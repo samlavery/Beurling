@@ -37,8 +37,9 @@ theorem for the realised system, and a counting theorem for clusters of composit
 
 ## Lean formalization
 
-An automated Lean 4 formalization attempt by Aristotle did not verify the main theorem. It reduced the theorem to a single
-unproved lemma and proved everything around that lemma. Details are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
+An automated Lean 4 formalization by [Aristotle](https://aristotle.harmonic.fun) (Harmonic) did not verify the main theorem. It
+reduced the theorem to a single unproved lemma and proved everything around that lemma. The Lean project is in [`lean/`](lean/);
+the status and blockers are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
 
 - **Proved:**
   - a Rouché-type zero criterion, `exists_zero_of_near_model`. It is proved from the maximum modulus principle, since
@@ -61,7 +62,8 @@ unproved lemma and proved everything around that lemma. Details are in [`LEAN-FO
 | `paper/` | the paper (LaTeX). `main.tex` inputs the files in `paper/sections/`. |
 | `certificates/` | the computer-assisted parts and numerical cross-checks (Python 3), described in Appendix B of the paper |
 | `review/` | the AI referee reports written while the proof was developed (two component referees and one end-to-end referee; they refer to working notes that are not included here), the AI consistency check of the paper (`paper-check.md`, `subchecks/`), and the re-check after the fixes (`paper-recheck.md`, `recheck/`) |
-| `LEAN-FORMALIZATION.md` | status of the Lean formalization attempt: what is proved, and the one unproved lemma |
+| `lean/` | the Lean 4 project from Aristotle (Lean/Mathlib v4.28.0): definitions, continuation of ζ_P, the zero criterion, the main theorem conditional on one `sorry`, and Aristotle's report |
+| `LEAN-FORMALIZATION.md` | status of the Lean formalization: what is proved, and the one unproved lemma |
 | `CORRECTIONS-vs-v3.md` | every deviation of the paper from the refereed draft ("v3"), with justification |
 | `PAPER-SPEC.md`, `paper/LABELS.md`, `review/PAPER-CHECK-BRIEF.md`, `review/RECHECK-BRIEF.md` | process documents: the instructions given to the AI agents that wrote and checked the paper |
 
