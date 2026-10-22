@@ -46,7 +46,8 @@ theorem for the realised system, and a counting theorem for clusters of composit
 
 ## Building the paper
 
-From `paper/`:
+A compiled copy is checked in as [`beurling-paper.pdf`](beurling-paper.pdf) (108 pages), built from the sources in this
+repository. To rebuild it, run from `paper/`:
 
 ```
 make
