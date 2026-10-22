@@ -2,7 +2,8 @@
 
 Samuel Lavery (sam.lavery@gmail.com)
 
-> **Status: draft. The proof has not been verified by a human expert.**
+> **Status: independent human review pending.** The proof has not yet been verified by a human expert, and it is not
+> formally verified (see [Lean formalization](#lean-formalization)).
 > The construction, the proofs and the certificate code were developed with extensive use of AI agents (Claude). Every review
 > so far was done by AI agents; the reports are in `review/`. The author takes responsibility for the manuscript and welcomes
 > scrutiny. See the statement on AI use (Appendix C of the paper, `paper/sections/C-ai-statement.tex`).
@@ -34,6 +35,25 @@ The system is built by a randomised greedy rule with feedback from the integer c
 queue of composite elements at every scale. This rests on a sharp resolvent bound of Beurling–Saias type, a local prime number
 theorem for the realised system, and a counting theorem for clusters of composites in short windows.
 
+## Lean formalization
+
+An automated Lean 4 formalization attempt by Aristotle did not verify the main theorem. It reduced the theorem to a single
+unproved lemma and proved everything around that lemma. Details are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
+
+- **Proved:**
+  - a Rouché-type zero criterion, `exists_zero_of_near_model`. It is proved from the maximum modulus principle, since
+    Mathlib has no Rouché theorem, and it is the last step of Theorem 4.9.
+  - the derivation of the main theorem (Corollary 2.2) from that criterion and one remaining input.
+- **Blocker, the only `sorry`: `exists_system_near_model`.** This is the existence of the system together with, for every
+  ε > 0, a disc near Re s = 1 on which a holomorphic model with a zero at the centre is close to ζ_P. It is the whole of the
+  paper before the Rouché step:
+  - the construction (Section 3);
+  - the lag bound (Sections 5–7, Appendices A and B);
+  - Lemmas 4.2–4.8.
+
+  Formalizing it would also need the Huxley–Heath-Brown short-interval prime number theorem and the Montgomery–Vaughan
+  mean value theorem, neither of which is in Mathlib.
+
 ## Repository layout
 
 | path | contents |
@@ -41,6 +61,7 @@ theorem for the realised system, and a counting theorem for clusters of composit
 | `paper/` | the paper (LaTeX). `main.tex` inputs the files in `paper/sections/`. |
 | `certificates/` | the computer-assisted parts and numerical cross-checks (Python 3), described in Appendix B of the paper |
 | `review/` | the AI referee reports written while the proof was developed (two component referees and one end-to-end referee; they refer to working notes that are not included here), the AI consistency check of the paper (`paper-check.md`, `subchecks/`), and the re-check after the fixes (`paper-recheck.md`, `recheck/`) |
+| `LEAN-FORMALIZATION.md` | status of the Lean formalization attempt: what is proved, and the one unproved lemma |
 | `CORRECTIONS-vs-v3.md` | every deviation of the paper from the refereed draft ("v3"), with justification |
 | `PAPER-SPEC.md`, `paper/LABELS.md`, `review/PAPER-CHECK-BRIEF.md`, `review/RECHECK-BRIEF.md` | process documents: the instructions given to the AI agents that wrote and checked the paper |
 
