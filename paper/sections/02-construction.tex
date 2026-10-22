@@ -8,7 +8,7 @@ The parameters $X_0$, $\kappa$, $H$, $M_1$, $L_0$, $y$, $x_k$, $\gamma_k$, $\alp
 \begin{itemize}
 \item \emph{Base.} Below $\Xm:=X_0-H(X_0)/2$ the system is exactly $\N$. Its primes are the rational primes $p<X_0$, placed at
 their own values with no jitter. On $[\Xm,X_0)$ it is $\N$ together with the at most $H(X_0)/2+1$ jittered primes that are decided
-at slots $s_j<X_0+H(X_0)/2$ and land there.
+at slots with $s_j-H(s_j)/2<X_0$ and land there.
 \item \emph{Jittered primes.} Every prime placed by the construction (Section~\ref{sec:greedy}) has value $\ge X_0-H(X_0)/2$ and is
 called \emph{jittered}.
 \item \emph{Elements.} $\NN$ is the free commutative semigroup on all primes, rational and jittered. An element is an exponent
@@ -30,7 +30,7 @@ $[1,x_k+2H(x_k)]$. The term $2H$ makes Lemma~\ref{lem:adapted} exact: $\gamma_k$
 $x_k+H(x_k)/2$, and $T$ on $[1,u]$ is read by slots $\le u-H(u)$.
 \item The \emph{amplitude condition}:
 \begin{equation}\label{eq:ampl}
-  \alpha_k\gamma_kx_k^{\theta-1}=\kappa'_k/\log x_k,\qquad \kappa'_k:=\kappa_0/\log^2x_k,\quad \kappa_0\in(0,\tfrac14].
+  \alpha_k\gamma_kx_k^{\theta-1}=\kappa'_k/\log x_k,\qquad \kappa'_k:=\kappa_0/\log^2x_k,\quad \kappa_0\in[X_0^{-1},\tfrac14].
 \end{equation}
 It gives $|R'(x)|\le\kappa_+/\log x$ with $\kappa_+=0.8$ (see \eqref{eq:G1}).
 \item $\gamma_k\in[\Gamma_k,2\Gamma_k]$ is chosen in Lemma~\ref{lem:goodheights} from data on $[1,x_k)$ only, and
@@ -38,15 +38,16 @@ $\alpha_k\in[1,2]$.
 \end{itemize}
 In Section~\ref{sec:zeros}, $x_k$ means $x_k^+$. The difference is a relative $O(H(x_k)/x_k)$, which is invisible in every estimate.
 
-\emph{The rigid density.} With $\kappa:=X_0^{-5/12+2\eps}$, $\eps:=0.01$, put
+\emph{The rigid density.} With $\kappa:=X_0^{-5/12+2\eps_\kappa}$, $\eps_\kappa:=0.01$, put
 \begin{equation}\label{eq:rhodet}
   \rhodet(u):=\frac{\Psi([u,(1+\kappa)u],X_0)}{\kappa u}\qquad(u\ge X_0).
 \end{equation}
 This is a linear-window average with linear normalisation. Each rigid $n\ge X_0(1+\kappa)$ contributes a ramp of total mass
 $\log(1+\kappa)/\kappa=1-\kappa/2+O(\kappa^2)$ on $[n/(1+\kappa),n]$.
 
-\emph{The absorbed set} (random and adapted). Put $L_*:=10^7$, $h(u):=u^{\theta/2}$ and $y(n):=H(n)L_0(n)(\log n)^6$, where $H$
-and $L_0$ are the parameters of Section~\ref{sec:params} at the scale of $n$. Then
+\emph{The absorbed set} (random and adapted). Put $L_*:=10^7$, $h(u):=u^{\theta/2}$ and $y(n):=y(x)=H(x)L_0(x)(\log x)^6$, where
+$x$ is the dyadic scale with $n\in[x,2x)$ and $H$, $L_0$ are the parameters of Section~\ref{sec:params}; so $y$ is frozen per
+scale. Then
 \begin{equation}\label{eq:absorbed}
   \Abs:=\{n\in\NN:\ \log n\ge L_*,\ \text{the latest prime $r$ of $n$ is jittered, and } r<y(n)\},
 \end{equation}
@@ -59,7 +60,10 @@ with any cofactor. Also put $\rho_{\Abs}(u):=\#(\Abs\cap[u,u+h(u)])/h(u)$.
   T'_{\mathrm{cont}}:=1-\rhodet-\bar\rho_{\Abs}+R',\qquad \bar\rho_{\Abs}(u):=\min\bigl(\rho_{\Abs}(u),0.1/\log u\bigr).
 \end{gathered}
 \end{equation}
-So $T$ has a unit jump at every $d\in\mathcal D\cap[X_0,\infty)$ and at every $n\in\Abs$.
+% Logged correction 36: X_0 is an even integer, so the jump at X_0 is the floor jump at the rigid integer X_0.
+So on $[X_0,\infty)$, $T$ has a unit jump at every $d\in\mathcal D\cap[X_0,\infty)$ and at every $n\in\Abs$, and no other jump. At
+$d=X_0$ this is the step from $\lfloor x\rfloor=X_0-1$ to $T(X_0)=X_0$: as $X_0$ is even, it lies in $\mathcal D$, and the term
+$\Psi(x,X_0)-\Psi(X_0,X_0)$ counts the $d\in\mathcal D\cap(X_0,x]$.
 
 \begin{remark}[The stopped process]\label{rem:stopped}
 % v3: Remark 1.0
@@ -81,7 +85,7 @@ $T$ restricted to $[1,u]$ is determined by the decisions and jitters at slots $s
 \begin{proof}
 An element $n\le u+h(u)$ of $\Abs$ has latest prime $r<y(n)\le n^{o(1)}\ll u-H(u)$. So $r$, and every other prime of $n$, is decided
 before slot $u-H(u)$ (by \eqref{eq:C2} below). The set $\mathcal D$ and the density $\rhodet$ are deterministic, and the parameters
-are deterministic functions of the scale. The oscillation $R$ on $[1,u]$ involves only those $R_k$ with $x_k+2H(x_k)<u$, and each
+are deterministic functions of the height or of the scale. The oscillation $R$ on $[1,u]$ involves only those $R_k$ with $x_k+2H(x_k)<u$, and each
 such $\gamma_k$ reads primes decided at slots up to $x_k+H(x_k)/2\le u-H(u)$. Hence $\rho_{\Abs}$ on $[X_0,u]$, $R$ on $[1,u]$ and
 the jumps of $T$ in $[1,u]$ are known before slot $u$.
 \end{proof}
@@ -133,17 +137,35 @@ $n\in[X_0,X_0(1+\kappa))$ (at most $\kappa X_0+1$, Lemma~\ref{lem:blin}(4)), so 
 scales $\log x\ge X_0^2$ of the zeros this drift is $\le\kappa x^{0.011}$, since by Rankin
 $\Psi(x,X_0)\le x^{0.01}\prod_{p<X_0}(1-p^{-0.01})^{-1}\le x^{0.011}$ there.
 
-\emph{Absorbed part.} $|\#\Abs(\le x)-\int^x\rho_{\Abs}|\le\#(\Abs\cap[x-h,x+h])+O(1)\le2h(x)(\log x)^{-4}+O(1)$, by
-Lemma~\ref{lem:lemmaP}.
+\emph{Absorbed part.}
+% Logged correction 34 (CORRECTIONS-vs-v3.md): v3 omitted the mass deficit 1-M_a of the smoothed elements; added here.
+Put $b:=\theta/2$ and, for $a\in\Abs$, let $u_a+h(u_a)=a$ and $M_a:=\int_{u_a}^adu/h(u)$, the mass of the smoothed element $a$.
+An element $a$ contributes to $\rho_{\Abs}(u)$ exactly for $u\in[u_a,a]$, so
+\[
+  \#\Abs(\le x)-\int^x\rho_{\Abs}=\sum_{a\in\Abs,\,a\le x}(1-M_a)-\sum_{a\in\Abs,\,u_a<x<a}\int_{u_a}^x\frac{du}{h(u)} .
+\]
+The second sum runs over $a\in(x,x+h(x))$, and is at most $\#(\Abs\cap[x-h,x+h])\le2h(x)(\log x)^{-4}$ by
+Lemma~\ref{lem:lemmaP}. In the first, $h$ is increasing, so $(u_a/a)^b=h(u_a)/h(a)\le M_a\le1$; with $a-u_a=h(u_a)\le a^b$ this gives
+$0\le1-M_a\le-b\log(u_a/a)\le b\,u_a^{b-1}\le1.01\,b\,a^{b-1}$. To sum this, note that
+$a^{b-1}\le M_a^{-1}\int_{u_a}^au^{b-1}du/h(u)$ with $M_a^{-1}\le1.001$, and that $\sum_{a\in\Abs}\mathbf 1[u_a\le u\le a]/h(u)=\rho_{\Abs}(u)
+\le(\log u)^{-4}$ by Lemma~\ref{lem:rhoA}(a), where $\log u\ge10^7-1$ wherever $\rho_{\Abs}(u)\ne0$ (since $L_*=10^7$). Hence
+\[
+  \sum_{a\in\Abs,\,a\le x}a^{b-1}\le1.001\int_{e^{10^7-1}}^xu^{b-1}(\log u)^{-4}\,du\le\frac{1.01}{b}\,x^b(\log x)^{-4},
+\]
+because $u^{b-1}(\log u)^{-4}\le(1-4/(b\log u))^{-1}\frac{d}{du}\bigl(u^b(\log u)^{-4}/b\bigr)$ and $4/(b\log u)\le4\cdot10^{-6}$. So the
+first sum is at most $1.01\,b\cdot1.01\,b^{-1}x^{\theta/2}(\log x)^{-4}\le1.03\,x^{\theta/2}(\log x)^{-4}$, and
+$|\#\Abs(\le x)-\int^x\rho_{\Abs}|\le3.1\,x^{\theta/2}(\log x)^{-4}+O(1)$, well within \eqref{eq:T1}.
 
 \emph{Oscillations.} $|R(x)|\le2x^{\theta}\cdot\#\{k:x_k\le x\}\le2x^{\theta}\log^*x$.
 \end{proof}
 
 \subsection{Slots and the greedy rule}\label{sec:greedy}
-\emph{Slots.} Fix $\vartheta\in(0,1)$ such that almost surely no jump of $T$ starts on a level $j+\vartheta$. This is possible: the
+% Logged correction 36: theta-offset restricted to (0,1/2] (used in Corollary cor:lag).
+\emph{Slots.} Fix $\vartheta_{\mathrm s}\in(0,\tfrac12]$ such that almost surely no jump of $T$ starts on a level $j+\vartheta_{\mathrm s}$. This is possible,
+since only countably many $\vartheta_{\mathrm s}$ are excluded: the
 deterministic jump levels form a countable set, and for $n\in\Abs$ the level $T(n-)$ is a continuous strictly increasing function
 of the landing position of $n$, which has a continuous law. For integers $j\ge X_0$, \emph{slot $j$} is
-$J_j:=T^{-1}([j+\vartheta,j+1+\vartheta))$, with $s_j:=\inf J_j$. Each unit jump of $T$ (at $d\in\mathcal D$ or $n\in\Abs$) crosses
+$J_j:=T^{-1}([j+\vartheta_{\mathrm s},j+1+\vartheta_{\mathrm s}))$, with $s_j:=\inf J_j$. Each unit jump of $T$ (at $d\in\mathcal D$ or $n\in\Abs$) crosses
 exactly one level and lies in its own \emph{jump slot}. Every other slot is a \emph{continuous slot}. Consecutive continuous-slot
 starts are at least $1/(1+1/(\kappa u)+\kappa_+/\log u)$ apart at height $u$, since
 $T'_{\mathrm{cont}}\le1+1/(\kappa u)+\kappa_+/\log u$. A single continuous slot can be shorter than $1$ where rigid integers are dense.
@@ -158,10 +180,15 @@ of the past. This holds for every slot, including those near $X_0$, so the landi
 $O(1/H)$; Section~\ref{sec:noise} uses this.
 \item The \emph{jitter width} is
 \begin{equation}\label{eq:jitter}
-  H(x):=\max\bigl(H_{\mathrm{std}}(x),M_1(x)^2\bigr),\qquad H_{\mathrm{std}}(x):=\exp\bigl(8(\log\log x)^2\bigr),
+\begin{gathered}
+  H(x):=\max\bigl(H_{\mathrm{std}}(x),\bar M_1(x)^2\bigr)\quad(x\ge X_0),\qquad H(x):=H_{\mathrm{std}}(x)\quad(x<X_0),\\
+  H_{\mathrm{std}}(x):=\exp\bigl(8(\log\log x)^2\bigr),
+\end{gathered}
 \end{equation}
-as in Section~\ref{sec:params}. \emph{Box-centred} means that the landing law of a prime decided at $s_j$ is uniform on
-$[s_j-H(s_j)/2,s_j+H(s_j)/2]$.
+with the smooth majorant $\bar M_1\ge M_1$ of Section~\ref{sec:params}. So $H$ is a function of the height itself, not frozen per
+scale; it is continuous and non-decreasing. The definition below $X_0$ makes $H$ continuous at $X_0$ and equal to
+$H_{\mathrm{std}}$ on $[\Xm/2,X_0^2]$. \emph{Box-centred} means that the landing law of a prime decided at $s_j$ is uniform on
+$[s_j-H(s_j)/2,s_j+H(s_j)/2)$.
 \item \emph{Decision order.} $t(p)$ is the slot at which $p$ is decided, with $t(p):=p$ for the rational primes $p<X_0$. For an
 element $w$, $\tau_w:=\max_{p\mid w}t(p)$ is the decision time of its latest prime.
 \item $\mathcal F_t$ is the $\sigma$-field of all decisions and offsets at slots $\le t$.
@@ -183,23 +210,30 @@ $\ge s_j-H/2>s_{j+1}/2$, so it is not a factor of any composite in $J_j$.
 \subsection{Bookkeeping}
 \begin{lemma}[Count identity]\label{lem:count}
 % v3: Lemma 1.2
-For $j\ge X_0$ put
+% Logged correction 36 (CORRECTIONS-vs-v3.md): v3 states V_j = j + Q_j; the initial value (offset 1, X_0 even) was not checked.
+Let $j_0:=X_0$ be the first slot (recall that $X_0$ is an even integer) and $Q_{j_0-1}:=0$. For $j\ge j_0-1$ put
 \[
 \begin{aligned}
   V_j:={}&\#(\text{composites of value }<s_{j+1})\\
   &+\#(\text{primes decided at slots }\le j,\text{ including the rational primes }<X_0)+1.
 \end{aligned}
 \]
-Then $V_j=j+Q_j$.
+Then $V_j=j+1+Q_j$.
 \end{lemma}
 \begin{proof}
-By induction: $V$ increases by $A_j+P_j$ at step $j$, and $Q_j=Q_{j-1}+A_j+P_j-1$.
+$V$ increases by $A_j+P_j$ at step $j$, and $Q_j=Q_{j-1}+A_j+P_j-1$, so $V_j-j-Q_j$ does not depend on $j$. It remains to
+compute it at $j=j_0-1$, where no slot has been processed and $V_{j_0-1}$ counts $1$, the composites of value $<s_{j_0}$ and the
+rational primes $<X_0$. By \eqref{eq:G1}, $T$ rises by $2$ within $30\log X_0$ of $X_0$, so $s_{j_0}<X_0+30\log X_0<2\Xm$. Hence
+every composite of value $<s_{j_0}$ is an integer (an element with a jittered prime factor has value $\ge2\Xm$), and jittered
+primes do not enter $V_{j_0-1}$. The composite integers in $[X_0,s_{j_0})$ are exactly $X_0$ itself: $T(X_0)=X_0<X_0+\vartheta_{\mathrm s}$,
+so $X_0<s_{j_0}$, and $X_0$ is composite (it is even); a composite $n\in(X_0,s_{j_0})$ would be rigid (as $n<2X_0$), and its unit jump
+would give $T(n)\ge X_0+1>j_0+\vartheta_{\mathrm s}$, which is impossible for $n<s_{j_0}$. So $V_{j_0-1}=\#(\N\cap[1,X_0))+1=j_0$.
 \end{proof}
 
 \begin{lemma}[Lindley]\label{lem:lindley}
 % v3: Lemma 1.3
-$Q_j=\max_{j_0-1\le i\le j}\bigl[\sum_{l=i+1}^jA_l-(j-i)\bigr]$, where $j_0:=\lceil X_0\rceil$ is the first slot and
-$Q_{j_0-1}:=0$. In words, the queue is the largest excess of composite arrivals over slots,
+$Q_j=\max_{j_0-1\le i\le j}\bigl[\sum_{l=i+1}^jA_l-(j-i)\bigr]$, with $j_0$ and $Q_{j_0-1}=0$ as in Lemma~\ref{lem:count}.
+In words, the queue is the largest excess of composite arrivals over slots,
 taken over slot windows ending at $j$.
 \end{lemma}
 \begin{proof}
@@ -210,15 +244,35 @@ This is the standard solution of the recursion $Q_j=\max(0,Q_{j-1}+A_j-1)$, whic
 % v3: Corollary 1.4, (1.5)
 With $D:=N-T$, for $x\ge X_0+2H(x)$,
 \begin{equation}\label{eq:lag}
-  -\tfrac{H(x)}2\Bigl(1+\frac{\kappa_+}{\log x}\Bigr)-3\le D(x)\le\max_{s_j\le x}Q_j+\tfrac{H(x)}2\Bigl(1+\frac{\kappa_+}{\log x}\Bigr)+3.
+  -\tfrac{H(x)}2\Bigl(1+\frac{\kappa_+}{\log x}\Bigr)-4\le D(x)\le\max_{s_j\le x}Q_j+\tfrac{H(x)}2\Bigl(1+\frac{\kappa_+}{\log x}\Bigr)+3.
 \end{equation}
 \end{corollary}
 \begin{proof}
-Landed primes $\le x$ differ from primes decided at slots $s_j\le x$ only by primes whose slot lies within $H/2$ of $x$, on either
-side. Since $T'_{\mathrm{cont}}\le1+1/(\kappa u)+\kappa_+/\log u$, there are at most $\frac{H(x)}2(1+\kappa_+/\log x)+3$ such slots
-on each side: the term $H/(\kappa x)$ and the variation of $H$ and $\log u$ across the window contribute less than $2$, and the end
-effects at most $1$. (Where $R'>0$ the slot density exceeds $1$ by up to $\kappa_+/\log x$, so $H/2+O(1)$ would not suffice.)
-Combine this with Lemma~\ref{lem:count}.
+% Logged correction 36: exact accounting, including the offset 1 of Lemma count, the rounding j - T(x) and the arrivals inside slot j.
+Let $j$ be the slot with $x\in J_j$, so $s_j\le x<s_{j+1}$ and $T(x)\in[j+\vartheta_{\mathrm s},j+1+\vartheta_{\mathrm s})$. Let $E_+$ be the number of
+primes decided at slots $>j$ that land in $[1,x]$, let $E_-$ be the number decided at slots $\le j$ that land in $(x,\infty)$, and
+let $C((x,s_{j+1}))$ be the number of composites of value in $(x,s_{j+1})$. The rational primes are decided before slot $j_0$ and
+lie below $x$. So $N(x)=V_j-C((x,s_{j+1}))+E_+-E_-$, and Lemma~\ref{lem:count} gives
+\[
+  D(x)=\bigl(j-T(x)\bigr)+Q_j+1-C((x,s_{j+1}))+E_+-E_- .
+\]
+The terms are bounded as follows.
+\begin{itemize}
+\item $j-T(x)\in(-1-\vartheta_{\mathrm s},-\vartheta_{\mathrm s}]$.
+\item $C((x,s_{j+1}))\le A_j$, and $Q_j-A_j=Q_{j-1}+P_j-1\ge-1$.
+\item A prime decided at slot $j'$ lands within $H(s_{j'})/2$ of $s_{j'}$, and only continuous slots receive primes. The slots
+counted by $E_-$ therefore start in $(x-H(x)/2,x]$, since $H$ is non-decreasing. Those counted by $E_+$ start in
+$(x,x+H(s_{j'})/2]$, and $H(s_{j'})\le H(x)+10^{-6}$ by Theorem~\ref{thm:caplw}(c), since $s_{j'}-x\le x^{0.1}$. Each unit jump
+of $T$ crosses exactly one level, so $T$ gains exactly one unit of continuous mass between consecutive continuous-slot starts;
+an interval $I$ therefore contains at most $\int_IT'_{\mathrm{cont}}+1$ of them. With
+$T'_{\mathrm{cont}}\le1+1/(\kappa u)+\kappa_+/\log u$ this gives
+$E_\pm\le\frac{H(x)}2(1+\kappa_+/\log x)+1+\epsilon$, where $\epsilon<10^{-6}$ covers the term $H/(\kappa x)$ and the variation
+of $H$ and $\log u$ across the window. (Where $R'>0$ the slot density exceeds $1$ by up to $\kappa_+/\log x$, so $H/2+O(1)$ would
+not suffice.)
+\end{itemize}
+Hence $D(x)\le Q_j+(1-\vartheta_{\mathrm s})+E_+<\max_{s_j\le x}Q_j+\frac{H(x)}2(1+\kappa_+/\log x)+2+\epsilon$, and
+$D(x)>-(1+\vartheta_{\mathrm s})-1+1-E_-\ge-\frac{H(x)}2(1+\kappa_+/\log x)-2-\vartheta_{\mathrm s}-\epsilon$, which is
+$\ge-\frac{H(x)}2(1+\kappa_+/\log x)-3$ because $\vartheta_{\mathrm s}\le\frac12$; in particular the lower bound in \eqref{eq:lag} holds.
 \end{proof}
 
 \begin{lemma}[Excess identity]\label{lem:excess}

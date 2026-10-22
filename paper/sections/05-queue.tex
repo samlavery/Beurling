@@ -5,8 +5,9 @@
 This section proves that, on an event of probability greater than $\tfrac12$ (Lemma~\ref{lem:budget}), the Lindley queue of
 Section~\ref{sec:construction} satisfies $Q_j\le B(s_j)$ at every slot (Theorem~\ref{thm:queue}). Here $B(x)$ is quasi-polylogarithmic in
 $x$, and is bounded by $H(x)^{O(1)}$ on the raised range of Section~\ref{sec:queue-capl}. Consequently (L-a) holds:
-$|D(x)|\le B(x)+\tfrac{H(x)}2(1+\kappa_+/\log x)+3\le x^{\eta}$. The ingredients are:
+$|D(x)|\le B(x)+\tfrac{H(x)}2(1+\kappa_+/\log x)+4\le x^{\eta}$. The ingredients are:
 % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #15): v3 has H(x)/2+2.
+% Logged correction 36: the symmetric lag constant is +4 (lower constant of eq:lag), not +3.
 \begin{itemize}
 \item the landing count and the local count (Lemma~\ref{lem:landing} and Corollary~\ref{cor:localcount});
 \item the good event and the first-failure budget (Definition~\ref{def:good} and Lemma~\ref{lem:budget});
@@ -22,7 +23,11 @@ $|D(x)|\le B(x)+\tfrac{H(x)}2(1+\kappa_+/\log x)+3\le x^{\eta}$. The ingredients
 
 \paragraph{Scales.}
 A \emph{dyadic scale} is $x=2^mX_0$ with $m\ge0$. We write $L:=\log x$ and $\ell:=\log L$. All parameters are \emph{frozen per
-scale}: they are evaluated at $x$ and used for heights in $[x,2x)$. We write $\Lambda:=\log X_0\ge10^8$
+scale}: they are evaluated at $x$ and used for heights in $[x,2x)$. The one exception is the jitter width $H(\cdot)$,
+together with the functions $c(\cdot)$, $\bar r_0(\cdot)$ and $\bar M_1(\cdot)$ that enter it: these are functions of the
+height itself, so that $H$ is continuous. Where a statement at scale $x$ writes $H$ without an argument, it means $H(x)$.
+% Logged correction 32: v3 freezes H per scale and builds it from the integer r_0, so H jumps.
+We write $\Lambda:=\log X_0\ge10^8$
 (Section~\ref{sec:params}).
 
 \paragraph{Parameters at scale $x$.}
@@ -31,19 +36,36 @@ These are the choices of Section~\ref{sec:params} and Section~\ref{sec:construct
 \item $\delta_1:=2L^{-6}$. The \emph{grid windows} at height $z\in[x,2x]$ are the intervals $[k\delta_1,(k+2)\delta_1)$,
   $k\in\Z$, of length $2\delta_1=4L^{-6}$.
 \item $r_0:=\lceil L/(3\ell)\rceil+3$ is the rank threshold (Theorem~\ref{thm:R}).
-\item $c:=c(x)$ is the capacity threshold, fixed in Theorem~\ref{thm:caplw}. We put $Q:=c^{1/2}$ and
-  $\varphi(u):=c+uQ+u(u+1)/2$.
-\item $M_1:=r_0+\varphi(r_0)+1$ is the cluster bound. Then $M_1\le 2c$, and $M_1\ge L$ for $L\ge L_*$.
-\item $H:=H(x):=\max(\qHstd(x),M_1(x)^2)$, where $\qHstd(x):=\exp(8\ell^2)$. This is the width of the box jitter of
-  Section~\ref{sec:construction}.
+\item $c:=c(x)$ is the capacity threshold. Here $c(\cdot)$ is the continuous, non-decreasing function of the height defined
+  in Theorem~\ref{thm:caplw}. We put $Q:=c^{1/2}$ and $\varphi(u):=c+uQ+u(u+1)/2$.
+\item $M_1:=r_0+\varphi(r_0)+1$ is the cluster bound. Then $M_1\le 2c$, and $M_1\ge L$ for $L\ge L_*$. The integer $r_0$
+  and the cluster bound $M_1$ are used for all counting (Theorem~\ref{thm:R}, Lemma~\ref{lem:heavy},
+  Theorem~\ref{thm:caplw}(a), the cluster events).
+\item For the jitter width we use smooth majorants. For a height $v\ge X_0$ put
+  \[
+  \bar r_0(v):=\frac{\log v}{3\log\log v}+4,\qquad \bar M_1(v):=\bar r_0+\varphi_v(\bar r_0)+1,
+  \]
+  where $\varphi_v$ is $\varphi$ with $c=c(v)$. Then $\bar r_0$ is continuous and increasing, $r_0\le\bar r_0(x)\le r_0+1$,
+  and $\bar M_1$ is continuous and non-decreasing. Moreover $M_1\le\bar M_1(x)\le M_1+c^{1/2}+\bar r_0+2\le
+  M_1(1+2c^{-1/2})$ and $\bar M_1\le2c(v)$, since $\bar r_0\le L\ll c^{1/2}$.
+  % Logged correction 32: smooth majorants r0bar, M1bar replace r0, M1 inside H.
+\item $H(v):=\max(\qHstd(v),\bar M_1(v)^2)$, where $\qHstd(v):=\exp(8(\log\log v)^2)$. This is the width of the box jitter
+  of Section~\ref{sec:construction}. It is continuous and non-decreasing in $v$, and $H(x)\ge\bar M_1(x)^2\ge M_1^2$.
   \begin{itemize}
-  \item Where $c(x)=\tfrac14\qHstd(x)^{1/2}$ we have $M_1\le\tfrac12\qHstd^{1/2}$, so $H=\qHstd$.
-  \item The \emph{raised range} is the set of scales where $c(x)>\tfrac14\qHstd(x)^{1/2}$, that is, where
-    $\gamma(s)\Lambda>4\ell^2-\log4$ (Theorem~\ref{thm:caplw}). There $H=\max(\qHstd,M_1^2)\ge\qHstd$.
+  \item Where $c(v)=\tfrac14\qHstd(v)^{1/2}$, that is, off the raised range, we have $\bar M_1\le2c=\tfrac12\qHstd^{1/2}$,
+    so $H=\qHstd$. This holds in particular for $v\in[X_0,X_0^2]$: there $s\le\log2-\log\Lambda$, so $e^{s/2}\le\sqrt2\,
+    \Lambda^{-1/2}$, $\Lambda_s\ge e^{-s}\ge\Lambda/2$ and $A(\Lambda_s,s)\le2\ell$, whence
+    $\gamma(s)\Lambda\le10.4\ell+5.2<4\ell^2-\log4$. For heights $v<X_0$ we put $H(v):=\qHstd(v)$; thus $H$ is continuous at
+    $X_0$, and $H=\qHstd$ on $[\Xm/2,X_0^2]$.
+    % Logged correction 32: off-raised-range fact for the majorant made explicit; H below X_0 specified.
+  \item The \emph{raised range} is the set of heights where $c(v)>\tfrac14\qHstd(v)^{1/2}$, that is, where
+    $\gamma(s)\Lambda>4\ell^2-\log4$ (Theorem~\ref{thm:caplw}). There $H=\max(\qHstd,\bar M_1^2)\ge\qHstd$.
   \item In all cases the tolerance $M_1\le H/L^{14}$ of Section~\ref{sec:params} holds.
   \end{itemize}
-\item $L_0:=\max(L^5,48M_1L^3/c'^2)$ is the block length. We put $q_{\min}:=L_0L^6$ and $y:=H\cdot L_0\cdot L^6$. The latter is
-  the absorption threshold of Section~\ref{sec:construction}, including its ramp.
+\item $L_0:=\max(L^5,48M_1L^3/c'^2)$ is the block length. We put $q_{\min}:=L_0L^6$ and $y:=H(x)\cdot L_0\cdot L^6$. The
+  latter is the absorption threshold of Section~\ref{sec:construction}, including its ramp. Like $M_1$, both are frozen per
+  scale and built from the integer $r_0$. They are used only through per-scale upper and lower bounds, through monotonicity
+  across scales, and (in Lemma~\ref{lem:lemmaP}) through $\sup_{[u,2u]}y$, so their jumps cause no difficulty.
 \item $B:=B(x)$ is the queue bound of Theorem~\ref{thm:queue}. The constants $c'=0.15$ and $K_d=3$ are the drift and edge constants of
   the drift bound R1$'$ (Corollary~\ref{cor:r1}).
 \item $\lambda:=4L$ in Theorem~\ref{thm:queue}. For the budget (Lemma~\ref{lem:budget}) we use, per scale $u$,
@@ -52,8 +74,10 @@ These are the choices of Section~\ref{sec:params} and Section~\ref{sec:construct
 In summary,
 \begin{equation}\label{eq:params}
 \begin{gathered}
-r_0=\Big\lceil\frac{L}{3\ell}\Big\rceil+3,\qquad M_1=r_0+\varphi(r_0)+1,\qquad H=\max(\qHstd,M_1^2),\\
-L_0=\max\Big(L^5,\frac{48M_1L^3}{c'^2}\Big),\qquad y=HL_0L^6.
+r_0=\Big\lceil\frac{L}{3\ell}\Big\rceil+3,\qquad M_1=r_0+\varphi(r_0)+1,\qquad
+L_0=\max\Big(L^5,\frac{48M_1L^3}{c'^2}\Big),\qquad y=H(x)L_0L^6,\\
+\bar r_0(v)=\frac{\log v}{3\log\log v}+4,\qquad \bar M_1(v)=\bar r_0+\varphi_v(\bar r_0)+1,\qquad
+H(v)=\max(\qHstd(v),\bar M_1(v)^2).
 \end{gathered}
 \end{equation}
 
@@ -146,8 +170,10 @@ $\NN\setminus\Abs$.
 % v3: §4.2
 
 Fix a dyadic $P$ and put $\lambda_P:=4\log P$, $H_-:=H(P/2)$, $H_+:=H(8P)$ and $\rho_H:=H_+/H_-$. Then $\rho_H\le1.35$ for
-$\log P\ge1100$, and $\rho_H\le1+1.2\cdot10^{-5}$ for $\log P\ge10^8$, the raise of Theorem~\ref{thm:caplw} included, because
-$d\log H/d\log P\le16\ell/L+10^{-7}$ (Theorem~\ref{thm:caplw}(c)). For a window $J\subset[P,4P+1]$ with $|J|\le6H(P)$ we
+$\log P\ge1100$, and $\rho_H\le1+1.2\cdot10^{-5}$ for $\log P\ge10^8$, the raise of Theorem~\ref{thm:caplw} included. Indeed,
+on $[X_0/2,\infty)$ both one-sided derivatives of $\log H$ in $\log z$ are at most $16\ell/L+10^{-7}\le3.1\cdot10^{-6}$: above
+$X_0$ by Theorem~\ref{thm:caplw}(c), and below $X_0$ because $H=\qHstd$ there (Section~\ref{sec:queue-conv}). So
+$\rho_H\le16^{3.1\cdot10^{-6}}\le1+1.2\cdot10^{-5}$. For a window $J\subset[P,4P+1]$ with $|J|\le6H(P)$ we
 define:
 \begin{itemize}
 \item the \emph{candidates} $\mathcal C(J)$: the decision slots $s$ with $|s-J|\le H(s)/2$. (Selection is by decision slot,
@@ -155,7 +181,10 @@ define:
 \item $\Lambda(J)$: the number of primes decided at slots in $\mathcal C(J)$ that land in $J$;
 \item the compensator $\mu(J):=\sum_{s\in\mathcal C(J)}\Prob(\text{the prime at $s$ lands in $J$}\mid\mathcal F_{s-})$;
 \item $\bar\mu(J):=(|J|+H_++2)\min(1,|J|/H_-)$. By (F1)--(F2) this is a \emph{sure} bound:
-  $\mu(J)\le\bar\mu(J)\le(1+\rho_H)|J|+2$.
+  $\mu(J)\le\bar\mu(J)\le(1+\rho_H)|J|+2$. Here the slot-density excess $\kappa_+/\log P+1/(\kappa P)$ in (F1) is absorbed by
+  the gap between $H_+$ and the widths $H(s)\le H(4P+1+H)$ of the candidates. Above $x_1$, where $R'\ne0$ (Section~\ref{sec:target}),
+  $H=\qHstd$ and this gap is at least $11\ell H/L$, more than the excess $7\cdot0.8H/L$ over the at most $7H$ candidate
+  slots. Below $x_1$, $R'=0$ and the excess is at most $7H/(\kappa P)\ll1$.
 \end{itemize}
 
 \begin{lemma}[Landing count]\label{lem:landing}
@@ -194,8 +223,9 @@ $|J|\le6H(P)-1$ is contained in a smallest $J^+\in\mathcal J_P$, and $|J^+|\le|J
 
 \begin{corollary}[Local count]\label{cor:localcount}
 % v3: Corollary 4.2
-Let $J\subset[P,4P]$ with $|J|\le6H(P)$ (including $|J|<1$). On the queue bound at the slots $s_j\le\max J+H(\max J)$, and,
-if $|J|\le6H(P)-1$, on $\qLand(J^+)$,
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item Let $P$ be dyadic, and let $J\subset[P,4P]$ with $|J|\le6H(P)$ (including $|J|<1$). On the queue bound at the slots
+$s_j\le\max J+H(\max J)$, and, if $|J|\le6H(P)-1$, on $\qLand(J^+)$,
 \begin{equation}\label{eq:localcount}
 |N(J)-T(J)|\le2B(4P)+2\Lambda(J)+2|J|+5\le(4\rho_H+6)|J|+\qKloc(P)\le11.4|J|+\qKloc(P),
 \end{equation}
@@ -203,10 +233,22 @@ where $\qKloc(P):=2B(4P)+\tfrac73\lambda_P+23$.
 % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #20): v3 has +13 in K_loc; the extra 10 pays for the passage from J to the landing window J^+.
 Under the target \eqref{eq:target} of Section~\ref{sec:construction},
 $T(J)\le2|J|+2+\#\Abs(J)$, so the non-absorbed count satisfies $N(J)-\#\Abs(J)\le13.4|J|+\qKloc(P)+2$.
+\item Let $P\ge X_0$ be real, let $P_1$ be the dyadic scale with $P_1\le P<2P_1$, and let $J\subset[P,4P]$ with
+$|J|\le6H(P)$. Split $J$ at $4P_1$ into $J_1:=J\cap[P_1,4P_1)$ and $J_2:=J\cap[4P_1,8P_1)$. On the queue bound at the
+slots $s_j\le\max J+H(\max J)$, and on the events $\qLand(J_i^+)$ of (i) at the dyadic scales $P_1$ and $2P_1$ (for the
+pieces with $|J_i|\le6H(2^{i-1}P_1)-1$),
+\begin{gather*}
+|N(J)-T(J)|\le11.4|J|+\qKloc(P)+\qKloc(2P),\\
+N(J)-\#\Abs(J)\le13.4|J|+\qKloc(P)+\qKloc(2P)+4.
+\end{gather*}
+\end{enumerate}
+The events used are the queue constraints of Definition~\ref{def:good} at those slots and the events E4 at the dyadic
+scales $P$ (in (i)), respectively $P_1$ and $2P_1$ (in (ii)).
+% Logged correction 37: v3 states the local count only at dyadic P, but it is applied at non-dyadic P; part (ii) is new.
 \end{corollary}
 
 \begin{proof}
-The count identity (Lemma~\ref{lem:count}), applied to the slots meeting $J$, gives $|\Delta Q|\le B$, $|\Delta C|\le B+1$,
+(i) The count identity (Lemma~\ref{lem:count}), applied to the slots meeting $J$, gives $|\Delta Q|\le B$, $|\Delta C|\le B+1$,
 $|\Delta(j-T)|\le2$ and $|\Delta L_\pm(J)|\le\Lambda(J)+\#\{\text{slots in }J\}\le\Lambda(J)+|J|+1$. This gives the first
 inequality. Now let $|J|\le6H(P)-1$. Since $J\subset J^+$, we have $\mathcal C(J)\subset\mathcal C(J^+)$ and
 $\Lambda(J)\le\Lambda(J^+)$. On $\qLand(J^+)$, by \eqref{eq:landing},
@@ -215,12 +257,20 @@ $\Lambda(J)\le\Lambda(J^+)$. On $\qLand(J^+)$, by \eqref{eq:landing},
 \]
 using $\rho_H\le1.35$; this gives the second inequality. If $6H(P)-1<|J|\le6H(P)$, then $|J|\ge H$ and Remark~\ref{rem:longwindows}
 gives the bound directly.
+
+(ii) We have $J_1\subset[P_1,4P_1]$ and $J_2\subset[2P_1,8P_1]$, so (i) applies to $J_1$ at the dyadic scale $P_1$ and to
+$J_2$ at the dyadic scale $2P_1$, provided $|J_i|\le6H(2^{i-1}P_1)$. A piece with $6H(2^{i-1}P_1)<|J_i|\le6H(P)$ has
+$|J_i|\ge H$, and Remark~\ref{rem:longwindows} together with $T(J_i)\le2|J_i|+2+\#\Abs(J_i)$ gives the same two bounds for it.
+Add the bounds for the two pieces, and use $\qKloc(P_1)\le\qKloc(P)$ and $\qKloc(2P_1)\le\qKloc(2P)$, since $\qKloc$ is
+non-decreasing.
 \end{proof}
 
 \begin{remark}\label{rem:longwindows}
 % v3: §4.2, after Corollary 4.2
-Windows longer than $6H(P)$ need no landing event. The sure lag bound \eqref{eq:lag} gives
-$|N(J)-T(J)|\le2\sup|D|\le2B+H(1+\kappa_+/L)+6\le1.01|J|+2B+6$ for $|J|\ge H$.
+Windows longer than $6H(P)$ need no landing event. The sure lag bound \eqref{eq:lag} for $x\ge X_0+2H$, and below that
+the start-up bound $|D|\le B(X_0)+\frac{H(X_0)}2(1+\kappa_+/\log X_0)+5$ from the proof of Proposition~\ref{prop:La}, give
+$|N(J)-T(J)|\le2\sup|D|\le2B+H(1+\kappa_+/L)+10\le1.01|J|+2B+6$ for $|J|\ge H$, since $H(0.01-\kappa_+/L)\ge4$.
+% Logged correction 36: v3/#15 have +6 in the middle term; the start-up range near X_0 needs +10.
 % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #15): v3 has 2B+H+4 <= |J|+2B+4.
 Alternatively, splitting $J$ into $\lceil|J|/H\rceil$ pieces gives $N(J)-\#\Abs(J)\le13.5|J|+\qKloc(P)+2$.
 \end{remark}
@@ -230,10 +280,13 @@ Alternatively, splitting $J$ into $\lceil|J|/H\rceil$ pieces gives $N(J)-\#\Abs(
 Corollary~\ref{cor:localcount} at height $z$ reads the queue bound at slots up to $z+H(z)$ and the event $\qLand$ at height $z$. It is
 therefore used only by steps that run after $z+7H(z)$, and always at a strictly smaller height. Its uses are:
 \begin{itemize}
-\item Lemma~\ref{lem:threshold-mass} (steps (i)--(ii)) and Proposition~\ref{prop:br} (step 3), at heights at most $x/4$ or $\sqrt x$;
-\item Lemma~\ref{lem:tau-near}, at heights $p_0\le\sqrt x$;
-\item optionally, step (iv) of Lemma~\ref{lem:lemmaP}, at heights $u/d\le u^{1-\theta/2}$.
+\item Lemma~\ref{lem:threshold-mass}, step (ii), through part (i) at a dyadic scale $P_1\le\sqrt x$;
+\item Lemma~\ref{lem:tau-near}, through part (ii) at $P'=0.51P$ (or at $X_0$), at heights $p_0\le\sqrt x$;
+\item Lemma~\ref{lem:short-recip}, through part (ii) at $P=M/2$, at heights $M\le y/2$;
+\item Proposition~\ref{prop:g1}, step 1, for a window that ends $\delta x\gg H$ before $x$;
+\item optionally, step (iv) of Lemma~\ref{lem:lemmaP}, through part (ii), at heights $u/d\le u^{1-\theta/2}$.
 \end{itemize}
+% List updated to the current citation sites of the corollary (v3's list predates the X_0-band and LP rewrites).
 It is \emph{not} used for the per-prime increment bound in Theorem~\ref{thm:queue}. A local count there would force
 $B(x)\ge(3/c')L^2B(x/q)$, which is incompatible with \eqref{eq:queueB}. The increment bound comes instead from $\qEcl$
 (Corollary~\ref{cor:increment}).
@@ -398,8 +451,9 @@ the small-$q$ case of S1 needs $L<L_*$ (Proposition~\ref{prop:S1S2}).
 \Prob(\tau<\infty)\le\sum_{m\ge0}\ \sum_{E\text{ at scale }2^mX_0}\Prob(E^c\cap\Good(<t(E)))\le\frac{1.5}{\Lambda}<\frac12.
 \]
 On $\{\tau=\infty\}$, $Q_j\le B(s_j)$ for all $j$, every event of Table~\ref{tab:events} holds, and \eqref{eq:La} holds pathwise:
-$|D(x)|\le B(x)+\tfrac{H(x)}2(1+\kappa_+/\log x)+3\le x^{\eta}$ for all $x\ge X_0+2H$.
+$|D(x)|\le B(x)+\tfrac{H(x)}2(1+\kappa_+/\log x)+4\le x^{\eta}$ for all $x\ge X_0+2H$.
 % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #15): v3 has H(x)/2+2.
+% Logged correction 36: the symmetric lag constant is +4 (lower constant of eq:lag), not +3.
 \end{lemma}
 
 \begin{proof}
@@ -677,7 +731,8 @@ equals $\int_{J^r}\prod_{\mathrm{piv}}q\big/\big(|\det E_P|\prod_yn_y\big)\,dn$.
 \emph{Allocation.} Every prime has an occurrence in some row of $C$, since $C$ covers $P(B')$. So:
 \begin{itemize}
 \item each pivot $p$ cancels the factor $q_p^{+1}$ of the Jacobian against one occurrence chosen in a row of $C$;
-\item each free prime $f$ keeps one occurrence in a row of $C$ for its harmonic sure sum (Lemma~\ref{lem:fac}, (S1$'$) and (S3));
+\item each free prime $f$ keeps, for its harmonic sure sum, one occurrence in a row of $C$
+  (Lemma~\ref{lem:fac}, (S1$'$) and~(S3));
 \item all occurrences in rows of $R$ stay with their row;
 \item the remaining occurrences in rows of $C$ are the excess, each at most $X_0^{-1}$.
 \end{itemize}
@@ -774,7 +829,11 @@ $\eta:=\log(u\log u)/\Lambda\in(0,1)$.
   \log\prod_{p\le X_0}(1-p^{-\sigma})^{-1}\le\log\Lambda+0.27+1.26\,\frac{u\log u}{\log(u\log u)}\Big(1+\frac2{\log(u\log u)}\Big)+1
   \le\log\Lambda+1.3u+2.
   \]
-\item So $\log(\Psi/Y)\le-u\log u-u\log\log u+1.3u+\log\Lambda+2\le-0.9u\log u$ for $u\ge\max(10^4,\log\Lambda)$. This needs
+\item So, for $u\ge\max(10^4,\log\Lambda)$,
+  \[
+  \log(\Psi/Y)\le-u\log u-u\log\log u+1.3u+\log\Lambda+2\le-0.9u\log u.
+  \]
+  This needs
   $0.1u\log u+u\log\log u-1.3u\ge\log\Lambda+2$, which holds there. (At $u=10^4$ alone it would need
   $\log\Lambda\le1.84\cdot10^4$; this is why the lower limit is $\max(10^4,\log\Lambda)$.)
 \item For $u>X_0^{1/2}$: an $X_0$-smooth $d\le Y$ has at most $1+\log Y/\log2$ choices of exponent for each of the at most
@@ -811,8 +870,8 @@ w_y\le z^{-1}\sum_{(M,d)}\Big(\frac{2z}{Md}\Big)^{1-\eta}\le2z^{-\eta}\prod_{p\i
 \begin{theorem}[High-capacity configurations at every scale; the capacity parameter]\label{thm:caplw}
 % v3: Theorem 4.17 (CapL-w at every scale, uniformly in Lambda >= 10^8)
 Let $\Lambda=\log X_0\ge10^8$ be arbitrary (Section~\ref{sec:params}), and let $\theta\in[\tfrac14,\theta_1]$ with
-$\theta_1=\tfrac12-10^{-4}$, as in Section~\ref{sec:setup}, so that $\theta_b=\theta/2\ge\tfrac18$. For a dyadic height $z\ge X_0$
-put $\ell:=\log\log z$ and $s:=\ell-2\log\Lambda$, so that $L=\Lambda^2e^s$. Define
+$\theta_1=\tfrac12-10^{-4}$, as in Section~\ref{sec:setup}, so that $\theta_b=\theta/2\ge\tfrac18$. For a height $z\ge X_0$
+(not necessarily dyadic) put $\ell:=\log\log z$ and $s:=\ell-2\log\Lambda$, so that $L=\Lambda^2e^s$. Define
 \begin{align*}
 A(\Lambda,s)&:=\log\big(2\Lambda^3e^{2s}/(2\log\Lambda+s)\big)=\log\big(2L^2/(\ell\Lambda)\big),&
 G(\Lambda,s)&:=\frac{2\sqrt{A(A+1)}\,e^{s/2}}{\sqrt{\Lambda-A-1}},\\
@@ -824,7 +883,8 @@ $\gamma(s):=\gamma_*(s_H)+(7.5-\gamma_*(s_H))(s-s_H)$ on $[s_H,s_H+1]$, and $\ga
 \log c(z):=\max\big(4\ell^2-\log4,\ \gamma(s)\Lambda\big),\qquad\text{that is,}\qquad
 c=\max\big(\tfrac14\qHstd^{1/2},\,X_0^{\gamma(s)}\big).
 \]
-Then, for every $\Lambda\ge10^8$ and every dyadic height $z\ge X_0$:
+Then, for every $\Lambda\ge10^8$, parts (a) and (b) hold at every dyadic height $z\ge X_0$, and part (c) holds for all
+heights $z\ge X_0$:
 \begin{enumerate}[label=\textup{(\alph*)}]
 \item (Counting.) The probability, on $\Good(<t_z)$, that some grid window $J$ at height $z$ has
   $\operatorname{rank}S(J)<r_0$ and $|S(J)|\ge r_0+\varphi(r_0)$ is at most $L^{-3}$. For such $J$, let $V$ be a heavy
@@ -834,19 +894,23 @@ Then, for every $\Lambda\ge10^8$ and every dyadic height $z\ge X_0$:
   $s>s_H$, condition \eqref{eq:twelvetwo} of Lemma~\ref{lem:lemmaP} holds at $z$.
 \item (Regularity.)
   \begin{itemize}
-  \item $c$, $M_1$, $H=\max(\qHstd,M_1^2)$ and $B$ are non-decreasing in $z$.
-  \item $d\log H/d\log z\le16\ell/L+10^{-7}\le4\cdot10^{-6}$. Here $16\ell/L$ comes from $\qHstd$, and the raise
-    contributes at most $10^{-7}$.
+  \item $c(z)$, $\bar M_1(z)$ and $H(z)=\max(\qHstd(z),\bar M_1(z)^2)$ are continuous, non-decreasing and piecewise $C^1$
+    in $z$, with locally finitely many break points; in particular $H$ is absolutely continuous on compact intervals. The per-scale parameters $M_1$, $L_0$, $y$ and $B$ are non-decreasing
+    across scales.
+    % Logged correction 32: v3 has "c, M1, H = max(H_std, M1^2) and B are non-decreasing in z".
+  \item At every $z\ge X_0$, both one-sided derivatives of $\log H$ with respect to $\log z$ are at most
+    $16\ell/L+10^{-7}\le4\cdot10^{-6}$. (At a break point, $d\log H/d\log z$ denotes the larger one-sided derivative.) Here $16\ell/L$
+    comes from $\qHstd$, and the raise contributes at most $10^{-7}$.
     % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #18): v3 has 4.1e-8 here, from a chain valid only for Lambda = Lambda_s.
-    Hence $\rho_H\le1+1.2\cdot10^{-5}$, $H(vw)/H(v)\le w^{4\cdot10^{-6}}$ for
-    $v\ge X_0$ and $w\ge1$ (the regularity \eqref{eq:RH}), and $H(v)/v$ is decreasing.
+    Hence, $H$ being continuous, $H(vw)/H(v)\le w^{4\cdot10^{-6}}$ for $v\ge X_0$ and $w\ge1$ (the regularity
+    \eqref{eq:RH}), $\rho_H\le1+1.2\cdot10^{-5}$, and $H(v)/v$ is strictly decreasing.
   \item $\log H(z)-\log\qHstd(z)\le10^{-6}\log z$; so the raise adds nothing to the lag.
   \item $c=\tfrac14\qHstd^{1/2}$ for $\ell\ge\ell_{\mathrm{std}}:=\sqrt{(7.5\Lambda+\log4)/4}$, which is $1.37\cdot10^4$ at
     $\Lambda=10^8$.
   \end{itemize}
 \end{enumerate}
 Parts (b) and (c) are deterministic statements about the parameters. Their proofs (Steps 5 and 6 below) use only the
-definitions of $\gamma$, $c$, $M_1$, $L_0$, $y$, $H$ and $B$, and not part (a). In particular (F3$'$) and $\rho_H$, which use
+definitions of $\gamma$, $c$, $M_1$, $\bar r_0$, $\bar M_1$, $L_0$, $y$, $H$ and $B$, and not part (a). In particular (F3$'$) and $\rho_H$, which use
 (c), do not depend on (a).
 \end{theorem}
 
@@ -869,7 +933,8 @@ So
 \]
 because $A\ge\log(2\Lambda/\ell)\ge16>6$. Every admissible pair has $\Lambda\ge\Lambda_s$, since $z\ge X_0$ means
 $s\ge-\log\Lambda$. Hence $\log c\ge\gamma_*(s)\Lambda\ge1.3\,G(\Lambda,s)\Lambda$ for every $s\le s_H$. Moreover $\gamma_*$
-is non-decreasing in $s$, since $s\mapsto e^{s/2}$ increases and $\Lambda\mapsto G$ decreases.
+is non-decreasing in $s$, since at fixed $\Lambda$ both $e^{s/2}$ and $A$ increase with $s$ ($\partial_sA=2-1/\ell>0$, and $G$ increases with
+$A$), while $\Lambda_s$ is non-increasing in $s$ and $\Lambda\mapsto G$ decreases.
 
 \emph{Step 2 (rows of high degree: $s\le s_H+1$).} Recall $Q=c^{1/2}$.
 \begin{itemize}
@@ -915,9 +980,9 @@ So (a) holds at every scale, including the scales $L\ge X_0^2$ of the zeros.
 
 \emph{Step 5 (proof of (b)).}
 \begin{itemize}
-\item \emph{$s\le s_H$.} The bounds $\log M_1\le\log c+\log2$, $\log H=\max(8\ell^2,2\log M_1)$ and
+\item \emph{$s\le s_H$.} The bounds $\log M_1,\log\bar M_1\le\log c+\log2$, $\log H=\max(8\ell^2,2\log\bar M_1)$ and
   $\log L_0\le\log48-2\log c'+\log M_1+3\ell=7.67+\log M_1+3\ell$ (with $c'=0.15$) give $\log y\le3\log c+9\ell+11.14$. The
-  constant is $11.14$ when $\qHstd$ dominates ($8\ell^2\le2\log c+2\log4$), and $9.8$ when $M_1^2$ does. If
+  constant is $11.14$ when $\qHstd$ dominates ($8\ell^2\le2\log c+2\log4$), and $9.8$ when $\bar M_1^2$ does. If
   $\log c=\gamma\Lambda\le(\tfrac13-10^{-5})\Lambda$, this is at most $\Lambda-2597<\log\Xm$, since
   $9\ell+11.14\le3\cdot10^{-5}\Lambda-2597$ for $\ell\le2\log\Lambda+6$, and $\log\Xm=\Lambda-O(e^{2715-\Lambda})$. If
   $\log c=4\ell^2-\log4$, it is at most $12\ell^2+9\ell+7\le\Lambda$.
@@ -932,8 +997,24 @@ So (a) holds at every scale, including the scales $L\ge X_0^2$ of the zeros.
 
 \emph{Step 6 (proof of (c)).}
 \begin{itemize}
-\item $\gamma$ is non-decreasing, so $c$, $M_1=r_0+\varphi(r_0)+1$, $H$ and $B$ are non-decreasing.
-\item $d\log H/dL\le2\Lambda\gamma'(s)/L+16\ell/L$. On the ramp this is at most $2\cdot7.2/(\Lambda e^{s_H})\le4\cdot10^{-10}$.
+\item \emph{Continuity and monotonicity.} $\Lambda_s=\max(10^8,e^{-s})$ and $\gamma_*$ are continuous; $\gamma$ is continuous
+  at $s_H$ and at $s_H+1$ by construction; and $\gamma$ is non-decreasing. So $c(z)=\exp(\max(4\ell^2-\log4,\gamma(s)\Lambda))$
+  is continuous and non-decreasing in $z$, and so are $\bar r_0$, $\bar M_1$ and $H$. Each is built from analytic functions of
+  $\log\log z$ by finitely many maxima and the three break points $s=-\log10^8,s_H,s_H+1$ of $\gamma$, so each is piecewise
+  $C^1$ with locally finitely many break points. The per-scale $M_1=r_0+\varphi(r_0)+1$, $L_0$, $y$ and $B$ are non-decreasing
+  across scales, since $r_0$ and $c(x)$ are.
+  % Logged correction 32: continuity of c, M1bar, H made explicit; v3 asserts monotonicity only.
+\item \emph{Derivative.} Where $H=\qHstd$, $d\log H/dL=16\ell/L$. Where $H=\bar M_1^2>\qHstd$, we have
+  $c\ge\bar M_1/2>\tfrac14\qHstd^{1/2}$, so we are on the raised range and $\log c=\gamma(s)\Lambda$. There $\bar M_1\ge c$,
+  $d\bar r_0/dL\le1/(3\ell)$, $\partial\bar M_1/\partial\bar r_0=\tfrac32+c^{1/2}+\bar r_0\le1.01c^{1/2}$ and
+  $\partial\bar M_1/\partial c=1+\bar r_0/(2c^{1/2})$, so
+  \[
+  \frac{d\log H}{dL}=2\,\frac{d\log\bar M_1}{dL}\le2\big(1+\bar r_0c^{-1/2}\big)\frac{\Lambda\gamma'(s)}L+\frac{0.7}{\ell c^{1/2}}.
+  \]
+  Here $\bar r_0c^{-1/2}\le2Le^{-2\ell^2}\le e^{-600}$ and $0.7/(\ell c^{1/2})\le e^{-600}$, because $c\ge\tfrac14e^{4\ell^2}$
+  and $\ell\ge18.42$. On the ramp $2\Lambda\gamma'(s)/L\le2\cdot7.2/(\Lambda e^{s_H})\le4\cdot10^{-10}$; for $s\ge s_H+1$,
+  $\gamma'=0$; for $s\le s_H$ the next item applies.
+  % Logged correction 32: the r0bar term 0.7/(l c^{1/2}) is new.
 \item For $s\le s_H$, where $\gamma_*\Lambda\ge4\ell^2-\log4$ (so that $\gamma_*$ dominates the standard term), the raise
   contributes $2\Lambda\gamma_*'(s)/L=2\kappa\gamma_*\Lambda/L$, with $\kappa:=d\log\gamma_*/ds$. Put
   $\ell_s:=2\log\Lambda_s+s$ and $A_s:=A(\Lambda_s,s)$; then $18.42\le\ell_s\le\ell$, since $\Lambda_s\le\Lambda$ and
@@ -952,8 +1033,16 @@ So (a) holds at every scale, including the scales $L\ge X_0^2$ of the zeros.
     variation of $\Lambda_s$ adds at most $\tfrac12(1+10^{-6})$ to the logarithmic rate, while the $A$-terms are now
     non-positive, so $\kappa\le1+10^{-6}$. The contribution is at most $2(1+10^{-6})\cdot1.7\cdot e^{-\ell_s}\le3.5\cdot10^{-8}$.
   \end{itemize}
-  So the raise contributes at most $10^{-7}$.
-\item $(\log H-\log\qHstd)/L\le\max(0,2\log M_1-8\ell^2)/L\le(2\gamma\Lambda+2)/L\le10^{-6}$ at every scale. \qedhere
+  So $2\Lambda\gamma_*'(s)/L\le5.1\cdot10^{-8}$ for $s\le s_H$.
+\item \emph{Conclusion.} The pieces are $C^1$ up to their break points, so the bounds above hold for both one-sided
+  derivatives at every point:
+  $d\log H/dL\le\max\big(16\ell/L,\ (1+e^{-600})\,5.1\cdot10^{-8}+e^{-600}\big)\le16\ell/L+10^{-7}$, and
+  $16\ell/L\le16\log\Lambda/\Lambda\le3\cdot10^{-6}$. Since $H$ is continuous and piecewise $C^1$, integration gives
+  $\log H(vw)-\log H(v)\le4\cdot10^{-6}\log w$ for $v\ge X_0$ and $w\ge1$, which is \eqref{eq:RH}; in particular
+  $\rho_H\le16^{4\cdot10^{-6}}\le1+1.2\cdot10^{-5}$. Also $d\log(H(v)/v)/d\log v\le4\cdot10^{-6}-1<0$, so $H(v)/v$ is
+  strictly decreasing.
+\item $(\log H-\log\qHstd)/L\le\max(0,2\log\bar M_1-8\ell^2)/L\le(2\gamma\Lambda+2)/L\le10^{-6}$ at every height, using
+  $\bar M_1\le2c$. \qedhere
 \end{itemize}
 \end{proof}
 
@@ -983,7 +1072,10 @@ Recall from Section~\ref{sec:construction} the absorption set
 \[
 \Abs=\{n\in\NN:\ \log n\ge L_*,\ \text{the latest prime $r$ of $n$ is jittered, and }r<y(n)\},
 \]
-with $L_*=10^7$ and $y(n):=H(n)L_0(n)(\log n)^6$, the parameters being those of the scale of $n$. Put $\theta_b:=\theta/2$
+with $L_*=10^7$ and $y(n):=y(x)=H(x)L_0(x)L(x)^6$, where $x$ is the dyadic scale with $n\in[x,2x)$; that is, $y$ is frozen
+per scale, as in Section~\ref{sec:queue-conv}.
+% Logged correction 32: one reading of y(n) fixed (frozen per scale).
+Put $\theta_b:=\theta/2$
 (so $\theta_b=\tfrac18$ for $\theta=\tfrac14$), $h(u):=u^{\theta_b}$ and $\rho_{\Abs}(u):=\#(\Abs\cap[u,u+h])/h$. The target $T$
 gets a unit jump at each $n\in\Abs$, and $T'$ gets $-\rho_{\Abs}$ (see \eqref{eq:target}). Membership is decided when $r$ is
 decided, at slot approximately $r<y(n)\ll n$, so $T$ is adapted.
@@ -1092,7 +1184,7 @@ Theorem~\ref{thm:queue}(ii); (S1) is the comparison $L_*<\Lambda$.
 \begin{lemma}[Raised threshold]\label{lem:raisedy}
 % v3: Lemma 4.21
 On the raised range of Theorem~\ref{thm:caplw}, where $\gamma(s)\Lambda>4\ell^2-\log4$, we have
-$y(n)\ge y_{\mathrm{std}}(n):=\qHstd(n)L_{0,\mathrm{std}}(n)(\log n)^6$, since $H$, $M_1$ and $L_0$ are all at least their
+$y(n)\ge y_{\mathrm{std}}(n):=\qHstd(x)L_{0,\mathrm{std}}(x)L(x)^6$ (with $x$ the dyadic scale of $n$), since $H$, $M_1$ and $L_0$ are all at least their
 standard values. So $\Abs_{\mathrm{std}}\subset\Abs$: raising $y$ only \emph{adds} to $\Abs$ the composites whose latest
 jittered prime $q$ lies in $[y_{\mathrm{std}}(n),y(n))$. The consumers of $\Abs$ are unaffected:
 \begin{itemize}
@@ -1103,12 +1195,14 @@ jittered prime $q$ lies in $[y_{\mathrm{std}}(n),y(n))$. The consumers of $\Abs$
   over all of $\NN$, so it is independent of $y$. Its threshold $H(v)\ge(\log v)^{8.5+\delta}$ only gets easier as $H$ grows.
 \item Proposition~\ref{prop:pointwise}: its only $\Abs$-input is Lemma~\ref{lem:rhoA}(c), which does not involve $y$ and reads only heights
   below $u$.
-\item Lemma~\ref{lem:lemmaP}: \eqref{eq:twelvetwo} holds by Theorem~\ref{thm:caplw}(b). It is read with $y:=\sup_{[u,2u]}y$; along the ramp
-  $d\log y/d\log u\le10^{-5}$, so this changes nothing numerically.
+\item Lemma~\ref{lem:lemmaP}: \eqref{eq:twelvetwo} holds by Theorem~\ref{thm:caplw}(b). It is read with $y:=\sup_{[u,2u]}y$. Since $y$
+  is frozen per scale, this sup involves at most two scales, and along the ramp $y(2x)/y(x)\le2^{10^{-5}}(1+2c^{-1/2})$ by
+  Theorem~\ref{thm:caplw}(c) and $M_1\le\bar M_1\le M_1(1+2c^{-1/2})$. So this changes nothing numerically.
+  % Logged correction 32: v3 has "along the ramp d log y/d log u <= 1e-5"; y is frozen per scale.
 \item Lemma~\ref{lem:ZA}: the bound on the absorbed part holds for $y=X_0^{O(1)}\le n^{o(1)}$.
 \item Queue size and \eqref{eq:La}: $B\le5M_1L^2/c'\le X_0^{7.6}L^2$ enters additively or as $x^{\eta}$, and is $\ll x^{\theta}$
   at these heights.
-\item Causality: $y(n)$ is a deterministic function of the scale of $n$, so membership in $\Abs$ is decided at the decision
+\item Causality: $y(n)=y(x)$ is a deterministic function of the dyadic scale $x$ of $n$, so membership in $\Abs$ is decided at the decision
   of the latest prime.
 \end{itemize}
 \end{lemma}

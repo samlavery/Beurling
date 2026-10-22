@@ -80,7 +80,10 @@ earliest pivot has value at least
 \begin{equation}\label{eq:A-tau}
   \tau_j:=\max\bigl(X_0,\ \sigma_j-2H(\sigma_j)\bigr).
 \end{equation}
-Recall that $H$ is non-decreasing and $H(v)/v$ is decreasing (Theorem~\ref{thm:caplw}(c)). By \eqref{eq:jitter} and
+% Logged correction 32: H continuous (H := max(H_std, Mbar_1^2)); used for the monotonicity of v - H(v)/2 above.
+Recall that $H$ is continuous and non-decreasing, and that $H(v)/v$ is decreasing (Theorem~\ref{thm:caplw}(c)). This
+makes $v\mapsto v-H(v)/2$ increasing above: for $v<v'$, since $H(v')/v'\le H(v)/v<2$,
+$H(v')-H(v)\le(v'-v)H(v)/v<2(v'-v)$. By \eqref{eq:jitter} and
 Theorem~\ref{thm:caplw}(c), $\log H(X_0)\le8(\log\Lambda)^2+10^{-6}\Lambda$, so $H(X_0)/X_0\le e^{-0.99\Lambda}\le
 e^{-10^{7}}$.
 Here and below, ``a jittered prime is $\ge X_0$'' is read with $X_0^{-}=X_0-H(X_0)/2$ in place of $X_0$, as in
@@ -273,7 +276,7 @@ the block step, by the constant $A_R\,e^{2.2/\Lambda}$. Taking expectations comp
   window constraints are invariant under the shift $x_f\mapsto x_f+s$,
   $x_{P_{\mathrm{late}}}\mapsto x_{P_{\mathrm{late}}}-s\,v_f$ (with $x=\log q$). So no late free prime ever enters a
   thin indicator.
-\item[\textup{(S1$'$)}] Let $c$ range over cofactors all of whose primes are $\le P:=s_{p_t}+H$. Then for $\beta\ge1$,
+\item[\textup{(S1$'$)}] Let $c$ range over cofactors all of whose primes are $\le P:=s_{p_t}+H(s_{p_t})$. Then for $\beta\ge1$,
   \[
     \sum_c c^{-\beta}\le\mathrm{Eu}(P),\qquad \mathrm{Eu}(x):=\prod_{\text{realised }p\le x}(1-1/p)^{-1}.
   \]

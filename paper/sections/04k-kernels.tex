@@ -18,7 +18,7 @@ Fix a start $x$. For a cofactor $w\in\NN$, $w\ge2$, and a position $v$, define t
 \begin{equation}\label{eq:step}
   Q_w(v,\cdot):=\mathbf 1[\tau_w<v/w]\,\mathbf 1[v/w\ge\Xm]\;\bx_{H(v/w)}(\cdot-v/w),
 \end{equation}
-where $\bx_h$ is the uniform probability measure on $[-h/2,h/2]$. Thus the filter is evaluated at the actual centre
+where $\bx_h$ is the uniform probability measure on $[-h/2,h/2)$. Thus the filter is evaluated at the actual centre
 $v/w$, and the window average comes after the filter. By the definitions of $\Kpt$ and $B$ in
 \S\ref{sec:noise-notation}, for every function $g$,
 \[
@@ -109,7 +109,7 @@ For a finite signed measure $\nu$ on $\R$ with $\nu(\R)=0$ and compact support, 
 \]
 The two expressions agree: for Lipschitz $f$, $\int f\,d\nu=-\int f'(t)F_\nu(t)\,dt$ (integration by parts, $\nu(\R)=0$),
 which is at most $\int|F_\nu|$, with equality for $f'=-\operatorname{sgn}F_\nu$. Let $D_w$ denote the push-forward under
-$t\mapsto t/w$, and $\bx_h$ the uniform probability on $[-h/2,h/2]$.
+$t\mapsto t/w$, and $\bx_h$ the uniform probability on $[-h/2,h/2)$.
 
 \begin{lemma}[Kantorovich--Rubinstein facts]\label{lem:kr-facts}
 % v3: §3.4, (K1)-(K5)
@@ -249,11 +249,15 @@ $\Theta_n\le\exp(3\sum_j\vartheta_{2^j\Xm})\le\exp(10^{-4}H(X_0)/X_0)\le\lambda_
 
 \begin{remark}[Other step kernels]\label{rem:kr-variants}
 % v3: §3.4, "Variants" bullet
+% Logged correction 31 (same pattern: widths at the actual centre)
 The proof of Theorem~\ref{thm:kr-random} uses only (Q1), the bound $\KRn{Q(x/d,\cdot)-\delta_{x/n}}\le\sigma H_n$ (for windows
 $\sigma=\frac14$), and (Q2) with a constant $\tau_0'/H_*$ in place of $2/H_*$ (for windows $\tau_0'=2$); the constant in front
-of the sum is then $\sigma\tau_0'\lambda_0$. The step order ``box, then filter'' and the exact compensator kernel
-$\bx(H(x)/m)*\mathrm{jitter}(H(x/m))$ (for which $\sigma\le\frac12$, the sum of the two widths over $4$) satisfy these with
-$\sigma\tau_0'\le1$, so they obey Theorem~\ref{thm:kr-random} with $\frac12\lambda_0$ replaced by $\lambda_0$.
+of the sum is then $\sigma\tau_0'\lambda_0$. The step order ``box, then filter'' satisfies these with $\sigma\tau_0'\le1$. The
+compensator kernel $\bx(H(x)/m)*\mathrm{jitter}(H(c))$, whose jitter width is taken at the actual centre $c$ (centre-dependent
+widths), satisfies (Q1) and (Q2) with $2\vartheta$ in place of $\vartheta$, which still gives $\Theta_n\le\lambda_0$ in that
+proof by \eqref{eq:width-product}, and $\sigma\le\frac12(1+\vartheta_{x/n})$ (the sum of the two widths over $4$, as
+$H(x)/m\le H_n$ and $H(c)\le(1+1.5\vartheta_{x/n})H_n$). So these two kernels obey Theorem~\ref{thm:kr-random} with
+$\frac12\lambda_0$ replaced by $\lambda_0$ and by $(1+\vartheta_{\Xm})\lambda_0$, respectively.
 \end{remark}
 
 \subsubsection{Dyadic weights of the kernels}\label{sec:kr-weights}
@@ -423,22 +427,28 @@ gives $|p-v'/(pm)|\le3H(p)(1+o(1))$, i.e. $p^2\in v'/m\pm3.1\,pH(p)$. So $p$ lie
 around $p_0:=\sqrt{v'/m}\ge\Xm$.
 
 \emph{Counting.} Let $[P,2P)$ be the dyadic block of $p_0$. The window lies in $[P-1.6H(P),\,2P+1.6H(P)]\subset[P',4P']$ with $P':=0.51P$ and has length
-$\le3.2H(P)\le6H(P')$, so by Corollary~\ref{cor:localcount} it holds at most $13.4\cdot3.2H(P)+K_{\mathrm{loc}}(P')+2\le
-43H(P)+K_{\mathrm{loc}}(P)+2\le46H(P)$ primes ($K_{\mathrm{loc}}$ is increasing and $K_{\mathrm{loc}}\le H$), each with
-$1/p\le1.01/P$ (as $p\ge P-1.6H(P)$). For $v'\in[v,2v)$ this forces $m\in(v/4P^2,2v/P^2]$, and a
+$\le3.2H(P)\le6H(P')$. % Logged correction 37: Corollary localcount(ii) at the non-dyadic scale P', and the blocks with P' < X_0
+If $P'\ge X_0$, Corollary~\ref{cor:localcount}(ii) at $P'$ shows that it holds at most
+$13.4\cdot3.2H(P)+K_{\mathrm{loc}}(P')+K_{\mathrm{loc}}(2P')+4\le43H(P)+2K_{\mathrm{loc}}(2P')+4\le46H(P)$ primes
+($K_{\mathrm{loc}}$ is non-decreasing and $K_{\mathrm{loc}}\le H/100$). If $P'<X_0$, then $P<1.97X_0$. The part $J_2$ of the
+window in $[X_0,\infty)$ lies in $[X_0,4X_0]$ and has length $\le6H(X_0)$, so Corollary~\ref{cor:localcount}(ii) at $X_0$
+bounds its primes by $13.4|J_2|+2K_{\mathrm{loc}}(2X_0)+4$; the part $J_1$ below $X_0$ holds at most $|J_1|+1$ integers and
+at most $2H(X_0)$ jittered primes (\S\ref{sec:noise-notation}). Since $|J_1|+|J_2|\le3.2H(P)$ and
+$H(X_0),H(2X_0)\le1.01H(P)$ (local exponent), the window again holds at most $13.4\cdot3.2H(P)+2.05H(P)+5\le46H(P)$ primes.
+Each has $1/p\le1.01/P$ (as $p\ge P-1.6H(P)$). For $v'\in[v,2v)$ this forces $m\in(v/4P^2,2v/P^2]$, and a
 pair $(P,m)$ occurs for at most three dyadic $v$. The $m$ are $4P$-smooth, so by Lemma~\ref{lem:cm},
 $\sum_m\log(8mP^2)/m\le5.4\log^2P(1+5/\log P)$ and $\sum_m1/m\le1.9\log P$.
 
 \emph{$E_\eta$.} Since $\log(2v)/\log(v/w)\le1.01\log(8mP^2)/\log P$, each $P$-block contributes at most
-$16.6(43H(P)+K_{\mathrm{loc}}(P)+2)\log P/P$.
+$16.6\cdot46H(P)\log P/P$.
 
 \emph{$E_\eta^0$, $E_\eta^{(2)}$, $E_\theta$, $\theta_*$.} $E_\eta^0$ has no division by $\log(v/w)$; $E_\eta^{(2)}$ has one
 more factor $\le1.01\log(8mP^2)$; $E_\theta$ has the extra factor $\log(v/w)+B_1\le1.01\log4P$. So each $P$-block contributes
-$\le16.6(43H(P)+K_{\mathrm{loc}}(P)+2)\cdot1.02\log^2P/P$ to $E_\eta^0$ and $E_\theta$ (one more $\log P$ to $E_\eta^{(2)}$),
+$\le16.6\cdot46H(P)\cdot1.02\log^2P/P$ to $E_\eta^0$ and $E_\theta$ (one more $\log P$ to $E_\eta^{(2)}$),
 and $\theta_*$ is bounded by the same expression without the weight $\log(2v)$.
 
-\emph{Summation.} The blocks decay geometrically (ratio $\le2^{\eps-1}\le0.52$, by \eqref{eq:RH}), and
-$K_{\mathrm{loc}}(P)\le H(P)$. Summing from $P=X_0/2$ gives
+\emph{Summation.} The blocks decay geometrically (ratio $\le2^{\eps-1}\le0.52$, by \eqref{eq:RH}). Summing from
+$P=X_0/2$ gives
 \[
   \le2.1\cdot16.6\cdot46\cdot1.02\cdot H(X_0)\cdot4\log^2X_0/X_0\le10^4H(X_0)\log^2X_0/X_0.
 \]

@@ -4,16 +4,27 @@ Samuel Lavery (sam.lavery@gmail.com)
 
 > **Status: independent human review pending.** The proof has not yet been verified by a human expert, and it is not
 > formally verified (see [Lean formalization](#lean-formalization)).
-> The construction, the proofs and the certificate code were developed with extensive use of AI agents (Claude). Every review
-> so far was done by AI agents; the reports are in `review/`. The author takes responsibility for the manuscript and welcomes
+> The construction, the proofs and the certificate code were developed with extensive use of AI agents (Claude). The systematic
+> reviews so far were done by AI agents; their reports are in `review/`. A reader has also reported defects (below). The author takes responsibility for the manuscript and welcomes
 > scrutiny. See the statement on AI use (Appendix C of the paper, `paper/sections/C-ai-statement.tex`).
 >
 > An AI consistency check of the LaTeX paper against the refereed draft is in `review/paper-check.md`, with its section
 > reports in `review/subchecks/`. It found one blocking gap, a proof step that was only sketched, and 36 fixable items. After
 > the fixes, three fresh AI checkers re-checked every changed passage (`review/paper-recheck.md`, reports in
-> `review/recheck/`). They found nothing blocking. Every fixable item they raised has been fixed, as have most cosmetic ones. Writing and checking the paper
-> turned up thirty logged slips in the refereed draft, none of which changes any conclusion. They are listed, with
-> justifications, in `CORRECTIONS-vs-v3.md`.
+> `review/recheck/R1–R3.md`). They found nothing blocking.
+>
+> **Defects found after the AI checks.** After the paper was first published here, a reader reported six further defects
+> that every earlier AI check had missed:
+> - a strip identity used as exact although the box widths vary;
+> - a jitter width that jumps (through a ceiling and a per-scale freeze) although its regularity is used throughout;
+> - two bounds for a smoothing kernel that wrongly assume unit mass and unit weight;
+> - an unproved initial value in the count identity, and an initialisation issue at X₀;
+> - a missing base condition in the definition of t-dense numbers.
+>
+> Repairing these and re-checking the repairs turned up four more. All ten are repaired; they are entries #31–#40 of
+> `CORRECTIONS-vs-v3.md`. The repairs were checked by a fresh AI checker in four passes (`review/recheck/R4.md`), which ended
+> with nothing blocking or fixable. None of the forty logged corrections changes a conclusion of the paper. But these
+> findings show that the AI checks are no substitute for expert review.
 
 ## The result
 

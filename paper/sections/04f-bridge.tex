@@ -156,7 +156,7 @@ Now bound the responses.
   \[
     \log x\cdot|(1+\Kpt)^{-1}\mu_0(x)|\le\log x\,(\log x+1)\sup_{u\le x}|\mu_0(u)|\le2.1\,\kappa(\log x)^5\le X_0^{-0.34}
   \]
-  for $\log x\le X_0^{1/100}$, since $\kappa=X_0^{-5/12+2\eps}\le X_0^{-0.3967}$.
+  for $\log x\le X_0^{1/100}$, since $\kappa=X_0^{-5/12+2\eps_\kappa}\le X_0^{-0.3967}$.
 \item $\mu_1$: by Corollary~\ref{cor:saias}, $\log x\cdot|(1+\Kpt)^{-1}\mu_1(x)|\le C_S\cdot7\cdot10^{-6}\le6\cdot10^{-4}$.
 \item $\sigma_{\Abs}$: likewise, at most $C_S\sum_v\log(2v)\cdot2L_v^{-4}\mathbf 1[\log\log v>2\log\Lambda+5.97]\le e^{-80}$.
 \end{itemize}
@@ -176,7 +176,10 @@ $c_{\mathrm{LP}}\sqrt{\log x}\ge c_{\mathrm{LP}}\sqrt{x_j}\gg\log x_j$.
 
 \emph{Step 1: the window average of $\rhot$.}
 \begin{itemize}
-\item $\int_J\rhot=\#\{q:s_q\in J\}\pm2$, and slots lie within $H/2$ of values. By the local count, and since the prime powers
+\item $\int_J\rhot=\#\{q:s_q\in J\}\pm(H(x)+2)$, the error coming from the partial boxes at the two ends of $J$; and slots lie
+  within $H/2$ of values.
+% Logged correction 31 (CORRECTIONS-vs-v3.md): the same partial-box effect; v3 has +-2. Absorbed by the +-27H(x) below.
+  By the local count, and since the prime powers
   $p^k\in J$ with $k\ge2$ number at most $2\sqrt x$, $\int_J\rhot=\Pi(J)\pm(27H(x)+2K_{\mathrm{loc}}+6+2\sqrt x)$.
 \item By Theorem~\ref{thm:lp}(ii), $\Pi(J)=\delta x\,\pi_0(x)(1+O(\delta))+O(Kxe^{-c_{\mathrm{LP}}\sqrt{\log x}})$, where
   $\pi_0(x):=(1-1/x)/\log x$.

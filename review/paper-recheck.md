@@ -60,3 +60,42 @@ complete and faithful presentation of its part of the proof of Theorem A.
 
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
+
+## Addendum: defects found after the re-check (corrections #31–#40)
+
+After the first public version, a reader reported six defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, turned up four more. The full list, with each repair, is entries #31–#40 of `CORRECTIONS-vs-v3.md`:
+
+| # | Where | Defect | Found by |
+|---|---|---|---|
+| 31 | Prop. pointwise margin, Step 2 | strip identity used as exact although box widths vary | reader |
+| 32 | jitter width H; Thm 6.22(c) | H jumped (ceiling in r₀; per-scale freeze), breaking its regularity | reader |
+| 33 | decomposition of ζ_P | absorbed-element weight bound \|w_a\| ≤ 1 false | reader |
+| 34 | Lemma T1, absorbed part | smoothed elements assumed to have unit mass | reader |
+| 35 | Lemma ZA(a) | statement stronger than proof; saving not monotone on the ramp | re-check |
+| 36 | Lemma count, Cor lag, X₀ | unproved initial value; lag's lower constant; initialisation at X₀ | reader |
+| 37 | Cor localcount | proved for dyadic P, used at non-dyadic P and below X₀ | re-check |
+| 38 | Lemma threshold-mass | stated for x ≥ X₀, valid for x ≥ X₀³ (all uses) | re-check |
+| 39 | Lemma designedzero | unspecified constant C₁; now C₁ := 0 with κ₀ ≥ X₀⁻¹ | re-check |
+| 40 | Thm bs, t-dense | definition omitted the j = 0 condition p₁ ≤ t | reader |
+
+**Repairs and their check.** All ten are repaired. A fresh AI checker checked them in four passes (`review/recheck/R4.md`
+§§1–10). Its work included:
+- a toy simulation of the #31 identity;
+- arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
+- an independent derivation of the count identity's initial value;
+- whole-paper sweeps for the patterns behind these defects:
+  - variable widths treated as constant;
+  - ceilings or freezes inside regular parameters;
+  - kernels assumed to have unit mass;
+  - unchecked induction bases and omitted base conditions;
+  - statement constants stronger than the proof;
+  - comments that hide rendered text.
+
+The final pass ended with nothing blocking, fixable or cosmetic.
+
+**Effect on the conclusions.** None of the forty corrections changes a conclusion of the paper. Several required new
+arguments, not just new constants: #31, #32, #36, #37 and #40.
+
+**Caveat.** These defects survived five rounds of AI checking. The paper should not be regarded as verified until a human
+expert has read it.

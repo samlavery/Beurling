@@ -9,7 +9,7 @@ worst case for the absorption estimates of Section~\ref{sec:queue}.
 \begin{theorem}[Theorem A]\label{thm:A}
 % v3: Theorem A (§0.1)
 Fix $\theta\in[\tfrac14,\theta_1]$, $\theta_1:=\tfrac12-10^{-4}$, and the parameters of Section~\ref{sec:params}; in particular
-$X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$, where $X_{\mathrm{Hux}}$ is defined in \eqref{eq:huxley}. Let $\PP$ be the random discrete
+$X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$ is an even integer, where $X_{\mathrm{Hux}}$ is defined in \eqref{eq:huxley}. Let $\PP$ be the random discrete
 Beurling system of Section~\ref{sec:construction}: the hard greedy rule with box-centred jitter, for the target $T$ of
 \eqref{eq:target}. Then on the event $\mathcal G=\{\tau=\infty\}$ of Definition~\ref{def:good}, which has probability at least
 $1-1.5/\log X_0>0$:
@@ -54,40 +54,48 @@ Lemma~\ref{lem:budget}.
 \end{proof}
 
 \subsection{Parameters}\label{sec:params}
-All parameters are deterministic functions of the scale. They are fixed here, before the construction starts.
+All parameters are deterministic, and they are fixed here, before the construction starts. The jitter width $H$, the capacity
+threshold $c$ and the smooth majorants $\bar r_0$, $\bar M_1$ are functions of the height itself; the integers $r_0$, $M_1$ and the
+quantities $L_0$, $y$, $B$ are frozen per scale.
 \begin{center}\small
 \begin{tabular}{@{}p{2.1cm}p{12.4cm}@{}}
 \hline
 parameter & value \\ \hline
 $\theta$, $\theta'$ & $\theta\in[\tfrac14,\theta_1]$, $\theta_1:=\tfrac12-10^{-4}$, fixed ($\theta=\tfrac14$ suffices for Corollary~\ref{cor:notQ});
 the local prime number theorem uses the exponent $\theta':=\theta+0.01$. \\
-$X_0$ & $X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$: the single regime for the whole proof. $X_{\mathrm{Hux}}$ is defined in
+$X_0$ & $X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$, an even integer (for instance the least one): the single regime for the whole
+proof. It is even so that the jump of $T$ at $X_0$ is the jump of $\lfloor x\rfloor$ at the rigid integer $X_0$ (Section~\ref{sec:target}). $X_{\mathrm{Hux}}$ is defined in
 \eqref{eq:huxley}, depends on no parameter, and gives $\mathrm{MA}[\mathbb P](q)\log q\ge0.99$ for every $q\ge X_0$
 (Lemma~\ref{lem:margin}(a)). The local prime number theorem is used only above $X_{\mathrm{LP}}(X_0)$, with
 $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$ \eqref{eq:XLP}. $X_{\mathrm{Hux}}$ is effective but has not been computed, so $X_0$
 is not fixed at $e^{10^8}$; every quantitative estimate therefore holds uniformly in $\Lambda=\log X_0\ge10^8$, in particular the
 computer-assisted Theorem~\ref{thm:bs}, Theorem~\ref{thm:caplw} and \eqref{eq:mu1sum}. \\
-$\kappa$ & $\kappa:=X_0^{-5/12+2\eps}$ with $\eps:=0.01$, i.e.\ $\kappa=X_0^{-0.3967}\approx e^{-3.97\cdot10^7}$ (the window of the
-rigid density; every use needs only $0<\eps\le0.04$). \\
-$H(x)$ & $H:=\max(H_{\mathrm{std}},M_1^2)$, $H_{\mathrm{std}}(x):=\exp(8\ell^2)$, so $H(X_0)\approx e^{2715}$. The raise $M_1^2$ can
-exceed $H_{\mathrm{std}}$ only on the raised range of Theorem~\ref{thm:caplw}, which ends at
+$\kappa$ & $\kappa:=X_0^{-5/12+2\eps_\kappa}$ with $\eps_\kappa:=0.01$, i.e.\ $\kappa=X_0^{-0.3967}\approx e^{-3.97\cdot10^7}$ (the window of the
+rigid density; every use needs only $0<\eps_\kappa\le0.04$). \\
+$H(x)$ & $H(v):=\max(H_{\mathrm{std}}(v),\bar M_1(v)^2)$ for $v\ge X_0$ and $H(v):=H_{\mathrm{std}}(v)$ for $v<X_0$, with
+$H_{\mathrm{std}}(v):=\exp(8(\log\log v)^2)$, where
+$\bar M_1(v):=\bar r_0+\varphi_v(\bar r_0)+1$ and $\bar r_0(v):=\log v/(3\log\log v)+4$ are smooth majorants of $M_1$ and $r_0$
+($\varphi_v$ is $\varphi$ below with $c=c(v)$). So $H$ is a function of the height, continuous and non-decreasing, with
+$d\log H/d\log z\le4\cdot10^{-6}$ (Theorem~\ref{thm:caplw}(c)) and $H\ge M_1^2$ (Section~\ref{sec:queue-conv}); the definition below $X_0$ makes $H$ continuous
+at $X_0$ and equal to $H_{\mathrm{std}}$ on $[\Xm/2,X_0^2]$; $H(X_0)\approx e^{2715}$. The raise $\bar M_1^2$
+can exceed $H_{\mathrm{std}}$ only on the raised range of Theorem~\ref{thm:caplw}, which ends at
 $\ell_{\mathrm{std}}=\sqrt{(7.5\Lambda+\log4)/4}$ ($1.37\cdot10^4$ at $\Lambda=10^8$). Always $\log H-\log H_{\mathrm{std}}\le10^{-6}L$,
 so $H=x^{o(1)}$; also $H\le16X_0^{15}$ for $\ell\le\ell_{\mathrm{std}}$, and $H=H_{\mathrm{std}}$ beyond. \\
 $\lambda$ & $\lambda=4L$ (Theorem~\ref{thm:queue}); $\lambda_u=3\log u+2\log\log u$ (per-scale noise);
 $\lambda'_u=\lambda_u+2+\log H(u)$ (short windows); $\lambda_P=4\log P$ (Lemma~\ref{lem:landing}). \\
 $c'$ & $c'=0.15$ (the drift margin). \\
-$r_0$, $c$, $M_1$ & $r_0=\lceil L/(3\log L)\rceil+3$. Capacity threshold $\log c=\max(4\ell^2-\log4,\gamma(s)\Lambda)$,
+$r_0$, $c$, $M_1$ & $r_0=\lceil L/(3\log L)\rceil+3$, the rank threshold. Capacity threshold $\log c=\max(4\ell^2-\log4,\gamma(s)\Lambda)$,
 $s:=\ell-2\log\Lambda$, with the explicit ramp $\gamma\le7.5$ of Theorem~\ref{thm:caplw}; so $c=\tfrac14H_{\mathrm{std}}^{1/2}$ for
-$\ell\ge\ell_{\mathrm{std}}$, and $c\le X_0^{7.5}$ for $\ell\le\ell_{\mathrm{std}}$. $M_1=r_0+\varphi(r_0)+1$ with $\varphi(u)=c+uc^{1/2}+u(u+1)/2$, so
-$M_1\le2c$. Tolerance: $M_1\le H/L^{14}$. \\
+$\ell\ge\ell_{\mathrm{std}}$, and $c\le X_0^{7.5}$ for $\ell\le\ell_{\mathrm{std}}$. $M_1=r_0+\varphi(r_0)+1$ with $\varphi(u)=c+uc^{1/2}+u(u+1)/2$ is
+the cluster bound, and $M_1\le\bar M_1\le2c$. Tolerance: $M_1\le H/L^{14}$. \\
 $L_0$, $q_{\min}$, $B$ & $L_0=\max(L^5,48M_1L^3/c'^2)$; $q_{\min}=L_0L^6$; queue bound $B(x)\le5M_1L^2/c'$ \eqref{eq:queueB};
 $K_{\mathrm{loc}}=2B(4P)+7\lambda_P/3+23$. \\
-absorption & $L_*=10^7$ (inactive, since $\log X_0\ge10^8$); $y(n)=H(n)L_0(n)(\log n)^6$, with $y\le X_0^{22.6}L^9$ for $\ell\le\ell_{\mathrm{std}}$ and $\log2y\le12.1\ell^2$ beyond; $\Abs=\emptyset$ wherever
+absorption & $L_*=10^7$ (inactive, since $\log X_0\ge10^8$); $y(n):=y(x)=H(x)L_0(x)(\log x)^6$ for $n\in[x,2x)$, $x$ dyadic (frozen per scale), with $y\le X_0^{22.6}L^9$ for $\ell\le\ell_{\mathrm{std}}$ and $\log2y\le12.1\ell^2$ beyond; $\Abs=\emptyset$ wherever
 $y<\Xm=X_0-H(X_0)/2$, which holds for $\ell\le2\log\Lambda+s_H$, $s_H=5.9745$ (Theorem~\ref{thm:caplw}(b)); $h(u)=u^{\theta/2}$;
 Lemma~\ref{lem:lemmaP} uses $\sup_{[u,2u]}y$. \\
 cluster window & $\delta_1=2L^{-6}$. \\
 \eqref{eq:La} & $|D|\le x^{\eta}$ with $\eta=\min(\theta,\tfrac12-\theta)/2$, for all $x\ge\Xm$; $D=0$ below $\Xm$. \\
-amplitudes & $\kappa'_k=\kappa_0/\log^2x_k$, $\kappa_0\in(0,\tfrac14]$; $\Gamma_k=\kappa_0x_k^{1-\theta}/(2\log^3x_k)$;
+amplitudes & $\kappa'_k=\kappa_0/\log^2x_k$, $\kappa_0\in[X_0^{-1},\tfrac14]$; $\Gamma_k=\kappa_0x_k^{1-\theta}/(2\log^3x_k)$;
 $\gamma_k\in[\Gamma_k,2\Gamma_k]$; $\alpha_k\in[1,2]$; $\kappa_+=0.8$. \\
 switch-on & $x_1\ge\exp(X_0^2)$, $x_{k+1}\ge\exp(x_k)$; $R_k\equiv0$ on $[1,x_k+2H(x_k)]$. \\
 budget & $\Prob(\tau<\infty)\le\sum_m(\Lambda+m\log2)^{-2}+O(X_0^{-1})\le1.5/\log X_0$ (Lemma~\ref{lem:budget}). \\ \hline
@@ -101,7 +109,7 @@ the proof.
 \subsection{Logical structure}\label{sec:logic}
 The table lists the main results with their inputs. An input marked $\downarrow$ is used only at a strictly earlier time or a
 strictly smaller height; every other input is used at the same time. The same-time dependencies form an acyclic graph; this was
-checked mechanically on the full dependency graph (79 nodes, 194 edges, 28 of them $\downarrow$; Appendix~\ref{app:cert-dep}).
+checked mechanically on the full dependency graph (79 nodes, 193 edges, 27 of them $\downarrow$; Appendix~\ref{app:cert-dep}).
 The table is an abridgement of that graph. The
 time-ordering of the $\downarrow$ edges is Section~\ref{sec:noncirc}.
 \begin{center}\footnotesize
@@ -123,7 +131,7 @@ Lemma~\ref{lem:cm} (Chebyshev--Mertens) & \eqref{eq:HBS} from Theorem~\ref{thm:q
 Theorem~\ref{thm:bs}, Lemma~\ref{lem:bs-profile} & Lemmas~\ref{lem:cm}, \ref{lem:smooth-v}; certificate & Corollary~\ref{cor:saias}, Lemma~\ref{lem:si} \\
 Theorems~\ref{thm:kr}, \ref{thm:kr-random}, Corollary~\ref{cor:kr-weights}, Proposition~\ref{prop:true-kernels} & Lemmas~\ref{lem:lemmaM}, \ref{lem:tau-near}, Corollary~\ref{cor:saias}, \eqref{eq:RH}; for the absorbed count: Corollary~\ref{cor:lag}, Lemma~\ref{lem:lemmaP}, Proposition~\ref{prop:ecl} & Proposition~\ref{prop:br}, Lemma~\ref{lem:xb} \\
 Lemma~\ref{lem:threshold-mass} (threshold mass) & Lemma~\ref{lem:cm}; Corollary~\ref{cor:localcount}$\downarrow$ & Proposition~\ref{prop:g1} \\
-Lemma~\ref{lem:noise} (per-scale noise) & Freedman; Theorem~\ref{thm:queue}$\downarrow$, Proposition~\ref{prop:ecl}$\downarrow$, Corollary~\ref{cor:localcount}$\downarrow$, Lemma~\ref{lem:lemmaP}$\downarrow$ & Proposition~\ref{prop:pointwise} \\
+Lemma~\ref{lem:noise} (per-scale noise) & Freedman; Theorem~\ref{thm:queue}$\downarrow$, Proposition~\ref{prop:ecl}$\downarrow$, Lemma~\ref{lem:lemmaP}$\downarrow$ & Proposition~\ref{prop:pointwise} \\
 Theorem~\ref{thm:lp} (local PNT) & Lemma~\ref{lem:ZBlow}, \eqref{eq:Rhatbound}, \eqref{eq:T1}, Lemma~\ref{lem:cm}; $|N-T_0|$ bound$\downarrow$ & Proposition~\ref{prop:g1}, Lemma~\ref{lem:si} \\
 \eqref{eq:osc} & \eqref{eq:rhodet}, \eqref{eq:target}; Lemma~\ref{lem:rhoA}(c) via Lemma~\ref{lem:lemmaP}$\downarrow$ & Propositions~\ref{prop:br}, \ref{prop:pointwise} \\
 Lemmas~\ref{lem:xb}, \ref{lem:si} (jump at $X_0$) & Theorem~\ref{thm:kr-random}, Corollary~\ref{cor:kr-weights}, Propositions~\ref{prop:true-kernels}, \ref{prop:br}, Lemma~\ref{lem:tau-near}, Theorem~\ref{thm:lp}, Lemma~\ref{lem:bs-profile}; Corollary~\ref{cor:localcount}$\downarrow$, Lemma~\ref{lem:lemmaP}$\downarrow$ & Propositions~\ref{prop:g1}, \ref{prop:pointwise}, Theorem~\ref{thm:g2} \\
@@ -144,15 +152,15 @@ The three loops of the proof close only through $\downarrow$ edges:
 \item queue $\to$ R1$'$ $\to$ per-scale noise $\to$ queue: Lemma~\ref{lem:noise} reads the queue at earlier slots;
 \item queue $\to$ cluster event $\to$ Lemma~\ref{lem:cm} $\to$ \eqref{eq:HBS} $\to$ queue: the cluster event reads Mertens bounds at
 heights $\le s-H$;
-\item local count $\to$ queue $\to$ local count: Corollary~\ref{cor:localcount} at height $z$ is read only at heights $\ge4z$ or
-$\ge z^2$.
+\item local count $\to$ queue $\to$ local count: Corollary~\ref{cor:localcount} at height $z$ is read only by steps that run after
+$z+7H(z)$ (Remark~\ref{rem:localcount-uses}).
 \end{itemize}
 
 \subsection{Why the induction is not circular}\label{sec:noncirc}
 The induction runs over \emph{time} (slots), not over scales. Every bad event is frozen at a time before any consumer reads it.
 
-\emph{(N0) Deterministic parameters.} $H$, $M_1$, $c$, $L_0$, $y$, $r_0$ and the switch-on points are deterministic functions of the
-scale, fixed in Section~\ref{sec:params} before the construction starts. The only random objects are the decisions $P_j$ and the
+\emph{(N0) Deterministic parameters.} $H$, $c$, $M_1$, $L_0$, $y$, $r_0$ and the switch-on points are deterministic functions of the
+height or of the scale, fixed in Section~\ref{sec:params} before the construction starts. The only random objects are the decisions $P_j$ and the
 jitters $U_j$.
 
 \emph{(N1) First failure} (Definition~\ref{def:good}, Lemma~\ref{lem:budget}).
@@ -178,7 +186,7 @@ with $\max I\le t_j$ holds on $\Good(<\max I)$, and it reads:
 \begin{itemize}
 \item the local prime number theorem (Theorem~\ref{thm:lp}, against the target without the absorbed part) on $[1,u(1-2\delta)]$,
 which is pathwise in the realised count below, so no event is needed;
-\item local counts at heights $\le u/4$ or $\le\sqrt u$, and one local count at height $u(1-\delta)$
+\item local counts at heights $\le u/2$ or $\le\sqrt u$, and one local count at height $u(1-\delta)$
 (the proof of Proposition~\ref{prop:g1}(B), Step~1), read before $u-\delta u+7H<u$;
 \item the per-scale noise event for the noise on $[1,u/2]$, at time $2v\le u$;
 \item the short-window events, internally ordered by window start, each window's variance bound coming from strictly earlier
@@ -200,9 +208,11 @@ bounds at heights $\le s-H$, which hold surely on $\Good(<s)$ (Lemma~\ref{lem:cm
 \begin{itemize}
 \item The local count at height $z$ (Corollary~\ref{cor:localcount}: Lemma~\ref{lem:landing} plus the count identity) reads queue
 bounds at slots $\le z+H(z)$ and the landing event at height $z$.
-\item Its uses are all at heights $\le$ (the consumer's height)$/4$ or $\le\sqrt{\text{consumer's height}}$: the two steps of
-Lemma~\ref{lem:threshold-mass}, the bridge and near-threshold terms (Proposition~\ref{prop:br}, Lemma~\ref{lem:tau-near}),
-Lemma~\ref{lem:noise}, and optionally Lemma~\ref{lem:lemmaP}.
+% R4 N13: list matched to the citation sites (Remark rem:localcount-uses).
+\item Its uses (Remark~\ref{rem:localcount-uses}) are: step (ii) of Lemma~\ref{lem:threshold-mass} and Lemma~\ref{lem:tau-near},
+at heights $\le\sqrt x$; Lemma~\ref{lem:short-recip}, at heights $\le y/2$; Step~1 of the proof of Proposition~\ref{prop:g1}(B),
+for a window that ends $\delta x\gg H$ before $x$; and optionally step (iv) of Lemma~\ref{lem:lemmaP}, at heights
+$u/d\le u^{1-\theta/2}$. Each is read at a strictly earlier time than its consumer.
 \item The per-prime increment in Theorem~\ref{thm:queue} uses the cluster event (Corollary~\ref{cor:increment}), never the local
 count, because a local count at height $x/q$ would force $B(x)\ge(3/c')L^2B(x/q)$.
 \end{itemize}

@@ -37,7 +37,9 @@ independent of $x$.
 Let $m(t)=T'(t)-(\Kpt\rhot)(t)-\NT_{\mathrm{pt}}(t)$ be the pointwise margin density (\S\ref{sec:noise-identity}), so that
 $M=Bm+B\,\NT_{\mathrm{pt}}+\vartheta/H$. Put $v(t):=\sup_{|h|\le1.01H(t)}|m(t+h)-m(t)|$, $N:=t/X_0$, and
 \begin{gather*}
-  E_S:=\sup_v\log v\cdot o_v+2\sup_y\log y\cdot\eta(y)+27\sum_{v\text{ dyadic}}\log(3v)\,\hat\nu(v)\qquad(\le10^{-28}),\\
+  E_S:=\sup_v\log v\cdot o_v+2\sup_y\log y\cdot\eta(y)+27\sum_{v\text{ dyadic}}\log(3v)\,\hat\nu(v)+E_\delta\qquad(\le10^{-28}),\\
+  E_\delta:=4.3\sum_{v\text{ dyadic},\,v\ge X_0/2}\log(3v)\sup_{[v,2v)}\delta,\qquad\delta(z):=6.6\,\eps_H\,\frac{H(z)}z\,\log z,\qquad
+  \eps_H:=4\cdot10^{-6},\\
   V_{X_0}(t):=1.02\,(1+\log N/\Lambda)\sum_{M\in I'_t}\Hord(M)\,M^{\eps'-2},\qquad I'_t:=\{M\in\NN:|t/M-X_0|\le5.5H(X_0)\},
 \end{gather*}
 with $\eps':=\eps+0.015\le0.045$ and $\Hord(M)$ the number of ordered factorisations of $M$ in $\NN$. On $\Good(<t)$:
@@ -57,13 +59,48 @@ with $\eps':=\eps+0.015\le0.045$ and $\Hord(M)$ the number of ordered factorisat
 $\sigma(I)=\int_Im+E(I)$, with $|E(I)|\le\hat\nu(u)H(u)$ on $G_u^{\mathrm{sw}}$. Write $\eps_s(z):=\sup|E(I)|$ over windows with
 $|I|\le s$ at $z$.
 
-\emph{Step 2: the sub-$H$ increments of $\rhot$ are strip differences of $m$.} For $0\le s\le1.01H(z)$, with
-$I_\pm:=[z\pm H/2,\,z\pm H/2+s)$,
+\emph{Step 2: the sub-$H$ increments of $\rhot$ are strip differences of $m$, up to $\delta$.}
+% Logged correction 31 (CORRECTIONS-vs-v3.md): v3 states the strip identity as exact; it is exact only for constant box
+% widths. The boxes have the prime-dependent widths H(s_q); the exact form below uses the slot sets A_+-, and the
+% comparison with the nominal strips costs delta(z), carried into S(t) and E_S (E_delta).
+Fix $z$ and $0\le s\le1.01H(z)$, write $H:=H(z)$, and put $I_\pm:=[z\pm H/2,\,z\pm H/2+s)$ and $\delta_z:=\eps_HH(z)/z$. By
+\eqref{eq:jitter} and \eqref{eq:RH} (whose exponent is $\eps_H$), $H$ is continuous and non-decreasing,
+$H(y)/H(x)\le(y/x)^{\eps_H}$ for $\Xm/2\le x\le y$, and $H(x)/x$ is decreasing; so $0\le H(y)-H(x)\le1.01\,\eps_HH(x)(y-x)/x$
+for $x\le y\le2x$. (Within $2H$ of $z$ the points stay above $\Xm/2$, even when $z$ is near $X_0$.)
+\begin{itemize}
+\item \emph{Exact form.} The boxes are half-open, $[s_q-H(s_q)/2,\,s_q+H(s_q)/2)$ (\S\ref{sec:noise-notation}); put
+  $\varphi_\pm(x):=x\pm H(x)/2$. By the
+  regularity of $H$, $\varphi_\pm$ is continuous and strictly increasing, and its difference quotients lie in
+  $[1-0.52\delta_z,1+0.52\delta_z]$ within $2H$ of $z$. The box of $q$ contains $y$ if and only if
+  $\varphi_-(s_q)\le y<\varphi_+(s_q)$, so $\mathbf 1[z+s\in\text{box}]-\mathbf 1[z\in\text{box}]
+  =\mathbf 1[\varphi_-(s_q)\in(z,z+s]]-\mathbf 1[\varphi_+(s_q)\in(z,z+s]]$. Hence, exactly,
+  \[
+    \rhot(z+s)-\rhot(z)=\int_{A_+}\frac{d\sigma(x)}{H(x)}-\int_{A_-}\frac{d\sigma(x)}{H(x)},\qquad
+    A_+:=\varphi_-^{-1}\big((z,z+s]\big),\quad A_-:=\varphi_+^{-1}\big((z,z+s]\big).
+  \]
+\item \emph{Position and length.} $A_+$ is an interval starting at $a_+:=\varphi_-^{-1}(z)=z+H(a_+)/2$, and $A_-$ one
+  starting at $a_-:=\varphi_+^{-1}(z)=z-H(a_-)/2$. So $|a_\pm-(z\pm H/2)|\le0.26\,\delta_zH$ and $|A_\pm|=s(1+\theta_\pm)$ with
+  $|\theta_\pm|\le0.52\,\delta_z$; in particular $|A_\pm\,\triangle\,I_\pm|\le1.05\,\delta_zH$ and $|A_\pm|\le1.0001s$.
+\item \emph{Weights.} $A_+\subset[z,z+1.53H]$ and $A_-\subset[z-0.51H,z+0.52H]$, so $|H(z)/H(x)-1|\le1.6\,\delta_z$ on
+  $A_\pm$. Each continuous slot decides at most one prime, and continuous-slot starts are at least $1-10^{-8}$ apart
+  (\S\ref{sec:noise-perscale}), so $\sigma(A_\pm)\le1.01|A_\pm|+1\le1.03H$. Hence
+  $H(z)[\rhot(z+s)-\rhot(z)]=\sigma(A_+)-\sigma(A_-)+R_1$ with $|R_1|\le1.6\,\delta_z(\sigma(A_+)+\sigma(A_-))\le3.3\,\delta_zH$.
+\item \emph{Strips.} By Step~1, $\sigma(A_\pm)=\int_{A_\pm}m+E(A_\pm)$. Replacing $A_\pm$ by $I_\pm$ changes $\int m$ by at most
+  $1.05\,\delta_zH\,m^*(z)$ each, where $m^*(z):=\sup_{|y-z|\le2H}|m(y)|$. Surely $|T'|\le2$,
+  $0\le\Kpt\rhot(y)\le1.01\sum_{2\le w\le y/\Xm}1/w\le1.01\log y$ and $|\NT_{\mathrm{pt}}(y)|\le2.02\,\eta(y)\le2.02(\log y+1)$
+  (as $\rhot\le1.01$), so $|m(y)|\le3.1\log y+4.1$ and $m^*(z)\le3.1\log z+4.2$.
+\end{itemize}
+Altogether,
 \[
-  \rhot(z+s)-\rhot(z)=\frac{\sigma(I_+)-\sigma(I_-)}{H(z)}=\frac1{H(z)}\int_0^s\big[m(z+H/2+r)-m(z-H/2+r)\big]dr+\frac{E(I_+)-E(I_-)}{H(z)} .
+  \rhot(z+s)-\rhot(z)=\frac1{H(z)}\int_0^s\big[m(z+H/2+r)-m(z-H/2+r)\big]dr+\frac{E(A_+)-E(A_-)}{H(z)}+R(z),
 \]
-This uses the centred boxes, and it holds also near $X_0$, where $\sigma=0$ and $m=T'=0$ below $X_0$. So
-$|\Delta_s\rhot(z)|\le(s/H(z))\sup v+2\eps_s(z)/H(z)$.
+with $|R(z)|\le(3.3+2.1\,m^*(z))\,\delta_z\le6.52\,\delta_z\log z\le\delta(z)$, since $\log z\ge10^8$. This holds also near
+$X_0$, where $\sigma=0$ and $m=T'=0$ below $X_0$. For $0\le r\le s$ the shift between the two strips is
+$H(z)\le1.01H(z-H/2+r)$, so the integrand is at most $v(z-H/2+r)$. Hence
+\[
+  |\Delta_s\rhot(z)|\le\frac s{H(z)}\sup v+\frac{2\eps_{1.0001s}(z)}{H(z)}+\delta(z),
+\]
+with the supremum over $[z-H,z+0.6H]$.
 
 \emph{Step 3: the recursion.} Write $\kappa_w:=\mathbf 1[\tau_w<t/w]$. Then
 \[
@@ -75,8 +112,15 @@ $|\Delta_s\rhot(z)|\le(s/H(z))\sup v+2\eps_s(z)/H(z)$.
 \item $h/w\le1.01H(t/w)w^{\eps-1}$ by \eqref{eq:RH}. So
   \begin{gather*}
     v(t)\le S(t)+\sum_{w\ge2}1.01\,\kappa_w\,w^{\eps-2}\sup\{v(t'):|t'-t/w|\le2.1H(t/w)\},\\
-    S(t):=o_t+2\eta(t)+2\sum_w\frac{\kappa_w}w\cdot\frac{\eps_{H(t)/w}(t/w)}{H(t/w)} .
+    S(t):=o_t+2\eta(t)+2\sum_w\frac{\kappa_w}w\cdot\frac{\eps_{1.02H(t)/w}(t/w)}{H(t/w)}+1.0001\sum_w\frac{\kappa_w}w\,\delta(t/w) .
   \end{gather*}
+\item For $h<0$, $\Delta_{h/w}\rhot(t/w)=-\Delta_{|h|/w}\rhot(z')$ with $z':=t/w-|h|/w\ge t/w-0.51H(t/w)$, and Step~2 is applied
+  at $z'$, which may lie in the dyadic block below that of $t/w$. There $H(t/w)/H(z')\le1+10^{-9}$, which Step~5 absorbs
+  (as $1.01(1+10^{-9})\le2^{0.015}$), and $\delta(z')\le1.0001\,\delta(t/w)$: as $H$ is non-decreasing and $z'\ge t/w-0.51H(t/w)$,
+  \[
+    \frac{H(z')}{z'}\le\frac{H(t/w)}{z'}\le\Big(1+\frac{0.52H(t/w)}{z'}\Big)\frac{H(t/w)}{t/w},
+  \]
+  and $\log z'\le\log(t/w)$. This is the factor $1.0001$ in $S(t)$.
 \item Base case $t<2\Xm$: there $\Kpt\rhot=\NT_{\mathrm{pt}}=0$, so $m=T'=\Tc+J$ and
   $v(t)\le o_t+\jz\mathbf 1[|t-X_0|\le1.01H(t)]$.
 \item $v(t)$ depends on $v$ and on the noise only at points $\le t/2+2.1H(t/2)<t$. So the recursion is a well-founded
@@ -84,11 +128,17 @@ $|\Delta_s\rhot(z)|\le(s/H(z))\sup v+2\eps_s(z)/H(z)$.
   event ordering in Definition~\ref{def:good} (event E3$'$).
 \end{itemize}
 
-\emph{Step 4: $\log t\cdot S(t)\le E_S$.} By Lemma~\ref{lem:noise}, $\eps_{H(t)/w}(t/w)/H(t/w)\le2\hat\nu(t/w)$, so the last
-term of $S$ is at most $4\sum_{v'}\omega_t(v')\hat\nu(v')$.
+\emph{Step 4: $\log t\cdot S(t)\le E_S$.} Since $H(t)\le w^{\eps_H}H(t/w)$ by \eqref{eq:RH}, $1.02H(t)/w\le0.52H(t/w)$ for
+$w\ge2$, and Lemma~\ref{lem:noise} gives
+$\eps_{1.02H(t)/w}(t/w)/H(t/w)\le2\hat\nu(t/w)$, so the third term of $S$ is at most $4\sum_{v'}\omega_t(v')\hat\nu(v')$, and the
+last term is at most $1.0001\sum_{v'\ge X_0/2}\omega_t(v')\sup_{[v',2v')}\delta$ (the points $t/w\ge\Xm$ lie in blocks $v'\ge X_0/2$).
 \begin{itemize}
 \item For $v'\ge\sqrt t/2$ use $\omega\le1.2$ and $\log t\le2\log(2v')$.
 \item For $v'<\sqrt t/2$ use Lemma~\ref{lem:S}(ii): $\log t\cdot\omega_t(v')\le2.1\max_u(1+u)\rho(u)\cdot\log3v'\le4.3\log3v'$.
+\item In both cases $1.0001\log t\cdot\omega_t(v')\le4.3\log3v'$ (the constants above are $2.4$ and $2.1\cdot2=4.2$), so the last
+  term contributes at most $E_\delta$ to $\log t\cdot S(t)$.
+  Since $H(v)/v$ is decreasing, $H(vw)\le w^{\eps_H}H(v)$ and $\log H(X_0)\le8(\log\Lambda)^2+10^{-6}\Lambda$
+  (Theorem~\ref{thm:caplw}(c)), we get $E_\delta\le28.4\,\eps_H\cdot10\Lambda^2H(X_0)/X_0\le e^{-0.9\Lambda}$; so $E_S\le10^{-28}$ still holds.
 \item With $\log t\cdot o_t\le\sup_v\log v\cdot o_v$ and $\log t\cdot2\eta(t)\le2\sup_y\log y\cdot\eta(y)$, this gives
   $\log t\cdot S(t)\le E_S$.
 \end{itemize}
@@ -120,8 +170,15 @@ Theorem~\ref{thm:g2}.
   $B\Rres J$, and $1-\Kpt B\Rres=\Rres$).
 \item \emph{The jump part.} By Lemma~\ref{lem:xb}, pointwise, $m_j(t)\ge\jz\rho^{\mathrm{sh}}_1(t)-\jz\mathfrak B(t)$; no step is $\tau$-near here, so the $\tau$-term of \eqref{eq:xb} is absent. Here
   $\rho^{\mathrm{sh}}_1=(1+\Kpt)^{-1}\mathbf 1_{[X_0,\infty)}$ and $\mathfrak B$ is defined there.
-\item \emph{The smooth part.} Steps 1--5 apply verbatim to $(m_c,\rhot_c)$, because $\Delta_s(Bf)$ is exactly the strip
-  difference of $f$. The base case is $m_c=\Tc$, which has no jump, so $v_c(t)\log t\le6.5E_S$. By \eqref{eq:predictable} and
+\item \emph{The smooth part.} Steps 1--5 apply to $(m_c,\rhot_c)$. Indeed $\rhot_c=\rhot-Bm_j$, and for a bounded $f$,
+  \[
+    \Delta_s(Bf)(z)=\frac1{H(z)}\int_0^s\big[f(z+H/2+r)-f(z-H/2+r)\big]dr+R_B,\qquad|R_B|\le2.02\,\eps_H\frac{H(z)}z\sup|f|,
+  \]
+  for $0\le s\le1.01H(z)$. Indeed $0\le H(z+s)/H(z)-1\le(1+s/z)^{\eps_H}-1\le\eps_Hs/z$, so the two window edges move by
+  $(H(z+s)-H(z))/2\le\eps_HH(z)s/(2z)$ each and the weight $1/H$ changes by a relative $\le\eps_Hs/z$; this gives
+  $|R_B|\le2\eps_H(s/z)\sup|f|$. With $f=m_j=\Rres J$ and $|\Rres J|\le\jz\sum_n\TV(C_n)/n\le2.2$ in this range
+  (Proposition~\ref{prop:true-kernels}), Step~2 holds for $(m_c,\rhot_c)$ with remainder $R(z)-R_B$, and
+  $|R(z)-R_B|\le(6.52\log z+4.45)\,\delta_z\le\delta(z)$. The base case is $m_c=\Tc$, which has no jump, so $v_c(t)\log t\le6.5E_S$. By \eqref{eq:predictable} and
   Proposition~\ref{prop:br}, $M_c:=M-B\Rres J$ satisfies $\log t\cdot M_c\ge\log t\cdot B\rhosh_c-\eps_N-E_{\mathrm{BR}}$, where
   $\rhosh_c:=\sum_nc_n\Tc(\cdot/n)/n$; and $Bm_c=M_c-\vartheta/H$.
 \item \emph{$\rhosh_c$ is flat on $W_t$.} Here $c_n(y)=\mu(n)\mathbf 1[y/n\ge\Xm]$, and $|\Tc|\le o_{X_0}$ on

@@ -195,7 +195,8 @@ cells 398801 on [60, 2e4]: failures 0; max slope = 0.00e+00
 \item \texttt{needs.py}: a diagnostic that prints, at sample $\ell$, the least $\log c$ needed by the precise criteria and the largest
 allowed by Lemma~\ref{lem:lemmaP}. It checks nothing.
 \item \texttt{raise\_max.py}: the value $1.3\cdot10^{-8}$ quoted in Remark~\ref{rem:caplw-numerics}. It computes the
-raise $\max(0,2\log M_1-8\ell^2)/L$ of $H$ over $H_{\mathrm{std}}$, with $c$, $\gamma(s)$ and $M_1=r_0+\varphi(r_0)+1$ exactly as in that
+raise $\max(0,2\log\bar M_1-8\ell^2)/L$ of $H$ over $H_{\mathrm{std}}$, with $c$, $\gamma(s)$ and the smooth majorant
+$\bar M_1=\bar r_0+\varphi(\bar r_0)+1$, $\bar r_0=L/(3\ell)+4$, that defines $H$ (Section~\ref{sec:params}), exactly as in that
 theorem (in log space), on the grid $\log_{10}\Lambda\in[8,30]$ at step $0.05$ and $s\in[-\log\Lambda,30]$ at step $0.01$
 ($3\,252\,514$ points), and compares the maximum with the analytic bound $10^{-6}$, which is all the proof uses. Expected output
 (about 10 seconds; the second line is wrapped here):
@@ -278,7 +279,7 @@ a cycle among the same-time edges.
 \begingroup\footnotesize
 \begin{verbatim}
 python3 -I -B certificates/depcheck/depcheck.py
-  same-time subgraph acyclic: True | nodes 79 | edges 194 | strictly-earlier edges 28
+  same-time subgraph acyclic: True | nodes 79 | edges 193 | strictly-earlier edges 27
 \end{verbatim}
 \endgroup
 The time-ordering of the strictly-earlier edges is argued in Section~\ref{sec:noncirc}; the script checks only the bookkeeping.

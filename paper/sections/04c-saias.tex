@@ -63,11 +63,16 @@ Let $s$ be the $t$-largest prime with $s^2\mid n$.
 \begin{itemize}
 \item $|c_n|\le1$, and $\sum_n|c_n|/n\le\sum_{n\in\NN,\,n\le y/\Xm}1/n\le\log y+B_1$.
 \item \emph{Density.} With the decision order $t$ ($|t(p)-p|\le H(p)$, and $t(p)=p$ for rational primes),
-  $\chi^t_y(n)=1$ and $y/n\in[v,2v)$ force $n$ to be squarefree and \emph{$4v$-dense}: $p_{j+1}\le4v\,p_1\cdots p_j$ for the
-  primes $p_1<\dots<p_r$ of $n$, sorted by value. To see this, fix $j$ and let $p^*$ be the prime of smallest $t$ among
-  $p_{j+1},\dots,p_r$. All of $p_{j+1},\dots,p_r$ have $t\ge t(p^*)$, so the condition at $p^*$ gives
-  $t(p^*)\,p_{j+1}\cdots p_r<y<2v\,n$, that is, $t(p^*)<2v\,p_1\cdots p_j$. Hence
-  $p_{j+1}\le p^*\le t(p^*)+H(p^*)\le 4v\,p_1\cdots p_j$, since $H(p^*)\le p^*/10^{10}$.
+  $\chi^t_y(n)=1$ and $y/n\in[v,2v)$ force $n$ to be squarefree and \emph{$4v$-dense}: $p_{j+1}\le4v\,p_1\cdots p_j$ for
+  $0\le j<r$, where $p_1<\dots<p_r$ are the primes of $n$ sorted by value and the empty product is $1$ (so $p_1\le4v$).
+  To see this, fix $0\le j<r$ and let $p^*$ be the prime of smallest $t$ among $p_{j+1},\dots,p_r$. All of
+  $p_{j+1},\dots,p_r$ have $t\ge t(p^*)$, so the condition at $p^*$ gives $t(p^*)\,p_{j+1}\cdots p_r<y<2v\,n$, that is,
+  $t(p^*)<2v\,p_1\cdots p_j$ (for $j=0$: $t(p^*)<2v$). Since $p_{j+1}$ has the smallest value among $p_{j+1},\dots,p_r$,
+  and $p^*\le t(p^*)+H(p^*)$ with $H(p^*)\le p^*/10^{10}$ (and $t(p)=p$ for rational primes),
+  $p_{j+1}\le p^*\le(1-10^{-10})^{-1}t(p^*)\le4v\,p_1\cdots p_j$. The passage from the decision order to the value order is
+  made by the choice of $p^*$; the factor $4$ in place of $2$ only has to absorb $(1-10^{-10})^{-1}$.
+% Logged correction 40 (CORRECTIONS-vs-v3.md): t-density includes j = 0 (p_1 <= t), as needed by the recursion of
+% Theorem bs; the argument above covers j = 0.
 \item Lemma~\ref{lem:lemmaM} concerns \emph{sharp scalar} filters. For the true operator $\Rres$, whose filter is
   averaged across the threshold, the pointwise analogue is false: for $n=4$ with void filter and constant $H$,
   $\TV(C_4)=\frac14$ while $\mu(4)=0$. The transfer to $\Rres$ is Theorem~\ref{thm:kr} and its random-width form Theorem~\ref{thm:kr-random}, which use only the masses $c_n$.
@@ -76,7 +81,10 @@ Let $s$ be the $t$-largest prime with $s^2\mid n$.
 \begin{theorem}[Beurling--Saias, upper bound]\label{thm:bs}
 % v3: Theorem 3.4
 Assume \textup{(H$_{\mathrm{BS}}$)} and $\log X_0\ge10^8$. For $t\ge X_0$ put $\tau:=\log t$. Call a squarefree $n\in\NN$
-\emph{$t$-dense} if $p_{j+1}\le t\,p_1\cdots p_j$ for its primes $p_1<\dots<p_r$. Then for every $Y\ge t$,
+\emph{$t$-dense} if $p_{j+1}\le t\,p_1\cdots p_j$ for $0\le j<r$, where $p_1<\dots<p_r$ are its primes and the empty product
+is $1$; in particular $p_1\le t$. Then for every $Y\ge t$,
+% Logged correction 40 (CORRECTIONS-vs-v3.md): v3 omits j = 0, so a single prime > t would count as t-dense and
+% Step 1 would fail for n = p.
 \begin{gather*}
   W_t(Y):=\sum_{n\in\NN\cap(Y,2Y],\ t\text{-dense}}\frac1n\le C_{\mathrm{BS}}\,\frac{\log t}{\log Y},\\
   C_{\mathrm{BS}}:=C_0\max\big(e^{\kappa_\Phi/\tau},\,30e^{\kappa_\Phi/(30\tau)}\big),\quad\kappa_\Phi:=4\tau+1500 .
@@ -91,7 +99,8 @@ exactly $1$; this is what makes the noise sums of \S\ref{sec:noise-perscale} ind
 
 \begin{proof}[Proof of Theorem~\ref{thm:bs}]
 \emph{Step 1: recursion.} Put $W_t(Y;z):=\sum_{n\in(Y,2Y],\ t\text{-dense},\ \Pplus(n)<z}1/n$. If $n$ is $t$-dense and
-$p=\Pplus(n)$, then $n/p$ is $t$-dense with $\Pplus(n/p)<p$, and $p\le t\cdot n/p$, so $p^2\le tn\le2tY$. Summing over $p$
+$p=\Pplus(n)$, then $n/p$ is $t$-dense with $\Pplus(n/p)<p$, and $p\le t\cdot n/p$ (for $n=p$ this is the case $j=0$, $p\le t$),
+so $p^2\le tn\le2tY$. Summing over $p$
 first (for each $p$ the cofactor range $(Y/p,2Y/p]$ is a single dyadic block, so the sum is exact),
 \begin{equation}\label{eq:bs-rec}
   W_t(Y;z)\le\sum_{p<z,\ p\le\sqrt{2tY}}\frac1p\,W_t(Y/p;p).
@@ -599,7 +608,11 @@ For every start $y\ge X_0$ and every $\Xm/2\le v\le y$,
 \end{corollary}
 
 \begin{proof}
-If $c_e(y)\ne0$, then $y/e\ge\Xm$ (the cutoff in $\Kpt$), and $e$ is squarefree and $4v$-dense (Lemma~\ref{lem:lemmaM}).
+If $c_e(y)\ne0$, then by Lemma~\ref{lem:lemmaM} $y/e\ge\Xm$ (the cutoff in $\Kpt$), $e$ is squarefree and
+$\chi^t_y(e)=1$. As $y/e\in[v,2v)$, the density statement after Lemma~\ref{lem:lemmaM} shows that $e$ is $4v$-dense,
+including the case $j=0$, $p_1\le4v$: with the primes of $e$ in decreasing decision order $q_1\succ\dots\succ q_r$, the
+condition of $\chi^t_y$ at $q_i$ reads $t(q_i)<y/(q_1\cdots q_i)<2v\,q_{i+1}\cdots q_r$, and the choice of $p^*$ there converts
+this into the value-ordered condition.
 \begin{itemize}
 \item For $v\le\sqrt y/4$, apply Theorem~\ref{thm:bs} with $t:=4v\ge2\Xm$ and $Y:=y/(2v)$. Then $Y\ge t$ and
 % Logged correction 25 (CORRECTIONS-vs-v3.md): v3 writes t = 4v >= 2X0; only 4v >= 2X0- holds, which suffices (t >= X0).

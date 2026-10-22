@@ -170,3 +170,4 @@
 | thm:kr-random | Theorem 3.6′, KR bound for nominal kernels with varying widths (factor λ₀) | sections/04k-kernels.tex |
 | lem:rhoA | UPDATE (correction #16): v3 4.19(b) deleted; parts are now (a) sup ρ_𝒜 ≤ L⁻⁴, (b) |σ_𝒜| ≤ 2L⁻⁴ (was (c)), (c) current-height form o_𝒜 ≤ 4L⁻⁴ (was (d)) | 05-queue.tex |
 | cor:localcount | UPDATE: K_loc(P) := 2B(4P) + 7λ_P/3 + 23 (was +13; landing windows 𝒥_P specified, E4 total 146H u⁻³) | 05-queue.tex |
+| cor:localcount | UPDATE (correction 37): part (i) dyadic P (as before); part (ii) any real P ≥ X₀, bound 11.4|J| + K_loc(P) + K_loc(2P) (non-absorbed 13.4|J| + K_loc(P) + K_loc(2P) + 4) | 05-queue.tex |

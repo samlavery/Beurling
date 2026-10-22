@@ -68,11 +68,11 @@ so $S_n^{X_0}=-\sum_{d\to n\ X_0\text{-near}}\mathcal Q\bigl((\varphi_\tau\varph
 places the window $\bx_{H(c)}$ at each centre $c$. Split $C_d=C_d^{\nom}+(C_d-C_d^{\nom})$ and write
 $S_n^{X_0}=S_n^{X_0,\nom}+S_n^{X_0,\tau}$ accordingly.
 
-\emph{Step 2: the nominal part, level by level.} For a centre $c$ let $U_c$ be uniform on $[-H(c)/2,H(c)/2]$ and
+\emph{Step 2: the nominal part, level by level.} For a centre $c$ let $U_c$ be uniform on $[-H(c)/2,H(c)/2)$ and
 $G(c):=\Prob(c+U_c\ge X_0)$, so that $\int\mathbf 1_{[X_0,\infty)}\,d(\mathcal Q\mu)=\int G\,d\mu$ for every measure $\mu$ of
 centres. Near $X_0$, $G(c)=\min\bigl(1,\max\bigl(0,\frac12+(c-X_0)/H(c)\bigr)\bigr)$, which is Lipschitz with constant
 $\le(1+2\vartheta_{X_0})/H_n\le\lambda_0/H_n$ on the support of $D_wD_d$ (width variation, \S\ref{sec:kernels-steps}), and
-$G(y/n)=\Prob(y/n+U\ge X_0)$ with $U$ uniform on $[-H_n/2,H_n/2]$. By \eqref{eq:kernel-rec} for
+$G(y/n)=\Prob(y/n+U\ge X_0)$ with $U$ uniform on $[-H_n/2,H_n/2)$. By \eqref{eq:kernel-rec} for
 the nominal kernels and $D_wC_d^{\nom}=c_d\delta_{y/n}+D_wD_d$,
 \[
   C_n^{\nom}([X_0,\infty))=c_n\,G(y/n)-\sum_{d\mid n,\,d<n}\kappa_{d\to n}\int G\,d(D_wD_d).
@@ -144,13 +144,15 @@ Let $I:=M[1-a,1+a]\subset[M/2,2M]$; it suffices to show $\#(\NN\cap I)\le13.5|I|
 since then $\sum_{e\in I}1/e\le(27aM+K^*(M))/(M(1-a))\le28a+7M^{-3/4}$.
 \begin{itemize}
 \item If $M<X_0/4$, then $I\subset[1,\Xm)$, where $\NN=\N$, and $\#(\NN\cap I)\le|I|+1$; take $K^*(M):=1$.
-\item If $M\ge X_0$, cut $I\subset[P,4P]$ ($P=M/2$) into $\lceil|I|/6H(P)\rceil$ pieces $J$ of length $\le6H(P)$. By
-  Corollary~\ref{cor:localcount}, $N(J)\le T(J)+11.4|J|+K_{\mathrm{loc}}(P)$, and under the target \eqref{eq:target},
+\item If $M\ge2X_0$, cut $I\subset[P,4P]$ ($P=M/2\ge X_0$) into $\lceil|I|/6H(P)\rceil$ pieces $J$ of length $\le6H(P)$.
+  % Logged correction 37: Corollary localcount(ii) at the non-dyadic scale P = M/2; the range X_0 <= M < 2X_0 moves to the third case
+  By Corollary~\ref{cor:localcount}(ii), $N(J)\le T(J)+11.4|J|+K_{\mathrm{loc}}(P)+K_{\mathrm{loc}}(2P)$, and under the target \eqref{eq:target},
   $T(J)\le2|J|+2+\#\Abs(J)$. Since $K_{\mathrm{loc}}\le H/100$, summing over the pieces gives
-  $\#(\NN\cap I)\le13.42|I|+K_{\mathrm{loc}}(P)+2+\#\Abs(I)$. By Lemma~\ref{lem:lemmaP}, each window $[u,u+h(u)]$,
+  $\#(\NN\cap I)\le13.42|I|+K_{\mathrm{loc}}(P)+K_{\mathrm{loc}}(2P)+2+\#\Abs(I)$. By Lemma~\ref{lem:lemmaP}, each window $[u,u+h(u)]$,
   $h(u)=u^{\theta/2}$, holds at most $h(u)L_u^{-4}$ absorbed elements; covering $I$ by $\lceil|I|/h(M/2)\rceil$ such windows,
-  $\#\Abs(I)\le0.01|I|+(2M)^{\theta/2}$. As $K_{\mathrm{loc}}(P)+2\le M^{1/8}$ and $\theta<\frac12$, take $K^*(M):=2M^{1/4}$.
-\item If $X_0/4\le M<X_0$, apply the first case to $I\cap[1,\Xm)$ and the second to $I\cap[X_0,\infty)$; in between,
+  $\#\Abs(I)\le0.01|I|+(2M)^{\theta/2}$. As $K_{\mathrm{loc}}(P)+K_{\mathrm{loc}}(2P)+2\le M^{1/8}$ and $\theta<\frac12$, take $K^*(M):=2M^{1/4}$.
+\item If $X_0/4\le M<2X_0$, apply the first case to $I\cap[1,\Xm)$ and the second, with $P:=X_0$, to
+  $I\cap[X_0,\infty)\subset[X_0,4X_0]$; in between,
   $\NN\cap[\Xm,X_0)$ consists of integers and of at most $2H(X_0)$ jittered primes (\S\ref{sec:noise-notation}). This gives
   $K^*(M):=4X_0^{1/4}\le4(4M)^{1/4}$.
 \end{itemize}
@@ -302,8 +304,10 @@ because $0.0001\Lambda\ge12.4+3\log\Lambda$ for $\Lambda\ge10^8$.
 
 \begin{proof}[Proof of (iii): the huge range]
 Let $J:=\log N\ge600\Lambda^4$ and $W_1:=e^{100}$. The main pieces use Lemma~\ref{lem:si} below, with $J_1=300\Lambda^4$.
-Recall from Lemma~\ref{lem:lemmaM} that $c_e(y)\ne0$ forces $e$ to be squarefree and $4v$-dense whenever $y/e\in[v,2v)$; so
-an element $e$ with $y/e\le1.01\,sX_0$ is $t$-dense with $t=4.01\,sX_0$.
+Recall from Lemma~\ref{lem:lemmaM} that $c_e(y)\ne0$ forces $e$ to be squarefree and $4v$-dense whenever $y/e\in[v,2v)$,
+including the condition $p_1\le4v$ on its smallest prime. % Logged correction 40: t-dense includes j = 0 (p_1 <= t)
+Applying this with $v$ just above $y/(2e)$, so that $4v\le2.03\,sX_0$, an element $e$ with $y/e\le1.01\,sX_0$ is $t$-dense
+with $t=4.01\,sX_0$.
 
 \emph{($\alpha$) The levels $\mathbb B_0$.} $\mathbb B_0\subset[N(1-0.51\delta),N]\cup[N,N(1+0.51\delta)]$. Lemma~\ref{lem:si}
 with $t=4.01X_0$ and $\eta=0.52\delta\in[e^{-2\Lambda},\frac12]$ gives
@@ -388,7 +392,7 @@ $\eta$, with no loss in $\eta$.
 
 \begin{proof}
 Let $I:=[N,N(1+\eta)]$ and let $n\in I$ be squarefree and $t$-dense. Since $n>t$, $n$ is not prime. Put $p:=\Pplus(n)$ and
-$m:=n/p$. Then $m$ is squarefree and $t$-dense with $\Pplus(m)<p\le tm$ (Theorem~\ref{thm:bs}, step (a) of its proof); in
+$m:=n/p$. Then $m$ is squarefree and $t$-dense with $\Pplus(m)<p\le tm$ (Theorem~\ref{thm:bs}, Step 1 of its proof); in
 particular $p^2\le t\,mp=tn$, so $m=n/p\ge\sqrt{n/t}\ge\sqrt{N/t}$ (this uses the lower end $n\ge N$ of $I$). Put
 $P_1:=e^{\Lambda_1}$ and split according to $p<P_1$ or $p\ge P_1$.
 

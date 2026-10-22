@@ -11,9 +11,12 @@ On the event $\mathcal G=\{\tau=\infty\}$ of Definition~\ref{def:good},
 and $D=0$ below $\Xm$.
 \end{proposition}
 \begin{proof}
-By \eqref{eq:lag} and Theorem~\ref{thm:queue}, $|D|\le B(x)+\frac{H(x)}2(1+\kappa_+/\log x)+3\le B(x)+H(x)+3$ for $x\ge X_0+2H$. On $[\Xm,X_0+2H]$ the same count
-(Lemma~\ref{lem:count}, with landed and decided primes differing only within the first $\le3H(X_0)+2$ slots) gives
-$|D|\le B(X_0)+3H(X_0)+3$.
+% Logged correction 36: lag constant 4 on the lower side; start-up range re-derived with the exact accounting.
+By \eqref{eq:lag} and Theorem~\ref{thm:queue}, $|D|\le B(x)+\frac{H(x)}2(1+\kappa_+/\log x)+4\le B(x)+H(x)+3$ for $x\ge X_0+2H$.
+On $[\Xm,X_0+2H]$ we have $|D|\le B(X_0)+3H(X_0)+3$. Indeed, for $x\in[X_0,X_0+2H]$ the accounting in the proof of
+Corollary~\ref{cor:lag} applies verbatim (with $j:=j_0-1$ if $x<s_{j_0}$, where $V_{j_0-1}=j_0$ and
+$T(x)\in[j_0,j_0+\vartheta_{\mathrm s})$), and gives $|D|\le B(X_0)+\frac{H(X_0)}2(1+\kappa_+/\log X_0)+5\le B(X_0)+H(X_0)+5$. For
+$x\in[\Xm,X_0)$, $D(x)$ is the number of jittered primes that land in $[\Xm,x]$, which is at most $H(X_0)/2+1$.
 
 At every scale, $\log(B+3H+3)\le8\ell^2+10^{-6}L+2$. Indeed $\log H-\log H_{\mathrm{std}}\le10^{-6}L$ by
 Theorem~\ref{thm:caplw}(c), and $B\le H$ by \eqref{eq:queueB}, since $\log M_1\le\frac12\log H$ and $4\ell^2\ge2\ell+3.6$. Since
@@ -34,8 +37,29 @@ where:
 \begin{itemize}
 \item $Z_B(s):=\sum_{n<X_0}n^{-s}+\sum_{d\in\mathcal D,\,d\ge X_0}d^{-s}+\int_{X_0}^\infty x^{-s}(1-\rhodet)\,dx$;
 \item $\widehat E_{\Abs}(s):=\int x^{-s}\,d\bigl(\#\Abs-\int\bar\rho_{\Abs}\bigr)$. On $\mathcal G$ the cap is inactive, and
-$\widehat E_{\Abs}(s)=\sum_{a\in\Abs}a^{-s}(1-w_a(s))$, where $w_a$ is the moving-average weight of window $h(a)$, with
-$|w_a(s)|\le\min(1,2a^{1-\theta/2}/|t|)$;
+$\widehat E_{\Abs}(s)=\sum_{a\in\Abs}a^{-s}(1-w_a(s))$, where
+\[
+  w_a(s):=a^s\int_{u_a}^au^{-s}g(u)\,du,\qquad g:=1/h,\qquad u_a+h(u_a)=a,
+\]
+is the weight of $a$ in the average $\rho_{\Abs}(u)=\#(\Abs\cap[u,u+h(u)])/h(u)$ over the forward window $[u,u+h(u)]$.
+% Logged correction 33 (CORRECTIONS-vs-v3.md): v3's |w_a(s)| <= min(1, 2a^{1-theta/2}/|t|) is false (w_a(1) > 1); replaced by (i)-(iv).
+Put $b:=\theta/2$, so that $h(u)=u^b$ and $g$ is decreasing, and $M:=\int_{u_a}^ag$. For $a\ge X_0/2$ (so for every $a\in\Abs$)
+and $0\le\sigma\le2$:
+\begin{enumerate}[label=(\roman*)]
+\item $(u_a/a)^b\le M\le1$ and $a/u_a\le(1-a^{b-1})^{-1}$;
+\item $|w_a(s)|\le(a/u_a)^{\sigma}M\le1+1.02\,\sigma a^{b-1}$;
+\item $|w_a(s)|\le2.01\,a^{1-b}/|t|$ for $t\ne0$;
+\item $|1-w_a(s)|\le1.01(|s|+b)a^{b-1}$; hence $|1-w_a(s)|\le2|t|a^{b-1}$ for $|t|\ge2$.
+\end{enumerate}
+Indeed, put $\epsilon:=a^{b-1}\le(X_0/2)^{-3/4}$.
+(i) Since $g$ is decreasing, $h(u_a)/h(a)=(a-u_a)g(a)\le M\le(a-u_a)g(u_a)=1$, and $h(u_a)/h(a)=(u_a/a)^b$; also
+$a-u_a=h(u_a)\le a^b$.
+(ii) $|u^{-s}|\le u_a^{-\sigma}$ on $[u_a,a]$, and $(1-\epsilon)^{-\sigma}\le1+1.02\,\sigma\epsilon$.
+(iii) Integrating, $w_a(s)=(a^{1-b}-a^su_a^{1-s-b})/(1-s-b)$, so $|w_a(s)|\le a^{1-b}\bigl(1+(a/u_a)^{\sigma+b-1}\bigr)/|t|$, and
+$(a/u_a)^{\sigma+b-1}\le\max\bigl(1,(1-\epsilon)^{-2}\bigr)\le1.01$.
+(iv) $1-w_a(s)=(1-M)+\int_{u_a}^a\bigl(1-(a/u)^s\bigr)g(u)\,du$. Here $1-M\le1-(1-\epsilon)^b\le1.01\,b\epsilon$, and, by
+$|e^z-1|\le|z|e^{\max(0,\operatorname{Re}z)}$, $|1-(a/u)^s|\le|s|\log(a/u_a)(a/u_a)^{\sigma}\le|s|\epsilon(1-\epsilon)^{-3}\le1.01|s|\epsilon$;
+with $M\le1$ this gives the first bound. For $|t|\ge2\ge\sigma$ we have $|s|\le\sqrt2|t|$, and $1.01(\sqrt2|t|+b)\le2|t|$.
 \item $\widehat R:=\sum_k\widehat R_k$ with $\widehat R_k(s):=\int x^{-s}R_k'(x)\,dx$;
 \item $\widehat D(s):=\int_{\Xm}^\infty x^{-s}\,dD=s\int_{\Xm}^\infty D(x)x^{-s-1}\,dx$, since $D=0$ below $\Xm$. Under \eqref{eq:La}
 this converges absolutely for $\sigma>\eta$.
@@ -106,14 +130,19 @@ So $Z_\infty(\sigma)\le1.01e^{\operatorname{Ein}(a)}e^{\gamma}\Lambda$ by Merten
 The local prime number theorem (Theorem~\ref{thm:lp}) compares $N$ with the target without its absorbed part,
 $T_0:=T-(\#\Abs-\int\bar\rho_{\Abs})$, whose transform is $\widehat T_0=Z_B+\widehat R=s/(s-1)+\widehat R+\widehat E$. The absorbed part
 $\widehat E_{\Abs}$ is \emph{not} bounded on all of $\sigma\ge1-a/\Lambda$ at large $|t|$ (Remark~\ref{rem:EAhuge}), so it is not put
-into $\widehat T_0$. On $\Good(<y)$, $|N-T_0|\le|N-T|+2u^{\theta/2}(\log u)^{-4}+2$ on $[1,y]$ by the absorbed part of
+% Logged correction 34: the constant 2 became 3.1 (mass deficit of the smoothed absorbed elements).
+into $\widehat T_0$. On $\Good(<y)$, $|N-T_0|\le|N-T|+3.1u^{\theta/2}(\log u)^{-4}+2$ on $[1,y]$ by the absorbed part of
 \eqref{eq:T1}. The constant of Lemma~\ref{lem:ZBlow} enters only through $\log C_a$; with $C_0=2.1$, $\log C_8<439.4$.
 
 \begin{lemma}[The absorbed part]\label{lem:ZA}
 % v3: Lemma 2.0'
-Let $v_0$ be the least $\log n$ with $n\in\Abs$, and $u_0:=v_0/\log y(e^{v_0})$.
+Put $u_*:=\Lambda e^{s_H}/22.6$, with $s_H=5.9745$ as in Theorem~\ref{thm:caplw}(b); so $u_*\ge1.7\cdot10^9$.
 \begin{enumerate}[label=(\alph*)]
-\item On $\mathcal G$, $|\widehat E_{\Abs}(s)|\le2\exp(-\tfrac12u_0\log u_0)\le e^{-10^{10}}$. This holds on every disc
+% Logged correction 35 (CORRECTIONS-vs-v3.md): v3 stated 2exp(-u0 log u0/2); the proof gives the bound below
+% (with the constant u_* in place of u_0, since the saving is not monotone across the ramp; R4 N12).
+\item On $\mathcal G$,
+$|\widehat E_{\Abs}(s)|\le2\exp(-0.45\,u_*\log u_*)+5.4(\log x_k)^9\exp\bigl(-\log x_k/(22\log\log x_k)\bigr)\le e^{-10^{10}}$,
+where $k$ is the index of the designed zero concerned. This holds on every disc
 $|s-(1+i\gamma_k)|\le\delta_k$, on every Rouch\'e circle of Lemma~\ref{lem:designedzero}, and on $\sigma=1$ at the designed heights.
 \item On $\mathcal G$, the term $\int_{X_0}^{x_k}x^{-s}\rho_{\Abs}\,dx$ has mean square $\le x_k^{\theta-1/2-o(1)}$ over
 $t\in[\Gamma_k,2\Gamma_k]$, $\sigma\in[\tfrac34,\tfrac54]$.
@@ -124,15 +153,40 @@ The elements of $\Abs$ are $2y$-smooth, and Rankin's method for the realised sys
 $\#\Abs\cap[1,x]\le x\exp(-0.9u\log u)$, with $u=\log x/\log(2y)\ge100$. Moreover $\Abs=\emptyset$ wherever $y<\Xm$, which holds for
 $\log L\le2\log\Lambda+s_H$ (Theorem~\ref{thm:caplw}(b)). Where $\Abs\ne\emptyset$ and $\ell\le\ell_{\mathrm{std}}$,
 $\log2y\le22.6\Lambda$ (Section~\ref{sec:params}). In the standard regime $\ell\ge\ell_{\mathrm{std}}$ instead $H=H_{\mathrm{std}}$,
-$c=\tfrac14H_{\mathrm{std}}^{1/2}$ and $\log2y\le12\ell^2+9\ell+8\le12.1\ell^2$, so the saving is $\ge L/(14\ell)$. In both cases
-$u_0\ge\Lambda e^{s_H}/22.6\ge1.7\cdot10^9$ for every $\Lambda\ge10^8$.
+$c=\tfrac14H_{\mathrm{std}}^{1/2}$ and $\log2y\le12\ell^2+9\ell+8\le12.1\ell^2$.
+% R4 N12: an increasing minorant of the saving replaces v3's "rate >= 0.18/Lambda" (u = v/log 2y is not monotone across the ramp).
+So, in the variable $v=\log x$, wherever $\Abs\ne\emptyset$ we have $\log2y\le\lambda(v):=\max\bigl(22.6\Lambda,\,12(\log v)^2+9\log v+8\bigr)$,
+and therefore
+\[
+  \#\Abs\cap[1,x]\le x\,e^{-\varsigma_*(\log x)},\qquad \varsigma_*(v):=0.9\,\tilde u(v)\log\tilde u(v),\quad \tilde u(v):=v/\lambda(v).
+\]
+The minorant $\varsigma_*$ is continuous and increasing, since $v\lambda'(v)\le24\log v+9<\lambda(v)$. For $\log v\ge\ell_{\mathrm{std}}$ we have
+$\lambda(v)\le12.1(\log v)^2$, hence $\varsigma_*(v)\ge v/(14\log v)$. Since $\Abs=\emptyset$ for $\log v\le2\log\Lambda+s_H$, the
+least $v_0$ with $e^{v_0}\in\Abs$ satisfies $\tilde u(v_0)\ge\Lambda^2e^{s_H}/(22.6\Lambda)=u_*$, so
+$\varsigma_*(v_0)/2\ge0.45\,u_*\log u_*\ge1.66\cdot10^{10}$ for every $\Lambda\ge10^8$.
 
-(a) Fix $|t|\in[\Gamma_k,2\Gamma_k]$ and $\sigma\ge1-\delta_k$, and put $Y:=|t|^{1/(1-\theta/2)}\le x_k$. The terms $a\le Y$ are
-$\le\int_{v_0}^{\log Y}\exp(\delta_kv-\varsigma(v))\,dv$, where $\varsigma(v)$ is the saving above. Since
-$\delta_k\le9\log\log x_k/\log x_k\le18\Lambda e^{-2\Lambda}$ at the scales of the zeros, it is below the saving rate at every
-$v\le\log Y$: the rate is $\ge0.18/\Lambda$ where $\ell\le\ell_{\mathrm{std}}$, and $\ge1/(14\ell)\ge1/(14\log\log x_k)$ beyond. So
-these terms are $\le2\exp(-\varsigma(v_0)/2)$. The terms $a>Y$ use $|1-w_a|\le2|t|a^{\theta/2-1}$. They lie in the standard
-regime ($\log\log Y\ge2\Lambda-1>\ell_{\mathrm{std}}$), so they are $\le(\log x_k)^{O(1)}\exp(-\log x_k/(14\log\log x_k))$.
+(a) Fix $|t|\in[\Gamma_k/2,3\Gamma_k]$ and $1-\delta_k\le\sigma\le2$ (this covers all the sets in (a)), and put
+$Y:=|t|^{1/(1-\theta/2)}\le x_k$.
+% Logged correction 33: |1-w_a| <= 2.0001 (from (ii)) replaces |1-w_a| <= 2; the a > Y bound is (iv), now proved.
+For the terms $a\le Y$ we use $|1-w_a(s)|\le1+|w_a(s)|\le2+2.1a^{\theta/2-1}\le2.0001$, by (ii) after \eqref{eq:zetadecomp}. By
+partial summation these terms are then at most $2.0001$ times
+$\exp(\delta_k\log Y-\varsigma_*(\log Y))+\int_{v_0}^{\log Y}\exp(\delta_kv-\varsigma_*(v))\,dv$. This is
+$\le2\exp(-\varsigma_*(v_0)/2)\le2\exp(-0.45\,u_*\log u_*)$, uniformly in $k$.
+% R4 N5: the bound is made uniform in k (v3: "the length of the range is absorbed").
+Indeed, $\varsigma_*$ is increasing, so $e^{-\varsigma_*(v)}\le e^{-\varsigma_*(v_0)/2}e^{-\varsigma_*(v)/2}$, and it suffices that
+$e^{\delta_k\log Y-\varsigma_*(\log Y)/2}+\int_{v_0}^{\log Y}e^{\delta_kv-\varsigma_*(v)/2}\,dv\le10^{-6}$. Put $V:=e^{\ell_{\mathrm{std}}}$. On
+$[v_0,V]$ we have $\delta_kv\le18\Lambda e^{-2\Lambda}V\le10^{-6}$, since $\delta_k\le9\log\log x_k/\log x_k\le18\Lambda e^{-2\Lambda}$,
+and $\varsigma_*(v)/2\ge\varsigma_*(v_0)/2\ge\ell_{\mathrm{std}}+20$, so that part is $\le1.01\,V e^{-\ell_{\mathrm{std}}-20}\le10^{-8}$. On
+$[V,\log Y]$ we have $\log v\le\log\log x_k$, hence $\delta_kv\le\varsigma_*(v)/4$ (as $504(\log\log x_k)^2\le\log x_k$), and
+$\varsigma_*(v)\ge v/(14\log v)$; so that part, and the boundary term, are $\le e^{-V/(60\log V)}\le10^{-8}$. The terms $a>Y$ use $|1-w_a|\le2|t|a^{\theta/2-1}$, from (iv) after
+\eqref{eq:zetadecomp}. With $b=\theta/2$, $|t|=Y^{1-b}$ and partial summation, they are at most
+\[
+  2|t|\sum_{a\in\Abs,\,a>Y}a^{b-2+\delta_k}\le2Y^{1-b}\,\frac{2-b}{1-b-\delta_k}\,Y^{b-1+\delta_k}e^{-\varsigma_*(\log Y)}\le5.4\,Y^{\delta_k}e^{-\varsigma_*(\log Y)} .
+\]
+Here $Y\le x_k$, so $Y^{\delta_k}\le x_k^{\delta_k}\le(\log x_k)^9$. Also $\log Y\ge0.66\log x_k$, since
+$\log\Gamma_k=(1-\theta)\log x_k-O(\log\log x_k)$ and $(1-\theta)/(1-\theta/2)>\tfrac23$. These $a$ lie in the standard regime
+($\log\log Y\ge2\Lambda-1>\ell_{\mathrm{std}}$), where $\varsigma_*(\log Y)\ge\log Y/(14\log\log Y)\ge\log x_k/(22\log\log x_k)$.
+So these terms are $\le5.4(\log x_k)^9\exp(-\log x_k/(22\log\log x_k))$, which is $\le e^{-10^{11}}$ since $\log x_k\ge X_0^2$.
 
 (b) Mellin--Plancherel gives, at $\sigma=\tfrac34$,
 $(4\pi/\Gamma_k)\sum_{a\in\Abs,\,a\le2x_k}a^{1-2\sigma}\le x_k^{1/2-1/(14\log\log x_k)}/\Gamma_k+2\exp(e^{\ell_{\mathrm{std}}}/2)/\Gamma_k$,
@@ -169,7 +223,8 @@ $|\widehat R_k|\le5|s|x_k^{-0.4}$. Theorem~\ref{thm:lp} uses this.
 \subsection{The designed zeros}
 \begin{lemma}[A designed zero]\label{lem:designedzero}
 % v3: Lemma 2.1
-Suppose $|Z_B|\in[\tfrac12,Z_{\max}]$ on $|s-(1+i\gamma_k)|\le\delta_k$, where $\delta_k:=3(3\log\log x_k+C_\delta)/\log x_k$. Then
+% R4 N4: the constant in delta_k (v3: C_1, unspecified) is set to 0; step 6 of the proof checks that this is admissible.
+Suppose $|Z_B|\in[\tfrac12,Z_{\max}]$ on $|s-(1+i\gamma_k)|\le\delta_k$, where $\delta_k:=9\log\log x_k/\log x_k$. Then
 $Z_B+M_k$ has a zero $s^*$ with
 \[
   \operatorname{Re}s^*=1-\frac{3\log\log x_k+O_{X_0}(1)}{\log x_k},
@@ -183,11 +238,16 @@ and $|Z_B+M_k|\ge\tfrac14$ on the circle $|s-s^*|=1/\log x_k$.
 \item The map $w\mapsto(\log G(w))/\log x_k$ has derivative $O(\log^2X_0/\log x_k)=o(1)$ (as $x_1\ge\exp(X_0^2)$), so it is a
 contraction with a unique fixed point $w^*$, and $\operatorname{Re}s^*=\theta+\operatorname{Re}w^*$.
 \item On the circle, with $\xi:=(w-w^*)\log x_k$: $M_k(s)/M_k(s^*)=e^{-\xi}(1+o(1))$ and $Z_B(s)/Z_B(s^*)=1+o(1)$.
-\item Since $Z_B(s^*)=-M_k(s^*)$, we get $|Z_B+M_k|\ge|Z_B(s^*)|(1-e^{-1}-o(1))\ge\tfrac14$.\qedhere
+\item Since $Z_B(s^*)=-M_k(s^*)$, we get $|Z_B+M_k|\ge|Z_B(s^*)|(1-e^{-1}-o(1))\ge\tfrac14$.
+\item The circle lies in the disc. In step~2 the $O_{X_0}(1)$ term lies in $[\log\kappa_0-\log(2\Lambda)-1.5,\ \log\kappa_0+0.72]$,
+since $e^{-1}\le|\Phi(w)|\le1$, $0.49\le|w|\le0.76$ and $\tfrac12\le|Z_B|\le2\Lambda$ there; it is negative, as $\kappa_0\le\tfrac14$.
+Choosing the branch of $\log G$ with $|\operatorname{Im}\log G|\le\pi$ gives $|\operatorname{Im}w^*|\le\pi/\log x_k$. Hence
+$|s^*-(1+i\gamma_k)|+1/\log x_k\le(3\log\log x_k+\log(1/\kappa_0)+\log(2\Lambda)+5.7)/\log x_k\le\delta_k$, because
+$\kappa_0\ge X_0^{-1}$ and $\log\log x_k\ge2\Lambda$.\qedhere
 \end{enumerate}
 \end{proof}
 
-The discs $|s-(1+i\gamma_k)|\le\delta_k$ are small for every $k\ge1$: $\delta_k\le\delta_1\le(18\log X_0+3C_\delta)/X_0^2\ll1/\log^2X_0$. So
+The discs $|s-(1+i\gamma_k)|\le\delta_k$ are small for every $k\ge1$: $\delta_k\le\delta_1\le18\log X_0/X_0^2\ll1/\log^2X_0$. So
 $Z_B$ is evaluated only where Lemma~\ref{lem:ZB} applies.
 
 \begin{lemma}[Late noise]\label{lem:latenoise}

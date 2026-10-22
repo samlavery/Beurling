@@ -7,7 +7,7 @@ prime-number input, and the decomposition of the sharp reference density. The ma
 Section~\ref{sec:noise}.
 
 \emph{The design.} This is the hard greedy rule and the target of Section~\ref{sec:target}, with the rigid set averaged over the
-\emph{linear} window $[u,(1+\kappa)u]$ and normalised by $1/(\kappa u)$, where $\kappa=X_0^{-5/12+2\eps}$. For a measure $h$ on
+\emph{linear} window $[u,(1+\kappa)u]$ and normalised by $1/(\kappa u)$, where $\kappa=X_0^{-5/12+2\eps_\kappa}$. For a measure $h$ on
 $[1,\infty)$ and $w>0$ write
 \begin{equation}\label{eq:MA}
   \mathrm{MA}_w[h](x):=\frac{h([x,x+w])}{w},
@@ -46,10 +46,10 @@ from the definitions, as indicated.
 \subsection{The short-interval prime number theorem}
 Every window of the construction lies in the range of the short-interval prime number theorem. Indeed, for every $q\ge X_0$,
 \[
-  \kappa q\ge q^{7/12+\eps}\iff q^{5/12-\eps}\ge X_0^{5/12-2\eps}\Longleftarrow q\ge X_0,
+  \kappa q\ge q^{7/12+\eps_\kappa}\iff q^{5/12-\eps_\kappa}\ge X_0^{5/12-2\eps_\kappa}\Longleftarrow q\ge X_0,
 \]
 and the window has length $\le q$. The input used is the asymptotic count of primes in intervals of length between
-$q^{7/12+\eps}$ and $q$, uniformly.
+$q^{7/12+\eps_\kappa}$ and $q$, uniformly.
 
 \emph{Short windows.} Heath-Brown proved \cite[Theorem, (1.2), p.~23]{HeathBrown1988}: for any function $0\le\eps_{\mathrm{HB}}(x)\le\frac1{12}$,
 $\pi(x)-\pi(x-y)=(y/\log x)\{1+O(\eps_{\mathrm{HB}}(x)^4)+O((\log\log x/\log x)^4)\}$ uniformly for
@@ -60,7 +60,7 @@ $\eps_{\mathrm{HB}}\equiv0$:
   x^{7/12}\le y\le x/(\log x)^4.
 \end{equation}
 The asymptotic for $y\ge x^{7/12+\eps_0}$ with fixed $\eps_0>0$ is Huxley's \cite{Huxley1972}, as Heath-Brown credits
-\cite[p.~22]{HeathBrown1988}; Heath-Brown removes the $\eps$.
+\cite[p.~22]{HeathBrown1988}; Heath-Brown removes the $\eps_0$.
 
 \emph{Long windows.} For $y>x/(\log x)^4$, which the windows $\kappa q$ reach once $\log q>\kappa^{-1/4}$, we use the prime number
 theorem with the de la Vall\'ee Poussin error, $\pi(t)=\Li(t)+O(t\exp(-c_{\mathrm{dVP}}\sqrt{\log t}))$. Applied at both ends of an interval, it gives
@@ -148,7 +148,7 @@ Consequently
 \end{lemma}
 
 \begin{proof}[Proof of (a)]
-The window $I:=[q,(1+\kappa)q]$ lies in $[q,2q]$ and has $|I|=\kappa q\ge q^{7/12+\eps}\ge(2q)^{7/12}$, so it is admissible in
+The window $I:=[q,(1+\kappa)q]$ lies in $[q,2q]$ and has $|I|=\kappa q\ge q^{7/12+\eps_\kappa}\ge(2q)^{7/12}$, so it is admissible in
 \eqref{eq:huxley}, and $\eta_{\mathrm H}(q)\le(\log q)^{-3}$ there (by \eqref{eq:HB} if $|I|\le x/(\log x)^4$ with $x:=(1+\kappa)q$, and by the de
 la Vall\'ee Poussin bound if $|I|$ is longer). Hence $\pi(I)\ge(1-\eta_{\mathrm H}(q))\int_Idt/\log t\ge(1-(\log q)^{-3})\kappa q/\log((1+\kappa)q)$.
 Dividing by $\kappa q$,
