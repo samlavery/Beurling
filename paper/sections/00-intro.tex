@@ -1,0 +1,155 @@
+% Introduction (v3 §0.1, §7)
+\section{Introduction}\label{sec:intro}
+
+\subsection{Beurling systems and the question}
+A \emph{discrete Beurling generalized number system} is a non-decreasing sequence $\PP=(p_j)_{j\ge1}$ of real numbers
+$p_j>1$ with $p_j\to\infty$, the \emph{generalized primes}, together with the multiplicative semigroup $\NN$ they generate.
+Its elements are the finite products $\prod_j p_j^{e_j}$, counted with multiplicity: different exponent vectors are
+different elements, even when their values coincide. Write
+\[
+  N_{\PP}(x):=\#\{n\in\NN:\ n\le x\},\qquad
+  \psi_{\PP}(x):=\sum_{p_j^k\le x}\log p_j,\qquad
+  \zeta_{\PP}(s):=\sum_{n\in\NN}n^{-s}=\prod_j(1-p_j^{-s})^{-1}.
+\]
+The rational primes give $(\N,\zeta)$. Following \cite{BDR}, $\PP$ is an \emph{$[\alpha,\beta]$-system} if
+$\psi_{\PP}(x)=x+O(x^{\alpha+\eps})$ and $N_{\PP}(x)=Ax+O(x^{\beta+\eps})$ for every $\eps>0$, with $A>0$ and both exponents
+optimal. Hilberdink \cite{Hilberdink2005} proved that always $\max(\alpha,\beta)\ge\tfrac12$.
+
+This paper answers the following question.
+
+\begin{definition}[Question Q]\label{def:Q}
+Is it true that every discrete Beurling system with $N_{\PP}(x)=Ax+O(x^{\theta})$ for some $A>0$ and some $\theta<\tfrac12$
+has $\zeta_{\PP}$ zero-free on some half-plane $\operatorname{Re}s>1-\eps$, $\eps>0$?
+\end{definition}
+
+Applied to $\N$, where $N(x)=\lfloor x\rfloor=x+O(1)$, a positive answer would give a zero-free half-plane for the Riemann zeta
+function. Our result shows that the integer-counting hypothesis alone cannot do this. It says nothing about $\zeta$ itself.
+
+The answer to Q is equivalent to the existence question for $[1,\beta]$-systems with $\beta<\tfrac12$
+(Remark~\ref{rem:equiv}).
+
+\subsection{The result}
+\begin{theoremA}[informal form; see Theorem~\ref{thm:A}]
+Let $\theta\in[\tfrac14,\tfrac12-10^{-4}]$. There is a discrete Beurling system $\PP$ with
+\[
+  N_{\PP}(x)=x+O(x^{\theta'})\qquad\text{for every }\theta'\in(\theta,\tfrac12),
+\]
+whose zeta function has zeros $\rho_k$, $k\ge1$, with
+\[
+  \operatorname{Re}\rho_k=1-\frac{3\log\log x_k+O(1)}{\log x_k}\longrightarrow1
+\]
+along an explicit sequence $x_k\to\infty$. In particular $\zeta_{\PP}$ is zero-free in no half-plane $\operatorname{Re}s>1-\eps$,
+the answer to Q is negative, and $\PP$ is a discrete $[1,\beta]$-system with $\beta\le\theta<\tfrac12$.
+\end{theoremA}
+
+The system is random, and Theorem~\ref{thm:A} holds on an event of probability at least $1-1.5/\log X_0>0$, where $X_0$ is the
+scale at which the construction starts (Section~\ref{sec:setup}). Every realisation in that event is a fixed discrete system
+with the stated properties. Since Q quantifies over deterministic systems, one realisation suffices. The value $\theta=\tfrac14$
+already gives a negative answer to Q.
+
+\begin{remark}[Q and ${[1,\beta]}$-systems]\label{rem:equiv}
+For a system with $N_{\PP}(x)=Ax+O(x^{\beta})$, $\beta<\tfrac12$, the following are equivalent:
+\begin{enumerate}[label=(\alph*)]
+\item $\zeta_{\PP}$ is zero-free on some half-plane $\operatorname{Re}s>1-\eps$;
+\item $\psi_{\PP}(x)=x+O(x^{1-\eps'})$ for some $\eps'>0$.
+\end{enumerate}
+This is the standard Perron/Mellin argument, using the continuation of $\zeta_{\PP}$ to $\operatorname{Re}s>\beta$ and its
+polynomial growth there. So a negative answer to Q is the same as the existence of a discrete $[1,\beta]$-system with
+$\beta<\tfrac12$.
+\end{remark}
+
+\subsection{Background}
+\emph{Well-behaved systems.} The notion of an $[\alpha,\beta]$-system is due to Hilberdink \cite{Hilberdink2005}. If the integers
+are $\beta$-well-behaved for some $\beta<1$, then $\psi_{\PP}(x)=x+O(x\exp(-c\sqrt{\log x}))$. Diamond, Montgomery and Vorhauer
+\cite{DMV2006} showed that this de la Vall\'ee Poussin-type error term cannot be improved in general. Zhang \cite{Zhang2007} gave
+the first unconditional well-behaved example, with $\psi_{\PP}(x)=x+O(x^{1/2+\eps})$ and $N_{\PP}(x)=ax+O(x^{1/2+\eps})$, using the
+probabilistic method of \cite{DMV2006}. Broucke and Vindas \cite{BrouckeVindas2024} refined that method and obtained
+$[0,\tfrac12]$-systems. Broucke, Debruyne and R\'ev\'esz \cite{BDR} constructed $[\alpha,\beta]$-systems for every
+$\alpha\in[0,1)$ and $\beta\in[\tfrac12,1)$, building on R\'ev\'esz's construction of systems with prescribed zeta zeros
+\cite{Revesz2023}. Assuming the Riemann hypothesis, they also constructed $[\tfrac12,\beta]$-systems for $0\le\beta<\tfrac12$, and
+$[\alpha,\beta]$-systems for $\tfrac12<\alpha<\tfrac23$ and $2\alpha/(\alpha+2)\le\beta<\tfrac12$ \cite[Thm.~1.3]{BDR}. A
+$[1,\beta_0]$-system with some $\beta_0\le\tfrac12$ is in \cite[Ch.~17]{DiamondZhang2016}, and \cite[footnote~4]{BDR} remarks:
+``Most likely the value of $\beta_0$ equals $1/2$, but in principle it is still possible that $\beta_0$ could be smaller.''
+
+\emph{The barrier at $x^{1/2}$.} The random approximation procedures discretise a continuous system, and they lose a square
+root. As \cite[\S5]{BDR} put it, ``a direct application of Theorem~1.2 will always yield an error term of at least $O(x^{1/2})$
+on the integers''. To get below $x^{1/2}$ ``one has to construct a discrete example right from the start'', and ``it seems
+natural to define a Beurling system through the sequence of the integers rather than the primes. Yet [\ldots] it is often
+extremely difficult to show which behavior the primes must admit.''
+
+\emph{The closest prior result.} Broucke \cite[Thm.~1.6]{Broucke2025} proves the following. Let $f$ be eventually $C^1$,
+decreasing and strictly convex, with $1/u=o(f(u))$, and regularly varying of index $-a\in[-1,0)$, or slowly varying and
+satisfying \cite[(1.10)]{Broucke2025}. Then there is a discrete Beurling system with:
+\begin{enumerate}[label=(\arabic*)]
+\item $N_{\PP}(x)=Ax+O_\eps(x^{1/2+\eps})$;
+\item $\psi_{\PP}(x)-x=\Omega_\pm\bigl(x\exp(-\omega(x)+(1-\delta)f(u_0(x))u_0(x))\bigr)$;
+\item infinitely many zeros on the curve $\sigma=1-f(\log|t|)$, and none to its right.
+\end{enumerate}
+The exponent $\tfrac12+\eps$ comes from randomly discretising a continuous system of Diamond--Montgomery--Vorhauer type.
+
+\emph{Landau's region.} If $N_{\PP}(x)=Ax+O(x^{\theta})$ with $\theta<1$, then $\zeta_{\PP}(s)\ne0$ for
+$\sigma>1-c(1-\theta)/\log|t|$, $|t|\ge t_0(\PP)$, with $c$ absolute. This is \cite[(1.2)]{Broucke2025}, derived there from
+\cite[Thm.~6.1, (1.4)]{Broucke2025}. The zeros of Theorem~\ref{thm:A} are consistent with it (Remark~\ref{rem:notshown}).
+
+\subsection{What is new, and what is not shown}
+Theorem~\ref{thm:A} makes the step from $\theta=\tfrac12+\eps$ to $\theta<\tfrac12$. It differs from \cite[Thm.~1.6]{Broucke2025}
+in three ways:
+\begin{enumerate}[label=(\alph*)]
+\item $\theta<\tfrac12$, which no random discretisation reaches;
+\item the construction is discrete from the start and integer-first: generalized primes are placed by a greedy rule with
+feedback from the integer count, which is the kind of construction \cite[\S5]{BDR} asks for;
+\item the zero information is weaker: the zeros are designed, but there is no zero contour and no $\Omega$-result.
+\end{enumerate}
+
+\begin{remark}[What Theorem~\ref{thm:A} does not show]\label{rem:notshown}
+\leavevmode
+\begin{itemize}
+\item It does not show that Landau's region is optimal for $\theta<\tfrac12$. Here
+$1-\operatorname{Re}\rho_k\asymp3(1-\theta)\log\log\gamma_k/\log\gamma_k$, where $\gamma_k=\operatorname{Im}\rho_k$. That is outside
+Landau's region by a factor $\log\log\gamma_k$. In this design the loss is forced by the positivity of the target
+(\eqref{eq:G1}) together with the amplitude condition \eqref{eq:ampl}, which gives the factor $3\log\log$ rather than
+$1\log\log$.
+\item It gives no system with prime error $x^{\alpha}$, $\tfrac12<\alpha<1$, and integer error $O(x^{\theta})$, $\theta<\tfrac12$.
+Infinitely many designed zeros make the prime error $x^{1-o(1)}$.
+\item It gives no $[\alpha,\beta]$-system with $\alpha<1$ and $\beta<\tfrac12$: the greedy construction has $\alpha=1$.
+\item It prescribes no zero contour and gives no $\Omega$-result for $\psi_{\PP}$ (compare \cite[Thm.~1.6]{Broucke2025}).
+\item It says nothing about the Riemann zeta function.
+\end{itemize}
+\end{remark}
+
+\subsection{Outline of the proof}
+\emph{The construction} (Section~\ref{sec:construction}). Below a large scale $X_0$ the system coincides with $\N$, apart from
+the few generalized primes that land within $H(X_0)/2$ below $X_0$. Above $X_0$ we fix an
+explicit, slightly modified target $T(x)\approx x$. Its continuous part removes the density of the $X_0$-smooth integers,
+averaged over windows $[u,(1+\kappa)u]$. It also carries oscillations $R_k$ that switch on at very sparse scales $x_k$ and plant
+zeros near $1+i\gamma_k$. The level sets of $T$ cut $[X_0,\infty)$ into unit \emph{slots}. Slots are processed in order: a slot
+receives a new generalized prime exactly when the queue of composite elements is empty and no composite lands in the slot, and
+the prime lands uniformly in a
+box of width $H(s_j)$ around the slot start. So $N_{\PP}-T$ is controlled by the queue length. Bounding the queue is the whole
+difficulty.
+
+\emph{Zeros} (Section~\ref{sec:zeros}). If $|N_{\PP}-T|\le x^{\eta}$ (property \eqref{eq:La}), a Rouch\'e argument places a zero
+of $\zeta_{\PP}$ near each designed point. The heights $\gamma_k$ are chosen from the system below $x_k$, so the target stays
+adapted to the construction.
+
+\emph{The queue} (Sections~\ref{sec:noise} and~\ref{sec:queue}). The queue follows a Lindley recursion. Its arrivals in a window
+of slots have predictable compensator $\int_W(\text{margin})$, plus martingale noise. Two facts drive it:
+\begin{itemize}
+\item a \emph{margin}: at every scale the compensator of jittered composites falls short of the number of continuous slots by
+a relative amount $\ge c'/\log x$ (Section~\ref{sec:noise}). This rests on a sharp bound for the resolvent coefficients of the
+realised system, of Beurling--Saias type, proved with a computer-assisted certificate; on a local prime number theorem; and on
+a careful treatment of the jump of the target at $X_0$;
+\item a \emph{cluster bound}: outside an event of small probability, no generalized prime is the latest prime of more than
+$2M_1$ composites in a slot window, where $M_1$ is an explicit parameter (Section~\ref{sec:queue} and
+Appendix~\ref{app:rankfull}).
+\end{itemize}
+A first-failure (stopping time) argument orders all the events by time and closes the induction. The probability that some
+event fails is $\le1.5/\log X_0$.
+
+\emph{The base range} (Section~\ref{sec:baserange}). The rigid part of the target averages the $X_0$-smooth integers over linear
+windows $[u,(1+\kappa)u]$. This makes the rational identity behind the margin exact, up to the error of the short-interval
+prime number theorem of Huxley and Heath-Brown, and it removes a family of edge effects.
+
+Section~\ref{sec:setup} states Theorem~\ref{thm:A} precisely, fixes all parameters, and records the logical structure, including
+why the induction is not circular. Appendix~\ref{app:cert} describes the computer-assisted parts, and Appendix~\ref{app:ai} is a
+statement on the use of AI.

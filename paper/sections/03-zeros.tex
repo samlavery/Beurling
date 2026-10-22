@@ -1,0 +1,257 @@
+% Zeros (v3 §2)
+\section{Zeros: everything reduces to a bound on the lag}\label{sec:zeros}
+
+\begin{proposition}[The lag bound]\label{prop:La}
+% v3: (L-a)
+On the event $\mathcal G=\{\tau=\infty\}$ of Definition~\ref{def:good},
+\begin{equation}\label{eq:La}
+  |D(x)|\le x^{\eta}\qquad\text{for all }x\ge\Xm,\qquad \eta:=\min(\theta,\tfrac12-\theta)/2,
+\end{equation}
+and $D=0$ below $\Xm$.
+\end{proposition}
+\begin{proof}
+By \eqref{eq:lag} and Theorem~\ref{thm:queue}, $|D|\le B(x)+H(x)/2+2$ for $x\ge X_0+2H$. On $[\Xm,X_0+2H]$ the same count
+(Lemma~\ref{lem:count}, with landed and decided primes differing only within the first $\le3H(X_0)+2$ slots) gives
+$|D|\le B(X_0)+3H(X_0)+3$.
+
+At every scale, $\log(B+3H+3)\le8\ell^2+10^{-6}L+2$. Indeed $\log H-\log H_{\mathrm{std}}\le10^{-6}L$ by
+Theorem~\ref{thm:caplw}(c), and $B\le H$ by \eqref{eq:queueB}, since $\log M_1\le\frac12\log H$ and $4\ell^2\ge2\ell+3.6$. Since
+$(8\ell^2+2)/L$ decreases for $L\ge\Lambda\ge10^8$, this is $\le2.82\cdot10^{-5}L$ for all $L\ge\Lambda-1$. For
+$\theta\le\theta_1=\tfrac12-10^{-4}$ we have $\eta\ge5\cdot10^{-5}$, so the right side is $\le x^{\eta}$ for all $x\ge\Xm$.
+\end{proof}
+
+This is where $\theta\le\theta_1$ is used. At $X_0=e^{10^8}$ one has $\log H(X_0)=2715$, so \eqref{eq:La} fails near $X_0$ for
+$\eta<2.8\cdot10^{-5}$; going beyond $\theta_1$ would need a $\theta$-dependent $X_0$, and one value of $\theta$ suffices for
+Corollary~\ref{cor:notQ}. A polylogarithmic form of \eqref{eq:La} is false: the landing lag alone is $H/2=x^{o(1)}$.
+
+\subsection{Decomposition of the zeta function}
+For $\sigma>1$,
+\begin{equation}\label{eq:zetadecomp}
+  \zeta_{\PP}(s)=\int x^{-s}\,dN=Z_B(s)+\widehat E_{\Abs}(s)+\widehat R(s)+\widehat D(s),
+\end{equation}
+where:
+\begin{itemize}
+\item $Z_B(s):=\sum_{n<X_0}n^{-s}+\sum_{d\in\mathcal D,\,d\ge X_0}d^{-s}+\int_{X_0}^\infty x^{-s}(1-\rhodet)\,dx$;
+\item $\widehat E_{\Abs}(s):=\int x^{-s}\,d\bigl(\#\Abs-\int\bar\rho_{\Abs}\bigr)$. On $\mathcal G$ the cap is inactive, and
+$\widehat E_{\Abs}(s)=\sum_{a\in\Abs}a^{-s}(1-w_a(s))$, where $w_a$ is the moving-average weight of window $h(a)$, with
+$|w_a(s)|\le\min(1,2a^{1-\theta/2}/|t|)$;
+\item $\widehat R:=\sum_k\widehat R_k$ with $\widehat R_k(s):=\int x^{-s}R_k'(x)\,dx$;
+\item $\widehat D(s):=\int_{\Xm}^\infty x^{-s}\,dD=s\int_{\Xm}^\infty D(x)x^{-s-1}\,dx$, since $D=0$ below $\Xm$. Under \eqref{eq:La}
+this converges absolutely for $\sigma>\eta$.
+\end{itemize}
+
+\begin{lemma}[The base factor]\label{lem:ZB}
+% v3: Lemma 2.0
+Let $Z_\infty(s):=\prod_{p<X_0}(1-p^{-s})^{-1}=\sum_{n\in\mathcal D}n^{-s}$. For $|t|\ge\Gamma_1$ and $\sigma\ge\tfrac12$,
+\[
+  |Z_B(s)-Z_\infty(s)|\le\exp(-X_0^2/4).
+\]
+On $\sigma\ge1-\delta$ with $\delta\log X_0\to0$: $|Z_\infty|\le2\log X_0=:Z_{\max}$ and $|Z_\infty'|\le4\log^2X_0$.
+\end{lemma}
+\begin{proof}
+Each rigid $n\ge X_0(1+\kappa)$ contributes a unit jump at $n$ and the ramp $-du/(\kappa u)$ on $[n/(1+\kappa),n]$. Hence, up to
+$O(1)$ boundary terms from $n\in[X_0,X_0(1+\kappa))$,
+\begin{equation}\label{eq:ZBformula}
+  Z_B=Z_\infty-W(s)S_{\ge X_0}(s)+\frac{X_0^{1-s}}{s-1},\qquad W(s):=\frac{(1+\kappa)^s-1}{s\kappa},\qquad
+  S_{\ge X_0}(s):=\sum_{d\in\mathcal D,\,d\ge X_0}d^{-s}.
+\end{equation}
+For $\sigma\le2$, $|W|\le6/(\kappa|t|)$ and $|S_{\ge X_0}(s)|\le Z_\infty(\sigma)$. Also
+$\log Z_\infty(\tfrac12+\delta)\lesssim2X_0^{1/2}/\log X_0$, while $\log(\kappa\Gamma_1)\ge(1-\theta)X_0^2-O(\log X_0)$, since
+$\log x_1\ge X_0^2$. On $\sigma\ge1-\delta$: $Z_\infty(\sigma)\le e^{\gamma}\log X_0\cdot e^{\delta\log X_0}(1+o(1))$, and
+$|Z_\infty'|\le Z_\infty(\sigma)\sum_{p<X_0}\log p/(p^{\sigma}-1)$.
+\end{proof}
+
+\begin{lemma}[The base factor at all heights]\label{lem:ZBlow}
+% v3: Lemma 2.0''
+Let $0<a\le8$ and $\operatorname{Ein}(a):=\int_0^a(e^t-1)\,dt/t$, so that $\operatorname{Ein}(1)=1.32$ and $\operatorname{Ein}(8)=437.7$.
+Put $\widehat E(s):=Z_B(s)-s/(s-1)$. Then for $\sigma\ge1-a/\Lambda$ and every $t$,
+\[
+  |\widehat E(s)|\le C_0e^a\Lambda+4.04e^{\operatorname{Ein}(a)}\min\bigl(1,\kappa(1+|s|)\bigr)e^{\gamma}\Lambda+3\kappa e^a+1
+  \le C_a(1+\kappa|s|)e^{\gamma}\log X_0,\qquad C_a:=C_0e^a+5e^{\operatorname{Ein}(a)},
+\]
+with $C_0$ absolute. Also $1-W(1)=0$, so $Z_B$ has the pole and residue of $s/(s-1)$.
+\end{lemma}
+\begin{proof}
+From \eqref{eq:ZBformula} and $s/(s-1)=1+\int_1^{X_0}x^{-s}\,dx+X_0^{1-s}/(s-1)$,
+\[
+  \widehat E(s)=\Bigl[\sum_{n<X_0}n^{-s}-1-\int_1^{X_0}x^{-s}\,dx\Bigr]+(1-W(s))S_{\ge X_0}(s)+(\text{boundary terms}).
+\]
+\emph{The bracket.} For $|t|\le X_0$ it equals $\zeta(s)-1/(s-1)-1+O(X_0^{-\sigma})$ \cite[Thm.~4.11]{Titchmarsh1986}, and
+$|\zeta(s)-1/(s-1)|\le C(|t|+2)^{a/\Lambda}\log(|t|+2)\le Ce^a\Lambda$ there (it is bounded near $s=1$, and the Phragm\'en--Lindel\"of
+convexity bound applies otherwise). For $|t|>X_0$ the bracket is $\le2+2\int_1^{X_0}x^{a/\Lambda-1}\,dx\le2+2e^a\Lambda$.
+
+\emph{The rigid part.} $|1-W(s)|\le\kappa|s-1|/2+O(\kappa^2(1+|s|)^2)\le\kappa(1+|s|)$ when $\kappa|s|\le1$, and $|W|\le3$ otherwise
+(for $\sigma\le2$; for $\sigma>2$ the term is $\le2/X_0$). Next, $|S_{\ge X_0}(s)|\le Z_\infty(\sigma)$, and
+\[
+  \log Z_\infty(\sigma)-\log Z_\infty(1)\le\sum_{p<X_0}p^{-1}(p^{a/\Lambda}-1)+O(a/\Lambda)\le\operatorname{Ein}(a)+O(ae^a/\Lambda).
+\]
+So $Z_\infty(\sigma)\le1.01e^{\operatorname{Ein}(a)}e^{\gamma}\Lambda$ by Mertens' product.
+
+\emph{Boundary.} The at most $\kappa X_0+1$ rigid $n\in[X_0,X_0(1+\kappa))$ each contribute $\le3n^{-\sigma}\le3X_0^{a/\Lambda-1}$.
+\end{proof}
+
+The local prime number theorem (Theorem~\ref{thm:lp}) compares $N$ with the target without its absorbed part,
+$T_0:=T-(\#\Abs-\int\bar\rho_{\Abs})$, whose transform is $\widehat T_0=Z_B+\widehat R=s/(s-1)+\widehat R+\widehat E$. The absorbed part
+$\widehat E_{\Abs}$ is \emph{not} bounded on all of $\sigma\ge1-a/\Lambda$ at large $|t|$ (Remark~\ref{rem:EAhuge}), so it is not put
+into $\widehat T_0$. On $\Good(<y)$, $|N-T_0|\le|N-T|+2u^{\theta/2}(\log u)^{-4}+2$ on $[1,y]$ by the absorbed part of
+\eqref{eq:T1}. The constant of Lemma~\ref{lem:ZBlow} enters only through $\log C_a$: $\log C_8<440$ and $\log C_1<3$.
+
+\begin{lemma}[The absorbed part]\label{lem:ZA}
+% v3: Lemma 2.0'
+Let $v_0$ be the least $\log n$ with $n\in\Abs$, and $u_0:=v_0/\log y(e^{v_0})$.
+\begin{enumerate}[label=(\alph*)]
+\item On $\mathcal G$, $|\widehat E_{\Abs}(s)|\le2\exp(-\tfrac12u_0\log u_0)\le e^{-10^{10}}$. This holds on every disc
+$|s-(1+i\gamma_k)|\le\delta_k$, on every Rouch\'e circle of Lemma~\ref{lem:designedzero}, and on $\sigma=1$ at the designed heights.
+\item On $\mathcal G$, the term $\int_{X_0}^{x_k}x^{-s}\rho_{\Abs}\,dx$ has mean square $\le x_k^{\theta-1/2-o(1)}$ over
+$t\in[\Gamma_k,2\Gamma_k]$, $\sigma\in[\tfrac34,\tfrac54]$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+The elements of $\Abs$ are $2y$-smooth, and Rankin's method for the realised system (Lemma~\ref{lem:lemmaP}, proof steps (i) and (v)) gives
+$\#\Abs\cap[1,x]\le x\exp(-0.9u\log u)$, with $u=\log x/\log(2y)\ge100$. Moreover $\Abs=\emptyset$ wherever $y<\Xm$, which holds for
+$\log L\le2\log\Lambda+s_H$ (Theorem~\ref{thm:caplw}(b)). Where $\Abs\ne\emptyset$, $\log2y\le22.6\Lambda$, so
+$u_0\ge\Lambda e^{s_H}/22.6\ge1.7\cdot10^9$ for every $\Lambda\ge10^8$. In the standard regime $\ell\ge\ell_{\mathrm{std}}$,
+$\log2y\le12.1\ell^2$, so the saving is $\ge L/(14\ell)$.
+
+(a) Fix $|t|\in[\Gamma_k,2\Gamma_k]$ and $\sigma\ge1-\delta_k$, and put $Y:=|t|^{1/(1-\theta/2)}\le x_k$. The terms $a\le Y$ are
+$\le\int_{v_0}^{\log Y}\exp(\delta_kv-\varsigma(v))\,dv$, where $\varsigma(v)$ is the saving above. Since
+$\delta_k\le9\log\log x_k/\log x_k\le18\Lambda e^{-2\Lambda}$ at the scales of the zeros, it is below the saving rate $\ge0.18/\Lambda$ at
+every $v$, so these terms are $\le2\exp(-\varsigma(v_0)/2)$. The terms $a>Y$ use $|1-w_a|\le2|t|a^{\theta/2-1}$. They lie in the standard
+regime ($\log\log Y\ge2\Lambda-1>\ell_{\mathrm{std}}$), so they are $\le(\log x_k)^{O(1)}\exp(-\log x_k/(14\log\log x_k))$.
+
+(b) Mellin--Plancherel gives, at $\sigma=\tfrac34$,
+$(4\pi/\Gamma_k)\sum_{a\in\Abs,\,a\le2x_k}a^{1-2\sigma}\le x_k^{1/2-1/(14\log\log x_k)}/\Gamma_k+2\exp(e^{\ell_{\mathrm{std}}}/2)/\Gamma_k$,
+and $\Gamma_k\asymp x_k^{1-\theta}/\log^3x_k$.
+\end{proof}
+
+\begin{remark}\label{rem:EAhuge}
+$\widehat E_{\Abs}$ can be huge off these sets, for example at $\sigma=1-1/\log X_0$. No step of this section evaluates it there.
+Lemma~\ref{lem:ZA} needs only $y\le n^{o(1)}$ on the range of $\Abs$ and $\log y\le23\log X_0$, so it holds for every absorption
+threshold of Section~\ref{sec:params}, uniformly in $\Lambda\ge10^8$.
+\end{remark}
+
+\subsection{The oscillations}
+Put $\Phi(w):=\int_0^1e^{-wv}\phi'(v)\,dv$. Then
+\begin{equation}\label{eq:Rhat}
+  \widehat R_k(s)=\frac{\alpha_ks}2\Bigl[x_k^{-w}\frac{\Phi(w)}w+x_k^{-w'}\frac{\Phi(w')}{w'}\Bigr],\qquad w=s-\theta-i\gamma_k,\quad
+  w'=s-\theta+i\gamma_k.
+\end{equation}
+\begin{itemize}
+\item $\Phi$ is entire, with $\Phi(0)=1$ and $|\Phi(w)|\le C_m|w|^{-m}$ for $\operatorname{Re}w\ge0$.
+\item $\operatorname{Re}\Phi(w)\ge e^{-1}\cos1=:\operatorname{Re}\Phi_{\min}$ for $0\le\operatorname{Re}w\le1$ and $|\operatorname{Im}w|\le1$.
+\item So $\zeta_{\PP}$ continues to $\sigma>\max(\theta,\eta)$, except for the simple pole at $1$.
+\item Write $M_k$ for the resonant term (the one with $w$) and $E_k$ for the conjugate one. Near $t=\gamma_k$:
+$|E_k|\le2\alpha_kC_2x_k^{\theta-\sigma}/\gamma_k^2$; $\sum_{j<k}|\widehat R_j|\ll\sum_j|\gamma_k-\gamma_j|^{-m}$; and
+$\sum_{j>k}|\widehat R_j|\ll x_j^{\theta-\sigma}\gamma_k$, since $x_j\ge\exp(x_k)$. All three are $o(1)$.
+\item On $\sigma\ge1-8/\log X_0$, at every height,
+\begin{equation}\label{eq:Rhatbound}
+  |\widehat R(s)|\le|s|\,e^{-0.39X_0^2}.
+\end{equation}
+Indeed there $\operatorname{Re}w,\operatorname{Re}w'\ge\tfrac12-8/\log X_0>0.4$, $|\Phi|\le\int\phi'=1$ and $|1/w|\le2.5$, so
+$|\widehat R_k|\le5|s|x_k^{-0.4}$. Theorem~\ref{thm:lp} uses this.
+\end{itemize}
+
+\subsection{The designed zeros}
+\begin{lemma}[A designed zero]\label{lem:designedzero}
+% v3: Lemma 2.1
+Suppose $|Z_B|\in[\tfrac12,Z_{\max}]$ on $|s-(1+i\gamma_k)|\le\delta_k$, where $\delta_k:=3(3\log\log x_k+C_1)/\log x_k$. Then
+$Z_B+M_k$ has a zero $s^*$ with
+\[
+  \operatorname{Re}s^*=1-\frac{3\log\log x_k+O_{X_0}(1)}{\log x_k},
+\]
+and $|Z_B+M_k|\ge\tfrac14$ on the circle $|s-s^*|=1/\log x_k$.
+\end{lemma}
+\begin{proof}
+\begin{enumerate}[label=\arabic*.]
+\item The equation is $x_k^w=G(w):=-(\alpha_ks/2)\Phi(w)/(wZ_B(s))$.
+\item Since $\alpha_k\gamma_k=\kappa_0x_k^{1-\theta}/\log^3x_k$, we have $\log|G|=(1-\theta)\log x_k-3\log\log x_k+O_{X_0}(1)$ on the box.
+\item The map $w\mapsto(\log G(w))/\log x_k$ has derivative $O(\log^2X_0/\log x_k)=o(1)$ (as $x_1\ge\exp(X_0^2)$), so it is a
+contraction with a unique fixed point $w^*$, and $\operatorname{Re}s^*=\theta+\operatorname{Re}w^*$.
+\item On the circle, with $\xi:=(w-w^*)\log x_k$: $M_k(s)/M_k(s^*)=e^{-\xi}(1+o(1))$ and $Z_B(s)/Z_B(s^*)=1+o(1)$.
+\item Since $Z_B(s^*)=-M_k(s^*)$, we get $|Z_B+M_k|\ge|Z_B(s^*)|(1-e^{-1}-o(1))\ge\tfrac14$.\qedhere
+\end{enumerate}
+\end{proof}
+
+The discs $|s-(1+i\gamma_k)|\le\delta_k$ are small for every $k\ge1$: $\delta_k\le\delta_1\le(18\log X_0+3C_1)/X_0^2\ll1/\log^2X_0$. So
+$Z_B$ is evaluated only where Lemma~\ref{lem:ZB} applies.
+
+\begin{lemma}[Late noise]\label{lem:latenoise}
+% v3: Lemma 2.2
+On the circle of Lemma~\ref{lem:designedzero}, with $\widehat D_{\ge x_k}(s):=\int_{x_k}^\infty x^{-s}\,dD$,
+\[
+  |\widehat D_{\ge x_k}(s)|\le6e\cdot|w^*|\cdot x_k^{\eta-\theta}\cdot\frac{Z_{\max}}{\alpha_k\operatorname{Re}\Phi_{\min}}\longrightarrow0\qquad(|w^*|\le1).
+\]
+\end{lemma}
+\begin{proof}
+By parts, $|\int_{x_k}^\infty x^{-s}\,dD|\le3|s|x_k^{\eta-\sigma}$, using \eqref{eq:La}. On the circle,
+$x_k^{-\sigma}\le e\,x_k^{-\operatorname{Re}s^*}=e\,x_k^{-\theta}/|G(w^*)|$, and $|G(w^*)|\ge|s|\alpha_k\operatorname{Re}\Phi_{\min}/(2|w^*|Z_{\max})$.
+The factor $|s|\approx\gamma_k$ cancels, and the bound tends to $0$ because $\eta<\theta$.
+\end{proof}
+
+\begin{lemma}[Good heights exist]\label{lem:goodheights}
+% v3: Lemma 2.3
+Let $\Gamma_k:=\kappa_0x_k^{1-\theta}/(2\log^3x_k)$. There is $\gamma_k\in[\Gamma_k,2\Gamma_k]$ with:
+\begin{enumerate}[label=(\roman*)]
+\item $|Z_B(1+i\gamma_k)|\ge0.6$;
+\item $|\widehat D_{<x_k}(s)|\le1/16$ on $|s-(1+i\gamma_k)|\le\tfrac18$, where $\widehat D_{<x_k}(s):=\int_{\Xm}^{x_k}x^{-s}\,dD$.
+\end{enumerate}
+The choice uses only the system on $[1,x_k)$, which does not depend on $\gamma_k$. So $R_k$, and hence $T$, is adapted
+(Lemma~\ref{lem:adapted}).
+\end{lemma}
+\begin{proof}
+\emph{(i)} We use the mean value theorem of Montgomery and Vaughan \cite{MontgomeryVaughan1974} for the absolutely convergent
+$Z_\infty$ and $Z_\infty^2$ on $\sigma=1$. Over $t\in[\Gamma,2\Gamma]$:
+\[
+  \E|Z_\infty(1+it)|^2=\prod_{p<X_0}(1-p^{-2})^{-1}+O(\log X_0/\Gamma)\in[1,\zeta(2)],\qquad
+  \E|Z_\infty|^4\le\sum_{n\in\mathcal D}\tau(n)^2n^{-2}+o(1)\le\frac{\zeta(2)^4}{\zeta(4)}+o(1)\le6.8.
+\]
+The Paley--Zygmund inequality gives $|Z_\infty(1+it)|\ge2^{-1/2}$ on a set of $t$ of density $\ge\frac14/6.8>0.036$, independently of
+$X_0$. Lemma~\ref{lem:ZB} moves this by at most $\exp(-X_0^2/4)$.
+
+\emph{(ii)} We have
+\[
+  \widehat D_{<x_k}=\sum_{n\in\NN\setminus(\mathcal D\cup\Abs),\ \Xm\le n<x_k}n^{-s}-\int_{X_0}^{x_k}x^{-s}(1-\rhodet-\rho_{\Abs}+R')\,dx.
+\]
+\begin{itemize}
+\item The $R'$ and $1$ parts are $O(x_k^{1-\sigma}/\Gamma)+O(\sum_{j<k}|\widehat R_j|)$.
+\item The $\rhodet$ part is a truncated $\sum_{d\in\mathcal D}d^{-s}W$, and it is $\le6Z_\infty(\tfrac34)/(\kappa\Gamma)+O(1/\Gamma)\le\exp(-X_0^2/4)$
+pointwise on $\sigma\ge\tfrac34$.
+\item The $\rho_{\Abs}$ part is Lemma~\ref{lem:ZA}(b).
+\item For the Dirichlet sum, on each dyadic block $(N,2N]$ use the mean value theorem for generalised Dirichlet polynomials
+\cite[Thm.~2.1]{Broucke2024} (from \cite{BrouckeDebruyne2023}):
+\[
+  \int_\Gamma^{2\Gamma}\Bigl|\sum_{n\in(N,2N]}n^{-\sigma-it}\Bigr|^2dt\ll(\Gamma+N)\,K(N)\,N^{1-2\sigma},
+\]
+where $K(N)$ is the largest number of elements of $\NN\setminus(\mathcal D\cup\Abs)$ in a window of length $2$ at scale $\le2N$. Those
+elements are counted by $D+\int T'_{\mathrm{cont}}$, so \eqref{eq:lag} and \eqref{eq:La} below $x_k$ give $K(N)\le2(2N)^{\eta}+5$.
+\item Sum the blocks by Cauchy--Schwarz and average over $\sigma\in[\tfrac34,\tfrac54]$. The mean of $|\widehat D_{<x_k}|^2$ over the
+strip is $\ll K(X_0)X_0^{-1/2}+x_k^{\theta+\eta-1/2}\log^3x_k+x_k^{\theta-1/2-o(1)}$.
+\item By subharmonicity, $|f(s)|^2\le(64/\pi)\iint_{|z-s|\le1/8}|f|^2$, so the bad set has density $<0.018$ once $X_0$ is large.
+\end{itemize}
+Intersecting with (i) leaves a set of density $\ge0.018$.
+\end{proof}
+
+\begin{theorem}[Zeros]\label{thm:zeros}
+% v3: Theorem 2.4
+Choose $\gamma_k$ by Lemma~\ref{lem:goodheights}, and $\alpha_k:=\kappa_0x_k^{1-\theta}/(\gamma_k\log^3x_k)\in[1,2]$. On $\mathcal G$,
+$\zeta_{\PP}$ has a zero $\rho_k$ with $|\rho_k-s^*_k|\le1/\log x_k$ for every $k$. Hence
+\[
+  \operatorname{Re}\rho_k=1-\frac{3\log\log x_k+O_{X_0}(1)}{\log x_k}\longrightarrow1.
+\]
+\end{theorem}
+\begin{proof}
+Apply Rouch\'e's theorem on the circle of Lemma~\ref{lem:designedzero}, comparing $\zeta_{\PP}$ with $Z_B+M_k$. The perturbation is
+bounded by
+\[
+  |E_k|+\sum_{j\ne k}|\widehat R_j|+|\widehat D_{<x_k}|+|\widehat D_{\ge x_k}|+|\widehat E_{\Abs}|\le o(1)+\tfrac1{16}+o(1)+e^{-10^{10}}<\tfrac14,
+\]
+by the bullets after \eqref{eq:Rhat} and Lemmas~\ref{lem:goodheights}, \ref{lem:latenoise} and~\ref{lem:ZA}. The hypothesis
+$|Z_B|\ge\tfrac12$ on the disc follows from Lemma~\ref{lem:goodheights}(i), Lemma~\ref{lem:ZB} and $|Z_\infty'|\le4\log^2X_0$.
+\end{proof}
+
+\begin{remark}
+$1-\operatorname{Re}\rho_k\asymp3(1-\theta)\log\log\gamma_k/\log\gamma_k$. This is outside Landau's region
+$1-c(1-\theta)/\log|t|$ by a factor $\log\log\gamma_k$, so it does not contradict it. In this design the loss is forced by the
+positivity constraint \eqref{eq:G1} together with the amplitude condition $\kappa'_k=\kappa_0/\log^2x_k$, which gives $3\log\log$ rather
+than $1\log\log$.
+\end{remark}

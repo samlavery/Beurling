@@ -1,0 +1,430 @@
+% 04x-x0band.tex -- v3 §3.6: the jump of the target at X_0 (Lemma 3.14A = XB, its three ranges, Lemma 3.14B = SI(Λ)).
+% Author: fix-bprime. Input from 04-noise (bridge subsection), after Proposition 3.14.
+\subsubsection{The jump of the target at $X_0$}\label{sec:x0band}
+% v3: §3.6, Lemmas 3.14A and 3.14B
+
+The source $T'$ vanishes below $X_0$ and equals $\jz=1-\rhodet(X_0)$ just above it (\S\ref{sec:noise-notation}). A jump
+cannot be handled by the oscillation bounds of Proposition~\ref{prop:br}: the kernels $C_n^x$ with $x/n$ within about
+$H(X_0)$ of $X_0$ straddle it, and their weight in a dyadic block is of order $\log X_0/\log x$, which is not small
+compared with the margin $0.97/\log x$. We therefore treat the jump separately and exactly. Recall
+$J=\jz\mathbf 1_{[X_0,\infty)}$, $\Tc=T'-J$, and put
+\[
+  \rhosh_1:=(1+\Kpt)^{-1}\mathbf 1_{[X_0,\infty)},\qquad\text{so that}\qquad \rhosh=\rhosh_{\mathrm c}+\jz\rhosh_1,
+  \qquad J_{X_0}=\jz\bigl(\Rres\mathbf 1_{[X_0,\infty)}-\rhosh_1\bigr),
+\]
+with $\rhosh_{\mathrm c}:=\sum_n c_n\Tc(\cdot/n)/n$ and $J_{X_0}$ as in Proposition~\ref{prop:br}. Throughout this
+subsection
+\[
+  \Lambda:=\log X_0\ge10^8,\qquad \delta:=H(X_0)/X_0=e^{8(\log\Lambda)^2-\Lambda},\qquad \tau_0:=\log(4.01X_0),\qquad N:=y/X_0 .
+\]
+By \eqref{eq:RH}, $\eps\le0.03$. Near $X_0$ the jitter width is the standard one, and its local exponent
+$\eps_*:=\sup_{X_0\le v\le X_0^2}d\log H/d\log v\le16\log(2\Lambda)/\Lambda\le3\cdot10^{-6}$, so that
+$H(vw)/H(v)\le w^{\eps_*}$ for $X_0\le v\le vw\le X_0^2$. By Huxley's theorem \eqref{eq:huxley}, $\jz\le1.0001/\Lambda$
+(\S\ref{sec:noise-notation}).
+
+\begin{lemma}[The $X_0$ jump in exact chain form]\label{lem:xb}
+% v3: Lemma 3.14A (Lemma XB)
+Let $y\ge2X_0$. For a level $n$ write $H_n:=H(y/n)$. For a pair $(d,w)$ with $d,w\in\NN$, $d,w\ge2$, $n=dw$, let
+$D_d:=C_d^{y,\nom}-c_d\,\delta_{y/d}$ (a measure of mass $0$; $C^{y,\nom}_d$ as in \S\ref{sec:kernels-steps}), and define
+\begin{align*}
+  \mathbb B_0&:=\{n:\ |y/n-X_0|\le H_n/2\},\\
+  \mathbb B_1&:=\{(d,w):\ \text{the step $d\to n$ is $X_0$-near, i.e. } |y/(dw)-\Xm|\le R_d/w\},\\
+  \mathbb B_2&:=\{(d,w)\notin\mathbb B_1:\ |y/n-X_0|\le H_n/2+R_d/w\}.
+\end{align*}
+Then, on $\Good(<y)$,
+\begin{equation}\label{eq:xb}
+  \bigl|\Rres\mathbf 1_{[X_0,\infty)}(y)-\rhosh_1(y)\bigr|\le\frakB(y)+\frac{4.3\,C_N E_\theta}{\log y},
+\end{equation}
+\begin{equation}\label{eq:frakB}
+  \frakB(y):=\sum_{n\in\mathbb B_0}\frac{|c_n|}{2n}+\sum_{(d,w)\in\mathbb B_1}\frac{\TV(D_d)}{2dw}
+  +\lambda_0\sum_{(d,w)\in\mathbb B_2}\frac{\KRn{D_d}}{dw\cdot wH_n}.
+\end{equation}
+By Lemma~\ref{lem:tau-near}, $4.3\,C_NE_\theta\le e^{-0.99\Lambda}$ for every $\Lambda\ge10^8$. If no step from the start $y$ is
+$\tau$-near, the last term of \eqref{eq:xb} may be omitted.
+\end{lemma}
+
+\begin{proof}
+All kernels below start at $y$; write $C_n=C_n^y$ for the true and $C_n^{\nom}$ for the nominal kernels, so that
+$\Rres\mathbf 1_{[X_0,\infty)}(y)=\sum_n n^{-1}C_n([X_0,\infty))$ by \eqref{eq:R-kernels}, and
+$\rhosh_1(y)=\sum_n n^{-1}c_n\mathbf 1[y/n\ge X_0]$.
+
+\emph{Step 1: the decomposition of Proposition~\ref{prop:true-kernels}.} Write $\tilde E_n:=C_n-C_n^{\nom}$. Then
+$\tilde E_n=S_n+\sum_{d<n}P^{\nom}_{d\to n}\tilde E_d$ with sources $S_n=S_n^\tau+S_n^{X_0}$ on $\tau$-near and $X_0$-near
+steps, where $P_{d\to n}$, $P^{\nom}_{d\to n}$ are the step operators of \S\ref{sec:true-kernels}. By Lemma~\ref{lem:near-structure}, the $X_0$-near sources sit at terminal levels and are never
+transferred, so
+\[
+  C_n=C_n^{\nom}+S_n^{X_0}+\tilde E_n^\tau,\qquad \tilde E_n^\tau:=\sum_{n'\mid n}\mathcal T^{\nom}_{n'\to n}S^\tau_{n'},
+\]
+where $\mathcal T^{\nom}_{n'\to n}$ is the nominal transfer (the signed sum over nominal chains from level $n'$ to $n$).
+On a step $d\to n$ the true and nominal filters at the centre $c$ are $\varphi_\tau(c)\varphi(c)$ and
+$\kappa_\tau\kappa_{X_0}$, where $\varphi(c):=\mathbf 1[c\ge\Xm]$, $\kappa_{X_0}:=\mathbf 1[y/n\ge\Xm]$, and
+$\varphi_\tau,\kappa_\tau$ are the $\tau$-filters. We assign the part $(\varphi_\tau-\kappa_\tau)\varphi$ to $S^\tau_n$ and the part
+$\kappa_\tau(\varphi-\kappa_{X_0})$ to $S^{X_0}_n$; so
+$S_n^{X_0}=-\sum_{d\to n\ X_0\text{-near}}\kappa_\tau\,\mathcal Q\bigl((\varphi-\kappa_{X_0})\,D_wC_d\bigr)$, where $\mathcal Q$
+places the window $\bx_{H(c)}$ at each centre $c$. Split $C_d=C_d^{\nom}+(C_d-C_d^{\nom})$ and write
+$S_n^{X_0}=S_n^{X_0,\nom}+S_n^{X_0,\tau}$ accordingly.
+
+\emph{Step 2: the nominal part, level by level.} For a centre $c$ let $U_c$ be uniform on $[-H(c)/2,H(c)/2]$ and
+$G(c):=\Prob(c+U_c\ge X_0)$, so that $\int\mathbf 1_{[X_0,\infty)}\,d(\mathcal Q\mu)=\int G\,d\mu$ for every measure $\mu$ of
+centres. Near $X_0$, $G(c)=\min\bigl(1,\max\bigl(0,\frac12+(c-X_0)/H(c)\bigr)\bigr)$, which is Lipschitz with constant
+$\le(1+2\vartheta_{X_0})/H_n\le\lambda_0/H_n$ on the support of $D_wD_d$ (width variation, \S\ref{sec:kernels-steps}), and
+$G(y/n)=\Prob(y/n+U\ge X_0)$ with $U$ uniform on $[-H_n/2,H_n/2]$. By \eqref{eq:kernel-rec} for
+the nominal kernels and $D_wC_d^{\nom}=c_d\delta_{y/n}+D_wD_d$,
+\[
+  C_n^{\nom}([X_0,\infty))=c_n\,G(y/n)-\sum_{d\mid n,\,d<n}\kappa_{d\to n}\int G\,d(D_wD_d).
+\]
+Adding $S_n^{X_0,\nom}([X_0,\infty))=-\sum_{X_0\text{-near}}\kappa_\tau\int G\,(\varphi-\kappa_{X_0})\,d(D_wC_d^{\nom})$, and
+using $(\varphi-\kappa_{X_0})\,c_d\delta_{y/n}=0$ (the centre filter at the nominal point equals its nominal value),
+\begin{equation}\label{eq:level-defect}
+  C_n^{\nom}([X_0,\infty))+S_n^{X_0,\nom}([X_0,\infty))-c_n\mathbf 1[y/n\ge X_0]
+  =c_n\bigl(G(y/n)-\mathbf 1[y/n\ge X_0]\bigr)-\sum_{d\mid n,\,d<n}\kappa_\tau\int G\varphi\,d(D_wD_d),
+\end{equation}
+where on steps that are not $X_0$-near we used $\varphi=\kappa_{X_0}$ on the support of $D_wD_d$
+(Lemma~\ref{lem:near-structure}(i)). Since $D_1=0$, only $d\ge2$ occurs.
+\begin{itemize}
+\item $|G(y/n)-\mathbf 1[y/n\ge X_0]|\le\frac12$, and it vanishes unless $|y/n-X_0|\le H_n/2$, i.e. unless $n\in\mathbb B_0$.
+\item $D_wD_d$ has mass $0$, total variation $\TV(D_d)$, and support of radius $R_d/w$ around $y/n$. The function $G\varphi$
+  takes values in $[0,1]$, so $|\int G\varphi\,d(D_wD_d)|\le\frac12\TV(D_d)$ (subtract the constant $\frac12$).
+\item If the step is not $X_0$-near, then $G\varphi=\kappa_{X_0}G$ on the support, and $G$ is Lipschitz with constant
+  $\le\lambda_0/H_n$; by Lemma~\ref{lem:kr-facts}(K2), $|\int G\,d(D_wD_d)|\le\lambda_0\KRn{D_wD_d}/H_n=\lambda_0\KRn{D_d}/(wH_n)$. If moreover
+  $|y/n-X_0|>H_n/2+R_d/w$, the support lies where $G$ is constant and the term vanishes.
+\end{itemize}
+Multiplying \eqref{eq:level-defect} by $1/n=1/(dw)$ and summing over $n$ gives at most $\frakB(y)$.
+
+\emph{Step 3: the $\tau$-part.} What remains is $\sum_n n^{-1}\bigl(\tilde E_n^\tau+S_n^{X_0,\tau}\bigr)([X_0,\infty))$, which
+is at most $\sum_n\TV(\tilde E_n^\tau)/n+\sum_n\TV(S_n^{X_0,\tau})/n$. As in the proof of Proposition~\ref{prop:true-kernels}
+(the $\infty$-norm step), the first sum is $\le2.04\lambda_0\sum_d(\TV(C_d)/d)\,\theta(y/d)\le4.1\,C_NE_\theta/\log y$, by
+Corollary~\ref{cor:kr-weights}(c) at every start, Proposition~\ref{prop:true-kernels} and Lemma~\ref{lem:tau-near}. The
+second is $\le\sum_d(\TV(\tilde E_d)/d)\,\eta_{X_0}(y/d)$ with $\eta_{X_0}$ as in the proof of
+Proposition~\ref{prop:true-kernels}; with the block bound $\sum_{y/d\in[v,2v)}\TV(\tilde E_d)/d\le2\lambda_0C_N^2E_\eta\log(2v)/\log y$
+from step (ii) of that proof and $\sum_v\log(2v)\sup\eta_{X_0}\le1.52\log(2X_0)$, it is
+$\le3.1\,C_N^2\tau_0E_\eta/\log y\le0.1\,C_NE_\theta/\log y$, because $\tilde\eta\le\theta/\log^2\Xm$ pointwise. Together,
+the $\tau$-part is at most $4.3\,C_NE_\theta/\log y$; if no step is $\tau$-near, then $S^\tau=0$, $\tilde E^\tau=0$ and
+$C_d=C_d^{\nom}$ for every parent of an $X_0$-near step, so the $\tau$-part vanishes.
+\end{proof}
+
+\begin{remark}
+% v3: remark after Lemma 3.14A
+A cruder bound by the level sum $\sum_{n}(\TV(C_n)+|c_n|)/n$ over the band does not suffice: at $n_0=6$ it is about
+$0.74$, while $\frakB(6X_0)\le5/12$ (Proposition~\ref{prop:xb-ranges}). The gain comes from three facts used above: the
+direct chain ($d=1$) has no centre smear; the defect of a mass-$0$ measure against a $[0,1]$-valued function is at most
+half its total variation; and the window average contributes only half a jump.
+\end{remark}
+
+\paragraph{Two counting tools.} The ranges below use two elementary bounds. The first is a local count on the realised
+semigroup.
+
+\begin{lemma}[Reciprocal sums over short intervals]\label{lem:short-recip}
+% v3: Lemma 3.14A, middle range (Corollary 4.2, Lemma 4.18, Corollary 1.4); fix-Bprime §12.2 counting input
+On $\Good(<y)$, for every $1\le M\le y/2$ and $0<a\le0.01$,
+\[
+  \sum_{e\in\NN\cap M[1-a,1+a]}\frac1e\le28\,a+7M^{-3/4}.
+\]
+\end{lemma}
+
+\begin{proof}
+Let $I:=M[1-a,1+a]\subset[M/2,2M]$; it suffices to show $\#(\NN\cap I)\le13.5|I|+K^*(M)$ with $K^*(M)/M\le6M^{-3/4}$,
+since then $\sum_{e\in I}1/e\le(27aM+K^*(M))/(M(1-a))\le28a+7M^{-3/4}$.
+\begin{itemize}
+\item If $M<X_0/4$, then $I\subset[1,\Xm)$, where $\NN=\N$, and $\#(\NN\cap I)\le|I|+1$; take $K^*(M):=1$.
+\item If $M\ge X_0$, cut $I\subset[P,4P]$ ($P=M/2$) into $\lceil|I|/6H(P)\rceil$ pieces $J$ of length $\le6H(P)$. By
+  Corollary~\ref{cor:localcount}, $N(J)\le T(J)+11.4|J|+K_{\mathrm{loc}}(P)$, and under the target \eqref{eq:target},
+  $T(J)\le2|J|+2+\#\Abs(J)$. Since $K_{\mathrm{loc}}\le H/100$, summing over the pieces gives
+  $\#(\NN\cap I)\le13.42|I|+K_{\mathrm{loc}}(P)+2+\#\Abs(I)$. By Lemma~\ref{lem:lemmaP}, each window $[u,u+h(u)]$,
+  $h(u)=u^{\theta/2}$, holds at most $h(u)L_u^{-4}$ absorbed elements; covering $I$ by $\lceil|I|/h(M/2)\rceil$ such windows,
+  $\#\Abs(I)\le0.01|I|+(2M)^{\theta/2}$. As $K_{\mathrm{loc}}(P)+2\le M^{1/8}$ and $\theta<\frac12$, take $K^*(M):=2M^{1/4}$.
+\item If $X_0/4\le M<X_0$, apply the first case to $I\cap[1,\Xm)$ and the second to $I\cap[X_0,\infty)$; in between,
+  $\NN\cap[\Xm,X_0)$ consists of integers and of at most $2H(X_0)$ jittered primes (\S\ref{sec:noise-notation}). This gives
+  $K^*(M):=4X_0^{1/4}\le4(4M)^{1/4}$.
+\end{itemize}
+In all cases $K^*(M)/M\le6M^{-3/4}$.
+\end{proof}
+
+The second is a Rankin bound for smooth elements, valid at every height.
+
+\begin{lemma}[Rankin bound]\label{lem:rankin-crude}
+% v3: Lemma 3.14B, proof ("Rankin gives ..."); fix-Bprime §12.3 (B)
+Let $z\ge e^{10}$, $\ell\ge0$, and $v(\ell,z):=\sum_{n\in\NN\cap(e^\ell,2e^\ell],\,\Pplus(n)\le z}1/n$. Then
+$v(\ell,z)\le e^{14}\,(\log z)\,e^{-\ell/\log z}$.
+\end{lemma}
+
+\begin{proof}
+Put $\beta:=1/\log z$. Since $\NN$ is the free semigroup on $\PP$,
+$v(\ell,z)\le e^{-\beta\ell}\sum_{\Pplus(n)\le z}n^{\beta-1}=e^{-\beta\ell}\prod_{p\le z}(1-p^{\beta-1})^{-1}$. For $p\le z$,
+$p^\beta\le e$, and $e^{\beta\log p}-1\le(e-1)\beta\log p$. So
+\[
+  \log\prod_{p\le z}(1-p^{\beta-1})^{-1}\le\sum_{p\le z}\frac1p+(e-1)\beta\sum_{p\le z}\frac{\log p}p
+  +\sum_{p}\frac{p^{2\beta-2}}{1-p^{\beta-1}}.
+\]
+By Lemma~\ref{lem:cm}(iv) and (iii), the first two sums are $\le\log\log z+4.1$ and $\le(e-1)(1+0.43/\log z)\le1.8$; the
+last is $\le1.3$: the primes $p\le7$ contribute $\le0.95$ (using $p^\beta\le p^{1/10}$), and those with $p\ge11$
+contribute $\le1.33\,e^2\sum_{p\ge11}p^{-2}\le0.31$. Hence the product is $\le e^{7.2}\log z$, and the claim follows with
+room.
+\end{proof}
+
+\paragraph{The three ranges.} Put
+\begin{equation}\label{eq:jX0}
+  j_{X_0}(x):=\sup_{y\in W_x}\log y\cdot\jz\Bigl(\frakB(y)+\frac{4.3\,C_NE_\theta}{\log y}\Bigr),
+\end{equation}
+so that $\log y\cdot|J_{X_0}(y)|\le j_{X_0}(x)$ for every $y\in W_x$, by Lemma~\ref{lem:xb}.
+
+\begin{proposition}[The $X_0$ band in three ranges]\label{prop:xb-ranges}
+% v3: Lemma 3.14A, "The three ranges"
+Let $\Lambda\ge10^8$, $x\ge2X_0$ and $N:=x/X_0$. On $\Good(<x)$:
+\begin{enumerate}[label=(\roman*)]
+\item (small) if $N\le e^{0.01\Lambda}$, then $j_{X_0}(x)\le0.4209$ (computer-assisted; see Appendix~\ref{app:cert-x0band});
+\item (middle) if $e^{0.01\Lambda}\le N\le e^{600\Lambda^4}$, then $\frakB(y)\le200\delta+400N^{-1/10}$ for $y\in W_x$, and
+  $j_{X_0}(x)\le e^{-0.0009\Lambda}$;
+\item (huge) if $N\ge e^{600\Lambda^4}$, then $\frakB(y)\le(400\delta+e^{-60})\,\tau_0/\log N$ for $y\in W_x$, and
+  $j_{X_0}(x)\le e^{-59}$.
+\end{enumerate}
+The three ranges cover $x\ge2X_0$ for every $\Lambda\ge10^8$.
+\end{proposition}
+
+Throughout the proof, $y\in W_x$, and we write $N$ also for $y/X_0$, which differs from $x/X_0$ by a factor
+$1+O(H(x)/x)$. We use the following consequences of Theorem~\ref{thm:kr-random} for the nominal kernels (with
+$H_e/H_d\le(d/e)^\eps$ from \eqref{eq:RH}, and $|c_e|\le\mu^2(e)$):
+\begin{equation}\label{eq:TVD-bounds}
+  \tfrac12\TV(D_d)\le|c_d|+\tfrac{\lambda_0}4\sum_{m\mid d,\,1<m<d}\Hord(m)m^{\eps-1}|c_{d/m}|,\qquad
+  \frac{\lambda_0\KRn{D_d}}{wH_n}\le\frac{\lambda_0^2w^{\eps-1}}4\sum_{m\mid d,\,m<d}\Hord(m)m^{\eps-1}|c_{d/m}|\quad(n=dw).
+\end{equation}
+For the first, $\TV(D_d)\le|c_d|+\TV(C_d^{\nom})$; for the second, $H_e/H_n\le(n/e)^\eps=(wm)^\eps$ with $m=d/e$. Since
+$\lambda_0^2\le1+7\delta$, the factors $\lambda_0$, $\lambda_0^2$ change the numerical constants below by a relative amount
+$\le7\delta\le e^{-9\cdot10^7}$, and we absorb them. Consequently, for every set $I$ of levels,
+\begin{equation}\label{eq:TVD-sums}
+  \sum_{d\in I}\frac{\TV(D_d)}{2d}\le\sum_{d\in I}\frac{|c_d|}d+\frac{\lambda_0}4\sum_{m\ge2}\Hord(m)m^{\eps-2}\sum_{e\in I/m}\frac{|c_e|}e,\qquad
+  \sum_{d\in I}\frac{\lambda_0\KRn{D_d}}{d\,wH_{dw}}\le\frac{\lambda_0^2w^{\eps-1}}4\sum_{m\ge1}\Hord(m)m^{\eps-2}\sum_{e\in I/m}\frac{|c_e|}e .
+\end{equation}
+
+\begin{proof}[Proof of (i): the small range]
+\emph{A single level.} Let $N\le e^{0.01\Lambda}$. If $n\in\mathbb B_0$ then $|n-N|\le nH_n/(2X_0)\le0.51\,(1.01N)\delta$.
+If $(d,w)\in\mathbb B_1\cup\mathbb B_2$ then $|y/n-X_0|\le H_n/2+R_d/w+(X_0-\Xm)\le1.6H(X_0)$, so $|n-N|\le2N\delta$. Since
+$N\delta\le e^{0.01\Lambda+8(\log\Lambda)^2-\Lambda}<10^{-10}$, every level occurring in $\frakB(y)$ is the integer $n_0$
+nearest to $N$, and $n_0<X_0$. Below $\Xm$ the semigroup is $\N$, so all divisors $d$ of $n_0$ are rational integers, all
+cofactors are rigid, and no step below level $n_0$ is $\tau$-near or $X_0$-near; in particular the $\tau$-term of
+\eqref{eq:xb} vanishes.
+
+\emph{The bound $B(n_0)$.} For $2\le n$, put
+\[
+  B(n):=\frac1n\Bigl[\tfrac12\mu^2(n)+\tfrac12\sum_{d\mid n,\,1<d<n}\Bigl(2\mu^2(d)+\tfrac12\lambda\frac{X(d)}d\Bigr)\Bigr],\qquad
+  X(d):=\sum_{e\mid d,\,1<e<d}\mu^2(e)\,e\,\Hord(d/e),\qquad\lambda:=1.0001 .
+\]
+Each pair $(d,n_0/d)$ lies in at most one of $\mathbb B_1,\mathbb B_2$. By \eqref{eq:TVD-bounds} with $\eps_*$ in place of
+$\eps$ and $\lambda_0(d/e)^{\eps_*}\le\lambda$ for $d\le10^6$, the $\mathbb B_1$-weight of $d$ is $\le\mu^2(d)+\frac14\lambda X(d)/d$;
+the $\mathbb B_2$-weight is $\le\frac18\lambda(\mu^2(d)+X(d)/d)$, which is smaller. Hence $\frakB(y)\le B(n_0)$ for
+$n_0\le10^6$.
+
+\emph{Computation, $n\le10^6$.} The certificate of Appendix~\ref{app:cert-x0band} computes $\mu^2$, $\Hord$, $X$ and the divisor
+sums exactly in integers, and evaluates $B(n)$ as a sum of at most $\tau(n)$ nonnegative terms, inflated by $1+10^{-9}$.
+The maximum over $2\le n\le10^6$ is $B(6)=(\frac12+\frac12(2+2))/6=5/12$; the next values are $B(12)=0.2778$ and
+$B(2)=B(4)=B(10)=\frac14$, and $\sup_{n\ge100}B(n)=0.0881$.
+
+\emph{Analytic tail, $10^6<n\le X_0^{0.01}$.} Here we use $H_e/H_d\le(d/e)^{\eps_*}$ directly instead of $\lambda$ (all heights are $\le X_0^{1.01}$). Write
+$d=em$ with $e>1$ squarefree, $m\ge2$. Then $\sum_{d\mid n}\frac1n\sum_{e\mid d}\mu^2(e)\Hord(m)m^{\eps_*-1}$ is a sum over
+factorisations $n=mk$ ($k\ge2$) of $\Hord(m)m^{\eps_*-2}\cdot2^{\omega(k)}k^{-1}$, which for $\sigma:=0.2$ is at most
+\[
+  n^{-\sigma}\sum_{m\ge2}\Hord(m)m^{\sigma+\eps_*-2}\cdot\sup_{k\ge2}2^{\omega(k)}k^{\sigma-1}
+  =n^{-0.2}\,A(1.8-\eps_*)\cdot2^{0.2},
+\]
+where $A(s):=1/(2-\zeta(s))-1$ and the supremum is attained at $k=2$ (since $2p^{-0.8}<1$ for $p\ge3$). In ball arithmetic,
+$A(1.8-4\cdot10^{-6})\le7.4915$. With $2^{\omega(n)}\le1.64\sqrt n$ (the maximum of $\prod_{p\mid n}2p^{-1/2}$ is at $n=6$),
+\[
+  B(n)\le\frac{\frac12+1.64\sqrt n}{n}+\frac14\cdot7.4915\cdot2^{0.2}\,n^{-0.2}\le\frac{\frac12+1.64\sqrt n}{n}+2.152\,n^{-0.2}
+  \le0.14\qquad(n>10^6).
+\]
+
+\emph{Conclusion.} $\log y\cdot\jz\le1.0001\,(\Lambda+\log N+1)/\Lambda\le1.0101$, and
+$4.3C_NE_\theta\le e^{-10^7}$ by Lemma~\ref{lem:tau-near}. So $j_{X_0}(x)\le1.0101\cdot\frac5{12}+e^{-10^7}\le0.4209$.
+\end{proof}
+
+\begin{proof}[Proof of (ii): the middle range]
+Let $e^{0.01\Lambda}\le N\le e^{600\Lambda^4}$. Every set below is an interval of relative half-width $\le0.01$, so
+Lemma~\ref{lem:short-recip} applies to it, and we use $|c_e|\le1$.
+
+\emph{($\alpha$) The levels $\mathbb B_0$.} Since $H_n\le H(1.01X_0)\le1.01H(X_0)$ there, $\mathbb B_0\subset
+N[1-0.51\delta,1+0.51\delta]$, so this part of $\frakB(y)$ is $\le\frac12(28\cdot0.51\delta+7N^{-3/4})\le7.2\delta+3.5N^{-3/4}$.
+
+\emph{($\beta_1$) $X_0$-near pairs with $w\le\sqrt N$.} For fixed $w$ the condition $|y/d-w\Xm|\le R_d=1.02H(y/d)$ and
+\eqref{eq:RH} give $d\in I_w:=M_w[1-1.01\delta_w,1+1.01\delta_w]$, with $M_w:=y/(w\Xm)$ and $\delta_w:=1.03w^{\eps-1}\delta$.
+By \eqref{eq:TVD-sums} and Lemma~\ref{lem:short-recip},
+\[
+  \sum_{d\in I_w}\frac{\TV(D_d)}{2d}\le28.3\delta_w\Bigl(1+\frac{A_0}4\Bigr)+7M_w^{-3/4}
+  +\frac74M_w^{-3/4}\sum_{m\le2M_w}\Hord(m)m^{\eps-1.25}\le43\,\delta_w+41\,M_w^{-0.2},
+\]
+using $A_0=A_0(\eps)\le2.07$ and $\sum_{m\le X}\Hord(m)m^{\eps-1.25}\le X^{0.55}A(1.8-\eps)\le13.1X^{0.55}$, where
+$A(1.77)=13.08$ (the abscissa of $\sum\Hord(m)m^{-s}$ is $1.7286<1.77$). Weighting by $1/w$ and summing over
+$2\le w\le\sqrt N$, with $M_w\ge N/w$ and $\sum_{w\ge2}w^{\eps-2}\le\zeta(1.97)-1=0.674$, gives
+$\le43\cdot1.03\cdot0.674\,\delta+41N^{-0.2}\cdot5N^{0.1}\le30\,\delta+205\,N^{-0.1}$.
+
+\emph{($\beta_2$) Pairs in $\mathbb B_2$ with $w\le\sqrt N$.} Here $|y/d-wX_0|\le wH_n/2+R_d\le1.04\,w H(X_0)$, so $d$
+ranges over an interval of relative half-width $\le1.05\delta$ around $y/(wX_0)$. By \eqref{eq:TVD-sums} and
+Lemma~\ref{lem:short-recip}, for fixed $w$ this part is
+$\le\frac14w^{\eps-1}\bigl(29.4\delta(1+A_0)+142(w/N)^{0.2}\bigr)$, and summing over $w$ gives
+$\le\frac14\cdot29.4\cdot3.07\cdot0.674\,\delta+36N^{-0.2}\sum_{w\ge2}w^{-1.77}\le15.3\,\delta+34\,N^{-0.2}$.
+
+\emph{($\gamma$) Pairs with $w>\sqrt N$.} Then $d<1.01\sqrt N$; fix $d$ and count $w$. For $X_0$-near pairs the
+$w$-window $\{w:|y/d-w\Xm|\le R_d\}$ has relative half-width $\le1.02\delta(d/N)^{1-\eps}$ at height
+$M':=y/(d\Xm)\ge0.98\sqrt N$, so $\sum_w1/w\le29\delta(d/N)^{1-\eps}+7M'^{-3/4}$. For pairs in $\mathbb B_2$ the window has
+relative half-width $\le1.05\delta$, and by \eqref{eq:TVD-bounds} the weight carries $\frac14w^{\eps-1}\le\frac14N^{-0.485}$.
+By Theorem~\ref{thm:kr-random}, $\sum_{d\le D}\TV(D_d)/(2d)\le1.52(\log D+1)$ and
+$\sum_{d\le D}d^{-1}\sum_{m\mid d}\Hord(m)m^{\eps-1}|c_{d/m}|\le3.07(\log D+1)$. Hence this part is
+$\le(\log N+1)\bigl(1.52(29\delta N^{-0.485}+7.2N^{-3/8})+0.77N^{-0.485}(30\delta+7.2N^{-3/8})\bigr)\le N^{-1/4}$.
+
+\emph{Total.} $\frakB(y)\le53\,\delta+3.5N^{-3/4}+205N^{-0.1}+34N^{-0.2}+N^{-1/4}\le200\,\delta+400\,N^{-1/10}$. Finally
+$\log y\le601\Lambda^4$, so $\log y\cdot\jz\le1.0001\cdot601\Lambda^3$, and with $N\ge e^{0.01\Lambda}$ and
+$4.3C_NE_\theta\le e^{-10^7}$,
+\[
+  j_{X_0}(x)\le1.0001\cdot601\Lambda^3\bigl(200\,e^{8(\log\Lambda)^2-\Lambda}+400\,e^{-0.001\Lambda}\bigr)+e^{-10^7}\le e^{-0.0009\Lambda},
+\]
+because $0.0001\Lambda\ge12.4+3\log\Lambda$ for $\Lambda\ge10^8$.
+\end{proof}
+
+\begin{proof}[Proof of (iii): the huge range]
+Let $J:=\log N\ge600\Lambda^4$ and $W_1:=e^{100}$. The main pieces use Lemma~\ref{lem:si} below, with $J_1=300\Lambda^4$.
+Recall from Lemma~\ref{lem:lemmaM} that $c_e(y)\ne0$ forces $e$ to be squarefree and $4v$-dense whenever $y/e\in[v,2v)$; so
+an element $e$ with $y/e\le1.01\,sX_0$ is $t$-dense with $t=4.01\,sX_0$.
+
+\emph{($\alpha$) The levels $\mathbb B_0$.} $\mathbb B_0\subset[N(1-0.51\delta),N]\cup[N,N(1+0.51\delta)]$. Lemma~\ref{lem:si}
+with $t=4.01X_0$ and $\eta=0.52\delta\in[e^{-2\Lambda},\frac12]$ gives
+$\frac12\cdot2\cdot61.1(1+2.1\tau_0/J)\cdot0.52\delta\,\tau_0/(J-1)\le32\,\delta\tau_0/J$.
+
+\emph{($\beta_1$) $X_0$-near pairs with $w\le W_1$.} As in (ii), $d\in I_w=M_w[1-1.01\delta_w,1+1.01\delta_w]$ with
+$\delta_w=1.03w^{\eps-1}\delta\ge\delta e^{-100}\ge e^{-2\Lambda}$ and $\log M_w\ge J-101$. In \eqref{eq:TVD-sums}, the
+element $d$ is $t_w$-dense with $t_w:=4.01wX_0$, and the element $e\in I_w/m$ is $t_{wm}$-dense with $t_{wm}:=4.01wmX_0$.
+\begin{itemize}
+\item For $m\le N^{1/100}/w$: the height of $I_w/m$ is $\ge N^{0.99}/1.01$, so its logarithm $J'$ is $\ge0.99J-1\ge J_1$;
+  and $t_{wm}\le4.01N^{1/100}X_0\le(N^{0.99})^{1/10}$ because $X_0\le N^{1/(600\Lambda^3)}$. So Lemma~\ref{lem:si} applies, with
+  $\tau_{wm}/J'\le0.0103$ and factor $1+2.1\tau_{wm}/J'\le1.022$:
+  $\sum_{e\in I_w/m}|c_e|/e\le2\cdot61.1\cdot1.022\cdot1.02\,\delta_w\,\tau_{wm}/J'$, with $\tau_{wm}=\tau_0+\log w+\log m$.
+\item For $m>N^{1/100}/w$: Lemma~\ref{lem:short-recip} gives $\sum_{e\in I_w/m}1/e\le29\delta_w+7$, and
+  $\sum_{m>N^{1/100}/w}\Hord(m)m^{\eps-2}\le(N^{1/100}/W_1)^{-0.2}A(1.77)\le e^{22.6}N^{-0.002}$.
+\end{itemize}
+With $A_0\le2.07$ and $A_1=A_1(\eps)\le9.42$, and $J'\ge0.99J-1$,
+\[
+  \sum_{d\in I_w}\frac{\TV(D_d)}{2d}\le\frac{127.4\,\delta_w}{0.99J-1}\Bigl(\tau_w\bigl(1+\tfrac{A_0}4\bigr)+\tfrac{A_1}4\Bigr)
+  +e^{26}N^{-0.002},\qquad \tau_w:=\tau_0+\log w .
+\]
+Weighting by $1/w$ and summing over $2\le w\le W_1$, with $\sum_{w\ge2}w^{-1.97}=0.674$ and
+$\sum_{w\ge2}w^{-1.97}\log w=-\zeta'(1.97)\le1.0001$ (ball arithmetic), gives
+$\le\frac{132.5\,\delta}{0.99J-1}\bigl(0.674(1.518\tau_0+2.36)+1.518\cdot1.0001\bigr)+e^{31}N^{-0.002}\le138\,\delta\tau_0/J$.
+
+\emph{($\beta_2$) Pairs in $\mathbb B_2$ with $w\le W_1$.} Now $d$ ranges over an interval of relative half-width
+$\le1.05\delta$ around $y/(wX_0)$, and by \eqref{eq:TVD-sums} with the factor $\frac14w^{\eps-1}$ and the same use of
+Lemma~\ref{lem:si} (now including $m=1$),
+this part is $\le\frac14\sum_{2\le w\le W_1}w^{\eps-2}\cdot\frac{2\cdot61.1\cdot1.022\cdot1.06\,\delta}{0.99J-1}
+\bigl(\tau_w(1+A_0)+A_1\bigr)+e^{31}N^{-0.002}\le72\,\delta\tau_0/J$.
+
+\emph{($\gamma'$) Pairs with $w>W_1$.} Fix $d$; then $y/d>W_1X_0/2$. Group $d$ by the dyadic block $y/d\in[v,2v)$,
+$v\ge W_1X_0/2$. For $X_0$-near pairs, the $w$-window has relative half-width $\le1.02H(v)/v\le1.02\delta(X_0/v)^{1-\eps}$
+at height $\ge v/X_0$, so $\sum_w1/w\le29\delta(X_0/v)^{0.97}+7(X_0/v)^{3/4}$ by Lemma~\ref{lem:short-recip}. For pairs in
+$\mathbb B_2$ the window has relative half-width $\le1.05\delta$, and the weight carries
+$\frac14w^{\eps-1}\le\frac14(X_0/v)^{0.97}$. By Proposition~\ref{prop:true-kernels} and Corollary~\ref{cor:saias} (and
+Corollary~\ref{cor:kr-weights} for the $m$-sums), the blocks satisfy $\sum_{y/d\in[v,2v)}\TV(D_d)/(2d)\le(C_N+C_S)\log(2v)/\log y$
+and $\sum_{y/d\in[v,2v)}d^{-1}\sum_{m\mid d}\Hord(m)m^{\eps-1}|c_{d/m}|\le C_S\bigl((1+A_0)\log(2v)+A_1\bigr)/\log y$. Summing
+the geometric series over $v=2^jW_1X_0/2$,
+\[
+  (\gamma')\le\frac{2.5\,(C_N+C_S)(\tau_0+102)}{\log y}\Bigl(29\delta\bigl(\tfrac2{W_1}\bigr)^{0.97}+7\bigl(\tfrac2{W_1}\bigr)^{3/4}\Bigr)
+  +\frac{2.5\cdot0.77\,C_S(\tau_0+102)}{\log y}\bigl(\tfrac2{W_1}\bigr)^{0.97}(30\delta+7)\le e^{-60}\,\frac{\tau_0}J .
+\]
+
+\emph{Total.} $\frakB(y)\le(32+138+72)\,\delta\tau_0/J+e^{-60}\tau_0/J\le(400\delta+e^{-60})\,\tau_0/\log N$. Since
+$\log y\le J+\Lambda+1$ and $\tau_0\le1.0001\Lambda$, $\log y\cdot\jz\cdot\tau_0/J\le1.0003$, so with
+$4.3C_NE_\theta\le e^{-10^7}$, $j_{X_0}(x)\le1.0003(400\delta+e^{-60})+e^{-10^7}\le e^{-59}$.
+\end{proof}
+
+\paragraph{Contiguity.} The three ranges meet at $N=e^{0.01\Lambda}$ and $N=e^{600\Lambda^4}$ and so cover $x\ge2X_0$ for
+every $\Lambda\ge10^8$. No step uses a short-interval count at relative width below $e^{-2\Lambda}$, and no sum of the form
+$\sum_w1/(w\log(N/w))$ arises: the pairs with $w>W_1$ are counted by fixing $d$.
+
+\paragraph{A short-interval Saias bound.} The huge range rests on the following lemma. Saias' asymptotic for integers with
+$t$-dense divisors has relative error $O(1/\log t)$, which is far larger than the relative widths $\eta\approx\delta$ needed
+here, so it cannot be used directly. Instead we combine the joint ``$t$-dense and smooth'' profile of
+Lemma~\ref{lem:bs-profile} with the short-window prime counts of Theorem~\ref{thm:lp}\eqref{eq:lpplus}.
+
+\begin{lemma}[Short-interval Saias bound]\label{lem:si}
+% v3: Lemma 3.14B (Lemma SI(Λ))
+Put $\Lambda_1:=100\Lambda^3$ and $J_1:=300\Lambda^4$. Let $J:=\log N\ge J_1$, $t\in[X_0,N^{1/10}]$, $\tau:=\log t$ and
+$\eta\in[e^{-2\Lambda},\frac12]$. Then, on $\Good(<y)$ for every $y\ge N$,
+\begin{equation}\label{eq:si}
+  S_t\bigl([N,N(1+\eta)]\bigr):=\sum_{\substack{n\in\NN\cap[N,N(1+\eta)]\\ n\ \text{squarefree, $t$-dense}}}\frac1n
+  \le61.1\Bigl(1+\frac{2.1\,\tau}J\Bigr)\frac{\eta\,\tau}J .
+\end{equation}
+\end{lemma}
+
+The trivial bound is about $27\eta$; \eqref{eq:si} is the Saias density $\tau/J$ inside an interval of relative width
+$\eta$, with no loss in $\eta$.
+
+\begin{proof}
+Let $I:=[N,N(1+\eta)]$ and let $n\in I$ be squarefree and $t$-dense. Since $n>t$, $n$ is not prime. Put $p:=\Pplus(n)$ and
+$m:=n/p$. Then $m$ is squarefree and $t$-dense with $\Pplus(m)<p\le tm$ (Theorem~\ref{thm:bs}, step (a) of its proof); in
+particular $p^2\le t\,mp=tn$, so $m=n/p\ge\sqrt{n/t}\ge\sqrt{N/t}$ (this uses the lower end $n\ge N$ of $I$). Put
+$P_1:=e^{\Lambda_1}$ and split according to $p<P_1$ or $p\ge P_1$.
+
+\emph{(B) $p<P_1$.} Then $n$ is $P_1$-smooth, and $I\subset(N/2,N]\cup(N,2N]$. By Lemma~\ref{lem:rankin-crude}, this part is
+$\le2e^{14}\Lambda_1e^{-(J-1)/\Lambda_1}$. This is $\le10^{-6}\eta\tau/J$, because $\eta\ge e^{-2\Lambda}$, $\tau\ge\Lambda$, and
+$(J-1)/\Lambda_1\ge3\Lambda-10^{-20}\ge2\Lambda+\log J+3\log\Lambda+34$ at $J=J_1$, while the left side grows linearly and the
+right logarithmically in $J$.
+
+\emph{(A) $p\ge P_1$: the prime sum.} For fixed $m$, $p$ runs over primes in $I/m=[X,X(1+\eta)]$ with $X:=N/m$ and
+$\Lambda_p:=\log X\ge\Lambda_1-1$; in particular $X\ge X_{\mathrm{LP}}$, since $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$, and
+$X\le N\le y$. In Theorem~\ref{thm:lp}(iii), $L_1=2\log\Lambda_p+\log(1/\eta)+5\le2\Lambda+2\log\Lambda_p+5$, $\log G(L_1)\le\Lambda$
+and $c_{\mathrm{zf}}\ge0.088/\Lambda$, so the exponent in \eqref{eq:lpplus} is at least
+$0.0792\,\Lambda_p/\bigl(\Lambda(2\Lambda+2\log\Lambda_p+447+2\log\Lambda+\log L_1)\bigr)$, while
+$\log\bigl(180\,G\,\Lambda_p^3\eta^{-1}\bigr)\le3\Lambda+3\log\Lambda_p+5.2$. For $\Lambda_p\ge76\Lambda^3$ (in particular for
+$\Lambda_p\ge\Lambda_1-1$) the first exceeds the second, so $\mathrm{Rel}\le0.1$. The smooth window $\varphi$ there majorises
+$\mathbf 1_{[X,X(1+\eta)]}$, so $\Pi([X,X(1+\eta)])\le\int\varphi\,d\Pi\le1.1\int\varphi\,d\Pi_0\le1.1\,(1+3\Lambda_p^{-2})\,\eta X/\log X$,
+the factor $1+3\Lambda_p^{-2}$ covering the width $\eta(1+2\Lambda_p^{-2})$ and the lower transition layer. As
+$\Lambda_p\ge10^{25}$, $1.1(1+3\Lambda_p^{-2})\le1.1001$. Hence
+\[
+  \sum_{p\in I/m}\frac1p\le\frac1X\,\Pi\bigl([X,X(1+\eta)]\bigr)\le1.1001\,\frac{\eta}{\log X}=\frac{1.1001\,\eta}{\log(N/m)} .
+\]
+
+\emph{(A) $p\ge P_1$: the $m$-sum.} Group $m$ into dyadic blocks $(M_k,2M_k]$, $M_k:=2^kM_0$ with $M_0:=\frac12\sqrt{N/t}$,
+up to $M_k\le N(1+\eta)/P_1$. In a block, $\Pplus(m)<p\le N(1+\eta)/m<2N/M_k$ and $\log(N/m)\ge\sigma_k:=\log(N/2M_k)$, so
+\[
+  S_A\le1.1001\,\eta\sum_k\frac{W_t(M_k;\,2N/M_k)}{\sigma_k},\qquad
+  W_t(M;z):=\sum_{\substack{m\in\NN\cap(M,2M]\\ m\ \text{sqf, $t$-dense},\ \Pplus(m)<z}}\frac1m .
+\]
+Put $\ell_k:=\log M_k$ and $u_k:=\ell_k/\log(2N/M_k)$. Since $\tau\le J/10$, $\ell_k\ge(J-\tau)/2-2\log2\ge\tau$. Recall from
+Lemma~\ref{lem:bs-profile} the profile $U(\ell)=\ell^{1/4}\bigl(1+\sqrt{2\log(\ell/\tau)+4}\bigr)$,
+$Q(\ell,u)=A+a$ with $A=11(1+u)^3\log(2+u)/\ell$ and $a=(u-\ell^{1/4})_+^2/(2\sqrt\ell)$, and $\Phi_\infty\le38.3$.
+
+\emph{Region 1: $u_k\le U(\ell_k)$.} By Lemma~\ref{lem:bs-profile},
+$W_t(M_k;2N/M_k)\le(\tau/\ell_k)\,\Phi_\infty\,\rho(u_k-1)\,e^{Q(\ell_k,u_k)}$, with $\rho(v):=1$ for $v\le1$.
+\begin{itemize}
+\item For $u\le\ell^{1/4}$: $a=0$ and $A\le11\cdot1.01\,\ell^{-1/4}(\frac14\log\ell+0.01)\le4\cdot10^{-7}$, because
+  $\ell\ge0.45J\ge10^{11}$. For $\ell^{1/4}<u\le U(\ell)$: $e^{Q}\le e^{2}\ell/\tau$ and
+  $\rho(u-1)\le1/\Gamma(\ell^{1/4})$, so these $k$ contribute less than $10^{-6}\tau/J$ in total.
+\item With $\tilde J:=J+\log2$ we have $u_k=\ell_k/(\tilde J-\ell_k)$ and $\sigma_k=\tilde J-\ell_k-2\log2$. The function
+  $f(\ell):=\rho(u(\ell)-1)/(\ell(\tilde J-\ell))$ satisfies
+  \[
+    \int f(\ell)\,d\ell=\frac1{\tilde J}\int\rho(u-1)\frac{du}u\qquad(\ell=\tilde Ju/(1+u)).
+  \]
+  The sum over $\ell_k\in\ell_0+(\log2)\Z$ differs from $(\log2)^{-1}\int f$ by at most the total variation of $f$ on
+  Region~1, which is $\le4\sup f\le10^{-6}/J$, since there $\tilde J-\ell\ge\ell/U(\ell)$.
+\item The lower limit is $u_{\min}\ge(J-\tau-6)/(J+\tau+8)$, and by $\int_a^\infty\rho(w-1)\,dw/w=\rho(a)$ ($a\ge1$),
+  \[
+    \int_{u_{\min}}^\infty\rho(u-1)\frac{du}u=\log\frac1{u_{\min}}+\rho(1)\le1+\log\frac{J+\tau+8}{J-\tau-6}\le(1+10^{-6})\Bigl(1+\frac{2.1\tau}J\Bigr),
+  \]
+  using $\log\frac{1+x}{1-x}=2x(1+\frac{x^2}3+\frac{x^4}5+\cdots)\le2.1x$ for $0\le x\le0.1$.
+\end{itemize}
+Hence Region~1 contributes at most
+$1.1001\cdot\frac{38.3}{\log2}\,(1+3\cdot10^{-6})\bigl(1+\frac{2.1\tau}J\bigr)\frac{\eta\tau}J
+\le60.81\bigl(1+\frac{2.1\tau}J\bigr)\frac{\eta\tau}J$.
+
+\emph{Region 2: $u_k>U(\ell_k)$.} Drop the density condition: by Lemma~\ref{lem:rankin-crude},
+$W_t(M_k;2N/M_k)\le e^{14}\log(2N/M_k)\,e^{-u_k}$, and $\log(2N/M_k)\le1.01\sigma_k$. Since $U(\ell)\ge3\ell^{1/4}\ge3(0.45J)^{1/4}$
+and there are at most $J/\log2+1$ blocks, Region~2 contributes $\le1.1001\,\eta\,e^{14}\cdot1.01\,(J/\log2+1)\,e^{-3(0.45J)^{1/4}}
+\le10^{-6}\eta\tau/J$.
+
+Adding (B), Region~1 and Region~2 gives \eqref{eq:si}, since $60.81+2\cdot10^{-6}\le61.1$.
+\end{proof}
+
+\begin{remark}
+% v3: §3.6, after Lemma 3.14B
+No cancellation of the M\"obius function and no short-interval asymptotic for smooth numbers is used. The smooth part
+needs no density saving: its Rankin factor $e^{-J/\Lambda_1}$ beats $\eta/J$ outright. The thresholds $\Lambda_1$ and $J_1$
+depend only polynomially on $\Lambda$; if the zero-free constant of Theorem~\ref{thm:lp} were only $c_{\mathrm{zf}}\ge\Lambda^{-A}$,
+it would suffice to take $\Lambda_1=100\Lambda^{2+A}$ and $J_1=300\Lambda^{3+A}$, and the middle range of
+Proposition~\ref{prop:xb-ranges} would still close.
+\end{remark}

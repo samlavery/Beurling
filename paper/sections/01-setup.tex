@@ -1,0 +1,210 @@
+% Statement, parameters, logical structure (v3 §0)
+\section{Statement, parameters and logical structure}\label{sec:setup}
+
+Throughout, $L:=\log x$ and $\ell:=\log\log x$ at the scale $x$ under discussion, and $\Lambda:=\log X_0$. The exponent
+$\theta\in[\tfrac14,\theta_1]$, $\theta_1:=\tfrac12-10^{-4}$, is fixed. Numerical values are quoted for $\theta=\tfrac14$, which is the
+worst case for the absorption estimates of Section~\ref{sec:queue}.
+
+\subsection{The main theorem}
+\begin{theorem}[Theorem A]\label{thm:A}
+% v3: Theorem A (§0.1)
+Fix $\theta\in[\tfrac14,\theta_1]$, $\theta_1:=\tfrac12-10^{-4}$, and the parameters of Section~\ref{sec:params}; in particular
+$X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$, where $X_{\mathrm{Hux}}$ is defined in \eqref{eq:huxley}. Let $\PP$ be the random discrete
+Beurling system of Section~\ref{sec:construction}: the hard greedy rule with box-centred jitter, for the target $T$ of
+\eqref{eq:target}. Then on the event $\mathcal G=\{\tau=\infty\}$ of Definition~\ref{def:good}, which has probability at least
+$1-1.5/\log X_0>0$:
+\begin{enumerate}[label=(\roman*)]
+\item $|N_{\PP}(x)-x|\le C_{X_0}x^{\theta}+3x^{\theta}\log^*x+x^{\eta}$ for all $x\ge1$, where $\eta:=\min(\theta,\tfrac12-\theta)/2$ and
+$C_{X_0}<\infty$;
+\item $\zeta_{\PP}$ has zeros $\rho_k$ $(k\ge1)$ with
+$\operatorname{Re}\rho_k=1-\bigl(3\log\log x_k+O_{X_0}(1)\bigr)/\log x_k\to1$.
+\end{enumerate}
+\end{theorem}
+
+The threshold $X_{\mathrm{Hux}}$ is finite by Heath-Brown's theorem \cite{HeathBrown1988} and depends on no parameter of the
+construction. Its value is never used: every quantitative estimate in the proof holds for all $\log X_0\ge10^8$.
+
+\begin{corollary}\label{cor:notQ}
+% v3: Consequence (§0.1)
+The answer to Question~\ref{def:Q} is negative. Equivalently, a discrete $[1,\beta]$-system with $\beta<\tfrac12$ exists.
+\end{corollary}
+
+\begin{proof}
+Fix any $\omega\in\mathcal G$. The realised prime sequence $\PP(\omega)$ is a fixed discrete Beurling system: it has at most one
+prime per slot, hence finitely many below any bound. By Theorem~\ref{thm:A}(i) it has $N=x+O(x^{\theta'})$ for every
+$\theta'\in(\theta,\tfrac12)$, and by Theorem~\ref{thm:A}(ii) it has no zero-free half-plane. That $T$ was constructed adaptively
+plays no role in this conclusion. The equivalence is Remark~\ref{rem:equiv}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:A}, assuming the results of Sections~\ref{sec:construction}--\ref{sec:baserange}]
+Part (i) follows from the target error \eqref{eq:T1}, the property \eqref{eq:La} and $|R|\le2x^{\theta}\log^*x$. Property
+\eqref{eq:La} follows from the two-sided lag \eqref{eq:lag} and the queue bound, Theorem~\ref{thm:queue}, on $\mathcal G$. The queue
+bound needs two inputs.
+\begin{itemize}
+\item The drift of Section~\ref{sec:noise}: the noise response, the margin, and R1$'$ (Corollary~\ref{cor:r1}). The jump of $T'$
+at $X_0$ is Lemma~\ref{lem:xb}, with Lemma~\ref{lem:si} in its largest range.
+\item The probabilistic inputs of Section~\ref{sec:queue}: Freedman's inequality, the cluster event (Proposition~\ref{prop:ecl}) via
+the rank-full counting of Appendix~\ref{app:rankfull}, the local count (Corollary~\ref{cor:localcount}), and the sparsity of the
+absorbed set (Lemma~\ref{lem:lemmaP}).
+\end{itemize}
+Part (ii) is Theorem~\ref{thm:zeros}, from \eqref{eq:La} and Lemma~\ref{lem:ZA}. Finally, $\Prob(\mathcal G)\ge1-1.5/\log X_0$ is
+Lemma~\ref{lem:budget}.
+\end{proof}
+
+\subsection{Parameters}\label{sec:params}
+All parameters are deterministic functions of the scale. They are fixed here, before the construction starts.
+\begin{center}\small
+\begin{tabular}{@{}p{2.1cm}p{12.4cm}@{}}
+\hline
+parameter & value \\ \hline
+$\theta$, $\theta'$ & $\theta\in[\tfrac14,\theta_1]$, $\theta_1:=\tfrac12-10^{-4}$, fixed ($\theta=\tfrac14$ suffices for Corollary~\ref{cor:notQ});
+the local prime number theorem uses the exponent $\theta':=\theta+0.01$. \\
+$X_0$ & $X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$: the single regime for the whole proof. $X_{\mathrm{Hux}}$ is defined in
+\eqref{eq:huxley}, depends on no parameter, and gives $\mathrm{MA}[\mathbb P](q)\log q\ge0.99$ for every $q\ge X_0$
+(Lemma~\ref{lem:margin}(a)). The local prime number theorem is used only above $X_{\mathrm{LP}}(X_0)$, with
+$\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$ \eqref{eq:XLP}. $X_{\mathrm{Hux}}$ is effective but has not been computed, so $X_0$
+is not fixed at $e^{10^8}$; every quantitative estimate therefore holds uniformly in $\Lambda=\log X_0\ge10^8$, in particular the
+computer-assisted Theorem~\ref{thm:bs}, Theorem~\ref{thm:caplw} and \eqref{eq:mu1sum}. \\
+$\kappa$ & $\kappa:=X_0^{-5/12+2\eps}$ with $\eps:=0.01$, i.e.\ $\kappa=X_0^{-0.3967}\approx e^{-3.97\cdot10^7}$ (the window of the
+rigid density; every use needs only $0<\eps\le0.04$). \\
+$H(x)$ & $H:=\max(H_{\mathrm{std}},M_1^2)$, $H_{\mathrm{std}}(x):=\exp(8\ell^2)$, so $H(X_0)\approx e^{2715}$. $H=M_1^2$ exactly on the
+raised range of Theorem~\ref{thm:caplw}, which ends at $\ell_{\mathrm{std}}=\sqrt{(7.5\Lambda+\log4)/4}$ ($1.37\cdot10^4$ at
+$\Lambda=10^8$). Always $\log H-\log H_{\mathrm{std}}\le10^{-6}L$, so $H=x^{o(1)}$; also $H\le4X_0^{15}$. \\
+$\lambda$ & $\lambda=4L$ (Theorem~\ref{thm:queue}); $\lambda_u=3\log u+2\log\log u$ (per-scale noise);
+$\lambda'_u=\lambda_u+2+\log H(u)$ (short windows); $\lambda_P=4\log P$ (Lemma~\ref{lem:landing}). \\
+$c'$ & $c'=0.15$ (the drift margin). \\
+$r_0$, $c$, $M_1$ & $r_0=\lceil L/(3\log L)\rceil+3$. Capacity threshold $\log c=\max(4\ell^2-\log4,\gamma(s)\Lambda)$,
+$s:=\ell-2\log\Lambda$, with the explicit ramp $\gamma\le7.5$ of Theorem~\ref{thm:caplw}; so $c=\tfrac14H_{\mathrm{std}}^{1/2}$ for
+$\ell\ge\ell_{\mathrm{std}}$, and $c\le X_0^{7.5}$ always. $M_1=r_0+\varphi(r_0)+1$ with $\varphi(u)=c+uc^{1/2}+u(u+1)/2$, so
+$M_1\le2c$. Tolerance: $M_1\le H/L^{14}$. \\
+$L_0$, $q_{\min}$, $B$ & $L_0=\max(L^5,48M_1L^3/c'^2)$; $q_{\min}=L_0L^6$; queue bound $B(x)\le5M_1L^2/c'$ \eqref{eq:queueB};
+$K_{\mathrm{loc}}=2B+7\lambda_P/3+13$. \\
+absorption & $L_*=10^7$ (inactive, since $\log X_0\ge10^8$); $y(n)=H(n)L_0(n)(\log n)^6\le X_0^{22.6}L^9$; $\Abs=\emptyset$ wherever
+$y<\Xm=X_0-H(X_0)/2$, which holds for $\ell\le2\log\Lambda+s_H$, $s_H=5.9745$ (Theorem~\ref{thm:caplw}(b)); $h(u)=u^{\theta/2}$;
+Lemma~\ref{lem:lemmaP} uses $\sup_{[u,2u]}y$. \\
+cluster window & $\delta_1=2L^{-6}$. \\
+\eqref{eq:La} & $|D|\le x^{\eta}$ with $\eta=\min(\theta,\tfrac12-\theta)/2$, for all $x\ge\Xm$; $D=0$ below $\Xm$. \\
+amplitudes & $\kappa'_k=\kappa_0/\log^2x_k$, $\kappa_0\in(0,\tfrac14]$; $\Gamma_k=\kappa_0x_k^{1-\theta}/(2\log^3x_k)$;
+$\gamma_k\in[\Gamma_k,2\Gamma_k]$; $\alpha_k\in[1,2]$; $\kappa_+=0.8$. \\
+switch-on & $x_1\ge\exp(X_0^2)$, $x_{k+1}\ge\exp(x_k)$; $R_k\equiv0$ on $[1,x_k+2H(x_k)]$. \\
+budget & $\Prob(\tau<\infty)\le\sum_m(\Lambda+m\log2)^{-2}+O(X_0^{-1})\le1.5/\log X_0$ (Lemma~\ref{lem:budget}). \\ \hline
+\end{tabular}
+\end{center}
+This regime is far beyond anything that can be simulated. Experiments at small scales (with $X_0\le10^7$ and
+$x\le5\cdot10^8$) reproduce the qualitative behaviour (a queue of size $O(\log^2x)$, and designed zeros near the predicted points),
+but they test only the mechanism, not any inequality used in the proof.
+
+\subsection{Logical structure}\label{sec:logic}
+The table lists the main results with their inputs. An input marked $\downarrow$ is used only at a strictly earlier time or a
+strictly smaller height; every other input is used at the same time. The same-time dependencies form an acyclic graph; this was
+checked mechanically on the full dependency graph (77 nodes, 168 edges, 27 of them $\downarrow$; Appendix~\ref{app:cert}). The
+time-ordering of the $\downarrow$ edges is Section~\ref{sec:noncirc}.
+\begin{center}\footnotesize
+\begin{tabular}{@{}p{4.4cm}p{6.6cm}p{3.5cm}@{}}
+\hline
+result & inputs & used in \\ \hline
+\eqref{eq:huxley} & Heath-Brown, de la Vall\'ee Poussin & \eqref{eq:G1}, Lemmas~\ref{lem:blin}, \ref{lem:margin} \\
+Lemma~\ref{lem:adapted} (adaptedness) & \eqref{eq:C2}, Section~\ref{sec:params} & Section~\ref{sec:noncirc}, Lemma~\ref{lem:budget} \\
+\eqref{eq:G1} (positivity) & \eqref{eq:huxley}, the cap, \eqref{eq:ampl} & slots, \ref{eq:sF1} \\
+\eqref{eq:T1} (target error) & Rankin; Lemma~\ref{lem:lemmaP}$\downarrow$ & Theorem~\ref{thm:A}(i), Section~\ref{sec:noise}, Lemma~\ref{lem:ZA} \\
+Lemmas~\ref{lem:count}--\ref{lem:excess} & the greedy rule & Theorem~\ref{thm:queue}, Corollary~\ref{cor:localcount}, \eqref{eq:La} \\
+Lemmas~\ref{lem:ZB}, \ref{lem:ZBlow} & \eqref{eq:rhodet}; Titchmarsh & Section~\ref{sec:zeros}; Theorem~\ref{thm:lp} \\
+Lemma~\ref{lem:ZA} & Lemma~\ref{lem:lemmaP}$\downarrow$, Theorem~\ref{thm:caplw}(b)$\downarrow$ & Lemma~\ref{lem:goodheights}, Theorem~\ref{thm:zeros} \\
+Lemmas~\ref{lem:designedzero}--\ref{lem:goodheights} & Lemma~\ref{lem:ZB}; mean values; \eqref{eq:La}$\downarrow$ on $[1,x_k)$, Lemma~\ref{lem:ZA}$\downarrow$ & Theorem~\ref{thm:zeros}, choice of $\gamma_k$ \\
+\eqref{eq:La}, Theorem~\ref{thm:zeros} & \eqref{eq:lag}, Theorem~\ref{thm:queue}, Lemma~\ref{lem:budget}; Rouch\'e & Theorem~\ref{thm:A}(ii) \\
+Lemmas~\ref{lem:blin}, \ref{lem:margin} & \eqref{eq:huxley}; Lemma~\ref{lem:cm}$\downarrow$, \eqref{eq:T1}$\downarrow$, \eqref{eq:La}$\downarrow$ on cofactors & Proposition~\ref{prop:g1} \\
+Lemma~\ref{lem:cm} (Chebyshev--Mertens) & \eqref{eq:HBS} from Theorem~\ref{thm:queue}$\downarrow$ & Section~\ref{sec:noise}, \ref{eq:sF3p}, \ref{eq:sF4} \\
+Theorem~\ref{thm:bs}, Lemma~\ref{lem:bs-profile} & Lemmas~\ref{lem:cm}, \ref{lem:smooth-v}; certificate & Corollary~\ref{cor:saias}, Lemma~\ref{lem:si} \\
+Theorem~\ref{thm:kr}, Proposition~\ref{prop:true-kernels} & Lemma~\ref{lem:lemmaM}, Corollary~\ref{cor:saias}; Corollary~\ref{cor:localcount}$\downarrow$ & Proposition~\ref{prop:br} \\
+Lemma~\ref{lem:noise} (per-scale noise) & Freedman; Theorem~\ref{thm:queue}$\downarrow$, Proposition~\ref{prop:ecl}$\downarrow$, Corollary~\ref{cor:localcount}$\downarrow$, Lemma~\ref{lem:lemmaP}$\downarrow$ & Proposition~\ref{prop:pointwise} \\
+Theorem~\ref{thm:lp} (local PNT) & Lemma~\ref{lem:ZBlow}, \eqref{eq:Rhatbound}, \eqref{eq:T1}, Lemma~\ref{lem:cm}; $|N-T_0|$ bound$\downarrow$ & Proposition~\ref{prop:g1}, Lemma~\ref{lem:si} \\
+\eqref{eq:osc} & \eqref{eq:rhodet}, \eqref{eq:target}; Lemma~\ref{lem:rhoA}(d) via Lemma~\ref{lem:lemmaP}$\downarrow$ & Propositions~\ref{prop:br}, \ref{prop:pointwise} \\
+Lemmas~\ref{lem:xb}, \ref{lem:si} (jump at $X_0$) & Theorem~\ref{thm:kr}, Proposition~\ref{prop:true-kernels}, Theorem~\ref{thm:lp}, Lemma~\ref{lem:bs-profile}; Corollary~\ref{cor:localcount}$\downarrow$, Lemma~\ref{lem:lemmaP}$\downarrow$ & Propositions~\ref{prop:g1}, \ref{prop:pointwise}, Theorem~\ref{thm:g2} \\
+Proposition~\ref{prop:g1}, Theorem~\ref{thm:g2}, Proposition~\ref{prop:pointwise} & Lemma~\ref{lem:margin}, Propositions~\ref{prop:br}, Theorem~\ref{thm:lp}, Lemmas~\ref{lem:xb}, \ref{lem:noise}, \eqref{eq:osc} & Corollary~\ref{cor:r1} \\
+Corollary~\ref{cor:r1} (R1$'$, every window) & Proposition~\ref{prop:pointwise} & Theorem~\ref{thm:queue} \\
+Lemma~\ref{lem:landing}, Corollary~\ref{cor:localcount} & \ref{eq:sF1}, \ref{eq:sF2}, Freedman, Lemma~\ref{lem:count}; Theorem~\ref{thm:queue}$\downarrow$ & Section~\ref{sec:noise} ($\downarrow$ uses) \\
+Theorem~\ref{thm:queue} (queue bound) & Corollary~\ref{cor:r1}, \ref{eq:sF1}, \ref{eq:sF2}, Lemmas~\ref{lem:lindley}, \ref{lem:excess}, Freedman; Proposition~\ref{prop:ecl}$\downarrow$, Corollary~\ref{cor:increment}$\downarrow$, \ref{eq:sF3p}$\downarrow$, Theorem~\ref{thm:queue}$\downarrow$ & \eqref{eq:La}, Lemma~\ref{lem:budget} \\
+Definition~\ref{def:good}, Lemma~\ref{lem:budget} & Theorem~\ref{thm:queue}, Proposition~\ref{prop:ecl}, Lemmas~\ref{lem:landing}, \ref{lem:noise} & Theorem~\ref{thm:A} \\
+Proposition~\ref{prop:ecl}, Corollary~\ref{cor:increment} & Theorem~\ref{thm:R}, Theorem~\ref{thm:caplw} & Theorem~\ref{thm:queue}, Lemmas~\ref{lem:noise}, \ref{lem:lemmaP} \\
+Theorem~\ref{thm:caplw} (capacity) & combinatorial covering lemmas, Rankin, Rosser--Schoenfeld & Proposition~\ref{prop:ecl}, Lemma~\ref{lem:lemmaP} \\
+Lemmas~\ref{lem:lemmaP}, \ref{lem:rhoA} (absorption) & Lemma~\ref{lem:cm}, Theorem~\ref{thm:caplw}, Corollary~\ref{cor:increment}; Proposition~\ref{prop:ecl}$\downarrow$ & \eqref{eq:target}, \eqref{eq:T1}, Lemma~\ref{lem:ZA}, \eqref{eq:osc} \\
+Theorem~\ref{thm:R} (Appendix~\ref{app:rankfull}) & \ref{eq:sF1}--\ref{eq:sF4} & Proposition~\ref{prop:ecl} \\ \hline
+\end{tabular}
+\end{center}
+The three loops of the proof close only through $\downarrow$ edges:
+\begin{itemize}
+\item queue $\to$ R1$'$ $\to$ per-scale noise $\to$ queue: Lemma~\ref{lem:noise} reads the queue at earlier slots;
+\item queue $\to$ cluster event $\to$ Lemma~\ref{lem:cm} $\to$ \eqref{eq:HBS} $\to$ queue: the cluster event reads Mertens bounds at
+heights $\le s-H$;
+\item local count $\to$ queue $\to$ local count: Corollary~\ref{cor:localcount} at height $z$ is read only at heights $\ge4z$ or
+$\ge z^2$.
+\end{itemize}
+
+\subsection{Why the induction is not circular}\label{sec:noncirc}
+The induction runs over \emph{time} (slots), not over scales. Every bad event is frozen at a time before any consumer reads it.
+
+\emph{(N0) Deterministic parameters.} $H$, $M_1$, $c$, $L_0$, $y$, $r_0$ and the switch-on points are deterministic functions of the
+scale, fixed in Section~\ref{sec:params} before the construction starts. The only random objects are the decisions $P_j$ and the
+jitters $U_j$.
+
+\emph{(N1) First failure} (Definition~\ref{def:good}, Lemma~\ref{lem:budget}).
+\begin{itemize}
+\item Every bad event $E$ carries a time $t(E)$, a slot, and is $\mathcal F_{t(E)}$-measurable. Put
+\[
+  \Good(<t):=\{Q_j\le B(s_j)\text{ for all }j\text{ with }t_j<t\}\cap\bigcap_{t(E)<t}E,
+\]
+where the queue constraint at $j$ carries the time $t_j:=\lceil s_{j+1}\rceil+1$, the reach of its outer deterministic window.
+Slots can be longer than $1$, but $s_{j+1}-s_j\le11.3L$ by \eqref{eq:G1}. The time $t_j$ is predictable, since $s_{j+1}$ is
+determined by $T$ on $[1,s_{j+1}]$ (Lemma~\ref{lem:adapted}). Then $\tau:=\min\{t:\Good(\le t)\text{ fails}\}$ is an
+$(\mathcal F_t)$-stopping time.
+\item Each event's bound holds on $\Good(<t(E))$. Freedman's inequality is used in the form $\Prob(S\ge a,\ V\le v)$, or peeled,
+so no conditioning on the future enters.
+\item (D) The queue bound at $s_j$ is deterministic on $\Good(<t_j)\cap\bigcap_{t(E)\le t_j}E$ (Theorem~\ref{thm:queue}(ii)). The
+relevant window event has time $\max I\le t_j$. Events with time in $(s_j,t_j]$ read only lower heights, so none of them uses $Q_j$.
+\item Hence $\Prob(\tau<\infty)\le\sum_E\Prob(E^c\cap\Good(<t(E)))\le1.5/\log X_0$, and on $\mathcal G=\{\tau=\infty\}$ every event
+holds at every scale.
+\end{itemize}
+
+\emph{(N2) The inputs of the queue bound at $s_j\in[x,2x)$ all have time $\le t_j$.} R1$'$ (Corollary~\ref{cor:r1}) on a window $I$
+with $\max I\le t_j$ holds on $\Good(<\max I)$, and it reads:
+\begin{itemize}
+\item the local prime number theorem (Theorem~\ref{thm:lp}, against the target without the absorbed part) on $[1,u(1-2\delta)]$,
+which is pathwise in the realised count below, so no event is needed;
+\item local counts at heights $\le u/4$ or $\le\sqrt u$, and one local count at height $u(1-\delta)$
+(the proof of Proposition~\ref{prop:g1}(B), Step~1), read before $u-\delta u+7H<u$;
+\item the per-scale noise event for the noise on $[1,u/2]$, at time $2v\le u$;
+\item the short-window events, internally ordered by window start, each window's variance bound coming from strictly earlier
+windows (Proposition~\ref{prop:pointwise});
+\item the cluster event at heights $\le8u/L^{11}+H$.
+\end{itemize}
+
+\emph{(N3) The cluster event follows from Theorem~\ref{thm:R} at lower heights, independently of the queue.}
+\begin{itemize}
+\item The moment bounds of Section~\ref{sec:queue} and Appendix~\ref{app:rankfull} carry the good-event indicator progressively,
+$\mathbf 1(\Good(<s_{p_1}))\ge\mathbf 1(\Good(<s_{p_2}))\ge\cdots$ at successive pivots.
+\item They use it only through: the harmonic sums \ref{eq:sF3p} over elements whose primes are all decided before $s$; Mertens
+bounds at heights $\le s-H$, which hold surely on $\Good(<s)$ (Lemma~\ref{lem:cm}, local form); and the sure slot facts
+\ref{eq:sF1}, \ref{eq:sF2}.
+\item No queue bound at heights in the window is used quantitatively, and the window's time is at most the cluster event's time.
+\end{itemize}
+
+\emph{(N4) The local count uses the queue bound strictly below the current scale.}
+\begin{itemize}
+\item The local count at height $z$ (Corollary~\ref{cor:localcount}: Lemma~\ref{lem:landing} plus the count identity) reads queue
+bounds at slots $\le z+H(z)$ and the landing event at height $z$.
+\item Its uses are all at heights $\le$ (the consumer's height)$/4$ or $\le\sqrt{\text{consumer's height}}$: the two steps of
+Lemma~\ref{lem:threshold-mass}, the bridge and near-threshold terms (Proposition~\ref{prop:br}, Lemma~\ref{lem:tau-near}),
+Lemma~\ref{lem:noise}, and optionally Lemma~\ref{lem:lemmaP}.
+\item The per-prime increment in Theorem~\ref{thm:queue} uses the cluster event (Corollary~\ref{cor:increment}), never the local
+count, because a local count at height $x/q$ would force $B(x)\ge(3/c')L^2B(x/q)$.
+\end{itemize}
+
+\emph{(N5) Absorption and zeros.}
+\begin{itemize}
+\item Membership in $\Abs$ is decided at the latest prime $r<y(n)\ll n$, and $\rho_{\Abs}$ at $u$ reads only data decided before
+$u-H$ (Lemma~\ref{lem:adapted}).
+\item Lemma~\ref{lem:lemmaP} at $u$ reads the cluster event and local counts at heights $u/d<u$: an induction on height.
+\item $\gamma_k$ is chosen from $Z_\infty$ (deterministic) and the system on $[1,x_k)$ (Lemma~\ref{lem:goodheights}), and
+$R_k\equiv0$ on $[1,x_k+2H(x_k)]$. So $T$ is adapted.
+\item \eqref{eq:La} and Section~\ref{sec:zeros} are pathwise consequences on $\mathcal G$.
+\end{itemize}

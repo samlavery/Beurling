@@ -1,0 +1,42 @@
+% Section: the noise response and the margin of the compensator (v3 §3).
+% Author file; sub-files are \input below. fix-bprime's files: 04k-kernels.tex, 04x-x0band.tex.
+\section{The noise response and the margin of the compensator}\label{sec:noise}
+% v3: §3
+
+This section proves that the predictable compensator of the jittered composites leaves a positive margin at every
+scale. Write $L:=\log x$.
+\begin{itemize}
+\item Theorem~\ref{thm:g2} shows that the $H(x)$-window average $M$ of the margin satisfies
+  $\log x\cdot M(x)\ge 0.97-o(1)-j_{X_0}(x)$, uniformly in $x\ge 2X_0$.
+\item Proposition~\ref{prop:pointwise} extends this to the pointwise margin density $m$.
+\item Corollary~\ref{cor:r1} deduces the drift inequality R1$'$ on every window, with $c'=0.15$. This is the input of
+  Theorem~\ref{thm:queue}.
+\end{itemize}
+The jump of the target at $X_0$ is handled exactly by Lemma~\ref{lem:xb}, using the short-interval Saias bound of
+Lemma~\ref{lem:si}. The noise enters only through Saias-weighted dyadic sums \eqref{eq:sw-sums}, which depend on $X_0$
+alone. This is what removes the divergence of the sup-norm noise response.
+
+The section is organised as follows.
+\begin{itemize}
+\item \S\ref{sec:noise-notation}: notation.
+\item \S\ref{sec:noise-primes}: prime inputs (Chebyshev--Mertens and smooth elements).
+\item \S\ref{sec:noise-identity}: the margin identity and its push-through form.
+\item \S\ref{sec:noise-saias}: the sharp coefficients (Lemma~M) and the Beurling--Saias bound.
+\item \S\ref{sec:kernels}: the operator kernels.
+\item \S\ref{sec:noise-perscale}: the noise, per scale.
+\item \S\ref{sec:noise-lp}: a local prime number theorem.
+\item \S\ref{sec:noise-bridge}: the bridge from the operator to the sharp reference, the $X_0$ jump, and positivity of
+  the sharp reference.
+\item \S\ref{sec:noise-margin}: the margin and R1$'$.
+\end{itemize}
+
+\input{sections/04a-setup}
+\input{sections/04b-identity}
+\input{sections/04c-saias}
+\InputIfFileExists{sections/04k-kernels}{}{%
+  \subsection{The operator kernels}\label{sec:kernels}
+  \textbf{[Placeholder: 04k-kernels.tex (Theorem~3.6, Corollary~3.7, Proposition~3.8, Lemmas~3.9--3.10) is pending.]}}
+\input{sections/04d-noise}
+\input{sections/04e-lp}
+\input{sections/04f-bridge}
+\input{sections/04g-margin}

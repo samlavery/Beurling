@@ -1,0 +1,47 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,enumitem}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref,cleveref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=green!40!black,urlcolor=blue!50!black}
+\input{macros}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{theoremA}{Theorem A}
+
+\title[Beurling systems with $N(x)=x+O(x^{\theta})$, $\theta<1/2$, and no zero-free half-plane]{Discrete Beurling number systems with integer error $O(x^{\theta})$, $\theta<1/2$, whose zeta function has no zero-free half-plane}
+\author{Samuel Lavery}
+\email{sam.lavery@gmail.com}
+\date{Draft, \today. Not yet verified by a human expert; see the statement on AI use.}
+
+\begin{document}
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+\maketitle
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+\input{sections/00-intro}
+\input{sections/01-setup}
+\input{sections/02-construction}
+\input{sections/03-zeros}
+\input{sections/04-noise}
+\input{sections/05-queue}
+\input{sections/06-base-range}
+\appendix
+\input{sections/A-rankfull}
+\input{sections/B-certificates}
+\input{sections/C-ai-statement}
+
+\nocite{BDR}
+\bibliographystyle{amsplain}
+\bibliography{refs}
+\end{document}

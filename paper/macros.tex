@@ -1,0 +1,49 @@
+% Shared macros. Add new ones here only (never in section files), and tell the assembler.
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\PP}{\mathcal{P}}        % generalized primes
+\newcommand{\NN}{\mathcal{N}}        % generalized integers
+\newcommand{\Abs}{\mathcal{A}}       % absorbed set
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Good}{\mathrm{Good}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\Li}{\operatorname{li}}
+\newcommand{\rhodet}{\rho_{\mathrm{det}}}
+\newcommand{\Xm}{X_0^{-}}
+\newcommand{\cl}{\mathrm{cl}}
+% --- §noise (04-noise*.tex), gap-localpnt ---
+\newcommand{\Kpt}{K_{\mathrm{pt}}}          % pointwise sharp latest-prime operator
+\newcommand{\Rres}{\mathcal{R}}             % long resolvent (1+K_pt B)^{-1}
+\newcommand{\rhot}{\tilde\rho}              % jitter-smoothed slot density
+\newcommand{\rhosh}{\rho^{\mathrm{sh}}}     % sharp reference
+\newcommand{\Tc}{T'_{\mathrm{c}}}           % jump-free source
+\newcommand{\jz}{j_0}                       % jump of T' at X_0
+\newcommand{\Hord}{H_{\mathrm{ord}}}        % ordered factorisations
+\newcommand{\NT}{\mathrm{NT}}               % near-threshold correction
+\newcommand{\Comp}{\mathrm{Comp}}           % predictable compensator
+\newcommand{\Mart}{\mathrm{Mart}}           % martingale part
+\newcommand{\TV}{\operatorname{TV}}         % total variation
+\newcommand{\KR}{\mathrm{KR}}               % Kantorovich--Rubinstein norm subscript
+\newcommand{\osc}{\operatorname{osc}}
+\newcommand{\Pplus}{P^{+}}                  % largest prime factor
+% --- §5 (05-queue.tex, gap-g3); prefixed \q... to avoid clashes ---
+\newcommand{\qHstd}{H_{\mathrm{std}}}          % standard jitter width exp(8 (log log x)^2)
+\newcommand{\qljit}{\ell_{\mathrm{jit}}}       % number of continuous (jittered) slots
+\newcommand{\qCjit}{C_{\mathrm{jit}}}          % non-absorbed composites with jittered latest prime
+\newcommand{\qEcl}{E_{\mathrm{cl}}}            % cluster event
+\newcommand{\qKloc}{K_{\mathrm{loc}}}          % local-count constant
+\newcommand{\qComp}{\operatorname{Comp}}       % compensator
+\newcommand{\qexc}{\operatorname{exc}}         % excess of a window
+\newcommand{\qCap}{\operatorname{Cap}}         % capacity |S| - rank S
+\newcommand{\qsupp}{\operatorname{supp}}
+\newcommand{\qFr}{\mathrm{Fr}}                 % Freedman event of Thm 5.3
+\newcommand{\qLand}{\mathrm{Land}}             % landing event
+\newcommand{\qdeg}{\operatorname{deg}}
+% --- §3 extra notation (fix-bprime; 04k-kernels, 04x-x0band). Uses gap-localpnt's \Kpt, \Rres, \rhosh, \Tc, \jz, \Hord, \TV, \KR. ---
+\newcommand{\KRn}[1]{\lVert #1\rVert_{\KR}}  % Kantorovich--Rubinstein norm
+\newcommand{\bx}{\mathrm{box}}               % uniform probability on an interval
+\newcommand{\frakB}{\mathfrak{B}}            % X_0-band defect
+\newcommand{\nom}{\mathrm{nom}}              % nominal (frozen-filter) kernels

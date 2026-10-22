@@ -1,0 +1,105 @@
+% 04b-identity.tex — v3 §3.2. Author: gap-localpnt.
+\subsection{The margin identity and the push-through form}\label{sec:noise-identity}
+% v3: §3.2
+
+\paragraph{Bookkeeping} (Lemmas~\ref{lem:count}, \ref{lem:excess}, Corollary~\ref{cor:lag}). Rigid integers and
+elements of $\Abs$ sit on their own unit jumps of $T$ (jump slots). Every level crossing of $T$ is either a jump slot or a
+continuous slot, so on every window $W$
+\[
+  \#\{\text{continuous slots in }W\}=\int_WT'_{\mathrm{cont}}\pm2 .
+\]
+By Lemma~\ref{lem:count}, on a slot window $W$ the number of primes decided equals the number of continuous slots,
+minus the non-absorbed jittered composites landing in $W$, plus the change in the queue:
+\begin{equation}\label{eq:bookkeeping}
+  \sigma(W)=\#\{\text{continuous slots in }W\}-C_{\mathrm{jit}}(W)+\Delta Q(W)\pm2 ,
+\end{equation}
+where the $\pm2$ accounts for the two slot boundaries. Here $C_{\mathrm{jit}}$ counts the composites $n\notin\Abs$ whose
+latest prime $q$ (in decision order) is jittered; the cofactor may be any element of $\NN$. Write
+$C_{\mathrm{jit}}=C^{(1)}+C^{(\ge2)}$, according to whether $q\,\|\,n$ or $q^2\mid n$.
+\begin{itemize}
+\item $\Comp$ is the predictable compensator of $C^{(1)}$. Given $\mathcal F_{q-}$, the element $q\cdot w$ ($q\nmid w$)
+  lands in $W$ with conditional probability $|J_q\cap W/w|/H(s_q)$, and $q\cdot w$ is formed only if $q$ is decided
+  after every prime of $w$, i.e.\ $s_q>\tau_w$. Hence
+  \[
+    \Comp(W)=\sum_w\int_{W/w}J(\Pi_{\tau_w}\sigma)\cdot\mathbf 1[qw\notin\Abs],
+  \]
+  where $\Pi_\tau\sigma$ keeps the slots $s_q>\tau$.
+\item $\Comp^{(2)}$ is the predictable compensator of $C^{(\ge2)}$:
+  $\Comp^{(2)}(W):=\sum_q\sum_{a\ge2}\sum_m\Prob(q^am\in W\mid\mathcal F_{q-})$.
+\item $\Mart':=(C^{(1)}-\Comp)+(C^{(\ge2)}-\Comp^{(2)})=:\Mart+\Mart^{(2)}$. Both parts are martingales in decision
+  order. They are controlled by separate Freedman bounds (\S\ref{sec:noise-perscale}), because the increment of $q$ enters
+  $\Mart$ through $W/q$ and $\Mart^{(2)}$ through $W/q^a$.
+\end{itemize}
+
+Since $\int_{W_x/w}g=\frac1w\int_{W_x}g(y/w)\,dy$,
+\[
+  \Comp(W_x)/H(x)=(B\Kpt\rhot)(x)-(BK_{\Abs}\rhot)(x)+\NT(x).
+\]
+\begin{itemize}
+\item $K_{\Abs}$ is the part of $\Kpt$ whose landing is absorbed ($y/w<y(y)$, $\log y\ge L_*$).
+\item The cutoff $\mathbf 1[y/w\ge\Xm]$ in $\Kpt$ costs nothing, since $\rhot$ vanishes below $\Xm$.
+\item $\NT$ replaces the slot filter $s_q>\tau_w$ by the landing filter $y/w>\tau_w$ on the non-absorbed part. It is
+  supported on \emph{$\tau$-near-threshold} cofactors, i.e.\ those with $|\tau_w-y/w|\le2H(y/w)$, and
+  \begin{equation}\label{eq:NT}
+    |\NT(y)|\le2\eta(y)\cdot\sup\rhot,\qquad\eta(y):=\sum_{w\ \tau\text{-near at }y}\frac1w .
+  \end{equation}
+\item $\NT_{\mathrm{pt}}$ denotes $\NT$ before the $B$-average, and $m:=T'-\Kpt\rhot-\NT_{\mathrm{pt}}$ is the
+  \emph{pointwise margin density}.
+\end{itemize}
+
+\begin{proposition}[the margin identity]\label{prop:margin-identity}
+% v3: Identity (3.1)
+For every $y\ge X_0$,
+\begin{equation}\label{eq:margin-identity}
+  \rhot+B\Kpt\rhot=F,\qquad F:=\tilde T'-\nu-\NT,\qquad
+  \nu(y):=\frac{\Mart'(W_y)-\Delta Q(W_y)+\Comp^{(2)}(W_y)}{H(y)} .
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Apply \eqref{eq:bookkeeping} to the window $W_y$ and divide by $H(y)$. On the left, $\rhot(y)=\sigma(W_y)/H(y)+O(2/H(y))$:
+every box is centred and has width $H(s_q)=H(y)(1+O(\eps H(y)/y))$, so at most two slots near the ends of $W_y$ are
+counted differently. On the right, write $C_{\mathrm{jit}}=\Comp+\Comp^{(2)}+\Mart'$, use the display for
+$\Comp(W_y)/H(y)$ above, and move $B\Kpt\rhot$ to the left. The terms $BK_{\Abs}\rhot$ and $\#\{\text{continuous slots in }W_y\}/H$
+make up $\tilde T'$. The $O(1/H)$ terms are part of $\vartheta$ in \eqref{eq:Ttilde}.
+\end{proof}
+
+The compensator margin density at $y$ is
+\begin{equation}\label{eq:M}
+  M(y):=\tilde T'(y)-(B\Kpt\rhot)(y)=\rhot(y)+\nu(y)+\NT(y).
+\end{equation}
+The noise $\nu$ enters only at the current scale $y$, as an $H(y)$-window function (Lemma~\ref{lem:noise}). Every other
+quantity in \eqref{eq:margin-identity} at $y$ involves $\sigma$ only at scales $\le y/2+H$.
+
+\paragraph{The push-through form.} $\Kpt$ maps functions supported on scales $\ge v$ to functions supported on scales
+$\ge2v$. So $1+B\Kpt$ and $1+\Kpt B$ are invertible, and their Neumann series terminate on bounded ranges. For any such
+operators $B,K$,
+\[
+  (1+BK)^{-1}=(1-B)+B(1+KB)^{-1}\big(1-K(1-B)\big),
+\]
+since $(1+BK)(1-B)+B(1-K(1-B))=1-B+BK-BKB+B-BK+BKB=1$. With $K=\Kpt$ and $\Rres:=(1+\Kpt B)^{-1}$, \eqref{eq:margin-identity}
+gives
+\begin{equation}\label{eq:pushthrough}
+  \rhot=(1-B)F+B\Rres F-B\Rres\Kpt(1-B)F .
+\end{equation}
+\begin{itemize}
+\item $\Rres$ is the \emph{long} operator: at each step the sharp landing filter, followed by an $H(u)$-average at the
+  landing scale $u$. Its kernels $C_n$ are studied in \S\ref{sec:kernels}.
+\item $(1-B)$ acts only on the source. The response $\rhot$ is never differentiated, so no regularity lemma for it is needed.
+\item Applying the pointwise inverse $(1+\Kpt)^{-1}$ to \eqref{eq:margin-identity} instead would leave the response term
+  $(1-B)\Kpt\rhot$, which is of size $\asymp1/\log y$ in sup norm. This is why the push-through form is used.
+\end{itemize}
+Note also the push-through identity $(1+B\Kpt)^{-1}B=B\Rres$ and its consequence $\Kpt B\Rres=1-\Rres$.
+
+\paragraph{The jump split.} Split $T'=\Tc+J$ with $J=\jz\mathbf 1_{[X_0,\infty)}$ (\S\ref{sec:noise-notation}). The
+$J$-part of $F$ is $BJ$. By the push-through identity its contribution to $\rhot$, and hence to the margin
+$M=\rhot+\nu+\NT$, is exactly $B\Rres J$. For the rest put
+\begin{equation}\label{eq:decomp}
+  F_c:=F-BJ=\Tc+F_r,\qquad F_r:=(B-1)\Tc+\vartheta/H-\nu-\NT,\qquad G:=\Kpt(1-B)F_c .
+\end{equation}
+By \eqref{eq:pushthrough} applied to $F_c$,
+$M=B\Rres J+(1-B)F_c+B\Rres F_c-B\Rres G+\nu+\NT$.
+
+\emph{Placement convention.} The absorbed source $\sigma_{\Abs}$ is part of $\Tc$, never of $F_r$. Only its
+$H$-oscillation enters, through $(B-1)\Tc$ and $o_u$ (see \eqref{eq:osc}). The jump enters only through $B\Rres J$, that is,
+through Lemma~\ref{lem:xb}.

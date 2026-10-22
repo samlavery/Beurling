@@ -1,0 +1,183 @@
+% 04g-margin.tex — v3 §3.7: Theorem 3.17, Proposition 3.18, Corollary 3.19. Author: gap-localpnt.
+\subsection{The margin: window average, pointwise, and R1\texorpdfstring{$'$}{'}}\label{sec:noise-margin}
+% v3: §3.7
+
+\begin{theorem}[the margin on $H$-windows, uniformly in $x$]\label{thm:g2}
+% v3: Theorem 3.17
+On $\Good(<x)$, for every $x\ge2X_0$, the compensator margin \eqref{eq:M} satisfies
+\[
+  \log x\cdot M(x)=\log x\cdot(\tilde T'-B\Kpt\rhot)(x)\ge0.97-o(1)-\eps_N-E_{\mathrm{BR}}-j_{X_0}(x),\qquad
+  \eps_N+E_{\mathrm{BR}}\le10^{-13},
+\]
+where $j_{X_0}$ is defined in \eqref{eq:jX0}; $j_{X_0}\le0.4209$ for $x\le X_0e^{0.01\Lambda}$ and $j_{X_0}\le e^{-0.0009\Lambda}$ beyond (Proposition~\ref{prop:xb-ranges}).
+\end{theorem}
+
+\begin{proof}
+\begin{itemize}
+\item By \eqref{eq:predictable} and Lemma~\ref{lem:predictable}, $\log x\cdot M(x)\ge\log x\cdot(B\Rres T')(x)-\eps_N$.
+\item By Proposition~\ref{prop:br}, Lemma~\ref{lem:xb} and \eqref{eq:jX0} at each point $y$ of $W_x$,
+  $\Rres T'(y)\ge\rhosh(y)-(E_{\mathrm{BR}}+j_{X_0}(x))/\log y$. (For $y<2\Xm$, $\Rres T'=\rhosh=T'$.)
+\item By Proposition~\ref{prop:g1} at each point of $W_x$, $B\rhosh(x)\cdot\log x\ge0.97-o(1)$.
+\item Every noise input lives at scales $\le x/2+2H$. Proposition~\ref{prop:g1} at points of $W_x$ uses only data up to
+  $x-H/2$ (its windows $J$ end before $x$).\qedhere
+\end{itemize}
+\end{proof}
+
+This is the place where the divergence of the sup-norm noise response is avoided. A bound of the form
+$|Ke|\le(1+\log x)^{2K+1}\sup|\nu|$ diverges, because $\nu$ is of size $\asymp H(X_0)^{-1/2}$ at $u\approx X_0$. Here the noise
+enters only through \eqref{eq:sw-sums}, whose weights $\log(2u)$ and $(\log3v)^2$ come from Corollary~\ref{cor:saias} and
+Lemma~\ref{lem:S}. The exponent of $1/\log x$ in Theorem~\ref{thm:bs} is exactly~$1$, which is what makes these sums
+independent of $x$.
+
+\begin{proposition}[the pointwise margin]\label{prop:pointwise}
+% v3: Proposition 3.18
+Let $m(t)=T'(t)-(\Kpt\rhot)(t)-\NT_{\mathrm{pt}}(t)$ be the pointwise margin density (\S\ref{sec:noise-identity}), so that
+$M=Bm+B\,\NT_{\mathrm{pt}}+\vartheta/H$. Put $v(t):=\sup_{|h|\le1.01H(t)}|m(t+h)-m(t)|$, $N:=t/X_0$, and
+\begin{gather*}
+  E_S:=\sup_v\log v\cdot o_v+2\sup_y\log y\cdot\eta(y)+27\sum_{v\text{ dyadic}}\log(3v)\,\hat\nu(v)\qquad(\le10^{-28}),\\
+  V_{X_0}(t):=1.02\,(1+\log N/\Lambda)\sum_{M\in I'_t}\Hord(M)\,M^{\eps'-2},\qquad I'_t:=\{M\in\NN:|t/M-X_0|\le5.5H(X_0)\},
+\end{gather*}
+with $\eps':=\eps+0.015\le0.045$ and $\Hord(M)$ the number of ordered factorisations of $M$ in $\NN$. On $\Good(<t)$:
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item for $t\ge X_0^{1.01}$: $v(t)\log t\le6.5E_S+V_{X_0}(t)$ with $V_{X_0}(t)\le e^{-0.0015\Lambda}$, and
+  \[
+    m(t)\log t\ge0.97-o(1)-\eps_N-E_{\mathrm{BR}}-54\sup_y\log y\cdot\eta(y)-6.5E_S-j_{X_0}(t)-V_{X_0}(t)\ge0.96-o(1);
+  \]
+\item for $2X_0\le t\le X_0^{1.01}$ the jump is paid once:
+  $m(t)\log t\ge\rhosh(t)\log t-j_{X_0}(t)-10^{-12}\ge0.97-0.4209-10^{-12}\ge0.549$;
+\item for $X_0\le t<2X_0$: $m(t)\log t\ge0.73$, surely (no event is used). Below $X_0$ there are no slots.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: short windows.} For a slot window $I\subset[u,2u]$ with $|I|\le H(u)$, Lemma~\ref{lem:noise} gives
+$\sigma(I)=\int_Im+E(I)$, with $|E(I)|\le\hat\nu(u)H(u)$ on $G_u^{\mathrm{sw}}$. Write $\eps_s(z):=\sup|E(I)|$ over windows with
+$|I|\le s$ at $z$.
+
+\emph{Step 2: the sub-$H$ increments of $\rhot$ are strip differences of $m$.} For $0\le s\le1.01H(z)$, with
+$I_\pm:=[z\pm H/2,\,z\pm H/2+s)$,
+\[
+  \rhot(z+s)-\rhot(z)=\frac{\sigma(I_+)-\sigma(I_-)}{H(z)}=\frac1{H(z)}\int_0^s\big[m(z+H/2+r)-m(z-H/2+r)\big]dr+\frac{E(I_+)-E(I_-)}{H(z)} .
+\]
+This uses the centred boxes, and it holds also near $X_0$, where $\sigma=0$ and $m=T'=0$ below $X_0$. So
+$|\Delta_s\rhot(z)|\le(s/H(z))\sup v+2\eps_s(z)/H(z)$.
+
+\emph{Step 3: the recursion.} Write $\kappa_w:=\mathbf 1[\tau_w<t/w]$. Then
+$\Delta_hm(t)=\Delta_hT'(t)-\sum_w(\kappa_w/w)\Delta_{h/w}\rhot(t/w)+(\text{filter switching})+\Delta_h\NT_{\mathrm{pt}}$.
+\begin{itemize}
+\item Filter switching and $\NT$ occur only for $w$ $\tau$-near at $t$, and cost at most $2\eta(t)$. The cutoff $\Xm$ switches
+  nothing on, since $\rhot(\Xm)=0$.
+\item $h/w\le1.01H(t/w)w^{\eps-1}$ by \eqref{eq:RH}. So
+  \[
+    v(t)\le S(t)+\sum_{w\ge2}1.01\,\kappa_w\,w^{\eps-2}\sup\{v(t'):|t'-t/w|\le2.1H(t/w)\},\qquad
+    S(t):=o_t+2\eta(t)+2\sum_w\frac{\kappa_w}w\cdot\frac{\eps_{H(t)/w}(t/w)}{H(t/w)} .
+  \]
+\item Base case $t<2\Xm$: there $\Kpt\rhot=\NT_{\mathrm{pt}}=0$, so $m=T'=\Tc+J$ and
+  $v(t)\le o_t+\jz\mathbf 1[|t-X_0|\le1.01H(t)]$.
+\item $v(t)$ depends on $v$ and on the noise only at points $\le t/2+2.1H(t/2)<t$. So the recursion is a well-founded
+  induction on $t$, and each short-window event is used only at strictly earlier times. This is the pointwise form of the
+  event ordering in Definition~\ref{def:good} (event E3$'$).
+\end{itemize}
+
+\emph{Step 4: $\log t\cdot S(t)\le E_S$.} By Lemma~\ref{lem:noise}, $\eps_{H(t)/w}(t/w)/H(t/w)\le2\hat\nu(t/w)$, so the last
+term of $S$ is at most $4\sum_{v'}\omega_t(v')\hat\nu(v')$.
+\begin{itemize}
+\item For $v'\ge\sqrt t/2$ use $\omega\le1.2$ and $\log t\le2\log(2v')$.
+\item For $v'<\sqrt t/2$ use Lemma~\ref{lem:S}(ii): $\log t\cdot\omega_t(v')\le2.1\max_u(1+u)\rho(u)\cdot\log3v'\le4.3\log3v'$.
+\item With $\log t\cdot o_t\le\sup_v\log v\cdot o_v$ and $\log t\cdot2\eta(t)\le2\sup_y\log y\cdot\eta(y)$, this gives
+  $\log t\cdot S(t)\le E_S$.
+\end{itemize}
+
+\emph{Step 5: solving the recursion.} Iterating Step~3, a chain with product $M$ has weight at most $\Hord(M)M^{\eps'-2}$, and
+it ends at a base point within $\sum_i2.1H(t_i)(t_k/t_i)\le4.4H(X_0)$ of $t/M$. So
+$v(t)\le\sum_M\Hord(M)M^{\eps'-2}E_S/\log(t/M)+v_{X_0}(t)$, where $v_{X_0}$ collects the base terms
+$\jz\mathbf 1[\cdots]$.
+\begin{itemize}
+\item Split at $M=\sqrt t$. The part $M\le\sqrt t$ is at most $2(1+A_0(0.045))E_S/\log t=6.44E_S/\log t$, since
+  $A_0(\eps'):=\sum_{M\ge2}\Hord(M)M^{\eps'-2}$ has $A_0(0.045)=2.218$. The tail is at most
+  $27t^{-0.1}(\log t/\Lambda)E_S/\log t\le X_0^{-0.09}E_S/\log t$, by Rankin's trick at $s=1.75$ (as $1/(2-\zeta(1.75))=26.5$).
+\item \emph{The jump.} The base term $\jz\mathbf 1[\cdots]$ is reached only by chains with $M\in I'_t$. So
+  $v_{X_0}(t)\le\jz\sum_{M\in I'_t}\Hord(M)M^{\eps'-2}$, and $\jz\log t\le1.01(1+\log N/\Lambda)$. For $N\ge e^{0.01\Lambda}$, every
+  $M\in I'_t$ has $M\ge N/2$, so
+  $\sum_{M\in I'_t}\Hord(M)M^{\eps'-2}\le(N/2)^{-0.155}\sum_M\Hord(M)M^{-1.8}\le8.5(N/2)^{-0.155}$, using
+  $1/(2-\zeta_{\NN}(1.8))-1\le7.5(1+O(\eta_1))$. This gives $V_{X_0}(t)\le e^{-0.0015\Lambda}$.
+\end{itemize}
+
+\emph{Step 6(a).} $m\ge Bm-v$ pointwise, and $Bm=M-B\,\NT_{\mathrm{pt}}-\vartheta/H\ge M-54\eta-6/H$. Insert
+Theorem~\ref{thm:g2}.
+
+\emph{Step 6(b): the small range; the jump is paid once.}
+\begin{itemize}
+\item For $y\in W_t$, every $n$ with $c_n(y)\ne0$ or $C_n^y\ne0$ has $n\le y/\Xm<X_0$, so $n$ is a rigid integer. Hence
+  $\tau_w=\Pplus(w)<y/w$ always: the $\tau$-filter of $\Kpt$ is void, $\NT=\NT_{\mathrm{pt}}=0$, and there are no $\tau$-near steps.
+\item \emph{Split.} $m=m_c+m_j$ and $\rhot=\rhot_c+B\Rres J$, with $m_j:=\Rres J$ exactly (since the $J$-part of $\rhot$ is
+  $B\Rres J$, and $1-\Kpt B\Rres=\Rres$).
+\item \emph{The jump part.} By Lemma~\ref{lem:xb}, pointwise, $m_j(t)\ge\jz\rho^{\mathrm{sh}}_1(t)-\jz\mathfrak B(t)$; no step is $\tau$-near here, so the $\tau$-term of \eqref{eq:xb} is absent. Here
+  $\rho^{\mathrm{sh}}_1=(1+\Kpt)^{-1}\mathbf 1_{[X_0,\infty)}$ and $\mathfrak B$ is defined there.
+\item \emph{The smooth part.} Steps 1--5 apply verbatim to $(m_c,\rhot_c)$, because $\Delta_s(Bf)$ is exactly the strip
+  difference of $f$. The base case is $m_c=\Tc$, which has no jump, so $v_c(t)\log t\le6.5E_S$. By \eqref{eq:predictable} and
+  Proposition~\ref{prop:br}, $M_c:=M-B\Rres J$ satisfies $\log t\cdot M_c\ge\log t\cdot B\rhosh_c-\eps_N-E_{\mathrm{BR}}$, where
+  $\rhosh_c:=\sum_nc_n\Tc(\cdot/n)/n$; and $Bm_c=M_c-\vartheta/H$.
+\item \emph{$\rhosh_c$ is flat on $W_t$.} Here $c_n(y)=\mu(n)\mathbf 1[y/n\ge\Xm]$, and $|\Tc|\le o_{X_0}$ on
+  $[\Xm,X_0+H]$. So $|\rhosh_c(y)-\rhosh_c(t)|\le\sum_uo_u+o_{X_0}\le11H(X_0)X_0^{-7/12}$, which is at most
+  $e^{-10^7}/\log t$. (Here $o_R=0$, and $o_{\Abs}=0$ because $\Abs$ is empty while $\log\log n\le2\log\Lambda+5.97$.)
+\item \emph{Sum.} $m(t)\ge\rhosh_c(t)+\jz\rho^{\mathrm{sh}}_1(t)-\jz\mathfrak B(t)-(\eps_N+E_{\mathrm{BR}}+6.5E_S+e^{-10^7})/\log t-6/H$,
+  and $\rhosh_c+\jz\rho^{\mathrm{sh}}_1=\rhosh$. Then use $\rhosh(t)\log t\ge0.97$ (Proposition~\ref{prop:g1}(A); the range
+  $2X_0\le t\le X_0^{1.01}$ lies in range (A) for every $\Lambda$).
+\end{itemize}
+
+\emph{Step 6(c): below $2X_0$.} Here $\Abs=\emptyset$, $R=0$, and $\Kpt\rhot(t)$ can be nonzero only through $w$ with
+$t/w\ge\Xm$, i.e.\ $w=2$.
+\begin{itemize}
+\item For $X_0\le t<2\Xm$: $\Kpt\rhot(t)=\NT_{\mathrm{pt}}(t)=0$, so $m(t)=T'(t)=1-\rhodet(t)$. The integers in $[t,(1+\kappa)t]$
+  that are not $X_0$-smooth include every prime there, so
+  $1-\rhodet(t)\ge\mathrm{MA}[\mathbb P](t)-1/(\kappa t)\ge(0.99-10^{-9})/\log t$, by \eqref{eq:huxley} and
+  Lemma~\ref{lem:margin}(a).
+\item For $2\Xm\le t<2X_0$: $m(t)=T'(t)-\frac12\rhot(t/2)$, with $t/2\in[\Xm,X_0)$ (the filter $\tau_2=2<t/2$ is void, and
+  $\NT_{\mathrm{pt}}=0$). Since slots start at $X_0$ and boxes are centred, $\rhot(t/2)$ counts the primes decided at slots in
+  $[X_0,X_0+H/2]$, at most one per continuous slot. So
+  $\rhot(t/2)\le(\int_{X_0}^{X_0+H/2}T'_{\mathrm{cont}}+3)/H(X_0)\le\frac12(\jz+o_{X_0})+3/H\le0.5001/\Lambda$, since
+  $T'_{\mathrm{cont}}\le\jz+o_{X_0}$ there and $\jz\le1.0001/\Lambda$. With $T'(t)\ge(0.99-10^{-9})/\log t$ as above and
+  $\log t\le\Lambda+0.7$,
+  \[
+    m(t)\log t\ge0.99-0.2501(1+0.7/\Lambda)-10^{-9}\ge0.739 .
+  \]
+\item These bounds use no event at all, only \eqref{eq:huxley} and the slot rule.\qedhere
+\end{itemize}
+\end{proof}
+
+\begin{remark}
+The contraction in Step~5 comes from compressing a shift $h$ at scale $t$ to a shift $h/w$ at scale $t/w$: a relative shift
+$w^{\eps-1}$, times the weight $1/w$. In the small range the jump is compared pointwise with its sharp value
+(Lemma~\ref{lem:xb}) and never enters a variation; bounding it as an additive variation term as well would pay for it twice.
+\end{remark}
+
+\begin{corollary}[R1$'$ on every window]\label{cor:r1}
+% v3: Corollary 3.19
+Let $I$ be any window: a slot window, or a physical interval $[a,b)$ with arbitrary (for instance integer, deterministic)
+endpoints, of any length, anywhere in $[1,\infty)$. It may start below $X_0$ and straddle $2X_0$ or $X_0^{1.01}$. Let
+$\ell_{\mathrm{jit}}(I):=\#\{\text{continuous slots in }I\}\le1.01|I\cap[X_0,\infty)|+1$, and let
+$L\ge\log\max(I\cup\{X_0\})$. On $\Good(<\max I)$,
+\[
+  \ell_{\mathrm{jit}}(I)-\Comp(I)=\int_Im\pm2\ge0.549\,\frac{|I\cap[X_0,\infty)|}L-2\ge\frac{c'}L\,\ell_{\mathrm{jit}}(I)-K_d,
+  \qquad\Comp^{(2)}(I)\le s_2\,|I|,
+\]
+with $c'=0.15$, $K_d=3$, and $s_2$ the supremum of $s_2(u)$ \eqref{eq:s2} over the dyadic scales meeting $I$.
+\end{corollary}
+
+\begin{proof}
+\begin{itemize}
+\item $\int_Im=\ell_{\mathrm{jit}}(I)-\Comp(I)\pm2$ is the bookkeeping of \S\ref{sec:noise-identity} without the $B$-average:
+  $\#\{\text{continuous slots in }I\}=\int_IT'_{\mathrm{cont}}\pm2$ and $\Comp(I)=\int_I(\Kpt\rhot-K_{\Abs}\rhot+\NT_{\mathrm{pt}})$
+  exactly, for any interval $I$. Below $X_0$ there are no slots, and below $2\Xm$ no jittered composites, so $m=0$ on
+  $[1,X_0)$ and that part contributes nothing.
+\item $\Comp$ is the compensator $\Comp_{\mathrm{jit}}$ of \S\ref{sec:queue} (latest prime dividing once). The $q^2$-part is
+  the separate source $\Comp^{(2)}$, bounded by \eqref{eq:s2}.
+\item $m\log t\ge0.549$ pointwise on all of $[X_0,\infty)$, by Proposition~\ref{prop:pointwise}(a)--(c): it is $\ge0.73$ on
+  $[X_0,2X_0)$, $\ge0.549$ up to $X_0^{1.01}$, and $\ge0.959$ beyond. Since $0.549\ge1.01c'$, the $+1$ in the slot count only
+  enters $K_d$.
+\end{itemize}
+In the form used in Theorem~\ref{thm:queue}: $\Comp(I)\le\ell_{\mathrm{jit}}(I)(1-c'/L)+K_d$ for every such $I$ with
+$L\ge\log\max I$. Above $X_0^{1.01}$ the hole rate is at least $0.959/\log x$, independently of the block length $L_0$ and of
+the tolerance $M_1\le H/L^{14}$.
+\end{proof}

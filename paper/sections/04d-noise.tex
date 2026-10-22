@@ -1,0 +1,159 @@
+% 04d-noise.tex — v3 §3.5: the noise, per scale. Author: gap-localpnt.
+\subsection{The noise, per scale}\label{sec:noise-perscale}
+% v3: §3.5
+
+\paragraph{Inputs from \S\ref{sec:queue}.} Each is used frozen at the scale where it is read.
+\begin{itemize}
+\item The queue bound $Q\le B(u)$ (Theorem~\ref{thm:queue}, \eqref{eq:queueB}); so $|\Delta Q(W)|\le B(u)$ on windows at
+  scale $u$.
+\item The per-prime increment bound (Proposition~\ref{prop:ecl}, Corollary~\ref{cor:increment}). On $E_{\mathrm{cl}}^{(u)}$,
+  for every slot window $I\subset[u,2u]$ with $|I|\le H(u)$, every non-absorbed latest prime $q\ge y(u)$, every $a\ge1$ and
+  every jitter offset, $X_q^{(a)}(I)\le2M_1(u)$. The event $E_{\mathrm{cl}}^{(u)}$ fails on $\Good$ with probability
+  $\le L_u^{-2}$.
+\item The local count (Corollary~\ref{cor:localcount}). For windows $J\subset[P,4P]$ of length $\le6H(P)$, the
+  non-absorbed count, and so the prime count, is $\le13.4|J|+K_{\mathrm{loc}}(P)+2$, with
+  $K_{\mathrm{loc}}(P)=2B(4P)+7\lambda_P/3+13$ and $\lambda_P=4\log P$.
+\item Absorption (Lemmas~\ref{lem:lemmaP}, \ref{lem:rhoA}, Proposition~\ref{prop:S1S2}). Non-absorbed latest primes satisfy
+  $q\ge y(u)=H(u)L_0L_u^6$, so $|I/q|\le L_u^{-6}$ for $|I|\le H(u)$. The small-$q$ case S1 does not arise in the present
+  regime.
+\end{itemize}
+
+\paragraph{The composites with $q^2\mid n$: the source $s_2$.} Recall $C^{(\ge2)}=\Comp^{(2)}+\Mart^{(2)}$
+(\S\ref{sec:noise-identity}).
+\begin{itemize}
+\item The latest-prime filter forces $\tau_m<t(q)$ for $q^am$, so $\Pplus(m)\le2q$.
+\item Interchange the sums. For fixed $m$ and $a=2$, $q$ runs over $I_m:=(I/m)^{1/2}$, an interval of length
+  $\le|I|/\sqrt{um}$, and the $q$-sum of the landing probabilities is $\int_{I_m}\rhot\le27|I_m|$, since
+  $\rhot\le1.01$ surely (see the variance bound below). Exponents $a\ge3$ add a relative $O(X_0^{-1/2})$.
+\item Group $m$ into dyadic blocks $[M,2M)$ with $M=u/q^2$. The $m$ in a block are $3q$-smooth with
+  $q=\sqrt{u/M}\ge\Xm$, and Lemma~\ref{lem:smooth-v} bounds their $1/m$-weight by $C_0\rho(\log M/\log3q)e^{o(1)}$. Since
+  $\rho(v)\le1/\Gamma(v+1)$ (from \ref{R1}: $\rho(v)\le\rho(v-1)/v$), for every window $I\subset[u,2u]$,
+  \begin{equation}\label{eq:s2}
+    \frac{\Comp^{(2)}(I)}{|I|}\le s_2(u):=9L_u\sup_{\log X_0\le s\le L_u/2}\frac{e^{-s}}{\Gamma(\max(1,L_u/s-2))}
+    \le9L_u\exp\Big(-\max\big(\log X_0,\tfrac12\sqrt{L_u\log L_u}\big)\Big)
+  \end{equation}
+  (the last bound for $L_u\ge10^4$). In particular $s_2(u)\le9L_u/X_0$ always.
+\item $\sum_{u\text{ dyadic}}\log(2u)\,s_2(u)\le e^{-9\cdot10^7}$: below $L_u\approx10^{16}$ use the factor $e^{-\log X_0}$,
+  and above it the tail of $\sum_jj^2e^{-\sqrt{j\log j}/2}$. The same holds with the weight $(\log3u)^2$.
+\item Put $A_u:=\#\{a\ge2:(\Xm)^a\le2u\}\le1.01L_u/\Lambda$. By Corollary~\ref{cor:increment} (which covers every
+  $a\ge1$), the increment of a prime $q$ to $\Mart^{(2)}(I)$ is at most $b_2:=2A_uM_1(u)$.
+\end{itemize}
+
+\paragraph{The per-scale Freedman events.} Put $\lambda'_u:=3\log u+2\log\log u+2+\log H(u)$. For dyadic $u\ge X_0$, let
+$\mathcal W'_u$ be the set of windows $[a,b]\subset[u,2u]$ with integer endpoints and $b-a\le1.03H(u)+1$; there are at most
+$(u+1)(1.03H(u)+2)$ of them. Let $\mathcal W_u\subset\mathcal W'_u$ consist of those with $b-a\ge H(u)-1$.
+\begin{itemize}
+\item $G_u^{\mathrm{NV}}$ (the event E3 of Definition~\ref{def:good}): every $W\in\mathcal W_u$ satisfies \eqref{eq:F1}
+  and \eqref{eq:F2}.
+\item $G_u^{\mathrm{sw}}$ (the event E3$'$): every $W\in\mathcal W'_u$ satisfies \eqref{eq:F1} and \eqref{eq:F2}.
+\end{itemize}
+\begin{align}
+  |\Mart(W)|&\le\sqrt{2\bar V_W\lambda'_u}+\tfrac43M_1(u)\lambda'_u,&\bar V_W&:=2M_1(u)\cdot50\log(2u)\cdot|W|;\label{eq:F1}\\
+  |\Mart^{(2)}(W)|&\le\sqrt{2\bar V^2_W\lambda'_u}+\tfrac23b_2\lambda'_u,&\bar V^2_W&:=b_2\cdot s_2(u)\cdot|W|.\label{eq:F2}
+\end{align}
+
+\paragraph{Truncation.} As in Theorem~\ref{thm:queue}(i), Freedman's inequality is applied to the truncated increments
+$\tilde X_q(W):=\min(X_q(W),2M_1(u))$ and $\tilde X^{(2)}_q(W):=\min(X^{(2)}_q(W),b_2)$, each compensated by its own
+conditional mean. These are martingales in decision order, with increments $\le2M_1$ and $\le b_2$ surely. Freedman's
+inequality is used in the form
+\[
+  \Prob(\exists n:\ S_n\ge a,\ V_n\le v)\le\exp\Big(-\frac{a^2}{2(v+ba/3)}\Big),
+\]
+for increments bounded by $b$ \cite[(4.1)]{Freedman1975} (with Bennett's bound for the exponent), with the deterministic $a$
+and $v=\bar V_W,\bar V^2_W$ of \eqref{eq:F1}, \eqref{eq:F2}.
+\begin{itemize}
+\item \emph{Truncation is inactive on $\Good(<t(W))$.} For every latest prime $q$ contributing to $W$, the set of cofactors
+  (elements whose primes are all decided before $q$) is $\mathcal F_{q-}$-measurable. So ``$X_q(W)\le2M_1$ for every jitter
+  offset of $q$'' is an $\mathcal F_{q-}$-measurable event. It may not yet be certified at time $s_q$ (for $q<\sqrt{2u}$).
+  But on $\Good(<t(W))$ the event $E_{\mathrm{cl}}^{(u)}$ holds (its time $8u/L^{11}+H$ is $<t(W)$), and
+  Corollary~\ref{cor:increment} then gives it for every $q$ and every offset. So $\tilde X_q=X_q$ and
+  $\E[\tilde X_q\mid\mathcal F_{q-}]=\E[X_q\mid\mathcal F_{q-}]$. The truncated and the true martingales therefore agree on
+  $\Good(<t(W))$, and likewise for $\Mart^{(2)}$.
+\item \emph{The variance bound holds on $\Good(<t(W))$.} We have
+  $\mathrm{Var}(\tilde X_q\mid\mathcal F_{q-})\le2M_1\E[X_q\mid\mathcal F_{q-}]$, so $V_W\le2M_1\Comp(W)$; likewise
+  $V^2_W\le b_2\Comp^{(2)}(W)\le b_2s_2|W|$. Next,
+  $\Comp(W)=\int_W(\Kpt\rhot-K_{\Abs}\rhot+\NT_{\mathrm{pt}})\le1.01\sum_v\omega_y(v)\cdot|W|+\int_W|\NT_{\mathrm{pt}}|\le50\log(2u)\,|W|$.
+  This uses $\sum_v\omega_y(v)\le1.2\log_2(4u/X_0)$ (Lemma~\ref{lem:S}(i), that is, \textup{(H$_{\mathrm{BS}}$)} at heights
+  $\le u$), and the sure bound $\rhot\le1.01$. The latter holds because each continuous slot decides at most one prime, and
+  the starts of consecutive continuous slots are at least $1-10^{-8}$ apart (a continuous slot needs
+  $\int T'_{\mathrm{cont}}=1$, with $T'_{\mathrm{cont}}\le1+10^{-8}$). No upper bound on the length of a slot is used in this
+  section.
+\item So on $\Good(<t(W))$ the event $\{|\Mart(W)|>$ the bound of \eqref{eq:F1}$\}$ lies in Freedman's event for the
+  truncated martingale; likewise for \eqref{eq:F2}. No positivity of the margin is used.
+\end{itemize}
+
+\paragraph{Probability.} With $a=\sqrt{2v\lambda'_u}+\frac23b\lambda'_u$, Freedman's inequality gives, per window and per
+martingale, a two-sided failure probability $\le2e^{-\lambda'_u}=2e^{-2}u^{-3}L_u^{-2}H(u)^{-1}$. With four bounds per window,
+\[
+  \Prob\big((G_u^{\mathrm{NV}}\cap G_u^{\mathrm{sw}})^c\cap\Good(<t)\big)\le8e^{-2}(u+1)(1.03H(u)+2)u^{-3}L_u^{-2}H(u)^{-1}
+  \le1.2\,u^{-2}L_u^{-2}.
+\]
+Each window's bound is an event whose time is the moment the window closes ($\le2u$). These are the events E3 and E3$'$ of
+Definition~\ref{def:good}. Together with $E_{\mathrm{cl}}$ they enter $\Good(<t)$ and the budget $\Prob(\tau<\infty)\le1.5/\Lambda$
+of Lemma~\ref{lem:budget}. The budget is dominated by $E_{\mathrm{cl}}$: $\sum_uL_u^{-2}\le1.45/\Lambda$, while the
+Freedman part is $\le2X_0^{-2}$.
+
+\begin{lemma}[per-scale noise]\label{lem:noise}
+% v3: Lemma 3.11
+For $y\in[u,2u]$, work on $\Good(<y+H(y))$. This event contains the E3/E3$'$ windows of the blocks
+$u'\in\{u/2,u,2u\}$ that close by $y+H(y)/2$, and $E_{\mathrm{cl}}^{(u')}$. Put
+\begin{multline*}
+  \nu_0(u'):=\sqrt{\frac{206M_1(u')\lambda'_{u'}\log(2u')}{H(u')}}\Big(1+\frac1{H(u')}\Big)
+  +\sqrt{\frac{4.2A_{u'}M_1(u')s_2(u')\lambda'_{u'}}{H(u')}}\\
+  +\frac{\frac43(1+A_{u'})M_1(u')\lambda'_{u'}+3B(u')+100\log(2u')+6}{H(u')}+1.1s_2(u').
+\end{multline*}
+Then
+\[
+  |\nu(y)|\le\bar\nu(u):=2.05\max_{u'\in\{u/2,u,2u\}}\nu_0(u').
+\]
+For every slot window $I\subset[u,2u]$ with $|I|\le H(u)$, put $E(I):=\sigma(I)-\int_Im$, where
+$m=T'-\Kpt\rhot-\NT_{\mathrm{pt}}$ is the pointwise margin density (\S\ref{sec:noise-identity}). Then
+\begin{multline*}
+  |E(I)|\le\sqrt{200M_1(u)\lambda'_u\log(2u)(|I|+2)}+\sqrt{4A_uM_1(u)s_2(u)\lambda'_u(|I|+2)}\\
+  +\tfrac43(1+A_u)M_1(u)\lambda'_u+B(u)+100\log(2u)+s_2(u)(|I|+2)+2 .
+\end{multline*}
+Write $\hat\nu(u):=\sup_{|I|\le H(u)}|E(I)|/H(u)$. Both bounds depend on $u$ only: nothing at the current scale $x$
+enters.
+\end{lemma}
+
+\begin{proof}
+\emph{The bound on $\nu$.} By \eqref{eq:margin-identity},
+$H(y)\nu(y)=\Mart(W_y)+\Mart^{(2)}(W_y)-\Delta Q(W_y)+\Comp^{(2)}(W_y)+E_{\mathrm{edge}}$.
+\begin{itemize}
+\item $E_{\mathrm{edge}}$ counts the two partial slot cells at the ends of $W_y$. Each holds at most one slot and at most
+  $A_j\le B(u)+1$ composites, so $|E_{\mathrm{edge}}|\le2B(u)+4$.
+\item $|\Delta Q|\le B(u)$ by Theorem~\ref{thm:queue}, and $\Comp^{(2)}(W_y)\le s_2|W_y|$ by \eqref{eq:s2}.
+\item Choose $W^-\subset W_y\subset W^+$ in $\mathcal W_u$ with $|W^+\setminus W^-|\le2$. Counts and compensators are
+  monotone in the window, so $\Mart(W^-)-\Comp(W^+\setminus W^-)\le\Mart(W_y)\le\Mart(W^+)+\Comp(W^+\setminus W^-)$, with
+  $\Comp(W^+\setminus W^-)\le100\log(2u)$. The same holds for $\Mart^{(2)}$, with $2s_2$ in place of $100\log(2u)$.
+\item Apply \eqref{eq:F1} and \eqref{eq:F2} with $|W^\pm|\le1.03H(u)+1$, and divide by $H(y)\ge H(u)$.
+\item If $W_y$ crosses $u$ or $2u$ (that is, $y$ is within $H(y)/2$ of it), split $W_y$ there. Each piece lies in one
+  dyadic block $u'$ and has length $\le1.03H(u')$, so the above applies to it in block $u'$. The two bounds add, and
+  $H(y)/H(u')\le1.02$ by \eqref{eq:RH}; the factor $2.05$ covers this.
+\end{itemize}
+
+\emph{The bound on $E(I)$.} The bookkeeping \eqref{eq:bookkeeping} on the slot window $I$ has no partial cells. By the
+computation of \eqref{eq:margin-identity} without the $B$-average,
+$\sigma(I)=\int_Im-\Comp^{(2)}(I)-\Mart(I)-\Mart^{(2)}(I)+\Delta Q(I)\pm2$. Now sandwich $I$ between windows of
+$\mathcal W'_u$ as above, and apply \eqref{eq:F1}, \eqref{eq:F2} and \eqref{eq:s2}.
+\end{proof}
+
+\paragraph{The \textup{(SW)} sums.} Under the tolerance $M_1\le H/L^{14}$ of \eqref{eq:params}, with $B\le28M_1L^2$,
+$A_u\le1.01L_u/\Lambda$ and $\lambda'_u\le18.2L_u$ (since $\log H\le15.1\Lambda$ on the raised range),
+\[
+  \bar\nu(u)\le128L_u^{-6}+2.3\max_{u'}s_2(u'),\qquad\hat\nu(u)\le62L_u^{-6}+1.1s_2(u),
+\]
+and
+\begin{equation}\label{eq:sw-sums}
+  \sum_{u\text{ dyadic}\ge X_0}\log(2u)\,\bar\nu(u/2)\le10^{-30},\qquad
+  \sum_v(\log3v)^2\,\bar\nu(v/2)\le10^{-22},\qquad
+  \sum_v\log(3v)\,\hat\nu(v)\le10^{-30}.
+\end{equation}
+\begin{itemize}
+\item The leading term is $\sqrt{206\cdot18.2}\,L\,(M_1/H)^{1/2}\le61.3L^{-6}$. The linear terms are $\le140L^{-12}$:
+  $\frac43(1+A_u)M_1\lambda'\le50L^2M_1$ and $3B\le84L^2M_1$. Then $\sum_j128(\Lambda+j\log2)^{-5}\le46.2/\Lambda^4$ and
+  $\sum_j128(\Lambda+j\log2)^{-4}\le61.6/\Lambda^3$.
+\item On the standard range, where $H=H_{\mathrm{std}}$ and $M_1\le\frac12H^{1/2}$, the same sums are $\le e^{-600}$; the first
+  term is then $\approx18L\,e^{-2(\log L)^2}$.
+\item The sums converge whenever $H(v)/M_1(v)\ge(\log v)^{8+\delta}$. This is what fixes the tolerance $M_1\le H/L^{14}$.
+\end{itemize}

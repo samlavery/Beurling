@@ -1,0 +1,256 @@
+% 04e-lp.tex — v3 §3.6 (first part): Lemma 3.12 and Theorem 3.13 (local PNT) with full proof. Author: gap-localpnt.
+\subsection{A local prime number theorem}\label{sec:noise-lp}
+% v3: §3.6 (Lemma 3.12, Theorem 3.13)
+
+\begin{lemma}[threshold mass]\label{lem:threshold-mass}
+% v3: Lemma 3.12
+For squarefree $n$ put $\tau(n):=\max_{p\mid n}t(p)\prod_{q\mid n,\,t(q)\ge t(p)}q$, so that $\chi^t_y(n)=1$ if and only if
+$\tau(n)<y$. Assume $|N-T|\le D:=B+H/2+2$ at the relevant heights (Corollary~\ref{cor:lag}). For $x\ge X_0$ and
+$\delta\in(0,\frac14]$,
+\[
+  \sum_{n:\ \tau(n)\in[x(1-\delta),x)}\frac1n\le55\,\delta\log x\,\big(\log H(x)+\log(1/\delta)+2\big)
+  +14\big(K_{\mathrm{loc}}(\sqrt x)+2\big)\log x\,\sqrt{\frac{H(x)}{\delta x}} .
+\]
+It is used only with $\delta\ge6H(x)x^{-1/3}$.
+\end{lemma}
+
+\begin{proof}
+Let $p$ be the prime attaining $\tau(n)=t(p)\,m$, with $m:=\prod_{t(q)\ge t(p)}q$, and write $n=k\cdot m$, where all
+primes of $k$ are $t$-below $p$. The map $n\mapsto(k,m)$ is injective. By Lemma~\ref{lem:cm}(iv),
+$\sum_{k:\,\Pplus(k)<p}1/k\le\prod_{q<p}(1-1/q)^{-1}\le1.8\log p+1\le2\log x$. Also $1/m\le2p/x$.
+
+Write $m=p\,m'$, so that $p^2m'\in I:=[x(1-\delta),x]\,(1+O(H(p)/p))$. In case (ii) below, $H(p)/p\le\delta/10$, since
+$\delta\ge6H(x)x^{-1/3}$.
+\begin{enumerate}[label=(\roman*)]
+\item $p\le\sqrt{\delta x/(2H(x))}$. The interval $I/p^2$ has length $\ge2D$, so it holds at most $4\delta x/p^2$
+  elements $m'$ (by $|N-T|\le D$). These pairs contribute at most $4\delta x\sum_{p\le\sqrt x}1/p$ to $\sum p$.
+\item $p$ larger. Then $m'\le2H(x)/\delta$. For each $m'$, the $p$-interval $\sqrt{I/m'}$ has length
+  $\ell_{m'}\le0.6\,\delta\sqrt{x/m'}$. Cut it into $\lceil\ell_{m'}/(6H)\rceil$ windows of length $\le6H$ and apply the local
+  count (Corollary~\ref{cor:localcount}) to each. This gives at most
+  $13.4\ell_{m'}+\lceil\ell_{m'}/(6H)\rceil(K_{\mathrm{loc}}+2)\le13.5\ell_{m'}+K_{\mathrm{loc}}(\sqrt x)+2$ primes, since
+  $K_{\mathrm{loc}}\le H/100$.
+\end{enumerate}
+Each pair $(p,m')$ contributes at most $2\log x\cdot2p/x$. Collecting, with $p\le\sqrt{x/m'}$, the sum is at most
+\[
+  \frac{4\log x}x\Big[4\delta x(\log\log x+1)+8.1\,\delta x\big(\log(2H(x)/\delta)+1\big)+2(K_{\mathrm{loc}}+2)\sqrt x\,\sqrt{2H(x)/\delta}\Big].
+\]
+Since $\log H\ge8(\log\log x)^2\ge16\log\log x$, this is at most the stated bound.
+\end{proof}
+
+\paragraph{Notation for the local prime number theorem.}
+\begin{itemize}
+\item $\Pi$ is the realised prime measure (prime powers weighted $1/k$), so that $N=\exp^*(\Pi)$; and
+  $\Pi_0:=\log^*(\delta_1+du)$, whose density is $(1-1/u)/\log u$.
+\item $T_0:=T-(\#\Abs-\int\bar\rho_{\Abs})$ is the $\Abs$-free target. Its Mellin transform is
+  $\hat T_0(s)=s/(s-1)+\hat R(s)+\hat E(s)$ (Lemma~\ref{lem:ZBlow}), where $\hat R=\sum_k\hat R_k$ is the transform of the
+  designed oscillation \eqref{eq:Rhat}.
+\item $\theta':=\max(\theta+0.01,\ 8(\log\log X_0)^2/\log X_0+0.005)\le0.51$ is a fixed exponent (only $\theta'<1$ is
+  needed), and $\Lambda=\log X_0$.
+\end{itemize}
+
+\begin{theorem}[local prime number theorem]\label{thm:lp}
+% v3: Theorem 3.13
+Let $y\ge X_0$, and assume:
+\begin{enumerate}[label=\textup{(LP-\alph*)}]
+\item $N=T_0$ below $\Xm$, and $|N(u)-T_0(u)|\le D_0(u):=B(u)+3H(u)+4+2u^{\theta/2}(\log u)^{-4}\le u^{\theta'}$ for
+  $\Xm\le u\le y$. (On $\Good(<y)$ this holds by Theorem~\ref{thm:queue}, Corollary~\ref{cor:lag} and \eqref{eq:T1}.)
+\item $|\hat E(s)|\le C_8(1+\kappa|s|)e^\gamma\Lambda$ for $\sigma\ge1-8/\Lambda$, with $\log C_8<440$
+  (Lemma~\ref{lem:ZBlow} with $a=8$).
+\item $|\hat R(s)|\le|s|$ for $\sigma\ge1-8/\Lambda$. (By \eqref{eq:Rhat}: there $\mathrm{Re}\,w=\sigma-\theta\ge0.4$, so
+  $|\hat R_k(s)|\le C\alpha_k|s|x_k^{\theta-\sigma}\le2C|s|x_k^{-0.4}$, which is summable over $k$ since $x_1\ge\exp(X_0^2)$;
+  see also \eqref{eq:Rhatbound}.)
+\end{enumerate}
+Then there are $c_{\mathrm{zf}}\ge0.088/\Lambda$, $c_{\mathrm{LP}}:=c_{\mathrm{zf}}/5\ge0.0176/\Lambda$, an effective $K$ with
+$\log K=O(\Lambda)$, and a threshold $X_{\mathrm{LP}}$ with $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$, such that for
+$X_{\mathrm{LP}}\le v\le y$:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\displaystyle\Big|\int_{[1,v]}\frac{d(\Pi-\Pi_0)(u)}u\Big|\le K\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$;
+\item $|\Pi(v)-\Pi_0(v)|\le K\,v\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$;
+\item \emph{(short windows)} let $\Lambda_p:=\log v$, $\eta\in[e^{-2\Lambda},\frac12]$, and let $\varphi\ge\mathbf 1_{[v,v(1+\eta)]}$ be the
+  smooth window of relative width $\eta(1+2\Lambda_p^{-2})$ with transition layers $\eta\Lambda_p^{-2}$. Put
+  $L_1:=2\log\Lambda_p+\log(1/\eta)+5\le3000\Lambda$. Then $\int\varphi\,d\Pi\le(1+\mathrm{Rel})\int\varphi\,d\Pi_0$, with
+  \begin{equation}\label{eq:lpplus}
+    \mathrm{Rel}(\Lambda_p,\eta)\le18\,G(L_1)\,\Lambda_p^3\,\eta^{-1}\exp\Big(-\frac{0.9\,c_{\mathrm{zf}}\Lambda_p}{L_1+442+2\log\Lambda+\log L_1}\Big),
+  \end{equation}
+  where $G(L):=\sup|\log\zeta^\sharp|$ on the shifted contour up to height $e^L$, and $\log G(L)\le\Lambda$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof of Theorem~\ref{thm:lp}]
+This is Landau's argument \cite[Lemmas~6.2--6.3 and the proof of Thm.~6.6]{MontgomeryVaughan2007}, with four changes. It is
+run on an extension of $N$ beyond $y$, which is not a Beurling system. Positivity is therefore imported from a finite
+Euler product. Landau's discs have radius $\asymp1/\Lambda$. And the region near the pole is handled with the fine form of
+$\hat E$. Throughout, $s=\sigma+it$.
+
+\emph{Step 1: the extension.} Put $D:=N-T_0$, so $D=0$ below $\Xm$ and $|D(u)|\le u^{\theta'}$ on $[\Xm,y]$ by (LP-a). Define
+$N^\sharp:=N$ on $[1,y]$ and $N^\sharp(u):=N(y)+T_0(u)-T_0(y)$ for $u>y$. Then $D^\sharp:=N^\sharp-T_0$ equals
+$D(\min(u,y))$, and
+\[
+  \zeta^\sharp(s):=\int_{[1,\infty)}u^{-s}\,dN^\sharp=\hat T_0(s)+\hat D^\sharp(s),\qquad
+  \hat D^\sharp(s)=s\int_{\Xm}^yD(u)u^{-s-1}du+D(y)y^{-s}.
+\]
+So $\hat D^\sharp$ is entire, with $|\hat D^\sharp(s)|\le|s|(\Xm)^{\theta'-\sigma}/(\sigma-\theta')+y^{\theta'-\sigma}$ for
+$\sigma>\theta'$. Let $\Pi^\sharp:=\log^*(dN^\sharp)$, a signed measure (the series converges in the weighted norm
+$\int u^{-\sigma}|\cdot|$ for large $\sigma$). Since $\log^*$ is causal, $\Pi^\sharp=\Pi$ on $[1,y]$.
+
+\emph{Step 2: upper bounds on $[1,y]$.} Lemma~\ref{lem:cm} holds on $[1,y]$ by (LP-a). Write $d\psi=\log u\,d\Pi$ and
+$S(z)=\int_{[1,z]}d\psi/u\le\log z+0.43$. By Lemma~\ref{lem:cm}(iv) and the values for $\N$,
+$\int_{[1,y]}d\Pi/u\le\log\log y+4.5$. Let $N_y:=\exp^*(\Pi|_{[1,y]})$ count the $y$-smooth elements, so $N_y=N$ on
+$[1,y]$, and put $P_y(s):=\int u^{-s}dN_y=\exp(\int_{[1,y]}u^{-s}d\Pi)$. Then $P_y(1)\le e^{4.5}\log y$.
+
+\emph{Step 3: positivity transfer.} Put $\Delta:=\zeta^\sharp-P_y=\int_{(y,\infty)}u^{-s}(dT_0-dN_y)$. For $\sigma=1+\eta$
+with $0<\eta\le1/8$, Rankin's trick ($u^{-\eta}\le y^{-\eta/2}u^{-\eta/2}$ for $u>y$) and (LP-a) give
+\begin{gather*}
+  P_y(\sigma)\le1/\eta+6+y^{-\eta/2}P_y(1),\qquad|\Delta(s)|\le2y^{-\eta}/\eta+y^{-\eta/2}P_y(1),\\
+  |\Delta'(s)|\le2y^{-\eta}(\log y/\eta+1/\eta^2)+y^{-\eta/2}P_y(1)\,S(y),\qquad|P_y(s)|\ge1/P_y(\sigma),\qquad
+  |P_y'/P_y(s)|\le S(y).
+\end{gather*}
+The last two hold because $\Pi\ge0$. Set $\eta_y:=17\log\log y/\log y$, so that $y^{-\eta/2}\le(\log y)^{-8.5}$ for
+$\eta\ge\eta_y$. Then, for $1+\eta_y\le\sigma\le1+1/8$,
+\begin{equation}\label{eq:lp-transfer}
+  P_y(\sigma)\le2/\eta,\qquad|\Delta/P_y|\le10^{-2},\qquad\Big|\frac{d}{ds}\log(1+\Delta/P_y)\Big|\le(\eta\log y)^{-1}.
+\end{equation}
+Let $F:=(dT_0-dN_y)|_{(y,\infty)}*(dN_y)^{*-1}$. Since $|(dN_y)^{*-1}|\le dN_y$, the same bounds give
+$\int u^{-\sigma}|dF|\le10^{-2}$. Hence $\Pi^\sharp=\Pi|_{[1,y]}+\log^*(\delta_1+F)$ satisfies $\int u^{-\sigma}|d\Pi^\sharp|<\infty$,
+$\zeta^\sharp$ has no zeros in $\sigma\ge1+\eta_y$, and $\log\zeta^\sharp=\log P_y+\log(1+\Delta/P_y)$ is the Mellin transform of
+$\Pi^\sharp$ there. The coefficients of $-P_y'/P_y$ form the positive measure $d\psi|_{[1,y]}$. So for the nonnegative
+polynomial
+\[
+  (1+\cos\phi)^4=\tfrac18\big(35+56\cos\phi+28\cos2\phi+8\cos3\phi+\cos4\phi\big),
+\]
+with $(a_0,\dots,a_4):=(35,56,28,8,1)$, we get
+\begin{equation}\label{eq:lp-341}
+  \sum_{k=0}^4a_k\,\mathrm{Re}\Big(-\frac{\zeta^{\sharp\prime}}{\zeta^\sharp}\Big)(\sigma+ikt)\ge-\frac{128\,\eps_f}{\eta},
+  \qquad\eps_f:=5\cdot10^{-4}\ \ (\ge1/\log y),\qquad\sigma=1+\eta\ge1+\eta_y .
+\end{equation}
+
+\emph{Step 4: the pole term.} By Step~3 and Lemma~\ref{lem:cm}(ii), with partial summation,
+$-P_y'/P_y(1+\eta)=\int_{[1,y]}u^{-\eta}dS(u)\le\eta\int_1^\infty(\log u+0.43)u^{-1-\eta}du=1/\eta+0.43$. Hence, by
+\eqref{eq:lp-transfer},
+\begin{equation}\label{eq:lp-pole}
+  -\frac{\zeta^{\sharp\prime}}{\zeta^\sharp}(1+\eta)\le\frac{1+10^{-8}}\eta+0.43\qquad(\eta\ge\eta_y).
+\end{equation}
+This replaces the usual use of the pole of $\zeta^\sharp$; the crude bound $|\hat E|\le C_8e^\gamma\Lambda$ is useless near
+$s=1$.
+
+\emph{Step 5: Landau's lemma.} Let $f$ be analytic on $|z-z_0|\le r$, with $|f|\le M|f(z_0)|$ there, and suppose every zero
+of $f$ in the disc has real part $\le\mathrm{Re}\,z_0$. Then for any zero $\rho_1$ in the disc,
+\[
+  -\mathrm{Re}\frac{f'}f(z_0)\le\frac2r\log M-\mathrm{Re}(z_0-\rho_1)\Big(\frac1{|z_0-\rho_1|^2}-\frac1{r^2}\Big).
+\]
+\emph{Proof.} Divide $f$ by the Blaschke factors of its zeros, normalised on the circle of radius $r$; the quotient $g$ has
+no zeros and $|g/g(z_0)|\le M$ on the circle. Borel--Carath\'eodory for $h=\log(g/g(z_0))$ on radii $R\uparrow r$ gives
+$|h'(z_0)|\le2\log M/r$. Each zero contributes $\mathrm{Re}(z_0-\rho)(1/|z_0-\rho|^2-1/r^2)\ge0$ to $-\mathrm{Re}\,f'/f(z_0)$;
+drop all but $\rho_1$.
+
+\emph{Step 6: the region near the pole.} For $|t|\le X_0$ and $\sigma\ge1-8/\Lambda$, the proof of
+Lemma~\ref{lem:ZBlow} gives the fine form
+$\hat E(s)=\zeta(s)-1/(s-1)-1+O(X_0^{-\sigma})+O(\kappa(1+|s|)e^{\mathrm{Ein}(8)}e^\gamma\Lambda)$. Since
+$s/(s-1)=1+1/(s-1)$, (LP-c) and Step~1 give
+\[
+  \zeta^\sharp(s)=\zeta(s)+E(s),\qquad|E(s)|\le3X_0^{-0.3}(1+|t|)\qquad(|t|\le X_0,\ \sigma\ge1-8/\Lambda),
+\]
+using $\kappa\le X_0^{-1/3}$ and $e^{\mathrm{Ein}(8)}\le e^{438}$. On $|s-1|\le1/8$ the Laurent series gives
+$|\zeta(s)-1/(s-1)|\le\gamma+0.02\le0.6$ (as $|\gamma_1|\le0.073$), so $|(s-1)\zeta^\sharp(s)-1|\le0.6/8+10^{-9}<1$, and
+$\zeta^\sharp$ has no zero there. This covers every point with $|t|<1/16$ and $1-8/\Lambda\le\sigma\le1.1$; for
+$\sigma>1.1$, $\zeta^\sharp\ne0$ by Step~3.
+
+\emph{Step 7: the zero-free region for $|t|\ge1/16$.} Take Landau discs of radius $r:=a/\Lambda$ with $a:=6.8\le8$, so that
+they stay in $\sigma\ge1-8/\Lambda$, where (LP-b) and (LP-c) apply. For $|t|\ge1/16$ they do not meet the pole.
+\begin{itemize}
+\item \emph{Growth.} At $z_0=1+\eta+ikt$, Step~3 gives $|\zeta^\sharp(z_0)|\ge(1-10^{-2})/P_y(1+\eta)\ge0.495\,\eta$. On the
+  disc, $|\zeta^\sharp|\le|z/(z-1)|+|\hat R|+|\hat E|+|\hat D^\sharp|$, bounded by (LP-a)--(LP-c). Hence
+  \[
+    \log M_k\le\max\big(\log(k|t|+3),\ \log C_8+\log\Lambda\big)+\log(1/\eta)+O(1),\qquad\log C_8<440 .
+  \]
+\item \emph{The inequality.} Suppose $\zeta^\sharp(\beta+it)=0$ with $1-\beta\le\eta/\kappa_L$ for a parameter $\kappa_L>0$, and
+  $\eta\ge\eta_y$. Apply Step~5 at $z_0=1+\eta+it$ with this zero, and at $z_0=1+\eta+ikt$ ($k=2,3,4$) with no zero term.
+  This is legitimate because all zeros have real part $<1+\eta_y\le1+\eta$ (Step~3), so the dropped terms are $\ge0$. Insert
+  these and \eqref{eq:lp-pole} into \eqref{eq:lp-341}. Using $1/(\eta+1-\beta)\ge\kappa_L/((\kappa_L+1)\eta)$, we get
+  \[
+    \frac{56\kappa_L/(\kappa_L+1)-35(1+10^{-8})-128\eps_f}{\eta}\le15.05+\frac2r\sum_{k=1}^4a_k\log M_k
+    +\frac{56\,\eta(1+1/\kappa_L)}{r^2}.
+  \]
+  The largest $\eta$ for which this fails defines the zero-free width $\delta_{\mathrm{zf}}(t):=\eta/\kappa_L$.
+\item \emph{The constant.} Since $\sum_{k=1}^4a_k=93$, letting $|t|\to\infty$ gives $\delta_{\mathrm{zf}}(t)\log|t|\to
+  \mathrm{merit}\cdot r/2$, with
+  \[
+    \mathrm{merit}:=\max_{\kappa_L}\frac{56\kappa_L/(\kappa_L+1)-35-128\eps_f}{93\,\kappa_L}=0.02623\qquad(\kappa_L\approx3.79).
+  \]
+  Hence $c_{\mathrm{zf}}:=\mathrm{merit}\cdot r/2=0.0892/\Lambda\ge0.088/\Lambda$ for every $\Lambda\ge10^8$. This needs
+  $a\ge6.71$. The constant $\mathrm{merit}$ does not depend on $\Lambda$.
+\item \emph{Finite height.} By the growth bound, at height $e^L$ the zero-free width is
+  $\delta_{\mathrm{zf}}(e^L)\ge c_{\mathrm{zf}}/(L+442+2\log\Lambda+\log L)$, for $L\le3000\Lambda$.
+\item \emph{The height constraint.} Step~3 requires $\eta=\kappa_L\delta_{\mathrm{zf}}(t)\ge\eta_y=17\log\log y/\log y$, and
+  under the present scaling this binds. So the zero-free region is
+  \begin{equation}\label{eq:lp-zf}
+    \sigma\ge1-\frac{c_{\mathrm{zf}}}{\log(|t|+3)+460+2\log\Lambda}\qquad\text{for }|t|\le T_y,\qquad
+    \log T_y:=\frac{\log y}{51\Lambda\log\log y}-500 .
+  \end{equation}
+  Together with Step~6 this covers all $|t|\le T_y$.
+\item By (LP-c), $\hat R$ enters only through the growth bound, like $\hat D^\sharp$. The region \eqref{eq:lp-zf} is
+  consistent with the designed zeros, which have $1-\beta_k\asymp\log\log\gamma_k/\log\gamma_k$ (\S\ref{sec:zeros}).
+\end{itemize}
+
+\emph{Step 8: $\log\zeta^\sharp$ in the region.} Fix $f:=0.9$, and for $2\le|t|\le T_y$ let $s_1:=1+\eta_t+it$ with
+$\eta_t:=\kappa_L\delta_{\mathrm{zf}}(t)$. Borel--Carath\'eodory for $\log\zeta^\sharp(s)-\log\zeta^\sharp(s_1)$, on the discs
+centred at $s_1$ of radii $R_1=\eta_t+\frac{1+f}2\delta_{\mathrm{zf}}$ and $r_1=\eta_t+f\delta_{\mathrm{zf}}$ (inside the
+zero-free region), gives
+\[
+  |\log\zeta^\sharp(s)|\le\frac{4(\kappa_L+f)}{1-f}\log M_1(t)+\log(2/\eta_t)\qquad\text{on }\sigma\ge1-f\delta_{\mathrm{zf}}(t).
+\]
+At the anchor, $|\log\zeta^\sharp(s_1)|\le\log P_y(1+\eta_t)+1\le\log(2/\eta_t)+1$ by Step~3. Near $s=1$,
+$\log((s-1)\zeta^\sharp(s)/s)$ is bounded on $|s-1|\le1/8$ by Step~6. Hence $G(L)$ is bounded by a polynomial in $L$ and
+$\Lambda$, and in particular $\log G(L)\le\Lambda$.
+
+\emph{Step 9: Perron's formula; proof of (i) and (ii).} Let
+$\mathfrak G(s):=\log\big(\zeta^\sharp(s+1)\,s/(s+1)\big)$. It is analytic in the shifted zero-free region, $\mathfrak G(0)=0$
+(the residue of $\zeta^\sharp$ at $1$ is $1$, and $\zeta^\sharp>0$ on $(1,\infty)$), and $\mathfrak G$ is the Mellin transform of
+$(\Pi^\sharp-\Pi_0)/u$ on $\mathrm{Re}\,s\ge\eta_y$. Let $\Phi^\sharp(w):=\int_{[1,w]}d(\Pi^\sharp-\Pi_0)/u$; it equals the left
+side of (i) for $w\le y$.
+\begin{itemize}
+\item Take $h_0\in C_c^\infty(-2,-1)$ with $h_0\ge0$, $\int h_0=1$, and put $h:=Th_0(T\cdot)$. Smoothing to the left keeps
+  everything inside $[1,y]$:
+  \[
+    \Phi^h(v):=\int\Phi^\sharp(ve^\tau)h(\tau)\,d\tau=\frac1{2\pi i}\int_{(\eta_y)}\mathfrak G(s)\,\hat h_0(s/T)\,v^s\,\frac{ds}s,
+    \qquad|\hat h_0(w)|\le C_me^{2|\mathrm{Re}\,w|}(1+|w|)^{-m}.
+  \]
+\item Shift the contour to $\mathrm{Re}\,s=-f\delta_{\mathrm{zf}}(T_1)$ for $|t|\le T_1\le T_y$. There is no residue at $s=0$,
+  because $\mathfrak G(0)=0$. Take $T:=e^{\sqrt{\log v}}$, $T_1:=e^{2\sqrt{\log v}}(\log y)^{2/m}$ and $m:=19$.
+\item The contributions are as follows. The shifted line gives at most
+  $K_8\,v^{-f\delta_{\mathrm{zf}}(T_1)}\log^2(T_1+3)$. The horizontal segments, and the line $\mathrm{Re}\,s=\eta_y$ beyond
+  $T_1$, give at most $K_9v^{\eta_y}(\log\log y)(T/T_1)^m\le e^{-\sqrt{\log v}}$, using $v^{\eta_y}\le(\log y)^{17}$. The
+  smoothing error is $|\Phi^\sharp(v)-\Phi^h(v)|\le\int_{(ve^{-2/T},v]}(d\Pi+d\Pi_0)/u\le6/T+3v^{\theta'-1}$, using
+  $d\Pi\le dN$.
+\item The heights used lie below $T_v$ once $\log v\ge1.1\cdot10^4\Lambda^2(\log\log v)^2$; here we apply the argument with
+  $y':=v$ in place of $y$, which is allowed since (LP-a) holds on $[1,v]$. For $\log v\ge(1000+4\log\Lambda)^2$ the offset in
+  \eqref{eq:lp-zf} at most doubles the denominator. Together this gives (i) with $c_{\mathrm{LP}}=c_{\mathrm{zf}}/5$. The
+  threshold $X_{\mathrm{LP}}$ is chosen above both heights, so $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$, and
+  $\log K=O(\Lambda)$.
+\item (ii) is the same argument with $\mathfrak G_1(s):=\log(\zeta^\sharp(s)(s-1)/s)$, the kernel
+  $v^s\hat h_0((s-1)/T)/s$, and the contour near $\sigma=1$.
+\end{itemize}
+
+\emph{Step 10: short windows; proof of (iii).} With the smooth window $\varphi$, write $\int\varphi\,d(\Pi^\sharp-\Pi_0)$ as the
+contour integral of $\log(\zeta^\sharp(s)(s-1)/s)$ against the Mellin transform $\tilde\varphi$ of $\varphi$. Since $\varphi$ has
+transition layers $\eta\Lambda_p^{-2}$, $\int|\tilde\varphi(\sigma+it)|\,dt\le4.04\,C_\varphi v^\sigma\Lambda_p^2$ with
+$C_\varphi\le4$, and the integrand is negligible beyond height $T_1=e^5\Lambda_p^2/\eta$, i.e.\ $L_1=\log T_1$. No $1/T$
+smoothing term arises, so $T_1$ is fixed by $\eta$ alone. Shifting to $\sigma=1-f\delta_{\mathrm{zf}}(T_1)$ and using Step~7 for
+the width at height $e^{L_1}$ gives \eqref{eq:lpplus}.
+\begin{itemize}
+\item For $\eta\ge e^{-2\Lambda}$ and $\log G\le\Lambda$, $\mathrm{Rel}\le0.1$ needs
+  $0.9c_{\mathrm{zf}}\Lambda_p/(L_1+442+2\log\Lambda+\log L_1)\ge3\Lambda+3\log\Lambda_p+6$, that is, $\Lambda_p\ge76\Lambda^3$.
+  This is below the threshold $\Lambda_1=100\Lambda^3$ of Lemma~\ref{lem:si}.
+\item The height constraint holds there: $L_1+500\le2\Lambda+2\log\Lambda_p+505$, while
+  $\log T_y\ge\Lambda_p/(51\Lambda\log\Lambda_p)-500$ (as $\log y\ge\Lambda_p$). The latter exceeds the former for every
+  $\Lambda_p\ge100\Lambda^3$: both sides increase, and at $\Lambda_p=100\Lambda^3$ the right side is
+  $\ge\Lambda^2/(2\log\Lambda+3)\gg2\Lambda$.\qedhere
+\end{itemize}
+\end{proof}
+
+\begin{remark}\label{rem:lp}
+Positivity cannot be dropped: $N=\lfloor u\rfloor+\frac23\cos(3\log u+\pi/2)$ has $|N-u|\le2$, but its $\zeta^\sharp$ has a zero
+near $1+3i$. The theorem uses only the realised $N$ on $[1,y]$, so it holds pathwise on $\Good(<y)$, and the adaptedness of $T$
+plays no role. Parts (i) and (ii) are used only in Proposition~\ref{prop:g1}(B), whose range starts at
+$X_{\mathrm{sw}}\gg X_{\mathrm{LP}}$; part (iii) is used in Lemma~\ref{lem:si}.
+\end{remark}

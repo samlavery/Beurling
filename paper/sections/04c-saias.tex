@@ -1,0 +1,426 @@
+% 04c-saias.tex — v3 §3.3: Lemma M, Theorem 3.4 (Beurling–Saias) with full proof, Lemma 3.4A, Corollary 3.5.
+% Author: gap-localpnt.
+\subsection{Sharp coefficients: Lemma M and the Beurling--Saias bound}\label{sec:noise-saias}
+% v3: §3.3
+
+For a start $y$, the sharp resolvent is $((1+\Kpt)^{-1}g)(y)=\sum_{n\in\NN}c_n(y)\,g(y/n)/n$, where $c_1=1$ and
+\[
+  c_n=-\sum_{d\mid n,\ d<n}\mathbf 1[\tau_{n/d}<y/n]\cdot\mathbf 1[y/n\ge\Xm]\cdot c_d .
+\]
+Expanding the recursion, $c_n(y)$ is the signed count of ordered factorisations $n=w_1\cdots w_k$ into
+$w_i\in\NN\setminus\{1\}$ whose cumulative filters $\tau_{w_i}\cdot w_1\cdots w_i<y$ and cutoffs
+$y/(w_1\cdots w_i)\ge\Xm$ all pass, with sign $(-1)^k$. Since the landing points $y/(w_1\cdots w_i)$ decrease along a
+chain, the cutoffs reduce to the single condition $y/n\ge\Xm$.
+
+\begin{lemma}[Lemma M]\label{lem:lemmaM}
+% v3: Lemma 3.3
+Let $t:\PP\to(0,\infty)$ be any weight, with ties broken by a fixed order, and $\tau_w:=\max_{p\mid w}t(p)$. Then
+$c_n(y)=\mu(n)\,\chi^t_y(n)\,\mathbf 1[y/n\ge\Xm]$, where $\chi^t_y(n)=1$ if and only if $n$ is squarefree and
+\[
+  t(p)\cdot\prod_{q\mid n,\ t(q)\ge t(p)}q<y\qquad\text{for every prime }p\mid n .
+\]
+In words: strip the primes of $n$ in decreasing $t$-order; after removing $p$, the current point must still exceed $t(p)$.
+\end{lemma}
+
+\begin{proof}
+We may assume $y/n\ge\Xm$. Write $q\succ q'$ for the $t$-order.
+
+\emph{$n$ squarefree.} Chains are ordered set partitions $(B_1,\dots,B_k)$ of the set of primes of $n$, with
+$w_i=\prod B_i$. Let $\Pi_i:=w_1\cdots w_i$ and $F(B):=\max_{p\in B}t(p)$. A chain is valid if and only if
+$F(B_i)\,\Pi_i<y$ for all $i$.
+\begin{itemize}
+\item Let $q_1\succ\cdots\succ q_r$ be the primes of $n$. The canonical chain $(\{q_1\},\dots,\{q_r\})$ is valid if and only
+  if $\chi^t_y(n)=1$, since the primes $q$ with $t(q)\ge t(q_i)$ are exactly $q_1,\dots,q_i$. Its sign is
+  $(-1)^r=\mu(n)$.
+\item For a non-canonical valid chain, let $i$ be the first index with $B_i\ne\{q_i\}$, put $q:=q_i$, and let $j\ge i$
+  be the index with $q\in B_j$. Every block from position $i$ on consists of primes $\preceq q$, so $F(B_j)=t(q)$.
+  \begin{itemize}
+  \item[(S)] If $|B_j|\ge2$, split $B_j$ into the two consecutive blocks $B_j\setminus\{q\},\{q\}$. The first new
+    condition is implied by the old condition of $B_j$, since both its $F$ and its partial product are smaller. The second
+    new condition is $t(q)\,\Pi_j<y$, which is the old condition of $B_j$.
+  \item[(M)] If $B_j=\{q\}$ (so $j>i$), merge $B_{j-1}$ and $\{q\}$ into one block. Its $F$ is $t(q)$ and its partial
+    product is $\Pi_j$, so its condition is the old condition of $\{q\}$; the other conditions are unchanged.
+  \end{itemize}
+  The maps (S) and (M) are mutually inverse, preserve validity and the first deviation $(i,q)$, and change $k$ by $1$.
+  So the non-canonical valid chains cancel in pairs.
+\end{itemize}
+
+\emph{$n$ not squarefree} (induction on $\Omega(n)$). By induction, $c_d=\mu(d)\chi^t_y(d)$ for $d<n$, so
+$c_n=-\sum_{d\in\mathcal F_n,\ d\text{ squarefree}}\mu(d)\chi^t_y(d)$ with
+$\mathcal F_n:=\{d\mid n,\ d<n:\ \tau_{n/d}\cdot n<y\}$.
+Let $s$ be the $t$-largest prime with $s^2\mid n$.
+\begin{itemize}
+\item $\mathcal F_n$ is stable under $d\mapsto d\triangle\{s\}$ (toggling $s$). Indeed $d\cdot s\mid n$ whenever $d$ is
+  squarefree, $d\mid n$ and $s\nmid d$; and $n/d$, $n/(ds)$ have the same prime support, because both still contain $s$.
+  So $\tau_{n/d}=\tau_{n/(ds)}$. Moreover, if $\mathcal F_n\ne\emptyset$ then $t(s)\,n\le\tau_{n/d}\,n<y$.
+\item $\chi^t_y(d)=\chi^t_y(d\triangle\{s\})$. The conditions at primes $p\succ s$ do not involve $s$. The conditions at
+  the other primes $p$ hold for both, since $t(p)\prod_{t(q)\ge t(p)}q\le t(s)\,\mathrm{rad}(n)\le t(s)\,n<y$.
+\item $\mu$ changes sign under $d\mapsto d\triangle\{s\}$, so the terms cancel in pairs and $c_n=0$.\qedhere
+\end{itemize}
+\end{proof}
+
+\paragraph{Consequences.}
+\begin{itemize}
+\item $|c_n|\le1$, and $\sum_n|c_n|/n\le\sum_{n\in\NN,\,n\le y/\Xm}1/n\le\log y+B_1$.
+\item \emph{Density.} With the decision order $t$ ($|t(p)-p|\le H(p)$, and $t(p)=p$ for rational primes),
+  $\chi^t_y(n)=1$ and $y/n\in[v,2v)$ force $n$ to be squarefree and \emph{$4v$-dense}: $p_{j+1}\le4v\,p_1\cdots p_j$ for the
+  primes $p_1<\dots<p_r$ of $n$, sorted by value. To see this, fix $j$ and let $p^*$ be the prime of smallest $t$ among
+  $p_{j+1},\dots,p_r$. All of $p_{j+1},\dots,p_r$ have $t\ge t(p^*)$, so the condition at $p^*$ gives
+  $t(p^*)\,p_{j+1}\cdots p_r<y<2v\,n$, that is, $t(p^*)<2v\,p_1\cdots p_j$. Hence
+  $p_{j+1}\le p^*\le t(p^*)+H(p^*)\le 4v\,p_1\cdots p_j$, since $H(p^*)\le p^*/10^{10}$.
+\item Lemma~\ref{lem:lemmaM} concerns \emph{sharp scalar} filters. For the true operator $\Rres$, whose filter is
+  averaged across the threshold, the pointwise analogue is false: for $n=4$ with void filter and constant $H$,
+  $\TV(C_4)=\frac14$ while $\mu(4)=0$. The transfer to $\Rres$ is Theorem~\ref{thm:kr} and its random-width form Theorem~\ref{thm:kr-random}, which use only the masses $c_n$.
+\end{itemize}
+
+\begin{theorem}[Beurling--Saias, upper bound]\label{thm:bs}
+% v3: Theorem 3.4
+Assume \textup{(H$_{\mathrm{BS}}$)} and $\log X_0\ge10^8$. For $t\ge X_0$ put $\tau:=\log t$. Call a squarefree $n\in\NN$
+\emph{$t$-dense} if $p_{j+1}\le t\,p_1\cdots p_j$ for its primes $p_1<\dots<p_r$. Then for every $Y\ge t$,
+\[
+  W_t(Y):=\sum_{n\in\NN\cap(Y,2Y],\ t\text{-dense}}\frac1n\le C_{\mathrm{BS}}\,\frac{\log t}{\log Y},\qquad
+  C_{\mathrm{BS}}:=C_0\max\big(e^{\kappa_\Phi/\tau},\,30e^{\kappa_\Phi/(30\tau)}\big),\quad\kappa_\Phi:=4\tau+1500 .
+\]
+In particular $C_{\mathrm{BS}}\le0.70\,e^{4+1.5\cdot10^{-5}}\le38.3$. The same bound holds with $t$ replaced by $4t$, at
+the cost of a factor $1+\log4/\log X_0$.
+\end{theorem}
+
+For $\NN=\N$ the order of magnitude is due to Saias \cite{Saias1997}. The point here is a proof that uses only
+Lemmas~\ref{lem:cm} and~\ref{lem:smooth-v}, so that it applies to the realised system $\NN$. The exponent of $1/\log Y$ is
+exactly $1$; this is what makes the noise sums of \S\ref{sec:noise-perscale} independent of $x$.
+
+\begin{proof}[Proof of Theorem~\ref{thm:bs}]
+\emph{Step 1: recursion.} Put $W_t(Y;z):=\sum_{n\in(Y,2Y],\ t\text{-dense},\ \Pplus(n)<z}1/n$. If $n$ is $t$-dense and
+$p=\Pplus(n)$, then $n/p$ is $t$-dense with $\Pplus(n/p)<p$, and $p\le t\cdot n/p$, so $p^2\le tn\le2tY$. Summing over $p$
+first (for each $p$ the cofactor range $(Y/p,2Y/p]$ is a single dyadic block, so the sum is exact),
+\begin{equation}\label{eq:bs-rec}
+  W_t(Y;z)\le\sum_{p<z,\ p\le\sqrt{2tY}}\frac1p\,W_t(Y/p;p).
+\end{equation}
+
+\emph{Step 2: logarithmic variables.} Put $\ell:=\log Y$, $u:=\ell/\log z$, and
+$\Psi(\ell,u):=W_t(e^\ell;e^{\ell/u})\cdot\max(1,\ell/\tau)$. For a prime $p$ write
+\[
+  \sigma:=\log p,\qquad m:=\ell-\sigma,\qquad w:=m/\sigma,\qquad \nu:=\ell/m=(1+w)/w,\qquad
+  w_1:=\frac{\ell-\tau-\log2}{\ell+\tau+\log2}.
+\]
+Then $p<z$ if and only if $w>u-1$, and $p\le\sqrt{2tY}$ if and only if $w\ge w_1$.
+% Logged correction 6 (CORRECTIONS-vs-v3.md): w_1 includes log 2 (v3: (l-tau)/(l+tau)); Z1 bound 0.265 tau - 2714.
+For $\ell\ge3\tau+\log2$ every term has $m\ge(\ell-\tau-\log2)/2\ge\tau$, so
+$\max(1,\ell/\tau)/\max(1,m/\tau)=\nu$, and \eqref{eq:bs-rec} becomes
+\begin{equation}\label{eq:bs-rec-log}
+  \Psi(\ell,u)\le\sum_{p:\ w\ge w_{\mathrm{lo}}}\frac1p\,\nu\,\Psi(m,w),\qquad w_{\mathrm{lo}}:=\max(u-1,w_1).
+\end{equation}
+In the continuum the kernel is $dw/w$. Its exact fixed point is $g(u)=\rho(u-1)$: by \ref{R1},
+$\int_{u-1}^\infty g(w)\,dw/w=g(u)$ for $u\ge2$, while for $u<2$
+$\int_{w_1}^\infty g(w)\,dw/w=1+\log(1/w_1)$. So the kernel is critical, and every error must be summable along chains.
+This is why the exponent of $1/\log Y$ is exactly~$1$.
+
+\emph{Step 3: the profile.} Fix the constants
+\[
+  B:=5K'=11,\qquad\kappa_\Phi:=4\tau+1500,\qquad\ell_1:=30\tau,
+\]
+and the functions
+\[
+  u_0(\ell):=\ell^{1/4},\qquad U(\ell):=u_0+\ell^{1/4}\sqrt{2\log(\ell/\tau)+4},\qquad
+  Q(\ell,u):=A+a,\quad A:=\frac{B(1+u)^3\log(2+u)}{\ell},\quad a:=\frac{(u-u_0)_+^2}{2\sqrt\ell},
+\]
+\[
+  \Phi(\ell):=\Phi_\infty e^{-\kappa_\Phi/\ell},\qquad\Phi_\infty:=C_0\max\big(e^{\kappa_\Phi/\tau},\,30e^{\kappa_\Phi/\ell_1}\big).
+\]
+We prove, by induction on $\ell$, the claim
+\begin{equation}\label{eq:bs-claim}
+  \Psi(\ell,u)\le G(\ell,u):=\Phi(\ell)\,\rho(u-1)\,e^{Q(\ell,u)}\qquad(\ell\ge\tau,\ 0\le u\le U(\ell)).
+\end{equation}
+At $u=0$ (that is, $z=\infty$) this gives the theorem, since
+$W_t(Y)=\Psi(\ell,0)\tau/\ell\le\Phi_\infty e^{(B\log2-\kappa_\Phi)/\ell}\,\tau/\ell\le\Phi_\infty\tau/\ell$ and
+$\Phi_\infty=C_{\mathrm{BS}}$. The three factors of $G$ play the following roles:
+\begin{itemize}
+\item $A$ absorbs the errors of the prime sums;
+\item $a$ inflates the profile gradually, by $\log(\ell/\tau)+2$ at $u=U$; this pays for the density factor $\ell/\tau$ in
+  the tail (Step~6);
+\item $\Phi$ absorbs the boundary term $\log(1/w_1)\approx2\tau/\ell$ of the critical zone $u<2$. The ratio is exact:
+  $\Phi(m)/\Phi(\ell)=e^{-\kappa_\Phi/(w\ell)}$, since $1/m-1/\ell=1/(w\ell)$.
+\end{itemize}
+
+\emph{Step 4: base region $\tau\le\ell\le\ell_1$.} Drop the density condition, which costs at most a factor
+$\max(1,\ell/\tau)$, and apply Lemma~\ref{lem:smooth-v}. Its hypotheses hold: $u\le U(\ell)\le4.3\ell^{1/4}$, so
+$L_z=\ell/u\ge\ell^{3/4}/4.3\ge100$ and $u\le L_z$. This gives $\Psi\le(\ell/\tau)C_0\rho(u)e^{a_V}\le G(\ell,u)$, because
+$\rho(u)\le\rho(u-1)$, $a_V\le A$ (as $11(1+u)^3\ge12.8u^2$), and $(\ell/\tau)C_0\le\Phi_\infty e^{-\kappa_\Phi/\ell}$ on
+$[\tau,\ell_1]$. The last inequality holds by the choice of $\Phi_\infty$: the function $(\ell/\tau)e^{\kappa_\Phi/\ell}$ is
+convex in $\ell$, so its maximum on $[\tau,\ell_1]$ is at an endpoint.
+
+\emph{Step 5: the induction step, discretised.} Let $\ell>\ell_1$ and $0\le u\le U(\ell)$, and assume
+\eqref{eq:bs-claim} for all smaller $\ell$. Split the primes in \eqref{eq:bs-rec-log} into the range $w\le U(m)$, where
+the induction hypothesis applies, and the tail $w>U(m)$ (Step~6). The range $w_{\mathrm{lo}}\le w\le U(m)$ is an interval
+$\sigma\in[\sigma_J,\sigma_a]$, with $\sigma_a:=\ell/(1+w_{\mathrm{lo}})$. On it put
+\[
+  f(\sigma):=\nu\,G(m,w)=f_1f_2,\qquad f_1:=\nu\,\rho(w-1),\qquad f_2:=\Phi(m)e^{Q(m,w)} .
+\]
+Here $f_1$ is increasing in $\sigma$ (both $\nu$ and $\rho(w-1)$ increase as $w$ decreases), and
+\[
+  |\partial_\sigma\log f_2|\le\eta_f(m,w):=\frac{\kappa_\Phi}{m^2}+|\partial_mQ|+\frac{(1+w)^2}{\ell}|\partial_wQ|,
+\]
+since $dm/d\sigma=-1$ and $dw/d\sigma=-(1+w)^2/\ell$. Write $\sum_{p\le e^\sigma}1/p=\log\sigma+M_z+E(\sigma)$ with
+$|E(\sigma)|\le K'/\sigma$ (Remark~\ref{rem:cm-chain}). Partial summation gives
+$\sum_pf(\sigma_p)/p\le\int f\,d\sigma/\sigma+K'[f(\sigma_a)/\sigma_a+f(\sigma_J)/\sigma_J+\int|f'|\,d\sigma/\sigma]$.
+Using $|f'|\le f'+2f\,|\partial_\sigma\log f_2|$ and integrating $\int f'\,d\sigma/\sigma$ by parts, the terms in
+$f(\sigma_J)$ cancel:
+\begin{equation}\label{eq:bs-D1}
+  \sum_p\frac{f(\sigma_p)}p\le\int f\frac{d\sigma}\sigma+\frac{2K'f(\sigma_a)}{\sigma_a}+K'\int f\frac{d\sigma}{\sigma^2}
+  +2K'\int f\,|\partial_\sigma\log f_2|\frac{d\sigma}\sigma .
+\end{equation}
+In $w$-variables $d\sigma/\sigma=dw/(1+w)$, so $\int f\,d\sigma/\sigma=\int G(m,w)\,dw/w$ and
+$\int f\,d\sigma/\sigma^2=\ell^{-1}\int G(m,w)(1+w)\,dw/w$.
+
+Now divide by $G(\ell,u)$. Put
+\[
+  D(w):=Q(m,w)-Q(\ell,u)-\frac{\kappa_\Phi}{w\ell},\qquad
+  \pi(dw):=\frac{\rho(w-1)\,dw}{w\,\rho(u-1)}\ \text{on }[w_{\mathrm{lo}},\infty),\qquad
+  g(w):=\frac{\rho(w-1)}{\rho(u-1)}e^{D(w)}\mathbf 1[w\le U(m)] .
+\]
+The main term is $\int\pi\,e^D\mathbf 1[w\le U(m)]$. Since $e^D>0$, it is at most $\int_{w_{\mathrm{lo}}}^\infty\pi\,e^D=1+\mu_0+J$,
+where
+\begin{itemize}
+\item $\mu_0:=\log(1/w_{\mathrm{lo}})$ for $u<2$, and $\mu_0:=0$ for $u\ge2$, is the exact excess mass of $\pi$, by \ref{R1};
+\item $J:=\int_{w_{\mathrm{lo}}}^\infty\pi\,(e^D-1)$.
+\end{itemize}
+In the same way, any positive majorant of $e^D\mathbf 1[w\le U(m)]$ may be integrated over the full range $[w_{\mathrm{lo}},\infty)$.
+The three error terms are
+\[
+  E_1:=\frac{2K'(1+w_{\mathrm{lo}})^2g(w_{\mathrm{lo}})}{w_{\mathrm{lo}}\,\ell},\qquad
+  E_2:=\frac{K'}\ell\int g\,\frac{(1+w)\,dw}w,\qquad E_3:=2K'\int g\,\eta_f\,\frac{dw}w ,
+\]
+and $T$ denotes the tail of Step~6, divided by $G(\ell,u)$. The induction closes if
+\begin{equation}\label{eq:bs-Sigma}
+  \Sigma(\ell,u):=-\big[\mu_0+J+E_1+E_2+E_3+T\big]\ge0\qquad\text{for all }\ell>\ell_1,\ 0\le u\le U(\ell).
+\end{equation}
+
+\emph{Step 6: the tail.} The primes with $w>U(m)$ correspond exactly to the $n$ that are $e^{\ell/u^*}$-smooth, with
+$u^*:=U(\ell)+\frac12$. This uses $U(m)\ge U(\ell)-\frac12$ for $m\ge\ell(1-1/U)$. Dropping the density condition and
+applying Lemma~\ref{lem:smooth-v} gives a tail contribution to $\Psi$ of at most $(\ell/\tau)C_0\rho(u^*)e^{a_V(u^*)}$.
+Divide by $G(\ell,u)$, and use $\Phi_\infty\ge C_0$, $Q\ge a$ and
+$\rho(u^*)/\rho(u-1)\le e^{-r(u-1)(u^*-u+1)}$ \ref{R3}. With $y:=\log(\ell/\tau)\ge\log30$,
+\[
+  T\le\exp\big(\kappa_\Phi/\ell+a_V(u^*)+y-a(\ell,u)-r(u-1)(U(\ell)-u+\tfrac32)\big).
+\]
+Maximising over the admissible $y$ gives $T\le\exp(\kappa_{\max}/\ell+a_V(u^*)+E_T)$, where
+$\kappa_{\max}:=4\ell/30+1500\ge\kappa_\Phi$ and, with $U_{30}(\ell):=u_0+\ell^{1/4}\sqrt{2\log30+4}$,
+\[
+  E_T:=\begin{cases}\log30-a(\ell,u)-r(u-1)\big(U_{30}-u+\tfrac32\big),&u\le U_{30},\\
+  -2-1.5\,r(u-1),&u>U_{30}.\end{cases}
+\]
+In the second case this uses $a(\ell,U(\ell))=y+2$.
+
+\emph{Step 7: verification of \eqref{eq:bs-Sigma}.} There are three regions. Throughout, $\tau\ge10^8$ and $\ell>\ell_1=30\tau$.
+
+\smallskip\noindent\emph{(i) Region Z1: $u<2$, every $\ell\ge30\tau$.} Here $\rho(u-1)=1$ and $\pi(dw)=\rho(w-1)\,dw/w$. Since
+$u_0=\ell^{1/4}\ge234$, $D_a:=a(m,w)-a(\ell,u)=0$ for $w\le40$, so $D=D_A+D_\Phi$ with $D_A:=A(m,w)-A(\ell,u)$ and
+$D_\Phi:=-\kappa_\Phi/(w\ell)\le0$; and $e^{D}-1\le(e^{D_A}-1)_++(e^{D_\Phi}-1)$.
+\begin{itemize}
+\item \emph{The $A$-part.} With $h(w):=(1+w)^4\log(2+w)/w$ one has $A(m,w)=(B/\ell)h(w)$ exactly, so
+  $D_A\le(B/\ell)h(w)\le10^{-3}$ for $w\le40$ and $e^{D_A}-1\le1.001D_A$ there. On $[w_{\mathrm{lo}},2]$, $\rho(w-1)=1$ and
+  $h\le h(2)=56.145$. On $[2,\infty)$, $\rho(w-1)\le e^{-(w-2)}$ by \ref{R3} with $r(1)=1$, and $h(w)/w\le(3+s)^4(\log4+s/4)/4$
+  with $s=w-2$. The part $w>40$ contributes at most $10^{-40}$: there $\rho(w-1)\le\rho(39)e^{-r(39)(w-40)}$ with
+  $r(39)\ge4.4$, while the slope of $D$ is at most $0.25$. So
+  $\ell\,E_\pi[(e^{D_A}-1)_+]\le1.001\,B\,(56.145\log(2/w_{\mathrm{lo}})+J_2)$, with
+  $J_2:=\int_0^\infty e^{-s}(3+s)^4(\log4+s/4)\,ds/4\le200.6$ (by the Gamma moments).
+\item \emph{The $\Phi$-benefit.} Put $\Phi_{\mathrm{ben}}:=E_\pi[1-e^{-\kappa_\Phi/(w\ell)}]$. Using
+  $1-e^{-y}\ge y(1-y/2)$, $\kappa_\Phi/\ell\le0.1334$ and $w\ge w_1\ge29/31-10^{-8}$,
+  $\Phi_{\mathrm{ben}}\ge(\kappa_\Phi/\ell)(1-\kappa_\Phi/(2w_1\ell))E_\pi[1/w]\ge0.9287\,(\kappa_\Phi/\ell)\,c_2^-$, where
+  \[
+    E_\pi[1/w]\ge c_2^-:=\int_1^2\frac{dw}{w^2}+\int_2^3\frac{(1-\log(w-1))\,dw}{w^2}=\frac23+\frac{\log2}3-\log\frac43=0.6100 .
+  \]
+\item \emph{The excess mass.} With $x':=(\tau+\log2)/\ell\le1/30+10^{-17}$, $\mu_0=\log(1/w_{\mathrm{lo}})\le\log(1/w_1)\le2x'+x'^3$,
+  so $\ell\mu_0\le2.0012\,\tau+1.4$.
+\item The remaining terms satisfy $\ell(E_1+E_2+E_3+T)\le33$.
+\end{itemize}
+Altogether, since $\kappa_\Phi\ge4\tau$ and $\log(2/w_{\mathrm{lo}})\le0.76$,
+\[
+  \ell\Sigma\ge\tau\,(4\cdot0.9287\,c_2^--2.0012)-1.001\,B\,(56.145\cdot0.76+J_2)-33-1.4\ge0.265\,\tau-2714>0 .
+\]
+
+\smallskip\noindent\emph{(ii) Large $\ell$: $\ell\ge10^{18}$, every $u\ge2$.} This region is analytic, apart from a
+one-variable inequality checked in ball arithmetic. Put
+\begin{gather*}
+  s:=w-u,\qquad r_0:=r(u-1),\qquad\Lambda(u):=(1+u)^2\log(2+u),\qquad h_A(u,w):=h(w)-(1+u)^3\log(2+u),\\
+  D_A=(B/\ell)\,h_A,\qquad D_a:=a(m,w)-a(\ell,u),\qquad D_\Phi:=-\kappa_\Phi/(w\ell),\qquad D':=D_A+D_a .
+\end{gather*}
+Write $E_\pi$ for integration against $\pi$, whose total mass is $1+\mu_0\le1.7$. For $s\ge0$ the density of $\pi$ is at most
+$e^{-r_0s}/u$, by \ref{R3}. The \emph{first-order profile} is
+\[
+  c(u):=\ell\big(\Phi_{\mathrm{ben}}-\mu_0\big)-B\,j_A(u)-2K'e_1(u)-K'e_2(u),
+\]
+where
+\begin{itemize}
+\item $\Phi_{\mathrm{ben}}:=E_\pi[1-e^{-\kappa_\Phi/(w\ell)}]$ (exact, not linearised);
+\item $j_A:=E_\pi h_A$;
+\item $e_1:=(1+w_{\mathrm{lo}})^2\rho(w_{\mathrm{lo}}-1)/(w_{\mathrm{lo}}\rho(u-1))$;
+\item $e_2:=\int(1+w)\rho(w-1)\,dw/(w\rho(u-1))$.
+\end{itemize}
+For $u\ge2$, $c$ depends on $\ell$ only through $\Phi_{\mathrm{ben}}$.
+
+\begin{lemma}[remainder, in ratio form]\label{lem:bs-remainder}
+% v3: Theorem 3.4, proof (g), case l >= 10^18
+For $\tau\ge10^8$, $\ell\ge\max(10^{18},30\tau)$ and $0\le u\le U(\ell)$,
+\[
+  \ell\Sigma\ge\big(1-\eps(\ell)\big)\big(c(u)+\ell s_a\big)-60\cdot\mathbf 1[u\ge u_0-2]-9\cdot10^{17}/\ell,
+\]
+where $s_a:=-E_\pi D_a\ge0$ is the slack of $a$, $a'(\ell,u):=\partial_ua=(u-u_0)_+/\sqrt\ell$, and
+\[
+  \eps(\ell):=2\cdot10^4\,U^2\log(2+U)/\ell+30\,a'(\ell,U)+\ell^{-1/4}\le0.03 ,
+\]
+with $U=U(\ell)$; $\eps$ is decreasing in $\ell$.
+\end{lemma}
+
+\begin{proof}
+Write $e^D-1=(e^{D_\Phi}-1)+e^{D_\Phi}(e^{D'}-1)$, and use $e^{D'}-1\le D'+\frac12D'^2e^{D'_+}$. This gives
+\[
+  \ell\Sigma\ge c(u)+\ell s_a-\ell\big(\rho_1+\rho_2+\rho_3+\rho_4+E_3+T\big),
+\]
+where $\rho_1:=E_\pi[(1-e^{D_\Phi})|D'|]$, $\rho_2:=\frac12E_\pi[D'^2e^{D'_+}]$, $\rho_3:=E_1-E_1^{\mathrm{lin}}$ and
+$\rho_4:=E_2-E_2^{\mathrm{lin}}$. Here $E_i^{\mathrm{lin}}$ denotes $E_i$ with $e^{D}$ replaced by $1$ in $g$, so that
+$\ell E_1^{\mathrm{lin}}=2K'e_1$ and $\ell E_2^{\mathrm{lin}}=K'e_2$; and $\rho_3=E_1^{\mathrm{lin}}(e^{D'(w_{\mathrm{lo}})}-1)$. We use
+the moments $M_k:=E_\pi|s|^k\le1.7\cdot2^k+e\,k!/2$, valid for $r_0\ge1$. The bounds below are for $u\ge2$; the case
+$u<2$ is identical with $\Lambda(2)$ in place of $\Lambda(u)$.
+\begin{enumerate}[label=(\alph*)]
+\item $|h_A|\le\Lambda(u)\big(1.5+8|s|(1+|s|)^3\big)$. This uses
+  $h(u)-(1+u)^3\log(2+u)=(1+u)^3\log(2+u)/u$ and $h'(w)\le8(1+w)^2\log(2+w)$ for $w\ge1$. For $|s|\le1$ and $u\ge27$ the
+  bound is at most $10.3\Lambda(u)$. Hence, for $u\ge27$ (where $r_0\ge4.3$), $E_\pi|h_A|\le18\Lambda$ and
+  $E_\pi h_A^2\le182\Lambda^2$. These bounds are in ratio form: the weight $e^{-r_0s}$ enters, not $\sup_w$.
+\item $\rho_1\le6\,\Phi_{\mathrm{ben}}\,E_\pi|D'|$, because $(1-e^{-y})/y$ is decreasing, $(u+1)/(u-1)\le3$, and
+  $\pi(w\le u+1)\ge\frac12$.
+\item The $a$-part. For $u\ge u_0-2$: $r_0\ge15$, and $s_a\ge0.32\,a'(\ell,u)-1.01/\sqrt\ell$. The proof combines the
+  chord bound on $[u-1,u]$, the identity $E_\pi(u-w)_+=1-1/r(u)$ from \ref{R1}, and the shift bound
+  $(w-m^{1/4})_+\le(w-u_0)_++u_0/(3(1+w))$. Also
+  $\frac12E_\pi D_a^2\le3a'(\ell,u)^2M_2+0.75M_4/\ell+0.01/\ell\le10\,a'(\ell,U)\,s_a+60/\ell$. For $u<u_0-2$:
+  $\ell|E_\pi D_a|\le1.02\sqrt\ell\,e^{-r_0(u_0-u-2/3)}/(u\,r_0^3)$.
+\item $\rho_3\le\ell E_1^{\mathrm{lin}}\cdot2\big(128B\Lambda/\ell+3a'(\ell,U)\big)$ and
+  $\rho_4\le\ell E_2^{\mathrm{lin}}\cdot2\big(8B\Lambda M_4/\ell+3a'(\ell,U)\big)$, with $\ell E_1^{\mathrm{lin}}=2K'u^2r_0$ for
+  $u\ge2$. Also
+  $\ell E_3\le2K'\big[14\kappa_\Phi/\ell+12B(1+u)^4\log(2+u)M_4/\ell+4(1+u)^2M_2\,a'(\ell,U)\big]$; its
+  $\kappa_\Phi$-piece is at most $10^{-3}\,\ell\Phi_{\mathrm{ben}}$.
+\end{enumerate}
+For $u\ge27$, every remainder is a small multiple of $c(u)\ge K'u^2\log(1+u)$ (proved below) or of $\ell\Phi_{\mathrm{ben}}$. For
+$u<27$ the remainders are absolute, at most $9\cdot10^{17}/\ell$. On the range $u\ge u_0-2$,
+$c(u)\ge K'(u_0-2)^2\log u_0\ge2\cdot10^9$, so the term $-60$ is negligible. Finally $\eps(10^{18})\le0.03$,
+$\eps(10^{22})\le0.003$, and $\eps$ is decreasing. The constants are crude, and nothing is optimised.
+\end{proof}
+
+\emph{Positivity of $c(u)$, for $\tau\ge10^8$.}
+\begin{itemize}
+\item \emph{$u\ge27$: $c(u)\ge K'u^2\log(1+u)$.} Here $\mu_0=0$ and $\Phi_{\mathrm{ben}}\ge0$.
+  \begin{itemize}
+  \item On $[u-1,u]$, convexity of $h$ ($h''>0$ on $[1,\infty)$) gives the chord bound $h(w)\le h(u)-h'(u-1)(u-w)$, with
+    $h'(u-1)\ge3u^2\log(1+u)$, and \ref{R1} gives $E_\pi(u-w)_+=1-1/r(u)$.
+  \item On $w\ge u$, $h(w)-h(u)\le h'(w)s$ and \ref{R3} bound the remaining part by $144\Lambda(u)/(ur_0^2)$.
+  \item Hence $E_\pi h_A\le(1+u)^3\log(2+u)/u-3u^2\log(1+u)(1-1/r(u))+144\Lambda(u)/(ur_0^2)$. Also $e_1=u^2r(u-1)$ and
+    $e_2\le u+1$.
+  \end{itemize}
+  With $B=5K'$ this gives
+  \begin{multline*}
+    \frac{c(u)}{K'u^2}\ge5\log(1+u)\Big[3\big(1-1/r(u)\big)-\frac{(1+u)^3\log(2+u)}{u^3\log(1+u)}
+    -\frac{144(1+u)^2\log(2+u)}{u^3r_0^2\log(1+u)}\Big]\\-2r(u-1)-\frac{u+1}{u^2}.
+  \end{multline*}
+  With $r$ enclosed in $[r_{\mathrm{low}},r_{\mathrm{up}}]$, the right side is $\ge\log(1+u)$ on $[27,4\cdot10^5]$
+  (computer-assisted; see Appendix~\ref{app:cert}: $9{,}609$ cells in ball arithmetic, no failures, minimum margin
+  $0.189$). Beyond $4\cdot10^5$ it is analytic: $r_{\mathrm{low}}\ge15.3$ gives
+  $5\cdot1.79\log u-2(\log u+\log\log u+2)>\log(1+u)$.
+\item \emph{$2\le u<27$: $\Phi$-dominance.} Here
+  $\ell\Phi_{\mathrm{ben}}\ge\kappa_\Phi\cdot0.933\cdot0.69/u\ge4\cdot10^8\cdot0.933\cdot0.69/u\ge9.5\cdot10^6$, while
+  $B\,j_A\le B(1.5+393.5/u)\Lambda(u)\le5\cdot10^5$ and $2K'u^2r_{\mathrm{up}}\le2\cdot10^4$.
+\item \emph{$u<2$:} region Z1, case (i).
+\end{itemize}
+So, by Lemma~\ref{lem:bs-remainder}, $\Sigma\ge0$ for every $\ell\ge10^{18}$ and every $u\le U(\ell)$.
+
+\smallskip\noindent\emph{(iii) Region Z2: $30\tau\le\ell<10^{18}$ and $u\ge2$ (computer-assisted; see Appendix~\ref{app:cert}).}
+Here we use a closed-form lower bound $S(\ell,u)\le\Sigma(\ell,u)$, built only from \ref{R1}--\ref{R4}, the constant $K'$ of
+Lemma~\ref{lem:cm}, and convexity. Since $u\ge2$, $w_{\mathrm{lo}}=u-1$ and $\mu_0=0$. Put $v:=u-u_0$,
+$c_u:=u_0/(3u)$, $k_u:=1+1/(2(u-1))$ and $\varphi(w):=(w-u_0+c_u)_+^2/(2\sqrt\ell)$.
+\begin{itemize}
+\item \emph{Two elementary majorants.} First, $1/(2\sqrt m)=\sqrt{(1+w)/w}/(2\sqrt\ell)\le k_u/(2\sqrt\ell)$ for $w\ge u-1$.
+  Second, $(w-m^{1/4})_+\le(w-u_0+u_0/(3(1+w)))_+\le(w-u_0+c_u)_+$. Together, $a(m,w)\le k_u\varphi(w)$, and $\varphi$ is
+  convex. Also $A(m,w)=(B/\ell)h(w)$ with $h$ convex.
+\item \emph{Part I, $w\in[u-1,u]$.} By the chord bounds for $h$ and $\varphi$, together with $h(u)-h(u-1)\ge h'(u-1)$,
+  $\varphi(u)-\varphi(u-1)\ge\varphi'(u-1)$, and $D_\Phi\le-\kappa_{\min}/(u\ell)$, we get $D\le\beta_I-\alpha(u-w)$, where:
+  \begin{itemize}
+  \item $\beta_I:=A(\ell,u)/u+\beta_a-\kappa_{\min}/(u\ell)$;
+  \item $\alpha:=(B/\ell)u^3(3u-4)\log(1+u)/(u-1)^2+k_u(v-1+c_u)_+/\sqrt\ell$;
+  \item $\beta_a:=(k_u-1)(v+c_u)_+^2/(2\sqrt\ell)+c_u(2v_++c_u)/(2\sqrt\ell)$.
+  \end{itemize}
+  Then use $e^{-\alpha t}\le1-(1-e^{-\alpha})t$ and $E_\pi(u-w)_+=1-1/r(u)$ \ref{R1}.
+\item \emph{Part II, $w\in[u,\bar U]$, $s=w-u$.} Here $D\le\beta_{II}+\gamma(s)s$, with $\beta_{II}:=A(\ell,u)/u+\beta_a$ and a
+  two-piece slope: $\gamma(s)=\gamma_1$ for $s\le60$ and $\gamma(s)=\gamma_{\max}$ beyond. These are the slopes of
+  $(B/\ell)h+k_u\varphi$ bounded via $h'(w)\le8(1+w)^2\log(2+w)$ at $w=u+60$ and at $w=\bar U$, respectively. This is
+  combined with $\rho(w-1)/\rho(u-1)\le e^{-r(u-1)s}$ \ref{R3}. The integrals converge because $r(u-1)>\gamma_1$ and
+  $r(u-1)>\gamma_{\max}$, which is checked in every cell.
+\item \emph{What the induction needs.} It needs an upper bound for $\int\pi\,e^D\mathbf 1[w\le U(m)]-1$. The Part I/II
+  functions are positive majorants of $e^D\mathbf 1[w\le U(m)]$ on $[u-1,\bar U]$, and $\mathbf 1[w\le U(m)]=0$ beyond
+  $\bar U$. So their integrals bound it. The same majorants (with a two-piece bound for $\eta_f$) bound $E_1$, $E_2$ and
+  $E_3$; $T$ is bounded as in Step~6. The difference $M-1$ is written as a sum of small terms, so there is no cancellation
+  against~$1$.
+\item \emph{Uniformity in $\tau\ge10^8$.} The bound uses $\kappa_{\min}:=4\cdot10^8$ where $\kappa_\Phi$ helps,
+  $\kappa_{\max}=4\ell/30+1500$ where it hurts, and the slopes at $\bar U(\ell):=U(\ell;\tau=10^8)$, which is the largest
+  junction.
+\item \emph{The cover.} The range $\ell\in[3\cdot10^9,10^{18}]$ is split into $403$ bands of ratio $1.05$. In each band,
+  $u$-cells cover $[2,\max(40,u_0/2)]$, and cells in $v=u-u_0(\ell)$ cover the rest up to $\bar U(\ell)$. The endpoints of
+  the $v$-cells are rounded outward, so the seams between the two kinds of cells, and the top edge, are covered exactly
+  for every $\ell$ in the band. On each cell, $S$ is evaluated in ball arithmetic, with $r_{\mathrm{low}}$ and $r_{\mathrm{up}}$
+  computed in the same arithmetic. The enclosure bounds $S$ on the whole cell, so no Lipschitz or interpolation argument is
+  needed.
+\item \emph{Result.} $302{,}013$ cells (including adaptive bisections), no failures, and minimum certified $\ell S=2.491\cdot10^6$.
+\end{itemize}
+
+\emph{Step 8: conclusion.} By Steps 4--7, \eqref{eq:bs-claim} holds for all $\ell\ge\tau$ and $0\le u\le U(\ell)$, and
+Step~3 gives the theorem. The threshold $\ell_1=30\tau$ is internal to the induction: the base region $[\tau,30\tau]$ is
+covered by Lemma~\ref{lem:smooth-v}. So the conclusion holds for every $Y\ge t$, with the same $C_{\mathrm{BS}}$. For the
+$4t$-dense version, replace $\tau$ by $\tau+\log4$ throughout; nothing else changes.
+\end{proof}
+
+The induction claim \eqref{eq:bs-claim} is itself used later, in the proof of the short-interval Saias bound
+(Lemma~\ref{lem:si}). We record it.
+
+\begin{lemma}[BS-profile]\label{lem:bs-profile}
+% v3: Lemma 3.4A
+Let $\tau=\log t\ge10^8$, $\ell\ge\tau$ and $0\le u\le U(\ell)$. Then
+\[
+  W_t(e^\ell;e^{\ell/u}):=\sum_{n\in\NN\cap(e^\ell,2e^\ell],\ t\text{-dense},\ \Pplus(n)<e^{\ell/u}}\frac1n
+  \le\frac\tau\ell\,\Phi_\infty\,\rho(u-1)\,e^{Q(\ell,u)},
+\]
+with $U$, $Q$ and $\Phi_\infty\le38.3$ as in Step~3 of the proof of Theorem~\ref{thm:bs}. Moreover, $\Phi_\infty$ is
+decreasing in $\tau$.
+\end{lemma}
+
+\begin{proof}
+This is \eqref{eq:bs-claim}, divided by $\max(1,\ell/\tau)=\ell/\tau$. Steps 4--7 prove it on the whole range
+$0\le u\le U(\ell)$, not only at $u=0$.
+
+\emph{Uniformity in $\tau\ge10^8$.} The computer-assisted region is uniform in $\tau$ by construction ($\kappa_{\min}$,
+$\kappa_{\max}$, $\bar U$). The analytic regions are monotone in $\tau$ in the safe direction: $\ell\Sigma\ge0.265\tau-2714$ for
+$u<2$, and for $\ell\ge10^{18}$ the term $\ell\Phi_{\mathrm{ben}}$ increases with $\kappa_\Phi$. The base region uses
+Lemma~\ref{lem:smooth-v} with $\Phi_\infty$ chosen for the given $\tau$.
+\end{proof}
+
+\begin{corollary}[Saias weights at every start]\label{cor:saias}
+% v3: Corollary 3.5
+For every start $y\ge X_0$ and every $\Xm/2\le v\le y$,
+\[
+  W^{\mathrm{sh}}_y(v):=\sum_{e\in\NN:\ y/e\in[v,2v)}\frac{|c_e(y)|}e\le C_S\,\frac{\log(2v)}{\log y},\qquad
+  C_S:=\max(2.01\,C_{\mathrm{BS}},\,1.4)\le77 .
+\]
+\end{corollary}
+
+\begin{proof}
+If $c_e(y)\ne0$, then $y/e\ge\Xm$ (the cutoff in $\Kpt$), and $e$ is squarefree and $4v$-dense (Lemma~\ref{lem:lemmaM}).
+\begin{itemize}
+\item For $v\le\sqrt y/4$, apply Theorem~\ref{thm:bs} with $t:=4v\ge2\Xm$ and $Y:=y/(2v)$. Then $Y\ge t$ and
+  $\log Y\ge\frac12\log y$, and
+  \[
+    W^{\mathrm{sh}}_y(v)\le C_{\mathrm{BS}}\frac{\log(4v)}{\log(y/2v)}\le2C_{\mathrm{BS}}\Big(1+\frac{\log2}{\log X_0}\Big)
+    \frac{\log(2v)}{\log y}\le2.01\,C_{\mathrm{BS}}\frac{\log(2v)}{\log y}.
+  \]
+\item For $v>\sqrt y/4$, put $A:=y/(2v)\in[\frac12,2\sqrt y)$. Then $W^{\mathrm{sh}}_y(v)\le\sum_{e\in(A,2A]}1/e$.
+  This sum is at most $1$ always (on $\N$ below $\Xm$), and at most $\log2+2\eta_1+1/A\le0.6952$ if $A\ge y^{1/4}$. In the
+  first case $\log(2v)/\log y\ge\frac34$, and in the second $\log(2v)/\log y\ge\frac12-\log2/\log y$. Either way
+  $W^{\mathrm{sh}}_y(v)\le1.4\log(2v)/\log y$.\qedhere
+\end{itemize}
+\end{proof}

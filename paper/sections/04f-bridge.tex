@@ -1,0 +1,248 @@
+% 04f-bridge.tex — v3 §3.6 (second part): Prop 3.14 (BR), the X0 band (input of 04x-x0band.tex), (Osc), Lemma 3.15,
+% Prop 3.16 (G1'). Author: gap-localpnt.
+\subsection{The bridge, the jump at \texorpdfstring{$X_0$}{X0}, and positivity of the sharp reference}\label{sec:noise-bridge}
+% v3: §3.6 (Proposition 3.14 – Proposition 3.16)
+
+\begin{proposition}[the bridge: operator versus sharp]\label{prop:br}
+% v3: Proposition 3.14
+Let $o_u$ be the supremum of $\osc(\Tc)$ over windows of length $2.04H(u)$ meeting $[u,2u)$: the $H$-window oscillation of
+the jump-free source. Only the kernels $C_n$ with $n\ge2$ use it, so it is read at heights $\le x/2+1.1H(x)$. For $x\ge2X_0$
+split
+\[
+  (\Rres T')(x)-\rhosh(x)=\mathrm{BR}_c(x)+J_{X_0}(x),\qquad
+  J_{X_0}(x):=\jz\Big[(\Rres\mathbf 1_{[X_0,\infty)})(x)-\sum_nc_n(x)\mathbf 1[x/n\ge X_0]/n\Big],
+\]
+where $\mathrm{BR}_c:=\Rres\Tc-\sum_nc_n\Tc(\cdot/n)/n$. Then
+\[
+  \log x\cdot|\mathrm{BR}_c(x)|\le(5.1C_N+C_S)\sum_{u\text{ dyadic}}\log(2u)\,o_u+8.4\,C_NE_\theta=:E_{\mathrm{BR}} .
+\]
+\end{proposition}
+
+\begin{proof}
+Write $\mathrm{BR}_c(x)=\sum_n\frac1n\big[\int\Tc\,dC_n^{\mathrm{nom}}-c_n\Tc(x/n)\big]+\sum_n\frac1n\int\Tc\,d\tilde E_n$, in the
+notation of \S\ref{sec:kernels}.
+\begin{itemize}
+\item \emph{The Kantorovich--Rubinstein part.} $\int\Tc\,dC_n^{\mathrm{nom}}-c_n\Tc(x/n)=\int(\Tc-\Tc(x/n))\,dC_n^{\mathrm{nom}}$, an
+  integral over $[x/n\pm R_n]$. So it is at most $o_{x/n}\TV(C_n^{\mathrm{nom}})$, with
+  $\TV(C_n^{\mathrm{nom}})\le\TV(C_n)+\TV(\tilde E_n)$. Use Proposition~\ref{prop:true-kernels} for $\sum\TV(C_n)/n$ in dyadic
+  blocks ($5.1C_N$ on the two blocks at $X_0$), and Corollary~\ref{cor:saias}.
+\item \emph{The near-threshold part.} For $\tau$-near steps, by the Duhamel form in Proposition~\ref{prop:true-kernels} and
+  $|\Tc|\le2$, it is at most $4.2\sum_d(\TV(C_d)/d)\,\theta(x/d)\le8.4C_NE_\theta/\log x$ (Lemma~\ref{lem:tau-near}). For
+  $X_0$-near (terminal) steps, $\Tc$ is within $o_{X_0}$ of $\Tc(X_0)=0$ on the support, so their part is at most
+  $o_{X_0}\cdot2C_N\cdot1.52\log(2X_0)/\log x$, which is inside the first term.
+\end{itemize}
+Only the oscillation of the smooth source enters, never the $H$-scale roughness of the noise. The jump
+$\jz\mathbf 1_{[X_0,\infty)}$ has no small oscillation, and its whole effect is $J_{X_0}$, which is treated next.
+\end{proof}
+
+\InputIfFileExists{sections/04x-x0band}{}{%
+  \paragraph{The jump at $X_0$.}\label{lem:xb}\label{lem:si}
+  \textbf{[Placeholder: 04x-x0band.tex (Lemma~XB = v3 Lemma~3.14A, its three ranges, and Lemma~SI$(\Lambda)$ = v3
+  Lemma~3.14B) is pending.]}}
+
+\paragraph{Oscillation of the target.}\label{par:osc} All bounds are for $\Tc$, and none uses a local count at the height where
+the oscillation is read.
+% v3: (Osc)
+\begin{equation}\label{eq:osc}
+  \sum_u\log(2u)\,o_u\le e^{-83},\qquad\sum_v(\log3v)^2\,o_v\le e^{-41},\qquad\sup_v\log v\cdot o_v\le e^{-120},
+  \qquad E_{\mathrm{BR}}\le e^{-76}.
+\end{equation}
+\begin{proof}
+\begin{itemize}
+\item Near $u=X_0$, $\Tc$ is continuous: it is $0$ below $X_0$ and $1-\rhodet-\jz$ above, which vanishes at $X_0$.
+\item $o_{\mathrm{det}}\le(2.04H(u)+2)X_0^{5/12}/u$, from the linear window of length $\kappa u$ in \eqref{eq:rhodet} and the
+  unit spacing of the rigid set.
+\item On $\Good(<u)$, the $\Abs$-part of $\Tc$ is $\sigma_{\Abs}=K_{\Abs}\rhot-\rho_{\Abs}$ (as $\bar\rho_{\Abs}=\rho_{\Abs}$,
+  Remark~\ref{rem:stopped}). So $o_{\Abs}\le2\sup|\sigma_{\Abs}|\le4L_u^{-4}$, by Lemma~\ref{lem:rhoA}(d) (from parts (a), (c)
+  and Lemma~\ref{lem:lemmaP}). Lemma~\ref{lem:lemmaP} holds on $\Good(<t)$ at heights up to $t+1.01H(t)$, using only
+  $E_{\mathrm{cl}}$ at lower heights and Chebyshev below $2y$. So reading $o_{\Abs}$ at the current height $t$ costs no event
+  later than $t$; Lemma~\ref{lem:rhoA}(b), the local count at height $u$, is not used. Moreover $o_{\Abs}$ vanishes unless
+  $\log\log u>2\log\Lambda+5.97$ ($=42.8$ at $\Lambda=10^8$), since $\Abs$ is empty below that height.
+\item $o_R\le\sum_{k:\,x_k\le u}\gamma_k\kappa_kH(u)u^{-1}(x_k/u)^{1-\theta}\le H(u)u^{-\theta}$, since
+  $\gamma_k\kappa_k\le x_k^{1-\theta}$ and $u\ge x_1\ge\exp(X_0^2)$.
+\item Hence $\sum_u\log(2u)\,o_u\le4.2H(X_0)X_0^{-7/12}\log X_0+5e^{-2\cdot42.8}\le e^{-83}$, and
+  $E_{\mathrm{BR}}\le883e^{-83}+8.4C_NE_\theta\le e^{-76}$. Also $\sum_v(\log3v)^2o_v\le5.8e^{-42.8}\le e^{-41}$ and
+  $\sup_v\log v\cdot o_v\le4e^{-3\cdot42.8}\le e^{-120}$. All of these improve with $\Lambda$.
+\end{itemize}
+No triangular windows and no Lipschitz bound are needed.
+\end{proof}
+
+\begin{lemma}[the noise terms, in predictable form]\label{lem:predictable}
+% v3: Lemma 3.15
+With \eqref{eq:decomp},
+\begin{equation}\label{eq:predictable}
+  M(x)-(B\Rres T')(x)=(\vartheta/H)(x)-(B\Kpt B\Rres F_r)(x)-(B\Rres G)(x),
+\end{equation}
+and, on $\Good(<x)$,
+\[
+  \log x\cdot|M-B\Rres T'|(x)\le\eps_N:=5.1C_N\sum_u\log(2u)\bar F_r(u)+15.3C_NC_S'\sum_v(\log3v)^2F_r^+(v)
+  +\sup_x\frac{6\log x}{H(x)}\le10^{-13},
+\]
+where $\bar F_r(v):=o_v+6/H(v)+\bar\nu(v)+54\eta(v)$ bounds $|F_r|$ on $[v,2v)$, and $F_r^+:=2\bar F_r$ bounds $|(1-B)F_c|$.
+Every sum is over dyadic scales $\ge X_0/2$; there is no dependence on $x$, and no event at the current scale is used.
+\end{lemma}
+
+\begin{proof}
+\emph{The identity.} By \eqref{eq:pushthrough} for $F_c$ and $\Kpt B\Rres=1-\Rres$, $\Kpt\rhot_c=F_c-\Rres F_c+\Rres G$, where
+$\rhot_c:=\rhot-(1+B\Kpt)^{-1}BJ$. So $M=B\Rres J+B\Tc+\vartheta/H-BF_c+B\Rres F_c-B\Rres G$. Insert $F_c=\Tc+F_r$ and
+$\Rres\Tc+\Rres J=\Rres T'$. In particular, the current-scale terms $-B(\nu+\NT)(x)$ of $BF_c$ cancel exactly against those of
+$B\Rres F_c$ (its $n=1$ term). Every term on the right of \eqref{eq:predictable} involves $\nu$, $\NT$ and $\rhot$ only at scales
+$\le x/2+2H$.
+
+\emph{The bounds.}
+\begin{itemize}
+\item $\log x\cdot|(B\Kpt B\Rres F_r)(x)|\le5.1C_N\sum_{u\le x/2+2H}\log(2u)\bar F_r(u)$. The kernels of $\Kpt B\Rres=1-\Rres$
+  are the $C_n$ with $n\ge2$, so Proposition~\ref{prop:true-kernels} applies ($5.1C_N$ bounds both kinds of blocks).
+\item $\log x\cdot|(B\Rres G)(x)|\le15.3C_NC_S'\sum_v(\log3v)^2F_r^+(v)$, since
+  $|G(y)|\le3\sum_v\omega_y(v)\sup_{[v,3v]}F_r^+$ (Lemma~\ref{lem:S}(iii)).
+\item $|\vartheta/H|\le6/H(x)$, and $\sup\rhot\le1.01$ surely (\S\ref{sec:noise-perscale}), so $|\NT|\le2.02\eta\le54\eta$ by
+  \eqref{eq:NT}.
+\end{itemize}
+By \eqref{eq:sw-sums} (note that $\sum_u\log(2u)\bar\nu(u)$ and $\sum_v(\log 3v)^2\bar\nu(v)$ are dominated by the sums
+there), Lemma~\ref{lem:tau-near} ($E_\eta^0$ and $E_\eta^{(2)}$) and \eqref{eq:osc}, $\eps_N\le10^{-13}$. The largest part is
+$30.6C_NC_S'e^{-41}$, from the oscillation of $\sigma_{\Abs}$.
+\end{proof}
+
+\paragraph{Design facts used} (\S\ref{sec:construction}).
+\begin{itemize}
+\item $R=\sum_kR_k$, with $R_k\equiv0$ on $[1,x_k+2H(x_k)]$, $x_1\ge\exp(X_0^2)$, $x_{k+1}\ge\exp(x_k)$, and
+  $\gamma_k\in[\Gamma_k,2\Gamma_k]$ with $\Gamma_k=\kappa_0x_k^{1-\theta}/(2\log^3x_k)$; so $\log\gamma_k\asymp(1-\theta)\log x_k$.
+\item \eqref{eq:Rkprime}: $|R_k'(v)|\le\kappa_k(v/x_k)^{\theta-1}$ with $\kappa_k=2\kappa_k'/\log x_k$, $\kappa_k'=\kappa_0/\log^2x_k$,
+  $\kappa_0\le\frac14$.
+\end{itemize}
+
+\paragraph{A squarefree average.} $F_\theta:=\sup_yy^{\theta-1}\sum_{n\in\NN,\,n\le y}\mu^2(n)n^{-\theta}\le1.33$ for $\theta\le\frac12$
+(in particular for $\theta\in[\frac14,\theta_1]$):
+\begin{itemize}
+\item $F_\theta\le F_{1/2}$, since $y^{\theta-1}n^{-\theta}=y^{-1}(y/n)^\theta$ increases with $\theta$;
+\item a direct computation of $F_{1/2}$ on $\N$ for $y\le10^6$ gives the maximum $1.3296$, at $y=7$;
+\item for $y\ge10^6$, the elementary bound $|Q(u)-6u/\pi^2|\le3\sqrt u$ for the squarefree count $Q$ gives
+  $y^{\theta-1}\sum_{n\le y}\mu^2(n)n^{-\theta}\le(6/\pi^2)/(1-\theta)+3y^{-1/2}+1.5y^{-1/2}\log y\le1.25$; and
+  \textup{(H$_{\mathrm{BS}}$)} changes the count for $\NN$ by a relative $O(\eta_1)$.
+\end{itemize}
+% Logged correction 9 (CORRECTIONS-vs-v3.md): explicit bound |Q(u) - 6u/pi^2| <= 3 sqrt u replaces v3's (1+o(1)).
+
+\begin{proposition}[positivity of the sharp reference]\label{prop:g1}
+% v3: Proposition 3.16
+For every $x\ge X_0+H(X_0)$, on $\Good(<x)$,
+\[
+  \rhosh(x)\cdot\log x\ge0.97-o(1).
+\]
+\end{proposition}
+
+The cutoff $\Xm$ in $\Kpt$ does not affect $\rhosh$: $c_n(y)=\mu(n)\chi^t_y(n)\mathbf 1[y/n\ge\Xm]$ (Lemma~\ref{lem:lemmaM}),
+and $T'=0$ on $[\Xm,X_0)$. The proof has two ranges. Put $\log X_{\mathrm{sw}}:=X_0^{1/100}$. For every $\Lambda\ge10^8$,
+$X_0^{1.01}\le X_{\mathrm{sw}}$, $\log X_{\mathrm{sw}}\le(0.0048/\kappa)^{1/5}$ (the limit for $\mu_0$ below, which is
+$\ge X_0^{0.079}$), and $\log X_{\mathrm{sw}}\gg\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$.
+
+\begin{proof}[Proof for range \textup{(A)}: $X_0+H\le x\le X_{\mathrm{sw}}$]
+No designed oscillation is active, since $x_1\ge\exp(X_0^2)>X_{\mathrm{sw}}$. So $T'=1-\rhodet+\sigma_{\Abs}$ there.
+Lemma~\ref{lem:margin} (\eqref{eq:ratid}, \eqref{eq:shdecomp}) gives
+$(1+\Kpt)^{-1}(1-\rhodet)=\mathrm{MA}[\mathbb P]+(1+\Kpt)^{-1}(\mu_0+\mu_1)$, where:
+\begin{enumerate}[label=(\alph*)]
+\item $\mathrm{MA}[\mathbb P](q):=\mathrm{MA}_{\kappa q}[\text{rational primes}](q)$ is the density of rational primes in the linear
+  window at $q$ (\S\ref{sec:baserange}). By \eqref{eq:huxley} and Lemma~\ref{lem:margin}(a) (Huxley and Heath-Brown,
+  $X_0\ge X_{\mathrm{Hux}}$), $\mathrm{MA}[\mathbb P](x)\log x\ge0.99$ for every $x\ge X_0$;
+\item $|\mu_0(u)|\le2\kappa(\log u)^3$ for $u\ge X_0$ with $\log\log u\le\Lambda/8$, which contains range (A)
+  (Lemma~\ref{lem:margin}(b)). This smooth part contains the drift $+(\kappa/2)\Psi$, the partial windows, the order mismatch
+  $H(q)/(\kappa q)$, the edge at $X_0$, and the $O(1/(\kappa x))$ term of \eqref{eq:ratid};
+\item $\sum_{u\text{ dyadic}\ge X_0}\log(2u)\sup_{[u,2u]}|\mu_1|\le7\cdot10^{-6}$ \eqref{eq:mu1sum}.
+\end{enumerate}
+Now bound the responses.
+\begin{itemize}
+\item $\mu_0$: by Lemma~\ref{lem:lemmaM} ($|c_n|\le1$ and $\sum|c_n|/n\le\log x+B_1$, with $B_1=1$),
+  \[
+    \log x\cdot|(1+\Kpt)^{-1}\mu_0(x)|\le\log x\,(\log x+1)\sup_{u\le x}|\mu_0(u)|\le2.1\,\kappa(\log x)^5\le X_0^{-0.34}
+  \]
+  for $\log x\le X_0^{1/100}$, since $\kappa=X_0^{-5/12+2\eps}\le X_0^{-0.3967}$.
+\item $\mu_1$: by Corollary~\ref{cor:saias}, $\log x\cdot|(1+\Kpt)^{-1}\mu_1(x)|\le C_S\cdot7\cdot10^{-6}\le6\cdot10^{-4}$.
+\item $\sigma_{\Abs}$: likewise, at most $C_S\sum_v\log(2v)\cdot2L_v^{-4}\mathbf 1[\log\log v>2\log\Lambda+5.97]\le e^{-80}$.
+\end{itemize}
+So $\rhosh\log x\ge0.99-6\cdot10^{-4}-X_0^{-0.34}-e^{-80}\ge0.989\ge0.97$, pointwise, for every
+$X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$; no constant here depends on $\Lambda$.
+\end{proof}
+
+\begin{proof}[Proof for range \textup{(B)}: $x\ge X_{\mathrm{sw}}$]
+Call $\gamma_j$ \emph{resolvable at $x$} if $\gamma_j\le\Gamma(x):=e^{c_{\mathrm{LP}}\sqrt{\log x}/4}$, and let $\gamma_*$ be the largest
+resolvable $\gamma_j$ ($\gamma_*:=1$ if there is none). Put
+\[
+  \delta:=\min\big(\gamma_*^{-2}\log^{-4}x,\ X_0^{-1/2}\big),\qquad J:=[x(1-2\delta),\,x(1-\delta)].
+\]
+The window $J$ ends $\delta x\gg H$ before $x$, so the proof uses only the realised data before $x-H$, on $\Good(<x)$. All old
+oscillations $j<k$ are resolvable: $\log\gamma_j\asymp(1-\theta)\log x_j$, while
+$c_{\mathrm{LP}}\sqrt{\log x}\ge c_{\mathrm{LP}}\sqrt{x_j}\gg\log x_j$.
+
+\emph{Step 1: the window average of $\rhot$.}
+\begin{itemize}
+\item $\int_J\rhot=\#\{q:s_q\in J\}\pm2$, and slots lie within $H/2$ of values. By the local count, and since the prime powers
+  $p^k\in J$ with $k\ge2$ number at most $2\sqrt x$, $\int_J\rhot=\Pi(J)\pm(27H(x)+2K_{\mathrm{loc}}+6+2\sqrt x)$.
+\item By Theorem~\ref{thm:lp}(ii), $\Pi(J)=\delta x\,\pi_0(x)(1+O(\delta))+O(Kxe^{-c_{\mathrm{LP}}\sqrt{\log x}})$, where
+  $\pi_0(x):=(1-1/x)/\log x$.
+\item Since $1/\delta\le\Gamma^2\log^4x+X_0^{1/2}$, and $c_{\mathrm{LP}}\sqrt{\log x}\ge(0.0176/\Lambda)X_0^{0.005}$ exceeds
+  $\log K+2\Lambda+5\log\log x$ (recall $\log K=O(\Lambda)$), this gives $\mathrm{avg}_J\rhot=\pi_0(x)+o(1/\log x)$.
+\end{itemize}
+
+\emph{Step 2: $\rhosh$ against $\rhot$ on average.}
+\begin{itemize}
+\item $\rhot-\rhosh=[\rhot+\nu+\NT-B\Rres T']-\nu-\NT+B[\Rres T'-\rhosh]+(B\rhosh-\rhosh)$.
+\item Lemma~\ref{lem:predictable} and Proposition~\ref{prop:br} bound the first and fourth terms by
+  $(\eps_N+E_{\mathrm{BR}}+j_{X_0}(x))/\log x$. In range (B), $\log(x/X_0)\ge X_0^{1/100}-\Lambda\ge600\Lambda^4$, so $x$ lies in
+  the huge range of Proposition~\ref{prop:xb-ranges}, where $j_{X_0}\le e^{-59}$. Also $|\nu|\le\bar\nu$ and $|\NT|\le54\eta$.
+\item Averaged over $J$, $\int_J(Bf-f)$ is a boundary term $\le2H(x)\sup|f|$, and $\sup|\rhosh|\le2(\log x+B_1)$.
+\item Hence $\mathrm{avg}_J\rhosh\ge\pi_0(x)-(\eps_N+E_{\mathrm{BR}}+e^{-59}+o(1))/\log x$.
+\end{itemize}
+
+\emph{Step 3: pointwise against average, for all components except the current oscillation.} For $y\in J$,
+$\rhosh(x)-\rhosh(y)=\sum_n[c_n(x)T'(x/n)-c_n(y)T'(y/n)]/n$.
+\begin{itemize}
+\item \emph{Threshold changes:} at most $2\cdot$(Lemma~\ref{lem:threshold-mass} at $2\delta$) $=o(1/\log x)$, since $|T'|\le2$,
+  $\delta\le\log^{-4}x$ and $\log H(x)=8(\log\log x)^2$.
+\item \emph{The jump of $T'$ at $X_0$:} only $n\in[y/X_0,x/X_0]$ see it. With $N:=x/X_0$ and the count $|N-T|\le H$ at height
+  $N$, this is at most $\jz\sum_{n\in[N(1-2\delta),N]}1/n\le\jz(2.1\delta+3H(N)/N)=o(1/\log x)$.
+\item \emph{$\rhodet$, smooth change:} for $|v-v'|\le\delta v$,
+  $|\rhodet(v)-\rhodet(v')|\le\min\big(2(\delta(1+\kappa)v+1)/(\kappa v),\ 3\Psi(2v,X_0)/(\kappa v)\big)$. Put $u:=\log v/\Lambda$
+  and $U_0:=\Lambda$. Use the first bound for $u<U_0$ and the second beyond; for $u\ge U_0$, Rankin's bound (exponent
+  $1-1/(2\Lambda)$) gives $\Psi(2v,X_0)\le10v\Lambda^{1.65}e^{-u/2}$. With the weights of Corollary~\ref{cor:saias}
+  ($\sum_{v<X_0^{U_0}}\log(2v)\le1.5(U_0\Lambda)^2$) and $1/\kappa\le X_0^{5/12}$, the weighted sum is at most
+  \[
+    C_S\Big[1.5\Lambda^4(2\delta+2/X_0)/\kappa+\sum_{u\ge\Lambda}\log(2v)\cdot30\Lambda^{1.65}e^{-u/2}/\kappa\Big]
+    \le C_S\big[5\Lambda^4X_0^{-1/12}+90\Lambda^{4.7}e^{-\Lambda/12}\big]\le e^{-10^6},
+  \]
+  using $\delta\le X_0^{-1/2}$. Both terms decrease with $\Lambda$, so this holds for every $\Lambda\ge10^8$.
+\item \emph{Resolvable $R_j'$, smooth change:} at most $\delta\gamma_j\kappa_j/(1-\theta)\le\kappa_j/((1-\theta)\gamma_j\log^4x)$, which
+  is summable over $j$.
+\item \emph{$\sigma_{\Abs}$:} $|\sigma_{\Abs}|\le2L_v^{-4}$, and it vanishes unless $\log\log v>2\log\Lambda+5.97$. So the
+  weighted sum is at most $4C_S\sum_v\log(2v)L_v^{-4}/\log x\le C_Se^{-80}/\log x$.
+\end{itemize}
+
+\emph{Step 4: the current oscillation, if it is not resolvable.} Let $k:=\max\{j:x_j\le x\}$; $R_j$ vanishes on $[1,x]$ for
+$j>k$. Put $\rho^{(k)}_{\mathrm{osc}}(y):=\sum_nc_n(y)R_k'(y/n)/n$.
+\begin{itemize}
+\item \emph{Separation.} If $\gamma_k$ is not resolvable, then $\gamma_k>\Gamma(x)$. Every $j<k$ is resolvable, and
+  $\gamma_*\le\gamma_{k-1}\le x_{k-1}\le\log x$ (as $x_k\ge\exp(x_{k-1})$). So
+  $\gamma_k\delta\ge\Gamma(x)\min(\log^{-6}x,X_0^{-1/2})\ge e^{c_{\mathrm{LP}}\sqrt{\log x}/5}$, since
+  $c_{\mathrm{LP}}\sqrt{\log x}\gg\log X_0+\log\log x$ in range (B).
+\item \emph{Average.} Where $c_n(y)$ is constant on $J$, $\int_JR_k'(y/n)\,dy/n=R_k(x(1-\delta)/n)-R_k(x(1-2\delta)/n)$, and
+  $|R_k(v)|\le2\kappa_kv(v/x_k)^{\theta-1}/((1-\theta)\gamma_k)$ (integrate the oscillation at frequency $\gamma_k$). So, with
+  Lemma~\ref{lem:lemmaM}, the $J$-average is at most $4\kappa_k(\log x+B_1)/((1-\theta)\gamma_k\delta)$, plus the threshold
+  part $\le\kappa_k\cdot R(2\delta)$, where $R(\cdot)$ is the bound of Lemma~\ref{lem:threshold-mass}. Both are $o(1/\log x)$.
+\item \emph{Pointwise.} $|c_n|\le\mu^2(n)$, and $R_k'(x/n)\ne0$ forces $n\le x/x_k$. So
+  $|\rho^{(k)}_{\mathrm{osc}}(x)|\le\kappa_k(x/x_k)^{\theta-1}\sum_{n\le x/x_k}\mu^2(n)n^{-\theta}\le\kappa_kF_\theta$.
+  \begin{itemize}
+  \item For $x\le x_k^2$: $\kappa_kF_\theta\log x\le4\kappa_k'F_\theta=4\kappa_0F_\theta/\log^2x_k=o(1)$.
+  \item For $x_k^2<x<\exp(C'\log^2x_k)$, with $C':=(4(1-\theta)/c_{\mathrm{LP}})^2$:
+    $\kappa_kF_\theta\log x\le2\kappa_k'F_\theta C'\log x_k=2\kappa_0F_\theta C'/\log x_k=o(1)$, since $\log x_k\ge X_0^2$ and
+    $C'\asymp\Lambda^2$.
+  \end{itemize}
+\item For $x\ge\exp(C'\log^2x_k)$, $\gamma_k\le x_k^{1-\theta}$ is resolvable, and Step~3 covers it.
+\end{itemize}
+
+\emph{Step 5.} Combining Steps 1--4,
+$\rhosh(x)\log x\ge\pi_0(x)\log x-\eps_N-E_{\mathrm{BR}}-e^{-59}-o(1)\ge1-10^{-12}-o(1)\ge0.97$.
+\end{proof}
+
+\begin{remark}
+No twisted M\"obius estimate is used: old oscillations are \emph{resolved} by the window of the local prime number theorem,
+not cancelled. Range (A) uses no local prime number theorem, and range (B) uses no Huxley-type input beyond
+$\jz\le1.0001/\Lambda$. The ranges fit: $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)\ll\log X_{\mathrm{sw}}=X_0^{1/100}\ll(0.0048/\kappa)^{1/5}$.
+\end{remark}

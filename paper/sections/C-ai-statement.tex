@@ -1,0 +1,32 @@
+% Statement on the use of AI
+\section{Statement on the use of AI}\label{app:ai}
+
+\emph{How this work was produced.} The construction, the proofs and the certificate code in this paper were developed with
+extensive use of AI agents (Anthropic's Claude models), working as a team under the direction of the author. The agents proposed
+constructions, wrote and revised proofs, wrote the computer-assisted certificates, and drafted this manuscript.
+
+\emph{How it has been checked.} Every review so far has been carried out by AI agents. Two component referees checked the individual
+parts of the argument, in several rounds, and an independent end-to-end referee then read the complete proof. That referee found no
+blocking error, found a number of repairable gaps, all of which were repaired, and finally judged that the argument proves
+Theorem~\ref{thm:A} for $\theta\in[\tfrac14,\tfrac12-10^{-4}]$. The reports are included in the \texttt{review/} directory of the
+repository that accompanies this paper. The certificates of Appendix~\ref{app:cert} were re-run independently during that review.
+
+\emph{Corrections found while writing.} Turning the refereed working draft into this paper surfaced ten slips (in constants,
+missing terms and individual proof steps), none of which changes any conclusion. They were corrected, and every
+deviation of this paper from the refereed draft is listed, with its justification, in the file \texttt{CORRECTIONS-vs-v3.md} of
+the repository.
+
+\emph{What has not been done.} No human expert has verified the proof. The author takes responsibility for the manuscript, and
+welcomes scrutiny, corrections and counterexamples.
+
+\emph{Components reviewed only once.} The end-to-end referee did not re-derive the following components; each was checked by one
+component referee only.
+\begin{itemize}
+\item The closed form of the cell bound behind the computer-assisted part of Theorem~\ref{thm:bs} (Appendix~\ref{app:cert}).
+\item The analytic regions of the proof of Theorem~\ref{thm:bs}.
+\item Lemma~\ref{lem:lemmaM} for non-squarefree $n$.
+\item The interior of the middle and large ranges of Lemma~\ref{lem:xb}.
+\item The staged volume lemma, Theorem~\ref{thm:svl}.
+\item The Landau--Perron argument behind Theorem~\ref{thm:lp}.
+\end{itemize}
+A reader who wishes to check the proof with limited time might start with these.

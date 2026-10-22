@@ -1,0 +1,232 @@
+% Base range (v3 §5)
+\section{The base range: the linear-window target}\label{sec:baserange}
+
+This section supplies the source term of the margin in Section~\ref{sec:noise}: the rigid part of the target, its short-interval
+prime-number input, and the decomposition of the sharp reference density. The margin itself and its noise bound are proved in
+Section~\ref{sec:noise}.
+
+\emph{The design.} This is the hard greedy rule and the target of Section~\ref{sec:target}, with the rigid set averaged over the
+\emph{linear} window $[u,(1+\kappa)u]$ and normalised by $1/(\kappa u)$, where $\kappa=X_0^{-5/12+2\eps}$. For a measure $h$ on
+$[1,\infty)$ and $w>0$ write
+\begin{equation}\label{eq:MA}
+  \mathrm{MA}_w[h](x):=\frac{h([x,x+w])}{w},
+\end{equation}
+so that $\rhodet(u)=\mathrm{MA}_{\kappa u}[\mathcal D](u)$, and write $D_mh$ for the dilate of $h$ by $m$, i.e.\ $(D_mh)(A)=h(A/m)$.
+
+\begin{lemma}[Properties of the linear-window target]\label{lem:blin}
+% v3: Lemma 5.1
+\leavevmode
+\begin{enumerate}[label=(\arabic*)]
+\item \emph{Excess identity.} Rigid integers sit on unit jumps of $T$, so Lemma~\ref{lem:excess} holds verbatim. Also
+$\rhodet\le1+1/(\kappa u)$, and $1-\rhodet\ge0.99/\log u-1/(\kappa u)$ by \eqref{eq:huxley}.
+\item \emph{Dilation commutation.} For any point measure $h$ and $m\ge1$,
+\[
+  \mathrm{MA}_{\kappa x}[D_mh](x)=m^{-1}\,\mathrm{MA}_{\kappa q}[h](q),\qquad q=x/m,
+\]
+because the window is linear. Write the non-rigid integers as $\bigsqcup_{m'}m'\cdot\mathbb P_{\ge\max(P^+(m'),X_0)}$, prime powers
+included. The $m'$-component of the target at $x$ equals $1/m'$ times the target's fresh-prime density at $q=x/m'$. So the
+mismatch between nested windows vanishes identically, for every $m'$.
+\item \emph{Partial windows.} When $P^+(m')\in(q,(1+\kappa)q]$, the component is a partial window. Those $m'=pm$ have
+$p\in(\sqrt{x/m},\sqrt{(1+\kappa)x/m}]$ and total weight $\ll\kappa/\log x$, so the correction is a relative $O(\kappa)$.
+\item \emph{Edges near $X_0$.} The ramps of integers in $[X_0,X_0(1+\kappa))$ are truncated at $X_0$. This gives $E$ a constant offset
+$|E_0|\le\kappa X_0+1$, which changes only $C_{X_0}$. In the margin it is part of $\mu_0$, through $\Delta$ (Lemma~\ref{lem:margin}(b),
+Step~1).
+\item \emph{Drift.} With the linear normalisation the ramp mass is $1-\kappa/2+O(\kappa^2)$, so $E$ drifts by
+$+(\kappa/2)\Psi(x,X_0)$. This is contained in \eqref{eq:T1}, and every consumer uses only $|\text{drift}|\le\kappa x^{0.011}$ at the
+scales of the zeros. In the margin this smooth source is part of $\mu_0$, with $|\mu_0(u)|\le2\kappa(\log u)^3$
+(Lemma~\ref{lem:margin}(b)).
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(2) $\mathrm{MA}_{\kappa x}[D_mh](x)=h([x,(1+\kappa)x]/m)/(\kappa x)=m^{-1}h([q,(1+\kappa)q])/(\kappa q)$. The other items are immediate
+from the definitions, as indicated.
+\end{proof}
+
+\subsection{The short-interval prime number theorem}
+Every window of the construction lies in the range of the short-interval prime number theorem. Indeed, for every $q\ge X_0$,
+\[
+  \kappa q\ge q^{7/12+\eps}\iff q^{5/12-\eps}\ge X_0^{5/12-2\eps}\Longleftarrow q\ge X_0,
+\]
+and the window has length $\le q$. The input used is the asymptotic count of primes in intervals of length between
+$q^{7/12+\eps}$ and $q$, uniformly.
+
+\emph{Short windows.} Heath-Brown proved \cite[Theorem, (1.2), p.~23]{HeathBrown1988}: for any function $0\le\eps(x)\le\frac1{12}$,
+$\pi(x)-\pi(x-y)=(y/\log x)\{1+O(\eps(x)^4)+O((\log\log x/\log x)^4)\}$ uniformly for $x^{7/12-\eps(x)}\le y\le x/(\log x)^4$. We use
+$\eps\equiv0$:
+\begin{equation}\label{eq:HB}
+  \pi(x)-\pi(x-y)=\frac{y}{\log x}\Bigl\{1+O\Bigl(\Bigl(\frac{\log\log x}{\log x}\Bigr)^4\Bigr)\Bigr\}\qquad\text{uniformly for }
+  x^{7/12}\le y\le x/(\log x)^4.
+\end{equation}
+The asymptotic for $y\ge x^{7/12+\eps}$ with fixed $\eps>0$ is Huxley's \cite{Huxley1972}, as Heath-Brown credits
+\cite[p.~22]{HeathBrown1988}; Heath-Brown removes the $\eps$.
+
+\emph{Long windows.} For $y>x/(\log x)^4$, which the windows $\kappa q$ reach once $\log q>\kappa^{-1/4}$, we use the prime number
+theorem with the de la Vall\'ee Poussin error, $\pi(t)=\Li(t)+O(t\exp(-c\sqrt{\log t}))$. Applied at both ends of an interval, it gives
+relative error $\le C(\log q)^5\exp(-c\sqrt{\log q})$.
+
+\emph{The threshold $X_{\mathrm{Hux}}$.} For $q\ge2$ put
+\begin{equation}\label{eq:huxley}
+  \eta(q):=\sup\Bigl\{\Bigl|\frac{\pi(I)}{\int_I dt/\log t}-1\Bigr|:\ I\subset[q,2q]\text{ an interval, }|I|\ge(2q)^{7/12}\Bigr\},\qquad
+  X_{\mathrm{Hux}}:=\min\bigl\{X\ge e^{10^8}:\ \eta(q)\le(\log q)^{-3}\text{ for all }q\ge X\bigr\}.
+\end{equation}
+Every window $[q,(1+\kappa)q]$ with $q\ge X_0$ is such an $I$. Let $x\le2q$ be the right end of $I$. If $|I|\le x/(\log x)^4$, then
+\eqref{eq:HB} applies, since $|I|\ge(2q)^{7/12}\ge x^{7/12}$ and $\int_Idt/\log t=(|I|/\log x)(1+O((\log x)^{-5}))$; otherwise the
+long-window bound applies. So
+\[
+  \eta(q)\le\max\bigl(C_{\mathrm{HB}}(\log\log q/\log q)^4,\ C(\log q)^5e^{-c\sqrt{\log q}}\bigr)=o((\log q)^{-3}),
+\]
+and $X_{\mathrm{Hux}}$ is finite. It depends on no parameter of the construction (in particular not on $\kappa$). It is effective in
+principle, since every input is effective, but it has not been computed: we do not know of an explicit form of the Huxley or
+Heath-Brown asymptotic. Theorem~\ref{thm:A} is an existence statement, so $X_0\ge X_{\mathrm{Hux}}$ is enough. The exponent $3$ is
+what Lemma~\ref{lem:margin}(c) needs.
+
+\emph{Consequence used throughout.} For every $q\ge X_0\ge X_{\mathrm{Hux}}$,
+$\mathrm{MA}[\mathbb P](q)\log q\ge(1-(\log q)^{-3})(1-\kappa/\log q)\ge0.99$ (Lemma~\ref{lem:margin}(a)). This feeds \eqref{eq:G1},
+the bound $1-\rhodet\ge0.99/\log u-1/(\kappa u)$, and the base value $0.97$ of Proposition~\ref{prop:g1}.
+
+\begin{remark}[A fully explicit route, not used]
+Johnston and Yang \cite[Thm.~1.1 and Table~1, row $X=10^8$]{JohnstonYang2023} prove $|\psi(x)-x|\le2.18\cdot10^{-4694}x$ for
+$\log x\ge10^8$; for $\theta(x)$ their Corollary~1.2 gives the same form with $A_1=A+0.01$. A fully explicit $X_0$ would therefore
+follow with $\kappa\approx200\cdot e^{-10807.6}$ in place of the short-interval input above.
+\end{remark}
+
+\subsection{The margin decomposition}
+Write the non-rigid rational integers as $\bigsqcup_{m'}m'\cdot\mathbb P_{\ge\max(P^+(m'),X_0)}$, and put
+$\mathrm{MA}[\mathbb P](q):=\mathrm{MA}_{\kappa q}[\text{rational primes}](q)$. Let $K_{\mathbb Q}$ be the latest-prime renewal operator
+with \emph{rational} cofactors, and let $K_{\mathrm{pt}}$ be the sharp operator of Section~\ref{sec:noise}, with realised cofactors
+and latest prime in decision order (Section~\ref{sec:greedy}). By dilation commutation (Lemma~\ref{lem:blin}(2)) we have the exact
+rational identity
+\begin{equation}\label{eq:ratid}
+  T'_{\mathrm{cont}}-R'+\bar\rho_{\Abs}=(1+K_{\mathbb Q})\,\mathrm{MA}[\mathbb P]+O(1/(\kappa x)).
+\end{equation}
+Put $\rho^{\mathrm{sh}}:=(1+K_{\mathrm{pt}})^{-1}(T'_{\mathrm{cont}}-R'+\bar\rho_{\Abs})$. Then
+\begin{equation}\label{eq:shdecomp}
+  \rho^{\mathrm{sh}}=\mathrm{MA}[\mathbb P]+\rho_{\mathrm{osc}}+(1+K_{\mathrm{pt}})^{-1}(\mu_0+\mu_1),
+\end{equation}
+where $\rho_{\mathrm{osc}}$ is the response to $R'$ and the absorbed source is carried in Section~\ref{sec:noise}. Here we split
+$\mathrm{MA}[\mathbb P]=f_0+f_1$ with $f_0(q):=\mathrm{MA}_{\kappa q}[dt/\log t](q)$ and $f_1:=\mathrm{MA}[\mathbb P]-f_0$, so that
+$|f_1(q)|\le\eta(q)f_0(q)\le\eta(q)/\log q$, and we set
+\[
+  \mu_1:=(K_{\mathbb Q}-K_{\mathrm{pt}})f_1,\qquad
+  \mu_0:=(K_{\mathbb Q}-K_{\mathrm{pt}})f_0+(\text{decision-order and cut-off mismatches})+O(1/(\kappa x)).
+\]
+For $u<2X_0$ every component has $m'=1$, so $K_{\mathbb Q}$, $K_{\mathrm{pt}}$ and the mismatches vanish there: $\mu_0=O(1/(\kappa u))$
+and $\mu_1=0$.
+
+\begin{lemma}[The margin decomposition]\label{lem:margin}
+% v3: Lemma 5.2
+\leavevmode
+\begin{enumerate}[label=(\alph*)]
+\item \emph{(Huxley part.)} For every $q\ge X_0\ge X_{\mathrm{Hux}}$, $\mathrm{MA}[\mathbb P](q)\log q\ge0.99$, and the left side tends to $1$.
+\item \emph{(Smooth part.)} On $\Good(<u)$, for every $u\ge X_0$ with $\log\log u\le\Lambda/8$,
+\[
+  |\mu_0(u)|\le2\kappa(\log u)^3.
+\]
+\item \emph{(Huxley-error part.)} Put $v:=\log x/\Lambda$. On $\Good(<x)$, for every $x\ge X_0$,
+\[
+  |\mu_1(x)|\le2\Lambda^{-3}(\log v+1.01),
+\]
+and, for $v\ge4$ with $U:=1+2\log v$,
+\[
+  |\mu_1(x)|\le2\Bigl[\Bigl(\frac U{\log x}\Bigr)^3(\log U+1.01)+2e^{\gamma}e^{\operatorname{Ein}(2)}\frac vUv^{-4}\Lambda^{-3}\Bigr],
+  \qquad\operatorname{Ein}(2)<3.69.
+\]
+Consequently
+\begin{equation}\label{eq:mu1sum}
+  \sum_{u\text{ dyadic}\ge X_0}\log(2u)\sup_{[u,2u]}|\mu_1|\le\frac{690}{\log X_0}\le7\cdot10^{-6}.
+\end{equation}
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}[Proof of (a)]
+The window $I:=[q,(1+\kappa)q]$ lies in $[q,2q]$ and has $|I|=\kappa q\ge q^{7/12+\eps}\ge(2q)^{7/12}$, so it is admissible in
+\eqref{eq:huxley}, and $\eta(q)\le(\log q)^{-3}$ there (by \eqref{eq:HB} if $|I|\le x/(\log x)^4$ with $x:=(1+\kappa)q$, and by the de
+la Vall\'ee Poussin bound if $|I|$ is longer). Hence $\pi(I)\ge(1-\eta(q))\int_Idt/\log t\ge(1-(\log q)^{-3})\kappa q/\log((1+\kappa)q)$.
+Dividing by $\kappa q$,
+$\mathrm{MA}[\mathbb P](q)\log q\ge(1-(\log q)^{-3})(1-\kappa/\log q)\ge1-10^{-20}$, since $\log q\ge10^8$ and $\kappa=X_0^{-0.3967}$.
+\end{proof}
+
+\begin{proof}[Proof of (b)]
+\emph{Step 1: the element count.} Put $\Delta:=N_{\NN}-\lfloor\cdot\rfloor$. Then $\Delta=0$ on $[1,\Xm)$, and on $\Good(<u)$, for
+$t\le u$,
+\[
+  |\Delta(t)|\le\delta(t):=2\kappa t+2t^{\theta}\log^*t+2t^{\theta/2}+B(t)+3H(t)+6.
+\]
+The pieces are: $|D|\le B+3H+3$ (\eqref{eq:lag} and the count in the proof of Proposition~\ref{prop:La});
+$|E|\le|E_0|+(\kappa/2)\Psi(t,X_0)+\kappa\Psi([t,(1+\kappa)t],X_0)+1\le2\kappa t+2$ (Lemma~\ref{lem:blin}(4),(5)); $|R|\le2t^{\theta}\log^*t$;
+and the absorbed part of \eqref{eq:T1}.
+
+\emph{Step 2: the prime count.} The Chebyshev identity $\log\cdot dN=d\psi*dN$ holds in both systems. Write $\varepsilon:=\psi_{\NN}-\psi$,
+which is supported on $[\Xm,\infty)$ because the base primes coincide. Then $d\varepsilon*dN_{\NN}=dh$ with
+$dh:=\log\cdot d\Delta-d\psi*d\Delta$, and
+\[
+  h(t)=\Delta(t)\log t-\int_1^t\Delta(v)\frac{dv}v-\int\Delta(t/a)\,d\psi(a).
+\]
+So $|h(t)|\le5\kappa t\log t$: the $\kappa$-part of $\delta$ gives $4\kappa t\log t+2\kappa t$, and the rest of $\delta$ gives
+$\le\kappa t\,X_0^{-0.1}$, using $(B+3H+3)(s)\le s^{3\cdot10^{-5}}$ (proof of Proposition~\ref{prop:La}) and $\theta\le\tfrac12-10^{-4}$.
+Invert with the M\"obius measure $\mu_{\NN}$ of $\NN$, using $|\mu_{\NN}|\le dN_{\NN}$ and $\sum_{v\in\NN,\,v\le s}1/v\le\log s+1$ on $\Good$.
+This gives
+\[
+  |\psi_{\NN}(t)-\psi(t)|\le5\kappa t\log^2t\qquad(t\le u).
+\]
+
+\emph{Step 3: telescoping the cofactors.} We have
+$(K_{\mathrm{pt}}-K_{\mathbb Q})f_0(u)=\sum_{w\in\NN}F(w)\chi_w-\sum_{m\in\N}F(m)\chi_m$, where $F(v):=f_0(u/v)/v$ and $\chi$ is the
+latest-prime filter ($P^+\le u/v$, in value order; the decision-order mismatch is treated below). Write each cofactor as
+$d\cdot p_2\cdots p_k$, with $d\in\mathcal D$ (the same set in both systems) and $k-1$ large primes (jittered and $\ge\Xm$,
+respectively rational and $\ge X_0$), ordered $p_2\ge\dots\ge p_k$. Replace the large-prime measure one variable at a time.
+\begin{itemize}
+\item With the other variables fixed, the summand is $G(p)=f_0(u/(cp))/(cp)$ on an interval $[a,b]\subset[\Xm,u]$ (given by the ordering
+and the filter), with $c:=d\prod_{i\ne j}p_i$. Since $|qf_0'(q)|\le f_0(q)/\Lambda$, we have $|(G/\log)'|\le1.1G/(p\log p)$.
+\item Integrating by parts against $d(\psi_{\NN}-\psi)/\log$ (prime powers cost $O(\sqrt b\log b)$), one replacement changes the sum by
+at most $10\kappa f_0\log b/c+2.8\kappa f_0\log^2b/c\le4\kappa\log^2u/(c\Lambda)$.
+\item Summing over the other variables: $\sum1/c\le1.01e^{\gamma}\Lambda\cdot\ell_u^{k-2}/(k-2)!$, with
+$\ell_u:=\sum_{\Xm\le p\le u}1/p\le\log(\log u/\Lambda)+2.2/\Lambda$ (Lemma~\ref{lem:cm}(iv) and Mertens' theorem). With $k-1$
+replacements for each $k$, the total is
+\[
+  \le4.1e^{\gamma}\kappa\log^2u\,(1+\ell_u)e^{\ell_u}\le\frac{7.4\kappa(\log u)^3(1+\log\log u)}{\Lambda}\le\kappa(\log u)^3
+  \qquad\text{for }\log\log u\le\Lambda/8.
+\]
+\end{itemize}
+
+\emph{The rest.} Each of the following is $\le10^{-3}\kappa(\log u)^3$: the top-prime cut-off $\Xm$ versus $X_0$ (relative $H(X_0)/X_0$);
+the decision-order mismatch, $H(q)/(\kappa q)\le H(X_0)/(\kappa X_0)$ per component; the partial windows of Lemma~\ref{lem:blin}(3)
+(relative $O(\kappa)$); $f_0-1/\log q=O(\kappa/\log^2q)$; and $O(1/(\kappa u))$.
+\end{proof}
+
+\begin{proof}[Proof of (c)]
+$|\mu_1|\le|K_{\mathbb Q}f_1|+|K_{\mathrm{pt}}f_1|$, and both are bounded in the same way; the restrictions $P^+(m')\le x/m'$ are simply
+dropped.
+\begin{itemize}
+\item Components with $q=x/m'\ge y:=x^{1/U}$ have $\eta(q)\le(\log x/U)^{-3}$, and
+$\sum_{m'\le x/y}1/(m'\log(x/m'))\le\log U+0.01$. This uses $\sum_{m\le t}1/m=\log t+\gamma+O(2\kappa)$ on $\Good(<x)$ for
+$t\le x/X_0$, from Step~1 of (b).
+\item Components with $q\in[X_0,y)$ have $\eta\le\Lambda^{-3}$, $1/\log q\le1/\Lambda$, and $m'\ge x/y$ with $P^+(m')\le y$. Rankin's
+method with exponent $1-2/\log y$ bounds $\sum1/m'$ by
+$e^{-2(U-1)}\prod_{p\le y}(1-p^{2/\log y-1})^{-1}\le e^{-2(U-1)}\cdot2e^{\gamma}e^{\operatorname{Ein}(2)}\log y$. Mertens' theorem for the
+realised primes is Lemma~\ref{lem:cm}(iii),(iv), and $\NN$ is free on its primes.
+\item The first bound is the case $U=1$, with $\sum_{m'\le x/X_0}1/(m'\log(x/m'))\le\log v+0.01$.
+\end{itemize}
+Summing over dyadic $u$, with $\log(2u)\le1.01\log u$, gives $(2.02/\log2)\Lambda^{-1}(I_1+I_2+I_3)$. Here
+$I_1=\int_1^4v(\log v+1.01)\,dv=14.92$ ($U=1$ on $v\le4$), and $I_2=214.8$ and $I_3=6.7$ are the integrals over $v\ge4$ of the two
+terms of the second bound. The integrands are elementary, and the total is $\le690/\Lambda$. The bound is proportional to $1/\Lambda$,
+so it holds uniformly in $\Lambda\ge10^8$.
+\end{proof}
+
+\emph{Use.} Proposition~\ref{prop:g1} uses (a)--(c) on its range (A), $\log x\le X_0^{1/100}$. For (b), Lemma~\ref{lem:lemmaM} gives
+$\log x\,|(1+K_{\mathrm{pt}})^{-1}\mu_0(x)|\le\log x(\log x+B_1)\sup_{u\le x}|\mu_0(u)|\le2.1\kappa(\log x)^5\le X_0^{-0.34}$ there. For (c),
+the Saias-weighted response (Corollary~\ref{cor:saias}) needs $\sum\log(2u)\sup|\mu_1|$ below a budget of about $2.4\cdot10^{-4}$, and
+\eqref{eq:mu1sum} has a factor $\ge30$ to spare.
+
+\subsection{Where the local prime number theorem is used}
+The local prime number theorem (Theorem~\ref{thm:lp}) is used only above a threshold $X_{\mathrm{LP}}(X_0)$. Landau's argument against
+$T$ uses discs of radius $\asymp1/\log X_0$, because the rigid series is huge at $\sigma=(1+\theta')/2$; so the zero-free constant is
+$c_{\mathrm{zf}}\propto1/\Lambda$. Landau's step also needs the zero-free width to beat $17\log\log y/\log y$, which is a binding
+constraint here. Hence
+\begin{equation}\label{eq:XLP}
+  \log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)
+\end{equation}
+(Theorem~\ref{thm:lp}), still far below $\log x_1\ge X_0^2$. Below $X_{\mathrm{LP}}$ the fresh-prime density
+$\mathrm{MA}_{\kappa q}[\mathbb P]$ comes from \eqref{eq:huxley}, with no local prime number theorem. Above it, Theorem~\ref{thm:lp}
+applies. The two ranges overlap: range (A) of Proposition~\ref{prop:g1} runs to $\log x=X_0^{1/100}$, inside the limit
+$\log x\le(0.0048/\kappa)^{1/5}\approx X_0^{0.079}$ of the $\mu_0$ bound, and range (B) starts there, far above $\log X_{\mathrm{LP}}$.

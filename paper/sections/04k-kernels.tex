@@ -1,0 +1,452 @@
+% 04k-kernels.tex -- v3 §3.4: the operator kernels (Kantorovich--Rubinstein transfer of Lemma M).
+% Author: fix-bprime. Input from 04-noise.tex. Contents: kernels and steps, KR facts, Theorem 3.6, Corollary 3.7,
+% Proposition 3.8, Lemma 3.9, Lemma 3.10.
+\subsection{The operator kernels}\label{sec:kernels}
+% v3: §3.4
+
+The long operator $\Rres=(1+\Kpt B)^{-1}$ of \eqref{eq:pushthrough} differs from the sharp resolvent $(1+\Kpt)^{-1}$ in two
+ways. After every latest-prime step it averages over a window of length $H$ at the landing scale, and it evaluates the
+filters at the actual (averaged) centre, not at the nominal landing point. This subsection shows that the first
+difference costs only a constant factor in the Saias weights of Corollary~\ref{cor:saias}, and that the second is
+supported on near-threshold steps, which are rare. The main tool is the Kantorovich--Rubinstein distance: it contracts
+under dilation by the factor $d/n$ at every step, so that, unlike total variation, it can be iterated along chains of
+arbitrary length.
+
+\subsubsection{Kernels and steps}\label{sec:kernels-steps}
+
+Fix a start $x$. For a cofactor $w\in\NN$, $w\ge2$, and a position $v$, define the \emph{step}
+\begin{equation}\label{eq:step}
+  Q_w(v,\cdot):=\mathbf 1[\tau_w<v/w]\,\mathbf 1[v/w\ge\Xm]\;\bx_{H(v/w)}(\cdot-v/w),
+\end{equation}
+where $\bx_h$ is the uniform probability measure on $[-h/2,h/2]$. Thus the filter is evaluated at the actual centre
+$v/w$, and the window average comes after the filter. By the definitions of $\Kpt$ and $B$ in
+\S\ref{sec:noise-notation}, for every function $g$,
+\[
+  (\Kpt Bg)(v)=\sum_{w\ge2}\frac1w\,\mathbf 1[\tau_w<v/w]\,\mathbf 1[v/w\ge\Xm]\,(Bg)(v/w)=\sum_{w\ge2}\frac1w\int g\,dQ_w(v,\cdot).
+\]
+
+\begin{definition}[Kernels]\label{def:kernels}
+% v3: §3.4, Kernels
+The kernels of $\Rres$ from the start $x$ are the signed measures $C_n=C_n^x$ ($n\in\NN$) given by the last-step recursion
+\begin{equation}\label{eq:kernel-rec}
+  C_1^x=\delta_x,\qquad C_n^x=-\sum_{d\mid n,\;d<n}\int Q_{n/d}(v,\cdot)\,dC_d^x(v)\quad(n\ge2).
+\end{equation}
+\end{definition}
+
+Expanding $\Rres=\sum_{k\ge0}(-\Kpt B)^k$ (the series terminates at every point, by the remark after
+\eqref{eq:pushthrough}) and grouping the chains $w_1,\dots,w_k$ according to their product $n=w_1\cdots w_k$ gives
+\begin{equation}\label{eq:R-kernels}
+  (\Rres g)(x)=\sum_{n\in\NN}\frac1n\int g\,dC_n^x .
+\end{equation}
+Each $C_n^x$ is supported in an interval of radius $R_n\le1.02\,H(x/n)$ around $x/n$. Indeed, a step $d\to n$ maps
+the support of $C_d$, of radius $R_d$ around $x/d$, to radius $R_d/w$ around $x/n$ and then adds half a window, so by
+induction and \eqref{eq:RH}, $R_n\le H(x/n)/2+\max_d 1.02\,H(x/d)/w\le H(x/n)\,(\tfrac12+1.02\cdot2^{\eps-1})\le1.02\,H(x/n)$.
+
+\paragraph{Nominal steps.} Write $H_n:=H(x/n)$. For a step $d\to n$ with cofactor $w=n/d$, the \emph{nominal} step
+\[
+  Q^{\nom}_{d\to n}(v,\cdot):=\kappa_{d\to n}\,\bx_{H(v/w)}(\cdot-v/w),\qquad
+  \kappa_{d\to n}:=\mathbf 1[\tau_w<x/n]\,\mathbf 1[x/n\ge\Xm],
+\]
+freezes the scalar filter at the nominal landing point $x/n$; the window width stays $H(v/w)$. The nominal kernels
+$C_n^{x,\nom}$ are defined by \eqref{eq:kernel-rec} with $Q^{\nom}$ in place of $Q$. Their masses
+$c_n:=C_n^{x,\nom}(\R)$ satisfy $c_1=1$ and $c_n=-\sum_{d\mid n,d<n}\kappa_{d\to n}c_d$, which is the recursion of the
+sharp resolvent. Hence, by Lemma~\ref{lem:lemmaM},
+\begin{equation}\label{eq:nominal-mass}
+  c_n=\mu(n)\chi^t_x(n).
+\end{equation}
+
+\begin{definition}[Near-threshold steps and terminal levels]\label{def:near}
+% v3: §3.4, τ-near / X₀-near / terminal
+A step $d\to n$ ($w=n/d$) is \emph{$\tau$-near} if $|\tau_w-x/n|\le2H_n$, and \emph{$X_0$-near} if
+$|x/n-\Xm|\le R_d/w$. A level $n$ is \emph{terminal} if $x/n<\Xm+0.6H(X_0)$.
+\end{definition}
+
+\begin{lemma}[Structure of the near-threshold steps]\label{lem:near-structure}
+% v3: §3.4, bullets on near-threshold steps and terminal levels
+\begin{enumerate}[label=(\roman*)]
+\item On a step that is neither $\tau$-near nor $X_0$-near, $Q_w(v,\cdot)=Q^{\nom}_{d\to n}(v,\cdot)$ for every $v$ in the
+  support of $C_d$.
+\item $R_d/w\le0.52\,H(X_0)$ for every $X_0$-near step, and every $X_0$-near step lands at a terminal level.
+\item A terminal level has no children in either family: $Q_{w'}(v,\cdot)=Q^{\nom}_{n\to nw'}(v,\cdot)=0$ for every $w'\ge2$
+  and every $v$ in the support of $C_n$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) On the support of $C_d$, the centre is $v/w\in[x/n-R_d/w,\,x/n+R_d/w]$, and $R_d/w\le1.02H(x/d)/w\le2H_n$ by
+\eqref{eq:RH}. Off $\tau$-near steps the filter $\mathbf 1[\tau_w<v/w]$ is therefore constant there and equal to
+$\mathbf 1[\tau_w<x/n]$; off $X_0$-near steps the same holds for $\mathbf 1[v/w\ge\Xm]$.
+
+(ii) By \eqref{eq:RH}, $R_d/w\le1.02\,H(w\cdot x/n)/w\le1.02\cdot2^{\eps-1}H(x/n)\le0.52\,H(x/n)$. If the step is
+$X_0$-near, then $x/n\le\Xm+0.52H(x/n)$. Since $H(v)/v$ is decreasing and $H(X_0)/X_0<10^{-10}$, this forces $x/n<X_0$,
+so $H(x/n)\le H(X_0)$, $R_d/w\le0.52H(X_0)$ and $x/n\le\Xm+0.52H(X_0)$: the level $n$ is terminal.
+
+(iii) The support of $C_n$ lies in $[x/n-R_n,x/n+R_n]$ with $R_n\le1.02H_n$, so every child centre is at most
+$(\Xm+0.6H(X_0)+1.03H(X_0))/2<\Xm$; both filters $\mathbf 1[v/w'\ge\Xm]$ and $\mathbf 1[x/(nw')\ge\Xm]$ vanish.
+\end{proof}
+
+\paragraph{Width variation.} Put $\vartheta_u:=\sup_{v\ge u/2}H'(v)$. By \eqref{eq:RH} and the bound
+$d\log H/d\log v\le\max(16\log\log v/\log v,\,4\cdot10^{-6})\le4\cdot10^{-6}$ for $v\ge X_0/2$,
+$\vartheta_u\le10^{-5}H(u)/u$. Along any chain the nominal landing scales $u_i$ decrease at least geometrically (by a
+factor $\ge2$) and stay $\ge\Xm$, and $H(u)/u$ is decreasing, so
+\begin{equation}\label{eq:width-product}
+  \prod_i(1+2\vartheta_{u_i})\le\exp\Bigl(2\sum_{j\ge0}\vartheta_{2^j\Xm}\Bigr)\le\exp\bigl(10^{-4}H(X_0)/X_0\bigr)
+  \le\lambda_0:=\exp\bigl(2.1H(X_0)/X_0\bigr).
+\end{equation}
+Every position $v$ in the support of $C_d$ satisfies $v/w\ge(x/n)/2$, so $|H(v/w)-H_n|\le\vartheta_{x/n}|v/w-x/n|$.
+
+\subsubsection{The Kantorovich--Rubinstein norm}\label{sec:kr}
+
+For a finite signed measure $\nu$ on $\R$ with $\nu(\R)=0$ and compact support, put $F_\nu(t):=\nu((-\infty,t])$ and
+\[
+  \KRn{\nu}:=\int_\R|F_\nu(t)|\,dt=\sup\Bigl\{\int f\,d\nu:\ \operatorname{Lip}f\le1\Bigr\}.
+\]
+The two expressions agree: for Lipschitz $f$, $\int f\,d\nu=-\int f'(t)F_\nu(t)\,dt$ (integration by parts, $\nu(\R)=0$),
+which is at most $\int|F_\nu|$, with equality for $f'=-\operatorname{sgn}F_\nu$. Let $D_w$ denote the push-forward under
+$t\mapsto t/w$, and $\bx_h$ the uniform probability on $[-h/2,h/2]$.
+
+\begin{lemma}[Kantorovich--Rubinstein facts]\label{lem:kr-facts}
+% v3: §3.4, (K1)-(K5)
+Let $\nu$ have mass $0$ and let $\rho$ be a finite signed measure. Then:
+\begin{enumerate}[label=(K\arabic*)]
+\item $\KRn{\rho*\nu}\le\TV(\rho)\,\KRn{\nu}$;
+\item $\KRn{D_w\nu}=\KRn{\nu}/w$;
+\item $\TV(\bx_h*\nu)\le(2/h)\,\KRn{\nu}$;
+\item $\KRn{\rho-\rho(\R)\delta_a}\le\int|t-a|\,d|\rho|(t)$; in particular $\KRn{\bx_h-\delta_0}=h/4$;
+\item multiplying a measure by a $[0,1]$-valued (or $[-1,1]$-valued) function does not increase its total variation.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(K1) $F_{\rho*\nu}(t)=\int F_\nu(t-s)\,d\rho(s)$, so $\int|F_{\rho*\nu}|\le\iint|F_\nu(t-s)|\,dt\,d|\rho|(s)=\TV(\rho)\KRn{\nu}$.
+(K2) $F_{D_w\nu}(t)=F_\nu(wt)$, and $\int|F_\nu(wt)|\,dt=\KRn{\nu}/w$.
+(K3) $\bx_h*\nu$ has density $h^{-1}\bigl(F_\nu(t+h/2)-F_\nu(t-h/2)\bigr)$, whose $L^1$ norm is at most $(2/h)\int|F_\nu|$.
+(K4) For $\operatorname{Lip}f\le1$, $\int f\,d(\rho-\rho(\R)\delta_a)=\int(f(t)-f(a))\,d\rho(t)\le\int|t-a|\,d|\rho|$. For
+$\rho=\bx_h$ and $a=0$, $F(t)=t/h+\tfrac12-\mathbf 1[t\ge0]$ on $[-h/2,h/2]$, and $\int|F|=2\int_0^{h/2}(\tfrac12-t/h)\,dt=h/4$.
+(K5) is immediate.
+\end{proof}
+
+\paragraph{Ordered factorisations.} Write $\Hord(m)$ for the number of ordered factorisations of $m\in\NN$ into factors
+$\ge2$ ($\Hord(1)=1$), so that $\Hord(m)=\sum_{g\mid m,\,g<m}\Hord(g)$ for $m\ge2$, and put
+\[
+  A_0(\eps):=\sum_{m\ge2}\Hord(m)m^{\eps-2},\qquad A_1(\eps):=\sum_{m\ge2}\Hord(m)m^{\eps-2}\log m .
+\]
+For $\NN=\N$, $\sum_{m\ge1}\Hord(m)m^{-s}=1/(2-\zeta(s))$, whose abscissa of convergence is $\rho_0=1.7286\ldots<1.97$, the
+root of $\zeta(\rho_0)=2$; numerically $A_0(0.03)=2.0673$ and $A_1(0.03)=9.409$. For $\NN$ the same values hold up to a
+factor $1+O(\eta_1)$, by \eqref{eq:HBS}.
+
+\subsubsection{The KR bound for nominal kernels}\label{sec:kr-bound}
+
+We first prove the bound for nominal kernels whose window widths are also frozen, and then transfer it to the nominal
+kernels of \S\ref{sec:kernels-steps}, whose widths $H(v/w)$ vary with the position $v$. The \emph{frozen-width} nominal
+kernels $C_n^{x,\mathrm{fr}}$ are defined by \eqref{eq:kernel-rec} with the steps
+$Q^{\mathrm{fr}}_{d\to n}(v,\cdot):=\kappa_{d\to n}\,\bx_{H_n}(\cdot-v/w)$; their masses are again the $c_n$ of
+\eqref{eq:nominal-mass}.
+
+\begin{theorem}[KR bound, nominal filters]\label{thm:kr}
+% v3: Theorem 3.6 (stated, as in v3's proof, for widths frozen at H_n; random widths: Theorem 3.6′ below)
+For every start $x$ and every $n\ge2$,
+\begin{align*}
+  \TV(C_n^{x,\mathrm{fr}})&\le|c_n|+\tfrac12\sum_{e\mid n,\,1<e<n}|c_e|\,\frac{H_e}{H_n}\,\Hord(n/e)\,\frac en,\\
+  \KRn{C_n^{x,\mathrm{fr}}-c_n\delta_{x/n}}&\le\tfrac14\sum_{e\mid n,\,e>1}|c_e|\,H_e\,\Hord(n/e)\,\frac en .
+\end{align*}
+\end{theorem}
+
+\begin{proof}
+Write $C_n=C_n^{x,\mathrm{fr}}$ and $D_n:=C_n-c_n\delta_{x/n}$, a measure of mass $0$, with $D_1=0$. Since the dilation
+$D_{n/d}$ maps $\delta_{x/d}$ to $\delta_{x/n}$, \eqref{eq:kernel-rec} gives
+\begin{equation}\label{eq:Dn-rec}
+  D_n=c_n\bigl(\bx_{H_n}-\delta_0\bigr)(\cdot-x/n)-\sum_{d\mid n,\,d<n}\kappa_{d\to n}\,\bx_{H_n}*D_{n/d}D_d ,
+\end{equation}
+where $c_n=-\sum_{d<n}\kappa_{d\to n}c_d$ was used.
+
+\emph{The KR bound.} By (K4), (K1), (K2) and $|\kappa|\le1$,
+\[
+  \KRn{D_n}\le\tfrac14|c_n|H_n+\sum_{d\mid n,\,d<n}\frac dn\KRn{D_d}.
+\]
+We show by induction on $n$ that $\KRn{D_n}\le\frac14\sum_{e\mid n,e>1}|c_e|H_e\Hord(n/e)\,e/n$. Inserting this for $d<n$
+(only $d>1$ contribute, since $D_1=0$) and writing $d=eg$,
+\[
+  \sum_{d\mid n,\,d<n}\frac dn\sum_{e\mid d,\,e>1}|c_e|H_e\Hord(d/e)\frac ed=\sum_{e\mid n,\,1<e<n}|c_e|H_e\frac en\sum_{g\mid n/e,\,g<n/e}\Hord(g)
+  =\sum_{e\mid n,\,1<e<n}|c_e|H_e\Hord(n/e)\frac en,
+\]
+by the recursion $\Hord(m)=\sum_{g\mid m,\,g<m}\Hord(g)$. Adding the term $\frac14|c_n|H_n$, which is the term $e=n$
+($\Hord(1)=1$), proves the claim.
+
+\emph{The TV bound.} From \eqref{eq:Dn-rec} and $C_n=c_n\bx_{H_n}(\cdot-x/n)+(D_n-c_n(\bx_{H_n}-\delta_0)(\cdot-x/n))$, by (K3)
+and (K2),
+\[
+  \TV(C_n)\le|c_n|+\frac2{H_n}\sum_{d\mid n,\,d<n}\frac dn\KRn{D_d}\le|c_n|+\frac12\sum_{e\mid n,\,1<e<n}|c_e|\frac{H_e}{H_n}\Hord(n/e)\frac en,
+\]
+by the KR bound for $d<n$ and the same divisor-sum identity.
+\end{proof}
+
+The bound is attained at $n=4$ (void filter, constant $H$), where $\TV(C_4)=\frac14$ while $\mu(4)=0$. The point of the proof is
+that it never iterates the triangle inequality on total variation. It iterates on the KR distance, which dilation contracts
+by $d/n$ at every step, and the filters enter only through the exact masses $c_e$.
+
+\begin{theorem}[KR bound, nominal filters, varying widths]\label{thm:kr-random}
+% v3: Theorem 3.6 for v3's nominal step (random widths H(v/w)); factor λ₀ per CORRECTIONS-vs-v3 entry 3
+Let $\lambda_0=\exp(2.1H(X_0)/X_0)$ be as in \eqref{eq:width-product}. For every start $x$ and every $n\ge2$, the nominal kernels
+$C_n^{x,\nom}$ of \S\ref{sec:kernels-steps} satisfy
+\begin{align*}
+  \TV(C_n^{x,\nom})&\le|c_n|+\tfrac12\lambda_0\sum_{e\mid n,\,1<e<n}|c_e|\,\frac{H_e}{H_n}\,\Hord(n/e)\,\frac en,\\
+  \KRn{C_n^{x,\nom}-c_n\delta_{x/n}}&\le\tfrac14\lambda_0\sum_{e\mid n,\,e>1}|c_e|\,H_e\,\Hord(n/e)\,\frac en .
+\end{align*}
+\end{theorem}
+
+\begin{proof}
+For a cofactor $w$ let $\mathcal Q_w\nu:=\int\bx_{H(v/w)}(\cdot-v/w)\,d\nu(v)$ be the nominal step without its scalar filter.
+We first prove two properties of $\mathcal Q_w$, for a mass-$0$ measure $\nu$ supported in an interval $I$ with
+$\inf I/w\ge u/2$ and $H_*:=\inf_{v\in I}H(v/w)$:
+\begin{enumerate}[label=(Q\arabic*)]
+\item $\KRn{\mathcal Q_w\nu}\le(1+2\vartheta_u)\KRn{\nu}/w$;
+\item $\TV(\mathcal Q_w\nu)\le(2/H_*)(1+2\vartheta_u)\KRn{\nu}/w$.
+\end{enumerate}
+\emph{Proof of (Q1).} For $\operatorname{Lip}f\le1$ put $g(v):=\int f\,d\bx_{H(v/w)}(\cdot-v/w)=\int_{-1/2}^{1/2}f(v/w+sH(v/w))\,ds$.
+Then $|g'(v)|\le\int_{-1/2}^{1/2}(1/w)(1+|s|H'(v/w))\,ds\le(1+\vartheta_u)/w$, so
+$\int f\,d\mathcal Q_w\nu=\int g\,d\nu\le(1+\vartheta_u)\KRn{\nu}/w$.
+
+\emph{Proof of (Q2).} Write $k_v(t):=H(v/w)^{-1}\mathbf 1[|t-v/w|\le H(v/w)/2]$ for the density of the window. Integrating
+by parts in $v$ ($\nu$ has mass $0$ and $F_\nu$ is its distribution function),
+$\mathcal Q_w\nu=\int k_v\,d\nu(v)=-\int F_\nu(v)\,\partial_vk_v\,dv$. For each $v$, $\partial_vk_v$ consists of two point
+masses at the ends of the window, of sizes $(1\pm H'(v/w)/2)/(wH(v/w))$, and the density $-H'(v/w)/(wH(v/w)^2)$ on the window;
+its total variation is $\le(2+2H'(v/w))/(wH(v/w))\le(2/H_*)(1+\vartheta_u)/w$. Hence
+$\TV(\mathcal Q_w\nu)\le(2/H_*)(1+\vartheta_u)\int|F_\nu|/w$, which gives (Q2).
+
+\emph{The recursion.} With $D_n:=C_n^{x,\nom}-c_n\delta_{x/n}$, the step from the point $x/d$ lands at $x/n$ with width
+exactly $H_n$, so
+\[
+  D_n=c_n\bigl(\bx_{H_n}-\delta_0\bigr)(\cdot-x/n)-\sum_{d\mid n,\,d<n}\kappa_{d\to n}\,\mathcal Q_{n/d}D_d .
+\]
+The support of $D_d$ lies within $R_d$ of $x/d$, so its image centres satisfy $v/w\ge(x/n)/2$, and on it
+$H(v/w)\ge H_n(1-\vartheta_{x/n})$ by the width-variation estimate of \S\ref{sec:kernels-steps}. By (K4) and (Q1),
+\[
+  \KRn{D_n}\le\tfrac14|c_n|H_n+(1+2\vartheta_{x/n})\sum_{d\mid n,\,d<n}\frac dn\KRn{D_d},
+\]
+and by (Q2), $\TV(C_n^{x,\nom})\le|c_n|+(2/H_n)(1+3\vartheta_{x/n})\sum_{d<n}(d/n)\KRn{D_d}$. Let $\Theta_n$ be the largest
+product $\prod_i(1+3\vartheta_{u_i})$ over the nominal landing scales $u_i$ of chains ending at $n$. The induction of
+Theorem~\ref{thm:kr}, with every term multiplied by these factors, gives
+$\KRn{D_n}\le\frac14\Theta_n\sum_{e\mid n,e>1}|c_e|H_e\Hord(n/e)\,e/n$ and the TV bound with $\frac12\Theta_n$. Finally
+$\Theta_n\le\exp(3\sum_j\vartheta_{2^j\Xm})\le\exp(10^{-4}H(X_0)/X_0)\le\lambda_0$, as in \eqref{eq:width-product}.
+\end{proof}
+
+\begin{remark}[Other step kernels]\label{rem:kr-variants}
+% v3: §3.4, "Variants" bullet
+The proof of Theorem~\ref{thm:kr-random} uses only (Q1), the bound $\KRn{Q(x/d,\cdot)-\delta_{x/n}}\le\sigma H_n$ (for windows
+$\sigma=\frac14$), and (Q2) with a constant $\tau_0'/H_*$ in place of $2/H_*$ (for windows $\tau_0'=2$); the constant in front
+of the sum is then $\sigma\tau_0'\lambda_0$. The step order ``box, then filter'' and the exact compensator kernel
+$\bx(H(x)/m)*\mathrm{jitter}(H(x/m))$ (for which $\sigma\le\frac12$, the sum of the two widths over $4$) satisfy these with
+$\sigma\tau_0'\le1$, so they obey Theorem~\ref{thm:kr-random} with $\frac12\lambda_0$ replaced by $\lambda_0$.
+\end{remark}
+
+\subsubsection{Dyadic weights of the kernels}\label{sec:kr-weights}
+
+\begin{corollary}\label{cor:kr-weights}
+% v3: Corollary 3.7
+For a start $x$ put $W^{\nom}_x(u):=\sum_{x/n\in[u,2u)}\TV(C_n^{x,\nom})/n$ and $W^{\mathrm{sh}}_x(v):=\sum_{x/e\in[v,2v)}|c_e|/e$.
+\begin{enumerate}[label=(\alph*)]
+\item $W^{\nom}_x(u)\le W^{\mathrm{sh}}_x(u)+\frac12\lambda_0\sum_{m\ge2}\Hord(m)m^{\eps-2}W^{\mathrm{sh}}_x(um)$.
+\item Hence, by Corollary~\ref{cor:saias}, for every start $y\in[X_0,x]$ and every $u\ge X_0/2$,
+  \[
+    W^{\nom}_y(u)\le C_S\bigl[(1+\tfrac12\lambda_0A_0)\log(2u)+\tfrac12\lambda_0A_1\bigr]/\log y\le C_N\log(2u)/\log y,\qquad
+    C_N:=C_S\bigl(2.04+4.71/\log X_0\bigr)\le158 .
+  \]
+\item $\sum_n\TV(C_n^{x,\nom})/n\le2.04(\log x+B_1)$; this needs no Saias bound.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+Multiply Theorem~\ref{thm:kr-random} by $\mathbf 1[x/n\in[u,2u)]/n$, sum over $n$, and substitute $n=em$ ($m\ge2$). By
+\eqref{eq:RH}, $H_e/H_{em}\le m^\eps$, and $x/n\in[u,2u)$ if and only if $x/e\in[um,2um)$. This gives (a). For (b), insert
+$W^{\mathrm{sh}}_y(v)\le C_S\log(2v)/\log y$ and use $\log(2um)=\log(2u)+\log m$; then
+$1+\frac12\lambda_0A_0(0.03)\le1+1.03365(1+3\delta)\le2.034\le2.04$ and $\frac12\lambda_0A_1(0.03)\le4.7045(1+3\delta)\le4.71$,
+and $\log(2u)\ge\log X_0$. So $C_N$ is the same constant as with frozen widths. For (c), sum (a) over all dyadic $u$ and use
+$\sum_e|c_e|/e\le\log x+B_1$ (Lemma~\ref{lem:lemmaM}). Theorem~\ref{thm:kr-random} and the chain-sum identity hold verbatim
+from every start $y\le x$, with $c_m(y)=\mu(m)\chi^t_y(m)$.
+\end{proof}
+
+\subsubsection{The true kernels}\label{sec:true-kernels}
+
+The true kernels $C_n=C_n^x$ use the filter at the actual centre. They differ from the nominal ones only through the
+near-threshold steps of Definition~\ref{def:near}. Write $P_{d\to n}$ and $P^{\nom}_{d\to n}$ for the step operators
+$\nu\mapsto-\int Q_{n/d}(v,\cdot)\,d\nu(v)$ and its nominal version, so that $C_n=\sum_{d<n}P_{d\to n}C_d$.
+
+\begin{proposition}[True kernels]\label{prop:true-kernels}
+% v3: Proposition 3.8
+Put $W^{\mathrm{op}}_x(u):=\sum_{x/n\in[u,2u)}\TV(C_n^x)/n$. If $\lambda_0C_NE_\eta\le\frac12$ (Lemma~\ref{lem:tau-near}), then on
+$\Good(<x)$
+\begin{align*}
+  W^{\mathrm{op}}_x(u)&\le2C_N\log(2u)/\log x\quad(u\ge2X_0),\qquad
+  W^{\mathrm{op}}_x(u)\le5.1\,C_N\log(2u)/\log x\quad(u\in\{X_0/2,X_0\}),\\
+  \sum_n\TV(C_n^x)/n&\le\frac{2.04(\log x+B_1)}{1-2.04\lambda_0\theta_*}+3.2\le2.1(\log x+B_1)+3.2 .
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+\emph{Duhamel form.} Put $\tilde E_n:=C_n-C_n^{\nom}$. Subtracting the two recursions,
+\[
+  \tilde E_n=S_n+\sum_{d<n}P^{\nom}_{d\to n}\tilde E_d,\qquad S_n:=\sum_{d<n}(P_{d\to n}-P^{\nom}_{d\to n})C_d .
+\]
+By Lemma~\ref{lem:near-structure}(i), only $\tau$-near and $X_0$-near steps contribute to $S_n$. On a step $d\to n$ the true
+and nominal filters at a centre $c$ are $\varphi_\tau(c)\varphi_{X_0}(c)$ and $\kappa_\tau\kappa_{X_0}$; write their difference as
+$(\varphi_\tau-\kappa_\tau)\varphi_{X_0}+\kappa_\tau(\varphi_{X_0}-\kappa_{X_0})$, and let $S^\tau_n$ and $S^{X_0}_n$ collect the
+first and second parts. The first vanishes off $\tau$-near steps and the second off $X_0$-near steps. Each part multiplies the
+measure $D_wC_d$ of centres by a function with values in $[-1,1]$ and then places a window (a probability), so by (K5)
+\[
+  \TV(S_n^\tau)\le\sum_{d\to n\ \tau\text{-near}}\TV(C_d),\qquad \TV(S_n^{X_0})\le\sum_{d\to n\ X_0\text{-near}}\TV(C_d).
+\]
+By induction, $\tilde E_n=\sum_{n'\mid n}\mathcal T^{\nom}_{n'\to n}S_{n'}$, where $\mathcal T^{\nom}_{n'\to n}$ is the signed sum
+over nominal chains from level $n'$ to level $n$ ($\mathcal T_{n\to n}=\mathrm{id}$).
+
+\emph{(i) $X_0$-near sources are terminal.} By Lemma~\ref{lem:near-structure}(ii)--(iii), $S^{X_0}_{n'}$ sits at a terminal level,
+which has no children; so $\mathcal T^{\nom}_{n'\to n}S^{X_0}_{n'}=0$ for $n\ne n'$, and the parent $d$ of an $X_0$-near step is
+non-terminal.
+
+\emph{(ii) $\tau$-sources: the fixed point.} Fix $n'$ and a point $v$ in the support of $S^\tau_{n'}$, so
+$|v-x/n'|\le R_{n'}$. The measure $\mathcal T^{\nom}_{n'\to n}\delta_v$ is built by nominal steps from the start $v$ with the
+scalar filters $\kappa$ of the original chains. These are frozen filters, so the proof of Theorem~\ref{thm:kr-random}
+applies verbatim to it, with masses given by the sharp recursion of those filters, i.e. by $c_{n/n'}(x/n')$, and with widths
+$H(v/g)=H((x/n')/g)(1+O(\vartheta))$ for the cofactors $g$ of the chain. Hence $\TV(\mathcal T^{\nom}_{n'\to n}\delta_v)$ is
+at most $\lambda_0$ times the right side of Theorem~\ref{thm:kr-random} for the start $x/n'$ and level $n/n'$, and
+Corollary~\ref{cor:kr-weights}(b) at the start $x/n'$ gives
+\[
+  \sum_{x/n\in[u,2u)}\frac{\TV(\mathcal T^{\nom}_{n'\to n}S^\tau_{n'})}{n}\le\lambda_0\frac{\TV(S^\tau_{n'})}{n'}\,
+  \frac{C_N\log(2u)}{\log(x/n')}.
+\]
+Summing over $n'$ and grouping by the parent $d$ of each $\tau$-near step $d\to n'$ ($n'=dw$),
+\[
+  \sum_{x/n\in[u,2u)}\frac{\TV(\tilde E_n^\tau)}n\le\lambda_0C_N\log(2u)\sum_d\frac{\TV(C_d)}d\,\tilde\eta(x/d),\qquad
+  \tilde\eta(v)=\sum_{w\ \tau\text{-near at }v}\frac1{w\log(v/w)},
+\]
+with $d$ non-terminal. Let $M$ be the least constant with $W^{\mathrm{op}}_x(v)\le M\log(2v)/\log x$ for all $v$, counting
+non-terminal levels and the $\tau$-parts at terminal levels; $M<\infty$ since $n\le x/\Xm$. Then
+$\sum_d\TV(C_d)/d\cdot\tilde\eta(x/d)\le\sum_v W^{\mathrm{op}}_x(v)\sup_{[v,2v)}\tilde\eta\le ME_\eta/\log x$, and
+$W^{\mathrm{op}}_x(u)\le W^{\nom}_x(u)+\lambda_0C_NME_\eta\log(2u)/\log x$. Hence $M\le C_N(1+\lambda_0ME_\eta)$, and
+$M\le2C_N$ since $\lambda_0C_NE_\eta\le\frac12$.
+
+\emph{(iii) Terminal levels.} They gain
+\[
+  \sum_{n\ \text{terminal}}\frac{\TV(S^{X_0}_n)}n\le\sum_d\frac{\TV(C_d)}d\,\eta_{X_0}(x/d),\qquad
+  \eta_{X_0}(v):=\sum_{w\in\NN:\ |v-w\Xm|\le1.02H(v)}\frac1w .
+\]
+\begin{itemize}
+\item For $v\le X_0^2/2$ the $w$-window has length $2.04H(v)/\Xm<1$ and lies below $\Xm$, where $\NN=\N$; so it holds at most
+  one $w$, and $\eta_{X_0}(v)\le1.01X_0/v$.
+\item For $v>X_0^2/2$, the window $I_v$ has length $\le2.1H(v)/X_0$ at height $v/X_0$. By the lag bound
+  Corollary~\ref{cor:lag}, $|N-T|\le H$ at that height, and under the target \eqref{eq:target}, $T(I_v)\le2|I_v|+2+\#\Abs(I_v)$;
+  by Lemma~\ref{lem:lemmaP}, $\#\Abs(I_v)\le2(v/X_0)^{\theta/2}$. So $I_v$ holds at most
+  $2.1H(v)/X_0+2H(v/X_0)+4+2(v/X_0)^{\theta/2}$ elements, and
+  $\eta_{X_0}(v)\le1.01\bigl(2.1H(v)+2X_0H(v/X_0)+4X_0+2X_0(v/X_0)^{\theta/2}\bigr)/v$.
+\item Since $\eta_{X_0}(v)=0$ for $v<2\Xm-1.1H(X_0)$, these give
+  $\sum_{v\ \text{dyadic}}\log(2v)\sup_{[v,2v)}\eta_{X_0}\le1.52\log(2X_0)$ and $\sum_v\sup_{[v,2v)}\eta_{X_0}\le1.52$: the first
+  bullet contributes $0.506\log(2X_0)$ from the block $[X_0,2X_0)$ and $1.01\sum_{j\ge1}2^{-j}(\log(2X_0)+j\log2)$ from the
+  others, and the second bullet less than $e^{-10^7}$.
+\end{itemize}
+Terminal levels lie in the blocks $u\in\{X_0/2,X_0\}$. With (ii) they add at most $2C_N\cdot1.52\log(2X_0)/\log x$ there.
+Since $1.52\log(2X_0)\le1.53\log(2u)$ for these $u$, the total there is $\le5.1\,C_N\log(2u)/\log x$.
+
+\emph{The $\infty$-norm.} Run (ii) with Corollary~\ref{cor:kr-weights}(c) in place of (b): the transfer from $n'$ adds
+$\le2.04\lambda_0(\log(x/n')+B_1)\TV(S^\tau_{n'})/n'$, and grouping by parents gives the weight
+$\theta(v)=\sum_{w\ \tau\text{-near at }v}(\log(v/w)+B_1)/w$; this yields the first term. For (iii) use the block bound
+$\sup_vW^{\mathrm{op}}_x(v)\le2.1$, which needs no Saias bound: $W^{\mathrm{sh}}_x(v)\le\sum_{e\in(x/2v,x/v]}1/e\le1$, so
+$W^{\nom}_x(v)\le1+\frac12\lambda_0A_0\le2.04$ by Corollary~\ref{cor:kr-weights}(a), and the $\tau$-part adds
+$\le2.04\sum_v\sup\eta\le10^{-6}$. That gives $\le2.1\cdot1.52\le3.2$.
+
+\emph{No circularity.} The inputs (Lemma~\ref{lem:lemmaM}, Corollary~\ref{cor:saias}, Lemma~\ref{lem:tau-near},
+Corollary~\ref{cor:lag}) concern $\NN$ on $[1,x/\Xm]$ only.
+\end{proof}
+
+\begin{remark}
+% v3: remark after Proposition 3.8
+Treating the $X_0$-near steps like the $\tau$-near ones in the fixed point would put
+$\sum_v\log(2v)\sup\eta_{X_0}\approx1.5\log X_0$ into $E_\eta$, and $C_NE_\eta\le\frac12$ would fail. They are harmless only
+because they are terminal.
+\end{remark}
+
+\begin{lemma}[$\tau$-near energy]\label{lem:tau-near}
+% v3: Lemma 3.9
+For $v\ge\Xm$ put $\eta(v):=\sum_{w\ \tau\text{-near at }v}1/w$, $\tilde\eta(v):=\sum_{w\ \tau\text{-near at }v}1/(w\log(v/w))$
+and $\theta(v):=\sum_{w\ \tau\text{-near at }v}(\log(v/w)+B_1)/w$, where $w$ is $\tau$-near at $v$ if
+$|\tau_w-v/w|\le2H(v/w)$ and $v/w\ge\Xm$. Put
+\[
+  E_\eta:=\sum_{v\ \text{dyadic}}\log(2v)\sup_{[v,2v)}\tilde\eta,\quad
+  E_\eta^0:=\sum_{v\ \text{dyadic}}\log(2v)\sup_{[v,2v)}\eta,\quad
+  E_\theta:=\sum_{v\ \text{dyadic}}\log(2v)\sup_{[v,2v)}\theta,\quad \theta_*:=\sup_v\theta(v).
+\]
+Then, on $\Good(<y)$ at all heights used,
+\[
+  E_\eta,\ E_\eta^0,\ E_\theta,\ \theta_*\le10^4H(X_0)\frac{\log^2X_0}{X_0}=10^4\Lambda^2e^{8(\log\Lambda)^2-\Lambda}\le e^{-0.99\Lambda},\qquad
+  E_\eta^{(2)}:=\sum_{v\ \text{dyadic}}(\log3v)^2\sup_{[v,2v)}\eta\le10^4H(X_0)\frac{\log^3X_0}{X_0},
+\]
+and $\sup_y\log y\cdot\eta(y)\le e^{-0.99\Lambda}$. (At $\Lambda=10^8$ these are $e^{-(10^8-2762)}$ and $e^{-(10^8-2770)}$.)
+\end{lemma}
+
+\begin{proof}
+\emph{Localisation.} Let $w$ be $\tau$-near at $v'$, and write $w=pm$ with $p$ the prime of $w$ that is largest in decision
+order, so that $\tau_w=t(p)$ and $\Pplus(m)\le p+H(p)$. Since $|t(p)-p|\le H(p)$, the condition $|t(p)-v'/(pm)|\le2H(v'/w)$
+gives $|p-v'/(pm)|\le3H(p)(1+o(1))$, i.e. $p^2\in v'/m\pm3.1\,pH(p)$. So $p$ lies in a window of length $3.1H(p_0)$
+around $p_0:=\sqrt{v'/m}\ge\Xm$.
+
+\emph{Counting.} Let $[P,2P)$ be the dyadic block of $p_0$. The window lies in $[P,4P]$ and has length
+$\le3.2H(P)\le6H(P)$, so by Corollary~\ref{cor:localcount} it holds at most $13.4\cdot3.2H(P)+K_{\mathrm{loc}}(P)+2\le
+43H(P)+K_{\mathrm{loc}}(P)+2$ primes, each with $1/p\le1.01/P$. For $v'\in[v,2v)$ this forces $m\in(v/4P^2,2v/P^2]$, and a
+pair $(P,m)$ occurs for at most three dyadic $v$. The $m$ are $4P$-smooth, so by Lemma~\ref{lem:cm},
+$\sum_m\log(8mP^2)/m\le5.4\log^2P(1+5/\log P)$ and $\sum_m1/m\le1.9\log P$.
+
+\emph{$E_\eta$.} Since $\log(2v)/\log(v/w)\le1.01\log(8mP^2)/\log P$, each $P$-block contributes at most
+$16.5(43H(P)+K_{\mathrm{loc}}(P)+2)\log P/P$.
+
+\emph{$E_\eta^0$, $E_\eta^{(2)}$, $E_\theta$, $\theta_*$.} $E_\eta^0$ has no division by $\log(v/w)$; $E_\eta^{(2)}$ has one
+more factor $\le1.01\log(8mP^2)$; $E_\theta$ has the extra factor $\log(v/w)+B_1\le1.01\log4P$. So each $P$-block contributes
+$\le16.5(43H(P)+K_{\mathrm{loc}}(P)+2)\cdot1.02\log^2P/P$ to $E_\eta^0$ and $E_\theta$ (one more $\log P$ to $E_\eta^{(2)}$),
+and $\theta_*$ is bounded by the same expression without the weight $\log(2v)$.
+
+\emph{Summation.} The blocks decay geometrically (ratio $\le2^{\eps-1}\le0.52$, by \eqref{eq:RH}), and
+$K_{\mathrm{loc}}(P)\le H(P)$. Summing from $P=X_0/2$ gives $\le2.1\cdot16.5\cdot44\cdot1.02\cdot H(X_0)\cdot4\log^2X_0/X_0
+\le10^4H(X_0)\log^2X_0/X_0$.
+
+\emph{$\log y\cdot\eta(y)$.} The $m$ with $p_0\in[P,2P)$ form one block $(y/4P^2,y/P^2]$ of $4P$-smooth elements, whose
+$1/m$-weight is $\le2C_0\rho(\log(y/P^2)/\log4P)e^{o(1)}$ by Lemma~\ref{lem:smooth-v}. This absorbs the factor $\log y$
+when $\log y\ge3\log P$, and $\log y\le3\log P$ otherwise.
+
+\emph{Numerics.} $H(X_0)=e^{8(\log\Lambda)^2}$, which is $\le e^{2715}$ at $\Lambda=10^8$, and $K_{\mathrm{loc}}(X_0)\le H(X_0)$. For
+every $\Lambda\ge10^8$, $9.3+2\log\Lambda+8(\log\Lambda)^2\le0.01\Lambda$, which gives the bounds $e^{-0.99\Lambda}$.
+\end{proof}
+
+Consequently $C_NE_\eta\le\frac12$ and $2.04\theta_*\le0.02$, with room $e^{-10^8}$. The per-scale constant $K_{\mathrm{loc}}(P)$
+is essential: a constant growing with the current scale would make $E_\eta$ grow with $x$. The quantity $E_\eta^0$ is what
+makes the $\tau$-near term $\NT$ summable with the weights $\log(2u)$ of Lemma~\ref{lem:predictable}; a pointwise bound on
+$\log y\cdot\eta(y)$ alone would give a sum growing like $\log\log x$.
+
+\begin{lemma}[Filtered cofactor weight]\label{lem:S}
+% v3: Lemma 3.10 (Lemma S)
+For a start $y$ and a scale $v\ge X_0/2$ put $\omega_y(v):=\sum_{w\in\NN:\ y/w\in[v,2v),\ \tau_w<y/w}1/w$. Then:
+\begin{enumerate}[label=(\roman*)]
+\item $\omega_y(v)\le1.2$;
+\item for $y\ge4v^2$ the filter forces $\Pplus(w)\le3v$. Put $u_y:=\log(y/2v)/\log3v$. If $u_y\le\log3v$, then
+  $\omega_y(v)\le2C_0\rho(u_y)e^{a_V}$ with $a_V\le13u_y\log(u_y+2)/\log3v$; so $\omega_y(v)\le2C_0\rho(u_y)e^{0.02}$ for
+  $u_y\le30$ and $\omega_y(v)\le2C_0e^{-0.9u_y\log u_y}$ for $30<u_y\le\log3v$. If $u_y>\log3v$, then
+  $\omega_y(v)\le5(\log3v)^{1.65}e^{-u_y/2}$;
+\item $\sum_{Y=2^k\ge v}\log(2Y)\sup_{y\in[Y,2Y)}\omega_y(v)\le C_S'(\log3v)^2$ with $C_S':=10$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) $\omega_y(v)\le\sum_{w\in(y/2v,y/v]}1/w\le\log2+2\eta_1+2v/y\le1.2$ by \eqref{eq:HBS} (and $\le1$ below $\Xm$).
+
+(ii) If $w$ passes the filter then $\tau_w<y/w\le2v$, so every prime of $w$ is decided before slot $2v$ and is $\le2v+H(2v)\le3v$.
+Since $w\in(y/2v,y/v]$, Lemma~\ref{lem:smooth-v} with $z=3v$ and $\ell=\log(y/2v)$ gives the first bound (its hypothesis
+$u\le L_z$ is $u_y\le\log3v$); the numerical forms follow from $a_V\le13u\log(u+2)/\log3v$ and $\log3v\ge10^8$, and from
+$\rho(u)\le e^{-u\log u}$. For $u_y>\log3v$, Rankin's bound with exponent $1-1/(2\log3v)$ and Lemma~\ref{lem:cm} gives
+$\omega_y(v)\le5(\log3v)^{1.65}e^{-u_y/2}$.
+
+(iii) The range $Y<4v^2$ contributes at most $1.2\cdot\frac3{2\log2}(1+o(1))(\log3v)^2\le2.7(\log3v)^2$. The range
+$Y\ge4v^2$ contributes at most $\frac{2\cdot0.70\cdot e^{0.02}}{\log2}(\log3v)^2\int_1^\infty\frac{1+u}{\Gamma(u+1)}\,du\le
+7.11(\log3v)^2$, using $\rho(u)\le1/\Gamma(u+1)$ (from $\rho(u)\le\rho(u-1)/u$) and
+$\int_1^\infty(1+u)/\Gamma(u+1)\,du=3.4479$. The parts with $u_y>30$ add less than $10^{-20}(\log3v)^2$. The total is
+$\le9.82(\log3v)^2$.
+\end{proof}
+
+The filter forces a dense cofactor ($v<\sqrt y$) to be $3v$-smooth, hence Dickman-small. No Riemann-sum or
+short-interval smooth-number input is needed, and Lemma~\ref{lem:smooth-v} avoids the Rankin loss $(\log3v)^{2+e}$.

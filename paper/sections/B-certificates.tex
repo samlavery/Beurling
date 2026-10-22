@@ -1,0 +1,186 @@
+% Appendix B: certificates
+\section{The computer-assisted parts}\label{app:cert}
+
+The scripts are in the directory \texttt{certificates/} of the repository accompanying this paper. They are written in Python~3;
+the interval computations use ball arithmetic from \texttt{python-flint} (Arb). Each subsection states what is checked, the
+method, the command, and the expected output. Commands are run from the repository root unless stated otherwise.
+
+Only two of them are steps of the proof: the Beurling--Saias certificate (Section~\ref{app:cert-bs}) and the small range of the
+$X_0$-band bound (Section~\ref{app:cert-x0band}). The others are independent numerical cross-checks of statements proved in the
+text (Theorem~\ref{thm:caplw}, Lemma~\ref{lem:sc}, Theorem~\ref{thm:svl}) or of the bookkeeping of Section~\ref{sec:logic}.
+
+\subsection{The Beurling--Saias certificate (\texttt{bs-cert})}\label{app:cert-bs}
+\emph{What it certifies.} The proof of Theorem~\ref{thm:bs} (and of Lemma~\ref{lem:bs-profile}) reduces the induction step to an
+explicit inequality $\Sigma(\ell,u)\ge0$, where $\ell=\log Y$, $u=\ell/\log z$ and $\tau=\log t\ge10^8$. Two parts of this reduction
+are computer-assisted.
+\begin{itemize}
+\item \emph{The region $30\tau\le\ell<10^{18}$, $u\ge2$.} A closed-form lower bound $S(\ell,u)\le\Sigma(\ell,u)$ is built from the
+majorants of the proof and from bounds $r_{\mathrm{low}}\le r\le r_{\mathrm{up}}$ for the Dickman ratio $r=-\rho'/\rho$. The script
+checks $S>0$ on cells covering the whole region, uniformly in $\tau\ge10^8$.
+\item \emph{One-variable inequalities:} the positivity $c(u)\ge K'u^2\log(1+u)$ for $27\le u\le4\cdot10^5$, used for
+$\ell\ge10^{18}$; the one-step inequality of Lemma~\ref{lem:smooth-v} for $1\le u\le10^6$; and that one-step inequality on
+$u\in[1,2]$ including both extra terms of the proof: the excess $X(u)$ of the small heights $1\le Y'<72$ (present for
+$u<1+\log72/L_z$), and a conservative allowance $2K_Mr(u)(e^{0.141}-1)$. Beyond these ranges they are proved analytically.
+\end{itemize}
+\emph{Method.}
+\begin{itemize}
+\item All arithmetic is ball arithmetic (Arb, through \texttt{python-flint} 0.9.0; module \texttt{ivarb.py}). Every elementary
+operation and transcendental function is enclosed. The bounds $r_{\mathrm{low}}$ (from the recursion
+$r(v)\ge r(v-1)/(1-e^{-r(v-1)})$, $r(2)=1/(2-2\log2)$) and $r_{\mathrm{up}}$ (from $r(x)\le\log((x+1)/\delta)/(1-\delta)$, optimised
+over $\delta$) are computed in balls. Conversions to floating point are rounded outward and are used only to select cells.
+\item Each cell is the product of an $\ell$-interval and a $u$-interval (or an interval in $v:=u-\ell^{1/4}$). The bound $S$ is
+evaluated on the whole box, so no Lipschitz or interpolation argument is needed.
+\item The range $\ell\in[3\cdot10^9,10^{18}]$ is split into 403 bands of ratio $1.05$. In each band, $u$-cells cover
+$[2,\max(40,u_0/2)]$ and $v$-cells cover the rest up to the largest junction $\bar U(\ell)=U(\ell;\tau=10^8)$. The endpoints of the
+$v$-cells are rounded outward, so the seams between $u$-cells and $v$-cells, and the top edge, are covered exactly for every $\ell$ in
+the band. Cells that fail are bisected adaptively.
+\item Every cell also checks $r(u-1)>\gamma_1$ and $r(u-1)>\gamma_{\max}$, which is the condition for the integrals of the second
+majorant to converge.
+\end{itemize}
+\emph{How to run} (\texttt{pip install python-flint==0.9.0}):
+\begin{verbatim}
+python3 -I certificates/bs-cert/cert_run_arb_patched.py 1.05 10   # main region, 10 workers, ~20 s
+python3 -I certificates/bs-cert/aux_cert_arb.py                   # the one-variable checks, ~2 s
+\end{verbatim}
+\emph{Expected output} (abridged; the first line is wrapped):
+\begin{verbatim}
+[patched seams] q=1.05 bands=403 cells=302013 failed=0 min certified l*S=2.491e+06
+    at (82792994654.45967, 86932644387.18266, 200.1275416813517, 210.13391876541928, False)
+(H'') c_A >= K'u^2 log(1+u): [27,400000] cells=9609 failed=0 min certified margin=0.189
+Lemma V one-step (L*Q_V, L = max(100,u)): [1,1e+06] cells=13823 failed=0 min certified margin=1.724
+Lemma V one-step on [1,2] with both extra terms: [1,2] cells=1387 failed=0 min certified margin=0.829
+\end{verbatim}
+That is: $302\,013$ cells (adaptive bisections included), $0$ failures, minimum certified $\ell\cdot S=2.491\cdot10^6$, at
+$\ell\approx8.3\cdot10^{10}$, $u\in[200,210]$; for $c(u)$, $9\,609$ cells on $[27,4\cdot10^5]$, $0$ failures, minimum margin $0.189$;
+for the one-step inequality of Lemma~\ref{lem:smooth-v}, $13\,823$ cells on $u\in[1,10^6]$, $0$ failures, minimum margin $1.724$;
+and for that inequality on $u\in[1,2]$ with both extra terms, $1\,387$ cells, $0$ failures, minimum margin $0.829$. The script \texttt{cert\_run\_arb.py 1.05 10} gives the same
+result. The double-precision twins \texttt{bs\_cert.py}, \texttt{cert\_run.py} and \texttt{aux\_cert.py} (minimum $2.598\cdot10^6$ for
+the main region) are a cross-check only and are not part of the certificate. In the code, the first majorant is \texttt{betaI},
+\texttt{alpha}; the second is \texttt{betaII}, \texttt{gam1}, \texttt{gmax}, \texttt{tailII}; the error terms are \texttt{E1},
+\texttt{E2}, \texttt{E3} with \texttt{eta}; the tail is \texttt{ET}, \texttt{T}; and the $v$-cells are \texttt{vmode}.
+
+\subsection{The jump at $X_0$, small range (\texttt{x0-band})}\label{app:cert-x0band}
+\emph{What it certifies.} The small range of Lemma~\ref{lem:xb}: the bound $B(n)\le5/12$ for every integer $2\le n\le10^6$, where
+\[
+  B(n)=\frac1n\Bigl[\tfrac12\mu^2(n)+\tfrac12\sum_{d\mid n,\,1<d<n}\Bigl(2\mu^2(d)+\tfrac12\lambda\frac{X(d)}d\Bigr)\Bigr],\qquad
+  X(d)=\sum_{e\mid d,\,1<e<d}\mu^2(e)\,e\,H_{\mathrm{ord}}(d/e),\qquad\lambda=1.0001.
+\]
+The maximum is attained only at $n=6$, where $B(6)=5/12$ exactly. The script also prints the suprema over $n\ge10^a$ for
+$a=1,\dots,5$, and the analytic tail bound $(\tfrac12+1.64\sqrt n)/n+\tfrac14\lambda A(1.8)2^{0.2}n^{-0.2}$ at $n=10^6$, which is
+$\le0.138$. For $n>10^6$ the lemma uses that analytic bound, not the computation.
+
+\emph{Method.} Sieves compute, exactly in integers: $\mu^2$; $H_{\mathrm{ord}}(m)$ by $H_{\mathrm{ord}}(1)=1$,
+$H_{\mathrm{ord}}(m)=\sum_{d\mid m,\,d<m}H_{\mathrm{ord}}(d)$; $X(d)$; and the divisor sums. The integer arrays are checked against
+64-bit overflow (the maximum of $X$ is about $2.9\cdot10^8$). The only floating-point steps are the divisions $X(d)/d$ and sums of at
+most $\tau(n)\le240$ nonnegative terms, whose relative rounding error is $<10^{-12}$; the script multiplies every $B(n)$ by
+$1+10^{-9}$ before taking maxima, so every printed value is an upper bound. All terms are nonnegative and every integer quantity is
+exact, so no interval arithmetic is needed.
+
+\emph{How to run} (standard library only, about 6 seconds):
+\begin{verbatim}
+cd certificates/x0-band && python3 -I x0band_exact.py 1000000
+\end{verbatim}
+\emph{Expected output} (abridged):
+\begin{verbatim}
+N= 1000000  Hmax= 83934208  Xmax= 288745984  (int64 ok: True )
+top: [(6, 0.41667), (12, 0.27778), (10, 0.25), (4, 0.25), (2, 0.25), (30, 0.23389), ...]
+sup B(n), 10<=n<=N: 0.277781
+sup B(n), 100<=n<=N: 0.088059
+sup B(n), 1000<=n<=N: 0.022826
+sup B(n), 10000<=n<=N: 0.007607
+sup B(n), 100000<=n<=N: 0.002121
+analytic tail bound for n>=N: 0.13738898318455534
+\end{verbatim}
+The companion script \texttt{x0band.py} is an earlier floating-point exploration up to $2\cdot10^4$; it is not part of the certificate.
+
+\subsection{The capacity theorem: numerical cross-check (\texttt{capl-cert})}\label{app:cert-capl}
+Theorem~\ref{thm:caplw} is proved analytically. The scripts in \texttt{certificates/capl-cert/} re-evaluate, in double-precision
+floating point, the precise criteria that Steps~2--5 of that proof bound analytically: the degree cap $D^*$ computed from
+$\binom{m+k}{k}$; the exact $j=\max\{j:e(r_0(D+1))^{2j+1}<c\}$; the row-weight bounds of Lemma~\ref{lem:rowweights}(b),(d); and
+condition~\eqref{eq:twelvetwo} of Lemma~\ref{lem:lemmaP} with the exact absorption threshold $y$. They are not interval-certified, and
+nothing in the proof depends on them. They use only the Python standard library and each takes a few seconds.
+\begin{itemize}
+\item \texttt{capl\_model.py}: the shared model (route-H criterion, Dickman-row criterion, Lemma~\ref{lem:lemmaP} criterion), in log
+space. It prints nothing.
+\item \texttt{analytic\_capl.py}: computes $s_H=5.9745$ (the root of $\gamma_*(s_H)=\tfrac13-10^{-5}$); checks that $G(\Lambda,s)$
+decreases in $\Lambda$ for $\Lambda$ from $10^8$ to $10^{40}$ at sample values of $s$; and evaluates the precise criteria with
+$c=\max(\tfrac14H_{\mathrm{std}}^{1/2},X_0^{\gamma(s)})$ on the grid $\Lambda\in\{10^8,10^9,10^{10},10^{12},10^{16},10^{20}\}$,
+$s\in[-\log\Lambda,30]$ at step $0.01$. Expected output: \texttt{s\_H = 5.9745}, ``decreasing'' on every sample line, and
+$4842$, $5072$, $5302$, $5763$, $6684$, $7605$ points with $0$ failures ($35\,268$ in all).
+\item \texttt{thm417\_check\_refereeB.py}: an independent re-implementation of Steps~1, 2, 3 and~5 at $200\,000$ random pairs with
+$\log_{10}\Lambda$ uniform in $[8,30]$ and $s\in[-\log\Lambda,60]$. Expected output:
+\texttt{Step1 violations: 0 route-H violations: 0 (min lhs/rhs 1.6938) Dickman violations: 0 (min ratio 1.1897) Step5 violations: 0}.
+\item \texttt{cert\_capl.py}: an earlier cell-by-cell check at $\Lambda=10^8$ only, with a piecewise-linear ramp of maximum $5.95$ in
+place of $\gamma$, covering $\ell\in[\log\Lambda,2\cdot10^4]$ with cells of width $0.002$ up to $\ell=60$ and $0.05$ beyond; each cell is
+checked at its worst corners. Expected output: \texttt{cells 20790 on [18.421, 60]: failures 0; max slope dlogH/dL = 2.94e-06} and
+\texttt{cells 398801 on [60, 2e4]: failures 0} ($419\,591$ cells in all). It is superseded by the analytic, $\Lambda$-uniform proof.
+\item \texttt{needs.py}: a diagnostic that prints, at sample $\ell$, the least $\log c$ needed by the precise criteria and the largest
+allowed by Lemma~\ref{lem:lemmaP}. It checks nothing.
+\item \texttt{raise\_max.py}: the value $1.3\cdot10^{-8}$ quoted in Step~6 of the proof of Theorem~\ref{thm:caplw}. It computes the
+raise $\max(0,2\log M_1-8\ell^2)/L$ of $H$ over $H_{\mathrm{std}}$, with $c$, $\gamma(s)$ and $M_1=r_0+\varphi(r_0)+1$ exactly as in that
+theorem (in log space), on the grid $\log_{10}\Lambda\in[8,30]$ at step $0.05$ and $s\in[-\log\Lambda,30]$ at step $0.01$
+($3\,252\,514$ points), and compares the maximum with the analytic bound $10^{-6}$, which is all the proof uses. Expected output
+(about 10 seconds):
+\begin{verbatim}
+s_H = 5.9745; points = 3252514
+max (log H - log H_std)/L = 1.292e-08 at log10 Lambda = 8.00, s = -9.92; analytic bound 1e-6: OK
+\end{verbatim}
+\end{itemize}
+
+
+\subsection{Lemma~\ref{lem:sc}: numerical check (\texttt{lemma-sc})}\label{app:cert-sc}
+Lemma~\ref{lem:sc} is proved in full in Appendix~\ref{app:rankfull}; these scripts are an independent corroboration, not a step of
+the proof. They work in exact rational arithmetic (Python's \texttt{fractions}).
+\begin{itemize}
+\item \emph{What is tested.} Random rank-full integer exponent matrices $E$ ($r\le8$ rows, up to $r+6$ columns, entries in
+$\{0,1,2,3\}$ at random densities; columns that vanish identically are removed, since primes absent from every row must not be
+counted) whose greedy latest-first pivots form at least two stages. For every \emph{minimum} cover $C$ of the row supports,
+\texttt{sc\_check.py} searches by brute force for nested row sets $R_{\le1}\subset R_{\le2}\subset\cdots$ with
+$|R_{\le t}|=|P_{\le t}|$, $E_{R_{\le t},P_{\le t}}$ invertible, and every pivot of $P_{\le t}$ and every late free column of $F_t$ covered
+by a row of $C\cap R_{\le t}$. \texttt{sc\_greedy.py} tests the explicit construction of the proof: the lexicographically first
+bases of the row matroids $M_t$, with the rows of $C$ first, checked for nesting, invertibility and coverage.
+\texttt{sc\_check\_refereeA.py} is an independent re-implementation over all \emph{minimal} covers; it also shows that the order
+matters, since putting the rows of $C$ last fails coverage in $1238$ of $2342$ cases.
+\item \emph{Commands and expected output} (each run prints one dictionary and takes seconds to a minute):
+\begin{verbatim}
+python3 -I certificates/lemma-sc/sc_check.py 1
+  {'tested': 10615, 'single': 20820, 'all_ok': 10615, 'some_fail': 0, 'all_fail': 0}
+python3 -I certificates/lemma-sc/sc_check.py 7 20000 7
+  {'tested': 5585, 'single': 10441, 'all_ok': 5585, 'some_fail': 0, 'all_fail': 0}
+python3 -I certificates/lemma-sc/sc_check.py 11 60000 5
+  {'tested': 15933, 'single': 31583, 'all_ok': 15933, 'some_fail': 0, 'all_fail': 0}
+python3 -I certificates/lemma-sc/sc_greedy.py 5 30000 8
+  {'ok': 13433}
+python3 -I certificates/lemma-sc/sc_check_refereeA.py
+  configs 842 {'ok': 2342, 'fail': 0, 'advfail': 1238, 'nest': 0}
+\end{verbatim}
+Here \texttt{tested} counts the multi-stage configurations (single-stage ones are skipped and counted as \texttt{single}), and
+\texttt{all\_ok} those for which the nested sets exist for every minimum cover; \texttt{ok} counts the (configuration, cover) pairs
+for which the explicit construction works, and \texttt{advfail} the coverage failures of the reversed order.
+\end{itemize}
+
+\subsection{The staged volume lemma: structural check (\texttt{svl-stress})}\label{app:cert-svl}
+Theorem~\ref{thm:svl} is proved in Appendix~\ref{app:rankfull}; this script is an independent sanity check of the structural facts
+its proof uses, not a step of the proof. In exact rational arithmetic, on random and adversarial rank-full configurations with
+$8$--$12$ rows and up to nine stages, it checks that the stage rows exist; that column masses are $\ge1$ on the stage prefix; that
+late free primes are covered; that a late free column is determined by its stage-prefix entries, with vanishing coefficient in the
+remaining rows; that the cumulative determinants are nonzero integers; and that the per-row block ranges are disjoint.
+\begin{verbatim}
+python3 -I certificates/svl-stress/svl_stress.py        # a few minutes, standard library only
+  rand configs 60 max stages T 1 violations 0
+  late configs 60 max stages T 9 violations 0
+  refA configs 60 max stages T 2 violations 0
+  nest configs 34 max stages T 4 violations 0
+\end{verbatim}
+
+\subsection{Non-circularity of the dependency graph (\texttt{depcheck})}\label{app:cert-dep}
+Section~\ref{sec:logic} asserts that the dependencies between the results of this paper used at the \emph{same} time form an acyclic
+graph, every loop closing only through an input used at a strictly earlier time or a strictly smaller height. The script
+\texttt{certificates/depcheck/depcheck.py} encodes the full dependency graph, one edge per input, each edge marked ``same time'' or
+``strictly earlier'' as in the table of Section~\ref{sec:logic} (its node names follow the numbering of the working draft, e.g.\
+\texttt{T4.3} for Theorem~\ref{thm:queue}). It runs a depth-first search for a cycle among the same-time edges.
+\begin{verbatim}
+python3 -I certificates/depcheck/depcheck.py
+  same-time subgraph acyclic: True | nodes 77 | edges 168 | strictly-earlier edges 27
+\end{verbatim}
+The time-ordering of the strictly-earlier edges is argued in Section~\ref{sec:noncirc}; the script checks only the bookkeeping.
