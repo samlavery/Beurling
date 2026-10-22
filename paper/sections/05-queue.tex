@@ -115,8 +115,25 @@ All of the following are sure (pathwise) statements, except (F2), which is distr
   Lemma~\ref{lem:pil} carry the factor $\theta:=1+1/\Lambda$, which bounds $1+\kappa_+/\log q+3/H$ for jittered primes
   $q\ge\Xm$ (with $\kappa_+=0.8$).
   % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #12): v3 has theta := 1+1/L.
-\item\label{eq:sF2} Given $\mathcal F_{s-}$, the position of the prime decided at slot $s$ has density at most $1/H(s)$ (centred box
-  jitter). The slots of distinct primes are independent.
+\item\label{eq:sF2} \emph{(Conditional law of positions.)} Whether a prime is decided at slot $s$, and the slot $s$ itself,
+  are $\mathcal F_{s-}$-measurable (Lemmas~\ref{lem:adapted} and~\ref{lem:C2}). Given $\mathcal F_{s-}$, the position of
+  the prime decided at $s$ is uniform on $[s-H(s)/2,\,s+H(s)/2)$ (centred box jitter), so its conditional density is at
+  most $1/H(s)$. The slots and positions of distinct primes are \emph{not} independent: which slots carry primes depends on
+  the history of the greedy process. Joint statements follow by iterated conditioning along the decision order. Let
+  $j_1<\dots<j_k$ be slot indices, let $D$ be the event that primes are decided at all of them, with positions
+  $q_1,\dots,q_k$, and let $h_1,\dots,h_k$ be $\mathcal F_{s_{j_1}-}$-measurable with $H(s_{j_i})\ge h_i$ surely (for instance
+  $h_i:=H(s_{j_1})$, as $H$ is non-decreasing). Then, for
+  every Borel $g\ge0$ on $\R^k$,
+  \[
+  \E\big[\mathbf 1_D\,g(q_1,\dots,q_k)\,\big|\,\mathcal F_{s_{j_1}-}\big]\le\prod_{i=1}^kh_i^{-1}\int_{\R^k}g(t)\,dt.
+  \]
+  Indeed, given $\mathcal F_{s_{j_k}-}$ the event that $j_1,\dots,j_{k-1}$ are decision slots, the positions
+  $q_1,\dots,q_{k-1}$, the event that $j_k$ is a decision slot, and the box at $s_{j_k}$ are all determined, while $q_k$ is
+  uniform on a box of length at least $h_k$. So the conditional expectation given $\mathcal F_{s_{j_k}-}$ is at most
+  $h_k^{-1}$ times $\mathbf 1_{D'}\int g(q_1,\dots,q_{k-1},t)\,dt$, where $D'$ is the event for $j_1,\dots,j_{k-1}$; now induct
+  on $k$.
+  % Logged correction 41: v3 states "The slots of distinct primes are independent", which is false; replaced by the
+  % conditional law and its iterated form.
 \end{enumerate}
 \begin{enumerate}[label=\textup{(F3$'$)},leftmargin=*]
 \item\label{eq:sF3p} \emph{(Harmonic sums, $\mathcal F_{s-}$-form.)} On $\Good(<s)$ (Definition~\ref{def:good}), for every $Y\ge1$,
@@ -1223,7 +1240,7 @@ Table~\ref{tab:queuedeps} lists the inputs of the results of this section and of
 \hline
 result & inputs & used in\\
 \hline
-(F1)--(F2) & Section~\ref{sec:construction} (box jitter, slots) & throughout\\
+(F1)--(F2) & Section~\ref{sec:construction} (box jitter, slots), Lemmas~\ref{lem:adapted} and~\ref{lem:C2} & throughout\\
 (F3$'$), (F4) & Lemma~\ref{lem:cm}(iv); Theorem~\ref{thm:caplw}(c); \cite{RosserSchoenfeld1962} & Lemma~\ref{lem:landing}, Lemma~\ref{lem:pil},
   Lemma~\ref{lem:fac}\\
 Lemma~\ref{lem:landing} & (F1)--(F2); Theorem~\ref{thm:caplw}(c) (for $\rho_H$); \cite{Freedman1975} & Corollary~\ref{cor:localcount}; event E4\\

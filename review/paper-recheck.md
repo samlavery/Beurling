@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#40)
+## Addendum: defects found after the re-check (corrections #31–#41)
 
-After the first public version, a reader reported six defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up four more. The full list, with each repair, is entries #31–#40 of `CORRECTIONS-vs-v3.md`:
+After the first public version, a reader reported seven defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, turned up four more. The full list, with each repair, is entries #31–#41 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -78,9 +78,10 @@ re-checking the repairs, turned up four more. The full list, with each repair, i
 | 38 | Lemma threshold-mass | stated for x ≥ X₀, valid for x ≥ X₀³ (all uses) | re-check |
 | 39 | Lemma designedzero | unspecified constant C₁; now C₁ := 0 with κ₀ ≥ X₀⁻¹ | re-check |
 | 40 | Thm bs, t-dense | definition omitted the j = 0 condition p₁ ≤ t | reader |
+| 41 | standing fact (F2) | claimed the slots of distinct primes are independent; only the conditional jitter law holds (and is all that is used) | reader |
 
-**Repairs and their check.** All ten are repaired. A fresh AI checker checked them in four passes (`review/recheck/R4.md`
-§§1–10). Its work included:
+**Repairs and their check.** All eleven are repaired. A fresh AI checker checked them in five passes
+(`review/recheck/R4.md` §§1–11). Its work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
 - an independent derivation of the count identity's initial value;
@@ -94,7 +95,7 @@ re-checking the repairs, turned up four more. The full list, with each repair, i
 
 The final pass ended with nothing blocking, fixable or cosmetic.
 
-**Effect on the conclusions.** None of the forty corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the forty-one corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37 and #40.
 
 **Caveat.** These defects survived five rounds of AI checking. The paper should not be regarded as verified until a human

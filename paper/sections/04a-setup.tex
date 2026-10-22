@@ -8,8 +8,12 @@ $L_u:=\log u$, and dyadic scales are $u=X_0 2^j$. We write $\Lambda:=\log X_0\ge
 
 \paragraph{Jitter and slots} (\S\ref{sec:construction}).
 \begin{itemize}
-\item A prime $q$ decided at slot $s_q\ge X_0$ has its value uniformly distributed on the box $J_q$ of width $H(s_q)$,
-  centred at $s_q$. Hence jittered values are $\ge \Xm:=X_0-H(X_0)/2$, and $\NN=\N$ below $\Xm$.
+\item A prime $q$ decided at slot $s_q\ge X_0$ has, conditionally on $\mathcal F_{s_q-}$, its value uniformly distributed on
+  the box $J_q$ of width $H(s_q)$, centred at $s_q$: the offset is independent of the past, while the slot $s_q$ and the
+  decision itself depend on the history. Only this conditional law is used below (predictable compensators and
+  martingales in decision order). Hence jittered values are $\ge \Xm:=X_0-H(X_0)/2$, and $\NN=\N$ below $\Xm$.
+% Logged correction 41 (CORRECTIONS-vs-v3.md): the landing law is a conditional law given F_{s_q-}; slots and decisions
+% of distinct primes are not independent.
 \item $H$ is the jitter width \eqref{eq:jitter} (\S\ref{sec:greedy}, \S\ref{sec:queue-conv}); it exceeds
   $H_{\mathrm{std}}(u):=\exp(8(\log\log u)^2)$ only on the raised range of Theorem~\ref{thm:caplw}.
 % Logged correction 32 (CORRECTIONS-vs-v3.md): H is the continuous width with the smooth majorant (v3: max(H_std, M1^2)).

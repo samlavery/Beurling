@@ -13,17 +13,19 @@ Samuel Lavery (sam.lavery@gmail.com)
 > the fixes, three fresh AI checkers re-checked every changed passage (`review/paper-recheck.md`, reports in
 > `review/recheck/R1–R3.md`). They found nothing blocking.
 >
-> **Defects found after the AI checks.** After the paper was first published here, a reader reported six further defects
+> **Defects found after the AI checks.** After the paper was first published here, a reader reported seven further defects
 > that every earlier AI check had missed:
 > - a strip identity used as exact although the box widths vary;
 > - a jitter width that jumps (through a ceiling and a per-scale freeze) although its regularity is used throughout;
 > - two bounds for a smoothing kernel that wrongly assume unit mass and unit weight;
 > - an unproved initial value in the count identity, and an initialisation issue at X₀;
-> - a missing base condition in the definition of t-dense numbers.
+> - a missing base condition in the definition of t-dense numbers;
+> - an overstated independence claim (the slots of distinct primes are not independent; only the conditional jitter law
+>   holds, and that is all the proofs use).
 >
-> Repairing these and re-checking the repairs turned up four more. All ten are repaired; they are entries #31–#40 of
-> `CORRECTIONS-vs-v3.md`. The repairs were checked by a fresh AI checker in four passes (`review/recheck/R4.md`), which ended
-> with nothing blocking or fixable. None of the forty logged corrections changes a conclusion of the paper. But these
+> Repairing these and re-checking the repairs turned up four more. All eleven are repaired; they are entries #31–#41 of
+> `CORRECTIONS-vs-v3.md`. The repairs were checked by a fresh AI checker in five passes (`review/recheck/R4.md`), which ended
+> with nothing blocking or fixable. None of the forty-one logged corrections changes a conclusion of the paper. But these
 > findings show that the AI checks are no substitute for expert review.
 
 ## The result

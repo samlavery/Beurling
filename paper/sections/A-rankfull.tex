@@ -24,8 +24,12 @@ Two difficulties have to be overcome:
 \item a prime that occurs in several elements constrains several of them at once;
 \item a free prime may be decided after some pivot, so its realisation is not measurable at that pivot's decision time.
 \end{itemize}
-The \emph{Volume Lemma} (Lemma~\ref{lem:volume}) handles the first: integrating all pivots jointly by a change of
-variables replaces per-constraint widths by an exact Jacobian. The \emph{Pivot-Integration Lemma} (Lemma~\ref{lem:pil})
+The \emph{Volume Lemma} (Lemma~\ref{lem:volume}) handles the first. The pivots are integrated one at a time, each
+against its conditional density given the past (Lemma~\ref{lem:pil}). The resulting iterated Lebesgue integral is then
+evaluated by a single change of variables, which replaces per-constraint widths by an exact Jacobian; no independence
+between primes is used.
+% Logged correction 41: clarifies that only conditional densities (tower property) are used, not independence.
+The \emph{Pivot-Integration Lemma} (Lemma~\ref{lem:pil})
 and the \emph{Staged Volume Lemma} (Theorem~\ref{thm:svl}) handle the second: integrate the pivots in stages, and bound
 the free primes decided between stages by sure sums, each against a weight that is harmonic in some row.
 
