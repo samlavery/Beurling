@@ -1,4 +1,4 @@
-# Referee B: independent numeric checks of v3 Theorem 4.17 Steps 1-3,5 (Λ-uniform version). Log-domain floats.
+# Independent numeric checks of the capacity theorem (paper Thm 6.22) Steps 1-3,5 (Λ-uniform version). Log-domain floats.
 import math, random
 def A(Lam, s): l = 2*math.log(Lam) + s; return math.log(2) + 3*math.log(Lam) + 2*s - math.log(l)
 def G(Lam, s): a = A(Lam, s); return 2*math.sqrt(a*(a+1))*math.exp(s/2)/math.sqrt(Lam - a - 1)
@@ -21,7 +21,7 @@ for _ in range(200000):
     # exact-ish ingredients: r0, D, m, a, j
     logL = l
     if s <= sH + 1:
-        # route H with exact D*, j (log-domain): m <= L^2/(l Λ)
+        # high-degree rows (Step 2) with exact D*, j (log-domain): m <= L^2/(l Λ)
         logm = 2*l - math.log(l) - math.log(Lam); a = math.log(2) + logm   # a <= log(r0(D+1)) <= log 2m
         j = math.floor((logc - 1)/(2*a) - 0.5)
         logQ = logc/2; Dstar = math.floor(logQ/(1 + math.log(2) + logm)); k = Dstar + 1
@@ -44,5 +44,5 @@ for _ in range(200000):
     if s >= sH and gamma(s)*Lam > 4*l*l:
         gm = gamma(s)
         if math.exp(min(s,700))*math.log(Lam*math.exp(min(s,700))/(8*3.01*gm)) < 107.6*gm*gm: bad5 += 1
-print("Step1 violations:", bad1, " route-H violations:", bad2, "(min lhs/rhs %.4f)" % minH,
+print("Step1 violations:", bad1, " Step2 violations:", bad2, "(min lhs/rhs %.4f)" % minH,
       " Dickman violations:", bad3, "(min ratio %.4f)" % minD, " Step5 violations:", bad5)

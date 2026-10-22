@@ -1,4 +1,5 @@
 % Zeros (v3 §2)
+\begingroup\emergencystretch=2em % typography only: lets TeX loosen lines instead of overfilling them
 \section{Zeros: everything reduces to a bound on the lag}\label{sec:zeros}
 
 \begin{proposition}[The lag bound]\label{prop:La}
@@ -10,7 +11,7 @@ On the event $\mathcal G=\{\tau=\infty\}$ of Definition~\ref{def:good},
 and $D=0$ below $\Xm$.
 \end{proposition}
 \begin{proof}
-By \eqref{eq:lag} and Theorem~\ref{thm:queue}, $|D|\le B(x)+H(x)/2+2$ for $x\ge X_0+2H$. On $[\Xm,X_0+2H]$ the same count
+By \eqref{eq:lag} and Theorem~\ref{thm:queue}, $|D|\le B(x)+\frac{H(x)}2(1+\kappa_+/\log x)+3\le B(x)+H(x)+3$ for $x\ge X_0+2H$. On $[\Xm,X_0+2H]$ the same count
 (Lemma~\ref{lem:count}, with landed and decided primes differing only within the first $\le3H(X_0)+2$ slots) gives
 $|D|\le B(X_0)+3H(X_0)+3$.
 
@@ -49,15 +50,17 @@ Let $Z_\infty(s):=\prod_{p<X_0}(1-p^{-s})^{-1}=\sum_{n\in\mathcal D}n^{-s}$. For
 On $\sigma\ge1-\delta$ with $\delta\log X_0\to0$: $|Z_\infty|\le2\log X_0=:Z_{\max}$ and $|Z_\infty'|\le4\log^2X_0$.
 \end{lemma}
 \begin{proof}
-Each rigid $n\ge X_0(1+\kappa)$ contributes a unit jump at $n$ and the ramp $-du/(\kappa u)$ on $[n/(1+\kappa),n]$. Hence, up to
-$O(1)$ boundary terms from $n\in[X_0,X_0(1+\kappa))$,
+Each rigid $n\ge X_0(1+\kappa)$ contributes a unit jump at $n$ and the ramp $-du/(\kappa u)$ on $[n/(1+\kappa),n]$. The at most
+$\kappa X_0+1$ rigid $n\in[X_0,X_0(1+\kappa))$ have ramps truncated at $X_0$; each truncation changes the transform by
+$(X_0^{-s}-n^{-s})/(s\kappa)$, of modulus $\le2X_0^{-\sigma}/(\kappa|s|)$, so these boundary terms total
+$\le3X_0^{1-\sigma}/|t|$. Up to them,
 \begin{equation}\label{eq:ZBformula}
   Z_B=Z_\infty-W(s)S_{\ge X_0}(s)+\frac{X_0^{1-s}}{s-1},\qquad W(s):=\frac{(1+\kappa)^s-1}{s\kappa},\qquad
   S_{\ge X_0}(s):=\sum_{d\in\mathcal D,\,d\ge X_0}d^{-s}.
 \end{equation}
 For $\sigma\le2$, $|W|\le6/(\kappa|t|)$ and $|S_{\ge X_0}(s)|\le Z_\infty(\sigma)$. Also
 $\log Z_\infty(\tfrac12+\delta)\lesssim2X_0^{1/2}/\log X_0$, while $\log(\kappa\Gamma_1)\ge(1-\theta)X_0^2-O(\log X_0)$, since
-$\log x_1\ge X_0^2$. On $\sigma\ge1-\delta$: $Z_\infty(\sigma)\le e^{\gamma}\log X_0\cdot e^{\delta\log X_0}(1+o(1))$, and
+$\log x_1\ge X_0^2$; the boundary terms and $X_0^{1-s}/(s-1)$ are $\le4X_0^{1/2}/\Gamma_1$ for $\sigma\ge\frac12$. On $\sigma\ge1-\delta$: $Z_\infty(\sigma)\le e^{\gamma}\log X_0\cdot e^{\delta\log X_0}(1+o(1))$, and
 $|Z_\infty'|\le Z_\infty(\sigma)\sum_{p<X_0}\log p/(p^{\sigma}-1)$.
 \end{proof}
 
@@ -66,19 +69,29 @@ $|Z_\infty'|\le Z_\infty(\sigma)\sum_{p<X_0}\log p/(p^{\sigma}-1)$.
 Let $0<a\le8$ and $\operatorname{Ein}(a):=\int_0^a(e^t-1)\,dt/t$, so that $\operatorname{Ein}(1)=1.32$ and $\operatorname{Ein}(8)=437.7$.
 Put $\widehat E(s):=Z_B(s)-s/(s-1)$. Then for $\sigma\ge1-a/\Lambda$ and every $t$,
 \[
-  |\widehat E(s)|\le C_0e^a\Lambda+4.04e^{\operatorname{Ein}(a)}\min\bigl(1,\kappa(1+|s|)\bigr)e^{\gamma}\Lambda+3\kappa e^a+1
-  \le C_a(1+\kappa|s|)e^{\gamma}\log X_0,\qquad C_a:=C_0e^a+5e^{\operatorname{Ein}(a)},
+\begin{aligned}
+  |\widehat E(s)|&\le C_0e^a\Lambda+4.04e^{\operatorname{Ein}(a)}\min\bigl(1,\kappa(1+|s|)\bigr)e^{\gamma}\Lambda+3\kappa e^a+1\\
+  &\le C_a(1+\kappa|s|)e^{\gamma}\log X_0,\qquad C_a:=C_0e^a+5e^{\operatorname{Ein}(a)},
+\end{aligned}
 \]
-with $C_0$ absolute. Also $1-W(1)=0$, so $Z_B$ has the pole and residue of $s/(s-1)$.
+with $C_0:=2.1$. Also $1-W(1)=0$, so $Z_B$ has the pole and residue of $s/(s-1)$.
 \end{lemma}
 \begin{proof}
 From \eqref{eq:ZBformula} and $s/(s-1)=1+\int_1^{X_0}x^{-s}\,dx+X_0^{1-s}/(s-1)$,
 \[
   \widehat E(s)=\Bigl[\sum_{n<X_0}n^{-s}-1-\int_1^{X_0}x^{-s}\,dx\Bigr]+(1-W(s))S_{\ge X_0}(s)+(\text{boundary terms}).
 \]
-\emph{The bracket.} For $|t|\le X_0$ it equals $\zeta(s)-1/(s-1)-1+O(X_0^{-\sigma})$ \cite[Thm.~4.11]{Titchmarsh1986}, and
-$|\zeta(s)-1/(s-1)|\le C(|t|+2)^{a/\Lambda}\log(|t|+2)\le Ce^a\Lambda$ there (it is bounded near $s=1$, and the Phragm\'en--Lindel\"of
-convexity bound applies otherwise). For $|t|>X_0$ the bracket is $\le2+2\int_1^{X_0}x^{a/\Lambda-1}\,dx\le2+2e^a\Lambda$.
+\emph{The bracket.} For $\sigma>2$ it is at most $2$; let $\sigma\le2$. For every integer $M\ge2$, partial summation gives the
+exact identity
+\begin{equation}\label{eq:zeta-partial}
+  \zeta(s)-\frac1{s-1}=\sum_{n\le M}n^{-s}-\int_1^Mx^{-s}\,dx-s\int_M^\infty\{x\}x^{-s-1}\,dx .
+\end{equation}
+Let $|t|\le X_0$. With $M:=\lceil X_0\rceil-1$, \eqref{eq:zeta-partial} shows that the bracket equals $\zeta(s)-1/(s-1)-1$ up to
+$s\int_M^\infty\{x\}x^{-s-1}\,dx-\int_M^{X_0}x^{-s}\,dx$, which has modulus $\le(|s|/\sigma+1)M^{-\sigma}\le1.1e^a$. (This makes
+explicit the error term $O(X_0^{-\sigma})$ of \cite[Thm.~4.11]{Titchmarsh1986}.) With $M:=\lfloor|t|\rfloor+2$ instead, $|s|\le M+1$
+and $\max(1,M^{1-\sigma})\le(X_0+2)^{a/\Lambda}\le1.001e^a$, so \eqref{eq:zeta-partial} gives
+$|\zeta(s)-1/(s-1)|\le1.001e^a(1+2\log M+1.52)\le2.01e^a\Lambda$. For $|t|>X_0$ the bracket is
+$\le2+2\int_1^{X_0}x^{a/\Lambda-1}\,dx\le2+2e^a\Lambda$. So the bracket is $\le C_0e^a\Lambda$ with $C_0:=2.1$.
 
 \emph{The rigid part.} $|1-W(s)|\le\kappa|s-1|/2+O(\kappa^2(1+|s|)^2)\le\kappa(1+|s|)$ when $\kappa|s|\le1$, and $|W|\le3$ otherwise
 (for $\sigma\le2$; for $\sigma>2$ the term is $\le2/X_0$). Next, $|S_{\ge X_0}(s)|\le Z_\infty(\sigma)$, and
@@ -94,7 +107,7 @@ The local prime number theorem (Theorem~\ref{thm:lp}) compares $N$ with the targ
 $T_0:=T-(\#\Abs-\int\bar\rho_{\Abs})$, whose transform is $\widehat T_0=Z_B+\widehat R=s/(s-1)+\widehat R+\widehat E$. The absorbed part
 $\widehat E_{\Abs}$ is \emph{not} bounded on all of $\sigma\ge1-a/\Lambda$ at large $|t|$ (Remark~\ref{rem:EAhuge}), so it is not put
 into $\widehat T_0$. On $\Good(<y)$, $|N-T_0|\le|N-T|+2u^{\theta/2}(\log u)^{-4}+2$ on $[1,y]$ by the absorbed part of
-\eqref{eq:T1}. The constant of Lemma~\ref{lem:ZBlow} enters only through $\log C_a$: $\log C_8<440$ and $\log C_1<3$.
+\eqref{eq:T1}. The constant of Lemma~\ref{lem:ZBlow} enters only through $\log C_a$; with $C_0=2.1$, $\log C_8<439.4$.
 
 \begin{lemma}[The absorbed part]\label{lem:ZA}
 % v3: Lemma 2.0'
@@ -109,14 +122,16 @@ $t\in[\Gamma_k,2\Gamma_k]$, $\sigma\in[\tfrac34,\tfrac54]$.
 \begin{proof}
 The elements of $\Abs$ are $2y$-smooth, and Rankin's method for the realised system (Lemma~\ref{lem:lemmaP}, proof steps (i) and (v)) gives
 $\#\Abs\cap[1,x]\le x\exp(-0.9u\log u)$, with $u=\log x/\log(2y)\ge100$. Moreover $\Abs=\emptyset$ wherever $y<\Xm$, which holds for
-$\log L\le2\log\Lambda+s_H$ (Theorem~\ref{thm:caplw}(b)). Where $\Abs\ne\emptyset$, $\log2y\le22.6\Lambda$, so
-$u_0\ge\Lambda e^{s_H}/22.6\ge1.7\cdot10^9$ for every $\Lambda\ge10^8$. In the standard regime $\ell\ge\ell_{\mathrm{std}}$,
-$\log2y\le12.1\ell^2$, so the saving is $\ge L/(14\ell)$.
+$\log L\le2\log\Lambda+s_H$ (Theorem~\ref{thm:caplw}(b)). Where $\Abs\ne\emptyset$ and $\ell\le\ell_{\mathrm{std}}$,
+$\log2y\le22.6\Lambda$ (Section~\ref{sec:params}). In the standard regime $\ell\ge\ell_{\mathrm{std}}$ instead $H=H_{\mathrm{std}}$,
+$c=\tfrac14H_{\mathrm{std}}^{1/2}$ and $\log2y\le12\ell^2+9\ell+8\le12.1\ell^2$, so the saving is $\ge L/(14\ell)$. In both cases
+$u_0\ge\Lambda e^{s_H}/22.6\ge1.7\cdot10^9$ for every $\Lambda\ge10^8$.
 
 (a) Fix $|t|\in[\Gamma_k,2\Gamma_k]$ and $\sigma\ge1-\delta_k$, and put $Y:=|t|^{1/(1-\theta/2)}\le x_k$. The terms $a\le Y$ are
 $\le\int_{v_0}^{\log Y}\exp(\delta_kv-\varsigma(v))\,dv$, where $\varsigma(v)$ is the saving above. Since
-$\delta_k\le9\log\log x_k/\log x_k\le18\Lambda e^{-2\Lambda}$ at the scales of the zeros, it is below the saving rate $\ge0.18/\Lambda$ at
-every $v$, so these terms are $\le2\exp(-\varsigma(v_0)/2)$. The terms $a>Y$ use $|1-w_a|\le2|t|a^{\theta/2-1}$. They lie in the standard
+$\delta_k\le9\log\log x_k/\log x_k\le18\Lambda e^{-2\Lambda}$ at the scales of the zeros, it is below the saving rate at every
+$v\le\log Y$: the rate is $\ge0.18/\Lambda$ where $\ell\le\ell_{\mathrm{std}}$, and $\ge1/(14\ell)\ge1/(14\log\log x_k)$ beyond. So
+these terms are $\le2\exp(-\varsigma(v_0)/2)$. The terms $a>Y$ use $|1-w_a|\le2|t|a^{\theta/2-1}$. They lie in the standard
 regime ($\log\log Y\ge2\Lambda-1>\ell_{\mathrm{std}}$), so they are $\le(\log x_k)^{O(1)}\exp(-\log x_k/(14\log\log x_k))$.
 
 (b) Mellin--Plancherel gives, at $\sigma=\tfrac34$,
@@ -126,8 +141,8 @@ and $\Gamma_k\asymp x_k^{1-\theta}/\log^3x_k$.
 
 \begin{remark}\label{rem:EAhuge}
 $\widehat E_{\Abs}$ can be huge off these sets, for example at $\sigma=1-1/\log X_0$. No step of this section evaluates it there.
-Lemma~\ref{lem:ZA} needs only $y\le n^{o(1)}$ on the range of $\Abs$ and $\log y\le23\log X_0$, so it holds for every absorption
-threshold of Section~\ref{sec:params}, uniformly in $\Lambda\ge10^8$.
+Lemma~\ref{lem:ZA} needs only $y\le n^{o(1)}$ on the range of $\Abs$, $\log y\le23\log X_0$ for $\ell\le\ell_{\mathrm{std}}$ and
+$\log2y\le12.1\ell^2$ beyond, so it holds for every absorption threshold of Section~\ref{sec:params}, uniformly in $\Lambda\ge10^8$.
 \end{remark}
 
 \subsection{The oscillations}
@@ -154,7 +169,7 @@ $|\widehat R_k|\le5|s|x_k^{-0.4}$. Theorem~\ref{thm:lp} uses this.
 \subsection{The designed zeros}
 \begin{lemma}[A designed zero]\label{lem:designedzero}
 % v3: Lemma 2.1
-Suppose $|Z_B|\in[\tfrac12,Z_{\max}]$ on $|s-(1+i\gamma_k)|\le\delta_k$, where $\delta_k:=3(3\log\log x_k+C_1)/\log x_k$. Then
+Suppose $|Z_B|\in[\tfrac12,Z_{\max}]$ on $|s-(1+i\gamma_k)|\le\delta_k$, where $\delta_k:=3(3\log\log x_k+C_\delta)/\log x_k$. Then
 $Z_B+M_k$ has a zero $s^*$ with
 \[
   \operatorname{Re}s^*=1-\frac{3\log\log x_k+O_{X_0}(1)}{\log x_k},
@@ -172,7 +187,7 @@ contraction with a unique fixed point $w^*$, and $\operatorname{Re}s^*=\theta+\o
 \end{enumerate}
 \end{proof}
 
-The discs $|s-(1+i\gamma_k)|\le\delta_k$ are small for every $k\ge1$: $\delta_k\le\delta_1\le(18\log X_0+3C_1)/X_0^2\ll1/\log^2X_0$. So
+The discs $|s-(1+i\gamma_k)|\le\delta_k$ are small for every $k\ge1$: $\delta_k\le\delta_1\le(18\log X_0+3C_\delta)/X_0^2\ll1/\log^2X_0$. So
 $Z_B$ is evaluated only where Lemma~\ref{lem:ZB} applies.
 
 \begin{lemma}[Late noise]\label{lem:latenoise}
@@ -202,8 +217,10 @@ The choice uses only the system on $[1,x_k)$, which does not depend on $\gamma_k
 \emph{(i)} We use the mean value theorem of Montgomery and Vaughan \cite{MontgomeryVaughan1974} for the absolutely convergent
 $Z_\infty$ and $Z_\infty^2$ on $\sigma=1$. Over $t\in[\Gamma,2\Gamma]$:
 \[
-  \E|Z_\infty(1+it)|^2=\prod_{p<X_0}(1-p^{-2})^{-1}+O(\log X_0/\Gamma)\in[1,\zeta(2)],\qquad
+\begin{gathered}
+  \E|Z_\infty(1+it)|^2=\prod_{p<X_0}(1-p^{-2})^{-1}+O(\log X_0/\Gamma)\in[1,\zeta(2)],\\
   \E|Z_\infty|^4\le\sum_{n\in\mathcal D}\tau(n)^2n^{-2}+o(1)\le\frac{\zeta(2)^4}{\zeta(4)}+o(1)\le6.8.
+\end{gathered}
 \]
 The Paley--Zygmund inequality gives $|Z_\infty(1+it)|\ge2^{-1/2}$ on a set of $t$ of density $\ge\frac14/6.8>0.036$, independently of
 $X_0$. Lemma~\ref{lem:ZB} moves this by at most $\exp(-X_0^2/4)$.
@@ -251,7 +268,11 @@ $|Z_B|\ge\tfrac12$ on the disc follows from Lemma~\ref{lem:goodheights}(i), Lemm
 
 \begin{remark}
 $1-\operatorname{Re}\rho_k\asymp3(1-\theta)\log\log\gamma_k/\log\gamma_k$. This is outside Landau's region
-$1-c(1-\theta)/\log|t|$ by a factor $\log\log\gamma_k$, so it does not contradict it. In this design the loss is forced by the
-positivity constraint \eqref{eq:G1} together with the amplitude condition $\kappa'_k=\kappa_0/\log^2x_k$, which gives $3\log\log$ rather
-than $1\log\log$.
+$1-c(1-\theta)/\log|t|$ by a factor $\log\log\gamma_k$, so it does not contradict it. In this design the loss comes from the
+amplitude condition $\kappa'_k=\kappa_0/\log^2x_k$, which gives $3\log\log$ rather than $1\log\log$. Positivity \eqref{eq:G1}
+alone would allow a constant $\kappa'_k=\kappa_0$. The margin needs a decaying amplitude: the response of the drift to the
+oscillation $R_k$ must stay $o(1/\log x)$ on $x_k^2<x<\exp(C'\log^2x_k)$, $C'=(4(1-\theta)/c_{\mathrm{LP}})^2$, where $\gamma_k$ is
+not yet resolvable (proof of Proposition~\ref{prop:g1}, Step~4), and this requires $\kappa'_k\log x_k\to0$. Any power
+$\log^{-1-\delta}x_k$ with $\delta>0$ would do, giving $(2+\delta)\log\log$; the exponent $2$ is a choice of the design.
 \end{remark}
+\par\endgroup

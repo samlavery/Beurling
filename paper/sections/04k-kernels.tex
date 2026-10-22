@@ -38,9 +38,15 @@ Expanding $\Rres=\sum_{k\ge0}(-\Kpt B)^k$ (the series terminates at every point,
 \begin{equation}\label{eq:R-kernels}
   (\Rres g)(x)=\sum_{n\in\NN}\frac1n\int g\,dC_n^x .
 \end{equation}
+We use the local exponent of the jitter width,
+\[
+  \eps_*:=\sup_{v\ge\Xm/2}\frac{d\log H}{d\log v}\le\max\Bigl(\frac{16\log\log(\Xm/2)}{\log(\Xm/2)},\,4\cdot10^{-6}\Bigr)\le4\cdot10^{-6},
+\]
+which follows from \eqref{eq:RH} for the standard width ($d\log H_{\mathrm{std}}/d\log v=16\log\log v/\log v$, decreasing in $v$)
+and from Theorem~\ref{thm:caplw}(c) on the raised range; so $H(vw)/H(v)\le w^{\eps_*}$ for $v\ge\Xm/2$, $w\ge1$.
 Each $C_n^x$ is supported in an interval of radius $R_n\le1.02\,H(x/n)$ around $x/n$. Indeed, a step $d\to n$ maps
 the support of $C_d$, of radius $R_d$ around $x/d$, to radius $R_d/w$ around $x/n$ and then adds half a window, so by
-induction and \eqref{eq:RH}, $R_n\le H(x/n)/2+\max_d 1.02\,H(x/d)/w\le H(x/n)\,(\tfrac12+1.02\cdot2^{\eps-1})\le1.02\,H(x/n)$.
+induction, $R_n\le H(x/n)/2+\max_d 1.02\,H(x/d)/w\le H(x/n)\,(\tfrac12+1.02\cdot2^{\eps_*-1})\le1.02\,H(x/n)$.
 
 \paragraph{Nominal steps.} Write $H_n:=H(x/n)$. For a step $d\to n$ with cofactor $w=n/d$, the \emph{nominal} step
 \[
@@ -52,7 +58,7 @@ $C_n^{x,\nom}$ are defined by \eqref{eq:kernel-rec} with $Q^{\nom}$ in place of 
 $c_n:=C_n^{x,\nom}(\R)$ satisfy $c_1=1$ and $c_n=-\sum_{d\mid n,d<n}\kappa_{d\to n}c_d$, which is the recursion of the
 sharp resolvent. Hence, by Lemma~\ref{lem:lemmaM},
 \begin{equation}\label{eq:nominal-mass}
-  c_n=\mu(n)\chi^t_x(n).
+  c_n=\mu(n)\chi^t_x(n)\,\mathbf 1[x/n\ge\Xm].
 \end{equation}
 
 \begin{definition}[Near-threshold steps and terminal levels]\label{def:near}
@@ -73,21 +79,21 @@ $|x/n-\Xm|\le R_d/w$. A level $n$ is \emph{terminal} if $x/n<\Xm+0.6H(X_0)$.
 \end{lemma}
 
 \begin{proof}
-(i) On the support of $C_d$, the centre is $v/w\in[x/n-R_d/w,\,x/n+R_d/w]$, and $R_d/w\le1.02H(x/d)/w\le2H_n$ by
-\eqref{eq:RH}. Off $\tau$-near steps the filter $\mathbf 1[\tau_w<v/w]$ is therefore constant there and equal to
+(i) On the support of $C_d$, the centre is $v/w\in[x/n-R_d/w,\,x/n+R_d/w]$, and
+$R_d/w\le1.02H(x/d)/w\le1.02\cdot2^{\eps_*-1}H_n\le2H_n$. Off $\tau$-near steps the filter $\mathbf 1[\tau_w<v/w]$ is therefore constant there and equal to
 $\mathbf 1[\tau_w<x/n]$; off $X_0$-near steps the same holds for $\mathbf 1[v/w\ge\Xm]$.
 
-(ii) By \eqref{eq:RH}, $R_d/w\le1.02\,H(w\cdot x/n)/w\le1.02\cdot2^{\eps-1}H(x/n)\le0.52\,H(x/n)$. If the step is
-$X_0$-near, then $x/n\le\Xm+0.52H(x/n)$. Since $H(v)/v$ is decreasing and $H(X_0)/X_0<10^{-10}$, this forces $x/n<X_0$,
-so $H(x/n)\le H(X_0)$, $R_d/w\le0.52H(X_0)$ and $x/n\le\Xm+0.52H(X_0)$: the level $n$ is terminal.
+(ii) As in (i), $R_d/w\le1.02\cdot2^{\eps_*-1}H(x/n)\le0.5101\,H(x/n)$. If the step is $X_0$-near, then
+$x/n\le\Xm+0.5101H(x/n)$. Since $H(v)/v$ is decreasing and $H(X_0)/X_0<10^{-10}$, this gives
+$x/n\le X_0+0.02H(X_0)$, and then $H(x/n)\le H(X_0)(1+10^{-15})$ by the local exponent. Hence $R_d/w\le0.52H(X_0)$ and
+$x/n\le\Xm+0.52H(X_0)$: the level $n$ is terminal.
 
 (iii) The support of $C_n$ lies in $[x/n-R_n,x/n+R_n]$ with $R_n\le1.02H_n$, so every child centre is at most
 $(\Xm+0.6H(X_0)+1.03H(X_0))/2<\Xm$; both filters $\mathbf 1[v/w'\ge\Xm]$ and $\mathbf 1[x/(nw')\ge\Xm]$ vanish.
 \end{proof}
 
-\paragraph{Width variation.} Put $\vartheta_u:=\sup_{v\ge u/2}H'(v)$. By \eqref{eq:RH} and the bound
-$d\log H/d\log v\le\max(16\log\log v/\log v,\,4\cdot10^{-6})\le4\cdot10^{-6}$ for $v\ge X_0/2$,
-$\vartheta_u\le10^{-5}H(u)/u$. Along any chain the nominal landing scales $u_i$ decrease at least geometrically (by a
+\paragraph{Width variation.} For $u\ge\Xm$ put $\vartheta_u:=\sup_{v\ge u/2}H'(v)$. Since $v\ge\Xm/2$ there, $H'(v)\le\eps_*H(v)/v$, and $H(v)/v$ is
+decreasing, so $\vartheta_u\le2\eps_*H(u/2)/u\le10^{-5}H(u)/u$. Along any chain the nominal landing scales $u_i$ decrease at least geometrically (by a
 factor $\ge2$) and stay $\ge\Xm$, and $H(u)/u$ is decreasing, so
 \begin{equation}\label{eq:width-product}
   \prod_i(1+2\vartheta_{u_i})\le\exp\Bigl(2\sum_{j\ge0}\vartheta_{2^j\Xm}\Bigr)\le\exp\bigl(10^{-4}H(X_0)/X_0\bigr)
@@ -132,8 +138,11 @@ $\ge2$ ($\Hord(1)=1$), so that $\Hord(m)=\sum_{g\mid m,\,g<m}\Hord(g)$ for $m\ge
   A_0(\eps):=\sum_{m\ge2}\Hord(m)m^{\eps-2},\qquad A_1(\eps):=\sum_{m\ge2}\Hord(m)m^{\eps-2}\log m .
 \]
 For $\NN=\N$, $\sum_{m\ge1}\Hord(m)m^{-s}=1/(2-\zeta(s))$, whose abscissa of convergence is $\rho_0=1.7286\ldots<1.97$, the
-root of $\zeta(\rho_0)=2$; numerically $A_0(0.03)=2.0673$ and $A_1(0.03)=9.409$. For $\NN$ the same values hold up to a
-factor $1+O(\eta_1)$, by \eqref{eq:HBS}.
+root of $\zeta(\rho_0)=2$; numerically $A_0(0.03)=2.0673$ and $A_1(0.03)=9.409$. For $\NN$ the values differ from these
+by less than $X_0^{-0.1}$. Indeed, the free semigroup $\NN$ also has $\sum_m\Hord(m)m^{-s}=1/(2-\zeta_\NN(s))$, and every
+factorisation of $m<\Xm$ uses only factors $<\Xm$, where $\NN=\N$; so the two sums agree on $m<\Xm$. For the tails,
+$\zeta_\NN(1.8)\le\zeta(1.8)+X_0^{-0.7}\le1.883$ by \eqref{eq:HBS}, so $\sum_m\Hord(m)m^{-1.8}\le8.6$ for both systems, and
+$\sum_{m\ge\Xm}\Hord(m)m^{\eps-2}(1+\log m)\le8.6\,(\Xm)^{-0.16}$ for each.
 
 \subsubsection{The KR bound for nominal kernels}\label{sec:kr-bound}
 
@@ -167,8 +176,11 @@ where $c_n=-\sum_{d<n}\kappa_{d\to n}c_d$ was used.
 We show by induction on $n$ that $\KRn{D_n}\le\frac14\sum_{e\mid n,e>1}|c_e|H_e\Hord(n/e)\,e/n$. Inserting this for $d<n$
 (only $d>1$ contribute, since $D_1=0$) and writing $d=eg$,
 \[
-  \sum_{d\mid n,\,d<n}\frac dn\sum_{e\mid d,\,e>1}|c_e|H_e\Hord(d/e)\frac ed=\sum_{e\mid n,\,1<e<n}|c_e|H_e\frac en\sum_{g\mid n/e,\,g<n/e}\Hord(g)
-  =\sum_{e\mid n,\,1<e<n}|c_e|H_e\Hord(n/e)\frac en,
+\begin{aligned}
+  \sum_{d\mid n,\,d<n}\frac dn\sum_{e\mid d,\,e>1}|c_e|H_e\Hord(d/e)\frac ed
+  &=\sum_{e\mid n,\,1<e<n}|c_e|H_e\frac en\sum_{g\mid n/e,\,g<n/e}\Hord(g)\\
+  &=\sum_{e\mid n,\,1<e<n}|c_e|H_e\Hord(n/e)\frac en,
+\end{aligned}
 \]
 by the recursion $\Hord(m)=\sum_{g\mid m,\,g<m}\Hord(g)$. Adding the term $\frac14|c_n|H_n$, which is the term $e=n$
 ($\Hord(1)=1$), proves the claim.
@@ -200,8 +212,8 @@ For a cofactor $w$ let $\mathcal Q_w\nu:=\int\bx_{H(v/w)}(\cdot-v/w)\,d\nu(v)$ b
 We first prove two properties of $\mathcal Q_w$, for a mass-$0$ measure $\nu$ supported in an interval $I$ with
 $\inf I/w\ge u/2$ and $H_*:=\inf_{v\in I}H(v/w)$:
 \begin{enumerate}[label=(Q\arabic*)]
-\item $\KRn{\mathcal Q_w\nu}\le(1+2\vartheta_u)\KRn{\nu}/w$;
-\item $\TV(\mathcal Q_w\nu)\le(2/H_*)(1+2\vartheta_u)\KRn{\nu}/w$.
+\item $\KRn{\mathcal Q_w\nu}\le(1+\vartheta_u)\KRn{\nu}/w$;
+\item $\TV(\mathcal Q_w\nu)\le(2/H_*)(1+\vartheta_u)\KRn{\nu}/w$.
 \end{enumerate}
 \emph{Proof of (Q1).} For $\operatorname{Lip}f\le1$ put $g(v):=\int f\,d\bx_{H(v/w)}(\cdot-v/w)=\int_{-1/2}^{1/2}f(v/w+sH(v/w))\,ds$.
 Then $|g'(v)|\le\int_{-1/2}^{1/2}(1/w)(1+|s|H'(v/w))\,ds\le(1+\vartheta_u)/w$, so
@@ -222,9 +234,13 @@ exactly $H_n$, so
 The support of $D_d$ lies within $R_d$ of $x/d$, so its image centres satisfy $v/w\ge(x/n)/2$, and on it
 $H(v/w)\ge H_n(1-\vartheta_{x/n})$ by the width-variation estimate of \S\ref{sec:kernels-steps}. By (K4) and (Q1),
 \[
-  \KRn{D_n}\le\tfrac14|c_n|H_n+(1+2\vartheta_{x/n})\sum_{d\mid n,\,d<n}\frac dn\KRn{D_d},
+  \KRn{D_n}\le\tfrac14|c_n|H_n+(1+\vartheta_{x/n})\sum_{d\mid n,\,d<n}\frac dn\KRn{D_d},
 \]
-and by (Q2), $\TV(C_n^{x,\nom})\le|c_n|+(2/H_n)(1+3\vartheta_{x/n})\sum_{d<n}(d/n)\KRn{D_d}$. Let $\Theta_n$ be the largest
+and by (Q2) and $(1+\vartheta)/(1-\vartheta)\le1+3\vartheta$,
+\[
+  \TV(C_n^{x,\nom})\le|c_n|+(2/H_n)(1+3\vartheta_{x/n})\sum_{d<n}(d/n)\KRn{D_d}.
+\]
+Let $\Theta_n$ be the largest
 product $\prod_i(1+3\vartheta_{u_i})$ over the nominal landing scales $u_i$ of chains ending at $n$. The induction of
 Theorem~\ref{thm:kr}, with every term multiplied by these factors, gives
 $\KRn{D_n}\le\frac14\Theta_n\sum_{e\mid n,e>1}|c_e|H_e\Hord(n/e)\,e/n$ and the TV bound with $\frac12\Theta_n$. Finally
@@ -249,8 +265,10 @@ For a start $x$ put $W^{\nom}_x(u):=\sum_{x/n\in[u,2u)}\TV(C_n^{x,\nom})/n$ and 
 \item $W^{\nom}_x(u)\le W^{\mathrm{sh}}_x(u)+\frac12\lambda_0\sum_{m\ge2}\Hord(m)m^{\eps-2}W^{\mathrm{sh}}_x(um)$.
 \item Hence, by Corollary~\ref{cor:saias}, for every start $y\in[X_0,x]$ and every $u\ge X_0/2$,
   \[
-    W^{\nom}_y(u)\le C_S\bigl[(1+\tfrac12\lambda_0A_0)\log(2u)+\tfrac12\lambda_0A_1\bigr]/\log y\le C_N\log(2u)/\log y,\qquad
-    C_N:=C_S\bigl(2.04+4.71/\log X_0\bigr)\le158 .
+  \begin{aligned}
+    W^{\nom}_y(u)&\le C_S\bigl[(1+\tfrac12\lambda_0A_0)\log(2u)+\tfrac12\lambda_0A_1\bigr]/\log y\le C_N\log(2u)/\log y,\\
+    C_N&:=C_S\bigl(2.04+4.71/\log X_0\bigr)\le158 .
+  \end{aligned}
   \]
 \item $\sum_n\TV(C_n^{x,\nom})/n\le2.04(\log x+B_1)$; this needs no Saias bound.
 \end{enumerate}
@@ -260,10 +278,11 @@ For a start $x$ put $W^{\nom}_x(u):=\sum_{x/n\in[u,2u)}\TV(C_n^{x,\nom})/n$ and 
 Multiply Theorem~\ref{thm:kr-random} by $\mathbf 1[x/n\in[u,2u)]/n$, sum over $n$, and substitute $n=em$ ($m\ge2$). By
 \eqref{eq:RH}, $H_e/H_{em}\le m^\eps$, and $x/n\in[u,2u)$ if and only if $x/e\in[um,2um)$. This gives (a). For (b), insert
 $W^{\mathrm{sh}}_y(v)\le C_S\log(2v)/\log y$ and use $\log(2um)=\log(2u)+\log m$; then
-$1+\frac12\lambda_0A_0(0.03)\le1+1.03365(1+3\delta)\le2.034\le2.04$ and $\frac12\lambda_0A_1(0.03)\le4.7045(1+3\delta)\le4.71$,
+$1+\frac12\lambda_0A_0(0.03)\le1+1.03367(1+3H(X_0)/X_0)\le2.034\le2.04$ and
+$\frac12\lambda_0A_1(0.03)\le4.7045(1+3H(X_0)/X_0)\le4.71$ (with the values for $\NN$, which differ by $<X_0^{-0.1}$),
 and $\log(2u)\ge\log X_0$. So $C_N$ is the same constant as with frozen widths. For (c), sum (a) over all dyadic $u$ and use
 $\sum_e|c_e|/e\le\log x+B_1$ (Lemma~\ref{lem:lemmaM}). Theorem~\ref{thm:kr-random} and the chain-sum identity hold verbatim
-from every start $y\le x$, with $c_m(y)=\mu(m)\chi^t_y(m)$.
+from every start $y\le x$, with $c_m(y)=\mu(m)\chi^t_y(m)\mathbf 1[y/m\ge\Xm]$.
 \end{proof}
 
 \subsubsection{The true kernels}\label{sec:true-kernels}
@@ -274,11 +293,12 @@ $\nu\mapsto-\int Q_{n/d}(v,\cdot)\,d\nu(v)$ and its nominal version, so that $C_
 
 \begin{proposition}[True kernels]\label{prop:true-kernels}
 % v3: Proposition 3.8
-Put $W^{\mathrm{op}}_x(u):=\sum_{x/n\in[u,2u)}\TV(C_n^x)/n$. If $\lambda_0C_NE_\eta\le\frac12$ (Lemma~\ref{lem:tau-near}), then on
-$\Good(<x)$
+Put $W^{\mathrm{op}}_x(u):=\sum_{x/n\in[u,2u)}\TV(C_n^x)/n$, and let $W^{\mathrm{op,nt}}_x(u)$ be the same sum restricted to
+non-terminal levels $n$. If $\lambda_0C_NE_\eta\le\frac12$ (Lemma~\ref{lem:tau-near}), then on $\Good(<x)$
 \begin{align*}
-  W^{\mathrm{op}}_x(u)&\le2C_N\log(2u)/\log x\quad(u\ge2X_0),\qquad
-  W^{\mathrm{op}}_x(u)\le5.1\,C_N\log(2u)/\log x\quad(u\in\{X_0/2,X_0\}),\\
+  W^{\mathrm{op,nt}}_x(v)&\le2C_N\log(2v)/\log x\quad\text{for every }v,\\
+  W^{\mathrm{op}}_x(u)&\le2C_N\log(2u)/\log x\quad(u\ge2X_0),\\
+  W^{\mathrm{op}}_x(u)&\le5.1\,C_N\log(2u)/\log x\quad(u\in\{X_0/2,X_0\}),\\
   \sum_n\TV(C_n^x)/n&\le\frac{2.04(\log x+B_1)}{1-2.04\lambda_0\theta_*}+3.2\le2.1(\log x+B_1)+3.2 .
 \end{align*}
 \end{proposition}
@@ -289,12 +309,14 @@ $\Good(<x)$
   \tilde E_n=S_n+\sum_{d<n}P^{\nom}_{d\to n}\tilde E_d,\qquad S_n:=\sum_{d<n}(P_{d\to n}-P^{\nom}_{d\to n})C_d .
 \]
 By Lemma~\ref{lem:near-structure}(i), only $\tau$-near and $X_0$-near steps contribute to $S_n$. On a step $d\to n$ the true
-and nominal filters at a centre $c$ are $\varphi_\tau(c)\varphi_{X_0}(c)$ and $\kappa_\tau\kappa_{X_0}$; write their difference as
-$(\varphi_\tau-\kappa_\tau)\varphi_{X_0}+\kappa_\tau(\varphi_{X_0}-\kappa_{X_0})$, and let $S^\tau_n$ and $S^{X_0}_n$ collect the
-first and second parts. The first vanishes off $\tau$-near steps and the second off $X_0$-near steps. Each part multiplies the
-measure $D_wC_d$ of centres by a function with values in $[-1,1]$ and then places a window (a probability), so by (K5)
+and nominal filters at a centre $c$ are $\varphi_\tau(c)\varphi_{X_0}(c)$ and $\kappa_\tau\kappa_{X_0}$. On $X_0$-near steps we
+assign the whole difference $\varphi_\tau\varphi_{X_0}-\kappa_\tau\kappa_{X_0}$ to $S^{X_0}_n$. On the other steps
+$\varphi_{X_0}=\kappa_{X_0}$ on the support, and the difference $(\varphi_\tau-\kappa_\tau)\kappa_{X_0}$ goes to $S^\tau_n$; it vanishes
+unless the step is $\tau$-near and $x/n\ge\Xm$, which is exactly the notion of $\tau$-near used in Lemma~\ref{lem:tau-near}.
+Each part multiplies the measure $D_wC_d$ of centres by a function with values in $[-1,1]$ and then places a window (a
+probability), so by (K5)
 \[
-  \TV(S_n^\tau)\le\sum_{d\to n\ \tau\text{-near}}\TV(C_d),\qquad \TV(S_n^{X_0})\le\sum_{d\to n\ X_0\text{-near}}\TV(C_d).
+  \TV(S_n^\tau)\le\sum_{\substack{d\to n\ \tau\text{-near, not }X_0\text{-near}\\ x/n\ge\Xm}}\TV(C_d),\qquad \TV(S_n^{X_0})\le\sum_{d\to n\ X_0\text{-near}}\TV(C_d).
 \]
 By induction, $\tilde E_n=\sum_{n'\mid n}\mathcal T^{\nom}_{n'\to n}S_{n'}$, where $\mathcal T^{\nom}_{n'\to n}$ is the signed sum
 over nominal chains from level $n'$ to level $n$ ($\mathcal T_{n\to n}=\mathrm{id}$).
@@ -323,7 +345,8 @@ with $d$ non-terminal. Let $M$ be the least constant with $W^{\mathrm{op}}_x(v)\
 non-terminal levels and the $\tau$-parts at terminal levels; $M<\infty$ since $n\le x/\Xm$. Then
 $\sum_d\TV(C_d)/d\cdot\tilde\eta(x/d)\le\sum_v W^{\mathrm{op}}_x(v)\sup_{[v,2v)}\tilde\eta\le ME_\eta/\log x$, and
 $W^{\mathrm{op}}_x(u)\le W^{\nom}_x(u)+\lambda_0C_NME_\eta\log(2u)/\log x$. Hence $M\le C_N(1+\lambda_0ME_\eta)$, and
-$M\le2C_N$ since $\lambda_0C_NE_\eta\le\frac12$.
+$M\le2C_N$ since $\lambda_0C_NE_\eta\le\frac12$. This is the bound on $W^{\mathrm{op,nt}}_x$, and also the bound
+$2C_N\log(2u)/\log x$ for $u\ge2X_0$, where there are no terminal levels.
 
 \emph{(iii) Terminal levels.} They gain
 \[
@@ -336,22 +359,29 @@ $M\le2C_N$ since $\lambda_0C_NE_\eta\le\frac12$.
 \item For $v>X_0^2/2$, the window $I_v$ has length $\le2.1H(v)/X_0$ at height $v/X_0$. By the lag bound
   Corollary~\ref{cor:lag}, $|N-T|\le H$ at that height, and under the target \eqref{eq:target}, $T(I_v)\le2|I_v|+2+\#\Abs(I_v)$;
   by Lemma~\ref{lem:lemmaP}, $\#\Abs(I_v)\le2(v/X_0)^{\theta/2}$. So $I_v$ holds at most
-  $2.1H(v)/X_0+2H(v/X_0)+4+2(v/X_0)^{\theta/2}$ elements, and
-  $\eta_{X_0}(v)\le1.01\bigl(2.1H(v)+2X_0H(v/X_0)+4X_0+2X_0(v/X_0)^{\theta/2}\bigr)/v$.
+  $4.2H(v)/X_0+2H(v/X_0)+4+2(v/X_0)^{\theta/2}$ elements, and
+  $\eta_{X_0}(v)\le1.01\bigl(4.2H(v)+2X_0H(v/X_0)+4X_0+2X_0(v/X_0)^{\theta/2}\bigr)/v$.
 \item Since $\eta_{X_0}(v)=0$ for $v<2\Xm-1.1H(X_0)$, these give
   $\sum_{v\ \text{dyadic}}\log(2v)\sup_{[v,2v)}\eta_{X_0}\le1.52\log(2X_0)$ and $\sum_v\sup_{[v,2v)}\eta_{X_0}\le1.52$: the first
   bullet contributes $0.506\log(2X_0)$ from the block $[X_0,2X_0)$ and $1.01\sum_{j\ge1}2^{-j}(\log(2X_0)+j\log2)$ from the
   others, and the second bullet less than $e^{-10^7}$.
 \end{itemize}
-Terminal levels lie in the blocks $u\in\{X_0/2,X_0\}$. With (ii) they add at most $2C_N\cdot1.52\log(2X_0)/\log x$ there.
-Since $1.52\log(2X_0)\le1.53\log(2u)$ for these $u$, the total there is $\le5.1\,C_N\log(2u)/\log x$.
+Terminal levels lie in the blocks $u\in\{X_0/2,X_0\}$. With (ii) they add at most $2C_N\cdot1.52\log(2X_0)/\allowbreak\log x$ there.
+Since $1.52\log(2X_0)\le1.53\log(2u)$ for these $u$, the total there is
+\[
+  \le5.1\,C_N\log(2u)/\log x.
+\]
 
 \emph{The $\infty$-norm.} Run (ii) with Corollary~\ref{cor:kr-weights}(c) in place of (b): the transfer from $n'$ adds
 $\le2.04\lambda_0(\log(x/n')+B_1)\TV(S^\tau_{n'})/n'$, and grouping by parents gives the weight
-$\theta(v)=\sum_{w\ \tau\text{-near at }v}(\log(v/w)+B_1)/w$; this yields the first term. For (iii) use the block bound
+\[
+  \theta(v)=\sum_{w\ \tau\text{-near at }v}(\log(v/w)+B_1)/w;
+\]
+this yields the first term. For (iii) use the block bound
 $\sup_vW^{\mathrm{op}}_x(v)\le2.1$, which needs no Saias bound: $W^{\mathrm{sh}}_x(v)\le\sum_{e\in(x/2v,x/v]}1/e\le1$, so
 $W^{\nom}_x(v)\le1+\frac12\lambda_0A_0\le2.04$ by Corollary~\ref{cor:kr-weights}(a), and the $\tau$-part adds
-$\le2.04\sum_v\sup\eta\le10^{-6}$. That gives $\le2.1\cdot1.52\le3.2$.
+$\le2.04\lambda_0\cdot2.1\sum_v\sup_{[v,2v)}\eta\le10^{-6}$ (each transfer costs $\le2.04\lambda_0$ without Saias weights, the
+parents contribute $\le\sup_vW^{\mathrm{op}}_x(v)\le2.1$ per block, and $\sum_v\sup\eta\le E_\eta^0/\log X_0$). That gives $\le2.1\cdot1.52\le3.2$.
 
 \emph{No circularity.} The inputs (Lemma~\ref{lem:lemmaM}, Corollary~\ref{cor:saias}, Lemma~\ref{lem:tau-near},
 Corollary~\ref{cor:lag}) concern $\NN$ on $[1,x/\Xm]$ only.
@@ -366,20 +396,24 @@ because they are terminal.
 
 \begin{lemma}[$\tau$-near energy]\label{lem:tau-near}
 % v3: Lemma 3.9
-For $v\ge\Xm$ put $\eta(v):=\sum_{w\ \tau\text{-near at }v}1/w$, $\tilde\eta(v):=\sum_{w\ \tau\text{-near at }v}1/(w\log(v/w))$
-and $\theta(v):=\sum_{w\ \tau\text{-near at }v}(\log(v/w)+B_1)/w$, where $w$ is $\tau$-near at $v$ if
+For $v\ge\Xm$ put
+\begin{gather*}
+  \eta(v):=\sum_{w\ \tau\text{-near at }v}1/w,\quad\tilde\eta(v):=\sum_{w\ \tau\text{-near at }v}1/(w\log(v/w))\\
+  \text{and}\quad\theta(v):=\sum_{w\ \tau\text{-near at }v}(\log(v/w)+B_1)/w,
+\end{gather*}
+where $w$ is $\tau$-near at $v$ if
 $|\tau_w-v/w|\le2H(v/w)$ and $v/w\ge\Xm$. Put
-\[
+\begin{gather*}
   E_\eta:=\sum_{v\ \text{dyadic}}\log(2v)\sup_{[v,2v)}\tilde\eta,\quad
-  E_\eta^0:=\sum_{v\ \text{dyadic}}\log(2v)\sup_{[v,2v)}\eta,\quad
+  E_\eta^0:=\sum_{v\ \text{dyadic}}\log(2v)\sup_{[v,2v)}\eta,\\
   E_\theta:=\sum_{v\ \text{dyadic}}\log(2v)\sup_{[v,2v)}\theta,\quad \theta_*:=\sup_v\theta(v).
-\]
-Then, on $\Good(<y)$ at all heights used,
-\[
-  E_\eta,\ E_\eta^0,\ E_\theta,\ \theta_*\le10^4H(X_0)\frac{\log^2X_0}{X_0}=10^4\Lambda^2e^{8(\log\Lambda)^2-\Lambda}\le e^{-0.99\Lambda},\qquad
+\end{gather*}
+Then, on $\Good(<x)$, at every height $\le x$ where these quantities are evaluated,
+\begin{gather*}
+  E_\eta,\ E_\eta^0,\ E_\theta,\ \theta_*\le10^4H(X_0)\frac{\log^2X_0}{X_0}=10^4\Lambda^2e^{8(\log\Lambda)^2-\Lambda}\le e^{-0.99\Lambda},\\
   E_\eta^{(2)}:=\sum_{v\ \text{dyadic}}(\log3v)^2\sup_{[v,2v)}\eta\le10^4H(X_0)\frac{\log^3X_0}{X_0},
-\]
-and $\sup_y\log y\cdot\eta(y)\le e^{-0.99\Lambda}$. (At $\Lambda=10^8$ these are $e^{-(10^8-2762)}$ and $e^{-(10^8-2770)}$.)
+\end{gather*}
+and $\sup_y\log y\cdot\eta(y)\le e^{-0.99\Lambda}$. (At $\Lambda=10^8$ the first bound is $e^{-(10^8-2762)}$.)
 \end{lemma}
 
 \begin{proof}
@@ -388,33 +422,55 @@ order, so that $\tau_w=t(p)$ and $\Pplus(m)\le p+H(p)$. Since $|t(p)-p|\le H(p)$
 gives $|p-v'/(pm)|\le3H(p)(1+o(1))$, i.e. $p^2\in v'/m\pm3.1\,pH(p)$. So $p$ lies in a window of length $3.1H(p_0)$
 around $p_0:=\sqrt{v'/m}\ge\Xm$.
 
-\emph{Counting.} Let $[P,2P)$ be the dyadic block of $p_0$. The window lies in $[P,4P]$ and has length
-$\le3.2H(P)\le6H(P)$, so by Corollary~\ref{cor:localcount} it holds at most $13.4\cdot3.2H(P)+K_{\mathrm{loc}}(P)+2\le
-43H(P)+K_{\mathrm{loc}}(P)+2$ primes, each with $1/p\le1.01/P$. For $v'\in[v,2v)$ this forces $m\in(v/4P^2,2v/P^2]$, and a
+\emph{Counting.} Let $[P,2P)$ be the dyadic block of $p_0$. The window lies in $[P-1.6H(P),\,2P+1.6H(P)]\subset[P',4P']$ with $P':=0.51P$ and has length
+$\le3.2H(P)\le6H(P')$, so by Corollary~\ref{cor:localcount} it holds at most $13.4\cdot3.2H(P)+K_{\mathrm{loc}}(P')+2\le
+43H(P)+K_{\mathrm{loc}}(P)+2\le46H(P)$ primes ($K_{\mathrm{loc}}$ is increasing and $K_{\mathrm{loc}}\le H$), each with
+$1/p\le1.01/P$ (as $p\ge P-1.6H(P)$). For $v'\in[v,2v)$ this forces $m\in(v/4P^2,2v/P^2]$, and a
 pair $(P,m)$ occurs for at most three dyadic $v$. The $m$ are $4P$-smooth, so by Lemma~\ref{lem:cm},
 $\sum_m\log(8mP^2)/m\le5.4\log^2P(1+5/\log P)$ and $\sum_m1/m\le1.9\log P$.
 
 \emph{$E_\eta$.} Since $\log(2v)/\log(v/w)\le1.01\log(8mP^2)/\log P$, each $P$-block contributes at most
-$16.5(43H(P)+K_{\mathrm{loc}}(P)+2)\log P/P$.
+$16.6(43H(P)+K_{\mathrm{loc}}(P)+2)\log P/P$.
 
 \emph{$E_\eta^0$, $E_\eta^{(2)}$, $E_\theta$, $\theta_*$.} $E_\eta^0$ has no division by $\log(v/w)$; $E_\eta^{(2)}$ has one
 more factor $\le1.01\log(8mP^2)$; $E_\theta$ has the extra factor $\log(v/w)+B_1\le1.01\log4P$. So each $P$-block contributes
-$\le16.5(43H(P)+K_{\mathrm{loc}}(P)+2)\cdot1.02\log^2P/P$ to $E_\eta^0$ and $E_\theta$ (one more $\log P$ to $E_\eta^{(2)}$),
+$\le16.6(43H(P)+K_{\mathrm{loc}}(P)+2)\cdot1.02\log^2P/P$ to $E_\eta^0$ and $E_\theta$ (one more $\log P$ to $E_\eta^{(2)}$),
 and $\theta_*$ is bounded by the same expression without the weight $\log(2v)$.
 
 \emph{Summation.} The blocks decay geometrically (ratio $\le2^{\eps-1}\le0.52$, by \eqref{eq:RH}), and
-$K_{\mathrm{loc}}(P)\le H(P)$. Summing from $P=X_0/2$ gives $\le2.1\cdot16.5\cdot44\cdot1.02\cdot H(X_0)\cdot4\log^2X_0/X_0
-\le10^4H(X_0)\log^2X_0/X_0$.
+$K_{\mathrm{loc}}(P)\le H(P)$. Summing from $P=X_0/2$ gives
+\[
+  \le2.1\cdot16.6\cdot46\cdot1.02\cdot H(X_0)\cdot4\log^2X_0/X_0\le10^4H(X_0)\log^2X_0/X_0.
+\]
 
-\emph{$\log y\cdot\eta(y)$.} The $m$ with $p_0\in[P,2P)$ form one block $(y/4P^2,y/P^2]$ of $4P$-smooth elements, whose
-$1/m$-weight is $\le2C_0\rho(\log(y/P^2)/\log4P)e^{o(1)}$ by Lemma~\ref{lem:smooth-v}. This absorbs the factor $\log y$
-when $\log y\ge3\log P$, and $\log y\le3\log P$ otherwise.
+\emph{$\log y\cdot\eta(y)$.} Fix $y$. As in the first step, every $\tau$-near $w$ at $y$ is $w=pm$ with $p$ in a window of
+length $\le3.2H(P)$ around $p_0=\sqrt{y/m}\in[P,2P)$, $P\ge X_0/2$; the window holds $\le46H(P)$ primes, each with
+$1/p\le1.01/P$. Every prime $q$ of $m$ has $t(q)\le t(p)$, so $q\le p+2H(p)\le4P$, and $m\in(y/4P^2,y/P^2]$. Hence
+\[
+  \eta(y)\le\sum_{P\ \text{dyadic}\ge X_0/2}\frac{47H(P)}P\,V_P(y),\qquad
+  V_P(y):=\sum_{m\in(y/4P^2,\,y/P^2],\ \Pplus(m)\le4P}\frac1m .
+\]
+Put $L:=\log4P\ge100$ and $u:=\log(y/4P^2)/L$, so that $\log y\le(u+2)L$ and $V_P(y)$ is at most two dyadic blocks
+$v(\ell,4P)$ with $\ell\le(u+1)L$.
+\begin{itemize}
+\item If $u<1$: each of the two dyadic blocks has $\sum1/m\le1$ (the harmonic sum over $(Y,2Y]$, by \eqref{eq:HBS} above
+  $\Xm$), so $V_P(y)\le2$ and $\log y\cdot V_P(y)\le2(u+2)L\le6L$.
+\item If $1\le u\le L$: Lemma~\ref{lem:smooth-v} with $z=4P$ gives $V_P(y)\le2C_0\rho(u)e^{a_V}$ with
+  $a_V\le4\cdot3.2\,u^2\log(u+2)/(uL)\le12.8\log(L+2)$. Since $(u+2)\rho(u)\le3$, $\log y\cdot V_P(y)\le4.2L(L+2)^{12.8}$.
+\item If $u>L$: Lemma~\ref{lem:rankin-crude} gives $V_P(y)\le2e^{14}Le^{-u}$, and $(u+2)L\cdot2e^{14}Le^{-u}\le2e^{14}L^2(L+2)e^{-L}\le1$.
+\end{itemize}
+In every case $\log y\cdot V_P(y)\le5(L+2)^{14}$. Summing over $P$ (the terms $H(P)(\log4P+2)^{14}/P$ decay geometrically, with
+ratio $\le0.53$, and the first is $\le2.01H(X_0)(\Lambda+4)^{14}/X_0$),
+\[
+  \log y\cdot\eta(y)\le2.2\cdot47\cdot5\cdot2.01\,H(X_0)(\Lambda+4)^{14}/X_0\le e^{-\Lambda+8(\log\Lambda)^2+14\log(\Lambda+4)+7}\le e^{-0.99\Lambda}.
+\]
 
 \emph{Numerics.} $H(X_0)=e^{8(\log\Lambda)^2}$, which is $\le e^{2715}$ at $\Lambda=10^8$, and $K_{\mathrm{loc}}(X_0)\le H(X_0)$. For
-every $\Lambda\ge10^8$, $9.3+2\log\Lambda+8(\log\Lambda)^2\le0.01\Lambda$, which gives the bounds $e^{-0.99\Lambda}$.
+every $\Lambda\ge10^8$, $9.3+2\log\Lambda+8(\log\Lambda)^2\le0.01\Lambda$ and $7+14\log(\Lambda+4)+8(\log\Lambda)^2\le0.01\Lambda$,
+which give the bounds $e^{-0.99\Lambda}$.
 \end{proof}
 
-Consequently $C_NE_\eta\le\frac12$ and $2.04\theta_*\le0.02$, with room $e^{-10^8}$. The per-scale constant $K_{\mathrm{loc}}(P)$
+Consequently $\lambda_0C_NE_\eta\le\frac12$ and $2.04\lambda_0\theta_*\le0.02$, with room $e^{-10^7}$. The per-scale constant $K_{\mathrm{loc}}(P)$
 is essential: a constant growing with the current scale would make $E_\eta$ grow with $x$. The quantity $E_\eta^0$ is what
 makes the $\tau$-near term $\NT$ summable with the weights $\log(2u)$ of Lemma~\ref{lem:predictable}; a pointwise bound on
 $\log y\cdot\eta(y)$ alone would give a sum growing like $\log\log x$.

@@ -57,7 +57,7 @@ def S_cell(la, lb, ua, ub, vmode=False):
     UbMu0 = q4 * isqrt(2 * ilog(l / arb(10) ** 8) + 4)   # Ubar(l) - u0(l), exact form
     gmax = (B / l) * 8 * isq(1 + I(Ub)) * ilog(2 + I(Ub)) + ku * ipos(UbMu0 + cu) / sl
     if lo_(r0) <= hi_(gmax): return -math.inf, "r0<=gamma_max"
-    if lo_(r0) <= hi_(gam1): return -math.inf, "r0<=gamma_1"   # explicit (referee B §21); never binds on the domain
+    if lo_(r0) <= hi_(gam1): return -math.inf, "r0<=gamma_1"   # explicit (seam-safe, directed rounding); never binds on the domain
     ur = u * r
     tailII = gam1 / (r0 * (r0 - gam1)) + iexp(-(r0 - gmax) * S1) / (r0 - gmax)
     Mm1 = iexpm1(betaI) * (1 - 1 / ur) + iexpm1(betaII) / ur - iexp(betaI) * (-iexpm1(-alpha)) * (1 - 1 / r) \

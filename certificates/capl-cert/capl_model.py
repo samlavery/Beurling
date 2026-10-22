@@ -1,4 +1,4 @@
-# Model for Theorem 4.17 (v3 part-G). All quantities in log space; l = log L, L = log z, Lam = log X0.
+# Model for Theorem caplw (Section 6 of the paper). All quantities in log space; l = log L, L = log z, Lam = log X0.
 import math
 LAM = 1e8; THETA_B = 1/8; SLACK = 1.0
 def lse(a, b): m = max(a, b); return m + math.log(math.exp(a - m) + math.exp(b - m))
@@ -17,8 +17,8 @@ def j_of(logc, l, lam=LAM):
 def rhs_over_L(l):
     """(L + 10 log L + 10)/L"""
     return SLACK*(1 + (10*l + 10)*math.exp(-l) if l < 700 else 1.0)
-def routeH_ok(logc, l_hi, l_lo, lam=LAM):
-    """route H criterion on the cell [l_lo, l_hi] with capacity c fixed (worst corner l_hi; degree cap at l_lo)."""
+def highdeg_ok(logc, l_hi, l_lo, lam=LAM):
+    """High-degree-row criterion (Step 2 of the proof of Theorem caplw) on the cell [l_lo, l_hi] with capacity c fixed (worst corner l_hi; degree cap at l_lo)."""
     logD, logr0, logpi = base(l_hi, lam)
     j = j_of(logc, l_hi, lam)
     if j < 0: return False
@@ -36,14 +36,14 @@ def routeH_ok(logc, l_hi, l_lo, lam=LAM):
             else: hi = mid
         kstar = lo
     Dstar = math.floor(kstar)
-    logD_hi_cap = l_hi - math.log(lam)   # degree cap at the TOP of the cell (fix-smooth §17: l2, not l1)
+    logD_hi_cap = l_hi - math.log(lam)   # degree cap at the TOP of the cell (worst corner: upper end of the cell)
     if logD_hi_cap < 700 and Dstar >= math.exp(logD_hi_cap) - 1: return True   # every element has degree <= D*: Cap >= c impossible
     k = Dstar + 1
-    row_gain = k*(lam - 1 - (lse(m_log, math.log(k)) - math.log(k))) - math.log(3)   # -log w_row, Lemma 4.15(b)
+    row_gain = k*(lam - 1 - (lse(m_log, math.log(k)) - math.log(k))) - math.log(3)   # -log w_row, Lemma rowweights(b)
     gain_over_L = (1 + j)*row_gain*(math.exp(-l_hi) if l_hi < 700 else 0.0)
     return gain_over_L >= rhs_over_L(l_hi)
 def rankin_rho(u):
-    """log(1/rho)-type saving per row from Psi(Y,X0) <= Y exp(-0.9 u log u), valid for u >= 1e4 (Lemma 4.15(c))."""
+    """log(1/rho)-type saving per row from Psi(Y,X0) <= Y exp(-0.9 u log u), valid for u >= 1e4 (Lemma rowweights(c))."""
     return 0.9*u*math.log(u) if u >= 1e4 else 0.0
 def dickman_ok(logc, l_hi, l_lo, lam=LAM):
     """sec 16.16 rows (any degree; k = 1 dominates) on the cell; g lower bound uses D at l_lo for the Dickman part."""
@@ -62,14 +62,14 @@ def dickman_ok(logc, l_hi, l_lo, lam=LAM):
 def logy_of(logc, l):
     logM1 = logc + math.log(2)
     lH = max(8*l*l, 2*logM1)
-    logL0 = max(5*l, math.log(48) - 2*math.log(0.15) + logM1 + 3*l)   # L0 = max(L^5, 48 M1 L^3 / c'^2), c' = 0.15 (E2E F-4.4)
+    logL0 = max(5*l, math.log(48) - 2*math.log(0.15) + logM1 + 3*l)   # L0 = max(L^5, 48 M1 L^3 / c'^2), c' = 0.15
     return lH + logL0 + 6*l + math.log(2), logM1
 def lemmaP_ok(logc, l_hi, l_lo, lam=LAM, theta_b=THETA_B):
     """A empty (y <= X0) at l_hi, or (12.2) at worst corners."""
     logy, logM1 = logy_of(logc, l_hi)
     if logy <= lam: return True
     logu0 = math.log(theta_b) + l_lo - math.log(logy)
-    if logu0 <= 1: return False
+    if logu0 < math.log(100): return False   # (12.2) requires u0 >= 100
     lhs = math.log(0.9) + logu0 + math.log(logu0)
     rhs = math.log(logy + (logM1 + 6*l_hi - math.log(2)) + 4*l_hi)
     return lhs >= rhs + math.log(SLACK)

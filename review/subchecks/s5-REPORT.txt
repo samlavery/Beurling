@@ -1,0 +1,147 @@
+§5 SUB-CHECKER REPORT — paper 05-queue.tex (+ B §capl-cert, §depcheck) vs v3 §4 (l.1627–2316), App. N, post-E2E, Applied list
+Paper commit d307ffd. NOTE: 05-queue.tex compiles as SECTION 6 (items 6.x; thm:caplw = Thm 6.22, lem:lemmaP = 6.25) — compiled copy in /tmp/paper-check-s5/build; repo untouched. No hard-coded theorem/section numbers in the file (all 214 refs are \cref).
+
+(1) FINDINGS
+[FIXABLE] F1 05-queue.tex:800-801 (thm:caplw(a)) — v3 2118-2119 (inherited)
+  - (a) is stated for ANY S′⊂S(J) with rank<r0 and Cap≥c.
+  - Step 0 applies lem:heavy to S′, which needs |S′|≥r0+φ(r0).
+  - Step 2's degree completion uses lem:reduction(i), which needs lem:heavy(iii). Both hold only for S′=S(J)∩V with V a minimal heavy subspace.
+  - prop:ecl uses only that case.
+  - Fix: restate (a) for S′=S(J)∩V as in lem:heavy. Alternatively drop the ≤Q elements of degree ≤D*: Cap stays ≥c−√c, every row then has degree ≥D*+1, and the 1.63L margin absorbs this.
+
+[FIXABLE] F2 05-queue.tex:897-899 (Step 6, 3rd bullet) — v3 2185
+  - The chain "≤1.06γ*Λ/L ≤ 2.8A/(Λ^{3/2}e^{s/2}) ≤ 1.8A²/(Λℓ²)" and the test "e^{s/2}√Λ ≥ 1.5ℓ²/A" both assume Λ_s=Λ.
+  - For Λ>Λ_s:
+    - dominance holds but the test fails at 165,140 points of my grid (Λ∈[1e8,1e30]);
+    - γ*'s log-derivative reaches 0.98, not ≤0.53.
+  - Example: Λ=1e10, s=−18.82. The actual raise slope is 8.4e-9, larger than every intermediate bound (4.7e-9, 9.8e-10, 2.0e-10).
+  - The conclusion ≤4.1e-8 is still true numerically: the maximum is 2.7e-8, at Λ=1e8, s≈−11.44.
+  - Fix: γ*Λ/L ≤ γ*²/((4ℓ²−log4)e^s) ≲ 1.7(A+1)²/(ℓ²Λ_s), so the slope is ≤1e-7.
+  - Still enough for d log H/d log z ≤4e-6, ρ_H ≤ 1+1.2e-5, and (R_H); nothing downstream changes.
+
+[FIXABLE] F3 05-queue.tex:984, 1007-1008 (lem:rhoA(b)) — v3 2237, 2252
+  - "osc_t ≤ 2(3t+K_loc)/u^{θ_b}" is justified by "each strip bounded by cor:localcount". The corollary cannot do this:
+    - T has a unit jump at each n∈𝒜 (eq:target), so #𝒜 cancels in |N−T|;
+    - its line T(J) ≤ 2|J|+2+#𝒜(J) is circular for this purpose.
+  - (b) has no consumer: 04f-bridge.tex:59 says it is not used, and tab:queuedeps lists none.
+  - Fix: delete (b) and the cor:localcount→(b) row, or re-prove it from Lemma P.
+  - Correction #8's arithmetic in (b) is itself fine.
+
+[FIXABLE] F4 dependency bookkeeping — 05-queue.tex:115 and 1076; 01-setup table; certificates/depcheck; B-certificates.tex:179
+  - Correction #2 makes (F3′) use thm:caplw(c). ρ_H (before Lemma 4.1) also uses it. Neither edge is recorded.
+  - Adding F3F4→T4.17 to a copy of depcheck gives a same-time cycle: T4.17→L4.14→P4.13→LA.4→F3F4→T4.17.
+  - Not a real circularity: (c) is a deterministic parameter fact, and Step 6 does not use (a).
+  - Fix: split thm:caplw into an (a) node and a (b)/(c) node. Then B's "full dependency graph" claim holds again.
+
+[FIXABLE] F5 05-queue.tex (all 214 \cref)
+  - Every \cref renders as lowercase "theorem N.M" whatever the environment type:
+    - "Lemma P (theorem 6.25)";
+    - lem:cm → "theorem 5.1(iv)";
+    - lem:blin → "theorem 7.1(1)";
+    - also "eq. (71)" and "section A".
+  - No other section file uses \cref; they all write Lemma~\ref.
+  - Fix: use typed \ref, or configure cleveref (capitalise, plus \crefname for the shared-counter environments).
+
+[FIXABLE] F6 05-queue.tex:163 and E4 row (l.364) — v3 1724 (inherited)
+  - The window family behind "≤72P·H(P) grid windows" for Land(J) is never specified. "Grid windows" (l.29) means the length-2δ1 intervals.
+  - cor:localcount claims the bound for every real J (|J|<1 included), which needs a stated family plus a sandwich.
+  - The sandwich adds about +10 to K_loc's 13. Irrelevant downstream, since K_loc ≥ 2B.
+
+[COSMETIC] C1 l.852-854 (Step 2)
+  - "½+2/A ≤ 0.53" is false: on the ramp A≥64.15, so ½+2/A = 0.5312 (actual rate 0.5306).
+  - "γ*(s_H)+7.17t ≤ γ(s_H+t)" is false: the slope is 7.16668.
+  - Fix: "≤ γ*(s_H)+0.24t". The slack is huge.
+[COSMETIC] C2 l.824 (Step 0): "a ≤ A−log2+log(1+1/D) ≤ A−0.28" fails for D<1.96. It is true via r0≤L/(3ℓ)+4, and only a≤A is used.
+[COSMETIC] C3 l.859-862 (Step 3)
+  - "1+j ≥ 7.5Λ/(2a)(1−1e-6)" fails when a is comparable to Λ (factor down to 0.92 at ℓ≈0.3Λ).
+  - The displayed ratio is overstated by up to 0.135.
+  - True minimum is 1.189 ≥ 1.12 (Λ≤1e30, ℓ≤0.3Λ).
+[COSMETIC] C4 l.878-880 (Step 5)
+  - With logM1 ≤ logc+log2, the H_std-case constant is 11.13, not 10.5. With exact M1 it is 10.44.
+  - The margin Λ−2597 holds either way (396.5 ≤ 403). Exact log y at s_H is Λ−2607.
+[COSMETIC] C5 l.317: 48−√768 = 20.287, not 20.3. Still 20.287/0.15 = 135.25 ≥ 135.
+[COSMETIC] C6 l.38-39 vs l.1037
+  - "H = H_std exactly where c = ¼H_std^{1/2}" fails on the band 4ℓ²−log4 < γΛ ≲ 4ℓ².
+  - So the §5.1 and lem:raisedy definitions of "raised range" differ. Harmless; unify them.
+[COSMETIC] C7 l.918-919
+  - "c ≤ X0^{7.5} throughout" and "y ≤ X0^{22.6}L^9" are false for ℓ>ℓ_std. Qualify with "on the raised range"; y ≤ n^{o(1)} still holds.
+  - Out of scope, for the §1 checker: 01-setup.tex:72/79/82 make the same claims, plus "H ≤ 4X0^{15}" (v3 l.163-166).
+[COSMETIC] C8 l.961: "On E_cl^{(u)} ⊂ Good(<u)" has the inclusion reversed.
+[COSMETIC] C9 l.689-693: lem:reduction(iii) has no proof (one line: log r0 + log7 + 8.1ℓ ≤ 10ℓ+10).
+[COSMETIC] C10 l.218: "not polylogarithmic" is stale after #7. Suggest "incompatible with eq:queueB".
+[COSMETIC] C11 Undefined internal names in rendered text:
+  - "Lemma P" (l.15, 125);
+  - "route H" (l.838);
+  - "canonical regime" (l.370, 936, 1020);
+  - "B-lin target" (l.192);
+  - "S1 and S2" (title of prop:S1S2).
+  - None is defined in sections 00-02. No agent/referee/E2E/A10/[P] tags appear in the rendered text.
+[COSMETIC] C12 B-certificates.tex
+  - l.119: 1.3e-8 is quoted in rem:caplw-numerics (l.911), not in Step 6.
+  - capl_model.lemmaP_ok checks u0>e, not u0≥100.
+  - The script names *_refereeA/B.py carry jargon.
+[COSMETIC] C13 l.280: "½√(L log L) ≫ γΛ+3ℓ" should be about log M1+5ℓ+13. True by a huge margin.
+[COSMETIC] C14
+  - l.969: "(2+o(1))" is not explicit.
+  - l.726: lem:rowweights(e) says "every η∈(0,1)", but the constant 1.36 needs η≥0.242; only η=¼ is used.
+
+(2) VERDICTS ON THE CORRECTIONS
+#2 — applied at the only occurrence (l.98, 113-115); no e^{5H/X0} remains anywhere in the paper.
+  - log H(s) ≤ 8ℓ²+1e-6·L ≪ L (thm:caplw(c)), so H<s/2.
+  - (1−2/s)^{−(2H+1)} ≤ e^{5H/s} ≤ e^{−1e7}, and the display e^γ log s·exp(2.21/Λ+5H/s) is correct.
+  - A_s ≤ A′ = 1.8(log z+1) in both branches: log2z+2, and 1.7811(1+1e-8)·log2z.
+  - No downstream effect; App A uses A′ and A_R unchanged.
+  - Side effect: the missing dependency edge (F4).
+#4 (§5 side) — PROVED.
+  - lem:lemmaP gives #(𝒜∩[u,u+h(u)]) ≤ h(u)(log u)^{-4} for every real u≥X0, on Good(<t) with t ≥ 9u/L^11+H(u).
+  - 𝒜=∅ for s≤s_H or u<X0.
+  - So any J of length ≤h at height v/X0 has #𝒜(J) ≤ (1+o(1))(v/X0)^{θ/2}(log(v/X0))^{-4}. That is the logged form, even without "+M1".
+  - |I_v| ≤ 2.1H(v)/X0 ≤ h wherever 𝒜≠∅.
+  - Paper §4 (04k-kernels.tex:338-340) uses the weaker #𝒜(I_v) ≤ 2(v/X0)^{θ/2} and adds 1.01·2X0(·)/v, where the log says 3X0. Consistent, but the wording differs.
+  - The time condition at the point of use is for the §4 checker.
+#7 — applied (l.6, l.263). Every use needs only B ≤ 34M1L² ≪ H = x^{o(1)}:
+  - (L-a) via B≤H;
+  - K_loc ≤ H/100 and K_loc+2 ≤ M^{1/8} (04x);
+  - K_loc ≤ H (04k);
+  - B ≤ 28M1L² (04a, 04d);
+  - B+3H+3 ≤ s^{3e-5} (06);
+  - lem:rhoA, lem:raisedy.
+  - "No downstream effect" is true. Leftover wording: C10.
+#8 — applied (l.984). 6·2.04 = 12.24 ≤ 12.3 is correct.
+  - Final bound: 15Λ+4−θ_bL ≤ −4.9e17 on the raised range (L ≥ 393Λ²), trivially elsewhere; so ≤ e^{−1e17} holds.
+  - But (b)'s first inequality is unproved and (b) is unused (F3), so "no downstream effect" holds trivially.
+
+(3) COVERAGE (match / (a)#n / (b) inlined / (c) reword / DRIFT)
+Opening paragraph — (a)#7
+Parameters (δ1, r0, c, Q, φ, M1, H, L0, q_min, y, B, c′, K_d, λ's), eq:params — match (C6)
+Filtration; convention on X0; eq:lindley, eq:lindleymax — match
+(F1), (F2), (F4) — match | (F3′) — (a)#2, correct
+Lemma 4.1 — match | eq:freedman derivation from Freedman (4.1)+Bennett — (b) inlined, complete, verified
+Remark old-landing; Cor 4.2 (11.4, 13.4, K_loc); long-windows remark; uses remark — match (F6, C10)
+𝒲_x, ℐ_x, Fr(I); Thm 4.3/eq:queueB/eq:fullblock, proofs (i)-(ii) — match; B recomputed (C5, C13)
+Base-scales remark; Def 4.4 and E1–E4 table — match
+Lemma 4.5 — match; Σ(Λ+m log2)^{-2} = 1.4427/Λ verified
+§4.4 setup, (V1) — match | Prop 4.6 — (a)#1, otherwise match; cor:R-Ecl is v3's "end of Thm A.6"
+Cor 4.7 and remark; Lemma 4.8 — match
+Lemmas 4.9–4.10, Thm 4.11 (N ≤ e(r(D+1))^{2j+1} verified), Thm 4.12 — match; "except last statement" is a (c) clarification
+Prop 4.13 and remark — match ((S1′) relabel) | Lemma 4.14 — match (C9) | Lemma 4.15 — match (C14)
+Thm 4.17 — verbatim v3 Steps 0–6 (v3 already had the proof inline; refereed only during assembly)
+  - Complete modulo F1, F2, C1–C4.
+  - All ranges covered: Step 2 s≤s_H+1; Step 3 s≥s_H+1, ℓ≤0.3Λ; T2 ℓ≥0.3Λ.
+  - Hypotheses of Lemmas 4.8/4.14/4.15(b,d,e) and Thm 4.11 hold where invoked (F1 aside).
+  - Raised-range threshold vs lem:raisedy: see C6.
+Remarks on numerics and sizes — match (C7, C12)
+Lemma 4.18 — match (C8, C14) | Lemma 4.19 — (a)#8; (b) unproved (F3)
+Prop 4.20 — match (reordered) | Lemma 4.21 — match (C6)
+§4.8 dependency table; non-circularity — match (F4)
+Constant comparison: v3 §4 vs 05-queue — only paper-only decimal constant is 12.3 (#8); the powers of ten are the same set.
+Certificates:
+  - analytic_capl, thm417_check_refereeB, raise_max, cert_capl reproduce B's expected outputs exactly.
+  - depcheck: acyclic, 77 nodes, 168 edges.
+  - Scratch scripts in /tmp/paper-check-s5/ (chk417.py, chk3.py, chk5.py, chk6.py, chk6b.py, dep/dc2.py).
+Unchecked: none in scope.
+
+(4) SUMMARY
+No BLOCKING item and no unlogged drift; corrections #2, #7, #8 are correct with no downstream effect, and §5 proves #4's bound via Lemma P.
+Thm 4.17 (v3's proof) needs (a) restated for minimal-heavy S′ (F1) and the Step 6 slope chain repaired (F2); conclusions hold numerically.
+Also fix F3 (4.19(b) unproved, unused), F4 (unrecorded caplw(c) edge), F5 (\cref renders "theorem N.M"), F6 (Land window family), plus C1–C14.

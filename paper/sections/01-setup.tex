@@ -14,7 +14,7 @@ Beurling system of Section~\ref{sec:construction}: the hard greedy rule with box
 \eqref{eq:target}. Then on the event $\mathcal G=\{\tau=\infty\}$ of Definition~\ref{def:good}, which has probability at least
 $1-1.5/\log X_0>0$:
 \begin{enumerate}[label=(\roman*)]
-\item $|N_{\PP}(x)-x|\le C_{X_0}x^{\theta}+3x^{\theta}\log^*x+x^{\eta}$ for all $x\ge1$, where $\eta:=\min(\theta,\tfrac12-\theta)/2$ and
+\item $|N_{\PP}(x)-x|\le C_{X_0}x^{\theta}+3x^{\theta}\log^*x+x^{\eta}$ for all $x\ge1$, where $\log^*$ is the iterated logarithm, $\eta:=\min(\theta,\tfrac12-\theta)/2$ and
 $C_{X_0}<\infty$;
 \item $\zeta_{\PP}$ has zeros $\rho_k$ $(k\ge1)$ with
 $\operatorname{Re}\rho_k=1-\bigl(3\log\log x_k+O_{X_0}(1)\bigr)/\log x_k\to1$.
@@ -22,7 +22,9 @@ $\operatorname{Re}\rho_k=1-\bigl(3\log\log x_k+O_{X_0}(1)\bigr)/\log x_k\to1$.
 \end{theorem}
 
 The threshold $X_{\mathrm{Hux}}$ is finite by Heath-Brown's theorem \cite{HeathBrown1988} and depends on no parameter of the
-construction. Its value is never used: every quantitative estimate in the proof holds for all $\log X_0\ge10^8$.
+construction. Its value is never used: every quantitative estimate in the proof holds for all $\log X_0\ge10^8$, with the
+estimates that rest on \eqref{eq:huxley} (Lemma~\ref{lem:margin}(a) and its consumers) needing only $X_0\ge X_{\mathrm{Hux}}$ in
+addition.
 
 \begin{corollary}\label{cor:notQ}
 % v3: Consequence (§0.1)
@@ -31,9 +33,9 @@ The answer to Question~\ref{def:Q} is negative. Equivalently, a discrete $[1,\be
 
 \begin{proof}
 Fix any $\omega\in\mathcal G$. The realised prime sequence $\PP(\omega)$ is a fixed discrete Beurling system: it has at most one
-prime per slot, hence finitely many below any bound. By Theorem~\ref{thm:A}(i) it has $N=x+O(x^{\theta'})$ for every
-$\theta'\in(\theta,\tfrac12)$, and by Theorem~\ref{thm:A}(ii) it has no zero-free half-plane. That $T$ was constructed adaptively
-plays no role in this conclusion. The equivalence is Remark~\ref{rem:equiv}.
+prime per slot, hence finitely many below any bound. By Theorem~\ref{thm:A}(i) it has $N=x+O(x^{\theta}\log^*x)$, and by Theorem~\ref{thm:A}(ii) it has no zero-free half-plane. That $T$ was constructed adaptively
+plays no role in this conclusion. By Remark~\ref{rem:equiv}, direction (b)$\Rightarrow$(a), $\psi_{\PP}(x)-x$ has
+no power saving, so $\PP(\omega)$ is a $[1,\beta]$-system with $\beta\le\theta<\tfrac12$.
 \end{proof}
 
 \begin{proof}[Proof of Theorem~\ref{thm:A}, assuming the results of Sections~\ref{sec:construction}--\ref{sec:baserange}]
@@ -67,19 +69,20 @@ is not fixed at $e^{10^8}$; every quantitative estimate therefore holds uniforml
 computer-assisted Theorem~\ref{thm:bs}, Theorem~\ref{thm:caplw} and \eqref{eq:mu1sum}. \\
 $\kappa$ & $\kappa:=X_0^{-5/12+2\eps}$ with $\eps:=0.01$, i.e.\ $\kappa=X_0^{-0.3967}\approx e^{-3.97\cdot10^7}$ (the window of the
 rigid density; every use needs only $0<\eps\le0.04$). \\
-$H(x)$ & $H:=\max(H_{\mathrm{std}},M_1^2)$, $H_{\mathrm{std}}(x):=\exp(8\ell^2)$, so $H(X_0)\approx e^{2715}$. $H=M_1^2$ exactly on the
-raised range of Theorem~\ref{thm:caplw}, which ends at $\ell_{\mathrm{std}}=\sqrt{(7.5\Lambda+\log4)/4}$ ($1.37\cdot10^4$ at
-$\Lambda=10^8$). Always $\log H-\log H_{\mathrm{std}}\le10^{-6}L$, so $H=x^{o(1)}$; also $H\le4X_0^{15}$. \\
+$H(x)$ & $H:=\max(H_{\mathrm{std}},M_1^2)$, $H_{\mathrm{std}}(x):=\exp(8\ell^2)$, so $H(X_0)\approx e^{2715}$. The raise $M_1^2$ can
+exceed $H_{\mathrm{std}}$ only on the raised range of Theorem~\ref{thm:caplw}, which ends at
+$\ell_{\mathrm{std}}=\sqrt{(7.5\Lambda+\log4)/4}$ ($1.37\cdot10^4$ at $\Lambda=10^8$). Always $\log H-\log H_{\mathrm{std}}\le10^{-6}L$,
+so $H=x^{o(1)}$; also $H\le16X_0^{15}$ for $\ell\le\ell_{\mathrm{std}}$, and $H=H_{\mathrm{std}}$ beyond. \\
 $\lambda$ & $\lambda=4L$ (Theorem~\ref{thm:queue}); $\lambda_u=3\log u+2\log\log u$ (per-scale noise);
 $\lambda'_u=\lambda_u+2+\log H(u)$ (short windows); $\lambda_P=4\log P$ (Lemma~\ref{lem:landing}). \\
 $c'$ & $c'=0.15$ (the drift margin). \\
 $r_0$, $c$, $M_1$ & $r_0=\lceil L/(3\log L)\rceil+3$. Capacity threshold $\log c=\max(4\ell^2-\log4,\gamma(s)\Lambda)$,
 $s:=\ell-2\log\Lambda$, with the explicit ramp $\gamma\le7.5$ of Theorem~\ref{thm:caplw}; so $c=\tfrac14H_{\mathrm{std}}^{1/2}$ for
-$\ell\ge\ell_{\mathrm{std}}$, and $c\le X_0^{7.5}$ always. $M_1=r_0+\varphi(r_0)+1$ with $\varphi(u)=c+uc^{1/2}+u(u+1)/2$, so
+$\ell\ge\ell_{\mathrm{std}}$, and $c\le X_0^{7.5}$ for $\ell\le\ell_{\mathrm{std}}$. $M_1=r_0+\varphi(r_0)+1$ with $\varphi(u)=c+uc^{1/2}+u(u+1)/2$, so
 $M_1\le2c$. Tolerance: $M_1\le H/L^{14}$. \\
 $L_0$, $q_{\min}$, $B$ & $L_0=\max(L^5,48M_1L^3/c'^2)$; $q_{\min}=L_0L^6$; queue bound $B(x)\le5M_1L^2/c'$ \eqref{eq:queueB};
-$K_{\mathrm{loc}}=2B+7\lambda_P/3+13$. \\
-absorption & $L_*=10^7$ (inactive, since $\log X_0\ge10^8$); $y(n)=H(n)L_0(n)(\log n)^6\le X_0^{22.6}L^9$; $\Abs=\emptyset$ wherever
+$K_{\mathrm{loc}}=2B(4P)+7\lambda_P/3+23$. \\
+absorption & $L_*=10^7$ (inactive, since $\log X_0\ge10^8$); $y(n)=H(n)L_0(n)(\log n)^6$, with $y\le X_0^{22.6}L^9$ for $\ell\le\ell_{\mathrm{std}}$ and $\log2y\le12.1\ell^2$ beyond; $\Abs=\emptyset$ wherever
 $y<\Xm=X_0-H(X_0)/2$, which holds for $\ell\le2\log\Lambda+s_H$, $s_H=5.9745$ (Theorem~\ref{thm:caplw}(b)); $h(u)=u^{\theta/2}$;
 Lemma~\ref{lem:lemmaP} uses $\sup_{[u,2u]}y$. \\
 cluster window & $\delta_1=2L^{-6}$. \\
@@ -91,43 +94,48 @@ budget & $\Prob(\tau<\infty)\le\sum_m(\Lambda+m\log2)^{-2}+O(X_0^{-1})\le1.5/\lo
 \end{tabular}
 \end{center}
 This regime is far beyond anything that can be simulated. Experiments at small scales (with $X_0\le10^7$ and
-$x\le5\cdot10^8$) reproduce the qualitative behaviour (a queue of size $O(\log^2x)$, and designed zeros near the predicted points),
-but they test only the mechanism, not any inequality used in the proof.
+$x\le5\cdot10^8$) reproduce the qualitative behaviour (an observed queue length of order $\log^2x$, far below the proved bound
+$B=e^{O(\ell^2)}$, and designed zeros near the predicted points), but they test only the mechanism, not any inequality used in
+the proof.
 
 \subsection{Logical structure}\label{sec:logic}
 The table lists the main results with their inputs. An input marked $\downarrow$ is used only at a strictly earlier time or a
 strictly smaller height; every other input is used at the same time. The same-time dependencies form an acyclic graph; this was
-checked mechanically on the full dependency graph (77 nodes, 168 edges, 27 of them $\downarrow$; Appendix~\ref{app:cert}). The
+checked mechanically on the full dependency graph (79 nodes, 194 edges, 28 of them $\downarrow$; Appendix~\ref{app:cert-dep}).
+The table is an abridgement of that graph. The
 time-ordering of the $\downarrow$ edges is Section~\ref{sec:noncirc}.
 \begin{center}\footnotesize
 \begin{tabular}{@{}p{4.4cm}p{6.6cm}p{3.5cm}@{}}
 \hline
 result & inputs & used in \\ \hline
 \eqref{eq:huxley} & Heath-Brown, de la Vall\'ee Poussin & \eqref{eq:G1}, Lemmas~\ref{lem:blin}, \ref{lem:margin} \\
-Lemma~\ref{lem:adapted} (adaptedness) & \eqref{eq:C2}, Section~\ref{sec:params} & Section~\ref{sec:noncirc}, Lemma~\ref{lem:budget} \\
+Lemma~\ref{lem:adapted} (adaptedness) & Lemma~\ref{lem:C2} (causality), Section~\ref{sec:params} & Section~\ref{sec:noncirc}, Lemma~\ref{lem:budget} \\
 \eqref{eq:G1} (positivity) & \eqref{eq:huxley}, the cap, \eqref{eq:ampl} & slots, \ref{eq:sF1} \\
 \eqref{eq:T1} (target error) & Rankin; Lemma~\ref{lem:lemmaP}$\downarrow$ & Theorem~\ref{thm:A}(i), Section~\ref{sec:noise}, Lemma~\ref{lem:ZA} \\
 Lemmas~\ref{lem:count}--\ref{lem:excess} & the greedy rule & Theorem~\ref{thm:queue}, Corollary~\ref{cor:localcount}, \eqref{eq:La} \\
-Lemmas~\ref{lem:ZB}, \ref{lem:ZBlow} & \eqref{eq:rhodet}; Titchmarsh & Section~\ref{sec:zeros}; Theorem~\ref{thm:lp} \\
+Lemmas~\ref{lem:ZB}, \ref{lem:ZBlow} & \eqref{eq:rhodet}; partial summation & Section~\ref{sec:zeros}; Theorem~\ref{thm:lp} \\
 Lemma~\ref{lem:ZA} & Lemma~\ref{lem:lemmaP}$\downarrow$, Theorem~\ref{thm:caplw}(b)$\downarrow$ & Lemma~\ref{lem:goodheights}, Theorem~\ref{thm:zeros} \\
 Lemmas~\ref{lem:designedzero}--\ref{lem:goodheights} & Lemma~\ref{lem:ZB}; mean values; \eqref{eq:La}$\downarrow$ on $[1,x_k)$, Lemma~\ref{lem:ZA}$\downarrow$ & Theorem~\ref{thm:zeros}, choice of $\gamma_k$ \\
-\eqref{eq:La}, Theorem~\ref{thm:zeros} & \eqref{eq:lag}, Theorem~\ref{thm:queue}, Lemma~\ref{lem:budget}; Rouch\'e & Theorem~\ref{thm:A}(ii) \\
+\eqref{eq:La} & \eqref{eq:lag}, Theorem~\ref{thm:queue}, Lemma~\ref{lem:budget} & Theorem~\ref{thm:A}, Theorem~\ref{thm:zeros} \\
+Theorem~\ref{thm:zeros} & \eqref{eq:La}, Lemmas~\ref{lem:ZB}, \ref{lem:ZA}, \ref{lem:designedzero}--\ref{lem:goodheights}; Rouch\'e & Theorem~\ref{thm:A}(ii) \\
 Lemmas~\ref{lem:blin}, \ref{lem:margin} & \eqref{eq:huxley}; Lemma~\ref{lem:cm}$\downarrow$, \eqref{eq:T1}$\downarrow$, \eqref{eq:La}$\downarrow$ on cofactors & Proposition~\ref{prop:g1} \\
 Lemma~\ref{lem:cm} (Chebyshev--Mertens) & \eqref{eq:HBS} from Theorem~\ref{thm:queue}$\downarrow$ & Section~\ref{sec:noise}, \ref{eq:sF3p}, \ref{eq:sF4} \\
 Theorem~\ref{thm:bs}, Lemma~\ref{lem:bs-profile} & Lemmas~\ref{lem:cm}, \ref{lem:smooth-v}; certificate & Corollary~\ref{cor:saias}, Lemma~\ref{lem:si} \\
-Theorem~\ref{thm:kr}, Proposition~\ref{prop:true-kernels} & Lemma~\ref{lem:lemmaM}, Corollary~\ref{cor:saias}; Corollary~\ref{cor:localcount}$\downarrow$ & Proposition~\ref{prop:br} \\
+Theorems~\ref{thm:kr}, \ref{thm:kr-random}, Corollary~\ref{cor:kr-weights}, Proposition~\ref{prop:true-kernels} & Lemmas~\ref{lem:lemmaM}, \ref{lem:tau-near}, Corollary~\ref{cor:saias}, \eqref{eq:RH}; for the absorbed count: Corollary~\ref{cor:lag}, Lemma~\ref{lem:lemmaP}, Proposition~\ref{prop:ecl} & Proposition~\ref{prop:br}, Lemma~\ref{lem:xb} \\
+Lemma~\ref{lem:threshold-mass} (threshold mass) & Lemma~\ref{lem:cm}; Corollary~\ref{cor:localcount}$\downarrow$ & Proposition~\ref{prop:g1} \\
 Lemma~\ref{lem:noise} (per-scale noise) & Freedman; Theorem~\ref{thm:queue}$\downarrow$, Proposition~\ref{prop:ecl}$\downarrow$, Corollary~\ref{cor:localcount}$\downarrow$, Lemma~\ref{lem:lemmaP}$\downarrow$ & Proposition~\ref{prop:pointwise} \\
 Theorem~\ref{thm:lp} (local PNT) & Lemma~\ref{lem:ZBlow}, \eqref{eq:Rhatbound}, \eqref{eq:T1}, Lemma~\ref{lem:cm}; $|N-T_0|$ bound$\downarrow$ & Proposition~\ref{prop:g1}, Lemma~\ref{lem:si} \\
-\eqref{eq:osc} & \eqref{eq:rhodet}, \eqref{eq:target}; Lemma~\ref{lem:rhoA}(d) via Lemma~\ref{lem:lemmaP}$\downarrow$ & Propositions~\ref{prop:br}, \ref{prop:pointwise} \\
-Lemmas~\ref{lem:xb}, \ref{lem:si} (jump at $X_0$) & Theorem~\ref{thm:kr}, Proposition~\ref{prop:true-kernels}, Theorem~\ref{thm:lp}, Lemma~\ref{lem:bs-profile}; Corollary~\ref{cor:localcount}$\downarrow$, Lemma~\ref{lem:lemmaP}$\downarrow$ & Propositions~\ref{prop:g1}, \ref{prop:pointwise}, Theorem~\ref{thm:g2} \\
-Proposition~\ref{prop:g1}, Theorem~\ref{thm:g2}, Proposition~\ref{prop:pointwise} & Lemma~\ref{lem:margin}, Propositions~\ref{prop:br}, Theorem~\ref{thm:lp}, Lemmas~\ref{lem:xb}, \ref{lem:noise}, \eqref{eq:osc} & Corollary~\ref{cor:r1} \\
+\eqref{eq:osc} & \eqref{eq:rhodet}, \eqref{eq:target}; Lemma~\ref{lem:rhoA}(c) via Lemma~\ref{lem:lemmaP}$\downarrow$ & Propositions~\ref{prop:br}, \ref{prop:pointwise} \\
+Lemmas~\ref{lem:xb}, \ref{lem:si} (jump at $X_0$) & Theorem~\ref{thm:kr-random}, Corollary~\ref{cor:kr-weights}, Propositions~\ref{prop:true-kernels}, \ref{prop:br}, Lemma~\ref{lem:tau-near}, Theorem~\ref{thm:lp}, Lemma~\ref{lem:bs-profile}; Corollary~\ref{cor:localcount}$\downarrow$, Lemma~\ref{lem:lemmaP}$\downarrow$ & Propositions~\ref{prop:g1}, \ref{prop:pointwise}, Theorem~\ref{thm:g2} \\
+Proposition~\ref{prop:g1}, Theorem~\ref{thm:g2}, Proposition~\ref{prop:pointwise} & Lemma~\ref{lem:margin}, Proposition~\ref{prop:br}, Theorem~\ref{thm:lp}, Lemmas~\ref{lem:xb}, \ref{lem:noise}, \eqref{eq:osc} & Corollary~\ref{cor:r1} \\
 Corollary~\ref{cor:r1} (R1$'$, every window) & Proposition~\ref{prop:pointwise} & Theorem~\ref{thm:queue} \\
-Lemma~\ref{lem:landing}, Corollary~\ref{cor:localcount} & \ref{eq:sF1}, \ref{eq:sF2}, Freedman, Lemma~\ref{lem:count}; Theorem~\ref{thm:queue}$\downarrow$ & Section~\ref{sec:noise} ($\downarrow$ uses) \\
-Theorem~\ref{thm:queue} (queue bound) & Corollary~\ref{cor:r1}, \ref{eq:sF1}, \ref{eq:sF2}, Lemmas~\ref{lem:lindley}, \ref{lem:excess}, Freedman; Proposition~\ref{prop:ecl}$\downarrow$, Corollary~\ref{cor:increment}$\downarrow$, \ref{eq:sF3p}$\downarrow$, Theorem~\ref{thm:queue}$\downarrow$ & \eqref{eq:La}, Lemma~\ref{lem:budget} \\
+Lemma~\ref{lem:landing}, Corollary~\ref{cor:localcount} & \ref{eq:sF1}, \ref{eq:sF2}, Freedman, Lemma~\ref{lem:count}, Theorem~\ref{thm:caplw}(c); Theorem~\ref{thm:queue}$\downarrow$ & Section~\ref{sec:noise}, Lemma~\ref{lem:lemmaP} ($\downarrow$ uses) \\
+Theorem~\ref{thm:queue} (queue bound) & Corollary~\ref{cor:r1}, \ref{eq:sF1}, \ref{eq:sF2}, Lemmas~\ref{lem:lindley}, \ref{lem:excess}, Theorem~\ref{thm:caplw}(b),(c), Freedman; Proposition~\ref{prop:ecl}$\downarrow$, Corollary~\ref{cor:increment}$\downarrow$, \ref{eq:sF3p}$\downarrow$, Theorem~\ref{thm:queue}$\downarrow$ & \eqref{eq:La}, Lemma~\ref{lem:budget} \\
 Definition~\ref{def:good}, Lemma~\ref{lem:budget} & Theorem~\ref{thm:queue}, Proposition~\ref{prop:ecl}, Lemmas~\ref{lem:landing}, \ref{lem:noise} & Theorem~\ref{thm:A} \\
-Proposition~\ref{prop:ecl}, Corollary~\ref{cor:increment} & Theorem~\ref{thm:R}, Theorem~\ref{thm:caplw} & Theorem~\ref{thm:queue}, Lemmas~\ref{lem:noise}, \ref{lem:lemmaP} \\
-Theorem~\ref{thm:caplw} (capacity) & combinatorial covering lemmas, Rankin, Rosser--Schoenfeld & Proposition~\ref{prop:ecl}, Lemma~\ref{lem:lemmaP} \\
-Lemmas~\ref{lem:lemmaP}, \ref{lem:rhoA} (absorption) & Lemma~\ref{lem:cm}, Theorem~\ref{thm:caplw}, Corollary~\ref{cor:increment}; Proposition~\ref{prop:ecl}$\downarrow$ & \eqref{eq:target}, \eqref{eq:T1}, Lemma~\ref{lem:ZA}, \eqref{eq:osc} \\
+Proposition~\ref{prop:ecl}, Corollary~\ref{cor:increment} & Theorem~\ref{thm:R}, Lemma~\ref{lem:heavy}, Theorem~\ref{thm:caplw} & Theorem~\ref{thm:queue}, Lemmas~\ref{lem:noise}, \ref{lem:lemmaP}, Proposition~\ref{prop:true-kernels} \\
+Theorem~\ref{thm:caplw}(a) (capacity) & combinatorial covering lemmas, Rankin, Rosser--Schoenfeld & Proposition~\ref{prop:ecl} \\
+Theorem~\ref{thm:caplw}(b),(c) & none (definitions of the parameters) & \ref{eq:sF3p}, Lemmas~\ref{lem:landing}, \ref{lem:lemmaP}, \ref{lem:ZA}, Theorem~\ref{thm:queue} \\
+Lemmas~\ref{lem:lemmaP}, \ref{lem:rhoA} (absorption) & Lemma~\ref{lem:cm}, Theorem~\ref{thm:caplw}(b), Corollary~\ref{cor:increment}; Proposition~\ref{prop:ecl}$\downarrow$, Corollary~\ref{cor:localcount}$\downarrow$ & \eqref{eq:target}, \eqref{eq:T1}, Lemma~\ref{lem:ZA}, \eqref{eq:osc}, Proposition~\ref{prop:true-kernels} \\
 Theorem~\ref{thm:R} (Appendix~\ref{app:rankfull}) & \ref{eq:sF1}--\ref{eq:sF4} & Proposition~\ref{prop:ecl} \\ \hline
 \end{tabular}
 \end{center}

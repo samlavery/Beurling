@@ -74,11 +74,15 @@ belong to $P_{\le t}$.
 
 \paragraph{Slot positions.}
 Pivots are distinct primes, one per slot. Slot spacing is $\ge 0.99$, and the value $q$ of a jittered prime differs
-from its slot $s_q$ by at most $H$, the jitter width at the slots in question (Section~\ref{sec:queue-standing}).
-Hence, whatever the labels are, the $j$-th earliest pivot has value at least
+from its slot $s_q$ by at most $H(s_q)/2$ (Section~\ref{sec:queue-standing}). Put $\sigma_j:=X_0+0.99(j-1)$. The $j$-th
+earliest pivot has slot $\ge\sigma_j$, and $v\mapsto v-H(v)/2$ is increasing. Hence, whatever the labels are, the $j$-th
+earliest pivot has value at least
 \begin{equation}\label{eq:A-tau}
-  \tau_j:=\max\bigl(X_0,\ X_0+0.99(j-1)-2H\bigr).
+  \tau_j:=\max\bigl(X_0,\ \sigma_j-2H(\sigma_j)\bigr).
 \end{equation}
+Recall that $H$ is non-decreasing and $H(v)/v$ is decreasing (Theorem~\ref{thm:caplw}(c)). By \eqref{eq:jitter} and
+Theorem~\ref{thm:caplw}(c), $\log H(X_0)\le8(\log\Lambda)^2+10^{-6}\Lambda$, so $H(X_0)/X_0\le e^{-0.99\Lambda}\le
+e^{-10^{7}}$.
 Here and below, ``a jittered prime is $\ge X_0$'' is read with $X_0^{-}=X_0-H(X_0)/2$ in place of $X_0$, as in
 Section~\ref{sec:queue-standing}. Every such use has a margin far larger than $H(X_0)/X_0$.
 
@@ -119,8 +123,8 @@ integrand is at most $1/\bigl(|\det E_P|\prod_ic_iX_0^{M-k}\bigr)$, and $J^k$ ha
 
 \begin{remark}
 Lemma~\ref{lem:volume} involves no per-constraint widths. Bounding the constraints one at a time by Gaussian elimination
-would combine them into integer combinations whose $\ell^1$-norms can grow exponentially in $k$. The Jacobian avoids this
-entirely.
+would combine them into integer combinations whose $\ell^1$-norms are not bounded by $k$ in general (this already
+happens for $k=4$). The Jacobian avoids this entirely.
 \end{remark}
 
 \begin{lemma}[Pattern sum]\label{lem:pattern}\label{lem:patternsum}
@@ -130,7 +134,8 @@ Summing over the invertible nonnegative integer matrices $E_P$ with columns in d
   \frac1{k!}\sum_{E_P}\prod_j\tau_j^{-(s_j-1)}\ \le\ \prod_j\bigl(1-1/\tau_j\bigr)^{-k}
   \ \le\ e^{(3H(X_0)+2)k/X_0}\bigl(1+k/X_0\bigr)^{1.02k}.
 \]
-Since $H(X_0)/X_0\le e^{-10^{7}}$, the right side is at most $e^{k\,e^{-10^{6}}}\bigl(1+k/X_0\bigr)^{1.02k}$.
+Since $H(X_0)/X_0\le e^{-10^{7}}$ (Section~\ref{sec:A-setting}), the right side is at most
+$e^{k\,e^{-10^{6}}}\bigl(1+k/X_0\bigr)^{1.02k}$.
 % CORRECTIONS-vs-v3.md entry 1: v3 states e^{2k/X0}; corrected constant e^{(3H(X0)+2)k/X0}.
 \end{lemma}
 
@@ -143,15 +148,16 @@ map $E_P\mapsto(\sigma,X)$ injective. Hence
   \sum_{E_P}\prod_j\tau_j^{-(s_j-1)}\le k!\prod_j\sum_{m\ge0}\binom{k+m-1}{m}\tau_j^{-m}=k!\prod_j(1-1/\tau_j)^{-k},
 \]
 since a column of extra mass $m$ can be distributed over the $k$ rows in $\binom{k+m-1}{m}$ ways. Next,
-$(1-1/\tau)^{-k}\le\exp\bigl(k/(\tau-1)\bigr)$. The indices with $\tau_j=X_0$ number at most $2H/0.99+1$, and the others
-satisfy $\tau_j\ge X_0+0.99i$ for distinct $i\ge1$. Hence
+$(1-1/\tau)^{-k}\le\exp\bigl(k/(\tau-1)\bigr)$. Since $H(v)/v$ is decreasing, $H(\sigma+0.99)-H(\sigma)\le0.99\,H(X_0)/X_0$ for
+$\sigma\ge X_0$. So $\sigma_j-2H(\sigma_j)$ increases by at least $0.989$ from one index to the next. Let $N_0$ be the
+number of indices with $\tau_j=X_0$. These satisfy $0.99(j-1)\le2H(\sigma_j)\le2H(X_0)(1+10^{-8})$, so
+$N_0\le2.03H(X_0)+1$. The remaining indices satisfy $\tau_{N_0+i}\ge X_0+0.989(i-1)$ for $i\ge1$. Hence
 \[
-  \sum_{j\le k}\frac1{\tau_j-1}\le\frac{3H}{X_0}+\frac1{X_0-1}+\sum_{i=1}^{k}\frac1{X_0-1+0.99i}
-  \le\frac{3H}{X_0}+\frac1{X_0-1}+1.02\log\Bigl(1+\frac{k}{X_0}\Bigr).
+  \sum_{j\le k}\frac1{\tau_j-1}\le\frac{N_0+1}{X_0-1}+\sum_{i=1}^{k}\frac1{X_0-1+0.989i}
+  \le\frac{3H(X_0)}{X_0}+\frac1{X_0-1}+1.02\log\Bigl(1+\frac{k}{X_0}\Bigr),
 \]
-Since $1/(X_0-1)\le2/X_0$, exponentiating gives
-$\prod_j(1-1/\tau_j)^{-k}\le e^{(3H(X_0)+2)k/X_0}(1+k/X_0)^{1.02k}$. Here $H=H(X_0)$, the jitter width at the slots
-near $X_0$, where the pivots with $\tau_j=X_0$ lie.
+using $(2.03H(X_0)+1)/(X_0-1)\le3H(X_0)/X_0$ and $1/0.989\le1.02$. Since $1/(X_0-1)\le2/X_0$, exponentiating gives
+$\prod_j(1-1/\tau_j)^{-k}\le e^{(3H(X_0)+2)k/X_0}(1+k/X_0)^{1.02k}$.
 \end{proof}
 
 \subsection{The Pivot-Integration Lemma}\label{sec:A-pil}
@@ -164,18 +170,21 @@ $p_1,p_2,\dots$ be the pivots, latest first.
 % v3: Lemma A.3
 Define $S_\tau$ by the following latest-first recursion, starting from $\Psi:=\prod_i\mathbf 1(n_i\in J)$:
 \begin{enumerate}[label=(\roman*)]
-\item at the pivot $p_t$: $\Psi\leftarrow\int\Psi\,dq_{p_t}$ (Lebesgue measure; the window restriction of $p_t$ is
+\item at each pivot $p$: $\Psi\leftarrow\int\Psi\,dq_{p}$ (Lebesgue measure; the window restriction of $p$ is
   dropped);
-\item at a late block $F_t$: $\Psi\leftarrow$ any bound for the realised sum $\sum_{F_t}\Psi$ that holds on
-  $G_{<s_{p_t}}$ and is a function of variables decided before the next pivot $p_{t+1}$. Examples are the
-  \emph{sup-sum} $\sup_{\omega\in G_{<s_{p_t}}}\sum_{F_t}\Psi$, or a carried Euler factor
-  (Lemma~\ref{lem:fac}\,(S3));
-\item at the early block and the tails: ordinary realised sums, taken at the end.
+\item at the late block $F_t$ below the run $P_t$: $\Psi\leftarrow$ any bound for the realised sum $\sum_{F_t}\Psi$
+  that holds on $G_{<s_t}$, where $s_t$ is the slot of the last pivot of $P_t$, and is a function of variables decided
+  before the first pivot of $P_{t+1}$, the slot labels included. Examples are a carried Euler factor
+  (Lemma~\ref{lem:fac}\,(S3)), or the \emph{sup-sum} $\sup\sum_{F_t}\Psi$ with the supremum taken over
+  $\omega\in G_{<s_t}$ and over the slot labels of $P_t$;
+\item at the early block and the tails: ordinary realised sums, taken inside the conditional expectation at the earliest
+  pivot.
 \end{enumerate}
 Then
 \[
-  \E\bigl[X_\tau\,\mathbf 1(\Good(<t_J))\bigr]\le\theta^{k}\,\sup S_\tau,\qquad\theta=1+1/L .
+  \E\bigl[X_\tau\,\mathbf 1(\Good(<t_J))\bigr]\le\theta^{k}\,\sup S_\tau,\qquad\theta:=1+1/\Lambda .
 \]
+% CORRECTIONS-vs-v3.md entry 12: v3 has theta = 1 + 1/L.
 \end{lemma}
 
 \begin{proof}
@@ -187,33 +196,63 @@ nested:
 \]
 Each $\mathbf 1(G_{<s_{p}})$ is $\mathcal F_{s_p-}$-measurable (Definition~\ref{def:good}). We induct along the decision
 order, latest first, keeping the invariant that after each step the pending integrand is a nonnegative function of the
-variables not yet processed.
+variables not yet processed. The pivots of a run are processed one after another. The block directly below a run, i.e.\
+decided between its last pivot and the first pivot of the next run, is processed together with the last pivot of the run,
+inside that pivot's conditional expectation.
 
-\emph{Pivot step.} Let $p$ be the current pivot, with slot $s$. Everything still pending is a function of $q_p$ and of
-variables decided before $s$. By \ref{eq:sF2}, the position of the prime decided at slot $s$ has conditional density
-$\le1/H(s)$ on its window $W_s$, given $\mathcal F_{s-}$. Hence
+\emph{Pivot step.} Let $p$ be the current pivot, with slot $s$, and condition on $\mathcal F_{s-}$. Everything still
+pending is then a function of $q_p$ and of data decided before $s$. These data include the realised primes of the block
+directly below $p$, if $p$ is the last pivot of its run. By \ref{eq:sF2}, the position of the prime decided at slot $s$ has
+conditional density $\le1/H(s)$ on its window $W_s$. Hence
 \[
   \E\bigl[\Psi\,\mathbf 1(G_{<s})\bigm|\mathcal F_{s-}\bigr]\le\mathbf 1(G_{<s})\,\frac1{H(s)}\int_{W_s}\Psi\,dq_p .
 \]
-The existence of a prime at slot $s$ is bounded by $1$ and dropped. Summing over the possible slots $s$ of $p$,
+The existence of a prime at slot $s$ is bounded by $1$ and dropped. If $p$ is the last pivot of its run, the block step
+below is carried out at this point, inside the conditional expectation and before the sum over $s$. If $p$ is the
+earliest pivot, the end step below is carried out at this point as well. After these steps, the pending integrand
+$\Psi(q)$ no longer depends on the label $s$ of $p$. Summing over the possible slots $s$,
 \[
   \sum_s\frac1{H(s)}\int_{W_s}\Psi\,dq=\int\Psi(q)\sum_s\frac{\mathbf 1(q\in W_s)}{H(s)}\,dq\le\theta\int\Psi\,dq .
 \]
-This uses \ref{eq:sF1}: at most $H(t)(1+\kappa_+/\log t)+3$ windows contain a given point $t$, and $H$ varies
-negligibly over a window, so the inner sum is $\le1+\kappa_+/L+3/H\le\theta$.
+This uses \ref{eq:sF1}: at most $H(q)(1+\kappa_+/\log q)+3$ windows contain the point $q$, and $H$ varies by a factor
+$1+o(1/\Lambda)$ over a window. Since $q\ge X_0^-$ and $\kappa_+=0.8$, the inner sum is at most
+$1+0.8/\Lambda+3/H(X_0)+o(1/\Lambda)\le1+1/\Lambda=\theta$.
 
-\emph{Block step.} At a late block $F_t$, the pending $\Psi$ is a nonnegative function of the realised block data and of
-earlier variables. Replacing the realised sum by a bound that holds on $G_{<s_{p_t}}$, and that is a function of
-variables decided before $p_{t+1}$, keeps the inequality on the event carried at this point. The result is
-$\mathcal F_{s_{p_{t+1}}-}$-measurable, which is exactly what the next pivot step needs.
+\emph{Block step.} For each run $P_t$, let $s_t$ be the slot of its last (earliest decided) pivot. Let $F_t$ be the
+block below $P_t$; its primes have slots in $(s_{t+1},s_t)$. The block step is carried out inside the conditional
+expectation at $s_t$. There, the pending $\Psi$ is a nonnegative function of the realised block data and of earlier
+variables, and the block data are $\mathcal F_{s_t-}$-measurable. Replace the realised sum by a bound that holds on
+$G_{<s_t}$. Together with the factors carried from above, this bound must be a function of variables decided before the
+first pivot $p_{t+1}$ of $P_{t+1}$. This is exactly what the carried Euler factors of Lemma~\ref{lem:fac}\,(S3) achieve.
+Per row, the block contributes at most $\mathrm{Eu}_s(s_t)/\mathrm{Eu}_s(s_{t+1})$, and the factor $\mathrm{Eu}_s(s_t)$
+cancels the factor $1/\mathrm{Eu}_s(s_t)$ carried from above. For a row whose chain starts at $F_t$ (a row joining at
+this stage), no factor is carried from above. There the top factor $\mathrm{Eu}_s(s_t)$ is first bounded by the sure bound
+of Lemma~\ref{lem:fac}\,(S3)(d), valid on $G_{<s_t}$, and then by its constant majorant $A_R\,e^{2.2/\Lambda}$. This is
+valid since $s_t\le2z+H(2z)$: the pivot value $q$ divides some $n_i\in J$, so $q\le2z$, and $|q-s_t|\le H(s_t)/2$ gives
+$s_t\le2z+0.51H(2z)$. It is done before the sum over the label $s_t$. What remains, $1/\mathrm{Eu}_s(s_{t+1})$
+per row, together with constants, involves only the label $s_{t+1}$ and primes of slot $<s_{t+1}$, all decided before the
+first pivot of $P_{t+1}$. In particular the result does not depend on the label $s_t$, as required in the pivot step. At the
+pivots of $P_{t+1}$ other than the last one, the carried factor $1/\mathrm{Eu}_s(s_{t+1})$ is a function of earlier
+variables, so the label sums there are unaffected.
 
-\emph{Order of decision versus order of value.} Slots order the decisions, while the prime values carry jitter.
-Primes in $(q-H,q]$ that are decided after the slot of $q$ number at most $H+3$, each of value $\ge X_0$. Wherever a sure
-bound is indexed by value rather than by slot, this costs a factor $\le e^{(H+3)/X_0}$ at each end of a chain. It is
-absorbed in $\theta$ and in Lemma~\ref{lem:fac}.
+\emph{Order of decision versus order of value.} Slots and values are compared in three places:
+\begin{itemize}
+\item in the slot bounds $\tau_j$ of \eqref{eq:A-tau};
+\item in $\mathrm{Proj}_t$ (Theorem~\ref{thm:svl}), which use slot spacing directly;
+\item along the chains, which are indexed by slot, only in the sure bound for the top of a chain (Lemma~\ref{lem:fac}\,(S3),
+  from the proof of \ref{eq:sF3p}).
+\end{itemize}
+In the last case the primes involved have values $\ge q-H(q)\ge q/2$. So the cost is at most
+$e^{3(H(q)+3)/q}\le e^{4H(X_0)/X_0}$, since $H(v)/v$ is decreasing; it is the factor $e^{5H(s)/s}$ already contained in
+that bound, and it is absorbed into $A_R$.
+% CORRECTIONS-vs-v3.md entry 13: v3 has e^{(H+3)/X0}, absorbed in theta.
 
-After the last pivot, the early block and the tails are summed over their realised values, which are
-$\mathcal F$-measurable before every pivot. Taking expectations completes the induction.
+\emph{End step.} At the earliest pivot, with slot $s_T$, the early block and the tails are summed over their realised
+values. This is done inside the conditional expectation at $s_T$, before the sum over $s_T$; these data are
+$\mathcal F_{s_T-}$-measurable. Per row, their sum is at most $\mathrm{Eu}_s(s_T)$ (Lemma~\ref{lem:fac}\,(S3)(c)). This
+cancels the carried factor $1/\mathrm{Eu}_s(s_T)$ exactly, so the label sum at $s_T$ again sees an integrand free of $s_T$.
+A row whose chain starts at the earliest stage has no carried factor; its factor $\mathrm{Eu}_s(s_T)$ is replaced, as in
+the block step, by the constant $A_R\,e^{2.2/\Lambda}$. Taking expectations completes the induction.
 \end{proof}
 
 \subsection{Factorisation and sure sums}\label{sec:A-fac}
@@ -229,8 +268,9 @@ $\mathcal F$-measurable before every pivot. Taking expectations completes the in
     \qquad\beta_f:=\mathbf 1^{\mathsf T}v_f .
   \]
   Here $C_\eps$ is the projection of the feasibility caps (later pivots $\ge\tau_j$, and decision order) onto the
-  $q_f$-axis, over the later-pivot values compatible with the window constraints; this widens the caps by relative
-  $O(\eps)$. The thin window constraints are invariant under the shift $x_f\mapsto x_f+s$,
+  $q_f$-axis, over the later-pivot values compatible with the window constraints. When the later pivots are pinned to
+  relative width $O(\eps)$, this widens the caps by relative $O(\eps)$; the main line uses only the projection. The thin
+  window constraints are invariant under the shift $x_f\mapsto x_f+s$,
   $x_{P_{\mathrm{late}}}\mapsto x_{P_{\mathrm{late}}}-s\,v_f$ (with $x=\log q$). So no late free prime ever enters a
   thin indicator.
 \item[\textup{(S1$'$)}] Let $c$ range over cofactors all of whose primes are $\le P:=s_{p_t}+H$. Then for $\beta\ge1$,
@@ -239,16 +279,31 @@ $\mathcal F$-measurable before every pivot. Taking expectations completes the in
   \]
 \item[\textup{(S2$'$)}] If $\beta<1$ and $c\le Y$, then $\sum_cc^{-\beta}\le Y^{1-\beta}\,\mathrm{Eu}(P)$. In particular
   $\#\{c\le Y:\ P^+(c)\le P\}\le Y\,\mathrm{Eu}(P)$.
-\item[\textup{(S3)}] \emph{(Euler chains, indexed by slot.)} Put
-  $\mathrm{Eu}_s(s):=\prod_{\text{realised }p\text{ of slot}\le s}(1-1/p)^{-1}$. A cofactor with harmonic weight that is
-  split by the pivots into slot ranges telescopes to $\mathrm{Eu}_s(\mathrm{top})/\mathrm{Eu}_s(\mathrm{bottom})$. The
-  factor $1/\mathrm{Eu}_s(s_p)$ may be carried as a pending factor: it is $\mathcal F_{s_p-}$-measurable. Fuzz between
-  slot and value appears only at the two ends of the chain. On $\Good$, the sure Mertens bound \ref{eq:sF4}
-  (Lemma~\ref{lem:cm}\,(iv), applied once per chain as in Remark~\ref{rem:cm-chain}) bounds the whole chain by
+\item[\textup{(S3)}] \emph{(Euler chains, indexed by slot.)} For a slot $s$ put
   \[
-    \frac{\log a_0}{\log a_m}\,e^{2.20/\log a_m+1/X_0},
+    \mathrm{Eu}_s(s):=\prod_{\text{realised }p\text{ decided before }s}(1-1/p)^{-1},
   \]
-  where $a_m<a_0$ are its end values.
+  the product over the realised primes of slot $<s$, rational primes $<X_0$ included. Let $s_t$ be the slot of the last
+  pivot of the run $P_t$, so the primes of the block $F_t$ have slots in $(s_{t+1},s_t)$. Consider one row, with harmonic
+  weight $1/c$ on its free pieces in the successive blocks below the run at which its chain starts, followed by the early
+  block and its tail. Then:
+  \begin{enumerate}[label=(\alph*)]
+  \item the piece in $F_t$ contributes at most $\mathrm{Eu}_s(s_t)/\mathrm{Eu}_s(s_{t+1})$;
+  \item the factor $1/\mathrm{Eu}_s(s_{t+1})$ is carried as a pending factor. It involves only primes decided before
+    $s_{t+1}$, and it is cancelled by the factor $\mathrm{Eu}_s(s_{t+1})$ of the next piece, inside the conditional
+    expectation at $s_{t+1}$ (Lemma~\ref{lem:pil});
+  \item the early block and the tail together contribute at most $\mathrm{Eu}_s(s_{T})$, where $s_T$ is the slot of the
+    earliest pivot. Summed inside the conditional expectation at $s_T$, this cancels the last carried factor;
+  \item at the top of the chain, below a pivot of slot $s_{\mathrm{top}}$, the factor $\mathrm{Eu}_s(s_{\mathrm{top}})$
+    is replaced, before the sum over the label $s_{\mathrm{top}}$, by the sure bound valid on $G_{<s_{\mathrm{top}}}$
+    taken from the proof of \ref{eq:sF3p}, and then by the constant majorant below:
+    \[
+      \mathrm{Eu}_s(s_{\mathrm{top}})\le e^{\gamma}\log s_{\mathrm{top}}\cdot
+      \exp\bigl(2.21/\Lambda+5H(s_{\mathrm{top}})/s_{\mathrm{top}}\bigr).
+    \]
+  \end{enumerate}
+  Hence the whole chain of a row is at most the right side of~(d). For $s_{\mathrm{top}}\le2z+H(2z)$ this is at most
+  $A_R\,e^{2.2/\Lambda}$, with $A_R=1.8(\log z+4)$ as in Theorem~\ref{thm:R}.
 \end{enumerate}
 \end{lemma}
 
@@ -266,17 +321,27 @@ projection over the $y$-values compatible with the window constraints gives $\ma
 since every $c$ is a product of realised primes $\le P$ (rational primes $<X_0$ included). For $\beta<1$ and $c\le Y$,
 $c^{-\beta}=c^{-1}c^{1-\beta}\le Y^{1-\beta}c^{-1}$, and the same Euler product bounds $\sum c^{-1}$.
 
-\emph{(S3).} The sum of $1/c$ over cofactors whose primes have slots in a range $(a,b]$ is at most
-$\prod_{\text{slot}\in(a,b]}(1-1/p)^{-1}=\mathrm{Eu}_s(b)/\mathrm{Eu}_s(a)$. Consecutive ranges are disjoint, so the
-product over the pieces of a chain telescopes exactly to $\mathrm{Eu}_s(\mathrm{top})/\mathrm{Eu}_s(\mathrm{bottom})$.
-At a pivot $p$ the carried factor $1/\mathrm{Eu}_s(s_p)$ involves only primes of slot $<s_p$, so it is
-$\mathcal F_{s_p-}$-measurable. The next piece contributes $\mathrm{Eu}_s(s_p)$, which cancels it.
+\emph{(S3).} (a) A cofactor whose primes have slots in $(s_{t+1},s_t)$ is a product of realised primes of slot in
+$[s_{t+1},s_t)$. So the sum of $1/c$ over such cofactors is at most
+$\prod_{\text{slot}\in[s_{t+1},s_t)}(1-1/p)^{-1}=\mathrm{Eu}_s(s_t)/\mathrm{Eu}_s(s_{t+1})$.
 
-At the two ends, compare slots with values: $\mathrm{Eu}_s(\mathrm{top})/\mathrm{Eu}_s(\mathrm{bottom})\le
-\mathrm{Eu}(\mathrm{top}+H)/\mathrm{Eu}(\mathrm{bottom}-H)$. By the sure local Mertens bound of Lemma~\ref{lem:cm}\,(iv) (once per chain; Remark~\ref{rem:cm-chain}),
-$\sum_{y<p\le x}1/p\le\log(\log x/\log y)+2.20/\log y$ on $\Good$. Moreover
-$\sum_{p\ge X_0}\bigl(-\log(1-1/p)-1/p\bigr)\le\sum_{p\ge X_0}p^{-2}\le1/X_0$. The end fuzz $H$ is absorbed as in
-Lemma~\ref{lem:pil}.
+(b) The factor $1/\mathrm{Eu}_s(s_{t+1})$ involves only primes of slot $<s_{t+1}$. These are decided before every pivot
+of $P_{t+1}$, so it may be carried through that run. The next piece of the same row lies in $F_{t+1}$. By
+Lemma~\ref{lem:pil}, that block is summed inside the conditional expectation at $s_{t+1}$. Its bound from~(a) has the
+factor $\mathrm{Eu}_s(s_{t+1})$ on top, which cancels the carried factor exactly.
+
+(c) Every prime of the early block or of a tail has slot $<s_T$, so the sum of $1/c$ over their products is at most
+$\mathrm{Eu}_s(s_T)$.
+
+(d) At the top no carried factor is available. The second case of the proof of \ref{eq:sF3p} bounds exactly the product
+over the realised primes decided before $s$, on $\Good(<s)$, by $e^{\gamma}\log s\cdot\exp(2.21/\Lambda+5H(s)/s)$. That
+bound uses the rational primes \cite[Thm.~8, (3.29)]{RosserSchoenfeld1962} and the sure local Mertens bound of
+Lemma~\ref{lem:cm}\,(iv) on $[X_0,s-H(s)]$, applied once per chain (Remark~\ref{rem:cm-chain}). At this point the event
+carried is $G_{<s_{\mathrm{top}}}$ (Lemma~\ref{lem:pil}).
+
+Finally, for $s_{\mathrm{top}}\le2z+H(2z)$ we have $\log s_{\mathrm{top}}\le\log z+0.7$ and $5H(s)/s\le5H(X_0)/X_0\le
+e^{-10^{6}}$, since $H(v)/v$ is decreasing. So the chain is at most
+$e^{\gamma}(\log z+0.7)e^{2.21/\Lambda}(1+10^{-8})\le1.8(\log z+4)\,e^{2.2/\Lambda}$.
 \end{proof}
 
 \begin{remark}[Widened caps; an optional route]\label{rem:widened}
@@ -284,8 +349,9 @@ Lemma~\ref{lem:pil}.
 Widen the caps of (FAC) by the pinned range $\rho_t$ of the later pivots, instead of by $O(\eps)$. Then they become
 functions of outer variables only, the sup-sums commute with the later integrals, and the recursion of
 Lemma~\ref{lem:pil} becomes a monotone functional of the final summand. The widened box costs a factor $e^{O(k\rho_t)}$.
-Since $\|E_P^{-1}\|_\infty\le k\,m^{k-1}$, which is sharp up to constants, with $m:=\log2z/\Lambda$ the maximal exponent
-sum of a row, this is harmless when
+Let $m:=\log2z/\Lambda$, the maximal exponent sum of a row. Then $\|E_P^{-1}\|_\infty\le k\,m^{k-1}$, by Cramer's rule and
+Hadamard's inequality. The order is attained: rows $n_i=q_iq_{i+1}^{m-1}$ give $E_P=I+(m-1)N$ with $N$ the nilpotent
+shift, whose inverse has a row of $\ell^1$-norm $\sum_{l<k}(m-1)^l$. So the route is harmless when
 \[
   (k-1)\log m+O(\log k)\ \ll\ \log(z/\delta).
 \]
@@ -341,8 +407,9 @@ $\mathcal R_{\le t}-w+y$ is a basis of $M_t$ with one more row of $C$. This cont
 
 \begin{remark}
 Neither minimality of $C$ nor any bound on $|C|$ is used. The order matters: if the rows of $B'\setminus C$ are listed
-first, conclusion~(3) can fail. Lemma~\ref{lem:SC} was also confirmed by exact rational rank computations on $43\,947$
-random multi-stage configurations with $r\le8$; see Appendix~\ref{app:cert}.
+first, conclusion~(3) can fail. As an independent check, not a step of the proof, Lemma~\ref{lem:SC} was also confirmed by exact rational rank
+computations: the nested sets exist on $32\,133$ random multi-stage configurations, and the explicit construction works on
+$13\,433$ (configuration, cover) pairs (computer check; see Appendix~\ref{app:cert}).
 \end{remark}
 
 \subsection{The Staged Volume Lemma}\label{sec:A-svl}
@@ -362,7 +429,7 @@ In the recursion of Lemma~\ref{lem:pil}, integrate the pivots stage by stage, th
 change of variables $q_{P_t}\mapsto(n_y)_{y\in C_t}$. Then the following hold.
 \begin{enumerate}[label=(\roman*),leftmargin=*]
 \item \emph{(Stage identity with the cover split.)} After stage $t$, the Jacobian integrand is
-  $\prod_{P_{\le t}}q\big/\bigl(|\det|\prod_{y\in\mathcal R_{\le t}}n_y\bigr)$, and
+  $\prod_{P_{\le t}}q\big/\allowbreak\bigl(|\det|\prod_{y\in\mathcal R_{\le t}}n_y\bigr)$, and
   \begin{equation}\label{eq:svl-identity}
     \frac{\prod_{j\in P_{\le t}}q_j}{\prod_{y\in\mathcal R_{\le t}}n_y}
     =W_t^{\mathrm{cov}}\prod_{y\in\mathcal R_{\le t}\setminus C}\frac1{n_y}\prod_{j\in P_{\le t}}q_j^{\,1-s_j^{\mathrm{cov}}}.
@@ -379,9 +446,10 @@ change of variables $q_{P_t}\mapsto(n_y)_{y\in C_t}$. Then the following hold.
   \[
     e_f=E_{\cdot,P_{\le t}}\,E_{\mathcal R_{\le t},P_{\le t}}^{-1}\,e_{f,\mathcal R_{\le t}} .
   \]
-  Hence the sup-sum of the block is at most $\prod_{y\in C\cap\mathcal R_{\le t}}$ (the $\mathrm{Eu}_s$-ratio of the
+  Hence the block bound (the realised block sum, bounded as in Lemma~\ref{lem:fac}\,(S3)) is at most
+  $\prod_{y\in C\cap\mathcal R_{\le t}}$ (the $\mathrm{Eu}_s$-ratio of the
   slot range of $F_t$), carried as in Lemma~\ref{lem:fac}\,(S3). The indicators of the remaining rows do not involve $f$.
-\item \emph{(Later stages; projected feasibility.)} After the sup-sum of each block, multiply by $\mathbf 1(\mathrm{Proj}_t)$.
+\item \emph{(Later stages; projected feasibility.)} After the block bound of each block, multiply by $\mathbf 1(\mathrm{Proj}_t)$.
   Here $\mathrm{Proj}_t$ is the projection onto the remaining variables of the real completions: summed primes
   $\ge X_0$, and integrated pivots $\ge\tau_j$ in slot order. It is deterministic, and $\mathcal F_{p-}$-measurable at
   the next pivot $p$. On $\mathrm{Proj}_t$, a row $y$ joining at a stage $t'>t$ satisfies
@@ -434,7 +502,7 @@ exponents. This map is injective.
 
 By Lemma~\ref{lem:SC}\,(3), $f$ has a nonzero entry in a cover row of $\mathcal R_{\le t}$. So
 $W_t^{\mathrm{cov}}=\prod_{y\in C\cap\mathcal R_{\le t}}c_{y,F_t}^{-1}\cdot(\text{factors free of }F_t)$, with every
-prime of $F_t$ appearing to a power $\ge1$. Before the sup-sum, replace $q_j^{1-s_j^{\mathrm{cov}}}$ by
+prime of $F_t$ appearing to a power $\ge1$. Before the block bound, replace $q_j^{1-s_j^{\mathrm{cov}}}$ by
 $\tau_j^{1-s_j^{\mathrm{cov}}}$; this is valid on $\mathrm{Proj}$, since $s_j^{\mathrm{cov}}\ge1$. After that, the only
 dependence on $F_t$ is through the cover-row pieces. Hence, by injectivity,
 \[
@@ -452,7 +520,7 @@ the pivots of $P_{\le t}$, is
 So their indicators do not involve $f$. The non-cover rows of $\mathcal R_{\le t}$ carry $1/n_y$ with $n_y$ an
 integration variable, which does not involve $f$ either.
 
-\emph{(iii).} After a sup-sum, the summed primes are no longer variables. The remaining integrand is a function of the
+\emph{(iii).} After a block bound, the summed primes are no longer variables. The remaining integrand is a function of the
 variables not yet processed, and every actual configuration lies in $\mathrm{Proj}_t$. So inserting
 $\mathbf 1(\mathrm{Proj}_t)$ costs nothing. $\mathrm{Proj}_t$ is defined by real inequalities among deterministic
 quantities and variables decided before the next pivot, so it has the stated measurability.
@@ -472,15 +540,18 @@ the cover, every prime lies in some cover row, and the type fixes its exponents 
 \end{proof}
 
 \begin{remark}
-As a numerical corroboration only, and not part of the proof, the structural conclusions of Theorem~\ref{thm:svl} were
-checked by exact rational arithmetic (computer check; see Appendix~\ref{app:cert}). There was no violation on adversarial
-families with $k\le12$ and up to nine stages:
+As a numerical corroboration only, and not part of the proof, some structural facts used in the proof of
+Theorem~\ref{thm:svl} were checked by exact rational arithmetic in the case $C=B'$ (computer check; see
+Appendix~\ref{app:cert}). There was no violation on random and adversarial families with $8$--$12$ rows and up to nine
+stages. The facts checked are:
 \begin{itemize}
-\item $s_j^{\mathrm{cov}}\ge1$;
-\item harmonic coverage of late primes;
-\item the vanishing of the coefficients of late primes in the remaining rows;
-\item the identity \eqref{eq:svl-identity}.
+\item the stage rows exist;
+\item column masses are $\ge1$ on the stage prefix;
+\item late free columns are covered and are determined by their stage-prefix entries, with vanishing coefficient in the
+  remaining rows;
+\item the cumulative determinants are nonzero integers.
 \end{itemize}
+The identity \eqref{eq:svl-identity} itself is not part of that check.
 \end{remark}
 
 \subsection{Theorem R}\label{sec:A-R}
@@ -489,9 +560,11 @@ families with $k\le12$ and up to nine stages:
 % v3: Theorem A.6 (Theorem R)
 For every window $J\subset[z,2z]$ of length $\delta\le1$ and every $k\ge1$,
 \[
-  \E\Bigl[\#\{\text{rank-}k\ k\text{-subsets of }\NN\cap J\}\cdot\mathbf 1\bigl(\Good(<t_J)\bigr)\Bigr]
-  \le(\theta A_R\delta)^k\,e^{(3H(X_0)+2)k/X_0}\bigl(1+k/X_0\bigr)^{1.02k}\,e^{2.2k/\Lambda},
+\begin{aligned}
+  &\E\Bigl[\#\{\text{rank-}k\ k\text{-subsets of }\NN\cap J\}\cdot\mathbf 1\bigl(\Good(<t_J)\bigr)\Bigr]\\
+  &\qquad\le(\theta A_R\delta)^k\,e^{(3H(X_0)+2)k/X_0}\bigl(1+k/X_0\bigr)^{1.02k}\,e^{2.2k/\Lambda},
   \qquad A_R:=1.8(\log z+4).
+\end{aligned}
 \]
 Since $H(X_0)/X_0\le e^{-10^{7}}$, the factor $e^{(3H(X_0)+2)k/X_0}$ is at most $e^{k\,e^{-10^{6}}}$.
 % CORRECTIONS-vs-v3.md entry 1: v3 states e^{2k/X0}.
@@ -514,15 +587,14 @@ $\mathcal R_{\le t}$ by~(2), and late free columns by \eqref{eq:A-span} and~(2).
 \item every row's $n_y$ is integrated over $J$ in exactly one stage, which gives $\delta^k$;
 \item $1/|\det E_P|\le1$;
 \item the pivot label sums give $\theta^k$;
-\item every row carries exactly one harmonic Euler chain over its free pieces, plus one tail sum, and no capped cofactor.
+\item every row carries exactly one harmonic Euler chain over its free pieces, ending with the early block and its tail,
+  and no capped cofactor.
 \end{itemize}
-For the last item:
-\begin{itemize}
-\item by Lemma~\ref{lem:fac}\,(S3) and \ref{eq:sF4}, the chain is at most $(\log2z/\Lambda)\,e^{2.20/\Lambda+1/X_0}$;
-\item by \ref{eq:sF3p}, the tail sum over $X_0$-smooth $d$ is at most $e^{\gamma}\Lambda(1+1/(2\Lambda^2))$.
-\end{itemize}
-Their product is at most $A_R$ per row, apart from the chain-end factor $e^{2.2/\Lambda}$ per row, which gives
-$e^{2.2k/\Lambda}$.
+For the last item, Lemma~\ref{lem:fac}\,(S3) bounds the chain of each row by $A_R\,e^{2.2/\Lambda}$. The factor
+$e^{2.2/\Lambda}$ there is the error term of the sure Mertens bound \ref{eq:sF4}. The rational primes (the tails) enter
+through \cite[Thm.~8, (3.29)]{RosserSchoenfeld1962}, inside the proof of \ref{eq:sF3p}. The slot--value fuzz of
+Lemma~\ref{lem:pil} is already contained in that top bound, as its factor $e^{5H(s)/s}$. Over the $k$ rows this gives
+$A_R^k\,e^{2.2k/\Lambda}$.
 
 The remaining factor is $\prod_jq_j^{1-s_j}$. By \eqref{eq:svl-identity} and \eqref{eq:B1}, it is at most
 $\prod_j\tau_j^{-(s_j-1)}$, with $s_j$ the full column sums. Summing it over patterns with the factor $1/k!$, by
@@ -541,7 +613,8 @@ Theorem~\ref{thm:R} contains two simpler cases:
 \begin{corollary}[The case of rank at least $r_0$]\label{cor:R-Ecl}
 % v3: Theorem A.6, application to E_cl
 Let $k=r_0=\lceil L/(3\ell)\rceil+3$ and $\delta=4L^{-6}$, and let $L\ge465$. Then the right side of
-Theorem~\ref{thm:R}, multiplied by the number $z/\delta$ of windows at height $z\le x$, is at most $L^{-4}$. This is the
+Theorem~\ref{thm:R}, multiplied by the number $2z/\delta$ of (overlapping) grid windows at height $z\le x$, is at most
+$L^{-4}$. This is the
 rank-$\ge r_0$ case of Proposition~\ref{prop:ecl}, and it is valid for every $L\ge465$.
 \end{corollary}
 
@@ -549,7 +622,8 @@ rank-$\ge r_0$ case of Proposition~\ref{prop:ecl}, and it is valid for every $L\
 Per element, the factor in Theorem~\ref{thm:R} is
 $\theta A_R\delta\,e^{(3H(X_0)+2)/X_0}(1+r_0/X_0)^{1.02}e^{2.2/\Lambda}$. Here:
 \begin{itemize}
-\item $\theta\,e^{(3H(X_0)+2)/X_0}e^{2.2/\Lambda}\le1.01$, since $H(X_0)/X_0\le e^{-10^{7}}$ and $\theta=1+1/L$;
+\item $\theta\,e^{(3H(X_0)+2)/X_0}e^{2.2/\Lambda}\le1.01$, since $H(X_0)/X_0\le e^{-10^{7}}$ (Section~\ref{sec:A-setting}),
+  $\theta=1+1/\Lambda$ and $\Lambda\ge10^{8}$;
 \item $A_R\le1.8(L+4)$, since $z\le x$;
 \item $1+r_0/X_0\le1+L\le2L$.
 \end{itemize}
@@ -557,11 +631,13 @@ Hence the factor is at most
 \[
   1.8(L+4)\cdot4L^{-6}\cdot(2L)^{1.02}\cdot1.01\le15L^{-3.98}\qquad(L\ge465).
 \]
-Since $z/\delta\le e^{L}L^{6}/4$ and $\log15-3.98\ell<0$,
+Since $2z/\delta\le e^{L}L^{6}/2$ and $\log15-3.98\ell<0$,
 \[
-  \log\Bigl(\frac z\delta\cdot\mathrm{RHS}\Bigr)\le L+6\ell+r_0(\log15-3.98\ell)
-  \le L\Bigl(-0.327+\frac{0.91}{\ell}\Bigr)+6\ell+9\le-4\ell
+  \log\Bigl(\frac{2z}\delta\cdot\mathrm{RHS}\Bigr)\le L+6\ell+r_0(\log15-3.98\ell)
+  \le L\Bigl(-0.3266+\frac{0.91}{\ell}\Bigr)+6\ell+9\le-4\ell
 \]
-for $L\ge465$. The middle step uses $r_0\ge L/(3\ell)+3$. For the last step, the left side at $L=465$ is $-37.3$, against
-$-4\ell=-24.6$, and the difference is increasing in $L$.
+for $L\ge465$. The middle step uses $r_0\ge L/(3\ell)+3$: the coefficient of $L$ is $1-3.98/3=-0.32667$, and
+$(\log15)/3\le0.91$ and $3\log15\le9$. For the last step, the left side at $L=465$ is $-37.1$, against $-4\ell=-24.6$, and
+the difference is increasing in $L$.
+% CORRECTIONS-vs-v3.md entry 17: v3 has -0.327.
 \end{proof}

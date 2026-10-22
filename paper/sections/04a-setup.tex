@@ -54,7 +54,7 @@ rational primes $p<X_0$, $t(p)=p$. For $w\in\NN$ put $\tau_w:=\max_{p\mid w}t(p)
     |R_k'(v)|\le\kappa_k\,(v/x_k)^{\theta-1},\qquad \kappa_k:=2\kappa_k'/\log x_k.
   \end{equation}
 \item $\Abs$ is the absorbed set \eqref{eq:absorbed}. $K_{\Abs}$ denotes the part of $\Kpt$ whose latest prime is
-  absorbed, and $\sigma_{\Abs}:=K_{\Abs}\rhot-\rho_{\Abs}$. By Lemma~\ref{lem:rhoA}(c), $|\sigma_{\Abs}|\le 2L^{-4}$, and
+  absorbed, and $\sigma_{\Abs}:=K_{\Abs}\rhot-\rho_{\Abs}$. By Lemma~\ref{lem:rhoA}(b), $|\sigma_{\Abs}|\le 2L^{-4}$, and
   $\sigma_{\Abs}$ vanishes unless $\log\log u>2\log\Lambda+5.97$ ($=42.8$ at $\Lambda=10^8$), since $\Abs$ is empty below
   that height.
 \item \emph{The effective source} is
@@ -77,8 +77,13 @@ rational primes $p<X_0$, $t(p)=p$. For $w\in\NN$ put $\tau_w:=\max_{p\mid w}t(p)
   boundaries, and $\rhot$ against $\sigma(W_y)/H(y)$.
 \end{itemize}
 
-\paragraph{Sharp coefficients.} $c_n(y):=\mu(n)\chi^t_y(n)$ (Lemma~\ref{lem:lemmaM}), and
-$\rhosh(y):=\sum_{n\in\NN}c_n(y)T'(y/n)/n$ is the pointwise sharp reference.
+\paragraph{Sharp coefficients.} Put
+% Logged correction 11 (CORRECTIONS-vs-v3.md): the cutoff 1[y/n >= X0-] (v3: c_n = mu chi).
+\[
+  c_n(y):=\mu(n)\chi^t_y(n)\,\mathbf 1[y/n\ge\Xm]\quad(\text{Lemma~\ref{lem:lemmaM}}),\qquad\text{and}\qquad
+  \rhosh(y):=\sum_{n\in\NN}c_n(y)T'(y/n)/n
+\]
+is the pointwise sharp reference.
 
 \paragraph{Constants.}
 \begin{itemize}
@@ -111,15 +116,17 @@ $|N(v)-\lfloor v\rfloor|\le\eps_1(v)\,v$ for $v\ge\Xm$. Put
 and require $\eta_1,\eta_2\le 10^{-3}$. In the construction, write
 $N-\lfloor\cdot\rfloor=(N-T)+(T-\lfloor\cdot\rfloor)$.
 \begin{itemize}
-\item On $\Good(<z)$ (Definition~\ref{def:good}), $|N-T|\le B(u)+H(u)/2+2$ at scales $u<z$, by Theorem~\ref{thm:queue}
-  and Corollary~\ref{cor:lag}.
-\item $T-\lfloor\cdot\rfloor$ is the B-lin error plus $R$ plus the absorbed part. By \eqref{eq:T1} and
+\item On $\Good(<z)$ (Definition~\ref{def:good}), $|N-T|\le B(u)+\frac12H(u)(1+\kappa_+/\log u)+3$ at scales $u<z$, by
+  Theorem~\ref{thm:queue} and Corollary~\ref{cor:lag}.
+% Logged correction 15 (CORRECTIONS-vs-v3.md): lag bound (H/2)(1+kappa_+/log x)+3 (v3: H/2+2).
+\item $T-\lfloor\cdot\rfloor$ is the error of the target \eqref{eq:target} (with its linear-window density \eqref{eq:rhodet})
+  plus $R$ plus the absorbed part. By \eqref{eq:T1} and
   Lemma~\ref{lem:lemmaP} it is bounded by $2\kappa u\cdot\min(1,C\rho(\log u/\log X_0))+O(u^{\theta}\log^*u)$.
 \item On $[\Xm,X_0)$, $N-\lfloor\cdot\rfloor$ counts the jittered primes landing below $X_0$. There are at most
   $\#\{\text{slots in }[X_0,X_0+H]\}\le 2H(X_0)$ of them, so $\eps_1\le 3H(X_0)/X_0$ there.
 \item Hence $\eta_1,\eta_2=O(\kappa\log X_0)+O(X_0^{-1/2})\ll 10^{-3}$.
 \end{itemize}
-No sup-norm power saving is assumed; under B-lin it would fail near $u\approx X_0^2$.
+No sup-norm power saving is assumed; for the target \eqref{eq:target} it would fail near $u\approx X_0^2$.
 
 \begin{lemma}[Chebyshev--Mertens]\label{lem:cm}
 % v3: Lemma 3.1
@@ -159,27 +166,29 @@ The proof of (i) is by induction on $x$, so this use of (i) at scales $\le 2x/\X
 \emph{(i).} Put $\ell_N(x):=\int_{[1,x]}\log v\,dN$. The Chebyshev identity gives
 $\ell_N(x)-2\ell_N(x/2)=\int[N(x/a)-2N(x/2a)]\,d\psi(a)$. In the bracket, $\lfloor v\rfloor-2\lfloor v/2\rfloor\ge
 \mathbf 1_{[1,2)}(v)$, so the $\lfloor\cdot\rfloor$ part contributes at least $\psi(x)-\psi(x/2)$. Hence
-\[
-  \psi(x)-\psi(x/2)\le\big[S_0(x)-2S_0(x/2)\big]+\Big|\int_{[1,x]}\!\log v\,dE_1\Big|+2\Big|\int_{[1,x/2]}\!\log v\,dE_1\Big|
+\begin{multline*}
+  \psi(x)-\psi(x/2)\le\big[S_0(x)-2S_0(x/2)\big]+\Big|\int_{[1,x]}\!\log v\,dE_1\Big|+2\Big|\int_{[1,x/2]}\!\log v\,dE_1\Big|\\
   +\int\big(|E_1(x/a)|+2|E_1(x/2a)|\big)\,d\psi(a),
-\]
+\end{multline*}
 with $S_0(x):=\sum_{n\le x}\log n$. By Stirling, $S_0(x)-2S_0(x/2)\le x\log2+3\log x+3$. The two log-integrals are at
 most $4x(\eta_2+\sup\eps_1)\le 0.008x$, and by \eqref{eq:cm-psi} the last integral is at most
 $2.84\,\eta_1x\le 0.0043x$. So
-$\psi(x)-\psi(x/2)\le(\log2+0.008+0.0043)x+O(\log x)=0.7054x+O(\log x)\le0.71x$ for $x\ge\Xm$. Below $\Xm$ the system
-is $\N$, where the maximum of $(\psi(x)-\psi(x/2))/x$ is $0.680$, attained at $x=5$. Summing over dyadic blocks gives
+$\psi(x)-\psi(x/2)\le(\log2+0.008+0.0043)x+3\log x+3\le0.71x$ for $x\ge\Xm$. Below $\Xm$ the system is $\N$, where
+$E_1=0$ and the same argument gives $\psi(x)-\psi(x/2)\le x\log2+3\log x+3\le0.71x$ for $x\ge1500$; a direct computation
+for $x<1500$ gives the maximum $0.6803$ of $(\psi(x)-\psi(x/2))/x$, attained at $x=5$ (see Appendix~\ref{app:cert},
+\texttt{finite-n}). Summing over dyadic blocks gives
 $\psi(x)\le 0.71x\sum_{k\ge0}2^{-k}=1.42x$.
 
 \emph{(ii).} In \eqref{eq:cm-identity}, $0\le\int\{x/a\}\,d\psi\le\psi(x)\le1.42x$, and
 $|S_0(x)-(x\log x-x)|\le\log(2\pi x)$. The two $E_1$-terms are at most $(\eta_2+\sup\eps_1+1.42\eta_1)x\le 0.004x$. So
 $S(x)-\log x\in[-1.004,\,0.424]$ for $x\ge\Xm$. Below $\Xm$ it equals the value for $\N$, which lies in $[-0.753,0]$:
-this is an exact computation for $x\le10^7$. For $10^7\le x<\Xm$, Rosser and Schoenfeld
+this is a direct computation for $x\le10^7$ (see Appendix~\ref{app:cert}, \texttt{finite-n}). For $10^7\le x<\Xm$, Rosser and Schoenfeld
 \cite[(2.8) and Thm.~6, (3.21)--(3.22)]{RosserSchoenfeld1962} give
 $\sum_{p\le x}(\log p)/p=\log x+E\pm1/(2\log x)$, where the lower bound holds for $x>1$ and the upper for $x\ge319$. By
 their (2.8), adding the prime powers gives $S(x)-\log x=-\gamma\pm0.04$ there.
 
 \emph{(iii).} $S-S_p=\sum_{p^k\le x,\,k\ge2}\log p/p^k\in[0,0.7554]$: the rational primes contribute at most
-$\sum_p\log p/(p(p-1))=0.75537$, and primes $\ge\Xm$ add at most $3/X_0$. Combine with (ii).
+$\sum_p\log p/(p(p-1))\le0.75537$ (Appendix~\ref{app:cert}, \texttt{finite-n}), and primes $\ge\Xm$ add at most $3/X_0$. Combine with (ii).
 
 \emph{(iv).} Put $E_p:=S_p-\log\in[-1.77,0.43]$. Partial summation on $(y,x]$ gives
 \[
@@ -192,9 +201,10 @@ $[-M'/\log y,\,-m/\log y]$. So the left side has absolute value at most $(M'-m)/
 
 \begin{remark}\label{rem:cm-chain}
 Part (iv) is the form used in the pivot chains of \S\ref{sec:queue} and Appendix~\ref{app:rankfull}. It applies once
-per chain, so nothing accumulates. A single-function version also exists: the function
-$E_z(\sigma):=\sum_{p\le e^\sigma}1/p-\log\sigma-M_z$, with $M_z$ defined from the primes $\le 2z$, satisfies
-$|E_z(\sigma)|\le 2.20/\sigma$, but it is not adapted.
+per chain, so nothing accumulates. A single-function version also exists: for $\sigma_a$ with $e^{\sigma_a}\le z$, the
+function $E(\sigma):=\sum_{p\le e^\sigma}1/p-\log\sigma-M_a$, with $M_a$ chosen so that $E(\sigma_a)=0$, satisfies
+$|E(\sigma)|\le 2.20/\sigma$ for $\log2\le\sigma\le\sigma_a$, by (iv) with $y=e^\sigma$ and $x=e^{\sigma_a}$. It depends on the
+top point $\sigma_a$, so it is not adapted.
 \end{remark}
 
 \paragraph{Facts on Dickman's function.} Let $\rho$ be Dickman's function, with $\rho(v):=1$ for $v\le1$, and put
@@ -242,10 +252,20 @@ $n=p^km$,
 \]
 The dyadic window shifts exactly, so this is an identity. Its left side is $\ge\ell\,v(\ell,z)$.
 
-\emph{Small heights.} For $0\le\ell'\le L_z$, $v(\ell',z)\le\sum_{n\in(e^{\ell'},2e^{\ell'}]}1/n$. For
-$e^{\ell'}\ge72$ this is at most $\log2+1/(4e^{\ell'})+3(\eta_2+\sup\eps_1)\le C_0$; on $\N$ the exact value is at most
-$0.6966$ there. For $1\le e^{\ell'}<72$ it is the value for $\N$, which is at most $0.8334$ (attained for
-$e^{\ell'}\in[1.5,2)$). For $\ell'<0$, $v(\ell',z)\le1$.
+\emph{Small heights.} For $0\le\ell'\le L_z$ put $Y':=e^{\ell'}$; then $v(\ell',z)\le\sum_{n\in\NN\cap(Y',2Y']}1/n$.
+\begin{itemize}
+\item If $72\le Y'<\Xm/2$, the window lies below $\Xm$, where $\NN=\N$. There
+  $\sum_{Y'<n\le2Y'}1/n\le\log2+1/\lceil Y'\rceil\le0.6933$ for $Y'\ge10^4$, and a direct computation for $72\le Y'<10^4$
+  gives at most $0.69658$ (attained for $Y'\in[72.5,73)$; see Appendix~\ref{app:cert}, \texttt{finite-n}).
+\item If $Y'\ge\Xm/2$, write $N=\lfloor\cdot\rfloor+E_1$ and sum by parts:
+  \begin{multline*}
+    \sum_{n\in\NN\cap(Y',2Y']}1/n=\sum_{Y'<n\le2Y'}1/n+\big[E_1(v)/v\big]_{Y'}^{2Y'}+\int_{Y'}^{2Y'}E_1(v)\,dv/v^2\\
+    \le\log2+1/Y'+3\sup\eps_1\le0.6992.
+  \end{multline*}
+\item If $1\le Y'<72$, it is the value for $\N$, which is at most $5/6\le0.8334$ (attained for $Y'\in[1.5,2)$, where the sum is $\frac12+\frac13$). For $\ell'<0$,
+  $v(\ell',z)\le1$.
+\end{itemize}
+So $v(\ell',z)\le C_0$ for $72\le Y'\le z$.
 % Logged correction 10 (CORRECTIONS-vs-v3.md): v3's base case v <= C_0 for all l' <= L_z fails for 1.5 <= e^{l'} < 72;
 % the excess enters the induction step as X(u) and is certified (aux_cert_arb.py, third line).
 
@@ -256,7 +276,12 @@ $0\le\sigma\le L_z$. Since $\rho$ is non-increasing and $a_V$ is increasing,
 \begin{equation}\label{eq:lemV-maxF}
   \max_{0\le\sigma\le L_z}F(\sigma)\le C_0\,\rho(u-1)\,e^{a_V(u)} .
 \end{equation}
-($F$ is increasing in $\sigma$ when $u\ge2$, but for $1<u<2$ it is only unimodal; \eqref{eq:lemV-maxF} is what is used.)
+Moreover $F$ is unimodal. As a function of $u'$, $G_V$ is increasing for $u'\le1$, where $\rho(u')=1$; and for $u'\ge1$,
+\[
+  \frac{d\log G_V}{du'}=-r(u')+\frac{4K}{L_z}\Big(\log(u'+2)+\frac{u'}{u'+2}\Big)\le-1+\frac{12.8\,(\log(L_z+2)+1)}{L_z}<0,
+\]
+since $r\ge1$ on $(1,\infty)$ \ref{R2}, $u'\le L_z$ and $L_z\ge100$. So $F(\sigma)=G_V(\ell-\sigma)$ first increases and then
+decreases in $\sigma$; it is increasing when $u\ge2$, but for $1<u<2$ it is only unimodal.
 % Logged correction 10: v3 asserts F is increasing for all u; for 1<u<2 it is unimodal, and max F <= C_0 rho(u-1) e^{a_V(u)}
 % gives the same term 2K_M r(u).
 \begin{itemize}
@@ -272,9 +297,18 @@ $0\le\sigma\le L_z$. Since $\rho$ is non-increasing and $a_V$ is increasing,
     0.1334\sum_{p^k\in(Y/72,z]}\frac{\log p}{p^k}\le0.1334\,(\log72+1.44)\le0.7627,
   \]
   by Lemma~\ref{lem:cm}(ii). This can happen only for $1<u<1+\log72/L_z\le1.043$.
-\item \emph{Prime powers $p^k>z$ with $p\le z$.} These contribute at most $22e^{-0.4L_z}$ relative to the normaliser below.
-  This uses $\rho(u-t)/\rho(u)\le e^{t\,r(u)}$, $v\le G_V/C_0$ for $\ell'<\log72$, and
-  $1-r(u)/L_z\ge1-r_{\mathrm{up}}(100)/100\ge0.92$.
+\item \emph{Prime powers $p^k>z$ with $p\le z$} (so $k\ge2$). Put $\ell':=\ell-k\log p$ and $t:=k\log p/L_z$. Then
+  $v(\ell',z)\le1.001\,G_V(\ell')/C_0$ for every $\ell'$: by induction for $\ell'\ge\log72$; because $v\le1$ and
+  $G_V(\ell')/C_0=e^{a_V(\ell')}\ge e^{-7\cdot10^{-4}}$ for $-\log2\le\ell'<\log72$; and because $v=0$ for $\ell'<-\log2$.
+  Since $r$ is non-negative and non-decreasing, $\rho(u-t)/\rho(u)\le e^{t\,r(u)}$, and $a_V(\ell')\le a_V(\ell)$. Hence
+  each term is at most $1.001\,(\log p)\,p^{-k\beta}\rho(u)e^{a_V(u)}$, with $\beta:=1-r(u)/L_z\ge1-r_{\mathrm{up}}(100)/100\ge0.92$.
+  For $p\le\sqrt z$ the $k$-sum is at most $z^{-\beta}/(1-2^{-\beta})\le2.12z^{-\beta}$, and
+  $\sum_{p\le\sqrt z}\log p\le1.42\sqrt z$ (Lemma~\ref{lem:cm}(i)), so these $p$ give at most $3.02z^{-0.42}$. For $p>\sqrt z$
+  every $k\ge2$ occurs, the $k$-sum is at most $1.01p^{-2\beta}$, and partial summation with $\psi(t)\le1.42t$ gives
+  $\sum_{p>\sqrt z}(\log p)p^{-2\beta}\le1.42\cdot\frac{2\beta}{2\beta-1}\,z^{1/2-\beta}\le3.12z^{-0.42}$. Altogether, with
+  $\rho(u)e^{a_V(u)}=\mathcal N(u)/(C_0u)\le\mathcal N(u)/C_0$ ($\mathcal N$ is the normaliser below), these terms contribute at
+  most $1.001\,(3.02+1.01\cdot3.12)\,z^{-0.42}\mathcal N(u)/C_0\le9e^{-0.42L_z}\mathcal N(u)\le22e^{-0.4L_z}\mathcal N(u)$.
+% The allowance 22e^{-0.4L} replaces v3's 15e^{-0.4L} (part of logged correction 10); the certified [1,2] cover uses 22.
 \end{itemize}
 
 \emph{The one-step inequality.} Substitute $s=u-\sigma/L_z$. Then $\int_0^{L_z}F=L_zC_0\int_{u-1}^u\rho(s)e^{a_V(s)}ds$,
@@ -282,10 +316,11 @@ where $a_V(s)$ is evaluated at $\ell'=sL_z$, and $\ell G_V(\ell)=uL_zC_0\rho(u)e
 $u\rho(u)=\int_{u-1}^u\rho(s)\,ds$. Let $\alpha:=4K\big(\log(u+1)+(u-1)/(u+1)\big)/L_z$; then $a_V(u)-a_V(s)\ge\alpha(u-s)$ on
 $[u-1,u]$, and $e^{-\alpha t}\le1-(1-e^{-\alpha})t$ for $t\in[0,1]$. Let $E_*$ be a lower bound for the mean of $u-s$ under the
 density proportional to $\rho(s)$ on $[u-1,u]$. With $\rho(u-1)=u\,r(u)\,\rho(u)$, this gives
-\[
+\begin{gather*}
   \ell G_V(\ell)-\int_0^{L_z}F-2K_MC_0\rho(u-1)e^{a_V(u)}\ \ge\ \mathcal N(u)\cdot
-  \Big[L_z(1-e^{-\alpha})E_*-2K_M\,r(u)\Big],\qquad\mathcal N(u):=C_0e^{a_V(u)}\rho(u)\,u .
-\]
+  \Big[L_z(1-e^{-\alpha})E_*-2K_M\,r(u)\Big],\\
+  \mathcal N(u):=C_0e^{a_V(u)}\rho(u)\,u .
+\end{gather*}
 Both sides are in the absolute units of the inequality $\ell v(\ell)\le\ell G_V(\ell)$. The bracket is of order $1$, not of
 order $L_z$: $L_z(1-e^{-\alpha})\approx4K\log(u+1)$. Two choices of $E_*$ are available:
 \begin{itemize}
@@ -308,8 +343,10 @@ shrinks as $L_z$ grows, so $L_z=\max(100,u)$ is the worst case.
   side \emph{with} $X$ and $22e^{-0.4L_z}$, and even with an additional allowance $2K_Mr_{\mathrm{up}}(u)(e^{0.141}-1)$, is
   positive: $1{,}387$ cells, no failures, minimum certified value $0.829$.
 % Logged correction 10: the small-height excess X(u) and the [1,2] check (aux_cert_arb.py, third line) are new.
-\item For $u>10^6$, use $r_{\mathrm{low}}\ge16.5$ and $r_{\mathrm{up}}(u)\le\log u+\log\log u+2$. The left side is then at least
-  $2K_M\big[3\log(u+1)\cdot0.94-\log u-\log\log u-2\big]>0$, since $K\ge3K_M$.
+\item For $u>10^6$, we have $L_z\ge u>10^6$, so $\alpha\le4K(\log(L_z+1)+1)/L_z\le2\cdot10^{-4}$ and
+  $L_z(1-e^{-\alpha})\ge0.9999\,L_z\alpha\ge12.79\log(u+1)$. Use $E_*=\frac12$ and
+  $r_{\mathrm{up}}(u)\le\log u+\log\log u+2$ \ref{R4}. The left side is then at least
+  $6.39\log(u+1)-2.02(\log u+\log\log u+2)-10^{-10^5}>0$.
 \end{itemize}
 This completes the induction. The range $\ell'\le L_z^2$ covers $u\le L_z$.
 \end{proof}

@@ -168,3 +168,5 @@
 | eq:sF4 | standing fact (F4), sure Mertens/Chebyshev (v3 §4.1); cite with \ref | 05-queue.tex |
 | sec:queue-standing | §5.1 conventions: parameters, filtration, 𝒩_{≺s}, X₀⁻ convention, (F1)–(F4) (alias of sec:queue-conv) | 05-queue.tex |
 | thm:kr-random | Theorem 3.6′, KR bound for nominal kernels with varying widths (factor λ₀) | sections/04k-kernels.tex |
+| lem:rhoA | UPDATE (correction #16): v3 4.19(b) deleted; parts are now (a) sup ρ_𝒜 ≤ L⁻⁴, (b) |σ_𝒜| ≤ 2L⁻⁴ (was (c)), (c) current-height form o_𝒜 ≤ 4L⁻⁴ (was (d)) | 05-queue.tex |
+| cor:localcount | UPDATE: K_loc(P) := 2B(4P) + 7λ_P/3 + 23 (was +13; landing windows 𝒥_P specified, E4 total 146H u⁻³) | 05-queue.tex |

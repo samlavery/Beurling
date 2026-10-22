@@ -9,7 +9,10 @@ On $\Good(<x)$, for every $x\ge2X_0$, the compensator margin \eqref{eq:M} satisf
   \log x\cdot M(x)=\log x\cdot(\tilde T'-B\Kpt\rhot)(x)\ge0.97-o(1)-\eps_N-E_{\mathrm{BR}}-j_{X_0}(x),\qquad
   \eps_N+E_{\mathrm{BR}}\le10^{-13},
 \]
-where $j_{X_0}$ is defined in \eqref{eq:jX0}; $j_{X_0}\le0.4209$ for $x\le X_0e^{0.01\Lambda}$ and $j_{X_0}\le e^{-0.0009\Lambda}$ beyond (Proposition~\ref{prop:xb-ranges}).
+where $j_{X_0}$ is defined in \eqref{eq:jX0}. By Proposition~\ref{prop:xb-ranges}, $j_{X_0}\le0.4209$ for
+$x\le X_0e^{0.01\Lambda}$, $j_{X_0}\le e^{-0.0009\Lambda}$ for $X_0e^{0.01\Lambda}\le x\le X_0e^{600\Lambda^4}$, and
+$j_{X_0}\le e^{-59}$ for $x\ge X_0e^{600\Lambda^4}$.
+% Logged correction 19 (CORRECTIONS-vs-v3.md): v3 states e^{-0.0009 Lambda} for all x beyond the small range.
 \end{theorem}
 
 \begin{proof}
@@ -63,15 +66,17 @@ This uses the centred boxes, and it holds also near $X_0$, where $\sigma=0$ and 
 $|\Delta_s\rhot(z)|\le(s/H(z))\sup v+2\eps_s(z)/H(z)$.
 
 \emph{Step 3: the recursion.} Write $\kappa_w:=\mathbf 1[\tau_w<t/w]$. Then
-$\Delta_hm(t)=\Delta_hT'(t)-\sum_w(\kappa_w/w)\Delta_{h/w}\rhot(t/w)+(\text{filter switching})+\Delta_h\NT_{\mathrm{pt}}$.
+\[
+  \Delta_hm(t)=\Delta_hT'(t)-\sum_w(\kappa_w/w)\Delta_{h/w}\rhot(t/w)+(\text{filter switching})+\Delta_h\NT_{\mathrm{pt}}.
+\]
 \begin{itemize}
 \item Filter switching and $\NT$ occur only for $w$ $\tau$-near at $t$, and cost at most $2\eta(t)$. The cutoff $\Xm$ switches
   nothing on, since $\rhot(\Xm)=0$.
 \item $h/w\le1.01H(t/w)w^{\eps-1}$ by \eqref{eq:RH}. So
-  \[
-    v(t)\le S(t)+\sum_{w\ge2}1.01\,\kappa_w\,w^{\eps-2}\sup\{v(t'):|t'-t/w|\le2.1H(t/w)\},\qquad
+  \begin{gather*}
+    v(t)\le S(t)+\sum_{w\ge2}1.01\,\kappa_w\,w^{\eps-2}\sup\{v(t'):|t'-t/w|\le2.1H(t/w)\},\\
     S(t):=o_t+2\eta(t)+2\sum_w\frac{\kappa_w}w\cdot\frac{\eps_{H(t)/w}(t/w)}{H(t/w)} .
-  \]
+  \end{gather*}
 \item Base case $t<2\Xm$: there $\Kpt\rhot=\NT_{\mathrm{pt}}=0$, so $m=T'=\Tc+J$ and
   $v(t)\le o_t+\jz\mathbf 1[|t-X_0|\le1.01H(t)]$.
 \item $v(t)$ depends on $v$ and on the noise only at points $\le t/2+2.1H(t/2)<t$. So the recursion is a well-founded
@@ -100,7 +105,8 @@ $\jz\mathbf 1[\cdots]$.
   $v_{X_0}(t)\le\jz\sum_{M\in I'_t}\Hord(M)M^{\eps'-2}$, and $\jz\log t\le1.01(1+\log N/\Lambda)$. For $N\ge e^{0.01\Lambda}$, every
   $M\in I'_t$ has $M\ge N/2$, so
   $\sum_{M\in I'_t}\Hord(M)M^{\eps'-2}\le(N/2)^{-0.155}\sum_M\Hord(M)M^{-1.8}\le8.5(N/2)^{-0.155}$, using
-  $1/(2-\zeta_{\NN}(1.8))-1\le7.5(1+O(\eta_1))$. This gives $V_{X_0}(t)\le e^{-0.0015\Lambda}$.
+  $\sum_M\Hord(M)M^{-1.8}=1/(2-\zeta_{\NN}(1.8))\le8.4912$, since $\zeta_{\NN}(1.8)\le\zeta(1.8)+X_0^{-0.7}$
+  (\S\ref{sec:kernels}) and $\zeta(1.8)=1.8822296\ldots$. This gives $V_{X_0}(t)\le e^{-0.0015\Lambda}$.
 \end{itemize}
 
 \emph{Step 6(a).} $m\ge Bm-v$ pointwise, and $Bm=M-B\,\NT_{\mathrm{pt}}-\vartheta/H\ge M-54\eta-6/H$. Insert

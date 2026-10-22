@@ -1,5 +1,5 @@
-# Certified one-variable checks for (H⁗) (outward-rounded intervals from bs_cert):
-#  (1) (H″), u >= 27:  5 log(1+u)[3(1-1/r(u)) - (1+u)^3 log(2+u)/(u^3 log(1+u)) - 144(1+u)^2 log(2+u)/(u^3 r0^2 log(1+u))]
+# Certified one-variable checks for Theorem bs (Appendix B) (outward-rounded intervals from bs_cert):
+#  (1) positivity of c_0(u), u >= 27:  5 log(1+u)[3(1-1/r(u)) - (1+u)^3 log(2+u)/(u^3 log(1+u)) - 144(1+u)^2 log(2+u)/(u^3 r0^2 log(1+u))]
 #                      - 2 r(u-1) - (u+1)/u^2  >=  log(1+u),   with r -> r_low, r0 -> r_low(u-1), r(u-1) -> r_up.
 #  (2) Lemma V one-step, closed form, u in [1, L], L >= 100, worst case L = max(100, u) (L*Q_V increasing in L):
 #      L(1-e^{-alpha}) * max(1/2, 1 - 1/r_low(u-1)) - 2 K_M r_up(u) - 15 e^{-0.4 L}  >  0   (last term: prime powers p^k > z),
@@ -35,5 +35,5 @@ def cover(f, a, b, ratio, name):
         if d > 30: fails += 1; continue
         m = 0.5 * (xa + xb); stack += [(xa, m, d + 1), (m, xb, d + 1)]
     print(f"{name}: [{a:g},{b:g}] cells={n} failed={fails} min certified margin={worst:.4g}")
-cover(cA_cell, 27.0, 4e5, 1.001, "(H'') c_A >= K'u^2 log(1+u)")
+cover(cA_cell, 27.0, 4e5, 1.001, "c_0 >= K'u^2 log(1+u)")
 cover(lemV_cell, 1.0, 1e6, 1.001, "Lemma V one-step (L*Q_V, L = max(100,u))")

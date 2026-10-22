@@ -1,0 +1,121 @@
+Sub-checker report: paper §4 (04-noise, 04a–04e, B §bs-cert) vs v3 §3.0–3.3, §3.5, §3.6–Thm 3.13, App. N part-F, Applied lists
+No BLOCKING items; 9 FIXABLE, 14 COSMETIC. Every item in scope was checked; none left unchecked.
+Checks run:
+  - aux_cert_arb.py, rerun from a scratch copy, reproduces the paper's output exactly
+    (9,609/0/0.189; 13,823/0/1.724; 1,387/0/0.829).
+  - The Z2 cover was not rerun; its code was read against the paper.
+  - Z1 constants, C_BS, merit/c_zf, J2, c2-, h(2) and eps(l) were recomputed.
+  - The N (natural-number) constants were checked to 2e6.
+
+(1) FINDINGS
+1. [FIXABLE] 04c-saias.tex:262-307 lem:bs-remainder (v3 l.846-853, where it was only stated). The inlined proof is a sketch.
+   - "r0 >= 15 for u >= u0-2" (l.292) is false at l = 1e18 (u0 = 31623): the paper's own (R4) gives r(31619) <= 14.06;
+     the certified r_low is 12.82; r_low first reaches 15 near u ~ 2.35e5.
+   - "s_a >= 0" (l.268) is false for u <= u0 (s_a ~ -0.06/sqrt(l)). v3 says the same.
+   - With the crude moments it states (M2 <= 9.5, M4 <= 59.8), "1/2 E D_a^2 <= 10 a'(l,U) s_a + 60/l" fails for a' < ~16/sqrt(l).
+     It holds with the true moments (~1 once r0 >= 12), or with 60 replaced by ~1e4.
+   - The assembly into eps(l) and 9e17/l is asserted, not shown.
+   - The conclusion survives:
+       * with r0 >= 12.8, s_a >= 0.33a' - 0.21/sqrt(l);
+       * c(u) >= 2.2 sqrt(l) log u0 >> l|s_a| <= 1.01 sqrt(l);
+       * eps(1e18) = 0.0230 and eps(1e22) = 0.00104 are correct.
+   - Fix: use r0 >= 12.8, state the sharp moments, drop ">= 0", and write each remainder relative to c(u).
+2. [FIXABLE] 04c:235 Z1 (v3 l.845). "l(E1+E2+E3+T) <= 33" is not derived.
+   I get lE1 <= 17.6, lE2 ~ 6.4, lE3 ~ 1.7, T negligible: ~25.8 in total. Add these lines.
+3. [FIXABLE] 04c:15-23 Lemma M (v3 l.743, 564). The paper adds the cutoff 1[y/n >= X0-] without a log entry.
+   - The change is correct: v3's statement is false without it.
+   - 04a:80 and 04k-kernels.tex:55 still define c_n := mu*chi, contradicting the lemma.
+   - Harmless for rho^sh, but the bound sum|c_n|/n <= sum_{n <= y/X0-} needs the cutoff.
+   - Fix: log it as correction #11 and add the indicator at 04a:80 and 04k:55.
+4. [FIXABLE] 04a:245-247 Lemma V base case (area of correction #10; v3 l.650).
+   - "log2 + 1/(4Y) + 3(eta2 + sup eps1) <= C0" is false as written: 0.7026 > 0.70 at Y = 72.
+   - The step sum_{Y<n<=2Y} 1/n <= log2 + 1/(4Y) also fails, by 1.2e-5 as Y -> 73-.
+   - Fix: split the two cases: Y < X0-/2 is the N case (max 0.69658); Y >= X0-/2 gives <= 0.6992.
+5. [FIXABLE] 04a:259-266 (v3 l.651). Unimodality of F, needed for TV(F) <= 2 max F, is asserted without proof.
+   One line suffices: G_V increases for s <= 1, and on [1,u], (log G_V)' <= -1 + 12.8(log(Lz+2)+1)/Lz < 0.
+6. [FIXABLE] 04c:145-150 Thm BS Step 4 (v3 l.817). Lemma V needs u >= 1, but the claim covers 0 <= u < 1.
+   Fix: for u < 1, use the trivial bound <= C0 and G >= Phi(l).
+7. [FIXABLE] 04e:150-152 LP Step 6. (LP-c) only gives |Rhat| <= |s|, which does not yield |E| <= 3X0^-0.3(1+|t|).
+   Fix: cite eq:Rhatbound.
+8. [FIXABLE] 04e:161-188 LP Step 7 (v3 l.1223).
+   - The constant 442 rests on an unspecified "+O(1)", and log(1/eta) is not log Lambda + log L.
+   - The stated width holds directly only for L >~ 8, and for all L only via the 0.0892 -> 0.088 slack.
+   - The T_y constants (51, 500) are unchecked when Lambda >~ 6e12 and log y/(Lambda loglog y) is small.
+   - Every use has large slack. Fix: make the O(1) explicit, or restrict to the ranges used.
+9. [FIXABLE] 04e:20 Lemma 3.12 (v3 l.1172). 1.8 log p + 1 does not follow from cm(iv) alone (that gives ~78 log p).
+   Fix: use (iv) at y = X0- together with Rosser-Schoenfeld (3.30).
+
+COSMETIC:
+C1  04c:233. "1/30 + 1e-17" should be "+2.4e-10". Harmless.
+C2  04c:239, 398. The displayed rounded constants give 0.26483 tau; the exact value is 0.26512 tau (v3 has the same rounding).
+    2713.05 <= 2714 is fine.
+C3  04a:311. "r_low >= 16.5" is not certified (the table caps at 15.57), and 1-1/16.5 = 0.9394 < 0.94. Not needed: E* = 1/2 suffices.
+C4  04a:276. The change 15 -> 22 is not in log #10. The justification is slightly off for l' < 0. Bound only sketched:
+    ~7.9e^{-0.42 Lz}, so 22 is safe.
+C5  04c:163. Uses the unproved rem:cm-chain, whose z clashes with BS's z. Derive it from (iv) in one line.
+C6  04c:286-289. "10.3 Lambda" needs the refined bound (9.7). "rho3 <=" should read "l rho3 <=", and "rho3 =" should be "<=".
+C7  04e:200-202 LP Step 8.
+    - The anchor "+1" is missing.
+    - 1/16 <= |t| < 2 is not covered by the explicit G bound.
+    - merit omits the 1e-8 used in Step 7.
+C8  04e:71. "L1 <= 3000 Lambda" is false for huge v; restrict the range.
+C9  04e:96. Deriving (H_BS) from (LP-a) also needs (T1).
+C10 04c:418, 422 Cor 3.5.
+    - Should use log X0-, not log X0.
+    - The excess is 2.7 eta1, not 2 eta1 (0.6959; 1.4 still holds).
+    - "4v >= 2X0-" correctly fixes v3's "2X0" (unlogged).
+C11 04a:169, 175-176. The N facts (0.680 at x=5; exact computation to 1e7) are uncited. I confirmed both to 2e6.
+C12 04-noise.tex:36-38. Dead placeholder with hard-coded "Theorem 3.6 ... Lemmas 3.9-3.10"; delete it.
+C13 B bs-cert section.
+    - The description matches the code.
+    - "Floats used only to select cells" is inaccurate.
+    - The "(H'')" label and README jargon (gap-localPNT, /tmp/rhscratch, referee B) are left in.
+C14 04a:33. Operators are defined for y >= X0- (v3: X0). Harmless.
+No hard-coded numbering or jargon appears in the rendered text of 04a-04e. All refs resolve.
+
+(2) CORRECTIONS
+#6: applied consistently, correct, and the downstream claim holds.
+    - w1 = (l-tau-log2)/(l+tau+log2) is exactly p <= sqrt(2tY).
+    - m >= tau because l > 30 tau.
+    - w1(30 tau) = 0.93548387 >= 29/31 - 1e-8; the factor is 0.92870.
+    - l*mu0 <= 2.00111 tau + 1.387; the constant is 2713.05 <= 2714.
+    - For u >= 2, w_lo = u-1 >= 1 > w1, so Z2, the certificate, l >= 1e18 and Lemma 3.4A are unchanged.
+    - Only nits remain: C1, C2.
+#10: applied and correct, apart from items 4 and 5.
+    - Values check out: 0.8334 for Y in [1.5,2); 0.1334(log72 + 1.44) = 0.7626; range u < 1.0428.
+    - X(u) is correct in the N(u) normalisation.
+    - The max F bound gives exactly 2K_M r(u).
+    - In the code, aux_cert_arb.py l.51-61 (L = 100) subtracts X(u) and 2K_M r_up(e^0.141 - 1), with 22e^{-0.4L}.
+    - Rerun: 1,387 cells, 0 failures, min 0.829.
+    - The log should also mention 15 -> 22.
+
+(3) COVERAGE
+Notation, (H_BS): match / reword; c_n definition inconsistent (item 3).
+Lemma 3.1: match; inlined proof complete (C11).
+rem:cm-chain: match, no proof (C5).
+(R1)-(R4): match, plus verified additions.
+Lemma V: correction #10; complete apart from items 4, 5, C3, C4.
+(3.1)-(3.3), push-through: match; algebra verified.
+Lemma M: unlogged but correct (item 3); proof complete; 4v-density proof complete.
+Thm BS statement, Steps 1-3: match / #6.
+Step 4: gap for u < 1 (item 6).
+Steps 5-6: complete (C5).
+Z1: #6; "<= 33" missing (item 2).
+Remainder lemma: incomplete (item 1).
+c(u) positivity: complete; matches certificate.
+Z2: matches code.
+Lemma 3.4A, Cor 3.5: match (C10).
+s2, (F1)/(F2), truncation, Lemma 3.11, (3.4): match; arithmetic verified.
+Lemma 3.12: match (item 9).
+Thm 3.13 statement, remark: match.
+Thm 3.13 proof: inlined, mostly complete (items 7, 8, C7-C9).
+App. N (N.18-N.31, E.6, E.10, P.3, P.4), Applied lists: all reflected.
+B bs-cert: matches code (C13).
+
+(4) SUMMARY
+1. No unlogged change to the mathematics except the Lemma M cutoff, which is correct but needs a log entry and a matching
+   edit at 04a:80. Corrections #6 and #10 are correctly applied and certified.
+2. The BS remainder lemma is a sketch with a false "r0 >= 15" (true value >= 12.82), and Z1's "<= 33" is unproved.
+   Both conclusions survive with large slack, but both proofs need rewriting.
+3. Thm 3.13's Landau-Perron proof is essentially complete. It needs the eq:Rhatbound citation in Step 6 and an explicit
+   O(1) behind the constant 442.

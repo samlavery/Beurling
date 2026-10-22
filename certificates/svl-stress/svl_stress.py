@@ -1,23 +1,21 @@
 #!/usr/bin/env python3
-"""Numerical corroboration of the structural claims of the Staged Volume Lemma (paper, Appendix A, Theorem thm:svl).
+"""Numerical corroboration of some structural facts used in the proof of the Staged Volume Lemma (paper, Appendix A, Theorem thm:svl).
 NOT part of any proof. Exact rational arithmetic (fractions.Fraction); no external dependencies.
 
 Usage:  python3 -I svl_stress.py [seed=1] [configs_per_mode=60]
 For each random configuration (k = 8..12 rows, exponents 0..D, D in {4,5,6}) it computes the greedy pivots
 (latest-first), the maximal pivot runs (stages), and row stages C_t with E_{C<=t,P<=t} invertible, and checks:
   C1  stage rows exist;   C2  every pivot column has mass >= 1 in the rows of its stage prefix;
-  C3  every late free column is nonzero on C_<=t;
+  C3  every late free column is nonzero on C_<=t (here C = all stage rows, i.e. the case C = B');
   C4/C5  every late free column equals E_{.,P<=t} E_{C<=t,P<=t}^{-1} e_{f,C<=t} on ALL rows
          (so it is determined by its C_<=t entries, and its coefficient in the remaining rows vanishes);
-  C6  the cumulative determinant det E_{C<=t,P<=t} is a nonzero integer;
-  C7  per-row block ranges are disjoint and contiguous.
-Modes: rand (dense), late (free columns = nonneg sums of later pivots, interleaved), refA (n_i = A f q_i d_i),
+  C6  the cumulative determinant det E_{C<=t,P<=t} is a nonzero integer.
+Modes: rand (dense), late (free columns = nonneg sums of later pivots, interleaved), shared (n_i = A f q_i d_i),
 nest (nested groups with cycle cores). Expected output: "violations 0" for every mode.
 """
-# (body) Columns = primes in decision order (index 0 = latest). Checks per config:
+# Columns = primes in decision order (index 0 = latest). Checks per config:
 # C1 greedy runs & C_t exist; C2 s_j^{(t_j)}>=1; C3 late f nonzero in C<=t; C4 e_f determined by C<=t entries;
-# C5 FAC: remaining rows' coeff on f vanish after eliminating P<=t; C6 cumulative det integer, |det|>=1;
-# C7 per-row collected block ranges disjoint & contiguous.
+# C5 remaining rows' coeff on f vanish after eliminating P<=t; C6 cumulative det integer, |det|>=1.
 import random, sys
 from fractions import Fraction as F
 def rref_rank(M):
@@ -86,11 +84,6 @@ def check(E):
         v=solve([[E[r][q] for q in Pl] for r in Cl],[E[r][c] for r in Cl])
         rec=[sum(E[i][q]*vv for q,vv in zip(Pl,v)) for i in range(k)]
         if rec!=[F(x) for x in col(c)]: bad.append('C4/C5')   # determined + remaining-row coeffs vanish
-    # C7: row y collects blocks t >= joined[y]; blocks are disjoint consecutive slot ranges
-    T=len(stages)
-    for y in range(k):
-        ts=list(range(joined[y],T))
-        if ts!=sorted(set(ts)): bad.append('C7')
     return (len(stages),bad)
 def gen(mode,k,D):
     if mode=='rand':
@@ -107,7 +100,7 @@ def gen(mode,k,D):
                 if any(c): cols.append(c); pcols.append(c)
         cols+= [[random.choice([0,1]) for _ in range(k)] for _ in range(random.randint(0,3))]
         return [[cols[c][i] for c in range(len(cols))] for i in range(k)]
-    if mode=='refA':   # n_i = A f q_i d_i, nested: A f B g q_i for half
+    if mode=='shared':   # n_i = A f q_i d_i, nested: A f B g q_i for half
         m=2+k; E=[[1,1]+[1 if j==i else 0 for j in range(k)] for i in range(k)]
         return E
     if mode=='nest':   # A f (B g q_i | q_i) nested groups + triangle cores
@@ -118,7 +111,7 @@ def gen(mode,k,D):
 seed=int(sys.argv[1]) if len(sys.argv)>1 else 1
 N=int(sys.argv[2]) if len(sys.argv)>2 else 60
 random.seed(seed); stats={}; total_bad=0
-for mode in ('rand','late','refA','nest'):
+for mode in ('rand','late','shared','nest'):
     n=0; maxT=0; nb=0
     for t in range(N):
         k=random.randint(8,12); D=random.choice([4,5,6])

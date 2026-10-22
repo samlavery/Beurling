@@ -6,11 +6,12 @@
 - column masses are ≥ 1 on the stage prefix;
 - late free primes are covered;
 - a late free column is determined by its stage-prefix entries, and its coefficient vanishes in the remaining rows;
-- the cumulative determinants are nonzero integers;
-- the per-row block ranges are disjoint.
+- the cumulative determinants are nonzero integers.
+
+The checks use C = all stage rows (the case C = B' of the appendix). The volume identity (eq:svl-identity) itself is not checked.
 
 These facts are PROVED in Appendix A. This script is an independent sanity check only.
 
 Run: `python3 -I svl_stress.py` (defaults: seed 1, 60 configurations per mode), or `python3 -I svl_stress.py <seed> <n>`.
-Expected output: four lines (modes rand, late, refA, nest), each ending in `violations 0`; exit status 0.
-Runtime: a few minutes. Python 3 standard library only.
+Expected output: four lines (modes rand, late, shared, nest), each ending in `violations 0`; exit status 0.
+Runtime: about 3 seconds. Python 3 standard library only.

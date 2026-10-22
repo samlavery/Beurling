@@ -11,10 +11,12 @@ blocking error, found a number of repairable gaps, all of which were repaired, a
 Theorem~\ref{thm:A} for $\theta\in[\tfrac14,\tfrac12-10^{-4}]$. The reports are included in the \texttt{review/} directory of the
 repository that accompanies this paper. The certificates of Appendix~\ref{app:cert} were re-run independently during that review.
 
-\emph{Corrections found while writing.} Turning the refereed working draft into this paper surfaced ten slips (in constants,
-missing terms and individual proof steps), none of which changes any conclusion. They were corrected, and every
-deviation of this paper from the refereed draft is listed, with its justification, in the file \texttt{CORRECTIONS-vs-v3.md} of
-the repository.
+\emph{Corrections found while writing.} Turning the refereed working draft into this paper, and a final AI consistency check of
+the paper against that draft (report \texttt{review/paper-check.md}), surfaced slips in the refereed draft (in constants, missing
+terms, statements broader than their proofs, and individual proof steps). The paper corrects thirty of them; each is logged,
+with its justification, in the file \texttt{CORRECTIONS-vs-v3.md} of the repository, which lists every deviation of this paper
+from the refereed draft. None of them changes any conclusion. Further fixes were made, during the same check, to proofs that were
+newly written out for this paper.
 
 \emph{What has not been done.} No human expert has verified the proof. The author takes responsibility for the manuscript, and
 welcomes scrutiny, corrections and counterexamples.
@@ -29,4 +31,26 @@ component referee only.
 \item The staged volume lemma, Theorem~\ref{thm:svl}.
 \item The Landau--Perron argument behind Theorem~\ref{thm:lp}.
 \end{itemize}
-A reader who wishes to check the proof with limited time might start with these.
+\emph{Material checked only by AI checks made for this paper.} The proofs below were written out in full for this paper. In the
+form given here they have not been seen by the earlier referees. They have been checked only by AI checks made for this paper: the
+consistency check \texttt{review/paper-check.md}, and, for text rewritten after that check reported, the targeted re-checks in
+\texttt{review/recheck/}.
+\begin{itemize}
+\item in the proof of Theorem~\ref{thm:bs}: the induction slack $\Sigma$ of Step~5 (\eqref{eq:bs-Sigma}), region Z1, and the
+remainder lemma for $\ell\ge10^{18}$ (Lemma~\ref{lem:bs-remainder});
+\item the local prime number theorem, Theorem~\ref{thm:lp}, including Landau's lemma and the explicit bound $G(L)$ and its range in
+part (iii);
+\item the Kantorovich--Rubinstein bounds, Theorems~\ref{thm:kr} and~\ref{thm:kr-random};
+\item Proposition~\ref{prop:true-kernels} and Lemmas~\ref{lem:tau-near} and~\ref{lem:S};
+\item the three ranges of the $X_0$-band bound (Proposition~\ref{prop:xb-ranges}) and Lemma~\ref{lem:si};
+\item the base case of the induction in the proof of Lemma~\ref{lem:smooth-v};
+\item the proof of the direction (b)$\Rightarrow$(a) in Remark~\ref{rem:equiv}, and the proof of Lemma~\ref{lem:reduction}(iii);
+\item the bookkeeping of the Pivot-Integration Lemma, Lemma~\ref{lem:pil}, with the Euler chains (S3) of Lemma~\ref{lem:fac};
+\item the analytic proof of Theorem~\ref{thm:caplw}, Steps 0--6;
+\item the explicit constants introduced by corrections \#20--\#22 of the log: the landing windows and $K_{\mathrm{loc}}$ of
+Corollary~\ref{cor:localcount}, the constants in Step~5 of the proof of Theorem~\ref{thm:caplw}, in step (v) of the proof of
+Lemma~\ref{lem:lemmaP} and in Lemma~\ref{lem:rowweights}(e), and $C_0$ in Lemma~\ref{lem:ZBlow}.
+\end{itemize}
+The same holds for the other corrections logged in \texttt{CORRECTIONS-vs-v3.md}.
+
+A reader who wishes to check the proof with limited time might start with these two lists.

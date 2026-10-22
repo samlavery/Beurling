@@ -1,5 +1,5 @@
 # Closed-form lower bound S(l,u) <= Sigma(l,u) for Lemma BS, canonical regime tau >= 1e8, l1 = 30 tau
-# (gap-localPNT §6.9.3′(H⁗)).  Works with plain floats or with the Interval class below (outward rounding).
+# (paper, proof of the Beurling–Saias theorem, computer-assisted region Z2).  Works with plain floats or with the Interval class below (outward rounding).
 # Uses only: (R1) exact identities, (R2) log-concavity, r_low (R3 recursion), r_up (R4), and elementary bounds.
 import math
 B, KP, KMIN, S1 = 11.0, 2.20, 4.0e8, 60.0
@@ -100,7 +100,7 @@ def S_cell(la, lb, ua, ub, vmode=False):
     UbMu0 = q4 * isqrt(2 * ilog(l / 1e8) + 4)   # Ubar(l) - u0(l), exact form
     gmax = (B / l) * 8 * (1 + Ub) ** 2 * math.log(2 + Ub) * (1 + 1e-12) + ku * ipos(UbMu0 + cu) / sl
     if lo_(r0) <= hi_(gmax): return -math.inf, "r0<=gamma_max"
-    if lo_(r0) <= hi_(gam1): return -math.inf, "r0<=gamma_1"   # explicit (referee B §21); never binds on the domain
+    if lo_(r0) <= hi_(gam1): return -math.inf, "r0<=gamma_1"   # explicit (seam-safe, directed rounding); never binds on the domain
     ur = u * r
     tailII = gam1 / (r0 * (r0 - gam1)) + iexp(-(r0 - gmax) * S1) / (r0 - gmax)
     Mm1 = iexpm1(betaI) * (1 - 1 / ur) + iexpm1(betaII) / ur - iexp(betaI) * (-iexpm1(-alpha)) * (1 - 1 / r) \

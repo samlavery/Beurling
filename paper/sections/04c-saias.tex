@@ -77,10 +77,10 @@ Let $s$ be the $t$-largest prime with $s^2\mid n$.
 % v3: Theorem 3.4
 Assume \textup{(H$_{\mathrm{BS}}$)} and $\log X_0\ge10^8$. For $t\ge X_0$ put $\tau:=\log t$. Call a squarefree $n\in\NN$
 \emph{$t$-dense} if $p_{j+1}\le t\,p_1\cdots p_j$ for its primes $p_1<\dots<p_r$. Then for every $Y\ge t$,
-\[
-  W_t(Y):=\sum_{n\in\NN\cap(Y,2Y],\ t\text{-dense}}\frac1n\le C_{\mathrm{BS}}\,\frac{\log t}{\log Y},\qquad
+\begin{gather*}
+  W_t(Y):=\sum_{n\in\NN\cap(Y,2Y],\ t\text{-dense}}\frac1n\le C_{\mathrm{BS}}\,\frac{\log t}{\log Y},\\
   C_{\mathrm{BS}}:=C_0\max\big(e^{\kappa_\Phi/\tau},\,30e^{\kappa_\Phi/(30\tau)}\big),\quad\kappa_\Phi:=4\tau+1500 .
-\]
+\end{gather*}
 In particular $C_{\mathrm{BS}}\le0.70\,e^{4+1.5\cdot10^{-5}}\le38.3$. The same bound holds with $t$ replaced by $4t$, at
 the cost of a factor $1+\log4/\log X_0$.
 \end{theorem}
@@ -120,10 +120,10 @@ This is why the exponent of $1/\log Y$ is exactly~$1$.
   B:=5K'=11,\qquad\kappa_\Phi:=4\tau+1500,\qquad\ell_1:=30\tau,
 \]
 and the functions
-\[
-  u_0(\ell):=\ell^{1/4},\qquad U(\ell):=u_0+\ell^{1/4}\sqrt{2\log(\ell/\tau)+4},\qquad
+\begin{gather*}
+  u_0(\ell):=\ell^{1/4},\qquad U(\ell):=u_0+\ell^{1/4}\sqrt{2\log(\ell/\tau)+4},\\
   Q(\ell,u):=A+a,\quad A:=\frac{B(1+u)^3\log(2+u)}{\ell},\quad a:=\frac{(u-u_0)_+^2}{2\sqrt\ell},
-\]
+\end{gather*}
 \[
   \Phi(\ell):=\Phi_\infty e^{-\kappa_\Phi/\ell},\qquad\Phi_\infty:=C_0\max\big(e^{\kappa_\Phi/\tau},\,30e^{\kappa_\Phi/\ell_1}\big).
 \]
@@ -132,8 +132,10 @@ We prove, by induction on $\ell$, the claim
   \Psi(\ell,u)\le G(\ell,u):=\Phi(\ell)\,\rho(u-1)\,e^{Q(\ell,u)}\qquad(\ell\ge\tau,\ 0\le u\le U(\ell)).
 \end{equation}
 At $u=0$ (that is, $z=\infty$) this gives the theorem, since
-$W_t(Y)=\Psi(\ell,0)\tau/\ell\le\Phi_\infty e^{(B\log2-\kappa_\Phi)/\ell}\,\tau/\ell\le\Phi_\infty\tau/\ell$ and
-$\Phi_\infty=C_{\mathrm{BS}}$. The three factors of $G$ play the following roles:
+\[
+  W_t(Y)=\Psi(\ell,0)\tau/\ell\le\Phi_\infty e^{(B\log2-\kappa_\Phi)/\ell}\,\tau/\ell\le\Phi_\infty\tau/\ell
+\]
+and $\Phi_\infty=C_{\mathrm{BS}}$. The three factors of $G$ play the following roles:
 \begin{itemize}
 \item $A$ absorbs the errors of the prime sums;
 \item $a$ inflates the profile gradually, by $\log(\ell/\tau)+2$ at $u=U$; this pays for the density factor $\ell/\tau$ in
@@ -143,11 +145,17 @@ $\Phi_\infty=C_{\mathrm{BS}}$. The three factors of $G$ play the following roles
 \end{itemize}
 
 \emph{Step 4: base region $\tau\le\ell\le\ell_1$.} Drop the density condition, which costs at most a factor
-$\max(1,\ell/\tau)$, and apply Lemma~\ref{lem:smooth-v}. Its hypotheses hold: $u\le U(\ell)\le4.3\ell^{1/4}$, so
-$L_z=\ell/u\ge\ell^{3/4}/4.3\ge100$ and $u\le L_z$. This gives $\Psi\le(\ell/\tau)C_0\rho(u)e^{a_V}\le G(\ell,u)$, because
-$\rho(u)\le\rho(u-1)$, $a_V\le A$ (as $11(1+u)^3\ge12.8u^2$), and $(\ell/\tau)C_0\le\Phi_\infty e^{-\kappa_\Phi/\ell}$ on
-$[\tau,\ell_1]$. The last inequality holds by the choice of $\Phi_\infty$: the function $(\ell/\tau)e^{\kappa_\Phi/\ell}$ is
-convex in $\ell$, so its maximum on $[\tau,\ell_1]$ is at an endpoint.
+$\max(1,\ell/\tau)$. First, $(\ell/\tau)C_0\le\Phi_\infty e^{-\kappa_\Phi/\ell}=\Phi(\ell)$ on $[\tau,\ell_1]$, by the choice of
+$\Phi_\infty$: the function $(\ell/\tau)e^{\kappa_\Phi/\ell}$ is convex in $\ell$, so its maximum on $[\tau,\ell_1]$ is at an
+endpoint.
+\begin{itemize}
+\item For $1\le u\le U(\ell)$, apply Lemma~\ref{lem:smooth-v}. Its hypotheses hold: $u\le U(\ell)\le4.3\ell^{1/4}$, so
+  $L_z=\ell/u\ge\ell^{3/4}/4.3\ge100$ and $u\le L_z$. This gives $\Psi\le(\ell/\tau)C_0\rho(u)e^{a_V}\le G(\ell,u)$, because
+  $\rho(u)\le\rho(u-1)$ and $a_V\le A$ (as $11(1+u)^3\ge12.8u^2$).
+\item For $0\le u<1$, Lemma~\ref{lem:smooth-v} does not apply, and the trivial bound suffices: by the small-height bound in
+  its proof (valid for every $Y'\ge72$), $W_t(e^\ell;e^{\ell/u})\le\sum_{n\in\NN\cap(e^\ell,2e^\ell]}1/n\le C_0$. So
+  $\Psi\le(\ell/\tau)C_0\le\Phi(\ell)\le G(\ell,u)$, since $\rho(u-1)=1$ and $Q\ge0$.
+\end{itemize}
 
 \emph{Step 5: the induction step, discretised.} Let $\ell>\ell_1$ and $0\le u\le U(\ell)$, and assume
 \eqref{eq:bs-claim} for all smaller $\ell$. Split the primes in \eqref{eq:bs-rec-log} into the range $w\le U(m)$, where
@@ -160,8 +168,9 @@ Here $f_1$ is increasing in $\sigma$ (both $\nu$ and $\rho(w-1)$ increase as $w$
 \[
   |\partial_\sigma\log f_2|\le\eta_f(m,w):=\frac{\kappa_\Phi}{m^2}+|\partial_mQ|+\frac{(1+w)^2}{\ell}|\partial_wQ|,
 \]
-since $dm/d\sigma=-1$ and $dw/d\sigma=-(1+w)^2/\ell$. Write $\sum_{p\le e^\sigma}1/p=\log\sigma+M_z+E(\sigma)$ with
-$|E(\sigma)|\le K'/\sigma$ (Remark~\ref{rem:cm-chain}). Partial summation gives
+since $dm/d\sigma=-1$ and $dw/d\sigma=-(1+w)^2/\ell$. Write $\sum_{p\le e^\sigma}1/p=\log\sigma+M_a+E(\sigma)$, with the
+constant $M_a$ chosen so that $E(\sigma_a)=0$. Then $-E(\sigma)=\sum_{e^\sigma<p\le e^{\sigma_a}}1/p-\log(\sigma_a/\sigma)$, so
+Lemma~\ref{lem:cm}(iv) gives $|E(\sigma)|\le K'/\sigma$ on $[\sigma_J,\sigma_a]$. Partial summation gives
 $\sum_pf(\sigma_p)/p\le\int f\,d\sigma/\sigma+K'[f(\sigma_a)/\sigma_a+f(\sigma_J)/\sigma_J+\int|f'|\,d\sigma/\sigma]$.
 Using $|f'|\le f'+2f\,|\partial_\sigma\log f_2|$ and integrating $\int f'\,d\sigma/\sigma$ by parts, the terms in
 $f(\sigma_J)$ cancel:
@@ -169,31 +178,34 @@ $f(\sigma_J)$ cancel:
   \sum_p\frac{f(\sigma_p)}p\le\int f\frac{d\sigma}\sigma+\frac{2K'f(\sigma_a)}{\sigma_a}+K'\int f\frac{d\sigma}{\sigma^2}
   +2K'\int f\,|\partial_\sigma\log f_2|\frac{d\sigma}\sigma .
 \end{equation}
-In $w$-variables $d\sigma/\sigma=dw/(1+w)$, so $\int f\,d\sigma/\sigma=\int G(m,w)\,dw/w$ and
-$\int f\,d\sigma/\sigma^2=\ell^{-1}\int G(m,w)(1+w)\,dw/w$.
+In $w$-variables $d\sigma/\sigma=dw/(1+w)$, so
+\[
+  \int f\,d\sigma/\sigma=\int G(m,w)\,dw/w\qquad\text{and}\qquad\int f\,d\sigma/\sigma^2=\ell^{-1}\int G(m,w)(1+w)\,dw/w.
+\]
 
 Now divide by $G(\ell,u)$. Put
-\[
+\begin{gather*}
   D(w):=Q(m,w)-Q(\ell,u)-\frac{\kappa_\Phi}{w\ell},\qquad
-  \pi(dw):=\frac{\rho(w-1)\,dw}{w\,\rho(u-1)}\ \text{on }[w_{\mathrm{lo}},\infty),\qquad
+  \pi(dw):=\frac{\rho(w-1)\,dw}{w\,\rho(u-1)}\ \text{on }[w_{\mathrm{lo}},\infty),\\
   g(w):=\frac{\rho(w-1)}{\rho(u-1)}e^{D(w)}\mathbf 1[w\le U(m)] .
-\]
-The main term is $\int\pi\,e^D\mathbf 1[w\le U(m)]$. Since $e^D>0$, it is at most $\int_{w_{\mathrm{lo}}}^\infty\pi\,e^D=1+\mu_0+J$,
-where
-\begin{itemize}
-\item $\mu_0:=\log(1/w_{\mathrm{lo}})$ for $u<2$, and $\mu_0:=0$ for $u\ge2$, is the exact excess mass of $\pi$, by \ref{R1};
-\item $J:=\int_{w_{\mathrm{lo}}}^\infty\pi\,(e^D-1)$.
-\end{itemize}
-In the same way, any positive majorant of $e^D\mathbf 1[w\le U(m)]$ may be integrated over the full range $[w_{\mathrm{lo}},\infty)$.
-The three error terms are
+\end{gather*}
+The main term is $M:=\int\pi\,e^D\mathbf 1[w\le U(m)]$. The three error terms are
 \[
   E_1:=\frac{2K'(1+w_{\mathrm{lo}})^2g(w_{\mathrm{lo}})}{w_{\mathrm{lo}}\,\ell},\qquad
   E_2:=\frac{K'}\ell\int g\,\frac{(1+w)\,dw}w,\qquad E_3:=2K'\int g\,\eta_f\,\frac{dw}w ,
 \]
 and $T$ denotes the tail of Step~6, divided by $G(\ell,u)$. The induction closes if
 \begin{equation}\label{eq:bs-Sigma}
-  \Sigma(\ell,u):=-\big[\mu_0+J+E_1+E_2+E_3+T\big]\ge0\qquad\text{for all }\ell>\ell_1,\ 0\le u\le U(\ell).
+  \Sigma(\ell,u):=1-\big[M+E_1+E_2+E_3+T\big]\ge0\qquad\text{for all }\ell>\ell_1,\ 0\le u\le U(\ell).
 \end{equation}
+Two ways of bounding $M$ are used.
+\begin{itemize}
+\item $M=\int\pi\,\mathbf 1[w\le U(m)]+J\le1+\mu_0+J$, so $\Sigma\ge-[\mu_0+J+E_1+E_2+E_3+T]$, where
+  $\mu_0:=\log(1/w_{\mathrm{lo}})$ for $u<2$, and $\mu_0:=0$ for $u\ge2$, is the exact excess mass of $\pi$ (by \ref{R1}), and
+  $J:=\int\pi\,(e^D-1)\,\mathbf 1[w\le U(m)]$.
+\item $M$ is at most the integral over $[w_{\mathrm{lo}},\infty)$ of any positive majorant of $e^D\mathbf 1[w\le U(m)]$.
+\end{itemize}
+The indicator cannot simply be dropped: $D$ grows like $Bw^3\log w/\ell$, so $\int\pi\,e^D$ diverges.
 
 \emph{Step 6: the tail.} The primes with $w>U(m)$ correspond exactly to the $n$ that are $e^{\ell/u^*}$-smooth, with
 $u^*:=U(\ell)+\frac12$. This uses $U(m)\ge U(\ell)-\frac12$ for $m\ge\ell(1-1/U)$. Dropping the density condition and
@@ -213,37 +225,75 @@ In the second case this uses $a(\ell,U(\ell))=y+2$.
 
 \emph{Step 7: verification of \eqref{eq:bs-Sigma}.} There are three regions. Throughout, $\tau\ge10^8$ and $\ell>\ell_1=30\tau$.
 
-\smallskip\noindent\emph{(i) Region Z1: $u<2$, every $\ell\ge30\tau$.} Here $\rho(u-1)=1$ and $\pi(dw)=\rho(w-1)\,dw/w$. Since
-$u_0=\ell^{1/4}\ge234$, $D_a:=a(m,w)-a(\ell,u)=0$ for $w\le40$, so $D=D_A+D_\Phi$ with $D_A:=A(m,w)-A(\ell,u)$ and
-$D_\Phi:=-\kappa_\Phi/(w\ell)\le0$; and $e^{D}-1\le(e^{D_A}-1)_++(e^{D_\Phi}-1)$.
+\smallskip\noindent\emph{(i) Region Z1: $u<2$, every $\ell\ge30\tau$.} Here $\rho(u-1)=1$, $w_{\mathrm{lo}}\in[w_1,1)$ and
+$\pi(dw)=\rho(w-1)\,dw/w$. Since $u_0=\ell^{1/4}\ge234$ and $m\ge\ell w_1/(1+w_1)\ge0.48\ell$, we have $m^{1/4}\ge194$, so
+$D_a:=a(m,w)-a(\ell,u)=0$ for $w\le m^{1/4}$, in particular for $w\le40$. Write $D=D'+D_\Phi$ with $D':=D_A+D_a$,
+$D_A:=A(m,w)-A(\ell,u)$ and $D_\Phi:=-\kappa_\Phi/(w\ell)\le0$; then $e^{D}-1\le(e^{D'}-1)_++(e^{D_\Phi}-1)$.
+
+\emph{The part $w>40$ is negligible, uniformly in $\ell$.} There $\rho(w-1)\le\rho(39)e^{-r(39)(w-40)}$ by \ref{R3}, with
+$r(39)\ge5.09$ and $\rho(39)\le\exp(-\sum_{k=1}^{38}r_{\mathrm{low}}(k))\le1.2\cdot10^{-65}$; and on $[40,U(m)]$ the slope of $D$
+in $w$ is at most $0.25$. The same holds for $D'$, whose slope is at most that of $D$ because $D_\Phi$ is increasing in $w$;
+as $D\le D'$ and $D'(40)\le9.7\cdot10^{-4}$, both $D$ and $D'$ are at most $10^{-3}+0.25(w-40)$. Every term below is multiplied by $\ell$, so we check that the
+$\ell$-scaled contributions of $w>40$ are bounded independently of $\ell$.
+\begin{itemize}
+\item For $40<w\le0.83\ell^{1/4}\le m^{1/4}$ we have $D'=D_A\le(B/\ell)h(w)$, with $h$ as below, so
+  $\ell(e^{D'}-1)_+\le B\,h(w)\,e^{10^{-3}+0.25(w-40)}$; integrated against $\pi$ this is at most
+  $1.2\cdot10^{-65}\,B\int_{40}^\infty h(w)e^{10^{-3}-4.84(w-40)}\,dw/w\le2\cdot10^{-61}$.
+\item For $w>0.83\ell^{1/4}$ (where $D_a$ may be non-zero), the factor
+  $\rho(w-1)\le1.2\cdot10^{-65}e^{-5.09(w-40)}$ is at most $e^{-4(0.83\ell^{1/4}-40)}$ times $e^{-1.09(w-40)}$, which beats the
+  factor $\ell$, the factor $e^{0.25(w-40)}$ and every polynomial in $w$, since $\ell^{1/4}\ge234$.
+\item In $\ell E_2$ and $\ell E_3$ the weights are $K'(1+w)/w$, $K'(\kappa_\Phi/\ell)(1+w)^2/w^3$ and the
+  $A$- and $a$-derivative terms of $\eta_f$, which are at most polynomial in $w$ and in $\log\ell$ after the factor $\ell$.
+\end{itemize}
+So the part $w>40$ contributes at most $10^{-50}$ to each $\ell$-scaled term below. Finally, $U(m)\ge m^{1/4}\ge194$ and
+$1-e^{D_\Phi}\le\kappa_\Phi/(w\ell)$, so $\ell\int\pi\,(1-e^{D_\Phi})\mathbf 1[w>U(m)]\le\kappa_\Phi\,\pi(w>194)/194\le10^{-50}\kappa_\Phi$.
 \begin{itemize}
 \item \emph{The $A$-part.} With $h(w):=(1+w)^4\log(2+w)/w$ one has $A(m,w)=(B/\ell)h(w)$ exactly, so
-  $D_A\le(B/\ell)h(w)\le10^{-3}$ for $w\le40$ and $e^{D_A}-1\le1.001D_A$ there. On $[w_{\mathrm{lo}},2]$, $\rho(w-1)=1$ and
+  $D'=D_A\le(B/\ell)h(w)\le9.7\cdot10^{-4}$ for $w\le40$ and $e^{D_A}-1\le1.001D_A$ there. On $[w_{\mathrm{lo}},2]$, $\rho(w-1)=1$ and
   $h\le h(2)=56.145$. On $[2,\infty)$, $\rho(w-1)\le e^{-(w-2)}$ by \ref{R3} with $r(1)=1$, and $h(w)/w\le(3+s)^4(\log4+s/4)/4$
-  with $s=w-2$. The part $w>40$ contributes at most $10^{-40}$: there $\rho(w-1)\le\rho(39)e^{-r(39)(w-40)}$ with
-  $r(39)\ge4.4$, while the slope of $D$ is at most $0.25$. So
-  $\ell\,E_\pi[(e^{D_A}-1)_+]\le1.001\,B\,(56.145\log(2/w_{\mathrm{lo}})+J_2)$, with
+  with $s=w-2$. So $\ell\,E_\pi[(e^{D'}-1)_+\mathbf 1[w\le U(m)]]\le1.001\,B\,(56.145\log(2/w_{\mathrm{lo}})+J_2)+10^{-50}$, with
   $J_2:=\int_0^\infty e^{-s}(3+s)^4(\log4+s/4)\,ds/4\le200.6$ (by the Gamma moments).
-\item \emph{The $\Phi$-benefit.} Put $\Phi_{\mathrm{ben}}:=E_\pi[1-e^{-\kappa_\Phi/(w\ell)}]$. Using
-  $1-e^{-y}\ge y(1-y/2)$, $\kappa_\Phi/\ell\le0.1334$ and $w\ge w_1\ge29/31-10^{-8}$,
-  $\Phi_{\mathrm{ben}}\ge(\kappa_\Phi/\ell)(1-\kappa_\Phi/(2w_1\ell))E_\pi[1/w]\ge0.9287\,(\kappa_\Phi/\ell)\,c_2^-$, where
+\item \emph{The $\Phi$-benefit.} Put $\Phi_{\mathrm{ben}}:=E_\pi[1-e^{-\kappa_\Phi/(w\ell)}]$, so that
+  $\ell\int\pi\,(e^{D_\Phi}-1)\mathbf 1[w\le U(m)]\le-\ell\Phi_{\mathrm{ben}}+10^{-50}\kappa_\Phi$. Using
+  $1-e^{-y}\ge y(1-y/2)$, $\kappa_\Phi/\ell\le0.13334$ and $w\ge w_1\ge29/31-10^{-8}$,
+  $\Phi_{\mathrm{ben}}\ge(\kappa_\Phi/\ell)(1-\kappa_\Phi/(2w_1\ell))E_\pi[1/w]\ge0.92873\,(\kappa_\Phi/\ell)\,c_2^-$, where
   \[
-    E_\pi[1/w]\ge c_2^-:=\int_1^2\frac{dw}{w^2}+\int_2^3\frac{(1-\log(w-1))\,dw}{w^2}=\frac23+\frac{\log2}3-\log\frac43=0.6100 .
+    E_\pi[1/w]\ge c_2^-:=\int_1^2\frac{dw}{w^2}+\int_2^3\frac{(1-\log(w-1))\,dw}{w^2}=\frac23+\frac{\log2}3-\log\frac43\ge0.61003 .
   \]
-\item \emph{The excess mass.} With $x':=(\tau+\log2)/\ell\le1/30+10^{-17}$, $\mu_0=\log(1/w_{\mathrm{lo}})\le\log(1/w_1)\le2x'+x'^3$,
-  so $\ell\mu_0\le2.0012\,\tau+1.4$.
-\item The remaining terms satisfy $\ell(E_1+E_2+E_3+T)\le33$.
+\item \emph{The excess mass.} With $x':=(\tau+\log2)/\ell\le1/30+2.4\cdot10^{-10}$,
+  $\mu_0=\log(1/w_{\mathrm{lo}})\le\log(1/w_1)=\log\frac{1+x'}{1-x'}\le2x'+x'^3$, so $\ell\mu_0\le2.0012\,\tau+1.4$.
+\item \emph{The remaining terms.} On $[w_{\mathrm{lo}},40]$ we have $e^{D}\le1.001$, and $(1+w)^2/w$ is decreasing on $(0,1)$.
+  \begin{itemize}
+  \item $\ell E_1\le2.002K'(1+w_1)^2/w_1\le4.41\cdot4.0045\le17.7$.
+  \item $\ell E_2\le1.001K'\big[\int_{w_1}^2(1+w)\frac{dw}w+\int_2^\infty\rho(w-1)\,dw+\int_2^\infty\rho(w-1)\frac{dw}w\big]$. The first
+    integral is $2+\log2-w_1-\log w_1\le1.8244$. The second is $\int_1^\infty\rho\le\int_1^2(1-\log v)\,dv+\rho(2)/r(2)\le0.8021$, by
+    \ref{R3}; the third is $\rho(2)=1-\log2$, by \ref{R1}. So $\ell E_2\le2.203\cdot2.9334\le6.5$.
+  \item In $\eta_f$, the $\Phi$-term is $\kappa_\Phi/m^2=\kappa_\Phi(1+w)^2/(\ell w)^2$, and since $a(m,\cdot)=0$ here, the
+    $Q$-terms come from $A$ alone: $|\partial_mA|=A/m$ and $(1+w)^2\ell^{-1}|\partial_wA|$ are together at most
+    $4B(1+w)^6/\ell^2$ on $[w_1,40]$. Since $\int\rho(w-1)(1+w)^6dw/w\le7820$, the latter contribute at most
+    $4.41\cdot4B\cdot7820/\ell\le10^{-3}$ to $\ell E_3$. Hence
+    \begin{multline*}
+      \ell E_3\le2.002K'\frac{\kappa_\Phi}\ell\Big[\int_{w_1}^2\frac{(1+w)^2}{w^3}dw+\frac94\int_2^\infty\rho(w-1)\frac{dw}w\Big]+10^{-3}\\
+      \le4.41\cdot0.13334\cdot(2.3442+0.6905)+10^{-3}\le1.8 .
+    \end{multline*}
+  \item $\ell T\le e^{-200}$. Indeed $G(\ell,u)\ge\Phi(\ell)\ge C_0e^{-\kappa_\Phi/\ell}$ here, and $\rho(u^*)\le e^{1-u^*}$ because
+    $r\ge1$ on $(1,\infty)$. So by Step~6,
+    $\ell T\le\exp\big(\log\ell+\log(\ell/\tau)+\kappa_\Phi/\ell+a_V(u^*)+1-u^*\big)$, and
+    $u^*\ge\ell^{1/4}(1+\sqrt{2\log(\ell/\tau)+4})\ge234$, $a_V(u^*)\le0.2$.
+  \end{itemize}
+  Altogether $\ell(E_1+E_2+E_3+T)\le26.1\le33$.
 \end{itemize}
-Altogether, since $\kappa_\Phi\ge4\tau$ and $\log(2/w_{\mathrm{lo}})\le0.76$,
+Altogether, since $\kappa_\Phi\ge4\tau$ and $\log(2/w_{\mathrm{lo}})\le\log(2/w_1)\le0.76$,
 \[
-  \ell\Sigma\ge\tau\,(4\cdot0.9287\,c_2^--2.0012)-1.001\,B\,(56.145\cdot0.76+J_2)-33-1.4\ge0.265\,\tau-2714>0 .
+  \ell\Sigma\ge\tau\,\big(4(0.92873\,c_2^--10^{-50})-2.0012\big)-1.001\,B\,(56.145\cdot0.76+J_2)-33-1.4\ge0.265\,\tau-2714>0 ,
 \]
+where the $10^{-50}$ from the $A$-part is included in the $33$.
 
 \smallskip\noindent\emph{(ii) Large $\ell$: $\ell\ge10^{18}$, every $u\ge2$.} This region is analytic, apart from a
 one-variable inequality checked in ball arithmetic. Put
 \begin{gather*}
-  s:=w-u,\qquad r_0:=r(u-1),\qquad\Lambda(u):=(1+u)^2\log(2+u),\qquad h_A(u,w):=h(w)-(1+u)^3\log(2+u),\\
-  D_A=(B/\ell)\,h_A,\qquad D_a:=a(m,w)-a(\ell,u),\qquad D_\Phi:=-\kappa_\Phi/(w\ell),\qquad D':=D_A+D_a .
+  s:=w-u,\qquad r_0:=r(u-1),\qquad\Lambda(u):=(1+u)^2\log(2+u),\\ h_A(u,w):=h(w)-(1+u)^3\log(2+u),\qquad
+  D_A=(B/\ell)\,h_A,\\ D_a:=a(m,w)-a(\ell,u),\qquad D_\Phi:=-\kappa_\Phi/(w\ell),\qquad D':=D_A+D_a .
 \end{gather*}
 Write $E_\pi$ for integration against $\pi$, whose total mass is $1+\mu_0\le1.7$. For $s\ge0$ the density of $\pi$ is at most
 $e^{-r_0s}/u$, by \ref{R3}. The \emph{first-order profile} is
@@ -261,54 +311,187 @@ For $u\ge2$, $c$ depends on $\ell$ only through $\Phi_{\mathrm{ben}}$.
 
 \begin{lemma}[remainder, in ratio form]\label{lem:bs-remainder}
 % v3: Theorem 3.4, proof (g), case l >= 10^18
-For $\tau\ge10^8$, $\ell\ge\max(10^{18},30\tau)$ and $0\le u\le U(\ell)$,
+For $\tau\ge10^8$, $\ell\ge\max(10^{18},30\tau)$ and $2\le u\le U(\ell)$,
 \[
   \ell\Sigma\ge\big(1-\eps(\ell)\big)\big(c(u)+\ell s_a\big)-60\cdot\mathbf 1[u\ge u_0-2]-9\cdot10^{17}/\ell,
 \]
-where $s_a:=-E_\pi D_a\ge0$ is the slack of $a$, $a'(\ell,u):=\partial_ua=(u-u_0)_+/\sqrt\ell$, and
+where $s_a:=-E_\pi D_a$ is the slack of $a$, $a'(\ell,u):=\partial_ua=(u-u_0)_+/\sqrt\ell$, and
 \[
-  \eps(\ell):=2\cdot10^4\,U^2\log(2+U)/\ell+30\,a'(\ell,U)+\ell^{-1/4}\le0.03 ,
+  \eps(\ell):=2\cdot10^4\,U^2\log(2+U)/\ell+30\,a'(\ell,U)+\ell^{-1/8}\le0.03 ,
 \]
-with $U=U(\ell)$; $\eps$ is decreasing in $\ell$.
+with $U=U(\ell)$; $\eps$ is decreasing in $\ell$. Moreover $s_a\ge0.67\,a'(\ell,u)-0.54/\sqrt\ell$ for $u\ge u_0-2$, and
+$-0.01\le\ell s_a\le0$ for $u<u_0-2$.
 \end{lemma}
+% Logged correction 23 (CORRECTIONS-vs-v3.md): eps uses l^{-1/8} (v3: l^{-1/4}), to absorb the tail T near u = U(l);
+% s_a >= 0 replaced by explicit bounds; stated for 2 <= u <= U (u < 2 is region Z1).
+
+The region $u<2$ is region Z1, which (i) covers for every $\ell\ge30\tau$; so the lemma is stated for $u\ge2$, where
+$w_{\mathrm{lo}}=u-1$, $\mu_0=0$ and $\pi$ is a probability measure.
 
 \begin{proof}
-Write $e^D-1=(e^{D_\Phi}-1)+e^{D_\Phi}(e^{D'}-1)$, and use $e^{D'}-1\le D'+\frac12D'^2e^{D'_+}$. This gives
+\emph{Notation and sizes.} Put $\bar U:=U(\ell)$, $\alpha':=a'(\ell,\bar U)$, $a':=a'(\ell,u)\le\alpha'$,
+$\lambda:=\bar U^2\log(2+\bar U)/\ell$, $s:=w-u\in[-1,\infty)$ and $r_0:=r(u-1)$. Since $\tau\ge10^8$ and $\ell\ge10^{18}$, and all
+of the following decrease in $\ell$ (the worst case is $\tau=10^8$),
+\[
+  \alpha'\le2.24\cdot10^{-4},\qquad\lambda\le8.2\cdot10^{-7},\qquad B\Lambda(u)/\ell\le11.0001\lambda\le9.1\cdot10^{-6},\qquad
+  1/\sqrt\ell\le10^{-5}\alpha' ,
+\]
+the last because $\alpha'=\sqrt{2\log(\ell/\tau)+4}\,\ell^{-1/4}\ge3.28\,\ell^{-1/4}$. Iterating \ref{R3} from $r(2)$ gives
+$r_0\ge1$, $r_0\ge4.59$ for $u\ge27$, and $r_0\ge r_{\mathrm{low}}(31619)\ge12.82$ for $u\ge u_0-2$ (as $u_0\ge31622.7$). The same
+iteration gives $r(x)\ge\log x$ for every $x\ge2$: it holds on $[2,3]$ since $r(2)\ge\log3$, and if $r(x-1)\ge\log(x-1)$ then
+$r(x)\ge\log(x-1)\cdot\frac{x-1}{x-2}\ge\log x$.
+
+\emph{Moments.} Let $u\ge2$. By \ref{R3}, the density of $\pi$ at $s\ge0$ is at most $e^{-r_0s}/u$, and $\pi([u-1,u])\le1$,
+where $|s|\le1$. Hence, for every $k\ge0$,
+\[
+  M_k:=E_\pi|s|^k\le1+\frac{k!}{u\,r_0^{k+1}},\qquad\text{and}\qquad
+  E_\pi\big[|s|^ke^{\gamma s_+}\big]\le1+\frac{k!}{u\,(r_0-\gamma)^{k+1}}\quad(0\le\gamma\le r_0/2).
+\]
+Also $\pi(w\le u+1)\ge1-e^{-r_0}/(ur_0)\ge0.8$, and $E_\pi(u-w)_+=1-1/r(u)$ by \ref{R1}.
+
+\emph{Decomposition.} Write $D=D_A+D_a+D_\Phi$ and $D':=D_A+D_a$. Since $U(m)\le\bar U$, the main term is at most
+$\int\pi\,e^D\mathbf 1[w\le\bar U]$. Write $e^D=e^{D_\Phi}+e^{D_\Phi}(e^{D'}-1)$ and $e^{D'}-1\le D'+\frac12D'^2e^{D'_+}$. Then
+$\int\pi\,e^{D_\Phi}\mathbf 1[w\le\bar U]\le1-\Phi_{\mathrm{ben}}$, and
+$\int\pi\,e^{D_\Phi}D'\mathbf 1[w\le\bar U]\le E_\pi D'+\rho_1$, because $D'\ge0$ for $w>\bar U$ (there $h(w)>h(\bar U)$ and
+$a(m,w)\ge a(\ell,\bar U)\ge a(\ell,u)$). With $E_\pi D'=(B/\ell)j_A-s_a$, this gives
 \[
   \ell\Sigma\ge c(u)+\ell s_a-\ell\big(\rho_1+\rho_2+\rho_3+\rho_4+E_3+T\big),
 \]
-where $\rho_1:=E_\pi[(1-e^{D_\Phi})|D'|]$, $\rho_2:=\frac12E_\pi[D'^2e^{D'_+}]$, $\rho_3:=E_1-E_1^{\mathrm{lin}}$ and
-$\rho_4:=E_2-E_2^{\mathrm{lin}}$. Here $E_i^{\mathrm{lin}}$ denotes $E_i$ with $e^{D}$ replaced by $1$ in $g$, so that
-$\ell E_1^{\mathrm{lin}}=2K'e_1$ and $\ell E_2^{\mathrm{lin}}=K'e_2$; and $\rho_3=E_1^{\mathrm{lin}}(e^{D'(w_{\mathrm{lo}})}-1)$. We use
-the moments $M_k:=E_\pi|s|^k\le1.7\cdot2^k+e\,k!/2$, valid for $r_0\ge1$. The bounds below are for $u\ge2$; the case
-$u<2$ is identical with $\Lambda(2)$ in place of $\Lambda(u)$.
-\begin{enumerate}[label=(\alph*)]
-\item $|h_A|\le\Lambda(u)\big(1.5+8|s|(1+|s|)^3\big)$. This uses
-  $h(u)-(1+u)^3\log(2+u)=(1+u)^3\log(2+u)/u$ and $h'(w)\le8(1+w)^2\log(2+w)$ for $w\ge1$. For $|s|\le1$ and $u\ge27$ the
-  bound is at most $10.3\Lambda(u)$. Hence, for $u\ge27$ (where $r_0\ge4.3$), $E_\pi|h_A|\le18\Lambda$ and
-  $E_\pi h_A^2\le182\Lambda^2$. These bounds are in ratio form: the weight $e^{-r_0s}$ enters, not $\sup_w$.
-\item $\rho_1\le6\,\Phi_{\mathrm{ben}}\,E_\pi|D'|$, because $(1-e^{-y})/y$ is decreasing, $(u+1)/(u-1)\le3$, and
-  $\pi(w\le u+1)\ge\frac12$.
-\item The $a$-part. For $u\ge u_0-2$: $r_0\ge15$, and $s_a\ge0.32\,a'(\ell,u)-1.01/\sqrt\ell$. The proof combines the
-  chord bound on $[u-1,u]$, the identity $E_\pi(u-w)_+=1-1/r(u)$ from \ref{R1}, and the shift bound
-  $(w-m^{1/4})_+\le(w-u_0)_++u_0/(3(1+w))$. Also
-  $\frac12E_\pi D_a^2\le3a'(\ell,u)^2M_2+0.75M_4/\ell+0.01/\ell\le10\,a'(\ell,U)\,s_a+60/\ell$. For $u<u_0-2$:
-  $\ell|E_\pi D_a|\le1.02\sqrt\ell\,e^{-r_0(u_0-u-2/3)}/(u\,r_0^3)$.
-\item $\rho_3\le\ell E_1^{\mathrm{lin}}\cdot2\big(128B\Lambda/\ell+3a'(\ell,U)\big)$ and
-  $\rho_4\le\ell E_2^{\mathrm{lin}}\cdot2\big(8B\Lambda M_4/\ell+3a'(\ell,U)\big)$, with $\ell E_1^{\mathrm{lin}}=2K'u^2r_0$ for
-  $u\ge2$. Also
-  $\ell E_3\le2K'\big[14\kappa_\Phi/\ell+12B(1+u)^4\log(2+u)M_4/\ell+4(1+u)^2M_2\,a'(\ell,U)\big]$; its
-  $\kappa_\Phi$-piece is at most $10^{-3}\,\ell\Phi_{\mathrm{ben}}$.
+where $\rho_1:=E_\pi[(1-e^{D_\Phi})|D'|]$, $\rho_2:=\frac12E_\pi[D'^2e^{D'_+}\mathbf 1[w\le\bar U]]$, $\rho_3:=E_1-E_1^{\mathrm{lin}}$ and
+$\rho_4:=E_2-E_2^{\mathrm{lin}}$. Here $E_i^{\mathrm{lin}}$ is $E_i$ with $e^D\mathbf 1[w\le U(m)]$ replaced by $1$ in $g$, so that
+$\ell E_1^{\mathrm{lin}}=2K'e_1=2K'u^2r_0$ and $\ell E_2^{\mathrm{lin}}=K'e_2$.
+
+\emph{Pointwise bounds.} \ref{it:bsP1} and \ref{it:bsP2} hold for all $w\ge u-1$, and \ref{it:bsP3} for $u-1\le w\le\bar U$. Put $\varphi_A(s):=8$ for $s\le0$ and $\varphi_A(s):=1.5+8s(1+s)^3$ for $s\ge0$.
+\begin{enumerate}[label=(P\arabic*)]
+\item\label{it:bsP1} $|D_A|\le(B\Lambda(u)/\ell)\varphi_A(s)$, $D_A\le1.5B\Lambda(u)/\ell$ for $s\le0$, and $D_A(u-1)<0$. This uses
+  $h_A(u)=(1+u)^3\log(2+u)/u\le1.5\Lambda(u)$, that $h$ is increasing on $[1,\infty)$ with $h'(w)\le8\Lambda(w)$, that
+  $\Lambda(w)\le\Lambda(u)(1+s)^3$ for $s\ge0$, and $u^4\log(1+u)/(u-1)<(1+u)^3\log(2+u)$.
+\item\label{it:bsP2} $D_a=\Delta\phi+\sigma_{\mathrm{sh}}$, where $\phi(x):=(x-u_0)_+^2/(2\sqrt\ell)$, $\Delta\phi:=\phi(w)-\phi(u)$ and
+  $\sigma_{\mathrm{sh}}:=a(m,w)-\phi(w)\ge0$ (the shift from $m<\ell$). By convexity of $\phi$,
+  \[
+    -|s|a'\le\Delta\phi\le-|s|a'+\frac{s^2}{2\sqrt\ell}\quad(s\le0),\qquad0\le\Delta\phi\le s\,a'+\frac{s^2}{2\sqrt\ell}\quad(s\ge0).
+  \]
+  \emph{The shift.} Recall $m=\ell w/(1+w)$, so $m^{1/4}=u_0(1-x)^{1/4}$ and $\sqrt m=\sqrt\ell\,(1+1/w)^{-1/2}$ with
+  $x:=1/(1+w)\le\frac12$. Put $A:=(w-u_0)_+$ and $c_w:=u_0-m^{1/4}$.
+  \begin{itemize}
+  \item For $w\le u_0-3$: by concavity, $(1-x)^{1/4}\ge1-x/3$ on $[0,\frac12]$, so $c_w\le u_0/(3(1+w))$; and
+    $w+u_0/(3(1+w))<u_0$ on $[1,u_0-3]$ (a convex function of $w$, checked at both ends). So $w<m^{1/4}$ and
+    $\sigma_{\mathrm{sh}}=0$.
+  \item For $w\ge u_0-3\ge31619$: $x\le3.2\cdot10^{-5}$, so $(1-x)^{1/4}\ge1-x/4-0.1x^2\ge1-0.2501x$ and
+    $c_w\le0.2501u_0/(1+w)$. In particular $c_w\le0.25012$, so $\sigma_{\mathrm{sh}}=0$ again for $w\le u_0-0.26$. Also
+    $1/\sqrt m\le(1+\frac1{2w})/\sqrt\ell$ and $(w-m^{1/4})_+\le A+c_w$. Hence
+    \[
+      \sigma_{\mathrm{sh}}\le\frac{(A+c_w)^2(1+\frac1{2w})-A^2}{2\sqrt\ell}
+      =\frac{A}{\sqrt\ell}\Big(c_w+\frac{A}{4w}+\frac{c_w}{2w}\Big)+\frac{c_w^2}{2\sqrt\ell}\Big(1+\frac1{2w}\Big).
+    \]
+    If $A>0$ then $w>u_0$, and the bracket is at most
+    $0.2501\frac{u_0}{1+w}+\frac14-\frac{u_0}{4w}+10^{-5}\le\frac14+0.0001\frac{u_0}w+10^{-5}\le0.2502$. For $w\ge u_0-0.26$,
+    $c_w\le0.2501$, so the last term is at most $0.0314/\sqrt\ell$.
+  \end{itemize}
+  Since $(w-u_0)_+\le(u-u_0)_++s_+$, in all cases
+  \[
+    0\le\sigma_{\mathrm{sh}}\le\Big(0.2503\,\frac{(w-u_0)_+}{\sqrt\ell}+\frac{0.0314}{\sqrt\ell}\Big)\mathbf 1[w\ge u_0-0.26]
+    \le0.2503\Big(a'+\frac{s_+}{\sqrt\ell}\Big)+\frac{0.0314}{\sqrt\ell}.
+  \]
+  Hence, using $-|s|a'\le\Delta\phi\le0$ for $s\le0$ (as $\phi$ is non-decreasing) and the displayed bound for $s\ge0$,
+  $|D_a|\le(|s|+0.2503)a'+q(s)/\sqrt\ell$ and $(D_a)_+\le(s_++0.2503)a'+(q(s)+0.5)/\sqrt\ell$, with
+  $q(s):=s_+^2/2+0.2503s_++0.0314$.
+\item\label{it:bsP3} $D'\le0.7\cdot10^{-4}+3\cdot10^{-4}s_+$. For $s\le0$ this follows from \ref{it:bsP1}, $\Delta\phi\le0$ and
+  $\sigma_{\mathrm{sh}}\le0.2503\alpha'+10^{-10}$, which give $D'\le1.37\cdot10^{-5}+5.61\cdot10^{-5}$. For $s\ge0$, the slope of $D_A$ in $w$ is $(B/\ell)h'\le8B\Lambda(\bar U)/\ell\le7.3\cdot10^{-5}$,
+  and that of $a(m,w)$ is at most $(w-m^{1/4})_+/\sqrt m\le1.0003\alpha'$ (the $m$-dependence only lowers it).
 \end{enumerate}
-For $u\ge27$, every remainder is a small multiple of $c(u)\ge K'u^2\log(1+u)$ (proved below) or of $\ell\Phi_{\mathrm{ben}}$. For
-$u<27$ the remainders are absolute, at most $9\cdot10^{17}/\ell$. On the range $u\ge u_0-2$,
-$c(u)\ge K'(u_0-2)^2\log u_0\ge2\cdot10^9$, so the term $-60$ is negligible. Finally $\eps(10^{18})\le0.03$,
-$\eps(10^{22})\le0.003$, and $\eps$ is decreasing. The constants are crude, and nothing is optimised.
+So $e^{D'_+}\le1.0001\,e^{\gamma s_+}$ with $\gamma:=3\cdot10^{-4}$, and the moment bounds apply. In particular, for $u=2$ (the
+worst case of $r_0\ge1$) and for $u\ge27$ ($r_0\ge4.59$) respectively,
+\[
+  E_\pi[\varphi_Ae^{\gamma s_+}]\le205.1,\ 8.07;\qquad E_\pi[\varphi_A^2e^{\gamma s_+}]\le2.71\cdot10^6,\ 66.5;\qquad
+  E_\pi[(1+s_+)^5e^{\gamma s_+}]\le165,\ 1.03 .
+\]
+
+\emph{The slack $s_a$.} Let $u\ge u_0-2$. Then $r_0\ge12.82$, and $r(u)\ge r_{\mathrm{low}}(31620)\ge12.8225$, so
+$1-1/r(u)\ge0.92201$. By \ref{it:bsP2} and the moments,
+$-E_\pi\Delta\phi\ge a'\big(E_\pi(u-w)_+-E_\pi s_+\big)-E_\pi s^2/(2\sqrt\ell)\ge0.9219a'-0.5001/\sqrt\ell$ and
+$E_\pi\sigma_{\mathrm{sh}}\le0.2503a'+0.0315/\sqrt\ell$. So $s_a\ge0.6716a'-0.532/\sqrt\ell$. Let $u<u_0-2$. Then $a'=0$,
+$D_a\ge0$, and $D_a\ne0$ only for $s\ge d:=u_0-0.26-u\ge1.74$, where $D_a\le(s^2/2+0.2503s+0.0314)/\sqrt\ell$. If
+$u\ge u_0/2$, then $r_0\ge\log(u_0/2-1)\ge9.6$ and $\ell|s_a|\le\sqrt\ell\cdot5e^{-1.74r_0}/(ur_0)\le4u_0^{-0.74}\le0.01$; if
+$u<u_0/2$, then $d\ge u_0/2-0.26$ and $\ell|s_a|\le e^{-u_0/3}$. (Here
+$\int_d^\infty p(s)e^{-r_0s}ds\le e^{-r_0d}(p+p'+p'')(d)/r_0$ for the quadratic $p$. For $r_0\ge1$ the function
+$e^{-r_0d}(p+p'+p'')(d)$ is decreasing in $d$, and $(p+p'+p'')(1.74)\le4.98$, so the integral is at most $5e^{-1.74r_0}/r_0$.)
+
+\emph{The remainders.}
+\begin{enumerate}[label=(\alph*)]
+\item $\rho_1\le6\,\Phi_{\mathrm{ben}}\,E_\pi|D'|$, because $1-e^{D_\Phi}\le1-e^{-\kappa_\Phi/((u-1)\ell)}$, $(1-e^{-y})/y$ is
+  decreasing, $(u+1)/(u-1)\le3$ and $\pi(w\le u+1)\ge0.8\ge\frac12$. By \ref{it:bsP1}, \ref{it:bsP2} and the moments,
+  $E_\pi|D'|\le205.1\,B\Lambda(u)/\ell+1.2504a'+0.7/\sqrt\ell$. So
+  $\ell\rho_1\le(13540\lambda+7.6\alpha')\,\ell\Phi_{\mathrm{ben}}$, and $\ell\rho_1\le(540\lambda+7.6\alpha')\,\ell\Phi_{\mathrm{ben}}$ if $u\ge27$.
+\item $\rho_2\le1.0001\,E_\pi[D_A^2e^{\gamma s_+}]+1.0001\,E_\pi[D_a^2e^{\gamma s_+}]$, from $D'^2\le2D_A^2+2D_a^2$ and \ref{it:bsP3}.
+  \begin{itemize}
+  \item The $A$-part is at most $1.0001B^2\Lambda(u)^2E_\pi[\varphi_A^2e^{\gamma s_+}]/\ell$. For $u<27$ this is at most
+    $1.0001\cdot121\cdot\Lambda(27)^2\cdot2.71\cdot10^6/\ell\le2.3\cdot10^{15}/\ell$. For $u\ge27$, using
+    $(1+u)^4\log^2(2+u)\le1.088\,u^2\log(1+u)\Lambda(u)$, it is at most
+    $1.0001\cdot(B^2/K')\cdot1.088\cdot66.5\cdot1.00001\lambda\cdot K'u^2\log(1+u)\le4000\lambda\,K'u^2\log(1+u)$.
+  \item The $a$-part. For $u\ge u_0-2$, by \ref{it:bsP2}, $\ell E_\pi[D_a^2e^{\gamma s_+}]\le2\ell a'^2\cdot1.5634+0.002$. If
+    $s_a\ge0$, the bound on $s_a$ gives $a'\le1.5s_a+0.81/\sqrt\ell$; if $s_a<0$, then $a'\le0.81/\sqrt\ell$. In both cases
+    $\ell a'^2\le1.5\alpha'\,\ell(s_a)_++0.81\alpha'\sqrt\ell+0.66$. So the $a$-part of $\ell\rho_2$ is at most
+    $4.7\alpha'\,\ell(s_a)_++2.54\alpha'\sqrt\ell+2.1$. For $u<u_0-2$, the tail estimate used for $s_a$ makes it at most
+    $\lambda\,K'u^2\log(1+u)$ if $u\ge27$, and $e^{-u_0/3}$ if $u<27$.
+  \end{itemize}
+\item $\rho_3\le E_1^{\mathrm{lin}}\cdot1.0001\,D'(u-1)_+$. By \ref{it:bsP1} and \ref{it:bsP2}, $D'(u-1)\le\sigma_{\mathrm{sh}}(u-1)$, which
+  vanishes unless $u\ge u_0+0.74$ and is at most $0.2503a'+0.0314/\sqrt\ell$. So $\rho_3=0$ for $u<u_0+0.74$, and otherwise
+  $\ell\rho_3\le2.0002K'u^2r_0(0.2504\alpha')\le0.72\alpha'\,K'u^2\log(1+u)$, since
+  $r_0\le r_{\mathrm{up}}(u-1)\le\log u+\log\log u+2\le1.42\log(1+u)$ there \ref{R4}.
+\item $\rho_4\le(K'/\ell)\cdot1.0001\,E_\pi[(1+w)D'_+e^{\gamma s_+}]$, with $1+w\le(1+u)(1+s_+)$ and
+  $D'_+\le(B\Lambda(u)/\ell)\varphi_A(s_+)+(s_++0.2503)a'+(q(s)+0.5)/\sqrt\ell$. For $u\ge27$ this gives
+  $\ell\rho_4\le1.0001K'(1+u)(1.6\cdot11.0001\lambda+0.2601\alpha')\le(0.21\lambda+0.004\alpha')K'u^2\log(1+u)$, as
+  $(1+u)/(u^2\log(1+u))\le0.0116$. For $u<27$, $a'=0$, $D_a$ vanishes except at $s\ge u_0-27$, and
+  $\ell\rho_4\le1.0001\cdot2.2\cdot28\cdot11\Lambda(27)\cdot1049/\ell\le2\cdot10^9/\ell$.
+\item $E_3\le2.0002K'E_\pi[e^{\gamma s_+}\eta_f\mathbf 1[w\le\bar U]]$, and $\eta_f=\kappa_\Phi/m^2+|\partial_mQ|+(1+w)^2\ell^{-1}|\partial_wQ|$
+  with $Q=A+a$.
+  \begin{itemize}
+  \item The $\Phi$-part: $\kappa_\Phi/m^2=\kappa_\Phi(1+w)^2/(\ell w)^2\le4\kappa_\Phi/\ell^2$. Since
+    $\ell\Phi_{\mathrm{ben}}\ge0.8\,(1-0.023)\,\kappa_\Phi/(u+1)$, its contribution is at most
+    $2.0002K'\cdot4\,E_\pi[e^{\gamma s_+}]\,\kappa_\Phi/\ell\le26.5\kappa_\Phi/\ell\le34(u+1)\ell^{-1}\,\ell\Phi_{\mathrm{ben}}\le\lambda\,\ell\Phi_{\mathrm{ben}}$.
+  \item The $A$-part: $|\partial_mA|=A/m$ and $(1+w)^2\ell^{-1}|\partial_wA|$ together are at most
+    $10B\Lambda(w)(1+w)^2/\ell^2\le10B\Lambda(u)(1+u)^2(1+s_+)^5/\ell^2$. For $u\ge27$ the contribution to $\ell E_3$ is at most
+    $44.01\cdot11\cdot1.03\,\Lambda(u)(1+u)^2/\ell\le260\lambda\,K'u^2\log(1+u)$; for $u<27$ it is at most
+    $44.01\cdot11\cdot\Lambda(27)\cdot28^2\cdot165/\ell\le2\cdot10^{11}/\ell$.
+  \item The $a$-part vanishes for $w<u_0-0.26$. There $m\ge0.9999\ell$ and $(w-m^{1/4})_+\le1.0001\alpha'\sqrt\ell$, so
+    $\ell|\partial_ma|\le0.2501(\alpha'u_0+\alpha'^2u_0^2)$ and $\ell\cdot(1+w)^2\ell^{-1}|\partial_wa|\le1.0002\alpha'(1+u)^2(1+s_+)^2$.
+    For $u\ge u_0-2$ the contribution to $\ell E_3$ is at most
+    $4.41\big(0.2501(\alpha'u_0+\alpha'^2u_0^2)+1.0004\alpha'(1+u)^2\big)\le0.2\alpha'\,K'u^2\log(1+u)$, since
+    $u\ge u_0-2$ and $\log(1+u)\ge10.36$. For $u<u_0-2$ the factor $\pi(w\ge u_0-0.26)\le e^{-r_0d}/(ur_0)$ makes it at most
+    $10^{-3}(\lambda+\alpha')K'u^2\log(1+u)$ for $u\ge27$, and $e^{-u_0/3}$ for $u<27$.
+  \end{itemize}
+\item $T$. By Step~6, $T\le e^{0.1334}\exp\big(y-a(\ell,u)-r_0(\bar U-u+\frac32)\big)$, where $y=\log(\ell/\tau)=a(\ell,\bar U)-2$,
+  $\kappa_\Phi/\ell\le0.13334$ and $a_V(u^*)\le13\lambda$.
+  \begin{itemize}
+  \item If $\bar U-u\le(\bar U-u_0)/2$, then $u-1\ge2.6u_0$ (as $\bar U-u_0\ge3.28u_0$), so $r_0\ge\log(2.6u_0)$; also
+    $y-a(\ell,u)\le\alpha'(\bar U-u)-2$ (convexity of $a(\ell,\cdot)$), and $a'\ge\alpha'/2$, so
+    $s_a\ge0.3358\alpha'-0.532/\sqrt\ell\ge0.3357\alpha'\ge1.103/u_0$. Hence $T\le e^{-1.8666}(2.6u_0)^{-1.5}\le0.037\,u_0^{-1.5}\le0.035\,\ell^{-1/8}s_a$.
+  \item Otherwise $\bar U-u\ge1.64u_0$, $y\le4\log u_0$ and $r_0\ge1$, so $\ell T\le\exp(0.14+8\log u_0-1.64u_0)\le1/\ell$.
+  \end{itemize}
+\end{enumerate}
+
+\emph{Assembly.} Write $c(u)=\ell\Phi_{\mathrm{ben}}+c_0(u)$, and recall $\ell(s_a)_+$ and $\ell|s_a|$ from the bounds on $s_a$.
+\begin{itemize}
+\item \emph{$u\ge27$.} By the positivity argument below, $c_0(u)\ge K'u^2\log(1+u)>0$, so both parts of $c$ are
+  non-negative; and $c\ge c_0\ge22.7\sqrt\ell$ when $u\ge u_0-2$, so that $2.54\alpha'\sqrt\ell\le0.12\alpha'c$. Adding (a)--(f),
+  \begin{gather*}
+    \ell(\rho_1+\cdots+T)\le\eps_1c+\eps_2\,\ell(s_a)_++2.2\cdot\mathbf 1[u\ge u_0-2]+1/\ell,\\
+    \eps_1:=4300\lambda+8.8\alpha',\quad\eps_2:=4.7\alpha'+0.035\,\ell^{-1/8}.
+  \end{gather*}
+\item \emph{$2\le u<27$.} Here $a'=0$, $\rho_3=0$ and $c\ge0.944\,\ell\Phi_{\mathrm{ben}}$, by the $\Phi$-dominance bound below. So
+  (a)--(f) give $\ell(\rho_1+\cdots+T)\le\eps_1c+2.5\cdot10^{15}/\ell$ with $\eps_1:=14400\lambda+\alpha'$.
+\end{itemize}
+In both cases $\eps_1\le0.72\,\eps$ and $\eps_2\le\eps$. If $s_a\ge0$, the claim follows at once. If $s_a<0$, it needs in
+addition $\eps\,\ell|s_a|\le(\eps-\eps_1)c$, which holds because $\ell|s_a|\le0.54\sqrt\ell\le0.024c$ for $u\ge u_0-2$,
+$\ell|s_a|\le0.01\le0.2c$ for $27\le u<u_0-2$, and $\ell|s_a|\le e^{-u_0/3}$ for $u<27$. Finally, at $\tau=10^8$ (the worst
+case), $\eps(10^{18})\le0.0286$ and $\eps(10^{22})\le0.0029$. The constants are crude, and nothing is optimised.
 \end{proof}
 
 \emph{Positivity of $c(u)$, for $\tau\ge10^8$.}
 \begin{itemize}
-\item \emph{$u\ge27$: $c(u)\ge K'u^2\log(1+u)$.} Here $\mu_0=0$ and $\Phi_{\mathrm{ben}}\ge0$.
+\item \emph{$u\ge27$: $c_0(u):=c(u)-\ell\Phi_{\mathrm{ben}}\ge K'u^2\log(1+u)$.} Here $\mu_0=0$, so
+  $c_0=-Bj_A-2K'e_1-K'e_2$ does not depend on $\ell$ or $\tau$.
   \begin{itemize}
   \item On $[u-1,u]$, convexity of $h$ ($h''>0$ on $[1,\infty)$) gives the chord bound $h(w)\le h(u)-h'(u-1)(u-w)$, with
     $h'(u-1)\ge3u^2\log(1+u)$, and \ref{R1} gives $E_\pi(u-w)_+=1-1/r(u)$.
@@ -318,19 +501,25 @@ $\eps(10^{22})\le0.003$, and $\eps$ is decreasing. The constants are crude, and 
   \end{itemize}
   With $B=5K'$ this gives
   \begin{multline*}
-    \frac{c(u)}{K'u^2}\ge5\log(1+u)\Big[3\big(1-1/r(u)\big)-\frac{(1+u)^3\log(2+u)}{u^3\log(1+u)}
+    \frac{c_0(u)}{K'u^2}\ge5\log(1+u)\Big[3\big(1-1/r(u)\big)-\frac{(1+u)^3\log(2+u)}{u^3\log(1+u)}
     -\frac{144(1+u)^2\log(2+u)}{u^3r_0^2\log(1+u)}\Big]\\-2r(u-1)-\frac{u+1}{u^2}.
   \end{multline*}
   With $r$ enclosed in $[r_{\mathrm{low}},r_{\mathrm{up}}]$, the right side is $\ge\log(1+u)$ on $[27,4\cdot10^5]$
   (computer-assisted; see Appendix~\ref{app:cert}: $9{,}609$ cells in ball arithmetic, no failures, minimum margin
   $0.189$). Beyond $4\cdot10^5$ it is analytic: $r_{\mathrm{low}}\ge15.3$ gives
   $5\cdot1.79\log u-2(\log u+\log\log u+2)>\log(1+u)$.
-\item \emph{$2\le u<27$: $\Phi$-dominance.} Here
-  $\ell\Phi_{\mathrm{ben}}\ge\kappa_\Phi\cdot0.933\cdot0.69/u\ge4\cdot10^8\cdot0.933\cdot0.69/u\ge9.5\cdot10^6$, while
-  $B\,j_A\le B(1.5+393.5/u)\Lambda(u)\le5\cdot10^5$ and $2K'u^2r_{\mathrm{up}}\le2\cdot10^4$.
-\item \emph{$u<2$:} region Z1, case (i).
+\item \emph{$2\le u<27$: $\Phi$-dominance.} By Jensen, $E_\pi[1/w]\ge1/E_\pi w\ge0.94/u$, since
+  $E_\pi w=u-(1-1/r(u))+E_\pi s_+\le u-1+1/r(2)+1/(ur_0^2)\le u+0.12$. With $1-e^{-y}\ge y(1-y/2)$ and $\kappa_\Phi/\ell\le0.1334$,
+  $\ell\Phi_{\mathrm{ben}}\ge0.933\cdot0.94\,\kappa_\Phi/u\ge0.87\cdot4\cdot10^8/27\ge9.5\cdot10^6$. Meanwhile
+  $B\,j_A\le B(1.5+392/u)\Lambda(u)\le4.7\cdot10^5$ (by \ref{R3} with $r_0\ge1$), $2K'e_1=2K'u^2r(u-1)\le2\cdot10^4$ and
+  $K'e_2\le K'(u+1.12)\le62$. So $c_0\ge-5.3\cdot10^5$ and $c(u)\ge0.944\,\ell\Phi_{\mathrm{ben}}\ge8.9\cdot10^6$.
+\item \emph{$u<2$:} region Z1. Case~(i) gives $\ell\Sigma\ge0.265\tau-2714>0$ for every $\ell\ge30\tau$, in particular for
+  $\ell\ge10^{18}$.
 \end{itemize}
-So, by Lemma~\ref{lem:bs-remainder}, $\Sigma\ge0$ for every $\ell\ge10^{18}$ and every $u\le U(\ell)$.
+So $c(u)\ge5000$ for every $u\ge2$, and $c(u)\ge c_0(u)\ge22.7\sqrt\ell$ for $u\ge u_0-2$. By the bounds on $s_a$ in
+Lemma~\ref{lem:bs-remainder}, $c(u)+\ell s_a\ge0.97\,c(u)$, and the lemma gives
+$\ell\Sigma\ge0.94\,c(u)-60\cdot\mathbf 1[u\ge u_0-2]-0.9>0$ for every $\ell\ge10^{18}$ and $2\le u\le U(\ell)$; with (i), every
+$u\le U(\ell)$ is covered.
 
 \smallskip\noindent\emph{(iii) Region Z2: $30\tau\le\ell<10^{18}$ and $u\ge2$ (computer-assisted; see Appendix~\ref{app:cert}).}
 Here we use a closed-form lower bound $S(\ell,u)\le\Sigma(\ell,u)$, built only from \ref{R1}--\ref{R4}, the constant $K'$ of
@@ -413,13 +602,15 @@ For every start $y\ge X_0$ and every $\Xm/2\le v\le y$,
 If $c_e(y)\ne0$, then $y/e\ge\Xm$ (the cutoff in $\Kpt$), and $e$ is squarefree and $4v$-dense (Lemma~\ref{lem:lemmaM}).
 \begin{itemize}
 \item For $v\le\sqrt y/4$, apply Theorem~\ref{thm:bs} with $t:=4v\ge2\Xm$ and $Y:=y/(2v)$. Then $Y\ge t$ and
+% Logged correction 25 (CORRECTIONS-vs-v3.md): v3 writes t = 4v >= 2X0; only 4v >= 2X0- holds, which suffices (t >= X0).
   $\log Y\ge\frac12\log y$, and
   \[
-    W^{\mathrm{sh}}_y(v)\le C_{\mathrm{BS}}\frac{\log(4v)}{\log(y/2v)}\le2C_{\mathrm{BS}}\Big(1+\frac{\log2}{\log X_0}\Big)
+    W^{\mathrm{sh}}_y(v)\le C_{\mathrm{BS}}\frac{\log(4v)}{\log(y/2v)}\le2C_{\mathrm{BS}}\Big(1+\frac{\log2}{\log\Xm}\Big)
     \frac{\log(2v)}{\log y}\le2.01\,C_{\mathrm{BS}}\frac{\log(2v)}{\log y}.
   \]
 \item For $v>\sqrt y/4$, put $A:=y/(2v)\in[\frac12,2\sqrt y)$. Then $W^{\mathrm{sh}}_y(v)\le\sum_{e\in(A,2A]}1/e$.
-  This sum is at most $1$ always (on $\N$ below $\Xm$), and at most $\log2+2\eta_1+1/A\le0.6952$ if $A\ge y^{1/4}$. In the
+  This sum is at most $1$ always (on $\N$ below $\Xm$), and at most $\log2+2.7\eta_1+1/A\le0.6959$ if $A\ge y^{1/4}$
+  (partial summation as in the proof of Lemma~\ref{lem:smooth-v}). In the
   first case $\log(2v)/\log y\ge\frac34$, and in the second $\log(2v)/\log y\ge\frac12-\log2/\log y$. Either way
   $W^{\mathrm{sh}}_y(v)\le1.4\log(2v)/\log y$.\qedhere
 \end{itemize}

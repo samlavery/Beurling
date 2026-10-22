@@ -1,4 +1,5 @@
 % Introduction (v3 §0.1, §7)
+\begingroup\emergencystretch=2em % typography only: lets TeX loosen lines instead of overfilling them
 \section{Introduction}\label{sec:intro}
 
 \subsection{Beurling systems and the question}
@@ -32,7 +33,7 @@ The answer to Q is equivalent to the existence question for $[1,\beta]$-systems 
 \begin{theoremA}[informal form; see Theorem~\ref{thm:A}]
 Let $\theta\in[\tfrac14,\tfrac12-10^{-4}]$. There is a discrete Beurling system $\PP$ with
 \[
-  N_{\PP}(x)=x+O(x^{\theta'})\qquad\text{for every }\theta'\in(\theta,\tfrac12),
+  N_{\PP}(x)=x+O(x^{\theta}\log^*x),
 \]
 whose zeta function has zeros $\rho_k$, $k\ge1$, with
 \[
@@ -48,19 +49,33 @@ with the stated properties. Since Q quantifies over deterministic systems, one r
 already gives a negative answer to Q.
 
 \begin{remark}[Q and ${[1,\beta]}$-systems]\label{rem:equiv}
-For a system with $N_{\PP}(x)=Ax+O(x^{\beta})$, $\beta<\tfrac12$, the following are equivalent:
+For a system with $N_{\PP}(x)=Ax+O(x^{\beta})$, $A>0$, $\beta<\tfrac12$, the following are equivalent:
 \begin{enumerate}[label=(\alph*)]
 \item $\zeta_{\PP}$ is zero-free on some half-plane $\operatorname{Re}s>1-\eps$;
 \item $\psi_{\PP}(x)=x+O(x^{1-\eps'})$ for some $\eps'>0$.
 \end{enumerate}
-This is the standard Perron/Mellin argument, using the continuation of $\zeta_{\PP}$ to $\operatorname{Re}s>\beta$ and its
-polynomial growth there. So a negative answer to Q is the same as the existence of a discrete $[1,\beta]$-system with
-$\beta<\tfrac12$.
+\emph{(b) implies (a).} For $\sigma>1$, partial summation gives
+\[
+  \zeta_{\PP}(s)-\frac{As}{s-1}=s\int_1^\infty(N_{\PP}(x)-Ax)\,x^{-s-1}\,dx,\qquad
+  -\frac{\zeta_{\PP}'(s)}{\zeta_{\PP}(s)}-\frac{s}{s-1}=s\int_1^\infty(\psi_{\PP}(x)-x)\,x^{-s-1}\,dx.
+\]
+The first integral converges absolutely and locally uniformly on $\sigma>\beta$, so $\zeta_{\PP}$ is meromorphic there, with only
+the simple pole at $s=1$. By (b) the second converges likewise on $\sigma>1-\eps'$, so $\zeta_{\PP}'/\zeta_{\PP}$ has no pole other
+than $s=1$ on $\sigma>\max(\beta,1-\eps')$. A zero of $\zeta_{\PP}$ there would be such a pole. Hence (a) holds with
+$\eps=\min(\eps',1-\beta)$.
+
+\emph{(a) implies (b).} This is the standard converse. $\zeta_{\PP}$ grows at most polynomially on $\sigma\ge\beta+\delta$ away from
+$s=1$, so the Borel--Carath\'eodory lemma bounds $\zeta_{\PP}'/\zeta_{\PP}$ polynomially on $\sigma\ge1-\eps+\delta$. Perron
+inversion for a smoothed $\psi_{\PP}$, followed by an elementary Tauberian step (since $\psi_{\PP}$ is non-decreasing), then gives
+(b). The same argument for $N_{\PP}$ is \cite[Remark~4.1]{BDR}; see \cite{DiamondZhang2016} for the general theory.
+
+So a negative answer to Q is the same as the existence of a discrete $[1,\beta]$-system with $\beta<\tfrac12$. Only the direction
+(b)$\Rightarrow$(a) is needed for Corollary~\ref{cor:notQ}.
 \end{remark}
 
 \subsection{Background}
 \emph{Well-behaved systems.} The notion of an $[\alpha,\beta]$-system is due to Hilberdink \cite{Hilberdink2005}. If the integers
-are $\beta$-well-behaved for some $\beta<1$, then $\psi_{\PP}(x)=x+O(x\exp(-c\sqrt{\log x}))$. Diamond, Montgomery and Vorhauer
+are $\beta$-well-behaved for some $\beta<1$, then $\psi_{\PP}(x)=x+O(x\exp(-c\sqrt{\log x}))$ (see \cite[\S1]{BDR}). Diamond, Montgomery and Vorhauer
 \cite{DMV2006} showed that this de la Vall\'ee Poussin-type error term cannot be improved in general. Zhang \cite{Zhang2007} gave
 the first unconditional well-behaved example, with $\psi_{\PP}(x)=x+O(x^{1/2+\eps})$ and $N_{\PP}(x)=ax+O(x^{1/2+\eps})$, using the
 probabilistic method of \cite{DMV2006}. Broucke and Vindas \cite{BrouckeVindas2024} refined that method and obtained
@@ -68,7 +83,8 @@ $[0,\tfrac12]$-systems. Broucke, Debruyne and R\'ev\'esz \cite{BDR} constructed 
 $\alpha\in[0,1)$ and $\beta\in[\tfrac12,1)$, building on R\'ev\'esz's construction of systems with prescribed zeta zeros
 \cite{Revesz2023}. Assuming the Riemann hypothesis, they also constructed $[\tfrac12,\beta]$-systems for $0\le\beta<\tfrac12$, and
 $[\alpha,\beta]$-systems for $\tfrac12<\alpha<\tfrac23$ and $2\alpha/(\alpha+2)\le\beta<\tfrac12$ \cite[Thm.~1.3]{BDR}. A
-$[1,\beta_0]$-system with some $\beta_0\le\tfrac12$ is in \cite[Ch.~17]{DiamondZhang2016}, and \cite[footnote~4]{BDR} remarks:
+$[1,\beta_0]$-system with some $\beta_0\le\tfrac12$ is in \cite[Ch.~17]{DiamondZhang2016}, as recorded in \cite[p.~3]{BDR}, and
+\cite[footnote~4]{BDR} remarks:
 ``Most likely the value of $\beta_0$ equals $1/2$, but in principle it is still possible that $\beta_0$ could be smaller.''
 
 \emph{The barrier at $x^{1/2}$.} The random approximation procedures discretise a continuous system, and they lose a square
@@ -85,7 +101,7 @@ satisfying \cite[(1.10)]{Broucke2025}. Then there is a discrete Beurling system 
 \item $\psi_{\PP}(x)-x=\Omega_\pm\bigl(x\exp(-\omega(x)+(1-\delta)f(u_0(x))u_0(x))\bigr)$;
 \item infinitely many zeros on the curve $\sigma=1-f(\log|t|)$, and none to its right.
 \end{enumerate}
-The exponent $\tfrac12+\eps$ comes from randomly discretising a continuous system of Diamond--Montgomery--Vorhauer type.
+The exponent $\tfrac12+\eps$ comes from randomly discretising a continuous system of Diamond--\allowbreak Montgomery--\allowbreak Vorhauer type.
 
 \emph{Landau's region.} If $N_{\PP}(x)=Ax+O(x^{\theta})$ with $\theta<1$, then $\zeta_{\PP}(s)\ne0$ for
 $\sigma>1-c(1-\theta)/\log|t|$, $|t|\ge t_0(\PP)$, with $c$ absolute. This is \cite[(1.2)]{Broucke2025}, derived there from
@@ -95,9 +111,10 @@ $\sigma>1-c(1-\theta)/\log|t|$, $|t|\ge t_0(\PP)$, with $c$ absolute. This is \c
 Theorem~\ref{thm:A} makes the step from $\theta=\tfrac12+\eps$ to $\theta<\tfrac12$. It differs from \cite[Thm.~1.6]{Broucke2025}
 in three ways:
 \begin{enumerate}[label=(\alph*)]
-\item $\theta<\tfrac12$, which no random discretisation reaches;
+\item $\theta<\tfrac12$, which the existing random approximation procedures \cite{DMV2006,Zhang2007,BrouckeVindas2024,BDR} do
+not reach;
 \item the construction is discrete from the start and integer-first: generalized primes are placed by a greedy rule with
-feedback from the integer count, which is the kind of construction \cite[\S5]{BDR} asks for;
+feedback from the integer count, which is the kind of construction \cite[\S5]{BDR} suggests;
 \item the zero information is weaker: the zeros are designed, but there is no zero contour and no $\Omega$-result.
 \end{enumerate}
 
@@ -106,9 +123,9 @@ feedback from the integer count, which is the kind of construction \cite[\S5]{BD
 \begin{itemize}
 \item It does not show that Landau's region is optimal for $\theta<\tfrac12$. Here
 $1-\operatorname{Re}\rho_k\asymp3(1-\theta)\log\log\gamma_k/\log\gamma_k$, where $\gamma_k=\operatorname{Im}\rho_k$. That is outside
-Landau's region by a factor $\log\log\gamma_k$. In this design the loss is forced by the positivity of the target
-(\eqref{eq:G1}) together with the amplitude condition \eqref{eq:ampl}, which gives the factor $3\log\log$ rather than
-$1\log\log$.
+Landau's region by a factor $\log\log\gamma_k$. In this design the loss comes from the amplitude condition \eqref{eq:ampl},
+which gives the factor $3\log\log$ rather than $1\log\log$. Positivity of the target alone would allow larger amplitudes; the
+smaller ones are needed to keep the drift margin of Section~\ref{sec:noise} at scales where $\gamma_k$ is not yet resolvable.
 \item It gives no system with prime error $x^{\alpha}$, $\tfrac12<\alpha<1$, and integer error $O(x^{\theta})$, $\theta<\tfrac12$.
 Infinitely many designed zeros make the prime error $x^{1-o(1)}$.
 \item It gives no $[\alpha,\beta]$-system with $\alpha<1$ and $\beta<\tfrac12$: the greedy construction has $\alpha=1$.
@@ -119,8 +136,8 @@ Infinitely many designed zeros make the prime error $x^{1-o(1)}$.
 
 \subsection{Outline of the proof}
 \emph{The construction} (Section~\ref{sec:construction}). Below a large scale $X_0$ the system coincides with $\N$, apart from
-the few generalized primes that land within $H(X_0)/2$ below $X_0$. Above $X_0$ we fix an
-explicit, slightly modified target $T(x)\approx x$. Its continuous part removes the density of the $X_0$-smooth integers,
+the few generalized primes that land within $H(X_0)/2$ below $X_0$. Above $X_0$ we follow a
+slightly modified target $T(x)\approx x$, built along with the system (its absorbed part and the heights $\gamma_k$ depend on it). Its continuous part removes the density of the $X_0$-smooth integers,
 averaged over windows $[u,(1+\kappa)u]$. It also carries oscillations $R_k$ that switch on at very sparse scales $x_k$ and plant
 zeros near $1+i\gamma_k$. The level sets of $T$ cut $[X_0,\infty)$ into unit \emph{slots}. Slots are processed in order: a slot
 receives a new generalized prime exactly when the queue of composite elements is empty and no composite lands in the slot, and
@@ -132,8 +149,8 @@ difficulty.
 of $\zeta_{\PP}$ near each designed point. The heights $\gamma_k$ are chosen from the system below $x_k$, so the target stays
 adapted to the construction.
 
-\emph{The queue} (Sections~\ref{sec:noise} and~\ref{sec:queue}). The queue follows a Lindley recursion. Its arrivals in a window
-of slots have predictable compensator $\int_W(\text{margin})$, plus martingale noise. Two facts drive it:
+\emph{The queue} (Sections~\ref{sec:noise} and~\ref{sec:queue}). The queue follows a Lindley recursion. In a window $W$ of slots, the
+excess of composite arrivals over slots has predictable compensator $-\int_W(\text{margin})$, plus martingale noise. Two facts drive it:
 \begin{itemize}
 \item a \emph{margin}: at every scale the compensator of jittered composites falls short of the number of continuous slots by
 a relative amount $\ge c'/\log x$ (Section~\ref{sec:noise}). This rests on a sharp bound for the resolvent coefficients of the
@@ -153,3 +170,4 @@ prime number theorem of Huxley and Heath-Brown, and it removes a family of edge 
 Section~\ref{sec:setup} states Theorem~\ref{thm:A} precisely, fixes all parameters, and records the logical structure, including
 why the induction is not circular. Appendix~\ref{app:cert} describes the computer-assisted parts, and Appendix~\ref{app:ai} is a
 statement on the use of AI.
+\par\endgroup

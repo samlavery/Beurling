@@ -1,4 +1,4 @@
-# Independent check of Lemma SC (lead-notes L1). Exact rational rank.
+# Independent check of Lemma SC (paper, Appendix A, lem:SC). Exact rational rank.
 import random, itertools
 from fractions import Fraction
 

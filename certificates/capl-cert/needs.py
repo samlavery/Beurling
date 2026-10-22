@@ -19,5 +19,5 @@ def ceiling(l, lam=LAM):
         else: hi = mid
     return lo
 for l in (18.5, 20, 22.2, 25, 30, 31.4, 35, 38, 40, 41.95, 42.5, 43, 43.6, 44.2, 45, 50, 100, 1000, 5000, 10000, 11000):
-    nH = need(routeH_ok, l); nD = need(dickman_ok, l); ce = ceiling(l)
-    print(f"l={l:8}: routeH need {nH/LAM:9.4f}  dickman need {nD/LAM:9.4f}  P-ceiling {ce/LAM:9.4f}  std 4l^2-log4 = {(4*l*l-math.log(4))/LAM:9.4f}  (units of Lam)")
+    nH = need(highdeg_ok, l); nD = need(dickman_ok, l); ce = ceiling(l)
+    print(f"l={l:8}: high-degree need {nH/LAM:9.4f}  dickman need {nD/LAM:9.4f}  P-ceiling {ce/LAM:9.4f}  std 4l^2-log4 = {(4*l*l-math.log(4))/LAM:9.4f}  (units of Lam)")

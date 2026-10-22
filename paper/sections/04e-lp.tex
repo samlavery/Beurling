@@ -5,7 +5,7 @@
 \begin{lemma}[threshold mass]\label{lem:threshold-mass}
 % v3: Lemma 3.12
 For squarefree $n$ put $\tau(n):=\max_{p\mid n}t(p)\prod_{q\mid n,\,t(q)\ge t(p)}q$, so that $\chi^t_y(n)=1$ if and only if
-$\tau(n)<y$. Assume $|N-T|\le D:=B+H/2+2$ at the relevant heights (Corollary~\ref{cor:lag}). For $x\ge X_0$ and
+$\tau(n)<y$. Assume $|N-T|\le D:=B+\frac12H(1+\kappa_+/\log x)+3$ at the relevant heights (Corollary~\ref{cor:lag}). For $x\ge X_0$ and
 $\delta\in(0,\frac14]$,
 \[
   \sum_{n:\ \tau(n)\in[x(1-\delta),x)}\frac1n\le55\,\delta\log x\,\big(\log H(x)+\log(1/\delta)+2\big)
@@ -16,8 +16,19 @@ It is used only with $\delta\ge6H(x)x^{-1/3}$.
 
 \begin{proof}
 Let $p$ be the prime attaining $\tau(n)=t(p)\,m$, with $m:=\prod_{t(q)\ge t(p)}q$, and write $n=k\cdot m$, where all
-primes of $k$ are $t$-below $p$. The map $n\mapsto(k,m)$ is injective. By Lemma~\ref{lem:cm}(iv),
-$\sum_{k:\,\Pplus(k)<p}1/k\le\prod_{q<p}(1-1/q)^{-1}\le1.8\log p+1\le2\log x$. Also $1/m\le2p/x$.
+primes of $k$ are $t$-below $p$. The map $n\mapsto(k,m)$ is injective. A prime $q$ with $t(q)<t(p)$ has $q<P:=p+3H(p)$,
+and $q<p$ if $p<\Xm$ (then $q$ and $p$ are rational primes, with $t(q)=q$). Hence
+$\sum_k1/k\le\prod_{q<P}(1-1/q)^{-1}$, which we bound as follows.
+\begin{itemize}
+\item If $p<\Xm$: for $p<400$ a direct computation gives $\prod_{q<p}(1-1/q)^{-1}\le1.8\log p+0.25$ (Appendix~\ref{app:cert}, \texttt{finite-n}); for $p\ge400$,
+  Rosser and Schoenfeld \cite[Thm.~8, (3.29)]{RosserSchoenfeld1962} give
+  $\prod_{q\le p}(1-1/q)^{-1}\le e^\gamma\log p\,(1+1/(2\log^2p))\le1.7811\log p+0.16$.
+\item If $p\ge\Xm$: split at $y_0:=\Xm-1$, below which all primes are rational. The rational part is at most
+  $e^\gamma\log y_0\,(1+1/(2\log^2y_0))$ by the same bound. For the rest, $-\log(1-1/q)\le1/q+1/q^2$, and
+  Lemma~\ref{lem:cm}(iv) with $y=y_0$, $x=P$ gives $\sum_{y_0<q<P}1/q\le\log(\log P/\log y_0)+2.2/\log y_0$, while
+  $\sum_{q>y_0}1/q^2\le3/y_0$. So the product is at most $1.7811\log P\,(1+3\cdot10^{-8})\le1.782\log p$.
+\end{itemize}
+In all cases $\sum_k1/k\le1.8\log p+1\le2\log x$, as $p\le x$ and $\log x\ge10^8$. Also $1/m\le2p/x$.
 
 Write $m=p\,m'$, so that $p^2m'\in I:=[x(1-\delta),x]\,(1+O(H(p)/p))$. In case (ii) below, $H(p)/p\le\delta/10$, since
 $\delta\ge6H(x)x^{-1/3}$.
@@ -66,21 +77,26 @@ $X_{\mathrm{LP}}\le v\le y$:
 \begin{enumerate}[label=\textup{(\roman*)}]
 \item $\displaystyle\Big|\int_{[1,v]}\frac{d(\Pi-\Pi_0)(u)}u\Big|\le K\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$;
 \item $|\Pi(v)-\Pi_0(v)|\le K\,v\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$;
-\item \emph{(short windows)} let $\Lambda_p:=\log v$, $\eta\in[e^{-2\Lambda},\frac12]$, and let $\varphi\ge\mathbf 1_{[v,v(1+\eta)]}$ be the
+\item \emph{(short windows)} let $\Lambda_p:=\log v\ge76\Lambda^3$, $\eta\in[e^{-2\Lambda},\frac12]$, and let $\varphi\ge\mathbf 1_{[v,v(1+\eta)]}$ be the
   smooth window of relative width $\eta(1+2\Lambda_p^{-2})$ with transition layers $\eta\Lambda_p^{-2}$. Put
-  $L_1:=2\log\Lambda_p+\log(1/\eta)+5\le3000\Lambda$. Then $\int\varphi\,d\Pi\le(1+\mathrm{Rel})\int\varphi\,d\Pi_0$, with
+  $L_1:=2\log\Lambda_p+\log(1/\eta)+5$. Then $\int\varphi\,d\Pi\le(1+\mathrm{Rel})\int\varphi\,d\Pi_0$, with
   \begin{equation}\label{eq:lpplus}
     \mathrm{Rel}(\Lambda_p,\eta)\le18\,G(L_1)\,\Lambda_p^3\,\eta^{-1}\exp\Big(-\frac{0.9\,c_{\mathrm{zf}}\Lambda_p}{L_1+442+2\log\Lambda+\log L_1}\Big),
   \end{equation}
-  where $G(L):=\sup|\log\zeta^\sharp|$ on the shifted contour up to height $e^L$, and $\log G(L)\le\Lambda$.
+  where $G(L):=\sup|\log(\zeta^\sharp(s)(s-1)/s)|$ on the shifted contour up to height $e^L$. Moreover
+  $G(L)\le400(L+450+2\log\Lambda)$ for $5\le L\le\log T_y$, with $\log T_y:=\log y/(51\Lambda\log\log y)-500$; so
+  $\log G(L)\le\Lambda$ for such $L$ with $L\le e^{\Lambda/2}$.
+% Logged correction 24 (CORRECTIONS-vs-v3.md): (iii) restricted to Lambda_p >= 76 Lambda^3; G defined via the integrand
+% log(zeta#(s)(s-1)/s) with the explicit bound above (v3: L_1 <= 3000 Lambda and log G <= Lambda unconditionally).
 \end{enumerate}
 \end{theorem}
 
 \begin{proof}[Proof of Theorem~\ref{thm:lp}]
+\begingroup\emergencystretch=3em
 This is Landau's argument \cite[Lemmas~6.2--6.3 and the proof of Thm.~6.6]{MontgomeryVaughan2007}, with four changes. It is
 run on an extension of $N$ beyond $y$, which is not a Beurling system. Positivity is therefore imported from a finite
 Euler product. Landau's discs have radius $\asymp1/\Lambda$. And the region near the pole is handled with the fine form of
-$\hat E$. Throughout, $s=\sigma+it$.
+$\hat E$. Throughout, $s=\sigma+it$.\par\endgroup
 
 \emph{Step 1: the extension.} Put $D:=N-T_0$, so $D=0$ below $\Xm$ and $|D(u)|\le u^{\theta'}$ on $[\Xm,y]$ by (LP-a). Define
 $N^\sharp:=N$ on $[1,y]$ and $N^\sharp(u):=N(y)+T_0(u)-T_0(y)$ for $u>y$. Then $D^\sharp:=N^\sharp-T_0$ equals
@@ -93,7 +109,7 @@ So $\hat D^\sharp$ is entire, with $|\hat D^\sharp(s)|\le|s|(\Xm)^{\theta'-\sigm
 $\sigma>\theta'$. Let $\Pi^\sharp:=\log^*(dN^\sharp)$, a signed measure (the series converges in the weighted norm
 $\int u^{-\sigma}|\cdot|$ for large $\sigma$). Since $\log^*$ is causal, $\Pi^\sharp=\Pi$ on $[1,y]$.
 
-\emph{Step 2: upper bounds on $[1,y]$.} Lemma~\ref{lem:cm} holds on $[1,y]$ by (LP-a). Write $d\psi=\log u\,d\Pi$ and
+\emph{Step 2: upper bounds on $[1,y]$.} Lemma~\ref{lem:cm} holds on $[1,y]$: (LP-a) and \eqref{eq:T1} give \textup{(H$_{\mathrm{BS}}$)} there. Write $d\psi=\log u\,d\Pi$ and
 $S(z)=\int_{[1,z]}d\psi/u\le\log z+0.43$. By Lemma~\ref{lem:cm}(iv) and the values for $\N$,
 $\int_{[1,y]}d\Pi/u\le\log\log y+4.5$. Let $N_y:=\exp^*(\Pi|_{[1,y]})$ count the $y$-smooth elements, so $N_y=N$ on
 $[1,y]$, and put $P_y(s):=\int u^{-s}dN_y=\exp(\int_{[1,y]}u^{-s}d\Pi)$. Then $P_y(1)\le e^{4.5}\log y$.
@@ -146,7 +162,7 @@ drop all but $\rho_1$.
 \emph{Step 6: the region near the pole.} For $|t|\le X_0$ and $\sigma\ge1-8/\Lambda$, the proof of
 Lemma~\ref{lem:ZBlow} gives the fine form
 $\hat E(s)=\zeta(s)-1/(s-1)-1+O(X_0^{-\sigma})+O(\kappa(1+|s|)e^{\mathrm{Ein}(8)}e^\gamma\Lambda)$. Since
-$s/(s-1)=1+1/(s-1)$, (LP-c) and Step~1 give
+$s/(s-1)=1+1/(s-1)$, \eqref{eq:Rhatbound} (that is, $|\hat R(s)|\le|s|e^{-0.39X_0^2}$) and Step~1 give
 \[
   \zeta^\sharp(s)=\zeta(s)+E(s),\qquad|E(s)|\le3X_0^{-0.3}(1+|t|)\qquad(|t|\le X_0,\ \sigma\ge1-8/\Lambda),
 \]
@@ -156,52 +172,103 @@ $\zeta^\sharp$ has no zero there. This covers every point with $|t|<1/16$ and $1
 $\sigma>1.1$, $\zeta^\sharp\ne0$ by Step~3.
 
 \emph{Step 7: the zero-free region for $|t|\ge1/16$.} Take Landau discs of radius $r:=a/\Lambda$ with $a:=6.8\le8$, so that
-they stay in $\sigma\ge1-8/\Lambda$, where (LP-b) and (LP-c) apply. For $|t|\ge1/16$ they do not meet the pole.
+they stay in $\sigma\ge1-8/\Lambda$, where (LP-b) and (LP-c) apply. For $|t|\ge1/16$ they do not meet the pole. Put
+\[
+  L_t:=\log(|t|+3),\qquad X(t):=L_t+442+2\log\Lambda,\qquad Y(t):=X(t)+\log X(t)+0.7 .
+\]
 \begin{itemize}
-\item \emph{Growth.} At $z_0=1+\eta+ikt$, Step~3 gives $|\zeta^\sharp(z_0)|\ge(1-10^{-2})/P_y(1+\eta)\ge0.495\,\eta$. On the
-  disc, $|\zeta^\sharp|\le|z/(z-1)|+|\hat R|+|\hat E|+|\hat D^\sharp|$, bounded by (LP-a)--(LP-c). Hence
-  \[
-    \log M_k\le\max\big(\log(k|t|+3),\ \log C_8+\log\Lambda\big)+\log(1/\eta)+O(1),\qquad\log C_8<440 .
-  \]
+\item \emph{Growth.} Let $|t|\ge1/16$, $\eta_y\le\eta\le10^{-3}/\Lambda$, $k\in\{1,2,3,4\}$ and $z_0=1+\eta+ikt$. Step~3 gives
+  $|\zeta^\sharp(z_0)|\ge(1-10^{-2})/P_y(1+\eta)\ge0.495\,\eta$. On the disc $|z-z_0|\le r$:
+  \begin{itemize}
+  \item $|z/(z-1)|\le1+1/(k|t|-r)\le17.1$;
+  \item $|\hat R(z)|\le|z|\le k|t|+1.01$, by (LP-c);
+  \item $|\hat E(z)|\le e^\gamma C_8\Lambda+10^{-10^7}|z|$, by (LP-b), since $\kappa\le X_0^{-1/3}$ and $\log C_8<440$;
+  \item $|\hat D^\sharp(z)|\le2.1|z|X_0^{-0.48}+1$, by Step~1, since $\sigma-\theta'\ge0.48$.
+  \end{itemize}
+  So $|\zeta^\sharp|\le2(1+3X_0^{-0.48})\max(k|t|+19.2,\ e^\gamma C_8\Lambda)$ there, for every $|t|\ge1/16$. Now
+  $\log(4|t|+19.2)\le L_t+1.857$ and $\log(e^\gamma C_8\Lambda)<440.578+\log\Lambda$; since $\max(a,b)\le a+b-2.975$ when
+  $a,b\ge2.975$, the ratio $M_k:=\max_{|z-z_0|\le r}|\zeta^\sharp(z)|/|\zeta^\sharp(z_0)|$ satisfies (the constant is
+  $440.855+\log(1+3X_0^{-0.48})\le440.86$)
+  \begin{equation}\label{eq:lp-growth}
+    \log M_k\le L_t+440.86+\log\Lambda+\log(1/\eta).
+  \end{equation}
 \item \emph{The inequality.} Suppose $\zeta^\sharp(\beta+it)=0$ with $1-\beta\le\eta/\kappa_L$ for a parameter $\kappa_L>0$, and
   $\eta\ge\eta_y$. Apply Step~5 at $z_0=1+\eta+it$ with this zero, and at $z_0=1+\eta+ikt$ ($k=2,3,4$) with no zero term.
   This is legitimate because all zeros have real part $<1+\eta_y\le1+\eta$ (Step~3), so the dropped terms are $\ge0$. Insert
   these and \eqref{eq:lp-pole} into \eqref{eq:lp-341}. Using $1/(\eta+1-\beta)\ge\kappa_L/((\kappa_L+1)\eta)$, we get
   \[
-    \frac{56\kappa_L/(\kappa_L+1)-35(1+10^{-8})-128\eps_f}{\eta}\le15.05+\frac2r\sum_{k=1}^4a_k\log M_k
-    +\frac{56\,\eta(1+1/\kappa_L)}{r^2}.
+    \frac{N_0(\kappa_L)}{\eta}\le15.05+\frac2r\sum_{k=1}^4a_k\log M_k+\frac{56\,\eta(1+1/\kappa_L)}{r^2},\qquad
+    N_0(\kappa_L):=\frac{56\kappa_L}{\kappa_L+1}-35(1+10^{-8})-128\eps_f .
   \]
-  The largest $\eta$ for which this fails defines the zero-free width $\delta_{\mathrm{zf}}(t):=\eta/\kappa_L$.
-\item \emph{The constant.} Since $\sum_{k=1}^4a_k=93$, letting $|t|\to\infty$ gives $\delta_{\mathrm{zf}}(t)\log|t|\to
-  \mathrm{merit}\cdot r/2$, with
+\item \emph{The constant.} Since $\sum_{k=1}^4a_k=93$, the inequality gives, as $|t|\to\infty$, the zero-free width
+  $\mathrm{merit}\cdot r/(2\log|t|)$, with
   \[
-    \mathrm{merit}:=\max_{\kappa_L}\frac{56\kappa_L/(\kappa_L+1)-35-128\eps_f}{93\,\kappa_L}=0.02623\qquad(\kappa_L\approx3.79).
+    \mathrm{merit}:=\max_{\kappa_L}\frac{N_0(\kappa_L)}{93\,\kappa_L}=0.0262291\qquad(\kappa_L\approx3.79).
   \]
-  Hence $c_{\mathrm{zf}}:=\mathrm{merit}\cdot r/2=0.0892/\Lambda\ge0.088/\Lambda$ for every $\Lambda\ge10^8$. This needs
-  $a\ge6.71$. The constant $\mathrm{merit}$ does not depend on $\Lambda$.
-\item \emph{Finite height.} By the growth bound, at height $e^L$ the zero-free width is
-  $\delta_{\mathrm{zf}}(e^L)\ge c_{\mathrm{zf}}/(L+442+2\log\Lambda+\log L)$, for $L\le3000\Lambda$.
-\item \emph{The height constraint.} Step~3 requires $\eta=\kappa_L\delta_{\mathrm{zf}}(t)\ge\eta_y=17\log\log y/\log y$, and
-  under the present scaling this binds. So the zero-free region is
+  So $\mathrm{merit}\cdot r/2=0.0891790/\Lambda$, and $\mathrm{merit}\cdot a/2\ge0.088$ needs $a\ge6.71$. We fix $\kappa_L:=3.79$,
+  for which $N_0\ge9.2449$, and put
+  \[
+    c_{\mathrm{zf}}:=0.088/\Lambda .
+  \]
+  The slack between $0.08917$ and $0.088$ absorbs the lower-order terms of \eqref{eq:lp-growth} at finite height, as follows.
+  The constant $\mathrm{merit}$ does not depend on $\Lambda$.
+\item \emph{Explicit width.} Let $|t|\ge1/16$, and suppose that $\eta:=0.33769/(\Lambda Y(t))$ satisfies $\eta\ge\eta_y$. Then
+  $\zeta^\sharp(\sigma+it)\ne0$ for
+  \begin{equation}\label{eq:lp-width}
+    \sigma\ge1-\delta_t,\qquad\delta_t:=\eta/\kappa_L=\frac{0.0891}{\Lambda\,Y(t)} .
+  \end{equation}
+  Indeed, otherwise the inequality holds with this $\eta$. Here $\log(1/\eta)=\log\Lambda+\log Y+1.0857$, and
+  $\log Y-\log X\le(\log X+0.7)/X\le0.0144$ (as $X\ge479.96$), so the right side of \eqref{eq:lp-growth} is at most
+  $X-0.054+\log Y\le X+\log X-0.039\le Y$.
+  Multiply the inequality by $\eta$, and use $\eta\Lambda=0.33769/Y\le7.1\cdot10^{-4}$: the right side becomes at most
+  $(2\cdot93/6.8)\cdot0.33769+10^{-6}\le9.2369<9.2449\le N_0$, a contradiction.
+\item \emph{Two consequences.} Write $\delta_{\mathrm{zf}}(t):=\delta_t$.
+  \begin{itemize}
+  \item Since $0.088(X+\log X+0.7)\le0.0891(X+18)$ for $X\ge479$, we have $\delta_{\mathrm{zf}}(t)\ge c_{\mathrm{zf}}/(L_t+460+2\log\Lambda)$.
+  \item \emph{Finite height.} Let $L\ge5$ and $|t|\le e^L$. Then $L_t\le L+3e^{-L}$, and
+    $0.088(X+\log X+0.7)\le0.0891(L+442+2\log\Lambda+\log L)$: the difference of the two sides increases with $L$ and with
+    $\Lambda$, and is positive at $L=5$, $\Lambda=10^8$. So at height $e^L$ the zero-free width is
+    $\delta_{\mathrm{zf}}\ge c_{\mathrm{zf}}/(L+442+2\log\Lambda+\log L)$. Every use below has $L\ge40$.
+  \end{itemize}
+\item \emph{The height constraint.} Step~3 requires $\eta=\kappa_L\delta_{\mathrm{zf}}(t)\ge\eta_y=17\log\log y/\log y$, and under the
+  present scaling this binds. Assume
+  \begin{equation}\label{eq:lp-yrange}
+    \log y\ge10^4\Lambda^2\log\log y,\qquad\text{so that}\quad Q_y:=\frac{\log y}{\Lambda\log\log y}\ge10^4\Lambda ,
+  \end{equation}
+  and put $\log T_y:=Q_y/51-500$. For $|t|\le T_y$ we have $X(t)\le Q_y$ and
+  $Y(t)\le Q_y/51-57.3+2\log\Lambda+\log Q_y\le Q_y/50.35$, because $(1/50.35-1/51)Q_y\ge2.53\cdot10^{-4}Q_y\ge2\log\Lambda+\log Q_y$.
+  Since $0.33769\cdot50.35\ge17.002$, this gives $\eta=0.33769/(\Lambda Y)\ge17/(\Lambda Q_y)=\eta_y$. So the zero-free region is
   \begin{equation}\label{eq:lp-zf}
     \sigma\ge1-\frac{c_{\mathrm{zf}}}{\log(|t|+3)+460+2\log\Lambda}\qquad\text{for }|t|\le T_y,\qquad
     \log T_y:=\frac{\log y}{51\Lambda\log\log y}-500 .
   \end{equation}
-  Together with Step~6 this covers all $|t|\le T_y$.
+  Together with Step~6 this covers all $|t|\le T_y$. Every application below satisfies \eqref{eq:lp-yrange}.
 \item By (LP-c), $\hat R$ enters only through the growth bound, like $\hat D^\sharp$. The region \eqref{eq:lp-zf} is
   consistent with the designed zeros, which have $1-\beta_k\asymp\log\log\gamma_k/\log\gamma_k$ (\S\ref{sec:zeros}).
 \end{itemize}
 
-\emph{Step 8: $\log\zeta^\sharp$ in the region.} Fix $f:=0.9$, and for $2\le|t|\le T_y$ let $s_1:=1+\eta_t+it$ with
-$\eta_t:=\kappa_L\delta_{\mathrm{zf}}(t)$. Borel--Carath\'eodory for $\log\zeta^\sharp(s)-\log\zeta^\sharp(s_1)$, on the discs
-centred at $s_1$ of radii $R_1=\eta_t+\frac{1+f}2\delta_{\mathrm{zf}}$ and $r_1=\eta_t+f\delta_{\mathrm{zf}}$ (inside the
-zero-free region), gives
+\emph{Step 8: $\log\zeta^\sharp$ in the region.} Assume \eqref{eq:lp-yrange}, and let $\mathfrak G_1(s):=\log(\zeta^\sharp(s)(s-1)/s)$,
+the branch that is real on $(1,\infty)$; it is analytic in the zero-free region, including near $s=1$. Fix $f:=0.9$, and
+for $1/16\le|t|\le T_y$ let $s_1:=1+\eta_t+it$ with $\eta_t:=\kappa_L\delta_t$. Consider the discs centred at $s_1$ of
+radii $R_1=\eta_t+\frac{1+f}2\delta_t$ and $r_1=\eta_t+f\delta_t$. They avoid the pole, and they lie in the zero-free
+region, since $\delta_{\mathrm{zf}}$ changes by a relative $10^{-8}$ over them. The function
+$h:=\log\zeta^\sharp-\log\zeta^\sharp(s_1)$ vanishes at $s_1$, and $\mathrm{Re}\,h\le\log M_1\le Y(t)$ on the larger disc, by
+\eqref{eq:lp-growth} with $\eta=\eta_t$ (as in Step~7). Borel--Carath\'eodory gives
+$|h|\le\frac{2r_1}{R_1-r_1}Y(t)=\frac{4(\kappa_L+f)}{1-f}Y(t)\le187.6\,Y(t)$ on the smaller disc. At the anchor, Step~3 gives
+$|\log\zeta^\sharp(s_1)|\le\log P_y(1+\eta_t)+0.02\le\log(2/\eta_t)+0.02\le0.5\,Y(t)$. Finally
+$|\log((s-1)/s)|\le\log17+\pi\le6$ for $|t|\ge1/16$ and $\sigma\le1.1$. Hence
 \[
-  |\log\zeta^\sharp(s)|\le\frac{4(\kappa_L+f)}{1-f}\log M_1(t)+\log(2/\eta_t)\qquad\text{on }\sigma\ge1-f\delta_{\mathrm{zf}}(t).
+  |\mathfrak G_1(s)|\le190\,Y(t)\qquad\text{for }|s-s_1|\le r_1 .
 \]
-At the anchor, $|\log\zeta^\sharp(s_1)|\le\log P_y(1+\eta_t)+1\le\log(2/\eta_t)+1$ by Step~3. Near $s=1$,
-$\log((s-1)\zeta^\sharp(s)/s)$ is bounded on $|s-1|\le1/8$ by Step~6. Hence $G(L)$ is bounded by a polynomial in $L$ and
-$\Lambda$, and in particular $\log G(L)\le\Lambda$.
+A point $s=\sigma+it$ of the contour $\sigma=1-f\delta_{\mathrm{zf}}(T_1)$, with $1/16\le|t|\le T_1\le T_y$, satisfies
+$|s-s_1|=\eta_t+f\delta_{\mathrm{zf}}(T_1)\le r_1$, because $\delta_{\mathrm{zf}}$ decreases in $|t|$. For $|t|<1/16$ the contour
+lies in $|s-1|\le1/16+10^{-8}$. There Step~6 gives $|\log((s-1)\zeta^\sharp(s))|\le-\log(1-0.075)\le0.078$, and
+$|\log s|\le-\log(1-|s-1|)\le0.0646$, so $|\mathfrak G_1|\le0.1426$. Since
+$Y\le2X$, it follows that for $5\le L\le\log T_y$ the quantity $G(L)$ of (iii) satisfies
+\[
+  G(L)\le190\,Y(e^L)\le400\,(L+450+2\log\Lambda);
+\]
+in particular $\log G(L)\le\Lambda$ for $L\le e^{\Lambda/2}$.
 
 \emph{Step 9: Perron's formula; proof of (i) and (ii).} Let
 $\mathfrak G(s):=\log\big(\zeta^\sharp(s+1)\,s/(s+1)\big)$. It is analytic in the shifted zero-free region, $\mathfrak G(0)=0$
@@ -219,11 +286,19 @@ side of (i) for $w\le y$.
   because $\mathfrak G(0)=0$. Take $T:=e^{\sqrt{\log v}}$, $T_1:=e^{2\sqrt{\log v}}(\log y)^{2/m}$ and $m:=19$.
 \item The contributions are as follows. The shifted line gives at most
   $K_8\,v^{-f\delta_{\mathrm{zf}}(T_1)}\log^2(T_1+3)$. The horizontal segments, and the line $\mathrm{Re}\,s=\eta_y$ beyond
-  $T_1$, give at most $K_9v^{\eta_y}(\log\log y)(T/T_1)^m\le e^{-\sqrt{\log v}}$, using $v^{\eta_y}\le(\log y)^{17}$. The
-  smoothing error is $|\Phi^\sharp(v)-\Phi^h(v)|\le\int_{(ve^{-2/T},v]}(d\Pi+d\Pi_0)/u\le6/T+3v^{\theta'-1}$, using
-  $d\Pi\le dN$.
+  $T_1$, give at most
+  \[
+    K_9v^{\eta_y}(\log\log y)(T/T_1)^m\le e^{-\sqrt{\log v}},
+  \]
+  using $v^{\eta_y}\le(\log y)^{17}$. The
+  smoothing error is
+  \[
+    |\Phi^\sharp(v)-\Phi^h(v)|\le\int_{(ve^{-2/T},v]}\frac{d\Pi+d\Pi_0}u\le\frac6T+3v^{\theta'-1},
+  \]
+  using $d\Pi\le dN$.
 \item The heights used lie below $T_v$ once $\log v\ge1.1\cdot10^4\Lambda^2(\log\log v)^2$; here we apply the argument with
-  $y':=v$ in place of $y$, which is allowed since (LP-a) holds on $[1,v]$. For $\log v\ge(1000+4\log\Lambda)^2$ the offset in
+  $y':=v$ in place of $y$, which is allowed since (LP-a) holds on $[1,v]$; and $y'=v$ satisfies \eqref{eq:lp-yrange}.
+  For $\log v\ge(1000+4\log\Lambda)^2$ the offset in
   \eqref{eq:lp-zf} at most doubles the denominator. Together this gives (i) with $c_{\mathrm{LP}}=c_{\mathrm{zf}}/5$. The
   threshold $X_{\mathrm{LP}}$ is chosen above both heights, so $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$, and
   $\log K=O(\Lambda)$.
@@ -238,13 +313,17 @@ $C_\varphi\le4$, and the integrand is negligible beyond height $T_1=e^5\Lambda_p
 smoothing term arises, so $T_1$ is fixed by $\eta$ alone. Shifting to $\sigma=1-f\delta_{\mathrm{zf}}(T_1)$ and using Step~7 for
 the width at height $e^{L_1}$ gives \eqref{eq:lpplus}.
 \begin{itemize}
-\item For $\eta\ge e^{-2\Lambda}$ and $\log G\le\Lambda$, $\mathrm{Rel}\le0.1$ needs
-  $0.9c_{\mathrm{zf}}\Lambda_p/(L_1+442+2\log\Lambda+\log L_1)\ge3\Lambda+3\log\Lambda_p+6$, that is, $\Lambda_p\ge76\Lambda^3$.
-  This is below the threshold $\Lambda_1=100\Lambda^3$ of Lemma~\ref{lem:si}.
-\item The height constraint holds there: $L_1+500\le2\Lambda+2\log\Lambda_p+505$, while
-  $\log T_y\ge\Lambda_p/(51\Lambda\log\Lambda_p)-500$ (as $\log y\ge\Lambda_p$). The latter exceeds the former for every
-  $\Lambda_p\ge100\Lambda^3$: both sides increase, and at $\Lambda_p=100\Lambda^3$ the right side is
-  $\ge\Lambda^2/(2\log\Lambda+3)\gg2\Lambda$.\qedhere
+\item \emph{Range.} Step~7 gives the width at height $e^{L_1}$ if \eqref{eq:lp-yrange} holds and $L_1\le\log T_y$. Both hold for
+  $\Lambda_p\ge76\Lambda^3$. First, $\log y\ge\Lambda_p\ge76\Lambda^3$, and $\log y/\log\log y$ is increasing, so
+  \eqref{eq:lp-yrange} holds. Second, $L_1+500\le2\Lambda+2\log\Lambda_p+505$, while $\log T_y+500\ge\Lambda_p/(51\Lambda\log\Lambda_p)$;
+  the latter exceeds the former for every $\Lambda_p\ge76\Lambda^3$, since both sides increase and at $\Lambda_p=76\Lambda^3$ the
+  right side is $\ge\Lambda^2/(3\log\Lambda+5)\gg2\Lambda$. Also $L_1\ge2\log\Lambda_p\ge40$. So $5\le L_1\le\log T_y$, and the
+  bound on $G(L_1)$ of Step~8 applies.
+\item \emph{Size.} For $\eta\ge e^{-2\Lambda}$ and $L_1\le e^{\Lambda/2}$ (so that $\log G(L_1)\le\Lambda$ by Step~8),
+  $\mathrm{Rel}\le0.1$ needs $0.9c_{\mathrm{zf}}\Lambda_p/(L_1+442+2\log\Lambda+\log L_1)\ge3\Lambda+3\log\Lambda_p+6$, that is,
+  $\Lambda_p\ge76\Lambda^3$. If $L_1>e^{\Lambda/2}$, then $\log\Lambda_p\ge e^{\Lambda/2}/3$ and $G(L_1)\le\Lambda_p$ by Step~8, and the
+  same comparison holds with room to spare. The threshold $76\Lambda^3$ is below $\Lambda_1=100\Lambda^3$ of
+  Lemma~\ref{lem:si}.\qedhere
 \end{itemize}
 \end{proof}
 

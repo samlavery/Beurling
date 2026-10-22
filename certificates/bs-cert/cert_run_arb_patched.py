@@ -1,4 +1,4 @@
-# Referee B: cert_run_arb.py with the two band seams closed by directed rounding (otherwise identical).
+# Independent driver: cert_run_arb.py with the two band seams closed by directed rounding (otherwise identical).
 import sys, math, time
 from multiprocessing import Pool
 sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__)))

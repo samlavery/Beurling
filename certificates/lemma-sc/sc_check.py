@@ -1,4 +1,4 @@
-# Brute-force test of gap-G3 §16.22' condition (SC) / verify-CL §R.12'' nested cover.
+# Brute-force test of Lemma SC (paper, Appendix A, lem:SC): existence of nested C-first stage rows.
 # Rows = basis B' (r rows, rank r). Columns = primes, index 0 = latest decided.
 # Greedy pivots latest-first; stages = maximal pivot runs; F_t = free cols between run t and run t+1.
 # C = a minimum cover of row supports. (SC): exists nested R_1 ⊂ R_2 ⊂ ... with |R_<=t| = |P_<=t|,

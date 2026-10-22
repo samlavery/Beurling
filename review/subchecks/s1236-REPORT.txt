@@ -1,0 +1,89 @@
+SUB-CHECKER 1 REPORT — abstract, 00-intro, 01-setup, 02-construction, 03-zeros, 06-base-range, C-ai-statement, refs.bib vs v3
+No BLOCKING findings. No unlogged mathematical drift. Correction #7 respected (no stale "polylogarithmic B"); B, lambda_0, Lemma V
+constants not present un-updated. A /tmp copy compiles cleanly (no undefined refs/cites). Duplicate labels lem:xb, lem:si,
+sec:kernels exist only in never-rendered \InputIfFileExists fallbacks.
+
+(1) FINDINGS
+[FIXABLE] 02-construction.tex:206-208 (eq:lag) — v3 l.318-320 — "-H(x)/2-2 <= D(x) <= max Q_j + H(x)/2+2" is too tight:
+  continuous-slot density is <= 1+kappa_+/log x+1/(kappa x), not <= 1, so up to (H/2)(1+kappa_+/log x)+2 primes are decided
+  within H/2 of x on each side; at zero scales R' ~ +4kappa_0/log^3 x over an H-window (H << period of cos(gamma_k log x)), excess
+  ~ H/log^3 x >> 1. The paper's own (F1) (05-queue.tex:86; v3 l.2946) uses H(t)(1+kappa_+/log t)+3. Fix: (H/2)(1+kappa_+/log x)+3
+  or H(x); propagate to 03-zeros.tex:13, 05-queue.tex:379, 04e-lp.tex:8 ("D:=B+H/2+2"). No conclusion changes (consumers need
+  only <= B+3H+3 <= x^eta).
+[FIXABLE] 01-setup.tex:72, 77-78, 82 — v3 l.163,166,168 — "H <= 4X0^15", "c <= X0^7.5 always", "y <= X0^22.6 L^9" hold only for
+  ell <= ell_std; beyond, the table itself gives c = (1/4)e^{4 ell^2} > X0^7.5, H = H_std > 4X0^15, log y ~ 12.1 ell^2. Same slip
+  at 03-zeros.tex:112 (log 2y <= 22.6 Lambda), :118 (rate >= 0.18/Lambda "at every v"), :129 (log y <= 23 log X0), 05-queue.tex:919.
+  Lemma ZA's conclusion survives (u0 needs only v0; standard-regime rate ~ 1/(14 ell) >> delta_k). Fix: qualify "for ell <= ell_std".
+[FIXABLE] 00-intro.tex:107-111 and 03-zeros.tex:252-256 — v3 l.505-507, 2534-2536 — "the 3 loglog loss is forced by positivity
+  (G1) together with (A)" is misleading: (G1) alone allows kappa'_k = kappa_0 constant (|R_k'| <= 4kappa_0/log x <= 0.8/log x for
+  kappa_0 <= 0.2 -> 1*loglog). The extra 1/log^2 x_k is needed by Prop g1 Step 4 (04f-bridge.tex:230-235: oscillation response
+  o(1/log x) on x_k^2 < x < exp(C' log^2 x_k)). Fix: attribute to the margin requirement.
+[FIXABLE] 00-intro.tex:98 — v3 l.2552 — "(a) theta<1/2, which no random discretisation reaches" overclaims: the construction is
+  itself randomised; BDR §5 (checked at source) says only "a direct application of Theorem 1.2" gives integer error >= O(x^{1/2}).
+  Fix: "which the existing random approximation procedures [DMV, Zhang, BV, BDR] do not reach".
+[FIXABLE] 00-intro.tex:50-59 (Remark equiv) — v3 l.2525-2527 — zero-free half-plane <=> power-saving psi asserted as "standard
+  Perron/Mellin", no proof or citation; Cor notQ's "Equivalently" rests on it. Only power saving => zero-free is needed (one line:
+  -zeta'/zeta - s/(s-1) analytic on sigma > 1-eps'). Inline it; cite (e.g. Diamond–Zhang) for the converse.
+[FIXABLE] 01-setup.tex:98-101 + certificates/depcheck/depcheck.py — v3 l.48-50 — 77-node/168-edge graph uses v3 node names, no
+  mapping in the paper (LABELS.md is not part of it); missing edges from corrections #4 (Prop true-kernels <- lemmaP, Cor lag;
+  04k-kernels.tex:337) and #5 (Lemma xb <- Prop br, tau-near). With P3.8->L4.18, P3.8->P4.6, L3.14A->P3.14, C3.7->T3.6 added as
+  same-time edges to a copy: still acyclic (78 nodes, 172 edges). Fix: add edges + node->\ref mapping.
+[COSMETIC] 03-zeros.tex:97 (66-71) — "log C_1<3" needs C_0 <= 0.518 (Ein(1)=1.3179; 5e^{Ein(1)}=18.68 vs e^3=20.09); C_0 only
+  "absolute" -> unproved, and unused. "log C_8<440" needs C_0 <= e^431. Delete or make C_0 explicit; rename C_1 (clash l.157).
+[COSMETIC] 03-zeros.tex:52-53 (Lemma ZB proof) — v3 l.366-367 — "up to O(1) boundary terms" can't give exp(-X0^2/4); boundary
+  terms are (X0^{-s}-n^{-s})/(s kappa), total <= 3X0^{1-sigma}/|t|. State this.
+[COSMETIC] 06-base-range.tex:156 — v3 l.2404 — "kappa Psi([t,(1+kappa)t],X0)" should be Psi([t,(1+kappa)t],X0) (in-flight mass
+  <= kappa t+1, cf. 02-construction.tex:128-129); total <= 2kappa t+2 survives since the terms have opposite signs (max, not sum).
+[COSMETIC] 06-base-range.tex:87-91 (Johnston–Yang remark) — v3 l.2355-2357, §8 R1 — JY 2.18e-4694 verified at source, but "a fully
+  explicit X0 would follow" is overstated: LP constants not explicit (v3 R1); with kappa ~ 200e^{-10807.6} the mu_0 range
+  (0.0048/kappa)^{1/5} ~ e^2159 no longer reaches range (A)'s end log x = e^{10^6}. Soften to "would remove X_Hux".
+[COSMETIC] 01-setup.tex:24-25 — v3 l.15-16 ("every certificate") — "every quantitative estimate holds for all log X0 >= 10^8" too
+  broad: eq:huxley-based estimates need X0 >= X_Hux.
+[COSMETIC] 01-setup.tex:93-95 — "queue of size O(log^2 x)" (experiments) is observed, not proved; proved B = e^{O(ell^2)}.
+[COSMETIC] Notation clashes: theta' (LP theta+0.01, 01-setup.tex:61, vs theta' in (theta,1/2) in Thm A); eta ((La) exponent vs
+  eta(q), 06-base-range.tex:69); eps (0.01, Heath-Brown eps(x), psi_N-psi at 06-base-range.tex:159); c (capacity, dlVP constant,
+  d*prod p_i); D (N-T vs dilation D_m).
+[COSMETIC] 00-intro.tex: l.62-63 dlVP-type psi error uncited (reads as Hilberdink's); l.70-71 Diamond–Zhang Ch.17 [1,beta_0] known
+  via BDR p.3 (book not checked at source per v3 l.2559-2560); l.135-136 "arrivals have compensator int_W(margin)" imprecise (the
+  excess has compensator -int_W margin); l.123 target called "explicit" though random/adapted.
+[COSMETIC] 02-construction.tex: l.100-101 cite Lemma margin(a), not blin(1); l.197 Lindley range of i unstated (i >= X0-1).
+[COSMETIC] 06-base-range.tex:217-219 — "budget ~2.4e-4" unsourced (v3: c'/(8C_S)).
+[COSMETIC] 01-setup.tex:105-131 dependency table — (La)/Thm zeros inputs omit Lemmas ZB–goodheights; lemmaP row omits Cor
+  localcount(down); Lemma threshold-mass and its Cor localcount(down) edge missing; "Propositions~\ref{prop:br}" plural/single;
+  bare "(9)" opaque for Causality.
+[COSMETIC] abstract.tex:3-9 — could state N = x+O(x^theta log* x) and [1,1/4] (in fact beta = theta); "composite integers" ->
+  "composite elements".
+Presentation: no agent names, referee tags, [P]/[S]/[N] tags, Lean/working-note file names or hard-coded v3 numbers in the rendered
+text of these files; AI statement's "CORRECTIONS-vs-v3.md" acceptable.
+
+(2) COVERAGE
+Theorem A (theta range, X0/X_Hux, G, (i), (ii)) ............ match
+Cor notQ / Consequence; proof of Thm A ........................ match / (c)
+Abstract vs intro vs v3 §0.1, §7.1 ............................ consistent
+Parameter table vs §0.4 ....................................... match except range qualification (same in v3)
+Dependency table vs §0.2 ...................................... (c) abridged; stale for #4/#5
+(N0)–(N5) ..................................................... match (c)
+§1.1, (1.1)-(1.3), Remark 1.0, slots, rule G, (C2) ............ match
+Lemma 1.1 ..................................................... (b) adds gamma_k/R argument, correct
+(G1) / (T1) ................................................... match / match + (b) detail; numbers rechecked
+Lemmas 1.2, 1.5 / 1.3 / Cor 1.4 ............................... match / (b) inlined / match (constant issue)
+(L-a) ......................................................... match; 2.8166e-5 recomputed
+(2.1), Lemma 2.0, 2.0'' ....................................... match (Ein(1)=1.3179, Ein(8)=437.72)
+Lemma 2.0' .................................................... match (17.4 Lambda >= 1.7e9; (1/2)u0 log u0 = 1.85e10)
+R^_k formula (Psi->Phi), (2.2) ................................ (c), re-derived
+Lemmas 2.1, 2.2, Thm 2.4, remarks ............................. match
+Lemma 2.3 ..................................................... match (6.765, PZ 0.0368; Broucke 2024 Thm 2.1 verified)
+Lemma 5.1, (5.2), (5.4), (5.5), Lemma 5.2(a),(b) .............. match (one typo)
+Lemma 5.2(c), (5.6) ........................................... match (I1=14.915, I2=214.77, I3=6.696; 688.9/Lambda <= 690/Lambda)
+(5.3), Use paragraph .......................................... match
+App N part-S N.1–N.10' ........................................ present
+Applied list §0–§2, §5–§9 ..................................... reflected
+AI statement vs v3 final verdict .............................. match
+refs vs sources ............................................... verified at source: BDR (defs, Thms 1.1/1.3, §5 quotes, fn 4,
+  Hilberdink, Zhang, BV, Révész), Broucke 2025 Thm 1.6/(1.2), Broucke 2024 Thm 2.1, Johnston–Yang row 10^8. Not re-checked at
+  source: Heath-Brown (1.2), Montgomery–Vaughan, Titchmarsh 4.11 (used consistently with their known statements).
+
+(3) SUMMARY
+Faithful, drift-free transcription of v3 §0–§2, §5, §7; correction #7 respected; checkable citations correct; no rendered jargon.
+FIXABLE: lag constant H/2+2; ell<=ell_std qualification for H, c, y bounds; novelty claim (a); 3 loglog misattributed to (G1);
+uncited Remark equiv; stale dependency graph (still acyclic). None affects Theorem A. Rest cosmetic.

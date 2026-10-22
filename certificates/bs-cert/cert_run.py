@@ -1,4 +1,4 @@
-# Certified cell cover for Lemma BS (H⁗): l in [3e9, 1e18], u in [2, Ubar(l)].
+# Certified cell cover for Theorem bs, region Z2 (Appendix B): l in [3e9, 1e18], u in [2, Ubar(l)].
 # u-mode cells on [2, u0(la)/2]; v-mode cells (v = u - u0(l)) covering u in [u0(la)/2, Ubar(l)].
 # Adaptive bisection; a cell passes iff the outward-rounded interval lower bound of Sigma is > 0.
 import sys, math, time
@@ -31,7 +31,7 @@ def band_cells(la, lb):
     e = [2.0 + 0.5 * k for k in range(77)]; x = 40.0
     while x < split: x = min(x * 1.05, split); e.append(x)
     cells += [(la, lb, e[i], e[i + 1], False, 0) for i in range(len(e) - 1)]
-    # v-mode, seam-safe (referee B §21): ends widened outward, last edge exactly the top (cross-check only)
+    # v-mode, seam-safe (seam-safe, directed rounding): ends widened outward, last edge exactly the top (cross-check only)
     va = math.nextafter(split - math.nextafter(lb ** 0.25, math.inf), -math.inf) - 1e-9
     vb = Ubar(lb) * (1 + 1e-12) - la ** 0.25 * (1 - 1e-12)
     n = max(8, int((vb - va) / max(1.0, 0.01 * u0a)))

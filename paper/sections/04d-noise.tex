@@ -12,7 +12,7 @@
   $\le L_u^{-2}$.
 \item The local count (Corollary~\ref{cor:localcount}). For windows $J\subset[P,4P]$ of length $\le6H(P)$, the
   non-absorbed count, and so the prime count, is $\le13.4|J|+K_{\mathrm{loc}}(P)+2$, with
-  $K_{\mathrm{loc}}(P)=2B(4P)+7\lambda_P/3+13$ and $\lambda_P=4\log P$.
+  $K_{\mathrm{loc}}(P)=2B(4P)+7\lambda_P/3+23$ and $\lambda_P=4\log P$.
 \item Absorption (Lemmas~\ref{lem:lemmaP}, \ref{lem:rhoA}, Proposition~\ref{prop:S1S2}). Non-absorbed latest primes satisfy
   $q\ge y(u)=H(u)L_0L_u^6$, so $|I/q|\le L_u^{-6}$ for $|I|\le H(u)$. The small-$q$ case S1 does not arise in the present
   regime.
@@ -26,11 +26,17 @@
   $\le|I|/\sqrt{um}$, and the $q$-sum of the landing probabilities is $\int_{I_m}\rhot\le27|I_m|$, since
   $\rhot\le1.01$ surely (see the variance bound below). Exponents $a\ge3$ add a relative $O(X_0^{-1/2})$.
 \item Group $m$ into dyadic blocks $[M,2M)$ with $M=u/q^2$. The $m$ in a block are $3q$-smooth with
-  $q=\sqrt{u/M}\ge\Xm$, and Lemma~\ref{lem:smooth-v} bounds their $1/m$-weight by $C_0\rho(\log M/\log3q)e^{o(1)}$. Since
+  $q=\sqrt{u/M}\ge\Xm$, and Lemma~\ref{lem:smooth-v} bounds their $1/m$-weight by
+  \[
+    C_0\rho(\log M/\log3q)e^{o(1)}.
+  \]
+  Since
   $\rho(v)\le1/\Gamma(v+1)$ (from \ref{R1}: $\rho(v)\le\rho(v-1)/v$), for every window $I\subset[u,2u]$,
   \begin{equation}\label{eq:s2}
-    \frac{\Comp^{(2)}(I)}{|I|}\le s_2(u):=9L_u\sup_{\log X_0\le s\le L_u/2}\frac{e^{-s}}{\Gamma(\max(1,L_u/s-2))}
-    \le9L_u\exp\Big(-\max\big(\log X_0,\tfrac12\sqrt{L_u\log L_u}\big)\Big)
+  \begin{split}
+    \frac{\Comp^{(2)}(I)}{|I|}&\le s_2(u):=9L_u\sup_{\log X_0\le s\le L_u/2}\frac{e^{-s}}{\Gamma(\max(1,L_u/s-2))}\\
+    &\le9L_u\exp\Big(-\max\big(\log X_0,\tfrac12\sqrt{L_u\log L_u}\big)\Big)
+  \end{split}
   \end{equation}
   (the last bound for $L_u\ge10^4$). In particular $s_2(u)\le9L_u/X_0$ always.
 \item $\sum_{u\text{ dyadic}}\log(2u)\,s_2(u)\le e^{-9\cdot10^7}$: below $L_u\approx10^{16}$ use the factor $e^{-\log X_0}$,

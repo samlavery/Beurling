@@ -1,7 +1,7 @@
-# Certificate for Theorem 4.17 (v3 part-G): for every cell [l1, l2] of a partition of [log Lam, l_T], with
+# Numerical cross-check for Theorem caplw (Section 6 of the paper): for every cell [l1, l2] of a partition of [log Lam, l_T], with
 # gamma(l) := log c_ramp / Lam piecewise linear and non-decreasing, c(l) := max(H_std^{1/2}/4, c_ramp(l)):
-#  (C1) counting criterion holds (route H or Dickman rows) with c = c(l1) at worst corners;
-#  (C2) A empty or Lemma P (12.2) holds with c = c(l2) at worst corners;
+#  (C1) counting criterion holds (high-degree rows, Step 2, or Dickman rows, Step 3) with c = c(l1) at worst corners;
+#  (C2) A empty or Lemma lemmaP, criterion (eq:twelvetwo), holds with c = c(l2) at worst corners;
 #  (C3) ramp slope 2*Lam*dgamma/dL <= 1e-6.
 import math, sys
 sys.path.insert(0, __import__('os').path.dirname(__import__('os').path.abspath(__file__)))
@@ -22,7 +22,7 @@ def cert(l_start, l_end, h):
     while l1 < l_end:
         l2 = min(l1 + h(l1), l_end)
         c1, c2 = logc_of(l1), logc_of(l2)
-        ok1 = (l2 <= 60 and routeH_ok(c1, l2, l1)) or dickman_ok(c1, l2, l1)
+        ok1 = (l2 <= 60 and highdeg_ok(c1, l2, l1)) or dickman_ok(c1, l2, l1)
         ok2 = lemmaP_ok(c2, l2, l1)
         if not (ok1 and ok2): fails.append((l1, l2, ok1, ok2))
         if l2 < 700:

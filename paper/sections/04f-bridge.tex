@@ -23,9 +23,11 @@ Write $\mathrm{BR}_c(x)=\sum_n\frac1n\big[\int\Tc\,dC_n^{\mathrm{nom}}-c_n\Tc(x/
 notation of \S\ref{sec:kernels}.
 \begin{itemize}
 \item \emph{The Kantorovich--Rubinstein part.} $\int\Tc\,dC_n^{\mathrm{nom}}-c_n\Tc(x/n)=\int(\Tc-\Tc(x/n))\,dC_n^{\mathrm{nom}}$, an
-  integral over $[x/n\pm R_n]$. So it is at most $o_{x/n}\TV(C_n^{\mathrm{nom}})$, with
-  $\TV(C_n^{\mathrm{nom}})\le\TV(C_n)+\TV(\tilde E_n)$. Use Proposition~\ref{prop:true-kernels} for $\sum\TV(C_n)/n$ in dyadic
-  blocks ($5.1C_N$ on the two blocks at $X_0$), and Corollary~\ref{cor:saias}.
+  integral over $[x/n\pm R_n]$ with $R_n\le1.02H(x/n)$. Let $u$ be the dyadic scale with $x/n\in[u,2u)$; then $u\ge X_0/2$,
+  since $x/n\ge\Xm$. Each half $[x/n-R_n,x/n]$, $[x/n,x/n+R_n]$ has length $\le1.02\cdot2^{\eps}H(u)\le2.04H(u)$ and meets
+  $[u,2u)$, so the integral is at most $2o_u\TV(C_n^{\mathrm{nom}})$. Summing over $n$ with Corollary~\ref{cor:kr-weights}(b)
+  (start $x$), this part is at most $\sum_u2o_uW^{\mathrm{nom}}_x(u)\le2C_N\sum_u\log(2u)\,o_u/\log x$, which is inside the
+  first term.
 \item \emph{The near-threshold part.} For $\tau$-near steps, by the Duhamel form in Proposition~\ref{prop:true-kernels} and
   $|\Tc|\le2$, it is at most $4.2\sum_d(\TV(C_d)/d)\,\theta(x/d)\le8.4C_NE_\theta/\log x$ (Lemma~\ref{lem:tau-near}). For
   $X_0$-near (terminal) steps, $\Tc$ is within $o_{X_0}$ of $\Tc(X_0)=0$ on the support, so their part is at most
@@ -35,10 +37,7 @@ Only the oscillation of the smooth source enters, never the $H$-scale roughness 
 $\jz\mathbf 1_{[X_0,\infty)}$ has no small oscillation, and its whole effect is $J_{X_0}$, which is treated next.
 \end{proof}
 
-\InputIfFileExists{sections/04x-x0band}{}{%
-  \paragraph{The jump at $X_0$.}\label{lem:xb}\label{lem:si}
-  \textbf{[Placeholder: 04x-x0band.tex (Lemma~XB = v3 Lemma~3.14A, its three ranges, and Lemma~SI$(\Lambda)$ = v3
-  Lemma~3.14B) is pending.]}}
+\input{sections/04x-x0band}
 
 \paragraph{Oscillation of the target.}\label{par:osc} All bounds are for $\Tc$, and none uses a local count at the height where
 the oscillation is read.
@@ -53,10 +52,10 @@ the oscillation is read.
 \item $o_{\mathrm{det}}\le(2.04H(u)+2)X_0^{5/12}/u$, from the linear window of length $\kappa u$ in \eqref{eq:rhodet} and the
   unit spacing of the rigid set.
 \item On $\Good(<u)$, the $\Abs$-part of $\Tc$ is $\sigma_{\Abs}=K_{\Abs}\rhot-\rho_{\Abs}$ (as $\bar\rho_{\Abs}=\rho_{\Abs}$,
-  Remark~\ref{rem:stopped}). So $o_{\Abs}\le2\sup|\sigma_{\Abs}|\le4L_u^{-4}$, by Lemma~\ref{lem:rhoA}(d) (from parts (a), (c)
+  Remark~\ref{rem:stopped}). So $o_{\Abs}\le2\sup|\sigma_{\Abs}|\le4L_u^{-4}$, by Lemma~\ref{lem:rhoA}(c) (from parts (a), (b)
   and Lemma~\ref{lem:lemmaP}). Lemma~\ref{lem:lemmaP} holds on $\Good(<t)$ at heights up to $t+1.01H(t)$, using only
   $E_{\mathrm{cl}}$ at lower heights and Chebyshev below $2y$. So reading $o_{\Abs}$ at the current height $t$ costs no event
-  later than $t$; Lemma~\ref{lem:rhoA}(b), the local count at height $u$, is not used. Moreover $o_{\Abs}$ vanishes unless
+  later than $t$. Moreover $o_{\Abs}$ vanishes unless
   $\log\log u>2\log\Lambda+5.97$ ($=42.8$ at $\Lambda=10^8$), since $\Abs$ is empty below that height.
 \item $o_R\le\sum_{k:\,x_k\le u}\gamma_k\kappa_kH(u)u^{-1}(x_k/u)^{1-\theta}\le H(u)u^{-\theta}$, since
   $\gamma_k\kappa_k\le x_k^{1-\theta}$ and $u\ge x_1\ge\exp(X_0^2)$.
@@ -74,10 +73,10 @@ With \eqref{eq:decomp},
   M(x)-(B\Rres T')(x)=(\vartheta/H)(x)-(B\Kpt B\Rres F_r)(x)-(B\Rres G)(x),
 \end{equation}
 and, on $\Good(<x)$,
-\[
-  \log x\cdot|M-B\Rres T'|(x)\le\eps_N:=5.1C_N\sum_u\log(2u)\bar F_r(u)+15.3C_NC_S'\sum_v(\log3v)^2F_r^+(v)
+\begin{multline*}
+  \log x\cdot|M-B\Rres T'|(x)\le\eps_N:=5.1C_N\sum_u\log(2u)\bar F_r(u)+15.3C_NC_S'\sum_v(\log3v)^2F_r^+(v)\\
   +\sup_x\frac{6\log x}{H(x)}\le10^{-13},
-\]
+\end{multline*}
 where $\bar F_r(v):=o_v+6/H(v)+\bar\nu(v)+54\eta(v)$ bounds $|F_r|$ on $[v,2v)$, and $F_r^+:=2\bar F_r$ bounds $|(1-B)F_c|$.
 Every sum is over dyadic scales $\ge X_0/2$; there is no dependence on $x$, and no event at the current scale is used.
 \end{lemma}
@@ -115,7 +114,8 @@ $30.6C_NC_S'e^{-41}$, from the oscillation of $\sigma_{\Abs}$.
 (in particular for $\theta\in[\frac14,\theta_1]$):
 \begin{itemize}
 \item $F_\theta\le F_{1/2}$, since $y^{\theta-1}n^{-\theta}=y^{-1}(y/n)^\theta$ increases with $\theta$;
-\item a direct computation of $F_{1/2}$ on $\N$ for $y\le10^6$ gives the maximum $1.3296$, at $y=7$;
+\item a direct computation of $F_{1/2}$ on $\N$ for $y\le10^6$ gives the maximum $1.3296$, at $y=7$ (see
+  Appendix~\ref{app:cert}, \texttt{finite-n});
 \item for $y\ge10^6$, the elementary bound $|Q(u)-6u/\pi^2|\le3\sqrt u$ for the squarefree count $Q$ gives
   $y^{\theta-1}\sum_{n\le y}\mu^2(n)n^{-\theta}\le(6/\pi^2)/(1-\theta)+3y^{-1/2}+1.5y^{-1/2}\log y\le1.25$; and
   \textup{(H$_{\mathrm{BS}}$)} changes the count for $\NN$ by a relative $O(\eta_1)$.
@@ -139,6 +139,7 @@ $\ge X_0^{0.079}$), and $\log X_{\mathrm{sw}}\gg\log X_{\mathrm{LP}}=O(\Lambda^2
 No designed oscillation is active, since $x_1\ge\exp(X_0^2)>X_{\mathrm{sw}}$. So $T'=1-\rhodet+\sigma_{\Abs}$ there.
 Lemma~\ref{lem:margin} (\eqref{eq:ratid}, \eqref{eq:shdecomp}) gives
 $(1+\Kpt)^{-1}(1-\rhodet)=\mathrm{MA}[\mathbb P]+(1+\Kpt)^{-1}(\mu_0+\mu_1)$, where:
+\begingroup\emergencystretch=3em
 \begin{enumerate}[label=(\alph*)]
 \item $\mathrm{MA}[\mathbb P](q):=\mathrm{MA}_{\kappa q}[\text{rational primes}](q)$ is the density of rational primes in the linear
   window at $q$ (\S\ref{sec:baserange}). By \eqref{eq:huxley} and Lemma~\ref{lem:margin}(a) (Huxley and Heath-Brown,
@@ -148,6 +149,7 @@ $(1+\Kpt)^{-1}(1-\rhodet)=\mathrm{MA}[\mathbb P]+(1+\Kpt)^{-1}(\mu_0+\mu_1)$, wh
   $H(q)/(\kappa q)$, the edge at $X_0$, and the $O(1/(\kappa x))$ term of \eqref{eq:ratid};
 \item $\sum_{u\text{ dyadic}\ge X_0}\log(2u)\sup_{[u,2u]}|\mu_1|\le7\cdot10^{-6}$ \eqref{eq:mu1sum}.
 \end{enumerate}
+\endgroup
 Now bound the responses.
 \begin{itemize}
 \item $\mu_0$: by Lemma~\ref{lem:lemmaM} ($|c_n|\le1$ and $\sum|c_n|/n\le\log x+B_1$, with $B_1=1$),
@@ -197,8 +199,14 @@ $\rhosh(x)-\rhosh(y)=\sum_n[c_n(x)T'(x/n)-c_n(y)T'(y/n)]/n$.
 \begin{itemize}
 \item \emph{Threshold changes:} at most $2\cdot$(Lemma~\ref{lem:threshold-mass} at $2\delta$) $=o(1/\log x)$, since $|T'|\le2$,
   $\delta\le\log^{-4}x$ and $\log H(x)=8(\log\log x)^2$.
-\item \emph{The jump of $T'$ at $X_0$:} only $n\in[y/X_0,x/X_0]$ see it. With $N:=x/X_0$ and the count $|N-T|\le H$ at height
-  $N$, this is at most $\jz\sum_{n\in[N(1-2\delta),N]}1/n\le\jz(2.1\delta+3H(N)/N)=o(1/\log x)$.
+\item \emph{The jump of $T'$ at $X_0$:} only $n\in[y/X_0,x/X_0]$ see it. Put $N_*:=x/X_0$, $I:=[N_*(1-2\delta),N_*]$ and
+  $L_*:=\log(N_*/2)$. By the lag bound, $|N-T|\le H(N_*)$ at both ends of $I$, and under the target \eqref{eq:target},
+  $T(I)\le2|I|+2+\#\Abs(I)$. Cover $I$ by $\lceil|I|/h(N_*(1-2\delta))\rceil$ consecutive windows $[u,u+h(u)]$,
+  $h(u)=u^{\theta/2}$; by Lemma~\ref{lem:lemmaP} each holds at most $h(u)L_u^{-4}$ absorbed elements, so
+  $\#\Abs(I)\le(2.01\,\delta N_*+N_*^{\theta/2})L_*^{-4}$. Hence $\#(\NN\cap I)\le4.01\,\delta N_*+2H(N_*)+2+N_*^{\theta/2}$, and
+  this part is at most $\jz\sum_{n\in\NN\cap I}1/n\le\jz\big(4.1\,\delta+3H(N_*)/N_*+2N_*^{\theta/2-1}\big)=o(1/\log x)$.
+% Logged correction 14 (CORRECTIONS-vs-v3.md): v3 omits #A(I) here (same omission as correction 4); with T(I) <= 2|I|+2+#A(I)
+% the constant 2.1 delta becomes 4.1 delta (noted under #14).
 \item \emph{$\rhodet$, smooth change:} for $|v-v'|\le\delta v$,
   $|\rhodet(v)-\rhodet(v')|\le\min\big(2(\delta(1+\kappa)v+1)/(\kappa v),\ 3\Psi(2v,X_0)/(\kappa v)\big)$. Put $u:=\log v/\Lambda$
   and $U_0:=\Lambda$. Use the first bound for $u<U_0$ and the second beyond; for $u\ge U_0$, Rankin's bound (exponent
@@ -227,12 +235,16 @@ $j>k$. Put $\rho^{(k)}_{\mathrm{osc}}(y):=\sum_nc_n(y)R_k'(y/n)/n$.
   Lemma~\ref{lem:lemmaM}, the $J$-average is at most $4\kappa_k(\log x+B_1)/((1-\theta)\gamma_k\delta)$, plus the threshold
   part $\le\kappa_k\cdot R(2\delta)$, where $R(\cdot)$ is the bound of Lemma~\ref{lem:threshold-mass}. Both are $o(1/\log x)$.
 \item \emph{Pointwise.} $|c_n|\le\mu^2(n)$, and $R_k'(x/n)\ne0$ forces $n\le x/x_k$. So
-  $|\rho^{(k)}_{\mathrm{osc}}(x)|\le\kappa_k(x/x_k)^{\theta-1}\sum_{n\le x/x_k}\mu^2(n)n^{-\theta}\le\kappa_kF_\theta$.
+  \[
+    |\rho^{(k)}_{\mathrm{osc}}(x)|\le\kappa_k(x/x_k)^{\theta-1}\sum_{n\le x/x_k}\mu^2(n)n^{-\theta}\le\kappa_kF_\theta.
+  \]
   \begin{itemize}
   \item For $x\le x_k^2$: $\kappa_kF_\theta\log x\le4\kappa_k'F_\theta=4\kappa_0F_\theta/\log^2x_k=o(1)$.
   \item For $x_k^2<x<\exp(C'\log^2x_k)$, with $C':=(4(1-\theta)/c_{\mathrm{LP}})^2$:
-    $\kappa_kF_\theta\log x\le2\kappa_k'F_\theta C'\log x_k=2\kappa_0F_\theta C'/\log x_k=o(1)$, since $\log x_k\ge X_0^2$ and
-    $C'\asymp\Lambda^2$.
+    \[
+      \kappa_kF_\theta\log x\le2\kappa_k'F_\theta C'\log x_k=2\kappa_0F_\theta C'/\log x_k=o(1),
+    \]
+    since $\log x_k\ge X_0^2$ and $C'\asymp\Lambda^2$.
   \end{itemize}
 \item For $x\ge\exp(C'\log^2x_k)$, $\gamma_k\le x_k^{1-\theta}$ is resolvable, and Step~3 covers it.
 \end{itemize}

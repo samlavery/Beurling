@@ -1,4 +1,4 @@
-# Cross-check for Theorem 4.17, Step 6 (numerical only; the proof uses the analytic bound <= 1e-6):
+# Cross-check for Theorem caplw, Step 6 (numerical only; the proof uses the analytic bound <= 1e-6 on the raise, Step 6 last item):
 # the raise of H over H_std, max(0, 2 log M1 - 8 l^2)/L with H = max(H_std, M1^2), log H_std = 8 l^2,
 # maximised over log10 Lambda in [8, 30] (step 0.05) and s = l - 2 log Lambda in [-log Lambda, 30] (step 0.01).
 # Here L = log z, l = log L, M1 = r0 + phi(r0) + 1, phi(u) = c + u c^{1/2} + u(u+1)/2, r0 = ceil(L/(3l)) + 3,

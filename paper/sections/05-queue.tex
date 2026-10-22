@@ -2,17 +2,19 @@
 \section{The queue}\label{sec:queue}
 % v3: §4 (opening paragraph)
 
-This section proves that, on an event of probability greater than $\tfrac12$ (\cref{lem:budget}), the Lindley queue of
-\cref{sec:construction} satisfies $Q_j\le B(s_j)$ at every slot (\cref{thm:queue}). Here $B(x)$ is quasi-polylogarithmic in
-$x$, and is bounded by $H(x)^{O(1)}$ on the raised range of \cref{sec:queue-capl}. Consequently (L-a) holds:
-$|D(x)|\le B(x)+H(x)/2+2\le x^{\eta}$. The ingredients are:
+This section proves that, on an event of probability greater than $\tfrac12$ (Lemma~\ref{lem:budget}), the Lindley queue of
+Section~\ref{sec:construction} satisfies $Q_j\le B(s_j)$ at every slot (Theorem~\ref{thm:queue}). Here $B(x)$ is quasi-polylogarithmic in
+$x$, and is bounded by $H(x)^{O(1)}$ on the raised range of Section~\ref{sec:queue-capl}. Consequently (L-a) holds:
+$|D(x)|\le B(x)+\tfrac{H(x)}2(1+\kappa_+/\log x)+3\le x^{\eta}$. The ingredients are:
+% Approved deviation from v3 (CORRECTIONS-vs-v3.md, #15): v3 has H(x)/2+2.
 \begin{itemize}
-\item the landing count and the local count (\cref{lem:landing,cor:localcount});
-\item the good event and the first-failure budget (\cref{def:good,lem:budget});
-\item the cluster event $\qEcl$ and its per-prime increment bound (\cref{prop:ecl,cor:increment});
-\item the chain of lemmas proving $\qEcl$ at every scale (\cref{sec:queue-ecl,sec:queue-cover,sec:queue-capl}, together
-  with \cref{app:rankfull});
-\item the analysis of the absorbed set $\Abs$: Lemma P and its consequences (\cref{sec:queue-abs}).
+\item the landing count and the local count (Lemma~\ref{lem:landing} and Corollary~\ref{cor:localcount});
+\item the good event and the first-failure budget (Definition~\ref{def:good} and Lemma~\ref{lem:budget});
+\item the cluster event $\qEcl$ and its per-prime increment bound (Proposition~\ref{prop:ecl} and Corollary~\ref{cor:increment});
+\item the chain of lemmas proving $\qEcl$ at every scale (Sections~\ref{sec:queue-ecl}, \ref{sec:queue-cover} and~\ref{sec:queue-capl}, together
+  with Appendix~\ref{app:rankfull});
+\item the analysis of the absorbed set $\Abs$: its pointwise sparsity (Lemma~\ref{lem:lemmaP}) and the consequences
+  (Section~\ref{sec:queue-abs}).
 \end{itemize}
 
 \subsection{Conventions, parameters and standing facts}\label{sec:queue-conv}\label{sec:queue-standing}
@@ -21,29 +23,30 @@ $|D(x)|\le B(x)+H(x)/2+2\le x^{\eta}$. The ingredients are:
 \paragraph{Scales.}
 A \emph{dyadic scale} is $x=2^mX_0$ with $m\ge0$. We write $L:=\log x$ and $\ell:=\log L$. All parameters are \emph{frozen per
 scale}: they are evaluated at $x$ and used for heights in $[x,2x)$. We write $\Lambda:=\log X_0\ge10^8$
-(\cref{sec:params}).
+(Section~\ref{sec:params}).
 
 \paragraph{Parameters at scale $x$.}
-These are the canonical choices of \cref{sec:params} and \cref{sec:construction}.
+These are the choices of Section~\ref{sec:params} and Section~\ref{sec:construction}.
 \begin{itemize}
 \item $\delta_1:=2L^{-6}$. The \emph{grid windows} at height $z\in[x,2x]$ are the intervals $[k\delta_1,(k+2)\delta_1)$,
   $k\in\Z$, of length $2\delta_1=4L^{-6}$.
-\item $r_0:=\lceil L/(3\ell)\rceil+3$ is the rank threshold (\cref{thm:R}).
-\item $c:=c(x)$ is the capacity threshold, fixed in \cref{thm:caplw}. We put $Q:=c^{1/2}$ and
+\item $r_0:=\lceil L/(3\ell)\rceil+3$ is the rank threshold (Theorem~\ref{thm:R}).
+\item $c:=c(x)$ is the capacity threshold, fixed in Theorem~\ref{thm:caplw}. We put $Q:=c^{1/2}$ and
   $\varphi(u):=c+uQ+u(u+1)/2$.
 \item $M_1:=r_0+\varphi(r_0)+1$ is the cluster bound. Then $M_1\le 2c$, and $M_1\ge L$ for $L\ge L_*$.
 \item $H:=H(x):=\max(\qHstd(x),M_1(x)^2)$, where $\qHstd(x):=\exp(8\ell^2)$. This is the width of the box jitter of
-  \cref{sec:construction}.
+  Section~\ref{sec:construction}.
   \begin{itemize}
-  \item $H=\qHstd$ exactly where $c(x)=\tfrac14\qHstd(x)^{1/2}$; then $M_1\le\tfrac12\qHstd^{1/2}$.
-  \item Elsewhere $H=M_1^2$. This is the \emph{raised range} of \cref{sec:queue-capl}.
-  \item In all cases the tolerance $M_1\le H/L^{14}$ of \cref{sec:params} holds.
+  \item Where $c(x)=\tfrac14\qHstd(x)^{1/2}$ we have $M_1\le\tfrac12\qHstd^{1/2}$, so $H=\qHstd$.
+  \item The \emph{raised range} is the set of scales where $c(x)>\tfrac14\qHstd(x)^{1/2}$, that is, where
+    $\gamma(s)\Lambda>4\ell^2-\log4$ (Theorem~\ref{thm:caplw}). There $H=\max(\qHstd,M_1^2)\ge\qHstd$.
+  \item In all cases the tolerance $M_1\le H/L^{14}$ of Section~\ref{sec:params} holds.
   \end{itemize}
 \item $L_0:=\max(L^5,48M_1L^3/c'^2)$ is the block length. We put $q_{\min}:=L_0L^6$ and $y:=H\cdot L_0\cdot L^6$. The latter is
-  the absorption threshold of \cref{sec:construction}, including its ramp.
-\item $B:=B(x)$ is the queue bound of \cref{thm:queue}. The constants $c'=0.15$ and $K_d=3$ are the drift and edge constants of
-  the drift bound R1$'$ (\cref{cor:r1}).
-\item $\lambda:=4L$ in \cref{thm:queue}. For the budget (\cref{lem:budget}) we use, per scale $u$,
+  the absorption threshold of Section~\ref{sec:construction}, including its ramp.
+\item $B:=B(x)$ is the queue bound of Theorem~\ref{thm:queue}. The constants $c'=0.15$ and $K_d=3$ are the drift and edge constants of
+  the drift bound R1$'$ (Corollary~\ref{cor:r1}).
+\item $\lambda:=4L$ in Theorem~\ref{thm:queue}. For the budget (Lemma~\ref{lem:budget}) we use, per scale $u$,
   $\lambda_u:=3\log u+2\log\log u$ and $\lambda'_u:=\lambda_u+2+\log H(u)$.
 \end{itemize}
 In summary,
@@ -55,25 +58,25 @@ L_0=\max\Big(L^5,\frac{48M_1L^3}{c'^2}\Big),\qquad y=HL_0L^6.
 \end{equation}
 
 \paragraph{Filtration.}
-Slots $s_1<s_2<\dots$ (\cref{sec:construction}) are processed in increasing order. $\mathcal F_t$ is the $\sigma$-field of
+Slots $s_1<s_2<\dots$ (Section~\ref{sec:construction}) are processed in increasing order. $\mathcal F_t$ is the $\sigma$-field of
 all decisions and jitter offsets at slots $\le t$, and $\mathcal F_{s-}$ is the same for slots $<s$. For a decision slot $s$,
 $\NN_{\prec s}$ denotes the set of elements of $\NN$ all of whose primes are decided at slots $<s$. It is
 $\mathcal F_{s-}$-measurable.
 
 \paragraph{Convention on $X_0$.}
-With centred placement (\cref{sec:construction}), jittered primes have values at least
-$\Xm:=X_0-H(X_0)/2=X_0(1-O(e^{2715-\Lambda}))$. Wherever this section or \cref{app:rankfull} says that ``a jittered prime is
-at least $X_0$'' (in (F3$'$), (V1), \cref{lem:rowweights}, the $\tau_j$ of \cref{app:rankfull}, and $\mathrm{Proj}_t$), read
-$\Xm$. Every such use has a margin far larger than $e^{-10^7}$, and \cref{lem:rowweights}(e) already uses the weaker bound
+With centred placement (Section~\ref{sec:construction}), jittered primes have values at least
+$\Xm:=X_0-H(X_0)/2=X_0(1-O(e^{2715-\Lambda}))$. Wherever this section or Appendix~\ref{app:rankfull} says that ``a jittered prime is
+at least $X_0$'' (in (F3$'$), (V1), Lemma~\ref{lem:rowweights}, the $\tau_j$ of Appendix~\ref{app:rankfull}, and $\mathrm{Proj}_t$), read
+$\Xm$. Every such use has a margin far larger than $e^{-10^7}$, and Lemma~\ref{lem:rowweights}(e) already uses the weaker bound
 $\tfrac23(X_0+0.99(i-1))$.
 
 \paragraph{The Lindley recursion.}
-By \cref{lem:lindley}, the queue is $Q_0=0$ and
+By Lemma~\ref{lem:lindley}, the queue is $Q_0=0$ and
 \begin{equation}\label{eq:lindley}
 Q_j=\max(0,\,Q_{j-1}+A_j-1),
 \end{equation}
 where $A_j$ is the number of arrivals assigned to slot $s_j$. The \emph{excess} of a slot window $W$ is
-$\qexc(W):=C(W)-\#\{\text{slots of }W\}$. By the excess identity (\cref{lem:excess}),
+$\qexc(W):=C(W)-\#\{\text{slots of }W\}$. By the excess identity (Lemma~\ref{lem:excess}),
 $\qexc(W)=\qCjit(W)-\qljit(W)\pm2$. Here $\qCjit$ counts the non-absorbed composites whose latest-decided prime is
 jittered, and $\qljit(W)$ counts the jittered (continuous) slots of $W$. Lindley's formula gives
 \begin{equation}\label{eq:lindleymax}
@@ -84,13 +87,15 @@ Q_j=\max\Big(0,\ \max_{k<j}\qexc((k,j])\Big).
 All of the following are sure (pathwise) statements, except (F2), which is distributional.
 \begin{enumerate}[label=\textup{(F\arabic*)},leftmargin=*]
 \item\label{eq:sF1} At most $H(t)(1+\kappa_+/\log t)+3$ decided primes have jitter windows containing a given point $t$, since the slot
-  density satisfies $T'\le1+\kappa_+/\log t$ (\cref{sec:construction}). Consequently, the label sums over slots in
-  \cref{lem:pil} carry the factor $\theta:=1+1/L$, which bounds $1+\kappa_+/L+3/H$.
+  density satisfies $T'\le1+\kappa_+/\log t$ (Section~\ref{sec:construction}). Consequently, the label sums over slots in
+  Lemma~\ref{lem:pil} carry the factor $\theta:=1+1/\Lambda$, which bounds $1+\kappa_+/\log q+3/H$ for jittered primes
+  $q\ge\Xm$ (with $\kappa_+=0.8$).
+  % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #12): v3 has theta := 1+1/L.
 \item\label{eq:sF2} Given $\mathcal F_{s-}$, the position of the prime decided at slot $s$ has density at most $1/H(s)$ (centred box
   jitter). The slots of distinct primes are independent.
 \end{enumerate}
 \begin{enumerate}[label=\textup{(F3$'$)},leftmargin=*]
-\item\label{eq:sF3p} \emph{(Harmonic sums, $\mathcal F_{s-}$-form.)} On $\Good(<s)$ (\cref{def:good}), for every $Y\ge1$,
+\item\label{eq:sF3p} \emph{(Harmonic sums, $\mathcal F_{s-}$-form.)} On $\Good(<s)$ (Definition~\ref{def:good}), for every $Y\ge1$,
 \[
 \sum_{c\in\NN_{\prec s},\ c\le Y}\frac1c\ \le\ A_s(Y):=
 \begin{cases}
@@ -103,46 +108,46 @@ Moreover $A_s(Y)\le A':=1.8(\log z+1)$ for $s\le 2z$ and $Y\le 2z$.
 \end{enumerate}
 \begin{proof}
 If $Y+H(Y)\le s$, then all of $\NN\cap[1,Y]$ is decided before $s$, and the bound is the sure harmonic bound of
-\cref{lem:cm}(iv), which holds on $\Good(<s)$. Otherwise we bound the sum by
+Lemma~\ref{lem:cm}(iv), which holds on $\Good(<s)$. Otherwise we bound the sum by
 $\prod_{p\text{ decided before }s}(1-1/p)^{-1}$.
 \begin{itemize}
 \item The rational primes $p<X_0$ give at most $e^{\gamma}\Lambda(1+1/(2\Lambda^2))$ \cite[Thm.~8, (3.29)]{RosserSchoenfeld1962}, valid for
   $X_0\ge286$.
 \item The realised primes in $[X_0,s-H(s)]$ give at most $(\log s/\Lambda)e^{2.20/\Lambda+1/X_0}$, by the sure local Mertens
-  bound of \cref{lem:cm}(iv). That bound reads $\NN$ only on $[1,s-H]$ and holds on $\Good(<s)$.
+  bound of Lemma~\ref{lem:cm}(iv). That bound reads $\NN$ only on $[1,s-H]$ and holds on $\Good(<s)$.
 \item The remaining primes decided before $s$ have values in $(s-H,s+H/2]$, hence values greater than $s/2$. There are at most
   $2H+1$ of them, so they contribute a factor at most $(1-2/s)^{-(2H+1)}\le e^{5H(s)/s}$. Since
-  $\log H\le8\ell^2+10^{-6}\log s$ (\cref{thm:caplw}(c)), this factor is at most $e^{10^{-9}}$. \qedhere
+  $\log H\le8\ell^2+10^{-6}\log s$ (Theorem~\ref{thm:caplw}(c)), this factor is at most $e^{10^{-9}}$. \qedhere
 \end{itemize}
 \end{proof}
 \begin{enumerate}[label=\textup{(F4)},leftmargin=*]
 \item\label{eq:sF4} \emph{(Sure Mertens and Chebyshev bounds on $\Good(<s)$.)} These are the realised-prime bounds of
-  \cref{lem:cm}(iv), used inside (F3$'$) and in \cref{app:rankfull}.
+  Lemma~\ref{lem:cm}(iv), used inside (F3$'$) and in Appendix~\ref{app:rankfull}.
 \end{enumerate}
 
 \paragraph{Absorbed and non-absorbed elements.}
-$\Abs$ (\cref{eq:absorbed}) is the extended absorption set: the elements $n$ with $\log n\ge L_*=10^7$ whose latest jittered
-prime $r$ satisfies $r<y(n)$. In Lemma P (\cref{lem:lemmaP}), $y(n)$ is replaced by $\sup_{[u,2u]}y$ on the dyadic block of
+$\Abs$ (see \eqref{eq:absorbed}) is the extended absorption set: the elements $n$ with $\log n\ge L_*=10^7$ whose latest jittered
+prime $r$ satisfies $r<y(n)$. In Lemma~\ref{lem:lemmaP}, $y(n)$ is replaced by $\sup_{[u,2u]}y$ on the dyadic block of
 $n$. Absorbed elements are counted in the target $T$ and are not arrivals. All statements about arrivals concern
 $\NN\setminus\Abs$.
 \begin{itemize}
 \item \emph{Stopped process.} Every statement of this section is proved on $\Good(<t)$ for the relevant $t$, that is, for the
-  process stopped at the first failure time $\tau$. There \cref{lem:lemmaP} gives $\rho_{\Abs}\le L^{-4}<0.1/\log u$, so the
-  capped density $\bar\rho_{\Abs}=\min(\rho_{\Abs},0.1/\log u)$ of \cref{eq:target} equals $\rho_{\Abs}$. No argument of this
-  section uses $\rho_{\Abs}$ off the good event: \cref{lem:lemmaP}, \cref{prop:S1S2}, the compensator of
-  $\sigma_{\Abs}$ (\cref{lem:rhoA}(c)) and \cref{eq:T1} all run on the good event.
+  process stopped at the first failure time $\tau$. There Lemma~\ref{lem:lemmaP} gives $\rho_{\Abs}\le L^{-4}<0.1/\log u$, so the
+  capped density $\bar\rho_{\Abs}=\min(\rho_{\Abs},0.1/\log u)$ of \eqref{eq:target} equals $\rho_{\Abs}$. No argument of this
+  section uses $\rho_{\Abs}$ off the good event: Lemma~\ref{lem:lemmaP}, Proposition~\ref{prop:S1S2}, the compensator of
+  $\sigma_{\Abs}$ (Lemma~\ref{lem:rhoA}(b)) and \eqref{eq:T1} all run on the good event.
 \item \emph{Slot lengths.} This section uses $\rhodet$ only through $T'\le1+1/(\kappa u)\le1.01$, in the linear
-  normalisation of \cref{sec:construction} (\cref{eq:rhodet} and \cref{lem:blin}(1)): $\rhodet\le$ (rigid fraction)
-  $+1/(\kappa u)$, and the positivity margin is \cref{eq:G1}, with no $\kappa/2$ loss. This enters as slot spacing at least
-  $0.99$ in (F1) and \cref{app:rankfull}, and in the candidate counts of \cref{lem:landing}. No $\kappa/2$ form is used.
+  normalisation of Section~\ref{sec:construction} (see \eqref{eq:rhodet} and Lemma~\ref{lem:blin}(1)): $\rhodet\le$ (rigid fraction)
+  $+1/(\kappa u)$, and the positivity margin is \eqref{eq:G1}, with no $\kappa/2$ loss. This enters as slot spacing at least
+  $0.99$ in (F1) and Appendix~\ref{app:rankfull}, and in the candidate counts of Lemma~\ref{lem:landing}. No $\kappa/2$ form is used.
 \end{itemize}
 
 \subsection{Landing count and local count}\label{sec:queue-landing}
 % v3: §4.2
 
 Fix a dyadic $P$ and put $\lambda_P:=4\log P$, $H_-:=H(P/2)$, $H_+:=H(8P)$ and $\rho_H:=H_+/H_-$. Then $\rho_H\le1.35$ for
-$\log P\ge1100$, and $\rho_H\le1+1.2\cdot10^{-5}$ for $\log P\ge10^8$, the raise of \cref{thm:caplw} included, because
-$d\log H/d\log P\le16\ell/L+4.1\cdot10^{-8}$ (\cref{thm:caplw}(c)). For a window $J\subset[P,4P]$ with $|J|\le6H(P)$ we
+$\log P\ge1100$, and $\rho_H\le1+1.2\cdot10^{-5}$ for $\log P\ge10^8$, the raise of Theorem~\ref{thm:caplw} included, because
+$d\log H/d\log P\le16\ell/L+10^{-7}$ (Theorem~\ref{thm:caplw}(c)). For a window $J\subset[P,4P+1]$ with $|J|\le6H(P)$ we
 define:
 \begin{itemize}
 \item the \emph{candidates} $\mathcal C(J)$: the decision slots $s$ with $|s-J|\le H(s)/2$. (Selection is by decision slot,
@@ -160,8 +165,8 @@ Let $\qLand(J)$ be the event
 |\Lambda(J)-\mu(J)|\le\sqrt{2\bar\mu(J)\lambda_P}+\tfrac23\lambda_P,\qquad\text{hence}\qquad
 \Lambda(J)\le\min\big(\#\mathcal C(J),\,2\bar\mu(J)+\tfrac76\lambda_P\big).
 \end{equation}
-Then $\Prob(\qLand(J)^c)\le2e^{-\lambda_P}=2P^{-4}$, with no conditioning. Summed over the at most $72P\,H(P)$ grid windows of
-a scale, the total is at most $144H(P)P^{-3}$. The event $\qLand(J)$ is $\mathcal F_t$-measurable with
+Then $\Prob(\qLand(J)^c)\le2e^{-\lambda_P}=2P^{-4}$, with no conditioning. Summed over the landing windows $J\in\mathcal J_P$
+defined below, the total is at most $146H(P)P^{-3}$. The event $\qLand(J)$ is $\mathcal F_t$-measurable with
 $t(\qLand(J)):=\max J+H(\max J)$.
 \end{lemma}
 
@@ -173,7 +178,7 @@ means sum to $\mu(J)\le\bar\mu(J)$ surely, and the increments are at most $1$. A
 \Prob(\exists n:\ S_n\ge a,\ V_n\le v)\le\exp\Big(-\frac{a^2}{2v+2ab/3}\Big),
 \end{equation}
 for a martingale $S_n$ with increments at most $b$ and predictable quadratic variation $V_n$, which follows from \cite[(4.1)]{Freedman1975} by scaling and Bennett's bound $(1+u)\log(1+u)-u\ge u^2/(2(1+u/3))$. Take
-$v=\bar\mu$ and $b=1$. The second form in \cref{eq:landing} follows from $\sqrt{2\bar\mu\lambda}\le\bar\mu+\lambda/2$.
+$v=\bar\mu$ and $b=1$. The second form in \eqref{eq:landing} follows from $\sqrt{2\bar\mu\lambda}\le\bar\mu+\lambda/2$.
 \end{proof}
 
 \begin{remark}\label{rem:oldlanding}
@@ -182,41 +187,56 @@ A bound of the form $\Lambda(J)\le|J|(1+|J|/H)+\lambda$ with failure probability
 which is false for $\lambda\lesssim|J|$; it would also condition on later decisions. It is not used.
 \end{remark}
 
+\paragraph{Landing windows.} Let $\mathcal J_P$ be the set of windows $[P+i/2,\,P+j/2)$ with integers $0\le i<j$,
+$j-i\le12H(P)$ and $P+j/2\le4P+1$. There are at most $(6P+3)\cdot12H(P)\le73P\,H(P)$ of them. Every $J\subset[P,4P]$ with
+$|J|\le6H(P)-1$ is contained in a smallest $J^+\in\mathcal J_P$, and $|J^+|\le|J|+1$.
+% Approved deviation from v3 (CORRECTIONS-vs-v3.md, #20): v3 leaves the window family of the union bound unspecified ("72P H(P) grid windows", total 144H(P)P^{-3}).
+
 \begin{corollary}[Local count]\label{cor:localcount}
 % v3: Corollary 4.2
-On $\qLand(J)$, and on the queue bound at the slots $s_j\le\max J+H(\max J)$, every $J\subset[P,4P]$ with $|J|\le6H(P)$
-(including $|J|<1$) satisfies
+Let $J\subset[P,4P]$ with $|J|\le6H(P)$ (including $|J|<1$). On the queue bound at the slots $s_j\le\max J+H(\max J)$, and,
+if $|J|\le6H(P)-1$, on $\qLand(J^+)$,
 \begin{equation}\label{eq:localcount}
 |N(J)-T(J)|\le2B(4P)+2\Lambda(J)+2|J|+5\le(4\rho_H+6)|J|+\qKloc(P)\le11.4|J|+\qKloc(P),
 \end{equation}
-where $\qKloc(P):=2B(4P)+\tfrac73\lambda_P+13$. Under the B-lin target of \cref{sec:construction},
+where $\qKloc(P):=2B(4P)+\tfrac73\lambda_P+23$.
+% Approved deviation from v3 (CORRECTIONS-vs-v3.md, #20): v3 has +13 in K_loc; the extra 10 pays for the passage from J to the landing window J^+.
+Under the target \eqref{eq:target} of Section~\ref{sec:construction},
 $T(J)\le2|J|+2+\#\Abs(J)$, so the non-absorbed count satisfies $N(J)-\#\Abs(J)\le13.4|J|+\qKloc(P)+2$.
 \end{corollary}
 
 \begin{proof}
-The count identity (\cref{lem:count}), applied to the slots meeting $J$, gives $|\Delta Q|\le B$, $|\Delta C|\le B+1$,
-$|\Delta(j-T)|\le2$ and $|\Delta L_\pm(J)|\le\Lambda(J)+\#\{\text{slots in }J\}\le\Lambda(J)+|J|+1$. Insert \cref{eq:landing}
-with $\rho_H\le1.35$.
+The count identity (Lemma~\ref{lem:count}), applied to the slots meeting $J$, gives $|\Delta Q|\le B$, $|\Delta C|\le B+1$,
+$|\Delta(j-T)|\le2$ and $|\Delta L_\pm(J)|\le\Lambda(J)+\#\{\text{slots in }J\}\le\Lambda(J)+|J|+1$. This gives the first
+inequality. Now let $|J|\le6H(P)-1$. Since $J\subset J^+$, we have $\mathcal C(J)\subset\mathcal C(J^+)$ and
+$\Lambda(J)\le\Lambda(J^+)$. On $\qLand(J^+)$, by \eqref{eq:landing},
+\[
+2\Lambda(J)\le4\bar\mu(J^+)+\tfrac73\lambda_P\le4(1+\rho_H)(|J|+1)+8+\tfrac73\lambda_P\le4(1+\rho_H)|J|+\tfrac73\lambda_P+17.4,
+\]
+using $\rho_H\le1.35$; this gives the second inequality. If $6H(P)-1<|J|\le6H(P)$, then $|J|\ge H$ and Remark~\ref{rem:longwindows}
+gives the bound directly.
 \end{proof}
 
 \begin{remark}\label{rem:longwindows}
 % v3: §4.2, after Corollary 4.2
-Windows longer than $6H(P)$ need no landing event. The sure lag bound gives $|N(J)-T(J)|\le2\sup|D|\le2B+H+4\le|J|+2B+4$ for
-$|J|\ge H$. Alternatively, splitting $J$ into $\lceil|J|/H\rceil$ pieces gives $N(J)-\#\Abs(J)\le13.5|J|+\qKloc(P)+2$.
+Windows longer than $6H(P)$ need no landing event. The sure lag bound \eqref{eq:lag} gives
+$|N(J)-T(J)|\le2\sup|D|\le2B+H(1+\kappa_+/L)+6\le1.01|J|+2B+6$ for $|J|\ge H$.
+% Approved deviation from v3 (CORRECTIONS-vs-v3.md, #15): v3 has 2B+H+4 <= |J|+2B+4.
+Alternatively, splitting $J$ into $\lceil|J|/H\rceil$ pieces gives $N(J)-\#\Abs(J)\le13.5|J|+\qKloc(P)+2$.
 \end{remark}
 
-\begin{remark}[Uses of \cref{cor:localcount}, and non-circularity]\label{rem:localcount-uses}
+\begin{remark}[Uses of Corollary~\ref{cor:localcount}, and non-circularity]\label{rem:localcount-uses}
 % v3: §4.2, "Uses of Corollary 4.2"
-\Cref{cor:localcount} at height $z$ reads the queue bound at slots up to $z+H(z)$ and the event $\qLand$ at height $z$. It is
+Corollary~\ref{cor:localcount} at height $z$ reads the queue bound at slots up to $z+H(z)$ and the event $\qLand$ at height $z$. It is
 therefore used only by steps that run after $z+7H(z)$, and always at a strictly smaller height. Its uses are:
 \begin{itemize}
-\item \cref{lem:threshold-mass} (steps (i)--(ii)) and \cref{prop:br} (step 3), at heights at most $x/4$ or $\sqrt x$;
-\item \cref{lem:tau-near}, at heights $p_0\le\sqrt x$;
-\item optionally, step (iv) of \cref{lem:lemmaP}, at heights $u/d\le u^{1-\theta/2}$.
+\item Lemma~\ref{lem:threshold-mass} (steps (i)--(ii)) and Proposition~\ref{prop:br} (step 3), at heights at most $x/4$ or $\sqrt x$;
+\item Lemma~\ref{lem:tau-near}, at heights $p_0\le\sqrt x$;
+\item optionally, step (iv) of Lemma~\ref{lem:lemmaP}, at heights $u/d\le u^{1-\theta/2}$.
 \end{itemize}
-It is \emph{not} used for the per-prime increment bound in \cref{thm:queue}. A local count there would force
-$B(x)\ge(3/c')L^2B(x/q)$, which is not polylogarithmic. The increment bound comes instead from $\qEcl$
-(\cref{cor:increment}).
+It is \emph{not} used for the per-prime increment bound in Theorem~\ref{thm:queue}. A local count there would force
+$B(x)\ge(3/c')L^2B(x/q)$, which is incompatible with \eqref{eq:queueB}. The increment bound comes instead from $\qEcl$
+(Corollary~\ref{cor:increment}).
 \end{remark}
 
 \subsection{The queue bound}\label{sec:queue-bound}
@@ -227,7 +247,7 @@ Fix a dyadic scale $x$ and put $\lambda:=4L$. Recall that $\qljit(\cdot)$ counts
 \paragraph{Windows.}
 \begin{itemize}
 \item \emph{Blocks are measured in continuous slots.} $\mathcal W_x$ is the set of slot windows $W=(k,j]$ with right end
-  $s_j\in[x,2x)$ and $\qljit(W)\le L_0$, of any total slot count. By \cref{eq:G1}, continuous slots have density at least
+  $s_j\in[x,2x)$ and $\qljit(W)\le L_0$, of any total slot count. By \eqref{eq:G1}, continuous slots have density at least
   $0.09/L$, so such a $W$ has physical length at most $(L_0+1)L/0.09\le12L\,L_0$.
 \item \emph{Freedman's inequality is applied to deterministic windows.} $\mathcal I_x$ is the set of physical windows
   $I=[a,b)$ with $a,b\in\Z$, $b\in[x,\,2x+12L+2]$ and $b-a\le12L(L_0+1)+2$.
@@ -237,7 +257,7 @@ and $q$ latest; let $X^{(2)}_q(I)$ count those with $q^a\,\|\,n$, $a\ge2$; and p
 These are $\mathcal F_q$-measurable: $n=q^a m$ with $m$ decided before $q$, and absorption is decided by $q<y(n)$. They
 depend neither on $T$ nor on the slot positions. Composites have $q\le b/2$, so every $X_q(I)$ is decided by $b/2+H(b/2)$.
 The event $\qFr(I)$ below also reads $\qljit(I)$ and uses R1$'$ on $I$, which holds on $\Good(<\max I)$
-(\cref{cor:r1}); so $\qFr(I)$ carries the time $t(I):=b$.
+(Corollary~\ref{cor:r1}); so $\qFr(I)$ carries the time $t(I):=b$.
 
 For $I\in\mathcal I_x$, let $\qFr(I)$ be the event that, with $\ell:=\qljit(I)$ (an integer, possibly random),
 \begin{enumerate}[label=\textup{(\alph*)}]
@@ -249,35 +269,36 @@ The sums run over latest primes, selected by decision slot.
 
 \begin{theorem}[Queue bound]\label{thm:queue}
 % v3: Theorem 4.3
-Let $x$ be a dyadic scale. The drift bound R1$'$ is used in the form of \cref{cor:r1}, on every window (slot or physical)
+Let $x$ be a dyadic scale. The drift bound R1$'$ is used in the form of Corollary~\ref{cor:r1}, on every window (slot or physical)
 in $[1,\infty)$, with $L:=\log(2x+12\log x+2)$; this exceeds $\log x$ by less than $0.7$, which R1$'$'s slack absorbs.
 \begin{enumerate}[label=\textup{(\roman*)}]
 \item For each $I\in\mathcal I_x$, $\Prob(\qFr(I)^c\cap\Good(<t(I)))\le2(L_0+6)e^{-\lambda}$, with $t(I)=b$. Hence
   $\sum_{I\in\mathcal I_x}\Prob(\qFr(I)^c\cap\Good(<t(I)))\le30L(L_0+1)(L_0+6)x^{-3}\le x^{-2}$.
 \item (Deterministic part.) Put $t_j:=\lceil s_{j+1}\rceil+1$, the time of the queue constraint at slot $j$
-  (\cref{def:good}). On $\Good(<t_j)\cap\bigcap_{I\in\mathcal I_x,\,t(I)\le t_j}\qFr(I)$, with $s_j\in[x,2x)$,
+  (Definition~\ref{def:good}). On $\Good(<t_j)\cap\bigcap_{I\in\mathcal I_x,\,t(I)\le t_j}\qFr(I)$, with $s_j\in[x,2x)$,
 \begin{equation}\label{eq:queueB}
 Q_j\le B(x):=\frac{4M_1L^2}{c'}+\frac{16M_1L}{3}+4\sqrt{M_1L(K_d+4)}+8M_1L\Big(\frac L\Lambda+1\Big)+K_d+9.
 \end{equation}
 \end{enumerate}
 In particular $B(x)\le5M_1L^2/c'\le34M_1L^2$. So $B\le L^{O(1)}\qHstd^{1/2}$ off the raised range, and
-$B\le X_0^{7.6}L^2$ on it (\cref{thm:caplw}). Moreover $B\le H$ at every scale: $\log M_1\le\tfrac12\log H$ since
+$B\le X_0^{7.6}L^2$ on it (Theorem~\ref{thm:caplw}). Moreover $B\le H$ at every scale: $\log M_1\le\tfrac12\log H$ since
 $H\ge M_1^2$, and $34L^2\le\qHstd^{1/2}=e^{4\ell^2}$, so $B\le(M_1^2\qHstd)^{1/2}\le H$.
 \end{theorem}
 
 \begin{proof}[Proof of (i)]
 Peel over the value of $\qljit(I)$. For each deterministic $\ell\in\{0,\dots,L_0+5\}$, apply Freedman's inequality in the
-form \cref{eq:freedman}, with deterministic $a(\ell):=\sqrt{2v_\ell\lambda}+\tfrac43M_1\lambda$, $v:=v_\ell$ and
+form \eqref{eq:freedman}, with deterministic $a(\ell):=\sqrt{2v_\ell\lambda}+\tfrac43M_1\lambda$, $v:=v_\ell$ and
 $b:=2M_1$ (by truncation).
 \begin{itemize}
 \item On $\{\qljit(I)=\ell\}\cap\Good(<t(I))$, the predictable variance satisfies
-  $V\le2M_1\qComp_{\mathrm{jit}}(I)\le2M_1(\ell+K_d)=v_\ell$, by R1$'$ (\cref{cor:r1}) applied to $I$. So (a) fails
+  $V\le2M_1\qComp_{\mathrm{jit}}(I)\le2M_1(\ell+K_d)=v_\ell$, by R1$'$ (Corollary~\ref{cor:r1}) applied to $I$. So (a) fails
   there only on the event $\{S\ge a(\ell),\,V\le v_\ell\}$, which has probability at most $e^{-\lambda}$.
 \item Windows with $\qljit(I)>L_0+5$ are never used in (ii).
 \item For (b): take $b=1$. On the good event,
   $\sum_q\Prob(X^{(2)}_q(I)\ge1\mid\mathcal F_{q-})\le\qComp^{(2)}(I)\le s_2(x)|I|\ll1$. This is the source $s_2$ of
-  \cref{eq:s2}, restated in \cref{cor:r1}, with \[s_2\le9L\exp\big(-\max(\Lambda,\tfrac12\sqrt{L\log L})\big).\] Along the ramp
-  $\gamma(s)$ of \cref{thm:caplw}, $\tfrac12\sqrt{L\log L}\gg\gamma\Lambda+3\ell$, so $s_2\cdot12L\,L_0\ll1$. Freedman's
+  \eqref{eq:s2}, restated in Corollary~\ref{cor:r1}, with \[s_2\le9L\exp\big(-\max(\Lambda,\tfrac12\sqrt{L\log L})\big).\] Since
+  $\log(12L\,L_0)\le\log M_1+4\ell+10.2$ and $\log M_1+5\ell+13\ll\tfrac12\sqrt{L\log L}$ at every scale (Theorem~\ref{thm:caplw}),
+  $s_2\cdot12L\,L_0\ll1$. Freedman's
   inequality then gives $\#\{q:X^{(2)}_q\ge1\}\le1+\sqrt{2\lambda}+\tfrac23\lambda\le\lambda$, except with probability
   $e^{-\lambda}$.
 \item Count: $\#\mathcal I_x\le(x+12L+2)(12L(L_0+1)+3)$, and $e^{-\lambda}=x^{-4}$. \qedhere
@@ -291,12 +312,12 @@ window with integer endpoints containing it. Then:
 \item $\qCjit(W)\le\sum_q\big(X^{(1)}_q(I)+X^{(2)}_q(I)\big)$, since $\qCjit$ is monotone in the window;
 \item $\qljit(I)\le\qljit(W)+4$, since each of the two unit edges holds at most $2$ slots (slot spacing at least $0.99$);
 \item $t(I)=b=\lceil s_{j+1}\rceil\le t_j$, and $b\le s_j+11.3L+1\le2x+12L+2$. Indeed a single slot has length at most
-  $11.3L$ by \cref{eq:G1}; slot lengths up to $2$ occur at primes in $(X_0,2X_0)$, and longer ones where $T'_{\mathrm{cont}}<\tfrac12$.
+  $11.3L$ by \eqref{eq:G1}; slot lengths up to $2$ occur at primes in $(X_0,2X_0)$, and longer ones where $T'_{\mathrm{cont}}<\tfrac12$.
   So $I\in\mathcal I_x$.
 \end{itemize}
-Hence $\qexc(W)\le\qCjit(I)-\qljit(I)+6$, by the excess identity (\cref{lem:excess}).
+Hence $\qexc(W)\le\qCjit(I)-\qljit(I)+6$, by the excess identity (Lemma~\ref{lem:excess}).
 
-\emph{Truncation is inactive.} On $\qEcl^{(x)}$ (whose time $8x/L^{11}+H$ is less than $s_j$), \cref{cor:increment} applies
+\emph{Truncation is inactive.} On $\qEcl^{(x)}$ (whose time $8x/L^{11}+H$ is less than $s_j$), Corollary~\ref{cor:increment} applies
 to $I$, since $|I|/q\le(12L(L_0+1)+2)/y\le13/(HL^5)\ll\delta_1$. It gives $X^{(1)}_q(I)(U)\le2M_1$ for every value $U$ of the
 jitter offset of $q$. So $\tilde X_q\equiv X^{(1)}_q(I)$, and the compensators agree.
 
@@ -305,7 +326,7 @@ $\qComp_{\mathrm{jit}}(I)\le\ell(1-c'/L)+K_d$. Together with (a),
 \[
 \qexc(W)\le-\frac{c'\ell}{L}+\sqrt{16M_1L(\ell+K_d)}+\frac43M_1\lambda+(\text{the $a\ge2$ part})+K_d+6.
 \]
-The $a\ge2$ part is at most $\lambda\cdot2a_{\max}M_1\le8M_1L(L/\Lambda+1)$, by (b), \cref{cor:increment} and
+The $a\ge2$ part is at most $\lambda\cdot2a_{\max}M_1\le8M_1L(L/\Lambda+1)$, by (b), Corollary~\ref{cor:increment} and
 $a_{\max}\le L/\Lambda+1$. Maximising over $\ell\ge0$ gives $\qexc(W)\le B(x)$.
 
 \emph{Full blocks.} If $\qljit(W)=L_0$, then $\ell\ge L_0$ and
@@ -313,24 +334,24 @@ $a_{\max}\le L/\Lambda+1$. Maximising over $\ell\ge0$ gives $\qexc(W)\le B(x)$.
 \frac{c'L_0}{L}\ge\sqrt{16M_1L(L_0+4+K_d)}+\frac{16M_1L}{3}+8M_1L\Big(\frac L\Lambda+1\Big)+L^3+K_d+10.
 \end{equation}
 Indeed, since $M_1\ge c\ge\tfrac14\qHstd^{1/2}\gg L^2$, we have $L_0=48M_1L^3/c'^2$ at every scale. Then
-$c'L_0/L=48M_1L^2/c'$ and $\sqrt{16M_1LL_0}=27.7M_1L^2/c'$, so the left side minus the first term on the right is at least
-$20.3M_1L^2/c'=135M_1L^2$, which exceeds the rest. So $\qexc(W)\le0$ on full blocks.
+$c'L_0/L=48M_1L^2/c'$ and $\sqrt{16M_1LL_0}=\sqrt{768}\,M_1L^2/c'\le27.72M_1L^2/c'$, so the left side minus the first term
+on the right is at least $20.28M_1L^2/c'\ge135M_1L^2$, which exceeds the rest. So $\qexc(W)\le0$ on full blocks.
 
-\emph{Lindley.} Let $k':=\max\{k<j:\ \qljit((k,j])=L_0\}$, if it exists. By \cref{eq:lindleymax},
+\emph{Lindley.} Let $k':=\max\{k<j:\ \qljit((k,j])=L_0\}$, if it exists. By \eqref{eq:lindleymax},
 \begin{align*}
 Q_j&\le\max\Big(Q_{k'}+\qexc((k',j]),\ \max\{\qexc(W):\ W\in\mathcal W_x,\ W=(k,j],\ \qljit(W)<L_0\}\Big)\\
 &\le\max(B(s_{k'}),B(x))=B(x).
 \end{align*}
 This uses: additivity of $\qexc$ over slots; $Q_{k'}\le B(s_{k'})$ on $\Good(<t_j)$, which holds because
 $t_{k'}\le s_{k'+1}+2\le s_j$ (a full block has physical length at least $0.99L_0\gg12L$); and that $B$ is non-decreasing
-across scales, because $M_1$ and $H$ are non-decreasing in $x$ (\cref{thm:caplw}(c)). A window $(k,j]$ with
+across scales, because $M_1$ and $H$ are non-decreasing in $x$ (Theorem~\ref{thm:caplw}(c)). A window $(k,j]$ with
 $\qljit>L_0$ splits at $k'$.
 \end{proof}
 
 \begin{remark}[Base scales]\label{rem:basescales}
 % v3: §4.3, after the proof of Theorem 4.3
 R1$'$ is used on windows $I\subset[x-12L(L_0+1)-2,\,2x+12L+2]$ from $x=X_0$ on. Below $2\Xm$ there are no jittered
-composites, so $\qCjit=\qComp_{\mathrm{jit}}=0$ and R1$'$ is trivial there. On $[2\Xm,2X_0)$ it is part of \cref{cor:r1}.
+composites, so $\qCjit=\qComp_{\mathrm{jit}}=0$ and R1$'$ is trivial there. On $[2\Xm,2X_0)$ it is part of Corollary~\ref{cor:r1}.
 \end{remark}
 
 \subsection{The probability skeleton}\label{sec:queue-skeleton}
@@ -343,7 +364,7 @@ Every event $E$ below carries a time $t(E)$, which is a slot, and is $\mathcal F
 t_j:=\lceil s_{j+1}\rceil+1,\qquad\tau:=\min\{t:\ \Good(\le t)\text{ fails}\},
 \end{gather*}
 with $B(s):=B(x)$ for $s\in[x,2x)$. Then $\tau$ is an $(\mathcal F_t)$-stopping time. The events are listed per dyadic scale
-$u=2^mX_0$, with parameters frozen at $u$, in \cref{tab:events}.
+$u=2^mX_0$, with parameters frozen at $u$, in Table~\ref{tab:events}.
 \end{definition}
 
 \begin{table}[ht]
@@ -353,53 +374,55 @@ $u=2^mX_0$, with parameters frozen at $u$, in \cref{tab:events}.
 \hline
 event & windows at scale $u$ & $\Prob(E^c\cap\Good(<t(E)))$ & $t(E)$\\
 \hline
-E1: $\qEcl^{(u)}$ (\cref{prop:ecl}) & grid windows, left end in $[X_0/2,\,4u/L^{11}]$ & $\le L_u^{-2}$ & $8u/L^{11}+H$\\
-E2: $\qFr(I)$ (\cref{thm:queue}) & grid windows $I\in\mathcal I_u$ (integer endpoints, right end $\le2u+12L+2$, length
+E1: $\qEcl^{(u)}$ (Proposition~\ref{prop:ecl}) & grid windows, left end in $[X_0/2,\,4u/L^{11}]$ & $\le L_u^{-2}$ & $8u/L^{11}+H$\\
+E2: $\qFr(I)$ (Theorem~\ref{thm:queue}) & grid windows $I\in\mathcal I_u$ (integer endpoints, right end $\le2u+12L+2$, length
   $\le12L(L_0+1)+2$), peeled over $\qljit(I)$ & $\le u^{-2}$ & $b=\max I$\\
-E3: $G^{\mathrm{NV}}_u$ (\cref{lem:noise}), including the bound \cref{eq:F2} & windows with integer endpoints in $[u,2u]$,
+E3: $G^{\mathrm{NV}}_u$ (Lemma~\ref{lem:noise}), including the bound \eqref{eq:F2} & windows with integer endpoints in $[u,2u]$,
   length in $[H-1,\,1.03H+1]$, two-sided, $\lambda'_u:=3\log u+2\log\log u+2+\log H(u)$ & $\le1.2u^{-2}L_u^{-2}$ for E3 and
   E3$'$ together (on $\qEcl(u)$; sure variance bound $V_I\le2M_1\qComp(I)$) & each window when it closes, $\le2u$\\
-E3$'$: $G^{\mathrm{sw}}_u$ (\cref{lem:noise}), including \cref{eq:F2} & windows with integer endpoints in $[u,2u]$, length
+E3$'$: $G^{\mathrm{sw}}_u$ (Lemma~\ref{lem:noise}), including \eqref{eq:F2} & windows with integer endpoints in $[u,2u]$, length
   $\le1.03H+1$, $\lambda'_u$ & (with E3) & each window when it closes, $\le2u$\\
-E4: $\qLand(J)$ (\cref{lem:landing}) & $J\subset[u,4u]$, $|J|\le6H(u)$ & $\le144H(u)u^{-3}$ & $\max J+H(\max J)$\\
+E4: $\qLand(J)$ (Lemma~\ref{lem:landing}) & landing windows $J\in\mathcal J_u$ (half-integer grid in $[u,4u+1]$, length
+  $\le6H(u)$) & $\le146H(u)u^{-3}$ & $\max J+H(\max J)$\\
 \hline
 \end{tabular}
-\caption{The events of \cref{def:good} at the dyadic scale $u=2^mX_0$.}\label{tab:events}
+\caption{The events of Definition~\ref{def:good} at the dyadic scale $u=2^mX_0$.}\label{tab:events}
 \end{table}
 
-There is no separate event for small latest primes: in the canonical regime these are absorbed (\cref{sec:queue-abs}), and
-the small-$q$ case of S1 needs $L<L_*$ (\cref{prop:S1S2}).
+There is no separate event for small latest primes: since $\Lambda\ge10^8>L_*$, these are absorbed (Section~\ref{sec:queue-abs}), and
+the small-$q$ case of S1 needs $L<L_*$ (Proposition~\ref{prop:S1S2}).
 
 \begin{lemma}[First failure; probability budget]\label{lem:budget}
 % v3: Lemma 4.5
 \[
 \Prob(\tau<\infty)\le\sum_{m\ge0}\ \sum_{E\text{ at scale }2^mX_0}\Prob(E^c\cap\Good(<t(E)))\le\frac{1.5}{\Lambda}<\frac12.
 \]
-On $\{\tau=\infty\}$, $Q_j\le B(s_j)$ for all $j$, every event of \cref{tab:events} holds, and \cref{eq:La} holds pathwise:
-$|D(x)|\le B(x)+H(x)/2+2\le x^{\eta}$ for all $x\ge X_0+2H$.
+On $\{\tau=\infty\}$, $Q_j\le B(s_j)$ for all $j$, every event of Table~\ref{tab:events} holds, and \eqref{eq:La} holds pathwise:
+$|D(x)|\le B(x)+\tfrac{H(x)}2(1+\kappa_+/\log x)+3\le x^{\eta}$ for all $x\ge X_0+2H$.
+% Approved deviation from v3 (CORRECTIONS-vs-v3.md, #15): v3 has H(x)/2+2.
 \end{lemma}
 
 \begin{proof}
-\emph{($*$) Times of the events.} Each bound in \cref{tab:events} holds on $\Good(<t(E))$. No conditioning is used: Freedman's
+\emph{($*$) Times of the events.} Each bound in Table~\ref{tab:events} holds on $\Good(<t(E))$. No conditioning is used: Freedman's
 inequality is applied to deterministic windows, with deterministic $(a,v)$ after peeling over $\qljit$ (E2; likewise E3 and
-E3$'$ in \cref{lem:noise}). Every consumer of an event $E$ runs at a time at least $t(E)$:
+E3$'$ in Lemma~\ref{lem:noise}). Every consumer of an event $E$ runs at a time at least $t(E)$:
 \begin{itemize}
-\item E1 is used by \cref{thm:queue}, by the noise bounds of \cref{lem:noise} and by \cref{lem:lemmaP}, at scales $\ge u$;
+\item E1 is used by Theorem~\ref{thm:queue}, by the noise bounds of Lemma~\ref{lem:noise} and by Lemma~\ref{lem:lemmaP}, at scales $\ge u$;
 \item E2 is used by the queue constraint at slot $j$, whose time $t_j$ is at least $t(I)$;
 \item E3 is used by $\nu$ on $[u,2u]$, read at times $\ge2u$;
-\item E3$'$ is used by \cref{prop:pointwise} (the pointwise margin);
+\item E3$'$ is used by Proposition~\ref{prop:pointwise} (the pointwise margin);
 \item E4 is used by the local counts, read at times at least $4$ times their height.
 \end{itemize}
 
 \emph{(D) The queue constraint at slot $j$ carries the time $t_j:=\lceil s_{j+1}\rceil+1$.}
 \begin{itemize}
-\item $t_j$ is predictable, because $T$ is adapted (\cref{lem:adapted}). The outer window $I\supset W$ of the proof of
-  \cref{thm:queue}(ii) ends at $b=\lceil s_{j+1}\rceil<t_j$, and R1$'$ on $I$ holds on $\Good(<\max I)$.
-\item $\Good(<t_j)\cap\bigcap_{t(E)=t_j}E\subset\{Q_j\le B(s_j)\}$ by \cref{thm:queue}(ii), and the inputs of that
+\item $t_j$ is predictable, because $T$ is adapted (Lemma~\ref{lem:adapted}). The outer window $I\supset W$ of the proof of
+  Theorem~\ref{thm:queue}(ii) ends at $b=\lceil s_{j+1}\rceil<t_j$, and R1$'$ on $I$ holds on $\Good(<\max I)$.
+\item $\Good(<t_j)\cap\bigcap_{t(E)=t_j}E\subset\{Q_j\le B(s_j)\}$ by Theorem~\ref{thm:queue}(ii), and the inputs of that
   theorem have times at most $t_j$.
 \item $t_j\le s_j+11.3L+2$. Every consumer of a queue constraint reads it with margin at least $H\gg12L$:
-  \cref{cor:localcount} at height $z$ reads slots $\le z+H$ and runs after $z+7H$; the Lindley step reads $Q_{k'}$ with
-  $t_{k'}\le s_j$; and \cref{eq:La}, \cref{sec:zeros} and \cref{sec:noise} read queue bounds at heights $\le x/2$ or with
+  Corollary~\ref{cor:localcount} at height $z$ reads slots $\le z+H$ and runs after $z+7H$; the Lindley step reads $Q_{k'}$ with
+  $t_{k'}\le s_j$; and \eqref{eq:La}, Section~\ref{sec:zeros} and Section~\ref{sec:noise} read queue bounds at heights $\le x/2$ or with
   margin at least $H/2$.
 \item No event with time at most $t_j$ reads $Q_j$.
 \end{itemize}
@@ -407,11 +430,11 @@ E3$'$ in \cref{lem:noise}). Every consumer of an event $E$ runs at a time at lea
 \emph{First failure.} On $\{\tau=t\}$, $\Good(<t)$ holds and $\Good(\le t)$ fails. If some $E$ with $t(E)=t$ fails, then
 $E^c\cap\Good(<t(E))$ occurred. Otherwise the queue constraint with time $t$ fails, which (D) excludes.
 
-\emph{Summation.} Summing \cref{tab:events} over $m$, E1 contributes
+\emph{Summation.} Summing Table~\ref{tab:events} over $m$, E1 contributes
 $\sum_mL_u^{-2}\le\sum_{m\ge0}(\Lambda+m\log2)^{-2}\le1.45/\Lambda$. Everything else contributes
 $\le\sum_uO(u^{-2})\ll1/X_0$.
 
-The target $T$ is adapted (\cref{sec:construction}), and every bound above holds for any adapted $T$. The union runs over
+The target $T$ is adapted (Section~\ref{sec:construction}), and every bound above holds for any adapted $T$. The union runs over
 dyadic scales, with finitely many windows per scale, never over all $x$; note that $\sum_x1/x$ diverges.
 \end{proof}
 
@@ -438,7 +461,7 @@ $t_z:=2z+H(2z)$,
 \[
 \Prob(\qEcl(z)^c\cap\Good(<t_z))\le L^{-2}.
 \]
-The event $\qEcl^{(u)}:=\bigcap_{X_0/2\le z\le4u/L_u^{11}}\qEcl(z)$ (over dyadic $z$) is the event E1 of \cref{def:good}. Its
+The event $\qEcl^{(u)}:=\bigcap_{X_0/2\le z\le4u/L_u^{11}}\qEcl(z)$ (over dyadic $z$) is the event E1 of Definition~\ref{def:good}. Its
 new heights at scale $u$ form one dyadic block, so its failure probability on the good event is at most
 $L_u^{-2}(1+o(1))$.
 \end{proposition}
@@ -450,16 +473,17 @@ Suppose $\#(\NN\cap J)\ge M_1+1$, so $|S(J)|\ge M_1=r_0+\varphi(r_0)+1$. Let $r:
   exactly one jittered prime $q$, because two jittered primes give a product at least $(\Xm)^2>2z$. (Heights $z\ge X_0$ are in
   any case covered by the general argument below.) So the exponent vectors are unit vectors, distinct by (V1). Hence
   $\operatorname{rank}S(J)=|S(J)|$ and $\qCap=0$, so the case $r<r_0$ below is vacuous. The case $r\ge r_0$ is the direct
-  (F1)--(F2) count $E\le(1.01|J|)^{r_0}/r_0!$, which is what \cref{thm:R} gives; \cref{thm:R} is stated for $z\ge X_0/2$.
-\item \emph{Case $r\ge r_0$.} $S(J)$ contains a rank-full $r_0$-subset. By \cref{thm:R} with $k=r_0$ and
+  (F1)--(F2) count $E\le(1.01|J|)^{r_0}/r_0!$, to which Theorem~\ref{thm:R} applies; Theorem~\ref{thm:R} is stated for $z\ge X_0/2$.
+\item \emph{Case $r\ge r_0$.} $S(J)$ contains a rank-full $r_0$-subset. By Theorem~\ref{thm:R} with $k=r_0$ and
   $\delta=|J|=4L^{-6}$, the expected number of rank-full $r_0$-subsets of $\NN\cap J$ on $\Good(<t_z)$ is at most
   $(\theta A_R\delta)^{r_0}e^{(3H(X_0)+2)r_0/X_0}(1+r_0/X_0)^{1.02r_0}e^{2.2r_0/\Lambda}$; the factor $e^{(3H(X_0)+2)r_0/X_0}$
-  is absorbed in the per-element factor $1.01$. There are at most $z/\delta$ windows. The total is at most $L^{-4}$ for
-  $L\ge465$, by \cref{cor:R-Ecl}.
+  is absorbed in the per-element factor $1.01$. There are at most $2z/\delta$ windows. The total is at most $L^{-4}$ for
+  $L\ge465$, by Corollary~\ref{cor:R-Ecl}.
   % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #1): v3 has e^{2r_0/X_0} in place of e^{(3H(X_0)+2)r_0/X_0}.
-\item \emph{Case $r<r_0$.} Then $|S(J)|>r_0+\varphi(r_0)\ge r+\varphi(r)$. By \cref{lem:heavy} there is a subspace $V$,
-  spanned by elements of $S(J)$, with $\qCap(S(J)\cap V)\ge c$. By \cref{thm:caplw}, the probability that some window at height
-  $z$ contains such a configuration is at most $L^{-3}$.
+\item \emph{Case $r<r_0$.} Then $|S(J)|>r_0+\varphi(r_0)\ge r+\varphi(r)$. So $J$ is a window as in
+  Theorem~\ref{thm:caplw}(a): with $V$ a heavy subspace of $S(J)$ of least dimension, Lemma~\ref{lem:heavy} gives
+  $\qCap(S(J)\cap V)\ge c$. By Theorem~\ref{thm:caplw}(a), the probability that some window at height $z$ is of this kind
+  is at most $L^{-3}$.
 \end{itemize}
 Summing the two cases gives the claim.
 \end{proof}
@@ -490,9 +514,9 @@ since $y=H\cdot L_0\cdot L^6$. They are $q$-smooth, so they are decided no later
 
 \begin{remark}\label{rem:increment-uses}
 % v3: §4.4, after Corollary 4.7
-\Cref{cor:increment} is all that \cref{sec:noise} (\cref{lem:noise}, \cref{prop:pointwise}) and \cref{thm:queue} take from
+Corollary~\ref{cor:increment} is all that Section~\ref{sec:noise} (Lemma~\ref{lem:noise}, Proposition~\ref{prop:pointwise}) and Theorem~\ref{thm:queue} take from
 $\qEcl$. Shorter windows only make it easier. It covers every window of length at most $L^{-6}$ at any height $\ge X_0$,
-including the cofactor windows at height $u/q^2$ of the $q^2$-composites in \cref{sec:noise}.
+including the cofactor windows at height $u/q^2$ of the $q^2$-composites in Section~\ref{sec:noise}.
 \end{remark}
 
 \begin{lemma}[Heavy subspace]\label{lem:heavy}
@@ -527,7 +551,7 @@ $\ell^1$-norm at most $D$. Put $P(S):=\bigcup_{v\in S}\qsupp v$. A \emph{cover} 
 $\bigcup_{y\in C}\qsupp y=P(S)$, and $\kappa(S)$ is the least size of a cover. For a basis $B\subset S$ and $y\in S\setminus B$
 (an \emph{extra}), write $e_y=\sum_{i\in B}\alpha_ie_i$, $I_+:=\{i:\alpha_i>0\}$, $I_-:=\{i:\alpha_i<0\}$ and
 $\qsupp_B(y):=I_+\cup I_-$. No affine-hyperplane assumption is used in this subsection, except in the last statement of
-\cref{thm:tcl}.
+Theorem~\ref{thm:tcl}.
 
 \begin{lemma}[Covering lemma; minimal covers]\label{lem:covering}
 % v3: Lemma 4.9
@@ -561,8 +585,8 @@ $|\qsupp_B(y)|\le2j+1$.
 \end{lemma}
 
 \begin{proof}
-If $|I_-|\ge1$, then $B\setminus I_-$ covers by \cref{eq:supportid}, so $r-|I_-|\ge\kappa\ge r-j$. In all cases
-$\{y\}\cup\{e_l:l\in I_-\}\cup(B\setminus(I_+\cup I_-))$ covers by \cref{eq:supportid}. It has size $r+1-|I_+|$, so
+If $|I_-|\ge1$, then $B\setminus I_-$ covers by \eqref{eq:supportid}, so $r-|I_-|\ge\kappa\ge r-j$. In all cases
+$\{y\}\cup\{e_l:l\in I_-\}\cup(B\setminus(I_+\cup I_-))$ covers by \eqref{eq:supportid}. It has size $r+1-|I_+|$, so
 $|I_+|\le j+1$.
 \end{proof}
 
@@ -576,7 +600,7 @@ Equivalently, $\qCap(S)>N(r,D,j)$ implies $\kappa(S)\le r-1-j$. Also $N(r,D,j)\l
 \end{theorem}
 
 \begin{proof}
-Fix a basis $B$. By \cref{lem:coefsupport}, each extra lies in $\operatorname{span}\{e_i:i\in I\}$ for some $I\subset B$ with
+Fix a basis $B$. By Lemma~\ref{lem:coefsupport}, each extra lies in $\operatorname{span}\{e_i:i\in I\}$ for some $I\subset B$ with
 $|I|=s\le2j+1$. Choose $s$ coordinates on which this span projects injectively. The extras with support $I$ then map
 injectively into $\{v\in\Z^s_{\ge0}:\|v\|_1\le D\}$, which has exactly $\binom{D+s}s$ points. Sum over $I$.
 \end{proof}
@@ -587,11 +611,11 @@ If $\kappa(S)\ge r-1$, then $\qCap(S)\le4r(D+1)^3$. If $S$ lies on an affine hyp
 the bound improves to $\qCap(S)\le3r(8D+4)$.
 \end{theorem}
 
-This is the case $j=1$ of \cref{thm:binomial}, with $O(r)$ supports instead of $\binom r3$. It is recorded for
-completeness; \cref{sec:queue-capl} uses \cref{thm:binomial}.
+This is the case $j=1$ of Theorem~\ref{thm:binomial}, with $O(r)$ supports instead of $\binom r3$. It is recorded for
+completeness; Section~\ref{sec:queue-capl} uses Theorem~\ref{thm:binomial}.
 
 \begin{proof}
-\emph{Supports have size at most $3$.} This is \cref{lem:coefsupport} with $j=1$. A support of size $1$ means that $y$ is
+\emph{Supports have size at most $3$.} This is Lemma~\ref{lem:coefsupport} with $j=1$. A support of size $1$ means that $y$ is
 proportional to a basis vector; there are at most $r$ such supports, each holding at most $D+1$ points.
 
 \emph{Exchange rule.} Write $I(y):=\qsupp_B(y)$. Let $I(y)\cap I(y')=\{h\}$ for extras $y,y'$. Put $B':=B-e_h+y$ and
@@ -603,10 +627,10 @@ $e_2$ for $y_{12}$ it produces a $3$-support meeting a $2$-support in exactly on
 a star or a triangle of pairs; a book $\{i,j,l_t\}$, possibly together with the pair $\{i,j\}$; or a family inside a $4$-set.
 Each has at most $3v_c$ supports, so there are at most $3r$ in all.
 
-\emph{Points per support.} A support of size $s$ contributes at most $(D+1)^s$ points, as in \cref{thm:binomial}. So
+\emph{Points per support.} A support of size $s$ contributes at most $(D+1)^s$ points, as in Theorem~\ref{thm:binomial}. So
 $\qCap\le r(D+1)+3r(D+1)^3\le4r(D+1)^3$.
 
-\emph{Hyperplane case.} By \cref{lem:coefsupport} with $j=1$, $S$ intersected with a plane is weakly convex: no point of $S$
+\emph{Hyperplane case.} By Lemma~\ref{lem:coefsupport} with $j=1$, $S$ intersected with a plane is weakly convex: no point of $S$
 lies strictly inside a triangle of points of $S$. Projecting to $[0,D]^2$ gives at most $4(2D+1)$ points per plane.
 \end{proof}
 
@@ -614,7 +638,7 @@ lies strictly inside a triangle of points of $S$. Projecting to $[0,D]^2$ gives 
 % v3: §4.6 (CapL-w)
 
 \paragraph{Setting.} Fix a dyadic height $z\ge X_0$, and put $L:=\log z$, $\ell:=\log L$ and $D:=\log2z/\Lambda$. Let $J$ range
-over the $z/\delta$ grid windows at height $z$, where $\delta:=2\delta_1=|J|$. A \emph{configuration} is a rank-full set
+over the $2z/\delta$ grid windows at height $z$, where $\delta:=2\delta_1=|J|$. A \emph{configuration} is a rank-full set
 $B'\subset S(J)$ of rank $r<r_0$, together with a minimum cover $C\subset B'$ of $P(B')$, so $|C|=\kappa$. Write $R:=B'\setminus
 C$ for the \emph{rows outside the cover}. For $y\in B'$ write $n_y=M_yd_y$, with $M_y$ jittered and $d_y$ rigid. The
 \emph{type} $\tau$ of a configuration is its exponent pattern, that is, the matrix of exponents of its distinct jittered
@@ -637,13 +661,14 @@ where:
 \end{proposition}
 
 \begin{proof}
-\emph{Exact identity.} By the Volume Lemma (\cref{lem:volume}), the pivot-integral of $\prod_{y\in B'}\mathbf 1(n_y\in J)$
+\emph{Exact identity.} By the Volume Lemma (Lemma~\ref{lem:volume}), the pivot-integral of $\prod_{y\in B'}\mathbf 1(n_y\in J)$
 equals $\int_{J^r}\prod_{\mathrm{piv}}q\big/\big(|\det E_P|\prod_yn_y\big)\,dn$.
 \begin{itemize}
-\item Order the pivots latest first, and stage the rows by \cref{lem:SC} (nested lexicographically-first bases with the
+\item Order the pivots latest first, and stage the rows by Lemma~\ref{lem:SC} (nested lexicographically-first bases with the
   rows of $C$ listed first).
-\item The Staged Volume Lemma (\cref{thm:svl}) then integrates the pivots stage by stage. Every late free block is bounded by
-  a sup-sum against a weight that is harmonic in some row of $C$ of its stage. This is the condition that \cref{lem:SC}
+\item The Staged Volume Lemma (Theorem~\ref{thm:svl}) then integrates the pivots stage by stage. Every late free block is handled by
+  a block bound (the realised block sum, bounded as in Lemma~\ref{lem:fac}\,(S3)) against a weight that is harmonic in
+  some row of $C$ of its stage. This is the condition that Lemma~\ref{lem:SC}
   guarantees.
 \item $\prod_{\mathrm{piv}}q/\prod_yn_y=\prod_yc_y^{-1}\cdot\prod_{\mathrm{piv}}q^{1-s_p}$, where $c_y:=n_y/(\text{pivot part
   of }n_y)$ and $s_p$ is the column sum of $p$.
@@ -652,7 +677,7 @@ equals $\int_{J^r}\prod_{\mathrm{piv}}q\big/\big(|\det E_P|\prod_yn_y\big)\,dn$.
 \emph{Allocation.} Every prime has an occurrence in some row of $C$, since $C$ covers $P(B')$. So:
 \begin{itemize}
 \item each pivot $p$ cancels the factor $q_p^{+1}$ of the Jacobian against one occurrence chosen in a row of $C$;
-\item each free prime $f$ keeps one occurrence in a row of $C$ for its harmonic sure sum (\cref{lem:fac}, (S1$'$) and (S3));
+\item each free prime $f$ keeps one occurrence in a row of $C$ for its harmonic sure sum (Lemma~\ref{lem:fac}, (S1$'$) and (S3));
 \item all occurrences in rows of $R$ stay with their row;
 \item the remaining occurrences in rows of $C$ are the excess, each at most $X_0^{-1}$.
 \end{itemize}
@@ -660,42 +685,42 @@ The resulting weights are as follows. A row of $C$ gets at most $d_y^{-1}$. A ro
 $c_y^{-1}\cdot\prod_{p\in M_y}p^{-E}=1/n_y$; its tail cancels, so it is summed with counting weight, which is a deterministic
 rigid count. Free primes are harmonic, and the excess contributes $X_0^{-\mathrm{exc}}$.
 
-\emph{Bookkeeping.} The factor $\theta=1+1/L$ per element comes from (F1)--(F2) and the slot sums, and $|\det E_P|\ge1$.
+\emph{Bookkeeping.} The factor $\theta=1+1/\Lambda$ per element comes from (F1)--(F2) and the slot sums, and $|\det E_P|\ge1$.
 \end{proof}
 
 \begin{remark}\label{rem:jacobianrows}
 % v3: §4.6, Remark after Proposition 4.13
 Every row of the basis $B'$ is a Jacobian row. Only extras outside $B'$ would be mere indicators, and none occur
-(\cref{lem:reduction}(i)). Being a Jacobian row is what supplies the factor $1/n_y\le1/z$ of a row of $R$, and it does not
+(Lemma~\ref{lem:reduction}(i)). Being a Jacobian row is what supplies the factor $1/n_y\le1/z$ of a row of $R$, and it does not
 cost the rigid count. The per-row weights below never credit $X_0^{-\mathrm{exc}}$ beyond the pattern sum over the rows of
-$C$ in \cref{lem:reduction}(ii).
+$C$ in Lemma~\ref{lem:reduction}(ii).
 \end{remark}
 
 \begin{lemma}[Reduction to configurations; type union]\label{lem:reduction}
 % v3: Lemma 4.14
 \begin{enumerate}[label=\textup{(\roman*)}]
-\item (Extras drop out.) Let $S':=S(J)\cap V$ with $V$ as in \cref{lem:heavy}, of rank $r$ and with $\qCap(S')\ge c$. Then
-  $\kappa(S')\le r-1-j(c)$, where $j(c):=\max\{j:\ e(r(D+1))^{2j+1}<c\}$ (\cref{thm:binomial}). A minimum cover $C$ of $S'$
-  is independent (\cref{lem:covering}(c)), so it extends to a basis $B'\subset S'$ with $P(B')=P(S')$
-  (\cref{lem:covering}(a)). So $|R|=r-\kappa\ge1+j(c)$. If moreover the elements of $S'$ of degree at most $k$ number at most
-  $Q$, the completion can be chosen with every row of $R$ of degree at least $k+1$ (\cref{lem:heavy}(iii) and Steinitz
+\item (Extras drop out.) Let $S':=S(J)\cap V$ with $V$ as in Lemma~\ref{lem:heavy}, of rank $r$ and with $\qCap(S')\ge c$. Then
+  $\kappa(S')\le r-1-j(c)$, where $j(c):=\max\{j:\ e(r(D+1))^{2j+1}<c\}$ (Theorem~\ref{thm:binomial}). A minimum cover $C$ of $S'$
+  is independent (Lemma~\ref{lem:covering}(c)), so it extends to a basis $B'\subset S'$ with $P(B')=P(S')$
+  (Lemma~\ref{lem:covering}(a)). So $|R|=r-\kappa\ge1+j(c)$. If moreover the elements of $S'$ of degree at most $k$ number at most
+  $Q$, the completion can be chosen with every row of $R$ of degree at least $k+1$ (Lemma~\ref{lem:heavy}(iii) and Steinitz
   exchange).
-\item (Type union.) Sum \cref{eq:coverbound} over types and multiply by the $z/\delta$ windows. For $L\ge60$, the result is,
+\item (Type union.) Sum \eqref{eq:coverbound} over types and multiply by the $2z/\delta$ windows. For $L\ge60$, the result is,
   per height, at most
   \begin{equation}\label{eq:typeunion}
-  7L^{5.1}\cdot z\cdot\prod_{y\in R}w_y,\qquad w_y:=z^{-1}\sum_{M_y}\Psi(2z/M_y,X_0),
+  13L^{5.1}\cdot z\cdot\prod_{y\in R}w_y,\qquad w_y:=z^{-1}\sum_{M_y}\Psi(2z/M_y,X_0),
   \end{equation}
   where $M_y$ runs over the monomials of the degree class of the row in the $\pi$ labels.
 \item (Consequence.) The probability that some window at height $z$ contains a configuration with $|R|\ge1+j$ and all
-  $w_y\le w$ is at most $r_0\cdot7L^{5.1}z\cdot w^{1+j}$. It is at most $L^{-3}$ as soon as
+  $w_y\le w$ is at most $r_0\cdot13L^{5.1}z\cdot w^{1+j}$. It is at most $L^{-3}$ as soon as
   \begin{equation}\label{eq:criterion}
   (1+j)\log(1/w)\ge L+10\ell+10.
   \end{equation}
 \end{enumerate}
 \end{lemma}
 
-\begin{proof}[Proof of (ii)]
-Per row, the type and sum factors are:
+\begin{proof}
+\emph{Proof of (ii).} Per row, the type and sum factors are:
 \begin{itemize}
 \item the free primes of a row of $C$, sorted by value: $\sum_k\lambda_D^k/k!\le e^{\lambda_D}\le eD$;
 \item the pivot positions: at most $D$ per row;
@@ -704,9 +729,13 @@ Per row, the type and sum factors are:
   $\pi\le L^2$;
 \item the tail of a row of $C$: $\sum_d1/d\le e^{\gamma}\Lambda(1+1/\Lambda^2)\le2L$.
 \end{itemize}
-The canonical minimum cover is determined by the type, so its choice costs nothing. So each row costs at most
-$C':=6L^{5.1}$, and $(z/\delta)(\theta\delta C')^r\le z\cdot\theta C'\cdot(\theta\delta C')^{r-1}\le7L^{5.1}z$, since
+The minimum cover used is a fixed choice determined by the type, so its choice costs nothing. So each row costs at most
+$C':=6L^{5.1}$, and $(2z/\delta)(\theta\delta C')^r\le2z\cdot\theta C'\cdot(\theta\delta C')^{r-1}\le13L^{5.1}z$, since
 $\theta\delta C'=24\theta L^{-0.9}\le1$ for $L\ge60$. The monomials and tails of the rows of $R$ are inside $w_y$.
+
+\emph{Proof of (iii).} Sum (ii) over the fewer than $r_0$ possible ranks. Since $w\le1$, we have
+$\prod_{y\in R}w_y\le w^{|R|}\le w^{1+j}$. As $z=e^L$, $r_0\le L=e^{\ell}$ and $\log13\le2.6$, the bound
+$r_0\cdot13L^{5.1}z\,w^{1+j}$ is at most $L^{-3}$ once $(1+j)\log(1/w)\ge L+9.1\ell+2.6$, which \eqref{eq:criterion} implies.
 \end{proof}
 
 \begin{lemma}[Row weights]\label{lem:rowweights}
@@ -721,7 +750,7 @@ Let $y\in R$ have degree $k\ge1$, so that $M_y\ge X_0^k$ and $d_y\le2z/X_0^k$.
   \[\Psi(Y,X_0)\le\exp\big(1.26X_0\log(2\log Y)/\Lambda\big).\]
 \item (Low degree, smooth tails.) If $10^4\le D-1\le X_0^{1/2}$ and $\pi X_0^{-1}(eD)^{0.9}\le1/3$, then
   $\log(1/w_y)\ge g:=\Lambda-\log(3\pi)+0.9(D-1)\log(D-1)$.
-\item (Joint Rankin bound; any $L$.) For every $\eta\in(0,1)$,
+\item (Joint Rankin bound; any $L$.) For every $\eta\in[\tfrac14,1)$,
   \[
   \log(1/w_y)\ge\eta L-\log2-\log\Lambda-2-\frac{1.3X_0^{\eta}}{\eta\Lambda}-\frac{1.36(X_0+\pi)^{\eta}}{0.99\,\eta}.
   \]
@@ -759,7 +788,7 @@ $2\pi\exp(-0.9(D-1)\log(D-1))/X_0$.
 \item For $D-k'<u_1$, bound the term by $\Psi\le Y$ instead. The first such term is at most
   $\pi X_0^{-1}e^{0.9(u_1+1)\log(u_1+1)}$, which is far less than $\tfrac13$ times the last term of type (c), and the
   following ratios are at most $(\pi+k')/((k'+1)X_0)\le\tfrac13$.
-\item So $g$ is unchanged. Where (d) is used (Steps 3--4 of the proof of \cref{thm:caplw}), $D-1\ge\Lambda e^{s_H+1}\gg u_1$.
+\item So $g$ is unchanged. Where (d) is used (Steps 3--4 of the proof of Theorem~\ref{thm:caplw}), $D-1\ge\Lambda e^{s_H+1}\gg u_1$.
 \end{itemize}
 
 (e) We have
@@ -771,18 +800,18 @@ w_y\le z^{-1}\sum_{(M,d)}\Big(\frac{2z}{Md}\Big)^{1-\eta}\le2z^{-\eta}\prod_{p\i
 \item The rigid product is at most $\exp(\log\Lambda+2+1.3X_0^{\eta}/(\eta\Lambda))$, by partial summation as in (c).
 \item The jittered primes of $P(C)$ are $\pi$ distinct primes in distinct slots. The $i$ smallest occupy $i$ distinct
   slots, the largest of which is at least $X_0+0.99(i-1)$. Since the jitter offset satisfies $|q-s|\le H(s)/2\le s/3$
-  (\cref{eq:C2}), the $i$-th smallest prime is at least $\tfrac23(X_0+0.99(i-1))$. So
+  (see \eqref{eq:C2}), the $i$-th smallest prime is at least $\tfrac23(X_0+0.99(i-1))$. So
   \[
-  \sum_{p\in P(C)}p^{\eta-1}\le(3/2)^{1-\eta}\sum_{i\ge1}(X_0+0.99(i-1))^{\eta-1}\le\frac{1.36(X_0+\pi)^{\eta}}{0.99\,\eta}.
-  \qedhere
+  \sum_{p\in P(C)}p^{\eta-1}\le(3/2)^{1-\eta}\sum_{i=1}^{\pi}(X_0+0.99(i-1))^{\eta-1}\le\frac{1.36(X_0+\pi)^{\eta}}{0.99\,\eta},
   \]
+  using $(3/2)^{1-\eta}\le1.36$ for $\eta\ge\tfrac14$. \qedhere
 \end{itemize}
 \end{proof}
 
 \begin{theorem}[High-capacity configurations at every scale; the capacity parameter]\label{thm:caplw}
 % v3: Theorem 4.17 (CapL-w at every scale, uniformly in Lambda >= 10^8)
-Let $\Lambda=\log X_0\ge10^8$ be arbitrary (\cref{sec:params}), and let $\theta\in[\tfrac14,\theta_1]$ with
-$\theta_1=\tfrac12-10^{-4}$, as in \cref{sec:setup}, so that $\theta_b=\theta/2\ge\tfrac18$. For a dyadic height $z\ge X_0$
+Let $\Lambda=\log X_0\ge10^8$ be arbitrary (Section~\ref{sec:params}), and let $\theta\in[\tfrac14,\theta_1]$ with
+$\theta_1=\tfrac12-10^{-4}$, as in Section~\ref{sec:setup}, so that $\theta_b=\theta/2\ge\tfrac18$. For a dyadic height $z\ge X_0$
 put $\ell:=\log\log z$ and $s:=\ell-2\log\Lambda$, so that $L=\Lambda^2e^s$. Define
 \begin{align*}
 A(\Lambda,s)&:=\log\big(2\Lambda^3e^{2s}/(2\log\Lambda+s)\big)=\log\big(2L^2/(\ell\Lambda)\big),&
@@ -797,31 +826,38 @@ c=\max\big(\tfrac14\qHstd^{1/2},\,X_0^{\gamma(s)}\big).
 \]
 Then, for every $\Lambda\ge10^8$ and every dyadic height $z\ge X_0$:
 \begin{enumerate}[label=\textup{(\alph*)}]
-\item (Counting.) The probability, on $\Good(<t_z)$, that some grid window at height $z$ contains a set $S'\subset S(J)$ of
-  rank less than $r_0$ with $\qCap(S')\ge c(z)$ is at most $L^{-3}$.
+\item (Counting.) The probability, on $\Good(<t_z)$, that some grid window $J$ at height $z$ has
+  $\operatorname{rank}S(J)<r_0$ and $|S(J)|\ge r_0+\varphi(r_0)$ is at most $L^{-3}$. For such $J$, let $V$ be a heavy
+  subspace of least dimension for $S=S(J)$ (Lemma~\ref{lem:heavy}); then $S':=S(J)\cap V$ satisfies $\qCap(S')\ge c(z)$.
+  % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #18): v3 states (a) for any S' of rank < r_0 with Cap(S') >= c.
 \item (Absorption compatibility.) If $s\le s_H$, then $y(z)<\Xm=X_0-H(X_0)/2$, so $\Abs$ has no element at height $z$. If
-  $s>s_H$, condition \cref{eq:twelvetwo} of \cref{lem:lemmaP} holds at $z$.
+  $s>s_H$, condition \eqref{eq:twelvetwo} of Lemma~\ref{lem:lemmaP} holds at $z$.
 \item (Regularity.)
   \begin{itemize}
   \item $c$, $M_1$, $H=\max(\qHstd,M_1^2)$ and $B$ are non-decreasing in $z$.
-  \item $d\log H/d\log z\le16\ell/L+4.1\cdot10^{-8}\le4\cdot10^{-6}$. Here $16\ell/L$ comes from $\qHstd$, and the raise
-    contributes at most $4.1\cdot10^{-8}$. Hence $\rho_H\le1+1.2\cdot10^{-5}$, $H(vw)/H(v)\le w^{4\cdot10^{-6}}$ for
-    $v\ge X_0$ and $w\ge1$ (the regularity \cref{eq:RH}), and $H(v)/v$ is decreasing.
+  \item $d\log H/d\log z\le16\ell/L+10^{-7}\le4\cdot10^{-6}$. Here $16\ell/L$ comes from $\qHstd$, and the raise
+    contributes at most $10^{-7}$.
+    % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #18): v3 has 4.1e-8 here, from a chain valid only for Lambda = Lambda_s.
+    Hence $\rho_H\le1+1.2\cdot10^{-5}$, $H(vw)/H(v)\le w^{4\cdot10^{-6}}$ for
+    $v\ge X_0$ and $w\ge1$ (the regularity \eqref{eq:RH}), and $H(v)/v$ is decreasing.
   \item $\log H(z)-\log\qHstd(z)\le10^{-6}\log z$; so the raise adds nothing to the lag.
   \item $c=\tfrac14\qHstd^{1/2}$ for $\ell\ge\ell_{\mathrm{std}}:=\sqrt{(7.5\Lambda+\log4)/4}$, which is $1.37\cdot10^4$ at
     $\Lambda=10^8$.
   \end{itemize}
 \end{enumerate}
+Parts (b) and (c) are deterministic statements about the parameters. Their proofs (Steps 5 and 6 below) use only the
+definitions of $\gamma$, $c$, $M_1$, $L_0$, $y$, $H$ and $B$, and not part (a). In particular (F3$'$) and $\rho_H$, which use
+(c), do not depend on (a).
 \end{theorem}
 
 \begin{proof}
-\emph{Step 0 (reduction).} By \cref{lem:heavy}, \cref{lem:reduction}(i) and \cref{thm:binomial}, a set $S'$ as in (a)
-yields a configuration with $|R|\ge1+j$ rows outside a minimum cover, where $j\ge(\log c-1)/(2a)-3/2$ and
-$a:=\log(r_0(D+1))$. By \cref{lem:reduction}(iii) it suffices to show $(1+j)\log(1/w)\ge L+10\ell+10$ for a common bound $w$
+\emph{Step 0 (reduction).} Let $J$ and $S'=S(J)\cap V$ be as in (a), so $\qCap(S')\ge c$ by Lemma~\ref{lem:heavy}(i). By
+Lemma~\ref{lem:reduction}(i) and Theorem~\ref{thm:binomial}, $S'$ yields a configuration with $|R|\ge1+j$ rows outside a minimum cover, where $j\ge(\log c-1)/(2a)-3/2$ and
+$a:=\log(r_0(D+1))$. By Lemma~\ref{lem:reduction}(iii) it suffices to show $(1+j)\log(1/w)\ge L+10\ell+10$ for a common bound $w$
 on the row weights. We use:
 \begin{itemize}
 \item $r_0\le L/(2\ell)$ and $L/\Lambda\le D\le2L/\Lambda$;
-\item $m:=r_0D\le L^2/(\ell\Lambda)$, so $\log2m\le A$. Also $a\le A-\log2+\log(1+1/D)\le A-0.28$, and
+\item $m:=r_0D\le L^2/(\ell\Lambda)$, so $\log2m\le A$. Also $a\le A-\log2+\log(1+1/D)\le A$, since $D\ge1$, and
   $a\le A-\log2+10^{-9}$ when $D\ge10^9$ (as in Step 3);
 \item $A\le2\ell$, and $\log c\ge4\ell^2-\log4\ge3.9\ell^2$ (since $\ell\ge\log\Lambda\ge18.42$).
 \end{itemize}
@@ -835,14 +871,14 @@ because $A\ge\log(2\Lambda/\ell)\ge16>6$. Every admissible pair has $\Lambda\ge\
 $s\ge-\log\Lambda$. Hence $\log c\ge\gamma_*(s)\Lambda\ge1.3\,G(\Lambda,s)\Lambda$ for every $s\le s_H$. Moreover $\gamma_*$
 is non-decreasing in $s$, since $s\mapsto e^{s/2}$ increases and $\Lambda\mapsto G$ decreases.
 
-\emph{Step 2 (route H: $s\le s_H+1$).} Recall $Q=c^{1/2}$.
+\emph{Step 2 (rows of high degree: $s\le s_H+1$).} Recall $Q=c^{1/2}$.
 \begin{itemize}
 \item The vectors of degree at most $k$ in $m$ coordinates number at most $\binom{m+k}k\le\exp(k(1+\log2m))$. So the elements
   of degree at most $D^*:=\lfloor\log Q/(1+\log2m)\rfloor$ number at most $Q$.
-\item If $D^*\ge D$, then $\qCap\ge c$ is impossible, by \cref{lem:heavy}(iii) and (V1). Otherwise \cref{lem:reduction}(i)
+\item If $D^*\ge D$, then $\qCap\ge c$ is impossible, by Lemma~\ref{lem:heavy}(iii) and (V1). Otherwise Lemma~\ref{lem:reduction}(i)
   completes the cover with rows of degree at least $k:=D^*+1\ge\log c/(2(A+1))$. If no such row exists,
-  \cref{lem:heavy}(iii) gives a contradiction; this includes the case $D^*=D-1$ with $D$ an integer.
-\item \Cref{lem:rowweights}(b) applies, since $\pi\le m\le\Lambda^3e^{14}\ll X_0$. It gives
+  Lemma~\ref{lem:heavy}(iii) gives a contradiction; this includes the case $D^*=D-1$ with $D$ an integer.
+\item Lemma~\ref{lem:rowweights}(b) applies, since $\pi\le m\le\Lambda^3e^{14}\ll X_0$. It gives
   $\log(1/w)\ge k(\Lambda-A-1)-1.1$.
 \item Therefore, using $(A+1)/\log c\le(2\ell+1)/(3.9\ell^2)\le0.03$,
   \[
@@ -850,24 +886,28 @@ is non-decreasing in $s$, since $s\mapsto e^{s/2}$ increases and $\Lambda\mapsto
   \]
   as soon as $\log c\ge1.3\,G(\Lambda,s)\Lambda$.
 \item This holds for $s\le s_H$ by Step 1. On $[s_H,s_H+1]$ it holds because $\gamma(s)\ge\gamma_*(s)$ there: $\Lambda_s=10^8$ on this range, and $G(10^8,\cdot)$
-  grows at logarithmic rate at most $\tfrac12+2/A\le0.53$, so
-  $\gamma_*(s_H+t)\le\gamma_*(s_H)e^{0.53t}\le\gamma_*(s_H)+7.17t\le\gamma(s_H+t)$.
+  grows at logarithmic rate at most $\tfrac12+2/A+10^{-7}\le0.532$ (as $A\ge64.1$ there), so
+  $\gamma_*(s_H+t)\le\gamma_*(s_H)e^{0.532t}\le\gamma_*(s_H)+0.24t\le\gamma(s_H+t)$ for $t\in[0,1]$.
 \end{itemize}
 
 \emph{Step 3 (Dickman rows: $s\ge s_H+1$).} Here $\log c\ge7.5\Lambda$. We have $D-1\ge\Lambda e^s-1\ge10^4$, and for
-$\ell\le0.3\Lambda$ the hypotheses of \cref{lem:rowweights}(d) hold, since $\pi X_0^{-1}(eD)^{0.9}\le e^{0.87\Lambda-\Lambda+1}$.
-So $\log(1/w)\ge g\ge0.9\Lambda e^s(\log\Lambda+s)(1-10^{-9})$. Also $1+j\ge7.5\Lambda/(2a)\cdot(1-10^{-6})$, with
-$a\le3\log\Lambda+2s-2.9$. Hence
+$\ell\le0.3\Lambda$ the hypotheses of Lemma~\ref{lem:rowweights}(d) hold, since $\pi X_0^{-1}(eD)^{0.9}\le e^{0.87\Lambda-\Lambda+1}$.
+So $\log(1/w)\ge g\ge0.9\Lambda e^s(\log\Lambda+s)(1-10^{-9})$. Also $1+j\ge(\log c-1-a)/(2a)\ge(7.5\Lambda-1-a)/(2a)$, with
+$a\le a_+:=3\log\Lambda+2s-2.9\le0.6\Lambda$ (as $\ell\le0.3\Lambda$). Hence, since the bound decreases in $a$,
 \[
-\frac{(1+j)g}{L}\ge\frac{3.375(\log\Lambda+s)}{3\log\Lambda+2s-2.9}(1-10^{-5})\ge1.12>1+\frac{10\ell+10}L.
+\frac{(1+j)g}{L}\ge0.45\,(1-10^{-9})\Big(7.5-\frac{1+a_+}{\Lambda}\Big)\frac{\log\Lambda+s}{a_+},\qquad
+\frac{\log\Lambda+s}{a_+}=\frac13+\frac{s+2.9}{3a_+}.
 \]
+If $a_+\le10^{-3}\Lambda$, this is at least $0.45\cdot7.498/3\ge1.12$. Otherwise $s+2.9\ge(a_+-3\log\Lambda)/2$, so
+$(\log\Lambda+s)/a_+\ge\tfrac12-10^{-4}$, and the bound is at least $0.45\cdot6.89\cdot0.4999\ge1.5$. In both cases it
+exceeds $1+(10\ell+10)/L$.
 Where the standard term dominates $\log c$, $j$ is only larger.
 
 \emph{Step 4 (tails).}
 \begin{itemize}
-\item (T1) $\ell_{\mathrm{std}}\le\ell\le0.3\Lambda$. Here $\log c=4\ell^2-\log4$ and $j\ge\ell-2$. \Cref{lem:rowweights}(d)
+\item (T1) $\ell_{\mathrm{std}}\le\ell\le0.3\Lambda$. Here $\log c=4\ell^2-\log4$ and $j\ge\ell-2$. Lemma~\ref{lem:rowweights}(d)
   gives $(1+j)g/L\ge0.9(\ell-1)(\ell-\log\Lambda-0.01)(1-\Lambda/L)/\Lambda\ge0.9\cdot1.87>1.6$.
-\item (T2) $\ell\ge0.3\Lambda$. \Cref{lem:rowweights}(e) with $\eta=\tfrac14$ gives
+\item (T2) $\ell\ge0.3\Lambda$. Lemma~\ref{lem:rowweights}(e) with $\eta=\tfrac14$ gives
   $\log(1/w)\ge L/4-5.3X_0^{1/4}/\Lambda-5.6(X_0+L^2)^{1/4}-\log\Lambda-3\ge0.24L$, since $L\ge e^{0.3\Lambda}$. Then $j\ge4$
   suffices.
 \end{itemize}
@@ -876,64 +916,81 @@ So (a) holds at every scale, including the scales $L\ge X_0^2$ of the zeros.
 \emph{Step 5 (proof of (b)).}
 \begin{itemize}
 \item \emph{$s\le s_H$.} The bounds $\log M_1\le\log c+\log2$, $\log H=\max(8\ell^2,2\log M_1)$ and
-  $\log L_0\le\log48-2\log c'+\log M_1+3\ell=7.67+\log M_1+3\ell$ (with $c'=0.15$) give $\log y\le3\log c+9\ell+10.5$. The
-  constant is $10.5$ when $\qHstd$ dominates ($8\ell^2\le2\log c+2\log4$), and $9.8$ when $M_1^2$ does. If
+  $\log L_0\le\log48-2\log c'+\log M_1+3\ell=7.67+\log M_1+3\ell$ (with $c'=0.15$) give $\log y\le3\log c+9\ell+11.14$. The
+  constant is $11.14$ when $\qHstd$ dominates ($8\ell^2\le2\log c+2\log4$), and $9.8$ when $M_1^2$ does. If
   $\log c=\gamma\Lambda\le(\tfrac13-10^{-5})\Lambda$, this is at most $\Lambda-2597<\log\Xm$, since
-  $9\ell+10.5\le3\cdot10^{-5}\Lambda-2597$ for $\ell\le2\log\Lambda+6$, and $\log\Xm=\Lambda-O(e^{2715-\Lambda})$. If
+  $9\ell+11.14\le3\cdot10^{-5}\Lambda-2597$ for $\ell\le2\log\Lambda+6$, and $\log\Xm=\Lambda-O(e^{2715-\Lambda})$. If
   $\log c=4\ell^2-\log4$, it is at most $12\ell^2+9\ell+7\le\Lambda$.
 \item \emph{$s\ge s_H$ with $\log c=\gamma\Lambda\le7.5\Lambda$.} Here $\log2y\le3.01\gamma\Lambda$ and
-  $\log C_d+4\ell\le1.01\gamma\Lambda$. With $u_0\ge\theta_b\Lambda e^s/(3.01\gamma)$, condition \cref{eq:twelvetwo} follows from
+  $\log C_d+4\ell\le1.01\gamma\Lambda$. With $u_0\ge\theta_b\Lambda e^s/(3.01\gamma)$, condition \eqref{eq:twelvetwo} follows from
   $e^s\log(\theta_b\Lambda e^s/(3.01\gamma))\ge107.6\gamma^2$. The left side is increasing in $\Lambda$ and $s$. At
   $\Lambda=10^8$ and $s=s_H+t$ it is at least $393e^t(19.2+t)$, against $107.6(0.334+7.17t)^2\le6053$ on the ramp and
   $=6053$ after it. Also $u_0\ge100$.
 \item \emph{Standard regime, $\ell\ge\ell_{\mathrm{std}}$.} Here $\log2y\le12.1\ell^2$, the right side is at most
-  $16.3\ell^2$, and $u_0\ge e^\ell/(97\ell^2)$. So \cref{eq:twelvetwo} holds with an enormous margin.
+  $16.3\ell^2$, and $u_0\ge e^\ell/(97\ell^2)$. So \eqref{eq:twelvetwo} holds with an enormous margin.
 \end{itemize}
 
 \emph{Step 6 (proof of (c)).}
 \begin{itemize}
 \item $\gamma$ is non-decreasing, so $c$, $M_1=r_0+\varphi(r_0)+1$, $H$ and $B$ are non-decreasing.
 \item $d\log H/dL\le2\Lambda\gamma'(s)/L+16\ell/L$. On the ramp this is at most $2\cdot7.2/(\Lambda e^{s_H})\le4\cdot10^{-10}$.
-\item Where $\gamma_*$ dominates the standard term ($e^{s/2}\sqrt\Lambda\ge1.5\ell^2/A$), it is at most
-  $1.06\gamma_*\Lambda/L\le2.8A/(\Lambda^{3/2}e^{s/2})\le1.8A^2/(\Lambda\ell^2)\le4.1\cdot10^{-8}$. The factor
-  $2(\tfrac12+2/A)\le1.06$ is the logarithmic derivative of $\gamma_*$.
+\item For $s\le s_H$, where $\gamma_*\Lambda\ge4\ell^2-\log4$ (so that $\gamma_*$ dominates the standard term), the raise
+  contributes $2\Lambda\gamma_*'(s)/L=2\kappa\gamma_*\Lambda/L$, with $\kappa:=d\log\gamma_*/ds$. Put
+  $\ell_s:=2\log\Lambda_s+s$ and $A_s:=A(\Lambda_s,s)$; then $18.42\le\ell_s\le\ell$, since $\Lambda_s\le\Lambda$ and
+  $s\ge-\log\Lambda$. Dominance gives $1/\Lambda\le\gamma_*/(4\ell^2-\log4)$, so
+  \[
+  \frac{\gamma_*\Lambda}L=\frac{\gamma_*}{\Lambda e^s}\le\frac{\gamma_*^2}{(4\ell^2-\log4)e^s}
+  =\frac{6.76A_s(A_s+1)}{(4\ell^2-\log4)(\Lambda_s-A_s-1)}\le\frac{1.7A_s(A_s+1)}{\ell_s^2\Lambda_s}.
+  \]
+  \begin{itemize}
+  \item If $s\ge-\log10^8$, then $\Lambda_s=10^8$ and $\ell_s\le42.82$. Here
+    $\kappa=\tfrac12+\tfrac12A'(\tfrac1A+\tfrac1{A+1})+\tfrac12A'/(\Lambda_s-A-1)$ with $A'=2-1/\ell_s$, so
+    $\kappa\le\tfrac12+2/A_s+10^{-7}\le0.63$, as $A_s\ge16.2$. Also $A_s\le2\ell_s-20.6$, so
+    $A_s(A_s+1)/\ell_s^2\le(2-19.6/42.82)^2\le2.38$. The contribution is at most
+    $2\cdot0.63\cdot1.7\cdot2.38\cdot10^{-8}\le5.1\cdot10^{-8}$.
+  \item If $s<-\log10^8$, then $\Lambda_s=e^{-s}=e^{\ell_s}$ and $A_s=\log2+\ell_s-\log\ell_s$, so $A_s+1\le\ell_s$. The
+    variation of $\Lambda_s$ adds at most $\tfrac12(1+10^{-6})$ to the logarithmic rate, while the $A$-terms are now
+    non-positive, so $\kappa\le1+10^{-6}$. The contribution is at most $2(1+10^{-6})\cdot1.7\cdot e^{-\ell_s}\le3.5\cdot10^{-8}$.
+  \end{itemize}
+  So the raise contributes at most $10^{-7}$.
 \item $(\log H-\log\qHstd)/L\le\max(0,2\log M_1-8\ell^2)/L\le(2\gamma\Lambda+2)/L\le10^{-6}$ at every scale. \qedhere
 \end{itemize}
 \end{proof}
 
 \begin{remark}[Numerical cross-check]\label{rem:caplw-numerics}
 % v3: §4.6, numerical cross-check after Theorem 4.17
-The proof of \cref{thm:caplw} is analytic. As an independent check, the precise criteria behind Steps 2--5 were evaluated
-numerically with $c$ as above: $D^*$ from $\binom{m+k}k$, the exact $j$, \cref{lem:rowweights}(b) and (d), and
-\cref{eq:twelvetwo} with the exact $y$. On the grid $\Lambda\in\{10^8,10^9,10^{10},10^{12},10^{16},10^{20}\}$,
+The proof of Theorem~\ref{thm:caplw} is analytic. As an independent check, the precise criteria behind Steps 2--5 were evaluated
+numerically with $c$ as above: $D^*$ from $\binom{m+k}k$, the exact $j$, Lemma~\ref{lem:rowweights}(b) and (d), and
+\eqref{eq:twelvetwo} with the exact $y$. On the grid $\Lambda\in\{10^8,10^9,10^{10},10^{12},10^{16},10^{20}\}$,
 $s\in[-\log\Lambda,30]$ with step $0.01$ (about $35\,000$ points), there are no failures. An earlier cell-by-cell check at
 $\Lambda=10^8$ alone, with a knot-based ramp, also passes: $419\,591$ cells, each checked at its worst corners with the degree
 cap $D$ evaluated at the top of the cell, and no failures. The maximum of $(\log H-\log\qHstd)/L$ over
 $\Lambda\in[10^8,10^{30}]$ is $1.3\cdot10^{-8}$, attained near $s\approx-9.9$ at $\Lambda=10^8$. (Numerical; see
-\cref{app:cert-capl}.)
+Appendix~\ref{app:cert-capl}.)
 \end{remark}
 
 \begin{remark}\label{rem:caplw-sizes}
 % v3: §4.6, remarks after the cross-check
-At $\Lambda=10^8$, $s_H$ corresponds to $\ell=42.82$ and the ramp ends at $\ell=43.82$; and $c\le X_0^{7.5}$ throughout. The
-absorption threshold satisfies $y\le X_0^{22.6}L^9\le n^{o(1)}$, as \cref{lem:ZA} requires.
+At $\Lambda=10^8$, $s_H$ corresponds to $\ell=42.82$ and the ramp ends at $\ell=43.82$. On the raised range,
+$c\le X_0^{7.5}$ and the absorption threshold satisfies $y\le X_0^{22.6}L^9$; elsewhere $y=\qHstd L_0L^6=e^{O(\ell^2)}$. In
+both cases $y\le n^{o(1)}$, as Lemma~\ref{lem:ZA} requires.
 \end{remark}
 
 \subsection{Absorption}\label{sec:queue-abs}
 % v3: §4.7 (Lemma P, S1, S2 and the raised threshold)
 
-Recall from \cref{sec:construction} the absorption set
+Recall from Section~\ref{sec:construction} the absorption set
 \[
 \Abs=\{n\in\NN:\ \log n\ge L_*,\ \text{the latest prime $r$ of $n$ is jittered, and }r<y(n)\},
 \]
 with $L_*=10^7$ and $y(n):=H(n)L_0(n)(\log n)^6$, the parameters being those of the scale of $n$. Put $\theta_b:=\theta/2$
 (so $\theta_b=\tfrac18$ for $\theta=\tfrac14$), $h(u):=u^{\theta_b}$ and $\rho_{\Abs}(u):=\#(\Abs\cap[u,u+h])/h$. The target $T$
-gets a unit jump at each $n\in\Abs$, and $T'$ gets $-\rho_{\Abs}$ (\cref{eq:target}). Membership is decided when $r$ is
+gets a unit jump at each $n\in\Abs$, and $T'$ gets $-\rho_{\Abs}$ (see \eqref{eq:target}). Membership is decided when $r$ is
 decided, at slot approximately $r<y(n)\ll n$, so $T$ is adapted.
 
 Every jittered prime is at least $\Xm=X_0-H(X_0)/2$ (centred placement), so \emph{$\Abs$ has no element at heights where
-$y<\Xm$.} By \cref{thm:caplw}(b) these are all heights with $s=\log\log n-2\log\Lambda\le s_H=5.9745$ (that is,
-$\log\log n\le42.82$ at $\Lambda=10^8$). So below that height \cref{lem:lemmaP} is vacuous, and in the canonical regime $L_*$
+$y<\Xm$.} By Theorem~\ref{thm:caplw}(b) these are all heights with $s=\log\log n-2\log\Lambda\le s_H=5.9745$ (that is,
+$\log\log n\le42.82$ at $\Lambda=10^8$). So below that height Lemma~\ref{lem:lemmaP} is vacuous, and, since $\Lambda\ge10^8>L_*$, the condition $\log n\ge L_*$
 plays no role.
 
 \begin{lemma}[Pointwise sparsity of $\Abs$]\label{lem:lemmaP}
@@ -943,8 +1000,8 @@ Let $u\ge X_0$ and $L:=\log u$, and put $y:=\sup_{v\in[u,2u]}y(v)$ and $C_d:=M_1
 0.9u_0\log u_0\ge\log(2y)+\log C_d+4\log L,\qquad u_0:=\frac{\theta_bL}{\log(2y)},\qquad u_0\ge100.
 \end{equation}
 Then $\#(\Abs\cap[u,u+h])\le h\,L^{-4}$ on $\Good(<t)$ for every $t\ge t_u:=9u/L^{11}+H(u)$. In particular this holds on
-$\Good(<t)$ at heights up to $t+1.01H(t)$, since $9(t+1.01H)/L^{11}+H<t$. Condition \cref{eq:twelvetwo} holds at every $u$ at
-which $\Abs$ meets $[u,2u]$, by \cref{thm:caplw}(b).
+$\Good(<t)$ at heights up to $t+1.01H(t)$, since $9(t+1.01H)/L^{11}+H<t$. Condition \eqref{eq:twelvetwo} holds at every $u$ at
+which $\Abs$ meets $[u,2u]$, by Theorem~\ref{thm:caplw}(b).
 \end{lemma}
 
 \begin{proof}
@@ -958,20 +1015,25 @@ $d\in(h,2yh]$ is a $2y$-smooth element of $\NN$, and $n=d\cdot m$ with $m\in\NN$
 $2y$-smooth elements of $\NN$ and $I_d:=[u/d,(u+h)/d]$ has length less than $1$.
 
 (iv) \emph{Window count.} $I_d$ lies at height $u/d\le u^{1-\theta_b}$, and it is covered by at most $L^6/4+1$ grid windows
-there. On $\qEcl^{(u)}\subset\Good(<u)$ each of them holds at most $M_1(u/d)\le M_1(u)$ elements, so $N(I_d)\le C_d$.
-(Alternatively, use \cref{cor:localcount} at height $u/d$.)
+there. On $\Good(<u)\subset\qEcl^{(u)}$ each of them holds at most $M_1(u/d)\le M_1(u)$ elements, so $N(I_d)\le C_d$.
+(Alternatively, use Corollary~\ref{cor:localcount} at height $u/d$.)
 
 (v) \emph{Rankin's bound for the realised system.} The primes below $2y$ are the rational primes below $X_0$, together with
-jittered primes, which satisfy $\pi_{\NN}(s)\le2s/\log s$ (\cref{lem:cm}(i); the local prime number theorem itself is not
-needed below $X_{\mathrm{LP}}$, \cref{eq:XLP}). With $u_*:=\log t/\log(2y)$ and $\sigma:=1-\log u_*/\log(2y)$, for
-$u_*\ge\max(100,\log\Lambda)$ (in use $u_*\ge u_0\ge2\Lambda$),
+jittered primes, which satisfy $\pi_{\NN}(s)\le2s/\log s$ (Lemma~\ref{lem:cm}(i); the local prime number theorem itself is not
+needed below $X_{\mathrm{LP}}$, \eqref{eq:XLP}). For $Y\ge h$ put $u_*:=\log Y/\log(2y)$ and $\sigma:=1-\log u_*/\log(2y)$, and suppose $u_*\ge2\Lambda$ and
+$\log\log2y\le1.79u_*$. (In use $u_*\ge u_0$, and
+$u_0\ge2\Lambda$ wherever $\Abs\ne\emptyset$: by Step 5 of the proof of Theorem~\ref{thm:caplw}, $u_0\ge\theta_b\Lambda e^s/(3.01\gamma)\ge5\Lambda$
+on the raised range, and $u_0\ge e^\ell/(97\ell^2)$ beyond it. The same step gives $\log2y\le\max(22.6\Lambda,12.1\ell^2)$,
+so $\log\log2y\le1.79u_*$ as well.) Rankin's bound and partial summation as in
+Lemma~\ref{lem:rowweights}(c), with $2s/\log s$ in place of $1.26s/\log s$, give
 \[
-\Psi_{\NN}(t,2y)/t\le\exp\big(-u_*\log u_*+(2+o(1))u_*/\log u_*+\log\log2y\big)\le\exp(-0.9u_*\log u_*).
+\Psi_{\NN}(Y,2y)/Y\le\exp\big(-u_*\log u_*+2.3u_*/\log u_*+\log\log2y\big)\le\exp(-0.9u_*\log u_*);
 \]
-For $t\ge h$ we have $u_*\ge u_0$.
+here $2.3$ bounds $2(1+2/\log u_*)$ plus the absolute constants, since $\log u_*\ge19$.
+For $Y\ge h$ we have $u_*\ge u_0$.
 
 (vi) So $\#(\Abs\cap[u,u+h])\le C_d\Psi_{\NN}(2yh,2y)\le C_d\cdot2yh\cdot\exp(-0.9u_0\log u_0)\le hL^{-4}$, by
-\cref{eq:twelvetwo}.
+\eqref{eq:twelvetwo}.
 \end{proof}
 
 No Diophantine input is used: rigid runs are tamed in step (iv), where every count is moved into windows of length less
@@ -981,75 +1043,70 @@ than $1$.
 % v3: Lemma 4.19
 \begin{enumerate}[label=\textup{(\alph*)}]
 \item $\sup\rho_{\Abs}\le L^{-4}$ at every height.
-\item For $t\le2.04H(u)$, $\operatorname{osc}_t(\rho_{\Abs})(u)\le2(3t+\qKloc(u))/u^{\theta_b}\le(12.3H(u)+2\qKloc(u))/u^{\theta_b}$.
-  % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #8): v3 has 6.2H(u) in place of 12.3H(u).
-  This uses only $\Abs\subset\NN$ and \cref{cor:localcount}, not $y$. With $H\le4X_0^{15}$ and $\qKloc\le X_0^8L^2$ on the
-  raised range, and $u^{\theta_b}=e^{\theta_bL}$ with $L\ge e^{42}$, this is at most $e^{-10^{17}}$ wherever $\Abs\ne\emptyset$.
-\item The source perturbation $\sigma_{\Abs}:=K_{\Abs}\tilde\rho-\rho_{\Abs}$ of \cref{sec:noise} satisfies
+% Approved deviation from v3 (CORRECTIONS-vs-v3.md, #16): v3's part (b), an oscillation bound via the local count, is
+% deleted (unused, and its proof does not bound the absorbed count). Parts (c), (d) of v3 are (b), (c) here.
+\item The source perturbation $\sigma_{\Abs}:=K_{\Abs}\tilde\rho-\rho_{\Abs}$ of Section~\ref{sec:noise} satisfies
   $|\sigma_{\Abs}|\le2L^{-4}$ pointwise. Its compensator form uses $u=L/\log2y\ge10^8$ wherever $\Abs\ne\emptyset$, the raised
   range included.
 \item (Current-height form.) On $\Good(<u)$ the $\Abs$-part of $T'$ is $\sigma_{\Abs}$, since $\bar\rho_{\Abs}=\rho_{\Abs}$.
-  So the $\Abs$-part of the oscillation term $o_u$ of \cref{sec:noise} satisfies
+  So the $\Abs$-part of the oscillation term $o_u$ of Section~\ref{sec:noise} satisfies
   \[
   o_{\Abs}(u)\le2\sup|\sigma_{\Abs}|\le4L^{-4}
   \]
   (or $\le2\sup\rho_{\Abs}+2\sup|K_{\Abs}\tilde\rho|\le8L^{-4}$ if the two parts are taken separately). This uses only (a)
-  and (c), that is, \cref{lem:lemmaP}, which reads $\qEcl$ at heights below $u$. So it involves no queue bound and no event
+  and (b), that is, Lemma~\ref{lem:lemmaP}, which reads $\qEcl$ at heights below $u$. So it involves no queue bound and no event
   $\qLand$ at heights $\ge u$. Then $\sup_v\log v\cdot o_{\Abs}(v)\le8\min L^{-3}\le e^{-120}$ wherever $\Abs\ne\emptyset$,
   since there $L\ge\Lambda^2e^{s_H}$.
 \end{enumerate}
-Only (d), and not (b), may be used where $o_u$ enters R1$'$ at the current height (\cref{eq:osc} and \cref{prop:pointwise}).
-Part (b) reads \cref{cor:localcount} at height $u$, that is, queue bounds at slots $\le u+H(u)$; it is valid, and usable at
-strictly smaller heights.
+Part (c) is the form used where $o_u$ enters R1$'$ at the current height (see \eqref{eq:osc} and Proposition~\ref{prop:pointwise}).
 \end{lemma}
 
 \begin{proof}
-(a) is \cref{lem:lemmaP}. (b) A shift by $t$ changes $\rho_{\Abs}$ by at most the $\Abs$-count of two strips of length $t$,
-each bounded by \cref{cor:localcount}. (c) $K_{\Abs}$ is the part of $K_{\mathrm{pt}}$ whose landing is absorbed, that is,
+(a) is Lemma~\ref{lem:lemmaP}. (b) $K_{\Abs}$ is the part of $K_{\mathrm{pt}}$ whose landing is absorbed, that is,
 whose latest prime is less than $y(\cdot)$. So its cofactors $w$ are $y$-smooth with $w\ge y/y(y)$. With the \emph{sure} bound
 $\tilde\rho\le1.01$ (at most one prime per continuous slot), $K_{\Abs}\tilde\rho\le1.01\sum1/w$ over such $w$. This is at
-most $L^{-4}$ by Rankin's bound, with $u=L/\log2y\ge10^8$ and \cref{lem:cm}(i) for the realised primes below $y(y)$, which
+most $L^{-4}$ by Rankin's bound, with $u=L/\log2y\ge10^8$ and Lemma~\ref{lem:cm}(i) for the realised primes below $y(y)$, which
 are decided long before. Together with (a) this gives $|\sigma_{\Abs}|\le2L^{-4}$. No local count at the current height is
-used. (d) An oscillation is at most twice the supremum.
+used. (c) An oscillation is at most twice the supremum.
 \end{proof}
 
-\begin{proposition}[S1 and S2 are closed by absorption]\label{prop:S1S2}
+\begin{proposition}[Small latest primes are absorbed]\label{prop:S1S2}
 % v3: Proposition 4.20
 \begin{enumerate}[label=\textup{(S\arabic*)}]
-\item (The small-$q$ truncation in the noise bounds of \cref{lem:noise}.) The case of latest primes $q<y$ with jittered
-  cofactors needs $\log n<L_*$. Since $L_*=10^7<\Lambda$, it is vacuous in the canonical regime. Latest primes
+\item (The small-$q$ truncation in the noise bounds of Lemma~\ref{lem:noise}.) The case of latest primes $q<y$ with jittered
+  cofactors needs $\log n<L_*$. Since $L_*=10^7<\Lambda$, it is vacuous. Latest primes
   $q\in[X_0,y)$ are absorbed.
-\item (The full blocks of \cref{thm:queue} at large heights.) The arrivals that would break \cref{eq:fullblock} are rigid runs
+\item (The full blocks of Theorem~\ref{thm:queue} at large heights.) The arrivals that would break \eqref{eq:fullblock} are rigid runs
   $r\cdot r'\cdot d$ driven by small jittered latest primes. These have latest prime less than $y$, so they lie in $\Abs$.
-  Non-absorbed arrivals have latest prime $q\ge y$, so \cref{cor:increment} applies to them, and \cref{eq:fullblock} holds as
-  shown in \cref{thm:queue}.
+  Non-absorbed arrivals have latest prime $q\ge y$, so Corollary~\ref{cor:increment} applies to them, and \eqref{eq:fullblock} holds as
+  shown in Theorem~\ref{thm:queue}.
 \end{enumerate}
-In particular no small-latest-prime event appears in the budget (\cref{def:good}).
+In particular no small-latest-prime event appears in the budget (Definition~\ref{def:good}).
 \end{proposition}
 
 \begin{proof}
-This is contained in the statement: (S2) combines the definition of $\Abs$ with \cref{cor:increment} and the proof of
-\cref{thm:queue}(ii); (S1) is the comparison $L_*<\Lambda$.
+This is contained in the statement: (S2) combines the definition of $\Abs$ with Corollary~\ref{cor:increment} and the proof of
+Theorem~\ref{thm:queue}(ii); (S1) is the comparison $L_*<\Lambda$.
 \end{proof}
 
 \begin{lemma}[Raised threshold]\label{lem:raisedy}
 % v3: Lemma 4.21
-On the raised range of \cref{thm:caplw}, where $\gamma(s)\Lambda>4\ell^2-\log4$, we have
+On the raised range of Theorem~\ref{thm:caplw}, where $\gamma(s)\Lambda>4\ell^2-\log4$, we have
 $y(n)\ge y_{\mathrm{std}}(n):=\qHstd(n)L_{0,\mathrm{std}}(n)(\log n)^6$, since $H$, $M_1$ and $L_0$ are all at least their
 standard values. So $\Abs_{\mathrm{std}}\subset\Abs$: raising $y$ only \emph{adds} to $\Abs$ the composites whose latest
 jittered prime $q$ lies in $[y_{\mathrm{std}}(n),y(n))$. The consumers of $\Abs$ are unaffected:
 \begin{itemize}
-\item \Cref{thm:queue} and the noise bounds (\cref{lem:noise}) see only latest primes $q\ge y$. \Cref{cor:increment} needs
+\item Theorem~\ref{thm:queue} and the noise bounds (Lemma~\ref{lem:noise}) see only latest primes $q\ge y$. Corollary~\ref{cor:increment} needs
   $|I/q|\le H/y=1/(L_0L^6)$, which holds because $y$ uses the same raised $H$ and $L_0$. No consumer assumes $y=y_{\mathrm{std}}$.
   Latest primes in $[y_{\mathrm{std}},y)$ are absorbed, not repaired.
-\item \Cref{lem:S}: its ``$y$'' is the start of the operator, not the absorption threshold. Its bound uses Mertens' bound
+\item Lemma~\ref{lem:S}: its ``$y$'' is the start of the operator, not the absorption threshold. Its bound uses Mertens' bound
   over all of $\NN$, so it is independent of $y$. Its threshold $H(v)\ge(\log v)^{8.5+\delta}$ only gets easier as $H$ grows.
-\item \Cref{prop:pointwise}: its only $\Abs$-input is \cref{lem:rhoA}(d), which does not involve $y$ and reads only heights
+\item Proposition~\ref{prop:pointwise}: its only $\Abs$-input is Lemma~\ref{lem:rhoA}(c), which does not involve $y$ and reads only heights
   below $u$.
-\item \Cref{lem:lemmaP}: \cref{eq:twelvetwo} holds by \cref{thm:caplw}(b). It is read with $y:=\sup_{[u,2u]}y$; along the ramp
+\item Lemma~\ref{lem:lemmaP}: \eqref{eq:twelvetwo} holds by Theorem~\ref{thm:caplw}(b). It is read with $y:=\sup_{[u,2u]}y$; along the ramp
   $d\log y/d\log u\le10^{-5}$, so this changes nothing numerically.
-\item \Cref{lem:ZA}: the bound on the absorbed part holds for $y=X_0^{O(1)}\le n^{o(1)}$.
-\item Queue size and \cref{eq:La}: $B\le5M_1L^2/c'\le X_0^{7.6}L^2$ enters additively or as $x^{\eta}$, and is $\ll x^{\theta}$
+\item Lemma~\ref{lem:ZA}: the bound on the absorbed part holds for $y=X_0^{O(1)}\le n^{o(1)}$.
+\item Queue size and \eqref{eq:La}: $B\le5M_1L^2/c'\le X_0^{7.6}L^2$ enters additively or as $x^{\eta}$, and is $\ll x^{\theta}$
   at these heights.
 \item Causality: $y(n)$ is a deterministic function of the scale of $n$, so membership in $\Abs$ is decided at the decision
   of the latest prime.
@@ -1063,7 +1120,7 @@ Each item is a direct check against the cited statement, as indicated.
 \subsection{Dependencies and non-circularity}\label{sec:queue-deps}
 % v3: §4.8
 
-\Cref{tab:queuedeps} lists the inputs of the results of this section and of \cref{app:rankfull}.
+Table~\ref{tab:queuedeps} lists the inputs of the results of this section and of Appendix~\ref{app:rankfull}.
 
 \begin{table}[ht]
 \centering\small
@@ -1072,48 +1129,49 @@ Each item is a direct check against the cited statement, as indicated.
 \hline
 result & inputs & used in\\
 \hline
-(F1)--(F2) & \cref{sec:construction} (box jitter, slots) & throughout\\
-(F3$'$), (F4) & \cref{lem:cm}(iv); \cite{RosserSchoenfeld1962} & \cref{lem:landing}, \cref{lem:pil}, \cref{lem:fac}\\
-\cref{lem:landing} & (F1)--(F2); \cite{Freedman1975} & \cref{cor:localcount}; event E4\\
-\cref{cor:localcount} & \cref{lem:landing}; \cref{thm:queue} at slots $\le\max J+H$; \cref{lem:count} &
-  \cref{lem:threshold-mass}, \cref{lem:tau-near}, \cref{prop:br}, \cref{lem:rhoA}(b)\\
-\cref{thm:queue} & \cref{cor:r1}, \cref{prop:pointwise}, \cref{prop:ecl}, \cref{cor:increment}, (F1)--(F3$'$),
-  \cref{lem:lindley}, \cref{lem:excess}; \cite{Freedman1975} & \cref{eq:La}, \cref{sec:zeros}, \cref{sec:noise},
-  \cref{lem:budget}\\
-\cref{def:good}, \cref{lem:budget} & \cref{thm:queue}, \cref{prop:ecl}, \cref{lem:landing}, \cref{lem:noise} & \cref{thm:A}\\
-\cref{prop:ecl} & \cref{thm:R}, \cref{lem:heavy}, \cref{thm:caplw} & \cref{cor:increment}, \cref{thm:queue},
-  \cref{lem:lemmaP}\\
-\cref{cor:increment} & \cref{prop:ecl} & \cref{thm:queue}, \cref{lem:noise}, \cref{prop:pointwise}\\
-\cref{lem:heavy} & none & \cref{prop:ecl}, \cref{lem:reduction}, \cref{thm:caplw}\\
-\cref{lem:covering}, \cref{lem:coefsupport}, \cref{thm:binomial}, \cref{thm:tcl} & none (deterministic) &
-  \cref{lem:reduction}, \cref{thm:caplw}\\
-\cref{prop:cover} & \cref{lem:volume}, \cref{lem:fac}, \cref{thm:svl}, \cref{lem:SC}, (V1) & \cref{lem:reduction}\\
-\cref{lem:reduction} & \cref{lem:heavy}, \cref{lem:covering}, \cref{thm:binomial}, \cref{prop:cover}, (F4) &
-  \cref{thm:caplw}\\
-\cref{lem:rowweights} & Rankin's bound; \cite{RosserSchoenfeld1962} & \cref{thm:caplw}\\
-\cref{thm:caplw} & \cref{lem:heavy}, \cref{lem:reduction}, \cref{lem:rowweights}, \cref{thm:binomial} & \cref{prop:ecl},
-  the parameters of \cref{sec:queue-conv}, \cref{lem:lemmaP}\\
-\cref{lem:lemmaP} & \cref{prop:ecl} (heights $<u$), \cref{lem:cm}, \cref{thm:caplw}(b) & \cref{lem:rhoA}, \cref{eq:target},
-  \cref{lem:ZA}, \cref{sec:noise} ($\sigma_{\Abs}$)\\
-\cref{lem:rhoA} & (a), (c), (d): \cref{lem:lemmaP} only (heights $<u$); (b): \cref{cor:localcount} at height $u$ &
-  (d): \cref{eq:osc}, \cref{prop:pointwise} (current height); (b): strictly smaller heights only\\
-\cref{prop:S1S2} & \cref{lem:lemmaP}, \cref{cor:increment} & \cref{thm:queue}, \cref{lem:noise}\\
-\cref{lem:raisedy} & \cref{thm:caplw}, \cref{lem:lemmaP}, \cref{lem:rhoA} & \cref{lem:S}, \cref{prop:pointwise},
-  \cref{lem:ZA}\\
-\cref{lem:volume}--\cref{lem:fac}, \cref{lem:SC}, \cref{thm:svl} & (F1)--(F4) & \cref{thm:R}, \cref{prop:cover}\\
-\cref{thm:R} & \cref{lem:volume}--\cref{lem:fac}, \cref{lem:SC}, \cref{thm:svl} & \cref{prop:ecl}\\
+(F1)--(F2) & Section~\ref{sec:construction} (box jitter, slots) & throughout\\
+(F3$'$), (F4) & Lemma~\ref{lem:cm}(iv); Theorem~\ref{thm:caplw}(c); \cite{RosserSchoenfeld1962} & Lemma~\ref{lem:landing}, Lemma~\ref{lem:pil},
+  Lemma~\ref{lem:fac}\\
+Lemma~\ref{lem:landing} & (F1)--(F2); Theorem~\ref{thm:caplw}(c) (for $\rho_H$); \cite{Freedman1975} & Corollary~\ref{cor:localcount}; event E4\\
+Corollary~\ref{cor:localcount} & Lemma~\ref{lem:landing}; Theorem~\ref{thm:queue} at slots $\le\max J+H$; Lemma~\ref{lem:count} &
+  Lemma~\ref{lem:threshold-mass}, Lemma~\ref{lem:tau-near}, Proposition~\ref{prop:br}\\
+Theorem~\ref{thm:queue} & Corollary~\ref{cor:r1}, Proposition~\ref{prop:pointwise}, Proposition~\ref{prop:ecl}, Corollary~\ref{cor:increment}, (F1)--(F3$'$),
+  Lemma~\ref{lem:lindley}, Lemma~\ref{lem:excess}; \cite{Freedman1975} & \eqref{eq:La}, Section~\ref{sec:zeros}, Section~\ref{sec:noise},
+  Lemma~\ref{lem:budget}\\
+Definition~\ref{def:good}, Lemma~\ref{lem:budget} & Theorem~\ref{thm:queue}, Proposition~\ref{prop:ecl}, Lemma~\ref{lem:landing}, Lemma~\ref{lem:noise} & Theorem~\ref{thm:A}\\
+Proposition~\ref{prop:ecl} & Theorem~\ref{thm:R}, Lemma~\ref{lem:heavy}, Theorem~\ref{thm:caplw} & Corollary~\ref{cor:increment}, Theorem~\ref{thm:queue},
+  Lemma~\ref{lem:lemmaP}\\
+Corollary~\ref{cor:increment} & Proposition~\ref{prop:ecl} & Theorem~\ref{thm:queue}, Lemma~\ref{lem:noise}, Proposition~\ref{prop:pointwise}\\
+Lemma~\ref{lem:heavy} & none & Proposition~\ref{prop:ecl}, Lemma~\ref{lem:reduction}, Theorem~\ref{thm:caplw}\\
+Lemma~\ref{lem:covering}, Lemma~\ref{lem:coefsupport}, Theorem~\ref{thm:binomial}, Theorem~\ref{thm:tcl} & none (deterministic) &
+  Lemma~\ref{lem:reduction}, Theorem~\ref{thm:caplw}\\
+Proposition~\ref{prop:cover} & Lemma~\ref{lem:volume}, Lemma~\ref{lem:fac}, Theorem~\ref{thm:svl}, Lemma~\ref{lem:SC}, (V1) & Lemma~\ref{lem:reduction}\\
+Lemma~\ref{lem:reduction} & Lemma~\ref{lem:heavy}, Lemma~\ref{lem:covering}, Theorem~\ref{thm:binomial}, Proposition~\ref{prop:cover}, (F4) &
+  Theorem~\ref{thm:caplw}\\
+Lemma~\ref{lem:rowweights} & Rankin's bound; \cite{RosserSchoenfeld1962} & Theorem~\ref{thm:caplw}\\
+Theorem~\ref{thm:caplw}(a) & Lemma~\ref{lem:heavy}, Lemma~\ref{lem:reduction}, Lemma~\ref{lem:rowweights}, Theorem~\ref{thm:binomial} & Proposition~\ref{prop:ecl}\\
+Theorem~\ref{thm:caplw}(b), (c) & none (definitions of the parameters) & the parameters of Section~\ref{sec:queue-conv}, (F3$'$),
+  Lemma~\ref{lem:landing}, Theorem~\ref{thm:queue}, Lemma~\ref{lem:lemmaP}\\
+Lemma~\ref{lem:lemmaP} & Proposition~\ref{prop:ecl} (heights $<u$), Lemma~\ref{lem:cm}, Theorem~\ref{thm:caplw}(b) & Lemma~\ref{lem:rhoA}, \eqref{eq:target},
+  Lemma~\ref{lem:ZA}, Section~\ref{sec:noise} ($\sigma_{\Abs}$)\\
+Lemma~\ref{lem:rhoA} & Lemma~\ref{lem:lemmaP} only (heights $<u$) & (c): \eqref{eq:osc}, Proposition~\ref{prop:pointwise} (current height)\\
+Proposition~\ref{prop:S1S2} & Lemma~\ref{lem:lemmaP}, Corollary~\ref{cor:increment} & Theorem~\ref{thm:queue}, Lemma~\ref{lem:noise}\\
+Lemma~\ref{lem:raisedy} & Theorem~\ref{thm:caplw}, Lemma~\ref{lem:lemmaP}, Lemma~\ref{lem:rhoA} & Lemma~\ref{lem:S}, Proposition~\ref{prop:pointwise},
+  Lemma~\ref{lem:ZA}\\
+Lemmas~\ref{lem:volume}--\ref{lem:fac}, Lemma~\ref{lem:SC}, Theorem~\ref{thm:svl} & (F1)--(F4) & Theorem~\ref{thm:R}, Proposition~\ref{prop:cover}\\
+Theorem~\ref{thm:R} & Lemmas~\ref{lem:volume}--\ref{lem:fac}, Lemma~\ref{lem:SC}, Theorem~\ref{thm:svl} & Proposition~\ref{prop:ecl}\\
 \hline
 \end{tabular}
-\caption{Dependencies of the results of \cref{sec:queue} and \cref{app:rankfull}.}\label{tab:queuedeps}
+\caption{Dependencies of the results of Section~\ref{sec:queue} and Appendix~\ref{app:rankfull}.}\label{tab:queuedeps}
 \end{table}
 
 \paragraph{Non-circularity.}
 \begin{itemize}
-\item \Cref{thm:queue} at slot $s_j$ reads only events with times at most $s_j$: $\qEcl$ at cofactor heights at most
-  $4u/L^{11}$, and \cref{cor:r1} and \cref{prop:pointwise}.
+\item Theorem~\ref{thm:queue} at slot $s_j$ reads only events with times at most $s_j$: $\qEcl$ at cofactor heights at most
+  $4u/L^{11}$, and Corollary~\ref{cor:r1} and Proposition~\ref{prop:pointwise}.
 \item $\qEcl$ reads no queue bound at its own heights. Its inputs are (F1)--(F4) at heights at most $s-H$, carried by
   progressive events.
-\item \Cref{cor:localcount} is used only at strictly smaller heights.
-\item \Cref{lem:lemmaP} uses $\qEcl$ only at heights $u/d<u$.
-\item The first-failure argument (\cref{lem:budget}) orders all of these by event time.
+\item Corollary~\ref{cor:localcount} is used only at strictly smaller heights.
+\item Lemma~\ref{lem:lemmaP} uses $\qEcl$ only at heights $u/d<u$.
+\item The first-failure argument (Lemma~\ref{lem:budget}) orders all of these by event time.
 \end{itemize}

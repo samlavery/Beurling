@@ -1,0 +1,143 @@
+SUB-CHECKER REPORT: paper sections 04k (kernels), 04x (X0 band), 04f (bridge), 04g (margin), and App. B x0-band, versus v3
+Summary result: no BLOCKING findings; 12 FIXABLE, 15 COSMETIC. Corrections #3, #4, #5 and #9 are all applied and correct.
+Method: constants recomputed independently (arb/python-flint, a Dickman rho solver, the exact F_theta sum).
+The x0-band certificate was re-run; its output matches App. B exactly. Scripts are in /tmp/paper-check-s4b/.
+File paths below are relative to paper/sections/.
+
+(1) FINDINGS
+
+[FIXABLE]
+
+F1 04x-x0band.tex:275-279 (v3 1308-09). The middle range bounds the tau-term by e^{-10^7}. That exceeds e^{-0.0009 Lambda}
+   once Lambda > 1.1e10, so the claim j_X0 <= e^{-0.0009 Lambda} does not follow for all Lambda.
+   Fix: use e^{-0.99 Lambda}, which the paper already states at 04x:42.
+
+F2 04g-margin.tex:12 (v3 1471; inherited from v3). The text says j_X0 <= e^{-0.0009 Lambda} "beyond" the small range.
+   This is false in the huge range, where only e^{-59} is proved. Fix: state the middle and huge ranges separately.
+   Nothing downstream breaks: Prop 3.18(a) only needs j_X0 small.
+
+F3 04f-bridge.tex:200-201 (v3 1434-35; inherited from v3, not in the corrections log). The bullet on the jump of T' at X0
+   counts n in [N(1-2delta), N] using |N-T| <= H and drops #A (the absorbed elements). This is the same defect that
+   correction #4 fixed in Prop 3.8. Fix: add #A <= 2 delta N L^-4 + 2 N^{theta/2} L^-4 (Lemma P).
+   The term remains o(1/log x).
+
+F4 04x-x0band.tex:395-396 (inlined proof of Lemma SI). The text says "A <= 4e-7 because l >= 0.45J >= 1e11".
+   This is wrong: at l = 1e11 the stated bound only gives A <= 0.125. At the true minimum l ~ 0.45 J1 = 1.35e34
+   it gives A <= 6.4e-7. Fix: "l >= 0.449J >= 1e34, so A <= 7e-7". The (1+3e-6) budget still holds
+   (about 1+2.4e-6), so 60.81 and 61.1 stand.
+
+F5 04x-x0band.tex:229 (v3 1305). The claimed ball-arithmetic bound A(1.8 - 4e-6) <= 7.4915 is false: arb gives 7.491531.
+   Fix: write 7.4916, or use 3e-6 (which gives 7.49142). The bound 2.152 still holds (2.15146).
+
+F6 04x-x0band.tex:96-97 and 04f-bridge.tex:30 (v3 1294, 1271). The constants 4.1 C_N E_theta and 8.4 C_N E_theta need
+   W^op <= 2 C_N log(2v)/log y for non-terminal levels at every v. That bound appears only inside the proof of Prop 3.8
+   (M <= 2 C_N). Prop 3.8's statement gives 5.1 C_N at the X0 blocks, which would yield 10.4 instead of 4.1.
+   Fix: add the non-terminal bound to the statement of prop:true-kernels.
+
+F7 04k-kernels.tex:369-371 versus 04k:60 (v3 1002 versus 915). Lemma 3.9 defines tau-near with the condition
+   v/w >= X0^-; Definition near has no such condition. A step that is both tau-near and X0-near and lands just below X0^-
+   produces a nonzero tau-source (split at 04k:293 and 04x:61) that eta-tilde does not count.
+   Fix: assign the whole filter difference on X0-near steps to S^{X0} (these steps are terminal), or relax the
+   condition to v/w >= X0^- - 2H(X0).
+
+F8 04k-kernels.tex:409-414 (v3 1025-28). The bound sup_y log y * eta(y) <= e^{-0.99 Lambda} is only sketched:
+   - Lemma smooth-v needs u <= L_z; the case u > L_z (Rankin) is missing.
+   - "e^{o(1)}" is not o(1) when u is comparable to L_z, since a_V ~ 4K log L_z.
+   - The numeric check at line 414 covers the E-family of bounds, not this bound, whose constant is e^8 larger.
+   Fix: write out both cases. A crude bound suffices where it is used (in E_S and in Prop 3.18(a)).
+
+F9 04k-kernels.tex:80-82 (inlined lem:near-structure (ii)). "This forces x/n < X0" is false: x/n can lie in
+   [X0, X0 + 0.02 H(X0)]. The conclusions still hold. Fix the step using H(x/n) <= H(X0)(1 + 1e-15) on that range.
+
+F10 04k-kernels.tex:134-136 (v3 934-35). A0 and A1 for the realised system N are given only "up to a factor 1+O(eta1)".
+   The margin from 2.034 to 2.04 is 0.3%, so an unspecified O-constant cannot certify C_N.
+   Fix: since N = the integers below X0^-, the values for N differ from those for the integers by less than X0^-0.8.
+   The same applies at 04g:103 (8.5 versus 8.491).
+
+F11 04k-kernels.tex:41-43 and 80 (v3 915 states "local exponent eps_* <= 3e-6"; the paper dropped this).
+   The inequalities 1/2 + 1.02 * 2^{eps-1} <= 1.02 and 1.02 * 2^{eps-1} <= 0.52 fail at the stated eps = 0.03
+   (values 1.0207 and 0.5207). They hold for the actual local exponent of H (<= 4e-6). Fix: state that exponent.
+
+F12 04x-x0band.tex:145-162 (lem:rankin-crude). The statement omits the hypothesis (H_BS)/Good(<z), although the proof
+   uses Lemma cm(iii) and (iv). Fix: add the hypothesis.
+
+[COSMETIC]
+
+C1 04k:263: delta is used before its definition (it is defined at 04x:18, and it clashes with the delta of Prop g1(B)).
+   Also, (1/2) A0(0.03) = 1.033665, not 1.03365. The conclusion is unaffected.
+C2 04k:417 (v3 1030): "C_N E_eta <= 1/2" and "2.04 theta_* <= 0.02" should both carry the factor lambda0.
+C3 04k:352-354: "the tau-part adds <= 2.04 * sum sup eta" omits lambda0 and the fixed-point factor.
+C4 04k:227: (Q2) is stated with (1+2 vartheta), and (1+2 vartheta)/(1-vartheta) > 1+3 vartheta at second order.
+   Use the constant actually proved, (1+vartheta).
+C5 04k:338-339 (inherited): "2.1 H/X0 + 2H + 4" does not follow from T(I) <= 2|I| + 2 + #A, which gives 4.2 H/X0.
+   Negligible.
+C6 04k:395-398: 3 * 1.01^2 * 5.4 = 16.53, not 16.5; and the window can dip below P. Both are absorbed (6220 << 1e4).
+C7 04k:377: y is undefined in Lemma 3.9.
+C8 04x:21: 16 log(2 Lambda)/Lambda = 3.06e-6, which exceeds the stated 3e-6. Use 16 log(Lambda)/Lambda <= 2.95e-6.
+C9 04x:236 (inherited): 1.010101 is written as "<= 1.0101". The result 0.420875 <= 0.4209 still holds.
+C10 04x:247: "R_d = 1.02 H(y/d)" should read "<=".
+C11 04x:88-90: the B2 cutoff should allow H_n (1+vartheta) in place of H_n.
+C12 04f:25-28 (same as v3): the KR bullet detours through TV(E~_n), which it never bounds.
+   Cor 3.7(b) gives the constant C_N directly.
+C13 04f:120-121: the part of F_theta for the realised system ("relative O(eta1)") is not explicit.
+   Harmless, since F_theta only multiplies o(1).
+C14 B-certificates.tex:63: should cite Prop xb-ranges(i), not Lemma xb.
+C15 Fallback placeholders at 04f:38-41 and 04-noise.tex:38 contain v3 numbering ("Lemma 3.14A", "Theorem 3.6").
+   They are not rendered, but should be deleted. Separately, 01-setup.tex:118 and 122 cite thm:kr where
+   thm:kr-random is the result actually applied.
+
+PRESENTATION: the rendered text of the four files has no hard-coded theorem numbers, agent names, [P]/[S] tags or note
+filenames. These appear only in % comments and in the dead placeholders.
+
+(2) CORRECTIONS
+
+#3: Applied at every listed site; lambda0 appears nowhere else in the paper. Two minor gaps: C1 and C2.
+    The proof of Theorem 3.6' is correct and complete; Theta_n <= e^{1e-4 delta} <= lambda0.
+    Downstream claim holds: 1 + 1.033665 e^{2.1 delta} = 2.0337 <= 2.034, so C_N = 157.08 <= 158 is unchanged.
+    lambda0^2 <= 1 + 7 delta is absorbed. The certificate's lambda = 1.0001 covers lambda0 * (1e6)^{eps_*} = 1.0000423.
+#4: Applied and correct. #A(I_v) <= 2 (v/X0)^{theta/2} follows from Lemma P; the log's extra "+M1" is not needed.
+    The contribution is <= e^{-0.75 Lambda}, so the constants 1.52 (actual 1.516), 5.1 C_N (5.06) and 3.2 (3.192) stand.
+    The same omission survives in Prop g1(B) Step 3 (F3).
+#5: Applied in eq:xb, eq:jX0, the nominal D_d, Prop 3.18(b), and all three ranges.
+    Correct: 2.04 lambda0 * 2 C_N = 4.1, plus 3.04 lambda0 C_N^2 tau0 E_eta <= 0.1 C_N E_theta,
+    since eta~ <= theta / log^2(X0^-).
+    4.3 C_N E_theta <= e^{-0.99 Lambda} for every Lambda, and 0.4209 stands.
+    Caveats: the middle range must use e^{-0.99 Lambda} (F1); the constant 4.1 relies on F6.
+#9: Correct. |Q(u) - 6u/pi^2| <= 3 sqrt(u) holds (maximum ratio on [1, 1e6] is 0.68).
+    Tail for y >= 1e6: 1.2396 <= 1.25.
+    The maximum of F_{1/2} for y <= 1e6 is 1.32963 (at y = 7), so 1.33 stands.
+
+(3) COVERAGE
+Verdict codes: "(a)#n" = logged correction n; "(b)" = proof inlined from v3's working notes; "(c)" = rewording;
+"match" = same as v3.
+Kernels, support radius R_n <= 1.02 H, nominal steps, def:near ......... match / (b) (F11)
+lem:near-structure ..................................................... (b), complete except F9
+eq:width-product ....................................................... (a)#3 + (b), correct
+KR facts (K1)-(K5) ..................................................... (b), complete; TV(C4) = 1/4 verified
+A0(0.03) = 2.06733, A1 = 9.40888, rho0 = 1.72865 ........................ match, verified (F10)
+thm:kr / thm:kr-random ................................................. (a)#3, correct (C4)
+rem:kr-variants ........................................................ unproved remark, not used anywhere
+cor:kr-weights, C_N <= 158 ............................................. (a)#3, correct
+prop:true-kernels ...................................................... (a)#3, #4 + (b), correct (F6, C3, C5)
+lem:tau-near ........................................................... (c) Lambda-general form, correct (F8, C6)
+lem:S (C_S' = 10) ...................................................... match, verified
+prop:br, E_BR .......................................................... match (C12)
+lem:xb ................................................................. (a)#3, #5 + (b), complete (F6, F7, C11)
+lem:short-recip, lem:rankin-crude ...................................... (b), correct (F12)
+prop:xb-ranges (i), (ii), (iii) ........................................ (b) + certificate; (i) F5, C9; (ii) F1; (iii) correct
+lem:si (constant 61.1; recomputed 60.79) ............................... (b), correct apart from F4
+(Osc), lem:predictable, eps_N <= 1e-13 ................................. match
+F_theta ................................................................ (a)#9, correct
+prop:g1 ................................................................ match (F3, inherited)
+thm:g2 ................................................................. match (F2, inherited)
+prop:pointwise (6.44, 0.549, 0.73) ..................................... match, verified
+cor:r1 (c' = 0.15, K_d = 3) ............................................ match
+App. B x0-band ......................................................... matches the code; output reproduced (C14)
+No unlogged difference changes any statement, apart from the inherited #A omission (F3).
+
+(4) SUMMARY
+The inlined proofs are complete and correct, and every listed constant re-derives.
+Corrections #3, #4, #5 and #9 are correct and applied consistently. Their "no downstream effect" claims hold,
+except that the middle range must use e^{-0.99 Lambda} (F1).
+Every FIXABLE item is local: wrong intermediate numbers (F4, F5, F9), two errors inherited from v3 (F2, F3),
+and missing statements or hypotheses (F6, F7, F8, F10, F11, F12).

@@ -1,4 +1,4 @@
-# Analytic Theorem 4.17 (Lambda-uniform): gamma(s), s = loglog z - 2 log Lambda. Sanity checks against the precise model.
+# Theorem caplw, analytic form (uniform in Lambda): gamma(s), s = loglog z - 2 log Lambda. Sanity checks against the precise model.
 import math, sys
 sys.path.insert(0, __import__('os').path.dirname(__import__('os').path.abspath(__file__)))
 import capl_model
@@ -36,7 +36,7 @@ def check(lam, s_lo, s_hi, h):
     while s < s_hi:
         l = 2*math.log(lam) + s
         logc = max(4*l*l - math.log(4), gamma(s)*lam)
-        okC = (l <= 700 and routeH_ok(logc, l, l, lam)) or dickman_ok(logc, l, l, lam)
+        okC = (l <= 700 and highdeg_ok(logc, l, l, lam)) or dickman_ok(logc, l, l, lam)
         okP = lemmaP_ok(logc, l, l, lam)
         if not (okC and okP): fails += 1
         n += 1; s += h

@@ -1,0 +1,167 @@
+App A CHECK REPORT: A-rankfull.tex, plus B-certificates §lemma-sc and §svl-stress
+
+Bottom line: nothing is BLOCKING, and there is no unlogged drift that changes the mathematics. Correction #1 is correct, applied everywhere, and its downstream claim holds.
+
+Scope: every item in scope was checked. I read the tree at 16e62d8; it differs from d307ffd only in two comment lines within my scope.
+
+======================================================================
+(1) FINDINGS
+======================================================================
+Items #1-#4 and #6 appear in v3 in the same form: they are v3 errors carried over, not drift. Item #5 also mirrors v3 l.2766, but the paper's own Appendix B now contradicts it. None of the fixes changes a downstream constant.
+
+1. [FIXABLE - most substantive] A-rankfull.tex:242-251, 269-279, 196-203, 382; v3 2696-2699, 2704.
+   The Euler-chain bookkeeping in (S3) and in the Pivot-Integration Lemma (PIL) is incomplete.
+   (a) Eu_s(s) is defined over "slot <= s", so it includes the pivot itself. But l.272 says the carried factor 1/Eu_s(s_p) "involves only primes of slot < s_p".
+   (b) At the first block of each chain, Eu_s(top) is not F_{s_{p_{t+1}}-}-measurable, and no carried factor cancels it. The scheme only handles the bottoms of the chains.
+   (c) The step "Eu(top+H)/Eu(bottom-H) <= ... by Lemma cm(iv) on Good" needs Good up to top+H, but at that point only G_{<s_top} is carried.
+   (d) The PIL label sum Sum_s 1(q in W_s)/H(s) (l.200) treats Psi as independent of s. In fact the carried 1/Eu_s(s) and the block range both depend on s. Bounding that dependence pivot by pivot costs about e^{2k^2 H(X0)/X0}, which is not small for k >~ (X0/H)^{1/2}.
+   Fix:
+   - Sum the block below each pivot inside the conditional expectation at s_p, so that Eu_s(s) cancels before the label sum.
+   - Define Eu_s over slots < s.
+   - At each chain top, replace Eu_s(top) by the sure bound valid on G_{<s_top}, as in the second branch of (F3'): rational product x Mertens on [X0, s-H] x (1-2/s)^{-(2H+1)}.
+   - The bottoms then telescope, and the early block plus the tail cancel the last carried factor.
+   - Per row the result is <= e^gamma log(2z+H)(1+1e-8) <= A_R e^{2.2/Lambda}, so A_R is unchanged.
+   Context: the E2E verdict (v3 2983) left the Staged Volume Lemma (SVL) "conditional on B §20". A self-contained paper needs this paragraph.
+
+2. [FIXABLE, inherited] A-rankfull.tex:177, 202-203; 05-queue.tex:87-88; v3 1677, 2677, 2682.
+   The paper claims the inner sum is <= 1 + kappa+/L + 3/H <= theta = 1 + 1/L. This is false.
+   - (F1) gives 1 + kappa+/log q + 3/H(q) at the pivot value q, and q ranges over [X0-, 2z].
+   - For q near X0, 0.8/Lambda > 1/L once L > 1.25 Lambda.
+   - 3/H(X0) > 1/L once L > e^{2715}/3.
+   - "Absorbed in theta" (l.212) also fails at large L.
+   Fix: set theta := 1 + 1/Lambda. The downstream uses all still hold:
+   - theta e^{(3H+2)/X0} e^{2.2/Lambda} <= 1.01;
+   - in Lemma 4.14(ii), 24 theta L^{-0.9} <= 1 and theta C' <= 7 L^{5.1};
+   - Prop ecl.
+   This should be logged in CORRECTIONS-vs-v3.md.
+
+3. [FIXABLE, inherited] A-rankfull.tex:210-213; v3 2684.
+   The text says each prime has "value >= X0", so the cost is e^{(H+3)/X0}. With H = H(q) and q up to 2z, this factor is >= e once 8(log L)^2 > Lambda. This is the same defect as correction #2.
+   Fix: the values are >= q - H >= q/2, so the factor is <= e^{3(H(q)+3)/q} <= e^{4H(X0)/X0}, because H(v)/v is decreasing (thm:caplw(c)). Absorb it in A_R, not in theta.
+
+4. [FIXABLE, inherited] A-rankfull.tex:562-566; v3 2787.
+   The step "<= L(-0.327 + 0.91/l) + 6l + 9" is false for L >~ 3.43e9.
+   - The true coefficient is 1 - 3.98/3 = -0.32667, which is larger than -0.327.
+   - L >= 1e8 throughout the paper, so this range is in use.
+   - The final bound <= -4l is still true.
+   Fix: replace -0.327 by -0.3266. The step then holds on a numeric grid up to L ~ 1.6e66, and at L = 465 it gives -37.1 against -24.6.
+
+5. [FIXABLE] A-rankfull.tex:474-483; v3 2766.
+   The remark says svl-stress checked "the identity (eq:svl-identity)".
+   - svl_stress.py runs checks C1-C7 only; none of them is that identity.
+   - Its s_j >= 1 and coverage checks use C = all stage rows, i.e. only the case C = B'.
+   - B-certificates.tex:162-168 lists the checks correctly.
+   Fix: align the remark with Appendix B.
+
+6. [FIXABLE] A-rankfull.tex:146-147; v3 2667.
+   The proof of Lemma A.2 says "the others satisfy tau_j >= X0 + 0.99i for distinct i >= 1". This is off by one.
+   - With N0 = floor(2H/0.99) + 1, one only has tau_{N0+i} in (X0 + 0.99(i-1), X0 + 0.99i].
+   - The displayed bound still holds: (2.03H+2)/(X0-1) <= 3H/X0 + 1/(X0-1).
+   - The H in tau_j is ambiguous: eq:A-tau says "at the slots in question", but l.153 says H(X0).
+   Fix: use H(sigma_j) with sigma_j = X0 + 0.99(j-1).
+
+7. [COSMETIC] A-rankfull.tex:344; v3 2729.
+   "43 947 configurations" does not match Appendix B.
+   - sc_check gives 32,133 configurations (10615 + 5585 + 15933).
+   - sc_greedy gives 13,433 (configuration, cover) pairs.
+   - the refereeA script gives 842 configurations / 2,342 pairs.
+   - v3's 30,514 is stale.
+   Fix: quote the Appendix B figures.
+
+8. [COSMETIC] A-rankfull.tex:544, 560; 05-queue.tex:457; Lemma 4.14(ii); v3 1911, 2051.
+   The grid windows [k delta1, (k+2) delta1) overlap, so there are 2z/delta = z/delta1 of them, not z/delta.
+   - In cor:R-Ecl, the dropped -log 4 absorbs the factor 2.
+   - In Lemma 4.14, 7L^{5.1} becomes about 13L^{5.1}, which still meets (4.10).
+
+9. [COSMETIC] 05-queue.tex:452-453; v3 1908.
+   The text says "direct (F1)-(F2) count E <= (1.01|J|)^{r0}/r0!, which is what Thm R gives". This omits Sum 1/d (about log X0 near 2z ~ X0^2).
+   It is harmless, because Theorem R itself is invoked.
+   Fix: say "Theorem R applies (it is stated for z >= X0/2)".
+
+10. [COSMETIC] A-rankfull.tex:133, 496, 552.
+    "H(X0)/X0 <= e^{-1e7}" is stated with no reason.
+    Fix: add that by eq:jitter and thm:caplw(c), log H(X0) <= 8(log Lambda)^2 + 1e-6 Lambda, so H(X0)/X0 <= e^{-0.99 Lambda}.
+
+11. [COSMETIC] A-rankfull.tex:521-525; v3 2779, 2783.
+    - The tail bound e^gamma Lambda (1 + 1/(2 Lambda^2)) comes from Rosser-Schoenfeld (3.29) inside the proof of (F3'), not from the statement of (F3').
+    - "Chain-end factor e^{2.2/Lambda}" is really the Mertens error term.
+
+12. [COSMETIC] Unproved claims that the main line does not use:
+    - FAC (l.232): "widens caps by relative O(eps)".
+    - rem:widened (l.287): "||E_P^{-1}||_inf <= k m^{k-1}, sharp up to constants". The upper bound follows from Hadamard's bound with l1 rows; sharpness is unproved.
+    - The new remark after the Volume Lemma (l.120-124): "l1-norms grow exponentially".
+    - l.278: "Sum_{p >= X0} p^{-2} <= 1/X0". The realised primes are reals, so this needs Lemma cm(i) on Good.
+
+13. [COSMETIC] Certificates.
+    - svl_stress.py check C7 is vacuous: ts = range(joined, T) is always sorted and distinct. So B-cert l.167's claim that "per-row block ranges are disjoint" is checked only trivially.
+    - The file name sc_check_refereeA.py appears in the rendered text (B-certificates.tex:142, 154).
+    - The certificate headers still name internal agents: "gap-G3 §16.22'", "verify-CL §R.12''", "lead-notes L1".
+
+PRESENTATION
+- The rendered App A text contains no agent names, referee section numbers, [P]/[N] tags or note file names.
+- There are no hard-coded theorem numbers, and every \ref resolves to a unique label.
+- amsart numbers App A as follows: Def A.1, Lemma A.2 (Volume Lemma), Rem A.3, Lemma A.4 (pattern sum), A.5 (PIL), A.6 (FAC), Rem A.7, Lemma A.8 (Lemma SC), Rem A.9, Thm A.10 (SVL), Rem A.11, Thm A.12 (Theorem R), Rem A.13, Cor A.14.
+- Equations are numbered globally, since there is no \numberwithin.
+- So the v3 labels in CORRECTIONS-vs-v3.md and LABELS.md do not match the compiled numbers. For example, their "Lemma A.2" means the pattern sum, but compiled Lemma A.2 is the Volume Lemma.
+- LABELS.md lists eq:stageidentity both as an alias and as withdrawn.
+
+======================================================================
+(2) CORRECTION #1 VERDICT
+======================================================================
+Applied everywhere: YES.
+- A-rankfull 131-134, 153, 493-497, 529, 550-552.
+- 05-queue 456-459.
+- Grepping all sections finds no stale e^{2k/X0}.
+
+Correct: YES. Re-derivation:
+- #{j : tau_j = X0} = floor(2H/0.99) + 1 <= 2.03H + 1, and the other tau_j are spaced 0.99 apart.
+- So Sum 1/(tau_j - 1) <= 3H/X0 + 1/(X0-1) + (1/0.99) log(1 + k/X0).
+- Using (1 - 1/tau)^{-k} <= e^{k/(tau-1)} and 1/(X0-1) <= 2/X0 gives e^{(3H+2)k/X0} (1 + k/X0)^{1.02k}.
+- v3's e^{2k/X0} was indeed wrong.
+
+H(X0)/X0 bound: H(X0)/X0 <= exp(8(log Lambda)^2 + 1e-6 Lambda - Lambda) <= e^{-0.99e8}. This uses eq:jitter and thm:caplw(c) at scale X0.
+
+Downstream claim true: YES.
+- theta e^{(3H+2)/X0} e^{2.2/Lambda} <= 1.0022 <= 1.01. This still holds with theta = 1 + 1/Lambda.
+- The ratio to 15 L^{-3.98} is 0.9916 at L = 465 and decreasing in L.
+
+Caveats: #6 (proof wording) and #10 (missing citation).
+
+======================================================================
+(3) COVERAGE
+======================================================================
+Item                                                 | Verdict
+Intro / setting / Def config type / greedy pivots    | match / (c)
+Runs, blocks, eq:A-span                              | match; (b) inlined, complete
+Slot positions, tau_j, X0- convention, prob set-up   | match / (c) from v3 §4.1, Def 4.4, N3; H ambiguity (#6)
+Lemma A.1 Volume Lemma                               | match; (b) complete
+Remark after Volume Lemma                            | new expository text (#12)
+Lemma A.2 pattern sum                                | (a)#1; (b) complete apart from #6
+Lemma A.3 PIL                                        | match; (b) with gaps #1(d), #2, #3
+Lemma A.4 FAC, (S1'), (S2')                          | match; (b) complete apart from #12
+Lemma A.4 (S3)                                       | match; (b) INCOMPLETE (#1)
+rem:widened                                          | match (c)
+Lemma A.7 SC (1)-(3)                                 | match; (b) complete, checked line by line
+SC remark                                            | (c); count (#7)
+Thm A.5 SVL (i), Schur, |det| >= 1                   | match; (b) complete
+SVL (ii) harmonic, injectivity, zero coefficients    | match; (b) complete given #1
+SVL (iii) Proj_t, (B1)                               | match; (b) complete
+SVL (iv), (v)                                        | match; (b) complete given #1
+SVL remark                                           | (c); overclaims (#5)
+Thm A.6 (Theorem R)                                  | (a)#1; (b) complete given #1-#3
+Special-cases remark                                 | (c); the v2 bound is dropped
+cor:R-Ecl                                            | (a)#1 + (c); #4, #8
+Uses: Prop ecl / Cover Bound / Lemma 4.14            | consistent; theta propagates (#2); #8, #9
+B §lemma-sc                                          | text matches code; all 5 commands re-run, outputs identical
+B §svl-stress                                        | text matches code; re-run gives 4 lines, violations 0, exit 0; C7 vacuous (#13)
+
+No unlogged drift changes the mathematics. Every difference from v3 is correction #1, an inlined proof, or rewording.
+
+======================================================================
+(4) SUMMARY
+======================================================================
+- Correction #1 is correctly derived and applied everywhere. Its downstream E_cl claim holds, and there is no unlogged drift.
+- App A is mostly self-contained. The Volume Lemma, Lemma SC and SVL (i)-(iii) are fully inlined and correct. The measurability of the (S3)/PIL Euler chains and the label sum needs one explicit paragraph (#1).
+- Three v3 errors were carried over and should be fixed and logged: theta = 1 + 1/L (should be 1 + 1/Lambda), the fuzz factor e^{(H+3)/X0}, and the -0.327 in cor:R-Ecl. None of them changes a downstream constant. The rest is cosmetic or concerns the accuracy of the certificate descriptions.
+
+Scratch scripts: /tmp/paper-check-appA/ecl.py and /tmp/paper-check-appA/ecl2.py.
