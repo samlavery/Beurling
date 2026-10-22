@@ -139,7 +139,7 @@
 | rem:EAhuge | Ê_𝒜 huge off the designed sets | 03-zeros.tex |
 | eq:MA | MA_w[h](x) := h([x,x+w])/w (forward window) | 06-base-range.tex |
 | eq:HB | Heath-Brown's theorem with ε ≡ 0 | 06-base-range.tex |
-| (bib) MontgomeryVaughan2007 | Montgomery–Vaughan, Multiplicative Number Theory I (Landau's lemma, Thm 6.6) | refs.bib (added by gap-localpnt) |
+| (bib) MontgomeryVaughan2007 | Montgomery–Vaughan, Multiplicative Number Theory I (Landau's lemma, Thm 6.6) | refs.bib |
 | sec:kernels | §noise subsection: operator kernels (v3 §3.4) | sections/04k-kernels.tex |
 | def:kernels | kernels C_n^x of 𝓡 (last-step recursion) ; eq:kernel-rec, eq:R-kernels | sections/04k-kernels.tex |
 | eq:step | step Q_w(v,·) (filter at centre, then box) | sections/04k-kernels.tex |
