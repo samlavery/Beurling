@@ -46,7 +46,7 @@ dep('prop:true-kernels', 'cor:lag,lem:lemmaP,prop:ecl')              # the count
 dep('lem:tau-near', 'lem:cm,lem:smooth-v'); dep('lem:tau-near', 'cor:localcount', '<')
 dep('lem:S', 'lem:smooth-v')
 dep('lem:noise', 'cite:Freedman1975,lem:S'); dep('lem:noise', 'thm:queue,prop:ecl,lem:lemmaP', '<')
-dep('lem:threshold-mass', 'lem:cm'); dep('lem:threshold-mass', 'cor:localcount', '<')
+dep('lem:threshold-mass', 'lem:cm'); dep('lem:threshold-mass', 'cor:localcount,cor:lag,lem:lemmaP', '<')   # lag and Lemma P: case (i) (#61)
 dep('thm:lp', 'lem:ZBlow,eq:Rhatbound,lem:T1,lem:cm'); dep('thm:lp', 'thm:queue', '<')
 dep('eq:osc', 'eq:rhodet,lem:rhoA(c)')
 dep('lem:rhoA(c)', 'lem:rhoA(a)(b)'); dep('lem:rhoA(a)(b)', 'lem:lemmaP', '<')

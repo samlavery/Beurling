@@ -5,7 +5,11 @@
 \begin{lemma}[threshold mass]\label{lem:threshold-mass}
 % v3: Lemma 3.12
 For squarefree $n$ put $\tau(n):=\max_{p\mid n}t(p)\prod_{q\mid n,\,t(q)\ge t(p)}q$, so that $\chi^t_y(n)=1$ if and only if
-$\tau(n)<y$. Assume $|N-T|\le D:=B+\frac12H(1+\kappa_+/\log x)+4$ at the relevant heights (Corollary~\ref{cor:lag}). For $x\ge X_0^3$ and
+$\tau(n)<y$. Assume $|N-T|\le D:=B+\frac12H(1+\kappa_+/\log x)+4$ at the relevant heights (Corollary~\ref{cor:lag}), and the
+bound $\#(\Abs\cap[v,v+h(v)])\le h(v)(\log v)^{-4}$ of Lemma~\ref{lem:lemmaP} at heights $X_0\le v\le x$; both hold on
+$\Good(<x)$.
+% Logged correction 61 (CORRECTIONS-vs-v3.md): the bound of Lemma P is a hypothesis; case (i) of the proof uses it.
+For $x\ge X_0^3$ and
 % Logged correction 38 (CORRECTIONS-vs-v3.md): x >= X0^3 (v3: x >= X0), so that every p in case (ii) exceeds X0.
 % Logged correction 36 (CORRECTIONS-vs-v3.md): +4 (lower lag constant -4); D <= H still, as B << H.
 % Logged correction 59 (CORRECTIONS-vs-v3.md): the lower bound on delta is a hypothesis (v3 and the first version stated the
@@ -41,8 +45,27 @@ rational prime $p$).
 % coefficient 0.6385 > 0.6 at delta = 1/4. With the centred jitter (|t(p)-p| <= delta p/20) the coefficient is 0.58259; and
 % m' = 1 in case (ii), so the sum over m' <= 2H/delta disappears.
 \begin{enumerate}[label=(\roman*)]
-\item $p\le\sqrt{\delta x/(2H(x))}$. The interval $I_p/p^2$ has length $\ge2D$, so it holds at most $4\delta x/p^2$
-  elements $m'$ (by $|N-T|\le D$). These pairs contribute at most $4\delta x\sum_{p\le\sqrt x}1/p$ to $\sum p$.
+% Logged correction 61 (CORRECTIONS-vs-v3.md): v3 counted the m' in I_p/p^2 by |N-T| <= D alone, which also needs
+% T(I) = O(|I|); T jumps at absorbed elements, which Lemma P controls only per window of length h(u). Now: if p <= 1.01x^{1/4},
+% the interval is longer than h and is covered by h-windows; if p > 1.01x^{1/4}, m' is a single prime, counted by slots.
+\item $p\le\sqrt{\delta x/(2H(x))}$. For fixed $p$, $m'\in J_p:=I_p/p^2=[x(1-\delta),x)/(t(p)p)$. As $0.99p\le t(p)\le1.01p$ (for
+  a jittered $p$, $|t(p)-p|\le H(t(p))/2$), $|J_p|=\delta x/(t(p)p)$ lies between $1.98H(x)$ and $1.0102\,\delta x/p^2$. Every
+  prime $q$ of $m'$ has $q\ge0.99p$: if $p$ is rational, $q\ge\min(p,\Xm)\ge0.99p$; otherwise $q\ge t(q)-H(t(q))/2\ge t(p)-H(t(p))/2\ge p-H(t(p))$.
+  And $m'\ne1$, since $p^2m'\ge0.74x$ while $p^2\le\delta x/(2H(x))$.
+  \begin{itemize}
+  \item If $p\le1.01x^{1/4}$: $J_p$ lies in $[0.75U,U)$ with $U:=x/(t(p)p)\ge0.97\sqrt x\ge X_0$, and $|J_p|=\delta U\ge h(U)$,
+    since $U^{1-\theta/2}\ge U^{3/4}\ge0.97x^{3/8}\ge1/\delta$. Cover $J_p$ by $\lceil|J_p|/h(0.75U)\rceil$ windows $[v,v+h(v)]$;
+    each holds at most $h(v)(\log v)^{-4}$ absorbed elements, so $\#\Abs(J_p)\le(1.08|J_p|+h(U))(\log0.75U)^{-4}\le0.01|J_p|$. As $T$
+    jumps by $1$ only at rigid integers and at absorbed elements, and $T'_{\mathrm{cont}}\le1+10^{-8}$ there,
+    $T(J_p)\le2.02|J_p|+1$; with $|N-T|\le D\le H(x)\le10^{-3}|J_p|$ at both ends, $N(J_p)\le2.03|J_p|$.
+  \item If $p>1.01x^{1/4}$: $m'$ is a single prime, since two primes $\ge0.99p$ would give $p^2m'\ge0.98p^4>1.019x$, while $p^2m'\le xp/t(p)\le1.011x$. The
+    rational primes are integers below $X_0$, and those in $[\Xm,X_0)$ number at most $H(X_0)/2+1$. A jittered prime lies within
+    $H(s)/2\le0.51H(x)$ of its slot $s$; each continuous slot decides at most one prime, and consecutive continuous slots are at
+    least $1-10^{-8}$ apart (\S\ref{sec:noise-perscale}). So $J_p$ holds at most
+    $(1+10^{-7})|J_p|+1.03H(x)+H(X_0)/2+3\le1.8|J_p|$ primes.
+  \end{itemize}
+  In both cases there are at most $2.03|J_p|\le2.1\,\delta x/p^2\le4\delta x/p^2$ elements $m'$. These pairs contribute at most
+  $4\delta x\sum_{p\le\sqrt x}1/p$ to $\sum p$.
 \item $p>\sqrt{\delta x/(2H(x))}$; then $p\ge\sqrt3\,x^{1/3}$, since $\delta\ge6H(x)x^{-1/3}$.
   \begin{itemize}
   \item \emph{The jitter.} $H(p)/p\le H(x)/(\sqrt3x^{1/3})\le\delta/(6\sqrt3)$. Also $t(p)\le p+H(t(p))/2\le p+t(p)/2$, so

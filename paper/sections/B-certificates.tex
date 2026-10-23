@@ -381,10 +381,11 @@ graph, every loop closing only through an input used at a strictly earlier time 
 only as leaves, and only some are listed), each edge marked ``same time'' or
 ``strictly earlier'' as in the table of Section~\ref{sec:logic}, of which that table is an abridgement. It runs a depth-first search for
 a cycle among the same-time edges.
+% Logged correction 61: edges lag -> threshold-mass and Lemma P -> threshold-mass (strictly earlier) added.
 \begingroup\footnotesize
 \begin{verbatim}
 python3 -I -B certificates/depcheck/depcheck.py
-  same-time subgraph acyclic: True | nodes 79 | edges 193 | strictly-earlier edges 27
+  same-time subgraph acyclic: True | nodes 79 | edges 195 | strictly-earlier edges 29
 \end{verbatim}
 \endgroup
 The time-ordering of the strictly-earlier edges is argued in Section~\ref{sec:noncirc}; the script checks only the bookkeeping.
