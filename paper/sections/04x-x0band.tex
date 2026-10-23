@@ -7,7 +7,8 @@ The source $T'$ vanishes below $X_0$ and equals $\jz=1-\rhodet(X_0)$ just above 
 cannot be handled by the oscillation bounds of Proposition~\ref{prop:br}: the kernels $C_n^x$ with $x/n$ within about
 $H(X_0)$ of $X_0$ straddle it, and their weight in a dyadic block is of order $\log X_0/\log x$, which is not small
 compared with the margin: $\rhosh(x)\log x\ge0.97-o(1)$ for $x\ge X_0^{1.01}$, but only $\ge0.82-o(1)$ on
-$[X_0+H(X_0),X_0^{1.01}]$ (Proposition~\ref{prop:g1} and Lemma~\ref{lem:margin}(d)). % Logged correction 47: piecewise margin
+$[X_0+H(X_0),X_0^{1.01}]$ (Proposition~\ref{prop:g1} and Lemma~\ref{lem:margin}(d)).
+% Logged correction 47: piecewise margin
 We therefore treat the jump separately and exactly. Recall
 $J=\jz\mathbf 1_{[X_0,\infty)}$, $\Tc=T'-J$, and put
 \[
@@ -31,7 +32,8 @@ $D_d:=C_d^{y,\nom}-c_d\,\delta_{y/d}$ (a measure of mass $0$; $C^{y,\nom}_d$ as 
 \begin{align*}
   \mathbb B_0&:=\{n:\ |y/n-X_0|\le H_n/2\},\\
   \mathbb B_1&:=\{(d,w):\ \text{the step $d\to n$ is $X_0$-near, i.e. } |y/(dw)-\Xm|\le R_d/w\},\\
-  \mathbb B_2&:=\{(d,w)\notin\mathbb B_1:\ |y/n-X_0|\le(1+\vartheta_{X_0})H_n/2+R_d/w\}. % CORRECTIONS #29 (factor 1+ϑ_{X₀})
+  \mathbb B_2&:=\{(d,w)\notin\mathbb B_1:\ |y/n-X_0|\le(1+\vartheta_{X_0})H_n/2+R_d/w\}.
+  % CORRECTIONS #29 (factor 1+ϑ_{X₀})
 \end{align*}
 Then, on $\Good(<y)$,
 \begin{equation}\label{eq:xb}
@@ -99,7 +101,8 @@ others. Since $D_1=0$, only $d\ge2$ occurs.
 \item If the step is not $X_0$-near, then $G\psi_{d\to n}=\kappa_\tau\kappa_{X_0}G$, and $G$ is Lipschitz with constant
   $\le\lambda_0/H_n$; by Lemma~\ref{lem:kr-facts}(K2), $|\int G\,d(D_wD_d)|\le\lambda_0\KRn{D_wD_d}/H_n=\lambda_0\KRn{D_d}/(wH_n)$. If moreover
   $|y/n-X_0|>(1+\vartheta_{X_0})H_n/2+R_d/w$, the support lies where $G$ is constant (there $H(c)\le(1+\vartheta_{X_0})H_n$)
-  and the term vanishes.  % CORRECTIONS #29
+  and the term vanishes.
+  % CORRECTIONS #29
 \end{itemize}
 Multiplying \eqref{eq:level-defect} by $1/n=1/(dw)$ and summing over $n$ gives at most $\frakB(y)$.
 
@@ -307,7 +310,8 @@ because $0.0001\Lambda\ge12.4+3\log\Lambda$ for $\Lambda\ge10^8$.
 \begin{proof}[Proof of (iii): the huge range]
 Let $J:=\log N\ge600\Lambda^4$ and $W_1:=e^{100}$. The main pieces use Lemma~\ref{lem:si} below, with $J_1=300\Lambda^4$.
 Recall from Lemma~\ref{lem:lemmaM} that $c_e(y)\ne0$ forces $e$ to be squarefree and $4v$-dense whenever $y/e\in[v,2v)$,
-including the condition $p_1\le4v$ on its smallest prime. % Logged correction 40: t-dense includes j = 0 (p_1 <= t)
+including the condition $p_1\le4v$ on its smallest prime.
+% Logged correction 40: t-dense includes j = 0 (p_1 <= t)
 Applying this with $v$ just above $y/(2e)$, so that $4v\le2.03\,sX_0$, an element $e$ with $y/e\le1.01\,sX_0$ is $t$-dense
 with $t=4.01\,sX_0$.
 

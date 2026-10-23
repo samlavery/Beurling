@@ -130,12 +130,28 @@ $N-\lfloor\cdot\rfloor=(N-T)+(T-\lfloor\cdot\rfloor)$.
   Theorem~\ref{thm:queue} and Corollary~\ref{cor:lag}.
 % Logged correction 15 (CORRECTIONS-vs-v3.md): lag bound (H/2)(1+kappa_+/log x)+3 (v3: H/2+2).
 % Logged correction 36 (CORRECTIONS-vs-v3.md): the lower lag constant is -4, so the two-sided bound has +4.
-\item $T-\lfloor\cdot\rfloor$ is the error of the target \eqref{eq:target} (with its linear-window density \eqref{eq:rhodet})
-  plus $R$ plus the absorbed part. By \eqref{eq:T1} and
-  Lemma~\ref{lem:lemmaP} it is bounded by $2\kappa u\cdot\min(1,C\rho(\log u/\log X_0))+O(u^{\theta}\log^*u)$.
+% Logged correction 51 (CORRECTIONS-vs-v3.md): v3's bound 2*kappa*u*min(1, C rho(log u/log X_0)) for the rigid error was never
+% proved; replaced by the explicit bound eq:Erig of Lemma T1 and a Rankin decay estimate.
+\item For $u\ge X_0$, $T-\lfloor\cdot\rfloor=E_{\mathrm{rig}}+(\#\Abs-\textstyle\int\bar\rho_{\Abs})+R+\{u\}$, with the rigid error
+  $E_{\mathrm{rig}}$ of Lemma~\ref{lem:T1}. By \eqref{eq:Erig},
+  $|E_{\mathrm{rig}}(u)|\le\kappa X_0+1+\min(\kappa u+1,\Psi(2u,X_0))$. Rankin's method with exponent $1-1/\Lambda$ gives
+  $\Psi(y,X_0)\le y\,e^{-\log y/\Lambda}\prod_{p<X_0}(1-p^{1/\Lambda-1})^{-1}\le e^{7.2}\Lambda\,y\,e^{-\log y/\Lambda}$; the product is
+  bounded as in the proof of Lemma~\ref{lem:rankin-crude} with $z=X_0$, using the rational primes and Mertens' estimates
+  \cite{RosserSchoenfeld1962} instead of Lemma~\ref{lem:cm}, so no use of \eqref{eq:HBS} is made. Hence
+  \[
+    \frac{|E_{\mathrm{rig}}(u)|}u\le\frac{\kappa X_0+1}u+\min\Bigl(1.001\kappa,\ 2700\,\Lambda e^{-\log u/\Lambda}\Bigr).
+  \]
+  The absorbed part is $\le2u^{\theta/2}$ (Lemma~\ref{lem:T1}), and $\Abs=\emptyset$ for $\log\log u\le2\log\Lambda+s_H$; $R\equiv0$ below
+  $x_1\ge\exp(X_0^2)$, and $|R(u)|\le2u^{\theta}\log^*u$; and $\{u\}<1$.
 \item On $[\Xm,X_0)$, $N-\lfloor\cdot\rfloor$ counts the jittered primes landing below $X_0$. There are at most
   $\#\{\text{slots in }[X_0,X_0+H]\}\le 2H(X_0)$ of them, so $\eps_1\le 3H(X_0)/X_0$ there.
-\item Hence $\eta_1,\eta_2=O(\kappa\log X_0)+O(X_0^{-1/2})\ll 10^{-3}$.
+\item Hence $\eta_1,\eta_2\le\kappa\Lambda^2+X_0^{-1/2}\ll10^{-3}$. Indeed, in the rigid part the term $(\kappa X_0+1)/u$ contributes
+  $\le4.01\kappa$ to $\eta_1$ (a geometric sum over the dyadic blocks above $\Xm$). The minimum equals $1.001\kappa$ on at most
+  $\Lambda\log(2700\Lambda/\kappa)/\log2+1\le0.61\Lambda^2$ blocks (as $\log(1/\kappa)\le\tfrac5{12}\Lambda$ for every $\eps_\kappa>0$), and beyond them it
+  decays geometrically with ratio $e^{-\log2/\Lambda}$, so it contributes $\le0.62\kappa\Lambda^2+1.45\kappa\Lambda$. For $\eta_2$, the
+  maximum of $\min(\cdot)\log u$ is at most $1.001\kappa\cdot\Lambda\log(2700\Lambda/\kappa)\le0.43\kappa\Lambda^2$, since
+  $t\mapsto2700\Lambda te^{-t/\Lambda}$ decreases for $t\ge\Lambda$; and $(\kappa X_0+1)\log u/u\le1.001\kappa\Lambda$.
+  The other parts (the lag $|N-T|$, the absorbed part, $R$, $\{u\}$, and the band $[\Xm,X_0)$) contribute $\le X_0^{-1/2}$ to each.
 \end{itemize}
 No sup-norm power saving is assumed; for the target \eqref{eq:target} it would fail near $u\approx X_0^2$.
 

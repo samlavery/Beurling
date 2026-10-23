@@ -71,7 +71,7 @@
 | thm:bs | Theorem 3.4, Beurling–Saias upper bound | sections/04c-saias.tex |
 | lem:bs-profile | Lemma 3.4A, BS-profile (induction claim of Thm 3.4) | sections/04c-saias.tex |
 | cor:saias | Corollary 3.5, Saias weights (S) at every start | sections/04c-saias.tex |
-| eq:s2 | the q²-source s₂(u) | sections/04d-noise.tex |
+| eq:s2 | the q²-source s₂(u) = 9L_u exp(−max(log X₀⁻, ½√(L_u log L_u))) (re-derived in correction #52) | sections/04d-noise.tex |
 | eq:F1 | Freedman bound (F₁) for Mart (events E3/E3′) | sections/04d-noise.tex |
 | eq:F2 | Freedman bound (F₂) for Mart^{(2)} | sections/04d-noise.tex |
 | lem:noise | Lemma 3.11, per-scale noise ν̄, ν̂ | sections/04d-noise.tex |
@@ -173,3 +173,5 @@
 | cor:localcount | UPDATE (correction 37): part (i) dyadic P (as before); part (ii) any real P ≥ X₀, bound 11.4|J| + K_loc(P) + K_loc(2P) (non-absorbed 13.4|J| + K_loc(P) + K_loc(2P) + 4) | 05-queue.tex |
 | eq:A-exactcount | App. A, Lemma fac (S3) proof: exact-count bound for r-sets of realised primes (correction #48) | A-rankfull.tex |
 | eq:A-telescope | App. A, Lemma fac (S3) proof: telescoping bound for the joining top factor (correction #48) | A-rankfull.tex |
+| eq:Erig | Lemma T1: explicit rigid error \|E_rig(x)\| ≤ min(Ψ(2x,X₀), κX₀+1+min(κx+1, Ψ(2x,X₀))) (correction #51) | 02-construction.tex |
+| app:cert-rankin | App. B: rankin_R.py, the Rankin constants of Lemma rowweights(c),(e) (correction #49) | B-certificates.tex |

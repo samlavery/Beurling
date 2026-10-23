@@ -5,8 +5,9 @@ The scripts are in the directory \texttt{certificates/} of the repository accomp
 the interval computations use ball arithmetic from \texttt{python-flint} (Arb). Each subsection states what is checked, the
 method, the command, and the expected output. Commands are run from the repository root unless stated otherwise.
 
-Three of them are steps of the proof: the Beurling--Saias certificate (Section~\ref{app:cert-bs}), the finite computations on
-the integers (Section~\ref{app:cert-finite}), and the small range of the $X_0$-band bound (Section~\ref{app:cert-x0band}). The
+Four of them are steps of the proof: the Beurling--Saias certificate (Section~\ref{app:cert-bs}), the finite computations on
+the integers (Section~\ref{app:cert-finite}), the small range of the $X_0$-band bound (Section~\ref{app:cert-x0band}), and the
+Rankin constants of Lemma~\ref{lem:rowweights} (\texttt{rankin\_R.py}, Section~\ref{app:cert-rankin}). The
 others are independent numerical cross-checks of statements proved in the text (Theorem~\ref{thm:caplw}, Lemma~\ref{lem:sc},
 Theorem~\ref{thm:svl}) or of the bookkeeping of Section~\ref{sec:logic}.
 
@@ -159,8 +160,9 @@ analytic tail bound for n>=N: 0.13738898318455534
 \endgroup
 The companion script \texttt{x0band.py} is an earlier floating-point exploration up to $2\cdot10^4$; it is not part of the certificate.
 
-\subsection{The capacity theorem: numerical cross-check (\texttt{capl-cert})}\label{app:cert-capl}
-Theorem~\ref{thm:caplw} is proved analytically. The scripts in \texttt{certificates/capl-cert/} re-evaluate, in double-precision
+\subsection{The capacity theorem: numerical cross-check and Rankin constants (\texttt{capl-cert})}\label{app:cert-capl}
+Theorem~\ref{thm:caplw} is proved analytically. Apart from \texttt{rankin\_R.py} (see below), the scripts in
+\texttt{certificates/capl-cert/} re-evaluate, in double-precision
 floating point, the precise criteria that Steps~2--5 of that proof bound analytically: the degree cap $D^*$ computed from
 $\binom{m+k}{k}$; the exact $j=\max\{j:e(r_0(D+1))^{2j+1}<c\}$; the row-weight bounds of Lemma~\ref{lem:rowweights}(b),(d); and
 condition~\eqref{eq:twelvetwo} of Lemma~\ref{lem:lemmaP} with the exact absorption threshold $y$. They are not interval-certified, and
@@ -208,7 +210,32 @@ max (log H - log H_std)/L = 1.292e-08 at log10 Lambda = 8.00, s = -9.92;
 \end{verbatim}
 \endgroup
 \end{itemize}
-\emph{How to run} (standard library only, from the repository root):
+% Logged correction 49: rankin_R.py, a proof step for Lemma rowweights(c),(e).
+\paragraph{A proof step in this directory: \texttt{rankin\_R.py}.}\label{app:cert-rankin}
+Unlike the scripts above, this one is a step of the proof, of Lemma~\ref{lem:rowweights}(c),(e). In ball arithmetic it checks:
+\begin{itemize}
+\item $R(\sigma):=\sum_p\bigl(-\log(1-p^{-\sigma})-p^{-\sigma}\bigr)$ satisfies $R(0.69)\le0.7618\le0.77$ and $R(0.75)\le0.6212\le0.63$.
+The sum over $p\le10^7$ is computed in balls, and the rest is bounded by
+$\sum_{n>N}n^{-2\sigma}/(2(1-n^{-\sigma}))\le N^{1-2\sigma}/(2(2\sigma-1)(1-N^{-\sigma}))$ with $N=10^7$.
+\item $\operatorname{Ei}(11)-e^{11}/11-e^{11}/121\le134$, and $2.75/x+134x^2e^{-x}<1$ on $[11,411]$. Together these give
+$\operatorname{Ei}(x)\le(e^x/x)(1+2/x)$ for $x\ge11$. The second function is decreasing on $[11,\infty)$; the script evaluates it on a
+grid of step $0.1$.
+\item $(3/2)^{3/4}\le1.3555$ and $\operatorname{Ei}(\tfrac14\log2)\ge-1$.
+\end{itemize}
+Expected output (about 2 seconds, with \texttt{python-flint}):
+\begingroup\footnotesize
+\begin{verbatim}
+R(0.69) <= [0.76178247 +/- 3.88e-9]  (claim <= 0.77): OK
+R(0.75) <= [0.62117313 +/- 3.99e-9]  (claim <= 0.63): OK
+Ei(11) - e^11/11 - e^11/121 = [133.47496 +/- 4.33e-6]  (claim <= 134): OK
+2.75/x + 134 x^2 e^-x < 1 on [11, 411]: OK
+(3/2)^(3/4) = [1.355403005 +/- 4.15e-10]  (claim <= 1.3555): OK
+Ei(log(2)/4) = [-0.9944989999 +/- 1.03e-11]  (claim >= -1): OK
+ALL OK
+\end{verbatim}
+\endgroup
+
+\emph{How to run} (from the repository root; all but \texttt{rankin\_R.py} use only the standard library):
 \begingroup\footnotesize
 \begin{verbatim}
 python3 -I -B certificates/capl-cert/analytic_capl.py
@@ -216,6 +243,7 @@ python3 -I -B certificates/capl-cert/caplw_check_independent.py
 python3 -I -B certificates/capl-cert/cert_capl.py
 python3 -I -B certificates/capl-cert/needs.py
 python3 -I -B certificates/capl-cert/raise_max.py
+python3 -I -B certificates/capl-cert/rankin_R.py    # needs python-flint 0.9.0
 \end{verbatim}
 \endgroup
 

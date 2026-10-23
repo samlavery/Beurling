@@ -126,16 +126,34 @@ Write $E(x):=T(x)-x-R(x)$. On the event of Lemma~\ref{lem:lemmaP},
 \begin{equation}\label{eq:T1}
   |E(x)|\le C_{X_0}x^{\theta}+2x^{\theta/2}\qquad\text{for all }x\ge X_0,\quad C_{X_0}<\infty.
 \end{equation}
-Moreover $|R(x)|\le2x^{\theta}\log^*x$.
+Moreover $|R(x)|\le2x^{\theta}\log^*x$, and the rigid part $E_{\mathrm{rig}}(x):=\Psi(x,X_0)-\Psi(X_0,X_0)-\int_{X_0}^x\rhodet$ of $E$
+satisfies, for every $x\ge X_0$,
+% Logged correction 51
+\begin{equation}\label{eq:Erig}
+  |E_{\mathrm{rig}}(x)|\le\min\Bigl(\Psi(2x,X_0),\ \kappa X_0+1+\min\bigl(\kappa x+1,\Psi(2x,X_0)\bigr)\Bigr).
+\end{equation}
 \end{lemma}
 \begin{proof}
-\emph{Rigid part.} For $\log x\ge X_0^{1-\theta}\log X_0$, Rankin's method gives
-$|\Psi(x,X_0)-\int\rhodet|\le\Psi(2x,X_0)\le(2x)^{\theta}\exp\bigl(X_0^{1-\theta}/((1-\theta)\log X_0)\bigr)$. Below that, the rigid mass
-in flight gives at most $\kappa x+1$. Together this is $C_{X_0}x^{\theta}$. This includes the drift caused by the ramp mass: with the
-linear normalisation, $\int_{X_0}^x\rhodet=(1-\kappa/2+O(\kappa^2))\Psi(x,X_0)$ up to the boundary terms from the rigid
-$n\in[X_0,X_0(1+\kappa))$ (at most $\kappa X_0+1$, Lemma~\ref{lem:blin}(4)), so $E$ drifts by $+(\kappa/2)\Psi(x,X_0)$. At the
-scales $\log x\ge X_0^2$ of the zeros this drift is $\le\kappa x^{0.011}$, since by Rankin
-$\Psi(x,X_0)\le x^{0.01}\prod_{p<X_0}(1-p^{-0.01})^{-1}\le x^{0.011}$ there.
+% Logged correction 51
+\emph{Rigid part.} Each rigid $d>X_0$ contributes a unit jump at $d$ and the ramp mass
+$\kappa^{-1}\log\bigl(\min(x,d)/\max(X_0,d/(1+\kappa))\bigr)^+$ to $\int_{X_0}^x\rhodet$. So $E_{\mathrm{rig}}(x)=E_0+E_{\mathrm{dr}}-E_{\mathrm{fl}}$, where:
+\begin{itemize}
+\item $E_0\in[0,\kappa X_0+1]$ comes from the $d\in(X_0,X_0(1+\kappa))$, whose ramps are truncated at $X_0$ (Lemma~\ref{lem:blin}(4));
+\item $E_{\mathrm{dr}}\in[0,\tfrac\kappa2\Psi(x,X_0)]$ is the drift: the $d\in[X_0(1+\kappa),x]$ each carry ramp mass
+$\log(1+\kappa)/\kappa=1-\kappa/2+O(\kappa^2)$ (Lemma~\ref{lem:blin}(5));
+\item $E_{\mathrm{fl}}\in[0,\#(\mathcal D\cap(x,(1+\kappa)x))]$ is the mass in flight.
+\end{itemize}
+Each rigid $d\le x$ contributes at most $1$ to $E_0+E_{\mathrm{dr}}$, so $E_0+E_{\mathrm{dr}}\le\Psi(x,X_0)$, and
+$E_{\mathrm{fl}}\le\Psi(2x,X_0)-\Psi(x,X_0)$. Since $E_0+E_{\mathrm{dr}}$ and $E_{\mathrm{fl}}$ are non-negative,
+$|E_{\mathrm{rig}}|\le\max(E_0+E_{\mathrm{dr}},E_{\mathrm{fl}})$. Both $E_{\mathrm{dr}}$ and $E_{\mathrm{fl}}$ are
+$\le\min(\kappa x+1,\Psi(2x,X_0))$ (as $\Psi(x,X_0)\le x$), which gives \eqref{eq:Erig}.
+
+% Logged correction 50
+Rankin's method gives $\Psi(2x,X_0)\le(2x)^{\theta}C'_{X_0}$, where $C'_{X_0}:=\prod_{p<X_0}(1-p^{-\theta})^{-1}<\infty$, since
+$\Psi(y,X_0)\le\sum_{d\in\mathcal D}(y/d)^{\theta}$. So $|E_{\mathrm{rig}}(x)|\le C_{X_0}x^{\theta}$ with $C_{X_0}:=2C'_{X_0}$. At the
+scales $\log x\ge X_0^2$ of the zeros the drift $E_{\mathrm{dr}}$ is $\le\kappa x^{0.011}$, since by Rankin
+$\Psi(x,X_0)\le x^{0.01}\prod_{p<X_0}(1-p^{-0.01})^{-1}\le x^{0.011}$ there: each factor is at most $(1-2^{-0.01})^{-1}<145<e^5$, so the
+product is $\le e^{5\pi(X_0)}\le e^{0.001X_0^2}\le x^{0.001}$.
 
 \emph{Absorbed part.}
 % Logged correction 34 (CORRECTIONS-vs-v3.md): v3 omitted the mass deficit 1-M_a of the smoothed elements; added here.

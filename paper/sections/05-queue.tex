@@ -375,9 +375,10 @@ $b:=2M_1$ (by truncation).
   $V\le2M_1\qComp_{\mathrm{jit}}(I)\le2M_1(\ell+K_d)=v_\ell$, by R1$'$ (Corollary~\ref{cor:r1}) applied to $I$. So (a) fails
   there only on the event $\{S\ge a(\ell),\,V\le v_\ell\}$, which has probability at most $e^{-\lambda}$.
 \item Windows with $\qljit(I)>L_0+5$ are never used in (ii).
+% Logged correction 52 (CORRECTIONS-vs-v3.md): the endpoint of s_2 is log X_0^-, not Lambda = log X_0.
 \item For (b): take $b=1$. On the good event,
   $\sum_q\Prob(X^{(2)}_q(I)\ge1\mid\mathcal F_{q-})\le\qComp^{(2)}(I)\le s_2(x)|I|\ll1$. This is the source $s_2$ of
-  \eqref{eq:s2}, restated in Corollary~\ref{cor:r1}, with \[s_2\le9L\exp\big(-\max(\Lambda,\tfrac12\sqrt{L\log L})\big).\] Since
+  \eqref{eq:s2}, restated in Corollary~\ref{cor:r1}, with \[s_2\le9L\exp\big(-\max(\log\Xm,\tfrac12\sqrt{L\log L})\big).\] Since
   $\log(12L\,L_0)\le\log M_1+4\ell+10.2$ and $\log M_1+5\ell+13\ll\tfrac12\sqrt{L\log L}$ at every scale (Theorem~\ref{thm:caplw}),
   $s_2\cdot12L\,L_0\ll1$. Freedman's
   inequality then gives $\#\{q:X^{(2)}_q\ge1\}\le1+\sqrt{2\lambda}+\tfrac23\lambda\le\lambda$, except with probability
@@ -877,15 +878,17 @@ Let $y\in R$ have degree $k\ge1$, so that $M_y\ge(\Xm)^k$ and $d_y\le2z/(\Xm)^k$
 \item $w_y\le\sum_{k'\ge k}\binom{\pi+k'-1}{k'}\Psi(2z/(\Xm)^{k'},X_0)/z$.
 \item (High degree.) If $e(\pi+k)/(k\Xm)\le1/3$, then $w_y\le3\,(e(\pi+k)/k)^k(\Xm)^{-k}$; that is,
   $\log(1/w_y)\ge k(\log\Xm-1-\log((\pi+k)/k))-\log3$.
-\item (Smooth tails.) Put $u:=\log Y/\Lambda$. For $\max(10^4,\log\Lambda)\le u\le X_0^{1/2}$ we have
-  $\Psi(Y,X_0)\le Y\exp(-0.9u\log u)$. For $u>X_0^{1/2}$ we have
+\item (Smooth tails.) Put $u:=\log Y/\Lambda$. For $\max(10^4,\log\Lambda)\le u\le X_0^{0.3}$ we have
+  $\Psi(Y,X_0)\le Y\exp(-0.9u\log u)$. For $u>X_0^{0.3}$ we have
   \[\Psi(Y,X_0)\le\exp\big(1.26X_0\log(2\log Y)/\Lambda\big).\]
-\item (Low degree, smooth tails.) Put $u_1:=\max(10^4,\log\Lambda)$. If $2u_1\le D-1$, $D\le X_0^{1/2}$ and
+\item (Low degree, smooth tails.) Put $u_1:=\max(10^4,\log\Lambda)$. If $2u_1\le D-1$, $D\le X_0^{0.3}$ and
   $\pi(\Xm)^{-1}(eD)^{0.9}\le1/3$, then $\log(1/w_y)\ge g:=\log\Xm-\log(3\pi)+0.9(D-1)\log(D-1)-e^{-0.4\Lambda}$.
-\item (Joint Rankin bound; any $L$.) For every $\eta\in[\tfrac14,1)$,
+\item (Joint Rankin bound at exponent $\tfrac34$; any $L$.)
   \[
-  \log(1/w_y)\ge\eta L-\log2-\log\Lambda-2-\frac{1.3X_0^{\eta}}{\eta\Lambda}-\frac{1.36(X_0+\pi)^{\eta}}{0.99\,\eta}.
+  \log(1/w_y)\ge\frac L4-\log2-\log\Lambda-2-\frac{5.2X_0^{1/4}}{\Lambda}-5.5(X_0+\pi)^{1/4}.
   \]
+  % Logged correction 49: v3 states (e) for every eta in [1/4,1); the rigid Euler product diverges as eta -> 1 and its
+  % prime-power terms are not O(1) for eta >= 1/2. The only use is eta = 1/4 (Step 4 (T2) of Theorem caplw).
 \end{enumerate}
 \end{lemma}
 
@@ -897,15 +900,33 @@ $(\pi+k')/((k'+1)\Xm)\le1/(3e)$, by the hypothesis. So the sum over $k'\ge k$ is
 $2.3\binom{\pi+k-1}{k}(\Xm)^{-k}\le3(e(\pi+k)/k)^k(\Xm)^{-k}$.
 
 (c) We use Rankin's bound $\Psi(Y,y)\le Y^{\sigma}\prod_{p\le y}(1-p^{-\sigma})^{-1}$ with $y=X_0$ and $\sigma=1-\eta$, where
-$\eta:=\log(u\log u)/\Lambda\in(0,1)$.
+$\eta:=\log(u\log u)/\Lambda$. Since $u\le X_0^{0.3}$, we have $\eta\le0.3+\log(0.3\Lambda)/\Lambda\le0.31$, so $\sigma\ge0.69$.
+% Logged correction 49: v3 states (c) up to u = X_0^{1/2}, where sigma ~ 1/2 and the prime-power sum R(sigma) exceeds 1;
+% the range is cut to u <= X_0^{0.3} (sigma >= 0.69), which covers every use, and the bound is now proved in full.
 \begin{itemize}
 \item $Y^{\sigma}=Y\exp(-u\log u-u\log\log u)$.
-\item By partial summation with $\pi(t)\le1.26t/\log t$ and $\sum_{p\le y}1/p\le\log\log y+0.27$ for $y\ge2140$
-  \cite[Thm.~5, (3.18)]{RosserSchoenfeld1962},
-  \[
-  \log\prod_{p\le X_0}(1-p^{-\sigma})^{-1}\le\log\Lambda+0.27+1.26\,\frac{u\log u}{\log(u\log u)}\Big(1+\frac2{\log(u\log u)}\Big)+1
-  \le\log\Lambda+1.3u+2.
-  \]
+\item Write $\log\prod_{p\le X_0}(1-p^{-\sigma})^{-1}=\sum_{p\le X_0}p^{-\sigma}+R(\sigma)$ with
+  $R(\sigma):=\sum_p\big(-\log(1-p^{-\sigma})-p^{-\sigma}\big)$. This is decreasing in $\sigma$, and $R(0.69)\le0.77$ and
+  $R(0.75)\le0.63$ (computer-assisted: the sum over $p\le10^7$ in interval arithmetic, plus the tail
+  $\sum_{n>10^7}n^{-2\sigma}/(2(1-n^{-\sigma}))$; see Appendix~\ref{app:cert-rankin}).
+\item $\sum_{p\le X_0}p^{-\sigma}=\sum_{p\le X_0}1/p+\sum_{p\le X_0}g(p)$ with $g(t):=(t^{\eta}-1)/t$. The first sum is at most
+  $\log\Lambda+0.27$ \cite[Thm.~5, (3.18)]{RosserSchoenfeld1962}. The function $g$ decreases for $t\ge t_0:=(1-\eta)^{-1/\eta}$,
+  and $t_0\in[e,e^{1.45}]$. Partial summation with $\pi(t)\le1.26t/\log t$ \cite[(3.6)]{RosserSchoenfeld1962}, dropping the
+  negative part of $-\int\pi g'$ on $[2,t_0]$, makes the boundary terms at $X_0$ cancel and gives
+  \begin{align*}
+  \sum_{p\le X_0}g(p)&\le1.26\Big(\frac{t_0^{\eta}-1}{\log t_0}+\int_{t_0}^{X_0}\frac{t^{\eta}-1}{t\log t}\,dt\Big)
+  \le1.26\Big(\frac{\eta}{1-\eta}+\mathrm{Ein}(\eta\Lambda)\Big),\\
+  \mathrm{Ein}(x)&:=\int_0^x\frac{e^w-1}w\,dw.
+  \end{align*}
+  Here $\eta\Lambda=\log(u\log u)\ge11.4$ and $e^{\eta\Lambda}=u\log u$. For $x\ge11$,
+  $\mathrm{Ein}(x)\le\mathrm{Ei}(x)\le(e^x/x)(1+2/x)$: integrating by parts twice on $[11,x]$ gives
+  $\mathrm{Ei}(x)\le(e^x/x)(1+1/x+2.75/x^2)+134$, and $2.75/x+134x^2e^{-x}\le1$ there.
+\item Altogether, with $1.26\eta/(1-\eta)\le0.6$,
+  \begin{align*}
+  \log\prod_{p\le X_0}(1-p^{-\sigma})^{-1}&\le\log\Lambda+0.27+0.6+1.26\,\frac{u\log u}{\log(u\log u)}\Big(1+\frac2{\log(u\log u)}\Big)+0.77\\
+  &\le\log\Lambda+1.3u+2,
+  \end{align*}
+  since $\log u\,(1+2/\log(u\log u))\le\log(u\log u)$ when $\log\log u\ge2$.
 \item So, for $u\ge\max(10^4,\log\Lambda)$,
   \[
   \log(\Psi/Y)\le-u\log u-u\log\log u+1.3u+\log\Lambda+2\le-0.9u\log u.
@@ -913,13 +934,13 @@ $\eta:=\log(u\log u)/\Lambda\in(0,1)$.
   This needs
   $0.1u\log u+u\log\log u-1.3u\ge\log\Lambda+2$, which holds there. (At $u=10^4$ alone it would need
   $\log\Lambda\le1.84\cdot10^4$; this is why the lower limit is $\max(10^4,\log\Lambda)$.)
-\item For $u>X_0^{1/2}$: an $X_0$-smooth $d\le Y$ has at most $1+\log Y/\log2$ choices of exponent for each of the at most
+\item For $u>X_0^{0.3}$: an $X_0$-smooth $d\le Y$ has at most $1+\log Y/\log2$ choices of exponent for each of the at most
   $1.26X_0/\Lambda$ primes $p<X_0$.
 \end{itemize}
 
 (d) The $k'$-th term of (a) has $Y=2z/(\Xm)^{k'}$, so $u=\log Y/\Lambda=(D-k')\log\Xm/\Lambda$. For $k'=1$ this gives
-$(D-1)(1-\eps)\le u\le D-1$ with $\eps:=e^{-0.98\Lambda}/\Lambda$, so $u_1\le u\le X_0^{1/2}$ and (c) applies. Since
-$D-1\le e^{\Lambda/2}$, we have $u\log u\ge(D-1)\log(D-1)-(D-1)\eps(\log(D-1)+2)\ge(D-1)\log(D-1)-e^{-0.48\Lambda}$. So the
+$(D-1)(1-\eps)\le u\le D-1$ with $\eps:=e^{-0.98\Lambda}/\Lambda$, so $u_1\le u\le X_0^{0.3}$ and (c) applies. Since
+$D-1\le e^{0.3\Lambda}$, we have $u\log u\ge(D-1)\log(D-1)-(D-1)\eps(\log(D-1)+2)\ge(D-1)\log(D-1)-e^{-0.48\Lambda}$. So the
 $k'=1$ term is at most $2\pi\exp(-0.9(D-1)\log(D-1)+e^{-0.48\Lambda})/\Xm$.
 \begin{itemize}
 \item Consecutive values of $u$ differ by $\log\Xm/\Lambda\le1$. So, while the next term still has $u\ge u_1$, the ratio
@@ -929,22 +950,29 @@ $k'=1$ term is at most $2\pi\exp(-0.9(D-1)\log(D-1)+e^{-0.48\Lambda})/\Xm$.
   following ratios are at most $(\pi+k')/((k'+1)\Xm)\le\tfrac13$.
 \item So $w_y\le\tfrac32(1+e^{-\Lambda})\cdot2\pi\exp(-0.9(D-1)\log(D-1)+e^{-0.48\Lambda})/\Xm$, which gives $g$. Where (d)
   is used (Steps 3--4 of the proof of Theorem~\ref{thm:caplw}), $D-1\ge\Lambda e^{s_H+1}-1\ge2u_1$ and $D\le2L/\Lambda\le
-  X_0^{1/2}$.
+  X_0^{0.3}$, as $\ell\le0.3\Lambda$ there.
 \end{itemize}
 
-(e) We have
+(e) Rankin's bound $\mathbf 1(Md\le2z)\le(2z/(Md))^{3/4}$ gives
 \[
-w_y\le z^{-1}\sum_{(M,d)}\Big(\frac{2z}{Md}\Big)^{1-\eta}\le2z^{-\eta}\prod_{j\le\pi}(1-\tau_j^{\eta-1})^{-1}
-\prod_{p<X_0}(1-p^{\eta-1})^{-1}.
+w_y\le z^{-1}\sum_{(M,d)}\Big(\frac{2z}{Md}\Big)^{3/4}\le2z^{-1/4}\prod_{j\le\pi}(1-\tau_j^{-3/4})^{-1}
+\prod_{p<X_0}(1-p^{-3/4})^{-1}.
 \]
 \begin{itemize}
-\item The rigid product is at most $\exp(\log\Lambda+2+1.3X_0^{\eta}/(\eta\Lambda))$, by partial summation as in (c).
+\item The rigid product: its logarithm is $\sum_{p<X_0}p^{-3/4}+R(\tfrac34)$, with $R(\tfrac34)\le0.63$ as in (c).
+  Partial summation with $\pi(t)\le1.26t/\log t$ gives
+  $\sum_{p<X_0}p^{-3/4}\le1.26\big(X_0^{1/4}/\Lambda+\tfrac34\int_2^{X_0}t^{-3/4}dt/\log t\big)$, and
+  $\int_2^{X_0}t^{-3/4}dt/\log t=\mathrm{Ei}(\Lambda/4)-\mathrm{Ei}(\tfrac14\log2)\le4X_0^{1/4}(1+8/\Lambda)/\Lambda+1$, by the
+  bound on $\mathrm{Ei}$ in (c) and $\mathrm{Ei}(\tfrac14\log2)\ge-1$. So the logarithm is at most
+  $5.05X_0^{1/4}/\Lambda+0.95+0.63\le\log\Lambda+2+5.2X_0^{1/4}/\Lambda$.
 \item The labels are evaluated at $\tau_i=\max(\Xm,\sigma_i-2H(\sigma_i))\ge\sigma_i-2H(\sigma_i)\ge\tfrac23\sigma_i
-  =\tfrac23(X_0+0.99(i-1))$, since $H(v)\le v/6$. So
-  \[
-  \sum_{i\le\pi}\tau_i^{\eta-1}\le(3/2)^{1-\eta}\sum_{i=1}^{\pi}(X_0+0.99(i-1))^{\eta-1}\le\frac{1.36(X_0+\pi)^{\eta}}{0.99\,\eta},
-  \]
-  using $(3/2)^{1-\eta}\le1.36$ for $\eta\ge\tfrac14$. \qedhere
+  =\tfrac23(X_0+0.99(i-1))$, since $H(v)\le v/6$. With $(3/2)^{3/4}\le1.3555$ and $\tau_i^{-3/4}\le X_0^{-0.7}$,
+  \begin{align*}
+  \log\prod_{j\le\pi}(1-\tau_j^{-3/4})^{-1}&\le(1+2X_0^{-0.7})\,1.3555\sum_{i=1}^{\pi}(X_0+0.99(i-1))^{-3/4}\\
+  &\le(1+2X_0^{-0.7})\,1.3555\Big(X_0^{-3/4}+\frac{4\big((X_0+\pi)^{1/4}-X_0^{1/4}\big)}{0.99}\Big),
+  \end{align*}
+  which is at most $5.5(X_0+\pi)^{1/4}$.
+\item Since $\log(2z^{-1/4})=\log2-L/4$, the three bounds give the claim. \qedhere
 \end{itemize}
 \end{proof}
 
@@ -1039,7 +1067,7 @@ $A$), while $\Lambda_s$ is non-increasing in $s$ and $\Lambda\mapsto G$ decrease
 \end{itemize}
 
 \emph{Step 3 (Dickman rows: $s\ge s_H+1$).} Here $\log c\ge7.5\Lambda$. We have $D-1\ge\Lambda e^s-1\ge2u_1$, and for
-$\ell\le0.3\Lambda$ the other hypotheses of Lemma~\ref{lem:rowweights}(d) hold: $D\le2L/\Lambda\le X_0^{1/2}$ and
+$\ell\le0.3\Lambda$ the other hypotheses of Lemma~\ref{lem:rowweights}(d) hold: $D\le2L/\Lambda\le X_0^{0.3}$ and
 $\pi(\Xm)^{-1}(eD)^{0.9}\le e^{0.87\Lambda-\Lambda+1}$. So $\log(1/w)\ge g\ge0.9\Lambda e^s(\log\Lambda+s)(1-10^{-9})$; the
 term $-e^{-0.4\Lambda}$ in $g$ is absorbed by the factor $1-10^{-9}$, and $\log\Xm-\log(3\pi)\ge0$. Also $1+j\ge(\log c-1-a)/(2a)\ge(7.5\Lambda-1-a)/(2a)$, with
 $a\le a_+:=3\log\Lambda+2s-2.9\le0.6\Lambda$ (as $\ell\le0.3\Lambda$). Hence, since the bound decreases in $a$,
@@ -1056,7 +1084,7 @@ Where the standard term dominates $\log c$, $j$ is only larger.
 \begin{itemize}
 \item (T1) $\ell_{\mathrm{std}}\le\ell\le0.3\Lambda$. Here $\log c=4\ell^2-\log4$ and $j\ge\ell-2$. The hypotheses of Lemma~\ref{lem:rowweights}(d) hold as in Step 3, and it
   gives $(1+j)g/L\ge0.9(\ell-1)(\ell-\log\Lambda-0.01)(1-\Lambda/L)/\Lambda\ge0.9\cdot1.87>1.6$.
-\item (T2) $\ell\ge0.3\Lambda$. Lemma~\ref{lem:rowweights}(e) with $\eta=\tfrac14$ gives
+\item (T2) $\ell\ge0.3\Lambda$. Lemma~\ref{lem:rowweights}(e) gives
   $\log(1/w)\ge L/4-5.3X_0^{1/4}/\Lambda-5.6(X_0+L^2)^{1/4}-\log\Lambda-3\ge0.24L$, since $L\ge e^{0.3\Lambda}$. Then $j\ge4$
   suffices.
 \end{itemize}
@@ -1326,7 +1354,7 @@ Lemma~\ref{lem:covering}, Lemma~\ref{lem:coefsupport}, Theorem~\ref{thm:binomial
 Proposition~\ref{prop:cover} & Lemma~\ref{lem:volume}, Lemma~\ref{lem:fac}, Theorem~\ref{thm:svl}, Lemma~\ref{lem:SC}, (V1) & Lemma~\ref{lem:reduction}\\
 Lemma~\ref{lem:reduction} & Lemma~\ref{lem:heavy}, Lemma~\ref{lem:covering}, Theorem~\ref{thm:binomial}, Proposition~\ref{prop:cover}, (F4) &
   Theorem~\ref{thm:caplw}\\
-Lemma~\ref{lem:rowweights} & Rankin's bound; \cite{RosserSchoenfeld1962} & Theorem~\ref{thm:caplw}\\
+Lemma~\ref{lem:rowweights} & Rankin's bound; \cite{RosserSchoenfeld1962}; certificate (Appendix~\ref{app:cert-rankin}) & Theorem~\ref{thm:caplw}\\
 Theorem~\ref{thm:caplw}(a) & Lemma~\ref{lem:heavy}, Lemma~\ref{lem:reduction}, Lemma~\ref{lem:rowweights}, Theorem~\ref{thm:binomial} & Proposition~\ref{prop:ecl}\\
 Theorem~\ref{thm:caplw}(b), (c) & none (definitions of the parameters) & the parameters of Section~\ref{sec:queue-conv}, (F3$'$),
   Lemma~\ref{lem:landing}, Theorem~\ref{thm:queue}, Lemma~\ref{lem:lemmaP}\\

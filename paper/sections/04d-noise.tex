@@ -20,28 +20,63 @@
 \end{itemize}
 
 \paragraph{The composites with $q^2\mid n$: the source $s_2$.} Recall $C^{(\ge2)}=\Comp^{(2)}+\Mart^{(2)}$
-(\S\ref{sec:noise-identity}).
+(\S\ref{sec:noise-identity}). Fix $u$ and a window $I\subset[u,2u]$, and put $\sigma:=\frac12\sqrt{L_u\log L_u}$.
+% Logged correction 52 (CORRECTIONS-vs-v3.md): v3 bounds the Dickman factor by 1/Gamma(max(1, L_u/s - 2)), which exceeds 1 on
+% (1,2) (up to 1.129), and starts its sup at log X_0, although latest primes can lie in [X_0^-, X_0); it also applies the
+% smooth-element weight with a smaller Dickman variable and without its factor e^{a_V}. The bound is re-derived below, with
+% the endpoint X_0^-, and s_2 is defined by its closed form.
 \begin{itemize}
 \item The latest-prime filter forces $\tau_m<t(q)$ for $q^am$, so $\Pplus(m)\le2q$.
-\item Interchange the sums. For fixed $m$ and $a=2$, $q$ runs over $I_m:=(I/m)^{1/2}$, an interval of length
-  $\le|I|/\sqrt{um}$, and the $q$-sum of the landing probabilities is $\int_{I_m}\rhot\le27|I_m|$, since
-  $\rhot\le1.01$ surely (see the variance bound below). Exponents $a\ge3$ add a relative $O(X_0^{-1/2})$.
-\item Group $m$ into dyadic blocks $[M,2M)$ with $M=u/q^2$. The $m$ in a block are $3q$-smooth with
-  $q=\sqrt{u/M}\ge\Xm$, and Lemma~\ref{lem:smooth-v} bounds their $1/m$-weight by
+\item \emph{Interchange the sums.} Fix $a\ge2$ and $m$. Then $q^am\in I$ means $q\in I_{m,a}:=(I/m)^{1/a}$, and the $q$-sum of
+  the landing probabilities is $\int_{I_{m,a}}\rhot\le1.01\,|I_{m,a}\cap[\Xm,\infty)|$, since $\rhot\le1.01$ surely (see the
+  variance bound below) and $\rhot=0$ below $\Xm$. With $y=q^am\in I$ we have $dq=dy/(amq^{a-1})$, and on
+  $I_{m,a}\cap[\Xm,\infty)$, $q\ge Q_{m,a}:=\max(\Xm,(u/m)^{1/a})$. Hence
   \[
-    C_0\rho(\log M/\log3q)e^{o(1)}.
+    \frac{\Comp^{(2)}(I)}{|I|}\le1.01\sum_{a\ge2}\frac1a\sum_m\frac1{m\,Q_{m,a}^{a-1}},
   \]
-  Since
-  $\rho(v)\le1/\Gamma(v+1)$ (from \ref{R1}: $\rho(v)\le\rho(v-1)/v$), for every window $I\subset[u,2u]$,
+  where $m$ runs over $\NN$ with $m\le2u/(\Xm)^a$ and $\Pplus(m)\le2(2u/m)^{1/a}$.
+\item \emph{Blocks.} Split the $m$-sum into blocks $m\in(Y,2Y]$, $Y=2^{k-1}$ ($k\ge0$); for each $a$, at most $1.443L_u$ of
+  them are nonempty. Define $s$ by $e^{as}=u/(2Y)$ and put $s_Y:=\max(\log\Xm,s)$. In the block, $Q_{m,a}\ge e^{s_Y}$,
+  $\log Y=L_u-as-\log2$, and the $m$ are $z$-smooth with $\log z:=s+\log2+(2\log2)/a\le s+1.39$. A nonempty block has
+  $Y<2u/(\Xm)^a$, so $s>\log\Xm-0.7$ and $\log z\ge\log\Xm-0.01$. The block contributes at most
+  $\frac1ae^{-(a-1)s_Y}v(\log Y,z)$, where $v(\ell,z)$ is the $1/n$-weight of the $z$-smooth $n\in\NN\cap(e^\ell,2e^\ell]$, as in
+  Lemma~\ref{lem:smooth-v}.
+\item \emph{First bound.} Always $v\le1$ (the small heights in the proof of Lemma~\ref{lem:smooth-v}; the block $Y=\frac12$
+  holds only $m=1$), and $s_Y\ge\log\Xm$. So
+  $\Comp^{(2)}(I)/|I|\le1.01\cdot1.443L_u(\Xm)^{-1}\bigl(\frac12+\sum_{a\ge3}(\Xm)^{2-a}/a\bigr)\le0.73L_u/\Xm$.
+\item \emph{Second bound, for $\sigma>\log\Xm$.} Then $L_u\ge10^{15}$, since $\log\Xm\ge10^8-1$. We show that every block term
+  is at most $\frac1ae^{-\sigma}(\Xm)^{-(a-2)/2}$, that is, $(a-1)s_Y-\log v\ge\sigma+\frac12(a-2)\log\Xm$.
+  \begin{itemize}
+  \item If $s_Y\ge\sigma$, or if $(a-2)s_Y\ge2\sigma$, this holds with $v\le1$.
+  \item Otherwise $s\le s_Y<\sigma$ and $as<4\sigma$, so $\ell:=\log Y\ge L_u-4\sigma-0.7\ge(1-4\cdot10^{-7})L_u$ and
+    $\log z<\sigma+1.39$. Since $(a-1)s_Y\ge\frac12(a-2)\log\Xm$, it suffices that $-\log v\ge\sigma$. Put $u':=\ell/\log z$
+    and $\omega:=2\sqrt{L_u/\log L_u}$, so that $\sigma=\frac14\omega\log L_u$ and
+    $u'\ge(L_u-4\sigma-0.7)/(\sigma+1.39)\ge(1-4\cdot10^{-7})\,\omega$. For every $w\ge1$, iterating $\rho(w)\le\rho(w-1)/w$
+    (from \ref{R1}) down to $w-\lfloor w\rfloor\in[0,1)$, where $\rho=1$, gives
+    $\rho(w)\le\Gamma(w-\lfloor w\rfloor+1)/\Gamma(w+1)\le1/\Gamma(w+1)\le e^{-w\log w+w}$ (Stirling).
+  \item If $u'\le\log z$: Lemma~\ref{lem:smooth-v} gives $v\le C_0\rho(u')e^{a_V}$ with
+    $a_V=12.8\,u'\log(u'+2)/\log z\le1.3\cdot10^{-7}u'\log(u'+2)$. So
+    \[
+      -\log v\ge u'(\log u'-1)-1.3\cdot10^{-7}u'\log(u'+2)\ge(1-10^{-6})\,\omega\bigl(\tfrac12\log L_u-\tfrac12\log\log L_u-0.31\bigr),
+    \]
+    which is $\ge1.75\sigma$ for $\log L_u\ge34.5$: with $x:=\log L_u$ the ratio to $\sigma$ is $(1-10^{-6})(2-(2\log x+1.24)/x)$,
+    which increases in $x$, and $\sigma\ge\log X_0^-$ forces $L_u\ge10^{15}$.
+  \item If $u'>\log z$: then $\sqrt\ell>\log z$, and $v(\ell,z)\le v(\ell,z')$ with $\log z':=\sqrt\ell$. Lemma~\ref{lem:smooth-v} at
+    the Dickman variable $\sqrt\ell$, where $a_V=12.8\log(\sqrt\ell+2)$, gives
+    $-\log v\ge\sqrt\ell(\log\sqrt\ell-1)-12.8\log(\sqrt\ell+2)\ge5.5\sigma$; its ratio to $\sigma$ also increases in $\log L_u$, and
+    is $\ge5.53$ at $L_u=10^{15}$.
+  \end{itemize}
+  Summing, $\Comp^{(2)}(I)/|I|\le1.01\cdot1.443L_u\,e^{-\sigma}\bigl(\frac12+\sum_{a\ge3}(\Xm)^{-(a-2)/2}/a\bigr)\le0.73L_u\,e^{-\sigma}$.
+\item Together, for every window $I\subset[u,2u]$,
   \begin{equation}\label{eq:s2}
-  \begin{split}
-    \frac{\Comp^{(2)}(I)}{|I|}&\le s_2(u):=9L_u\sup_{\log X_0\le s\le L_u/2}\frac{e^{-s}}{\Gamma(\max(1,L_u/s-2))}\\
-    &\le9L_u\exp\Big(-\max\big(\log X_0,\tfrac12\sqrt{L_u\log L_u}\big)\Big)
-  \end{split}
+    \frac{\Comp^{(2)}(I)}{|I|}\le s_2(u):=9L_u\exp\Big(-\max\big(\log\Xm,\tfrac12\sqrt{L_u\log L_u}\big)\Big).
   \end{equation}
-  (the last bound for $L_u\ge10^4$). In particular $s_2(u)\le9L_u/X_0$ always.
-\item $\sum_{u\text{ dyadic}}\log(2u)\,s_2(u)\le e^{-9\cdot10^7}$: below $L_u\approx10^{16}$ use the factor $e^{-\log X_0}$,
-  and above it the tail of $\sum_jj^2e^{-\sqrt{j\log j}/2}$. The same holds with the weight $(\log3u)^2$.
+  In particular $s_2(u)\le9L_u/\Xm\le9(1+10^{-9})L_u/X_0$ always, since $X_0/\Xm\le1+H(X_0)/X_0$.
+\item $\sum_{u\text{ dyadic}}\log(2u)\,s_2(u)\le e^{-9\cdot10^7}$, and the same holds with the weight $(\log3u)^2$. For
+  $L_u\le\Lambda^2$, use $s_2(u)\le9L_u/\Xm$: these at most $1.443\Lambda^2$ scales contribute $\le14\Lambda^8/\Xm$. For
+  $L_u>\Lambda^2$, $\frac12\sqrt{L_u\log L_u}\ge3.03\sqrt{L_u}$, and $10L^3e^{-3.03\sqrt L}$ is decreasing, so these scales
+  contribute $\le10\Lambda^6e^{-3.03\Lambda}+\frac{10}{\log2}\int_{\Lambda^2}^\infty L^3e^{-3.03\sqrt L}\,dL\le10\Lambda^7e^{-3.03\Lambda}$.
+  The total is $\le e^{-0.99\Lambda}$.
 \item Put $A_u:=\#\{a\ge2:(\Xm)^a\le2u\}\le1.01L_u/\Lambda$. By Corollary~\ref{cor:increment} (which covers every
   $a\ge1$), the increment of a prime $q$ to $\Mart^{(2)}(I)$ is at most $b_2:=2A_uM_1(u)$.
 \end{itemize}

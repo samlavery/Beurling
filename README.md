@@ -13,7 +13,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 > the fixes, three fresh AI checkers re-checked every changed passage (`review/paper-recheck.md`, reports in
 > `review/recheck/R1–R3.md`). They found nothing blocking.
 >
-> **Defects found after the AI checks.** After the paper was first published here, a reader reported twelve further defects
+> **Defects found after the AI checks.** After the paper was first published here, a reader reported fourteen further defects
 > that every earlier AI check had missed:
 > - a strip identity used as exact although the box widths vary;
 > - a jitter width that jumps (through a ceiling and a per-scale freeze) although its regularity is used throughout;
@@ -28,15 +28,21 @@ Samuel Lavery (sam.lavery@gmail.com)
 > - a Cover Bound whose right side was a sum over the realised (random) primes, compared with an expectation;
 > - a missing support convention for the prime density at X₀. With the convention that makes the margin identity exact,
 >   the margin has an edge term just below small multiples of X₀ (from 2X₀ on), and its constant drops from 0.97 to 0.82
->   up to X₀^1.01.
+>   up to X₀^1.01;
+> - a Rankin bound in the row-weight lemma claimed for every exponent η ∈ [¼, 1), although its Euler product diverges as
+>   η → 1 (it is used only at η = ¼);
+> - a bound for the square-prime source s₂ in the noise section whose Γ factor exceeds 1 and whose range started at X₀
+>   instead of X₀⁻; its repair also found the Dickman variable applied the wrong way round, so the bound is re-derived.
 >
-> Repairing these and re-checking the repairs turned up six more. The most serious was a gap in the label sum of the
-> Pivot-Integration Lemma (Appendix A): the carried Euler factors cancel only after integration, not pointwise as the
-> argument needed. The lemma has been re-proved without changing any constant.
+> Repairing these and re-checking the repairs turned up eight more. The most serious were:
+> - a gap in the label sum of the Pivot-Integration Lemma (Appendix A): the carried Euler factors cancel only after
+>   integration, not pointwise as the argument needed. The lemma has been re-proved without changing any constant;
+> - a gap inherited from the refereed draft in the check of the Beurling–Saias hypothesis (H_BS): the decay of the rigid
+>   error that it needs was asserted but never proved. It is now proved (Lemma T1, eq:Erig).
 >
-> All eighteen are repaired; they are entries #31–#48 of `CORRECTIONS-vs-v3.md`. The repairs of #31–#47 were checked by a
-> fresh AI checker in ten passes (`review/recheck/R4.md`), which ended with nothing blocking or fixable. The repair of #48 was
-> checked by a separate adversarial AI check (`review/recheck/R5-pil-repair.md`). None of the forty-eight logged corrections
+> All twenty-two are repaired; they are entries #31–#52 of `CORRECTIONS-vs-v3.md`. The repairs of #31–#47 and #49–#52 were
+> checked by a fresh AI checker in twelve passes (`review/recheck/R4.md`), which ended with nothing blocking or fixable. The repair of #48 was
+> checked by a separate adversarial AI check (`review/recheck/R5-pil-repair.md`). None of the fifty-two logged corrections
 > changes a conclusion of the paper. But these findings show that the AI checks are no substitute for expert review.
 
 ## The result
@@ -112,7 +118,7 @@ outputs are listed in Appendix B of the paper:
 | `certificates/bs-cert/` | the computer-assisted part of the Beurling–Saias bound (Arb ball arithmetic over a cell cover); see also its `README.md` |
 | `certificates/finite-n/` | the finite computations on the integers used in Section 5 (Lemmas CM, V and threshold-mass, the squarefree average); standard library, exact or with stated rounding bounds |
 | `certificates/x0-band/` | the small range of the bound for the jump of the target at X₀ (exact computation) |
-| `certificates/capl-cert/` | a numerical cross-check of the capacity theorem, which is proved analytically |
+| `certificates/capl-cert/` | a numerical cross-check of the capacity theorem, which is proved analytically; and `rankin_R.py`, a proof step: the Rankin constants of Lemma rowweights (needs python-flint) |
 | `certificates/lemma-sc/` | a numerical check of Lemma SC (exact rational arithmetic) |
 | `certificates/svl-stress/` | numerical corroboration of the Staged Volume Lemma's structural claims; not part of the proof |
 | `certificates/depcheck/` | that the same-time dependencies between the results of the paper form an acyclic graph |

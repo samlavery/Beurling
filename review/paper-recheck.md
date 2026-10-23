@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#48)
+## Addendum: defects found after the re-check (corrections #31–#52)
 
-After the first public version, a reader reported twelve defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up six more. The full list, with each repair, is entries #31–#48 of `CORRECTIONS-vs-v3.md`:
+After the first public version, a reader reported fourteen defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, turned up eight more. The full list, with each repair, is entries #31–#52 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -86,9 +86,13 @@ re-checking the repairs, turned up six more. The full list, with each repair, is
 | 46 | Prop cover (Cover Bound) | right side was a sum over the realised (random) primes, compared with an expectation; now a deterministic envelope Σ̄_τ (per-row chain bound Ch, R-row labels at τ_j) | reader |
 | 47 | margin decomposition; Prop g1, Thm g2, Prop pointwise(b), Cor r1 | no support convention for MA[ℙ] and f₀ at X₀; the exact convention gives an edge term just below small multiples of X₀; margin constant 0.97 → 0.82 up to X₀^1.01 (new Lemma margin(d)); c′ = 0.15 and K_d = 3 stand | reader |
 | 48 | App. A Pivot-Integration Lemma, label sum | the label sum needs the integrand free of the slot label pointwise, but the carried Euler factors cancel only after integration; re-proved with the label sum first (at the first slot u_t after the latest free column f_t, with support indicator χ_t), then the pivot integrals, then a joint block bound; no constant changes | re-check |
+| 49 | Lemma rowweights(c), (e) | (e) claimed its Rankin bound for every η ∈ [¼, 1), but the rigid Euler product diverges as η → 1; (c) was claimed up to σ ≈ ½, where the prime-power terms exceed its allowance; (e) now at η = ¼ (its only use), (c) for u ≤ X₀^0.3 (all uses), with explicit proofs and a new certificate `rankin_R.py` | reader |
+| 50 | Lemma T1, rigid part | explicit Rankin constant at σ = θ < ½ false as written (it defines only the finite C_{X₀}); now the Euler product itself | sweep for #49 |
+| 51 | (H_BS) verification (§4a); Lemma T1 | the rigid error's decay 2κu·min(1, Cρ) was asserted (in v3 too) but never proved, and without decay η₁ is unbounded; now eq:Erig plus Rankin at σ = 1 − 1/Λ give η₁, η₂ ≤ κΛ² + X₀^{−1/2} | re-check |
+| 52 | square-prime source s₂ (eq:s2, §4d) | Γ factor up to 1.129 and range starting at X₀ instead of X₀⁻ (reader); the repair also found the Dickman variable applied the wrong way, e^{a_V} not small, an unchecked range, and an unproved a ≥ 3 claim; re-derived with real constant 0.73 against 9 | reader |
 
-**Repairs and their check.** All eighteen are repaired. A fresh AI checker checked #31–#47 in ten passes
-(`review/recheck/R4.md` §§1–17); the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+**Repairs and their check.** All twenty-two are repaired. A fresh AI checker checked #31–#47 and #49–#52 in twelve passes
+(`review/recheck/R4.md` §§1–19); the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -102,11 +106,12 @@ about 107k exact and float checks, including the counterexample that made the su
   - comments that hide rendered text.
 
 Pass 9 ended with one FIXABLE item (N20, a displayed identity in Lemma margin(d)(iii) that was false although the bounds
-hold). Its fix was confirmed in pass 10 (§17), which ended with nothing blocking or fixable. R5 found the #48 repair CORRECT
+hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); passes 11 and 12 ended with nothing else blocking or
+fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the forty-eight corrections changes a conclusion of the paper. Several required new
-arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47 and #48.
+**Effect on the conclusions.** None of the fifty-two corrections changes a conclusion of the paper. Several required new
+arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **Caveat.** These defects survived five rounds of AI checking. The paper should not be regarded as verified until a human
 expert has read it.
