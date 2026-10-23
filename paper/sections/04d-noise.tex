@@ -180,13 +180,17 @@ Then
   |\nu(y)|\le\bar\nu(u):=2.05\max_{u'\in\{u/2,u,2u\}}\nu_0(u').
 \]
 % Logged correction 73 (R17, C73-6): the good event of the bound on E(I) is stated.
-For every slot window $I\subset[u,2u]$ with $|I|\le H(u)$, put $E(I):=\sigma(I)-\int_Im$, where
-$m=T'-\Kpt\rhot-\NT_{\mathrm{pt}}$ is the pointwise margin density (\S\ref{sec:noise-identity}). Then, on $\Good(<\max I+H(u))$,
+% Logged correction 89 (CORRECTIONS-vs-v3.md): v3 bounds E(I) only for slot windows, but Proposition pointwise (Step 2) applies
+% it to the physical intervals A_+-, which cut through slot cells. The bound now covers every interval, at the cost of the
+% term 70 log^2(2u) from the two partial cells.
+For every interval $I\subset[u,2u]$ with $|I|\le H(u)$ (a slot window, or a physical interval with arbitrary endpoints), put
+$E(I):=\sigma(I)-\int_Im$, where $m=T'-\Kpt\rhot-\NT_{\mathrm{pt}}$ is the pointwise margin density (\S\ref{sec:noise-identity}). Then,
+on $\Good(<\max I+H(u))$,
 \begin{multline*}
   |E(I)|\le\sqrt{200M_1(u)\lambda'_u\log(2u)(|I|+2)}+\sqrt{4A_uM_1(u)s_2(u)\lambda'_u(|I|+2)}\\
-  +\tfrac43(1+A_u)M_1(u)\lambda'_u+B(u)+100\log(2u)+s_2(u)(|I|+2)+2 .
+  +\tfrac43(1+A_u)M_1(u)\lambda'_u+B(u)+100\log(2u)+s_2(u)(|I|+2)+70\log^2(2u)+2 .
 \end{multline*}
-Write $\hat\nu(u):=\sup_{|I|\le H(u)}|E(I)|/H(u)$. Both bounds depend on $u$ only: nothing at the current scale $x$
+Write $\hat\nu(u):=\sup_{|I|\le H(u)}|E(I)|/H(u)$, the supremum over all such intervals. Both bounds depend on $u$ only: nothing at the current scale $x$
 enters.
 \end{lemma}
 
@@ -210,7 +214,22 @@ $H(y)\nu(y)=\Mart(W_y)+\Mart^{(2)}(W_y)-\Delta Q(W_y)+\Comp^{(2)}(W_y)+E_{\mathr
 computation of \eqref{eq:margin-identity} without the $B$-average,
 $\sigma(I)=\int_Im-\Comp^{(2)}(I)-\Mart(I)-\Mart^{(2)}(I)+\Delta Q(I)\pm2$. Now sandwich $I$ between windows $W$ of
 $\mathcal W'_u$ as above, with $t(W)\le\max I+1<\max I+H(u)$, and apply \eqref{eq:F1}, \eqref{eq:F2} (that is, $\mathrm{E3}_W$) and
-\eqref{eq:s2}.
+\eqref{eq:s2}. For a slot window this gives the display without the term $70\log^2(2u)$.
+
+% Logged correction 89: physical intervals are compared with the slot window of the slots whose cells they contain.
+\emph{Physical intervals.} Let $I\subset[u,2u]$ be any interval with $|I|\le H(u)$, and let $I^\circ\subset I$ be the slot window of the
+slots that start in $I$ and whose cells $[s_j,s_{j+1})$ lie in $I$ (possibly empty). Then $\max I^\circ\le\max I$, $|I^\circ|\le|I|$, and the slot-window
+bound applies to $I^\circ$ on $\Good(<\max I+H(u))$.
+\begin{itemize}
+\item $\sigma$ sits at slot starts, and a slot starting in $I$ lies in $I^\circ$ unless it is the last one, whose cell reaches past
+  $\max I$. Each slot decides at most one prime, so $0\le\sigma(I)-\sigma(I^\circ)\le1$.
+\item $I\setminus I^\circ$ lies in at most two cells, one at each end of $I$. Each is a slot cell of length
+  $\le11.2\log(2u)$ (Remark~\ref{rem:horizon}), or the initial segment $[X_0,s_{X_0})$, on which $T$ rises by at most $\frac12$, so
+  its length is $\le5.6\log X_0$ by \eqref{eq:G1}. There, on $\Good(<\max I+H(u))$, $|m|\le|T'|+\Kpt\rhot+|\NT_{\mathrm{pt}}|\le3.1\log(2u)+4.2$
+  (as in Step~2 of the proof of Proposition~\ref{prop:pointwise}; the harmonic sums read \textup{(H$_{\mathrm{BS}}$)} at heights
+  $\le2u/\Xm$, below the certified horizon, Remark~\ref{rem:horizon}).
+\end{itemize}
+Hence $|E(I)-E(I^\circ)|\le1+22.4\log(2u)\bigl(3.1\log(2u)+4.2\bigr)\le70\log^2(2u)$, as $\log(2u)\ge10^8$, which gives the display.
 \end{proof}
 
 \paragraph{The \textup{(SW)} sums.} Under the tolerance $M_1\le H/L^{14}$ of \eqref{eq:params}, with $B\le28M_1L^2$,
@@ -218,7 +237,10 @@ $A_u\le1.01L_u/\Lambda$ and $\lambda'_u\le18.2L_u$ (since $\log H\le15.1\Lambda$
 \[
   \bar\nu(u)\le128L_u^{-6}+2.3\max_{u'}s_2(u'),\qquad\hat\nu(u)\le62L_u^{-6}+1.1s_2(u),
 \]
-and
+% Logged correction 89: the new term 70 log^2(2u)/H(u) of E(I) is absorbed in the constant 62.
+where the term $70\log^2(2u)/H(u)$ of $\hat\nu$ is at most $71L_u^{-14}$, as $H\ge M_1L^{14}\ge L^{16}$; the leading term of
+$\hat\nu$ is $\le60.4L_u^{-6}$, the linear ones are $\le80L_u^{-12}$, and the mixed term is $\le0.05s_2(u)+10^{-5}L_u^{-12}$, so the
+constant $62$ keeps a margin $\ge1.5L_u^{-6}$; and
 \begin{equation}\label{eq:sw-sums}
   \sum_{u\text{ dyadic}\ge X_0}\log(2u)\,\bar\nu(u/2)\le10^{-30},\qquad
   \sum_v(\log3v)^2\,\bar\nu(v/2)\le10^{-22},\qquad

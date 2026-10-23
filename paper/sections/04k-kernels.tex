@@ -430,9 +430,13 @@ order, so that $\tau_w=t(p)$ and $\Pplus(m)\le p+H(t(p))\le p+2H(p)$. Since $|t(
 gives $|p-v'/(pm)|\le H(p)+2H(v'/(pm))\le3.01H(p)$, since $v'/(pm)\le1.02p$ (as $H(z)\le10^{-3}z$) and $H(1.02p)\le1.0001H(p)$ by \eqref{eq:RH};
 % Logged correction 69 (CORRECTIONS-vs-v3.md): 3H(p)(1+o(1)) made explicit.
 i.e. $p^2\in v'/m\pm3.1\,pH(p)$. So $p$ lies in a window of length $3.1H(p_0)$
-around $p_0:=\sqrt{v'/m}\ge\Xm$.
+around $p_0:=\sqrt{v'/m}$, and $p_0\ge\Xm-1.01H(\Xm)\ge X_0-1.6H(X_0)>X_0/2$.
+% Logged correction 88 (CORRECTIONS-vs-v3.md): v3 states p_0 >= X_0^-, which fails when p is a rational prime just below X_0^-
+% (e.g. w = p, v' = pX_0^-). The bound below uses v'/w >= X_0^- and the tau-nearness of the rational p.
+Indeed $p_0^2=p\cdot(v'/w)$ with $v'/w\ge\Xm$. If $p$ is jittered, then $p\ge\Xm$. If $p$ is rational, then $t(p)=p$, and
+$\tau$-nearness gives $p\ge v'/w-2H(v'/w)\ge\Xm-2H(\Xm)$, as $z-2H(z)$ increases; so $p_0\ge\sqrt{(\Xm-2H(\Xm))\Xm}\ge\Xm-1.01H(\Xm)$.
 
-\emph{Counting.} Let $[P,2P)$ be the dyadic block of $p_0$. The window lies in $[P-1.6H(P),\,2P+1.6H(P)]\subset[P',4P']$ with $P':=0.51P$ and has length
+\emph{Counting.} Let $[P,2P)$ be the dyadic block of $p_0$; as $p_0>X_0/2$, $P\ge X_0/2$. The window lies in $[P-1.6H(P),\,2P+1.6H(P)]\subset[P',4P']$ with $P':=0.51P$ and has length
 $\le3.2H(P)\le6H(P')$.
 % Logged correction 37: Corollary localcount(ii) at the non-dyadic scale P', and the blocks with P' < X_0
 If $P'\ge X_0$, Corollary~\ref{cor:localcount}(ii) at $P'$ shows that it holds at most
@@ -461,7 +465,8 @@ $P=X_0/2$ gives
 \]
 
 \emph{$\log y\cdot\eta(y)$.} Fix $y$. As in the first step, every $\tau$-near $w$ at $y$ is $w=pm$ with $p$ in a window of
-length $\le3.2H(P)$ around $p_0=\sqrt{y/m}\in[P,2P)$, $P\ge X_0/2$; the window holds $\le46H(P)$ primes, each with
+length $\le3.2H(P)$ around $p_0=\sqrt{y/m}\in[P,2P)$, where $p_0\ge X_0-1.6H(X_0)$ as in the first step, so $P\ge X_0/2$; the window
+holds $\le46H(P)$ primes, each with
 $1/p\le1.01/P$. Every prime $q$ of $m$ has $t(q)\le t(p)$, so $q\le p+2H(p)\le4P$, and $m\in(y/4P^2,y/P^2]$. Hence
 \[
   \eta(y)\le\sum_{P\ \text{dyadic}\ge X_0/2}\frac{47H(P)}P\,V_P(y),\qquad

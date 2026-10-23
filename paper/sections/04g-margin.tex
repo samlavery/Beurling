@@ -65,10 +65,12 @@ with $\eps':=\eps+0.015\le0.045$ and $\Hord(M)$ the number of ordered factorisat
 
 \begin{proof}
 % Logged correction 78 (CORRECTIONS-vs-v3.md): the bound on E(I) uses the window events E3_W of the windows around I only.
-\emph{Step 1: short windows.} For a slot window $I\subset[u,2u]$ with $|I|\le H(u)$, Lemma~\ref{lem:noise} gives
+% Logged correction 89 (CORRECTIONS-vs-v3.md): Step 2 applies Step 1 to the physical intervals A_+-; Lemma noise now covers them.
+\emph{Step 1: short windows.} For an interval $I\subset[u,2u]$ with $|I|\le H(u)$, a slot window or a physical interval such as
+$A_\pm$ below, Lemma~\ref{lem:noise} gives
 $\sigma(I)=\int_Im+E(I)$, with $|E(I)|\le\hat\nu(u)H(u)$ on $\Good(<\max I+H(u))$; it reads the events $\mathrm{E3}_W$ of the windows
 $W\in\mathcal W'_u$ around $I$, of time $t(W)\le\max I+1$. A window meeting two dyadic blocks is split there; $E$ is additive, and each
-piece is covered in its own block, with the same times. Write $\eps_s(z):=\sup|E(I)|$ over windows with
+piece is covered in its own block, with the same times. Write $\eps_s(z):=\sup|E(I)|$ over intervals with
 $|I|\le s$ at $z$.
 
 \emph{Step 2: the sub-$H$ increments of $\rhot$ are strip differences of $m$, up to $\delta$.}
@@ -98,7 +100,7 @@ for $x\le y\le2x$. (Within $2H$ of $z$ the points stay above $\Xm/2$, even when 
   (\S\ref{sec:noise-perscale}), so $\sigma(A_\pm)\le1.01|A_\pm|+1\le1.03H$. Hence
   $H(z)[\rhot(z+s)-\rhot(z)]=\sigma(A_+)-\sigma(A_-)+R_1$ with $|R_1|\le1.6\,\delta_z(\sigma(A_+)+\sigma(A_-))\le3.3\,\delta_zH$.
 \item \emph{Strips.} By Step~1, $\sigma(A_\pm)=\int_{A_\pm}m+E(A_\pm)$. Replacing $A_\pm$ by $I_\pm$ changes $\int m$ by at most
-  $1.05\,\delta_zH\,m^*(z)$ each, where $m^*(z):=\sup_{|y-z|\le2H}|m(y)|$. Surely $|T'|\le2$,
+  $1.05\,\delta_zH\,m^*(z)$ each, where $m^*(z):=\sup_{|y-z|\le2H}|m(y)|$. On $\Good(<t)$ (by \textup{(H$_{\mathrm{BS}}$)} below the horizon and Lemma~\ref{lem:rhoA}), $|T'|\le2$,
   $0\le\Kpt\rhot(y)\le1.01\sum_{2\le w\le y/\Xm}1/w\le1.01\log y$ and $|\NT_{\mathrm{pt}}(y)|\le2.02\,\eta(y)\le2.02(\log y+1)$
   (as $\rhot\le1.01$), so $|m(y)|\le3.1\log y+4.1$ and $m^*(z)\le3.1\log z+4.2$.
 \end{itemize}
