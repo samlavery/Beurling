@@ -296,7 +296,12 @@ $x/N\in(X_0/(1+\kappa),X_0)$ satisfy $N<1.01X_0^{0.9}<X_0$. Writing $N=dM$ with 
 \]
 since every proper divisor $d$ of such an $N$ has $x/d\ge2x/N>X_0$; and $\sum_{d\mid N,\,d<N}\mu(d)=-\mu(N)$.
 
-(ii) The $N$ in (i) lie in $(x/X_0,(1+\kappa)x/X_0)$, an interval of length $\kappa x/X_0\le X_0^{-0.38}<1$. A negative term needs
+(ii)
+% Logged correction 62 (CORRECTIONS-vs-v3.md): the length bound X_0^{-0.38} was stated for all N in (i), i.e. for
+% x <= X_0^{1.9}, where kappa x/X_0 reaches X_0^{0.503}; it holds only for x <= X_0^{1.01}, the range of (ii).
+Let $X_0\le x\le X_0^{1.01}$, the range of (ii). The $N$ in (i) lie in $(x/X_0,(1+\kappa)x/X_0)$, an interval of length
+$\kappa x/X_0\le X_0^{-5/12+0.02+0.01}\le X_0^{-0.3866}<1$, so at most one $N$ occurs. (For larger $x$ the interval can hold many
+$N$; that range is treated in (iii).) A negative term needs
 $\mu(N)=1$, so $N\ge6$. For $q\in(X_0/(1+\kappa),X_0)$ we have $\mathrm{MA}[\mathbb P](q)\le1.0001/\Lambda$: the window
 $[X_0,(1+\kappa)q]$ lies in $[X_0,2X_0]$, so if its length is $\ge(2X_0)^{7/12}$, \eqref{eq:huxley} at $X_0$ bounds its primes by
 $(1+\Lambda^{-3})\kappa q/\Lambda$, and otherwise it holds at most $(2X_0)^{7/12}+1\le X_0^{-0.01}\kappa q$ primes. As $x<NX_0$,

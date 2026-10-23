@@ -25,7 +25,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 > the fixes, three fresh AI checkers re-checked every changed passage (`review/paper-recheck.md`, reports in
 > `review/recheck/R1–R3.md`). They found nothing blocking.
 >
-> **Defects found after the AI checks.** After the paper was first published here, a reader reported nineteen further defects
+> **Defects found after the AI checks.** After the paper was first published here, a reader reported twenty further defects
 > that every earlier AI check had missed:
 > - a strip identity used as exact although the box widths vary;
 > - a jitter width that jumps (through a ceiling and a per-scale freeze) although its regularity is used throughout;
@@ -47,6 +47,8 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   instead of X₀⁻; its repair also found the Dickman variable applied the wrong way round, so the bound is re-derived;
 > - in the local prime number theorem, a Perron kernel that did not match the defined smoothing, and an auxiliary Euler
 >   proxy misdescribed as the counting measure of y-smooth elements;
+> - in the edge term of Lemma margin(d), a single-integer argument written over a wider range of x than the one
+>   where it holds;
 > - in the threshold-mass lemma, a statement wider than its proof (a missing lower bound on δ), an interval constant
 >   that the written derivation did not give, and a count of cofactors that used the lag bound without bounding the
 >   target on short intervals.
@@ -59,8 +61,8 @@ Samuel Lavery (sam.lavery@gmail.com)
 > - a gap inherited from the refereed draft in the check of the Beurling–Saias hypothesis (H_BS): the decay of the rigid
 >   error that it needs was asserted but never proved. It is now proved (Lemma T1, eq:Erig).
 >
-> These are entries #31–#61 of `CORRECTIONS-vs-v3.md`. All are repaired.
-> - **The repairs of #31–#47, #49–#53, #56–#59 and #61** were checked by a fresh AI checker in sixteen passes
+> These are entries #31–#62 of `CORRECTIONS-vs-v3.md`. All are repaired.
+> - **The repairs of #31–#47, #49–#53, #56–#59, #61 and #62** were checked by a fresh AI checker in seventeen passes
 >   (`review/recheck/R4.md`).
 > - **The certificate fixes of #54** were checked by the R8 checker (`review/recheck/R8-cert-repro.md` §9).
 > - **The repair of #60** was checked by the R10 checker (`review/recheck/R10-lp-transfer.md`, re-check of #60).
@@ -72,7 +74,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   `review/recheck/R7-margin-var.md` and `review/recheck/R8-cert-repro.md`. An independent check of the local prime
 >   number theorem's positivity transfer is in `review/recheck/R10-lp-transfer.md`.
 >
-> None of the sixty-one logged corrections changes a conclusion of the paper. But these
+> None of the sixty-two logged corrections changes a conclusion of the paper. But these
 > findings show that the AI checks are no substitute for expert review.
 
 ## The result
