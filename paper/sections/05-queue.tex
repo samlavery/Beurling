@@ -1093,7 +1093,10 @@ So
 \[
 \partial_\Lambda\log G^2\le\frac3\Lambda\Big(\frac1A+\frac1{A+1}\Big)-\frac{1-3/\Lambda}{\Lambda-A-1}<0,
 \]
-because $A\ge\log(2\Lambda/\ell)\ge16>6$. Every admissible pair has $\Lambda\ge\Lambda_s$, since $z\ge X_0$ means
+because $A\ge\log(2\Lambda/\ell)\ge15.3>6$ (as $\ell\le2\log\Lambda+s_H$ for $s\le s_H$; at $\Lambda=10^8$ this is
+$\log(2\cdot10^8/42.82)=15.357$, and it increases with $\Lambda$). Every admissible pair has $\Lambda\ge\Lambda_s$, since $z\ge X_0$ means
+% Logged correction 72 (CORRECTIONS-vs-v3.md): v3 has "log(2 Lambda/ell) >= 16", which fails at Lambda = 10^8 (15.357);
+% only A > 6 is used.
 $s\ge-\log\Lambda$. Hence $\log c\ge\gamma_*(s)\Lambda\ge1.3\,G(\Lambda,s)\Lambda$ for every $s\le s_H$. Moreover $\gamma_*$
 is non-decreasing in $s$, since at fixed $\Lambda$ both $e^{s/2}$ and $A$ increase with $s$ ($\partial_sA=2-1/\ell>0$, and $G$ increases with
 $A$), while $\Lambda_s$ is non-increasing in $s$ and $\Lambda\mapsto G$ decreases.
@@ -1155,8 +1158,11 @@ So (a) holds at every scale, including the scales $L\ge X_0^2$ of the zeros.
 \item \emph{$s\ge s_H$ with $\log c=\gamma\Lambda\le7.5\Lambda$.} Here $\log2y\le3.01\gamma\Lambda$ and
   $\log C_d+4\ell\le1.01\gamma\Lambda$. With $u_0\ge\theta_b\Lambda e^s/(3.01\gamma)$, condition \eqref{eq:twelvetwo} follows from
   $e^s\log(\theta_b\Lambda e^s/(3.01\gamma))\ge107.6\gamma^2$. The left side is increasing in $\Lambda$ and $s$. At
-  $\Lambda=10^8$ and $s=s_H+t$ it is at least $393e^t(19.2+t)$, against $107.6(0.334+7.17t)^2\le6053$ on the ramp and
-  $=6053$ after it. Also $u_0\ge100$.
+  $\Lambda=10^8$ and $s=s_H+t$ it is at least $393.28e^t(19.19+t)\ge7547$, against $107.6\gamma^2\le107.6\cdot7.5^2=6052.5$, since
+  $\gamma\le7.5$ everywhere. Also $u_0\ge100$.
+% Logged correction 72 (CORRECTIONS-vs-v3.md): v3 bounds the ramp by 107.6(0.334+7.17t)^2 <= 6053, which fails at t = 1
+% (6058.96); the linear form overestimates gamma there, and gamma <= 7.5 gives 6052.5. The factors are now
+% 393.28 (e^{s_H} = 393.286) and 19.19 (the log factor is 19.1989 at theta_b = 1/8, Lambda = 1e8, gamma = 7.5).
 \item \emph{Standard regime, $\ell\ge\ell_{\mathrm{std}}$.} Here $\log2y\le12.1\ell^2$, the right side is at most
   $16.3\ell^2$, and $u_0\ge e^\ell/(97\ell^2)$. So \eqref{eq:twelvetwo} holds with an enormous margin.
 \end{itemize}

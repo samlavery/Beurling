@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#71)
+## Addendum: defects found after the re-check (corrections #31–#72)
 
-After the first public version, a reader reported twenty-four defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up seventeen more. The full list, with each repair, is entries #31–#71 of `CORRECTIONS-vs-v3.md`:
+After the first public version, a reader reported twenty-five defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, turned up seventeen more. The full list, with each repair, is entries #31–#72 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -109,9 +109,10 @@ re-checking the repairs, turned up seventeen more. The full list, with each repa
 | 69 | §4 (noise section) | the stated o(1) convention was smaller than the terms it covered; now o(1) ≤ Λ⁻³ with every term itemised in Prop g1(B) Step 5; other ≪/o(1) explicit | sweep (#67) |
 | 70 | Thm lp | log K = O(Λ) made explicit: log K ≤ 98 + 5.9 log Λ (box-spline kernel, explicit contour constants) | sweep (#69) |
 | 71 | Prop ecl, low heights | "direct (F1)–(F2) count (1.01\|J\|)^{r₀}/r₀!" omitted the rigid-cofactor sums Σ1/d; the case is now handled by Theorem R, which includes them | reader |
+| 72 | Thm caplw, Steps 1 and 5 | "log(2Λ/ℓ) ≥ 16" (actually 15.357) and "107.6(0.334+7.17t)² ≤ 6053" (6058.96 at t = 1) false at Λ = 10⁸; replaced by ≥ 15.3 > 6 and 107.6γ² ≤ 6052.5 | reader |
 
-**Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59, #61–#64, #67 and #71 in twenty-one passes
-(`review/recheck/R4.md` §§1–28); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+**Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72 in twenty-two passes
+(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -129,7 +130,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the seventy-one corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the seventy-two corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and
