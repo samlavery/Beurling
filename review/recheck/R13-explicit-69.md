@@ -167,3 +167,15 @@ log log x ≤ about 0.6Λ.
 
 ### Limitations
 Step 7's finite-height width, Step 8's G(L) and the smoothing-error bound were taken as given; they predate #69 and #70.
+
+## 8. Confirmation of the lead's fix of C4 (in c8011c2)
+
+**Verdict: CORRECT.**
+- **Γ.** Γ := e^{c_LP√log x/4}, so Γ² = e^{c_LP√log x/2} exactly. Since γ_* ≤ Γ, 1/δ ≤ Γ²log⁴x + X₀^{1/2}.
+- **The comparison.** (0.0176/Λ)s ≥ 4Λ + 20 log s + 10 for s ≥ e^{Λ/200}. Together with log K ≤ Λ, this gives
+  c√log x ≥ 2(log K + Λ + 10 log√log x) + 10.
+- **The two error terms.** They are ≤ 2e^{−5}e^{−Λ} and ≤ 2e^{−10}e^{−1.5Λ}, a total of about 0.014·e^{−Λ} in units of π₀(x).
+  So the error is ≤ π₀(x)e^{−Λ}.
+- **A nit with no effect.** The displayed bound uses π₀(x) = (1 − 1/x)/log x where the exact factor is 1/log x, so it is low by
+  the factor 1 − 1/x. The 0.014 slack absorbs this.
+- **Step 5.** Its item e^{−0.4c_LP√log x} still holds.

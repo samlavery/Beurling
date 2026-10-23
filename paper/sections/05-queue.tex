@@ -571,8 +571,11 @@ Suppose $\#(\NN\cap J)\ge M_1+1$, so $|S(J)|\ge M_1=r_0+\varphi(r_0)+1$. Let $r:
 \item \emph{Low heights, $2z<(\Xm)^2$}, in particular every $z\in[X_0/2,X_0)$. Every element of $S(J)$ is $q\cdot d$ with
   exactly one jittered prime $q$, because two jittered primes give a product at least $(\Xm)^2>2z$. (Heights $z\ge X_0$ are in
   any case covered by the general argument below.) So the exponent vectors are unit vectors, distinct by (V1). Hence
-  $\operatorname{rank}S(J)=|S(J)|$ and $\qCap=0$, so the case $r<r_0$ below is vacuous. The case $r\ge r_0$ is the direct
-  (F1)--(F2) count $E\le(1.01|J|)^{r_0}/r_0!$, to which Theorem~\ref{thm:R} applies; Theorem~\ref{thm:R} is stated for $z\ge X_0/2$.
+  $\operatorname{rank}S(J)=|S(J)|$ and $\qCap=0$, so the case $r<r_0$ below is vacuous. The case $r\ge r_0$ is handled by
+  Theorem~\ref{thm:R}, exactly as below; it is stated for $z\ge X_0/2$, and its bound includes the sums over the rigid
+  cofactors $d$.
+% Logged correction 71 (CORRECTIONS-vs-v3.md): v3 calls this case "the direct (F1)-(F2) count E <= (1.01|J|)^{r_0}/r_0!",
+% which omits the sums over the rigid cofactors d (an element is q*d); Theorem R, which includes them, is what is used.
 \item \emph{Case $r\ge r_0$.} $S(J)$ contains a rank-full $r_0$-subset. By Theorem~\ref{thm:R} with $k=r_0$ and
   $\delta=|J|=4L^{-6}$, the expected number of rank-full $r_0$-subsets of $\NN\cap J$ on $\Good(<t_z)$ is at most
   $(e\,\theta A_R\delta)^{r_0}e^{(3H(X_0)+2)r_0/X_0}(1+r_0/X_0)^{1.02r_0}e^{2.2r_0/\Lambda}$; the factor $e^{(3H(X_0)+2)r_0/X_0}$
