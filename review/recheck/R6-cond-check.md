@@ -2,7 +2,7 @@
 
 The checker was cond-check, a fresh AI agent. It worked from the committed snapshot 874bf72. It was not allowed to write
 files, so the lead saved its messages here. Its scripts were in `/tmp/rhscratch/cond-check/scripts/`, which is temporary, and
-were run with `python3 -I -B`. **This file is incomplete: the rest of the report will be appended when it arrives.**
+were run with `python3 -I -B`. Copies of its scripts are in `review/recheck/cond-check/`.
 
 **What it read:**
 - in `A-rankfull.tex`: Lemma pil, Lemma fac (S1′), (S2′) and (S3)(a)–(d), Lemma SC, SVL, Theorem R, cor:R-Ecl and
@@ -84,5 +84,413 @@ dropped.
 
 Nothing else depends on s_t. For q ≥ X₀⁻, θ = 1 + 1/Λ. (S3)(a), (c) and (d) were re-proved by hand for one type.
 
-*(The report is truncated here. The rest — the remainder of Step 2, Steps 3–5, the defects D1–D3 and the toy results — is
-pending.)*
+### Step 2, continued: the last pivot of P_t
+
+**Every pending factor that can depend on the label s_t, and how:**
+
+| Factor | Dependence on s_t |
+|---|---|
+| window W_{s_t} and existence D_{s_t} | removed by the (F1) label sum |
+| 1(G_{<s_t}) | non-increasing (the good events are nested) |
+| carried 1/Eu_s(s_t) of every chain row already joined, including the A_top/Eu_s(s_t) output of rows that joined at F_{t−1} | non-increasing |
+| order constraint s_t > σ(f_t) | kept; gives s_t ≥ u_t |
+| support s_t ≤ s_max | true for every realised pivot (q ≤ 2z, \|q−s\| ≤ H(s)/2); gives 1(u_t ≤ s_max) |
+| order with the other pivots of P_t | dropped (≤ 1) |
+| order with F_{t−1} | already used inside (S3)(a) for F_{t−1}, as "slots ≥ s_t", so it lives in the carried factor |
+| order with P_{<t}, F_{<t} | dropped at their own steps |
+| χ_{t′}, t′ < t | consumed by earlier block bounds |
+| τ_j (deterministic; the decision rank is fixed by the type), Proj_{t′}, (B1), R-row τ-counts, A_top | label-free |
+
+Nothing else depends on s_t. Hence 1(G_{<s})Ψ ≤ 1(G_{<s′})χ_tΨ|_{s_t=u_t} for every admissible s ∈ [u_t, s_max], pointwise in
+q, in the block data and in ω.
+
+**The (F1) step.** Σ_s 1(q∈W_s)/H(s) ≤ 1 + 0.8/Λ + 3/H(X₀) + o(1/Λ) ≤ θ for q ≥ X₀⁻. The sum must run over continuous slots
+(D4).
+
+**(S3)(a) for one type, re-proved by hand.**
+- Rows other than y₁ give ≤ Eu_s(σ_t)/Eu_s(s_{t+1}). This is free of f_t, either after the passing factor 1/Eu_s(u_t) or,
+  for joining rows, after (d) at u_t.
+- A passing y₁ uses the exact count. Its summand ∏_S g⁻¹∏_{slot∈[a,σ(g_S)]}(1−1/p) is ≤ P(the r earliest elements of 𝓡
+  form S), and these events are disjoint.
+- A joining y₁ uses the telescoping. χ is 1 on an initial segment, so the sum is ≤ Eu_s(u(g*)) ≤ A_top.
+
+**(S3)(c).** Σ_d 1/d = Eu_rat = Eu_s(X₀). An empty F_T gives u_T = X₀ and uses (d) at X₀.
+
+**The output of (S3)(b)/(iii)** is a function of s_{t+1} and of primes before s_{t+1}, and it is non-increasing. So it is
+𝓕_{s′−}-measurable at every pivot s′ of P_{t+1}.
+
+## Step 3: exchange of order (correct)
+
+- All terms are nonnegative, so Tonelli applies to the label sums, the sums over block data, and the integrals.
+- The substitution s_t → u_t changes only the carried Eu factors, G and the support indicator. None of these involves a pivot
+  value, so the substitution commutes with the integrals over P_t.
+- u_t is consumed by the pathwise bound (iii), so it needs no measurability at the next pivot.
+
+## Step 4: majorisation for one type (correct given D2)
+
+Each listed case was checked:
+- empty F_T (u_T = X₀);
+- runs of length 1;
+- the latest column of a block owned by a joining row (telescoping). The latest column overall is always a pivot, so a
+  "free latest column" cannot occur;
+- a passing owner (exact count);
+- R rows whose tail cancels: weight 1/n_y ≤ 1/z, with the tail counted with M_y(τ). This needs the caps of D2;
+- exponents ≥ 2: g^{−a_g} ≤ g^{−1}, and q^{1−s} in the Volume Lemma;
+- values in [X₀⁻, X₀): included in Eu_s, in θ, and in (d) via #43;
+- a decision order that differs from the value order: τ_j uses the decision rank only;
+- u_t = s_max: χ_t includes equality, and (d) holds at u = s_max ≤ 2z + H(2z).
+
+**Across free structures the majorisation fails:** see D1 and §§3.2–3.3.
+
+## Step 5: the end step and Prop cover
+
+- The end step (S3)(c) is correct.
+- Prop cover's first inequality, E[X_τ; Good(<t_z)] ≤ θ^r S̄_τ, is correct for one decision-ordered full type, with
+  t_z = 2z + H(2z) > s_max.
+- Σ̄_τ is deterministic.
+- S̄_τ ≤ δ^r Σ̄_τ needs D3:
+  - SVL(ii) drops the free-prime excess ("g^{−a_g} ≤ g^{−1}");
+  - (B1) floors summed primes at X₀⁻;
+  - pivots get τ indexed by pivot rank, while Σ̄ needs τ_j^{−e_j}, with j the decision rank in P(C). A uniform X₀⁻ weight is
+    exactly #44's failure mode.
+- Summing over types (Lemma reduction(ii)) is D1.
+
+## Defects
+
+Line numbers refer to snapshot 874bf72.
+
+### D1 (BLOCKING): the per-type (S3)(a) is used for unions over free structures
+
+**Where the lemma is per type:**
+- A-rankfull:334–336: owners are assigned "by the type alone";
+- A-rankfull:342–348: (S3)(a) sums "over the assignments of distinct realised primes to the columns of F_t, in the type's
+  decision order";
+- A-rankfull:427–428: "the row y₁ and the number r of its columns are fixed by the type";
+- A-rankfull:436–437: without a fixed r, the bound "would lose a factor Σ1/f_t".
+
+**Where it is used as a union:**
+- A-rankfull:553: the heading of SVL(ii) says "no type count";
+- A-rankfull:684–693: Theorem R records only the pattern E_P, the labels and the cofactors, then says "One pattern. Apply
+  Lemma pil";
+- 05-queue:761–800: the proof of Prop cover;
+- 05-queue:844–852: Lemma reduction(ii) puts the kept free primes "in all blocks" inside Ch, and counts only pivot positions
+  (D per row) and excess patterns.
+
+No consumer counts the number, block, decision position or owner of the free columns.
+
+**Consequences:**
+- for C = B′, the best per-pattern output of the #48 scheme is (k^k/k!)·A_top^k, against the claimed A_top^k;
+- in the Cover Bound, stages where only rows of R join cost factors of about κ·log(A_top/Eu_rat) when no cover row joins
+  later.
+
+**Fix:** §6, pending.
+
+### D2 (FIXABLE): caps are missing from the integrand
+
+**Where:**
+- A-rankfull:193–194: the recursion starts from Ψ := ∏1(n_i∈J);
+- A-rankfull:617–618: "replace q_j^{1−s} by τ_j^{1−s}; this is valid on Proj";
+- A-rankfull:643–644: (B1) is derived from "some completion".
+
+Proj is an existence statement. The τ-replacement and (B1) need q_j ≥ τ_j at every point of the Lebesgue domain, and without
+caps the R-row tail sums are not cut off either.
+
+**Fix.** Start from Ψ := ∏_i 1(n_i∈J)·∏_{piv} 1(q_j ≥ τ_j), with floors by P(C) rank in the Cover Bound. These hold for every
+realised configuration, are label-free, and survive step (i). Proj_t is then automatic, and inserting it is free.
+
+### D3 (FIXABLE): excess weights and floors in the Cover Bound
+
+**Where:**
+- A-rankfull:621: "g^{−a_g} ≤ g^{−1}" drops the free-prime excess;
+- A-rankfull:563 and 568: Proj and (B1) floor summed primes at X₀⁻;
+- A-rankfull:84–87: eq:A-tau indexes τ by pivot rank;
+- against 05-queue:739, 750–755 and 794–795: Σ̄_τ needs τ_j^{−e_j} for every excess occurrence, with j the decision rank in
+  P(C).
+
+**Fix**, all pathwise valid:
+- g^{−a_g} ≤ τ_{j(g)}^{−(a_g−1)}·g^{−1};
+- floors τ_j by decision rank in P(C), for pivots and for the summed primes in Proj and (B1).
+
+### Cosmetic items
+
+- **D4.** A-rankfull:243 ("existence … dropped") and 259–263 conflict with (F1) at 05-queue:113–116, which is stated for
+  decided primes. The label sum must run over continuous slots: if jump slots were included, the factor θ would fail near X₀,
+  where most slots are jump slots. Say so explicitly.
+- **D5.**
+  - Def config-type (A-rankfull:49) fixes the tails d_i, but the end step sums them (A-rankfull:203–205, 441–445). Drop (d)
+    from the type.
+  - "A count with the slot labels evaluated at τ_j" (A-rankfull:205) means prime values.
+  - No label survives the end step, so "sup over the slot labels" (A-rankfull:213–214) is vacuous.
+- **D6.** 05-queue:729–730 defines the type "up to relabelling by value", but Σ̄ indexes primes in decision order
+  (05-queue:750), and the PIL needs decision-ordered columns. Define types in decision order. The union over decision orders
+  must then be counted, which is part of D1.
+- **D7.** A-rankfull:744–751: the displayed simplification of cor:R-Ecl drops the −11.94ℓ term that comes from
+  r₀ ≥ L/(3ℓ) + 3. That is harmless now. But under the D1 repair (a factor e per element) the simplified chain gives
+  −10.4 > −24.6 at L = 465, while the unsimplified bound with the exact r₀ gives −99.5. Keep the term.
+
+## Analysis of the type union
+
+### 3.1 What a "type" fixes, from the text
+- **Lemma pil and (S3).** Def config-type (A-rankfull:42–53) fixes everything: the rows, the columns in decision order, the
+  exponent matrix and the tails. (S3) adds the owners, and needs the owner's r (l.427–428). So the number of free columns
+  per row per block is fixed.
+- **Theorem R** fixes only the pattern E_P, that is, the pivot columns in decision order. The free primes and tails are
+  cofactors, summed inside "one pattern" (l.684–693).
+- **Prop cover** fixes the full exponent matrix "up to relabelling by value" (05-queue:729–730). That fixes the number of free
+  columns per row, but not the decision order, so it does not fix the blocks, runs or owners.
+- **Lemma reduction(ii).** Its per-row "type and sum factors" are Ch (kept free primes "in all blocks" plus the tail), D (pivot
+  positions) and the excess patterns. There is no count of free structures.
+
+So neither consumer sums per-type bounds with a type count. Both apply the chain bound A_top/Ch to a union in which r, the
+blocks and the owners all vary.
+
+### 3.2 One block, all contents
+
+Take one late block, with a := s_{t+1} and K = j + m active chain rows: j joining and m passing. Use weights g^{−a_g}, let f
+be the latest prime, and let the passing rows carry 1/Eu_s(u_f). Summing over every nonempty content gives exactly
+
+  Σ_f [(1−1/f)^{−j} − (1−1/f)^{m}] · Eu_s(σ_f)^j · χ(f) / Eu_s(a)^K.
+
+The right side of (S3)(a) is A_top^j/Eu_s(a)^K.
+- **The part (1−1/f)^{−j} − 1** telescopes to at most A_top^j − Eu_a^j. That is exact, with no loss.
+- **The extra part Σ_f[1 − (1−1/f)^m]·Eu_s(σ_f)^j** comes from blocks whose latest prime lies only in passing rows.
+  - j = 0: it is about m·Σ_{p∈[a,s_max]} 1/p = m·E|𝓡|. (Summing the exact count over r gives Σ_r P(|𝓡| ≥ r) = E|𝓡|.)
+  - j ≥ 1: the Eu^j weight of the joining rows turns Σ1/f into the integral ∫x^{j−1}dx. The net factor is at most
+    (1+m/j)(1−ρ^j), with ρ := Eu_a/A_top.
+
+This sum is exact. So within the #48 order (label replaced by u_t first), no better block bound can avoid the loss.
+
+### 3.3 Theorem R (C = B′; every block has j_t = |P_t| ≥ 1)
+
+Only (K_t, j_t) enter, with K_t = |R_{≤t}| and j_t = |C_t| = |P_t|, so the result holds for every E_P. Write E for Eu,
+A = A_top and ρ = Eu_rat/A_top.
+
+**The recursion.**
+- G_t(E) = ∫_E^{A} K_t x^{j_t−1} G_{t−1}(x)dx, with G₀ = 1.
+- End step: Final = Eu_rat^{j_T}·G_{T−1}(Eu_rat) + ∫_{Eu_rat}^{A} k x^{j_T−1} G_{T−1}(x)dx.
+
+**Summing over the 2^{k−1} run structures**, with H_K the run-structure sum and A = 1:
+- H_K(E) = K·Σ_{j=1}^{K} ∫_E^1 x^{j−1} H_{K−j}(x)dx.
+- Closed form, verified in exact rationals for K ≤ 10: H_K(E) = K·Σ_m S(K−1, K−m)(1−E)^m/m!.
+- total(ρ → 0) = H_k(0) = k^k/k!. Given the closed form, this follows from the falling-factorial identity
+  Σ_j S(n,j)·K!/(K−j)! = K^n with n = K−1. It was checked exactly for k ≤ 40, and the full sum for k ≤ 12.
+- total(ρ) is non-increasing in ρ. Its ρ-derivative is Σ_j ρ^{j−1}(j−k)H_{k−j}(ρ) + Σ_j ρ^j H′_{k−j}(ρ), and both sums are
+  ≤ 0.
+
+**The discrete recursion is at most the continuous model.** This uses (1−x)^{−j} − (1−x)^{K′} ≤ (K/j)((1−x)^{−j} − 1), from
+1 − e^{−K′u} ≤ K′u ≤ (K′/j)(e^{ju} − 1), and a monotone Stieltjes comparison over the disjoint intervals
+[Eu_s(σ_f), Eu_s(u_f)]. Numerically: 4200 cases, 0 violations.
+
+**Result.** Done correctly per pattern, the #48 scheme gives at most (k^k/k!)·A_top^k. This is below e^k·A_top^k, and
+uniform in L. As A_top/Eu_rat → ∞, the excess over Theorem R's A_top^k tends to k^k/k!. So the excess is real, not an
+artifact of crude bounds.
+
+### 3.4 The Cover Bound (C ⊊ B′)
+
+- A stage where only rows of R join has j_t = 0. Its block gives G_t(E) = ∫_E^{A} (K_t/x) G_{t−1}dx, which carries the factor
+  log(A_top/Eu_rat).
+- That factor is compensated whenever a C row joins at a later stage, because the later telescoping integrates the log:
+  - CRC stays at about 4 for every ρ;
+  - CR gives 1 + log(1/ρ);
+  - CRR grows like log², and CRRRR reaches 1.0·10⁴ at ρ = 10⁻⁸.
+- So the uncompensated cost per such stage is at most about 1 + K_t·log(A_top/Eu_rat) ≤ 1 + κ·log(L/Λ) + O(1).
+- **The smallest uncompensated example:** n1 = p1·p2·g·c (C), n2 = p1·p2²·g (R). The union over free structures gives
+  1 + log(A_top/Eu_rat), against a per-type value of 1.
+
+### 3.5 pil-o3b's family, n1 = p1·g·c·d1, n2 = p1·p2·g·d2, n3 = p3·d3
+
+- Here C = B′, because p2 occurs only in row 2.
+- At F2 the owner of c (row 1) is passing, and row 2 joins with no F2 columns.
+- If the union is restricted to the family's own shape, the E|𝓡| loss at F2 is absorbed. Row 2's empty sum leaves slack
+  A_top/Eu_a in (S3)(a), and E|𝓡| ≈ log(A_top/Eu_a) is below that slack.
+- The real excess appears in the full union over all free structures for this pattern: a factor 2.97 in the toy (§4,
+  pending).
+- The observation that q*_{p2} increases in c concerns only the localisation route; #48 never uses q*.
+
+**Conclusion.** This agrees with pil-o3b and with verify-cl: #48 is valid only for one full type, and both consumers need the
+union. The refinement: the E|𝓡| loss is uncompensated only at blocks with no joining chain row and no later C-row join.
+Everywhere else, the net loss is the L-uniform composition factor.
+
+## 4. Toy results
+
+All toys are exact, using rational arithmetic or closed-form logs.
+
+**The common toy world.**
+- Pivots sit on jittered J-slots: positions 4, 6, 8, …, with H = 2 and continuous uniform jitter, so θ_toy = ½.
+- Free primes sit on rigid R-slots: values 3, 5, 7, ….
+- Decisions and good events may be adaptive: they may depend on past decisions and on the half-bits of past jitters.
+
+**A. Exact E[X_τ; G] against the PIL envelope, one type at a time** (`toy_exact.py`).
+- Types:
+  - k = 1: n = q·f·g, and n = q·f²;
+  - k = 2: a shared early prime, a passing owner g > h, a single run, and two free primes in gap 1.
+- Decision rules: always decide; R-slots with probability ½; and an adaptive rule.
+- Good events: G ≡ 1, and "at most one upper-half J-prime".
+- Result: 36 cases and 0 violations. The largest E/envelope ratio is 0.036, so the bound holds but is loose. This is only a
+  sanity check.
+
+**B. (S3)(a)** (`s3a_types.py`).
+- One type at a time: 336 exact rational checks, 0 violations, largest LHS/RHS 0.48.
+- Summed over all block contents, with the rational primes in [101, 10⁶] (A_top/Eu_a = 2.961), the ratio to the right side of
+  (S3)(a) is:
+
+| (j, m) | Weight 1/g | Weight g^{−a} |
+|---|---|---|
+| (1,1) | 1.315 | 1.324 |
+| (1,2) | 1.961 | 1.985 |
+| (2,2) | 1.738 | 1.771 |
+| (1,4) | 3.214 | 3.304 |
+| (0,1) | 1.081 | 1.085 |
+| (0,2) | 2.152 | 2.167 |
+
+  The model, (1+m/j)(1−ρ^j) or m·Σ1/p respectively, matches to 10⁻³ in all 24 rows (four prime ranges).
+
+**C. Theorem R over all free structures** (`pattern_sum.py`, `checks_extra.py`, `stirling_check.py`).
+- The continuous ratio is H_k(0)/1 = k^k/k!: 2, 4.5, 10.67, 26.04, 64.8, …, 18613.9 at k = 12. This is exact for k ≤ 12, and
+  through the Stirling form for k ≤ 40.
+- It decreases monotonically in ρ: the maximum of total(ρ)/total(0) over ρ ∈ (0,1] is 0.995 on the grid.
+- With real primes in [101, 10⁶] (A_top/Eu_rat = 2.96), the discrete ratios are 1.66, 3.20 and 6.54 for k = 2, 3, 4.
+- Discrete ≤ continuous held in 4200 random cases, with 0 violations.
+- cor:R-Ecl with an extra factor e per element, using the exact r₀: −99.5 at L = 465, against the requirement ≤ −24.6. It
+  passes at every L in {465, 500, 600, 800, 10³, 10⁴, 10⁶, 10⁸, 10¹²}. With the paper's simplified chain it would be −10.4 at
+  L = 465, which fails.
+
+**D. Sequences in the Cover Bound** (`cover_model.py`). C marks a cover row and R a row outside the cover, in decision order,
+latest first. The table gives the sum over run structures, where the paper claims 1:
+
+| Sequence | ρ = 10⁻¹ | ρ = 10⁻² | ρ = 10⁻⁴ | ρ = 10⁻⁸ |
+|---|---|---|---|---|
+| CR | 3.30 | 5.61 | 10.2 | 19.4 |
+| CRC | 3.47 | 3.92 | 4.00 | 4.00 |
+| CRR | 8.26 | 20.8 | 61.8 | 208 |
+| CCR | 9.31 | 18.4 | 36.8 | 73.7 |
+| CCRR | 32.3 | 105 | 378 | 1433 |
+| CRRRR | 35.4 | 167 | 1113 | 10057 |
+
+**E. Theorem R with k = 2, E_P = I, over all free structures, in the common toy world** (`toy_pattern.py`).
+- The true E lies between 0.011 and 0.072, over six window pairs.
+- The claim θ²δ²A_top² is 2.468.
+- The sharpest per-pattern value of the #48 scheme is 3.860.
+- The per-type envelopes, summed over the 1–11 feasible types, give 2.47–27.15.
+
+**F. pil-o3b's family n1 = p1·g·c·d1, n2 = p1·p2·g·d2, n3 = p3·d3** (`toy_family.py`).
+- **Set-up.**
+  - J-slots 4..24 and R-values 3..25; A_top = 4.03; τ_{p1} = 7; |det E_P| = 1.
+  - Every slot is decided and G = 1. Since X is monotone in the decided set and the U_j are i.i.d., this maximises
+    E[X; Good] over all adaptive rules and good events.
+- Theorem R's bound, summed as the paper sums it (per pattern, with no type count), is θ³δ³A_top³/τ_{p1} = **1.168**.
+- The true E[X; Good], over all free structures with this pivot pattern and order, is 2.9·10⁻⁴ to 6.5·10⁻⁴ over the six best
+  window pairs, so at most **6.5·10⁻⁴**. Restricted to the family's own shape it is 8–9·10⁻⁵.
+- The sharpest per-pattern value of the #48 scheme is **3.464**, which is **2.97× the bound**.
+- The per-type envelopes, summed over the 6–8 feasible full types, give 7.0–9.3.
+- Block F2 alone, with a passing owner and r varying:
+  - for primes starting at 3, 5, 7 and 9, the union over r of the exact-count terms is 0.91, 0.78, 0.64 and 0.53, against
+    E|𝓡| = 1.26, 0.93, 0.73 and 0.59;
+  - the union stays below 1 here only because the toy's prime set is small; with real primes it is about E|𝓡| (1.08 for
+    [101, 10⁶]);
+  - in this family, the excess is absorbed by the (d)-slack of row 2.
+
+**So the theorem's bound holds in every toy, with a large margin. What fails is the proof's ability to deliver it.**
+
+## 5. A feasible repair
+
+### R1. A block lemma with variable content (replaces (S3)(a) and the exact count)
+
+**Statement.** Let the carried function be Φ_{t−1}(u) = G_{t−1}(Eu_s(u))/Eu_s(u)^{K_{t−1}}, with G_{t−1} ≥ 0 and
+non-increasing. Sum over all contents of F_t: every size, every owner, every exponent vector, with weights g^{−a_g}, together
+with χ_t and Φ_{t−1}(u_t). Then on every ω the sum is at most
+
+  G_t(Eu_s(s_{t+1})) / Eu_s(s_{t+1})^{K_t},  where G_t(E) = ∫_E^{A_top} K_t x^{j_t−1} G_{t−1}(x) dx,
+
+and j_t = 0 is allowed.
+
+**Proof sketch.**
+- The exact formula of §3.2.
+- The inequality (1−x)^{−j} − (1−x)^{K′} ≤ (K/j)((1−x)^{−j} − 1). For j = 0, use 1 − (1−x)^K ≤ K·log(1/(1−x)).
+- A Stieltjes comparison over the disjoint intervals [Eu_s(σ_f), Eu_s(u_f)].
+- χ restricts the sum to u_f ≤ s_max and G_{<u_f}, and (d) gives Eu_s(u(g*)) ≤ A_top.
+
+**Properties.**
+- The output depends only on Eu_s(s_{t+1}) and A_top. So it is measurable at the next pivot and non-increasing, which is what
+  step (i) needs.
+- The empty-block case changes the run structure, so it is summed outside the lemma, over the 2^{k−1} run structures.
+- Theorem R's union over cofactors is exactly this sum.
+
+### R2. Theorem R and cor:R-Ecl
+
+- The sum over run structures is ≤ H_k(0)·A_top^k = (k^k/k!)·A_top^k < e^k·A_top^k, uniformly in L, because total(ρ) is
+  non-increasing in ρ (§3.3).
+- **Change of constant.** Theorem R's right side becomes (eθA_Rδ)^k·e^{(3H+2)k/X₀}(1+k/X₀)^{1.02k}e^{2.2k/Λ}, or exactly
+  (k^k/k!)·(θA_Rδ)^k·(…).
+- **cor:R-Ecl.**
+  - The per-element constant 15 becomes 15e ≈ 40.8.
+  - The corollary still holds for every L ≥ 465 with the exact r₀: −99.5 against −24.6 at L = 465.
+  - The displayed simplification at A-rankfull:744–751 must keep the −11.94ℓ term (D7).
+  - Prop ecl's L⁻⁴ is unchanged.
+
+### R3. The Cover Bound and Lemma reduction(ii)–(iii)
+
+**The bound.**
+- In R1, a stage with j_t = 0 gives G_t(E) ≤ K_t·λ·G_{t−1}(E) pointwise, with λ := log(A_top/Eu_rat) ≤ log(L/Λ) + 1.
+- An end stage with j_T = 0 gives a factor ≤ 1 + K_T·λ.
+- The recursion is built from positive monotone operators, so these factors can be pulled out. The stages of the C rows then
+  form Theorem R's recursion, with κ in place of k.
+
+This gives, per pivot pattern with its C/R labels:
+
+  Σ over free structures ≤ 2^{r−1}·(κ^κ/κ!)·(1 + κλ)^{s_R}·A_top^κ,
+
+where s_R ≤ |R| is the number of stages where only rows outside the cover join. This is consistent with `cover_model.py`; for
+example, CRRRR gives 1.0·10⁴ against the bound 1.2·10⁷ at ρ = 10⁻⁸. The derivation is sketched, not written.
+
+**Charging.**
+- Each C row costs about 2e ≈ 5.4. That is far below its slack of L^{0.9}/24, since θδC′ = 24θL^{−0.9}.
+- Each stage where only R rows join costs 2(1 + κλ) ≤ 2(1 + r₀(ℓ − log Λ + 1)), whose logarithm is at most about 2ℓ. Charge
+  it to an R row of that stage: w_y → w_y·2(1+κλ). There are at most |R| such stages.
+- Criterion (iii) becomes (1+j)(log(1/w) − O(ℓ)) ≥ L + 10ℓ + 10. Theorem caplw's lower bounds make the O(ℓ) negligible at
+  every scale, and the existing margins (≥ 1.12×) absorb it:
+  - Step 2: log(1/w) ≥ k(Λ−A−1) − 1.1, with k ≳ ℓ;
+  - Step 3 and T1: g ≥ 0.9Λe^s(log Λ + s);
+  - T2: log(1/w) ≥ 0.24L.
+
+**Still to do in R3:**
+- write out the j = 0 pull-out and the interleaving count;
+- re-check the bookkeeping of Step 0's |R| ≥ 1 + j;
+- settle the decision-order count of D6. The PIL needs the pivot order. Theorem R's pattern sum covers it through 1/k!, but
+  the value-ordered types of the Cover Bound do not visibly count it.
+
+### Comparison with pil-o3b
+
+The diagnosis agrees: the lemma is valid per type, and both consumers need the union. This repair reaches further in two
+places.
+1. **Theorem R and cor:R-Ecl, uniformly in L.**
+   - With C = B′, every block has j_t = |P_t| ≥ 1 joining chain rows. Their Eu^j weight turns the passing-only excess
+     Σ_f(1/f)·(…) into (m/j)·∫d(x^j).
+   - So no per-boundary factor 1 + m·λ_t ever appears. It is a Crossing-Lemma loss θ₊(1 + m⁻_t·λ_t), charged to the pattern
+     excess, that fails beyond log L ≤ 51Λ.
+   - Summing the exact recursion over run structures gives the L-free constant k^k/k! instead.
+2. **The Cover Bound, with no upper limit on L.**
+   - The only λ-type losses come from stages where only R rows join, and they are charged to the weights w_y of the R rows
+     (log(1/w) ≳ Λ, or ≳ 0.24L), not to the excess of the C rows.
+   - The losses of the C rows are L-free (about 2e per row).
+   - That removes the restriction L ≤ (Λ²/29)^{10}, but only once the R3 sketch is written out.
+
+## 6. Confidence and limitations
+
+- **High:** the conditional-expectation argument is correct for one full type, given D2 and D3. It was proved by hand, and
+  Toy A is exact (36 cases, 0 violations).
+- **High:** D1 is real.
+  - The text fixes r and the owners per type, and the consumers sum over free structures without a count.
+  - The exact unions exceed the claims: Toy C gives k^k/k!, Toy F gives 2.97×, and the Cover-Bound sequence "CR" gives
+    1 + log(1/ρ).
+- **High:** the stated theorems are probably true. In every toy the true E is far below the claim, and the v3 heuristic gives
+  ∏Eu_s(s_i) ≤ A_top^k.
+- **Moderate-high:** the Theorem R repair and its constant k^k/k!.
+  - The closed form for H_K is verified exactly for K ≤ 10, but its induction proof is not written. The identity then follows
+    from Σ_j S(n,j)·(K)_j = K^n.
+  - Monotonicity in ρ is proved.
+  - Discrete ≤ continuous is sketched, and was tested on 4200 cases.
+- **Moderate:** the Cover Bound repair. The bound in R3, the charging to R rows, the decision-order count and the re-check of
+  caplw are sketches.
+- **Not re-checked:** the SVL linear algebra, Lemma SC, the arithmetic of Theorem caplw, and whether a different route
+  recovers the original constants with no loss.
