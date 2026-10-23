@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#53)
+## Addendum: defects found after the re-check (corrections #31–#54)
 
 After the first public version, a reader reported fourteen defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up nine more. The full list, with each repair, is entries #31–#53 of `CORRECTIONS-vs-v3.md`:
+re-checking the repairs, turned up ten more. The full list, with each repair, is entries #31–#54 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -91,6 +91,7 @@ re-checking the repairs, turned up nine more. The full list, with each repair, i
 | 51 | (H_BS) verification (§4a); Lemma T1 | the rigid error's decay 2κu·min(1, Cρ) was asserted (in v3 too) but never proved, and without decay η₁ is unbounded; now eq:Erig plus Rankin at σ = 1 − 1/Λ give η₁, η₂ ≤ κΛ² + X₀^{−1/2} | re-check |
 | 52 | square-prime source s₂ (eq:s2, §4d) | Γ factor up to 1.129 and range starting at X₀ instead of X₀⁻ (reader); the repair also found the Dickman variable applied the wrong way, e^{a_V} not small, an unchecked range, and an unproved a ≥ 3 claim; re-derived with real constant 0.73 against 9 | reader |
 | 53 | Lemma margin(b) Step 3, (d)(iii) | the one-variable-at-a-time replacement made mixed realised/rational sums that the one-system multiset argument does not cover; now a symmetric telescoping over ordered tuples, with a better bound | independent check R7 |
+| 54 | certificates (App B), quoted constants | finite-n rigour rested on libm and hard-coded error strings; about a dozen constants quoted as "ball arithmetic" had no certificate; bs-cert's bound S was specified only in code; two quoted decimals were not upper bounds; now an arb finite-n, a new constants certificate, S written into §4c | independent check R8 |
 
 **Repairs and their check.** All except #48 are repaired (see the open gap below). A fresh AI checker checked #31–#47 and #49–#53 in thirteen passes
 (`review/recheck/R4.md` §§1–20); the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
@@ -111,7 +112,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** Apart from the open gap of #48 (below), none of the fifty-three corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** Apart from the open gap of #48 (below), none of the fifty-four corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **Known open gap: #48.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and
@@ -128,7 +129,7 @@ arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, 
 **Other independent checks.**
 - `review/recheck/R7-margin-var.md` checked #47's large-range estimate: CORRECT WITH FIXES. Its fix is #53.
 - `review/recheck/R8-cert-repro.md` reproduced every certificate and independently re-implemented the four proof-step
-  certificates. All agree, with no blocking items. Its fixable items are being applied as #54.
+  certificates. All agree, with no blocking items. Its fixable items are fixed as #54, and the fixes were verified by the same checker (R8 §9).
 
 **Caveat.** These defects survived five rounds of AI checking. The paper should not be regarded as verified until a human
 expert has read it.

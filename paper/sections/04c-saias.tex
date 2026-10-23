@@ -559,6 +559,30 @@ $c_u:=u_0/(3u)$, $k_u:=1+1/(2(u-1))$ and $\varphi(w):=(w-u_0+c_u)_+^2/(2\sqrt\el
 \item \emph{Uniformity in $\tau\ge10^8$.} The bound uses $\kappa_{\min}:=4\cdot10^8$ where $\kappa_\Phi$ helps,
   $\kappa_{\max}=4\ell/30+1500$ where it hurts, and the slopes at $\bar U(\ell):=U(\ell;\tau=10^8)$, which is the largest
   junction.
+% Logged correction 54: the bound S evaluated by the certificate, written out (independent check R8, F3).
+\item \emph{The bound $S$.} With $r:=r(u)$, $r_0:=r(u-1)$, $S_1:=60$, $q:=e^{-(r_0-\gamma_{\max})S_1}/(r_0-\gamma_{\max})$ and
+  $d_+:=(d+c_u)_+$, the certificate evaluates
+  \begin{align*}
+    M-1&\le(e^{\beta_I}-1)\Big(1-\frac1{ur}\Big)+\frac{e^{\beta_{II}}-1}{ur}-e^{\beta_I}(1-e^{-\alpha})\Big(1-\frac1r\Big)
+      +\frac{e^{\beta_{II}}}u\Big(\frac{\gamma_1}{r_0(r_0-\gamma_1)}+q\Big),\\
+    \ell E_1&\le2K'u^2r_0e^{\beta_I-\alpha},\qquad
+    \ell E_2\le K'\frac u{u-1}\Big((u-1)e^{\beta_I}+e^{\beta_{II}}\Big(\frac1{r_0-\gamma_1}+q\Big)\Big),\\
+    E_3&\le2K'\Big(\bar\eta(u,v)e^{\beta_I}+\frac{e^{\beta_{II}}}u\Big(\frac{\bar\eta(u+S_1,v+S_1)}{r_0-\gamma_1}
+      +\bar\eta(\bar U,\bar U-u_0)\,q\Big)\Big),
+  \end{align*}
+  where
+  \begin{multline*}
+    \bar\eta(w,d):=\frac{4\kappa_{\max}}{\ell^2}+\frac{4B(1+w)^3\log(2+w)}{\ell^2}+\frac{d_+}{4(\ell/2)^{5/4}}
+      +\frac{k_ud_+^2}{2\ell^{3/2}}\\
+      +\frac{(1+w)^2}\ell\Big(\frac{2B(1+w)^2(3\log(2+w)+1)}\ell+\frac{\sqrt2\,d_+}{\sqrt\ell}\Big),
+  \end{multline*}
+  and $T\le\exp(\kappa_{\max}/\ell+a_V(\bar U+\frac12)+E_T)$ by Step~6. Then $S:=-\big[(M-1)+E_1+E_2+E_3+T\big]$, with these
+  bounds, satisfies $S\le\Sigma$. Here the masses $\pi([u-1,u])=1-1/(ur)$ and $\pi([u,\infty))=1/(ur)$, and
+  $\int_{u-1}^u\rho(w-1)\,dw=(u-1)\rho(u-1)$, come from \ref{R1}; on $w\ge u$, $\pi(dw)\le e^{-r_0(w-u)}dw/u$ by \ref{R3}; and
+  $(1+w)/w\le u/(u-1)$ for $w\ge u-1$. Also $\bar\eta\ge\eta_f$, because $\kappa_\Phi\le\kappa_{\max}$, $m\ge\ell/2$,
+  $(1+w)/w\le2$ and $((1+w)/w)^{3/2}\le2k_u$ for $w\ge u-1\ge1$, and $(w-m^{1/4})_+\le(w-u_0+c_u)_+$. Since $\bar\eta$ is
+  increasing in both arguments, its values at $(u,v)$, $(u+S_1,v+S_1)$ and $(\bar U,\bar U-u_0)$ bound $\eta_f$ on $[u-1,u]$,
+  $[u,u+S_1]$ and $[u+S_1,\bar U]$. The code is \texttt{bs\_cert\_arb.py} (Appendix~\ref{app:cert-bs}).
 \item \emph{The cover.} The range $\ell\in[3\cdot10^9,10^{18}]$ is split into $403$ bands of ratio $1.05$. In each band,
   $u$-cells cover $[2,\max(40,u_0/2)]$, and cells in $v=u-u_0(\ell)$ cover the rest up to $\bar U(\ell)$. The endpoints of
   the $v$-cells are rounded outward, so the seams between the two kinds of cells, and the top edge, are covered exactly

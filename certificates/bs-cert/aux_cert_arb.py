@@ -2,8 +2,9 @@
 #  (1) positivity of c_0(u), u >= 27:  5 log(1+u)[3(1-1/r(u)) - (1+u)^3 log(2+u)/(u^3 log(1+u)) - 144(1+u)^2 log(2+u)/(u^3 r0^2 log(1+u))]
 #                      - 2 r(u-1) - (u+1)/u^2  >=  log(1+u),   with r -> r_low, r0 -> r_low(u-1), r(u-1) -> r_up.
 #  (2) Lemma V one-step, closed form, u in [1, L], L >= 100, worst case L = max(100, u) (L*Q_V increasing in L):
-#      L(1-e^{-alpha}) * max(1/2, 1 - 1/r_low(u-1)) - 2 K_M r_up(u) - 15 e^{-0.4 L}  >  0   (last term: prime powers p^k > z),
+#      L(1-e^{-alpha}) * max(1/2, 1 - 1/r_low(u-1)) - 2 K_M r_up(u) - 22 e^{-0.4 L}  >  0   (last term: prime powers p^k > z),
 #      alpha = 4K(log(u+1) + (u-1)/(u+1))/L.
+# Decimal constants enter as exact Arb balls (arb("3.2") etc.), never as binary64 floats.
 import sys, math
 sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__)))
 from bs_cert_arb import I, ilog, iexp, iexpm1, r_low, r_up, lo_, hi_
@@ -17,14 +18,14 @@ def cA_cell(ua, ub):
     jA = 3 * (1 - 1 / r) - (1 + u) * (1 + u) * (1 + u) * L2 / (u3 * L1) - 144 * (1 + u) * (1 + u) * L2 / (u3 * (r0l * r0l) * L1)
     val = 5 * L1 * jA - 2 * r0u - (u + 1) / (u * u) - L1
     return lo_(val)
-K, KM = 3.2, 1.01
+K, KM = arb("3.2"), arb("1.01")
 def lemV_cell(ua, ub):
     u = I(ua, ub)
     L = I(max(100.0, ua), max(100.0, ub))
     alpha = 4 * K * (ilog(u + 1) + (u - 1) / (u + 1)) / L
     E = max(0.5, _fdn((1 - 1 / arb(r_low(ua - 1))).lower())) if ua >= 2 else 0.5
     ru = r_up(ub) if ub > 1 else 1.0
-    val = L * (-iexpm1(-alpha)) * E - 2 * KM * ru - 15 * iexp(-0.4 * L)
+    val = L * (-iexpm1(-alpha)) * E - 2 * KM * ru - 22 * iexp(L * arb("-0.4"))
     return lo_(val)
 def cover(f, a, b, ratio, name):
     cells, x, worst, n, stack = [], a, math.inf, 0, []
@@ -47,15 +48,15 @@ cover(lemV_cell, 1.0, 1e6, 1.001, "Lemma V one-step (L*Q_V, L = max(100,u))")
 #            divided by the normaliser C0 rho(u) e^{a_V} u >= C0 (1 - log u) u), and
 #     Y(u) = 2 K_M r_up(u)(e^{0.141} - 1)  (conservative allowance for a non-monotone F; not needed, since max F <=
 #            C0 rho(u-1) e^{a_V(u)} gives exactly the term 2 K_M r(u)).
-C0 = 0.70
+C0 = arb("0.70")
 def lemV_ext_cell(ua, ub):
     u = I(ua, ub)
     L = I(100.0)
     alpha = 4 * K * (ilog(u + 1) + (u - 1) / (u + 1)) / L
     ru = r_up(ub) if ub > 1 else 1.0
-    val = L * (-iexpm1(-alpha)) * 0.5 - 2 * KM * ru - 22 * iexp(-0.4 * L)
-    if ua < 1 + math.log(72) / 100:
-        val = val - I(0.7627) / (C0 * (1 - ilog(I(ub))) * I(ua))
-    val = val - 2 * KM * ru * (iexp(I(0.141)) - 1)
+    val = L * (-iexpm1(-alpha)) * 0.5 - 2 * KM * ru - 22 * iexp(L * arb("-0.4"))
+    if not (arb(ua) >= 1 + arb(72).log() / 100):          # X(u) is subtracted unless u >= 1 + log(72)/100 surely
+        val = val - I(arb("0.7627")) / (C0 * (1 - ilog(I(ub))) * I(ua))
+    val = val - 2 * KM * ru * (iexp(I(arb("0.141"))) - 1)
     return lo_(val)
 cover(lemV_ext_cell, 1.0, 2.0, 1.0005, "Lemma V one-step on [1,2] with both extra terms")

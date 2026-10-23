@@ -283,7 +283,8 @@ The dyadic window shifts exactly, so this is an identity. Its left side is $\ge\
 \begin{itemize}
 \item If $72\le Y'<\Xm/2$, the window lies below $\Xm$, where $\NN=\N$. There
   $\sum_{Y'<n\le2Y'}1/n\le\log2+1/\lceil Y'\rceil\le0.6933$ for $Y'\ge10^4$, and a direct computation for $72\le Y'<10^4$
-  gives at most $0.69658$ (attained for $Y'\in[72.5,73)$; see Appendix~\ref{app:cert}, \texttt{finite-n}).
+  gives at most $0.69659$ (attained for $Y'\in[72.5,73)$; see Appendix~\ref{app:cert}, \texttt{finite-n}).
+% Logged correction 54: 0.69659 (an upper bound) replaces 0.69658; the maximum is 0.6965836 (independent check R8, C1).
 \item If $Y'\ge\Xm/2$, write $N=\lfloor\cdot\rfloor+E_1$ and sum by parts:
   \begin{multline*}
     \sum_{n\in\NN\cap(Y',2Y']}1/n=\sum_{Y'<n\le2Y'}1/n+\big[E_1(v)/v\big]_{Y'}^{2Y'}+\int_{Y'}^{2Y'}E_1(v)\,dv/v^2\\
@@ -335,7 +336,7 @@ decreases in $\sigma$; it is increasing when $u\ge2$, but for $1<u<2$ it is only
   $\sum_{p>\sqrt z}(\log p)p^{-2\beta}\le1.42\cdot\frac{2\beta}{2\beta-1}\,z^{1/2-\beta}\le3.12z^{-0.42}$. Altogether, with
   $\rho(u)e^{a_V(u)}=\mathcal N(u)/(C_0u)\le\mathcal N(u)/C_0$ ($\mathcal N$ is the normaliser below), these terms contribute at
   most $1.001\,(3.02+1.01\cdot3.12)\,z^{-0.42}\mathcal N(u)/C_0\le9e^{-0.42L_z}\mathcal N(u)\le22e^{-0.4L_z}\mathcal N(u)$.
-% The allowance 22e^{-0.4L} replaces v3's 15e^{-0.4L} (part of logged correction 10); the certified [1,2] cover uses 22.
+% The allowance 22e^{-0.4L} replaces v3's 15e^{-0.4L} (part of logged correction 10); both certified covers use 22 (correction 54).
 \end{itemize}
 
 \emph{The one-step inequality.} Substitute $s=u-\sigma/L_z$. Then $\int_0^{L_z}F=L_zC_0\int_{u-1}^u\rho(s)e^{a_V(s)}ds$,
@@ -363,10 +364,10 @@ where $X(u):=0.7627/(C_0(1-\log u)u)$ for $u<1+\log72/L_z$ (using $\mathcal N(u)
 $[1,2]$), and $X(u):=0$ otherwise. The left side of \eqref{eq:lemV-onestep} is increasing in $L_z$, and the range of $X$
 shrinks as $L_z$ grows, so $L_z=\max(100,u)$ is the worst case.
 \begin{itemize}
+% Logged correction 54: the [1,10^6] cover now uses 22e^{-0.4L} too (aux_cert_arb.py; independent check R8, C4).
 \item \emph{Computer-assisted check} (see Appendix~\ref{app:cert}). With $r$ enclosed in $[r_{\mathrm{low}},r_{\mathrm{up}}]$ (and
-  exact on $[1,2]$), the left side of \eqref{eq:lemV-onestep} without $X$ (and with $15e^{-0.4L_z}$) is positive on
-  $u\in[1,10^6]$: $13{,}823$ cells in ball arithmetic, no failures, minimum certified value $1.724$ (the difference
-  $7e^{-0.4L_z}\le10^{-16}$ between the two prime-power allowances is immaterial). On $u\in[1,2]$, the left
+  exact on $[1,2]$), the left side of \eqref{eq:lemV-onestep} without $X$ is positive on
+  $u\in[1,10^6]$: $13{,}823$ cells in ball arithmetic, no failures, minimum certified value $1.724$. On $u\in[1,2]$, the left
   side \emph{with} $X$ and $22e^{-0.4L_z}$, and even with an additional allowance $2K_Mr_{\mathrm{up}}(u)(e^{0.141}-1)$, is
   positive: $1{,}387$ cells, no failures, minimum certified value $0.829$.
 % Logged correction 10: the small-height excess X(u) and the [1,2] check (aux_cert_arb.py, third line) are new.

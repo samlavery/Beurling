@@ -48,22 +48,23 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   instead of X₀⁻; its repair also found the Dickman variable applied the wrong way round, so the bound is re-derived.
 >
 > Repairing these and re-checking the repairs, and three further independent AI checks (R6–R8 in `review/recheck/`),
-> turned up nine more. The most serious were:
+> turned up ten more. The most serious were:
 > - a gap in the label sum of the Pivot-Integration Lemma (Appendix A): the carried Euler factors cancel only after
 >   integration, not pointwise as the argument needed. The repair (#48) proves the lemma per configuration type, but not
 >   in the summed form the paper uses, so **this gap is open**; see above;
 > - a gap inherited from the refereed draft in the check of the Beurling–Saias hypothesis (H_BS): the decay of the rigid
 >   error that it needs was asserted but never proved. It is now proved (Lemma T1, eq:Erig).
 >
-> These are entries #31–#53 of `CORRECTIONS-vs-v3.md`. All are repaired except #48.
+> These are entries #31–#54 of `CORRECTIONS-vs-v3.md`. All are repaired except #48.
 > - **The repairs of #31–#47 and #49–#53** were checked by a fresh AI checker in thirteen passes (`review/recheck/R4.md`).
+> - **The certificate fixes of #54** were checked by the R8 checker (`review/recheck/R8-cert-repro.md` §9).
 >   The passes ended with nothing blocking or fixable.
 > - **The repair of #48** passed one adversarial AI check (`review/recheck/R5-pil-repair.md`). Two later independent checks
 >   found that it holds only per configuration type.
 > - **The reports.** Independent checks of #47's large-range estimate and of every certificate are in
 >   `review/recheck/R7-margin-var.md` and `review/recheck/R8-cert-repro.md`.
 >
-> Apart from the open gap of #48, none of the fifty-three logged corrections changes a conclusion of the paper. But these
+> Apart from the open gap of #48, none of the fifty-four logged corrections changes a conclusion of the paper. But these
 > findings show that the AI checks are no substitute for expert review.
 
 ## The result
@@ -137,8 +138,9 @@ outputs are listed in Appendix B of the paper:
 | directory | what it checks |
 |---|---|
 | `certificates/bs-cert/` | the computer-assisted part of the Beurling–Saias bound (Arb ball arithmetic over a cell cover); see also its `README.md` |
-| `certificates/finite-n/` | the finite computations on the integers used in Section 5 (Lemmas CM, V and threshold-mass, the squarefree average); standard library, exact or with stated rounding bounds |
+| `certificates/finite-n/` | the finite computations on the integers used in Section 5 (Lemmas CM, V and threshold-mass, the squarefree average); Arb balls and exact rationals (needs python-flint) |
 | `certificates/x0-band/` | the small range of the bound for the jump of the target at X₀ (exact computation) |
+| `certificates/constants/` | numerical constants quoted in Sections 5 and 7 (ordered factorisations, the X₀-band ranges, the integrals of eq:mu1sum); Arb balls (needs python-flint) |
 | `certificates/capl-cert/` | a numerical cross-check of the capacity theorem, which is proved analytically; and `rankin_R.py`, a proof step: the Rankin constants of Lemma rowweights (needs python-flint) |
 | `certificates/lemma-sc/` | a numerical check of Lemma SC (exact rational arithmetic) |
 | `certificates/svl-stress/` | numerical corroboration of the Staged Volume Lemma's structural claims; not part of the proof |

@@ -5,8 +5,10 @@ The scripts are in the directory \texttt{certificates/} of the repository accomp
 the interval computations use ball arithmetic from \texttt{python-flint} (Arb). Each subsection states what is checked, the
 method, the command, and the expected output. Commands are run from the repository root unless stated otherwise.
 
-Four of them are steps of the proof: the Beurling--Saias certificate (Section~\ref{app:cert-bs}), the finite computations on
-the integers (Section~\ref{app:cert-finite}), the small range of the $X_0$-band bound (Section~\ref{app:cert-x0band}), and the
+% Logged correction 54: the constants certificate is a fifth proof step (independent check R8, F2).
+Five of them are steps of the proof: the Beurling--Saias certificate (Section~\ref{app:cert-bs}), the finite computations on
+the integers (Section~\ref{app:cert-finite}), the small range of the $X_0$-band bound (Section~\ref{app:cert-x0band}), the
+numerical constants of Sections~\ref{sec:noise} and~\ref{sec:baserange} (Section~\ref{app:cert-consts}), and the
 Rankin constants of Lemma~\ref{lem:rowweights} (\texttt{rankin\_R.py}, Section~\ref{app:cert-rankin}). The
 others are independent numerical cross-checks of statements proved in the text (Theorem~\ref{thm:caplw}, Lemma~\ref{lem:sc},
 Theorem~\ref{thm:svl}) or of the bookkeeping of Section~\ref{sec:logic}.
@@ -17,7 +19,7 @@ explicit inequality $\Sigma(\ell,u)\ge0$, where $\ell=\log Y$, $u=\ell/\log z$ a
 are computer-assisted.
 \begin{itemize}
 \item \emph{The region $30\tau\le\ell<10^{18}$, $u\ge2$.} A closed-form lower bound $S(\ell,u)\le\Sigma(\ell,u)$ is built from the
-majorants of the proof and from bounds $r_{\mathrm{low}}\le r\le r_{\mathrm{up}}$ for the Dickman ratio $r=-\rho'/\rho$. The script
+majorants of the proof (it is written out in Step~7(iii) of the proof of Theorem~\ref{thm:bs}) and from bounds $r_{\mathrm{low}}\le r\le r_{\mathrm{up}}$ for the Dickman ratio $r=-\rho'/\rho$. The script
 checks $S>0$ on cells covering the whole region, uniformly in $\tau\ge10^8$.
 \item \emph{One-variable inequalities:} the positivity $c_0(u):=c(u)-\ell\Phi_{\mathrm{ben}}\ge K'u^2\log(1+u)$ for
 $27\le u\le4\cdot10^5$, used for $\ell\ge10^{18}$; the one-step inequality of Lemma~\ref{lem:smooth-v} for $1\le u\le10^6$; and that one-step inequality on
@@ -26,10 +28,14 @@ $u<1+\log72/L_z$), and a conservative allowance $2K_Mr(u)(e^{0.141}-1)$. Beyond 
 \end{itemize}
 \emph{Method.}
 \begin{itemize}
-\item All arithmetic is ball arithmetic (Arb, through \texttt{python-flint} 0.9.0; module \texttt{ivarb.py}). Every elementary
+% Logged correction 54: file names, the set of delta, and decimal constants as exact balls (independent check R8, C5, C6, C9).
+\item All arithmetic is ball arithmetic (Arb, through \texttt{python-flint} 0.9.0); the bound $S$ is in \texttt{bs\_cert\_arb.py},
+the interval layer in \texttt{ivarb.py}. Every elementary
 operation and transcendental function is enclosed. The bounds $r_{\mathrm{low}}$ (from the recursion
-$r(v)\ge r(v-1)/(1-e^{-r(v-1)})$, $r(2)=1/(2-2\log2)$) and $r_{\mathrm{up}}$ (from $r(x)\le\log((x+1)/\delta)/(1-\delta)$, optimised
-over $\delta$) are computed in balls. Floating-point numbers enter only as exactly representable cell endpoints and as
+$r(v)\ge r(v-1)/(1-e^{-r(v-1)})$, $r(2)=1/(2-2\log2)$) and $r_{\mathrm{up}}$ (from $r(x)\le\log((x+1)/\delta)/(1-\delta)$, minimised
+over $\delta\in\{0.05,0.1,0.15,0.2,0.3,0.4,0.5\}$) are computed in balls. Decimal constants (such as $K'=2.2$, $K=3.2$,
+$C_0=0.70$ and $0.4$) enter as exact balls. Floating-point numbers enter only as exactly representable cell endpoints and
+parameters (the float complement $1-\delta$ in $r_{\mathrm{up}}$ is compensated by a factor $1+2^{-50}$), and as
 outward-rounded (\texttt{nextafter}) images of ball endpoints: in the table lookups for $r_{\mathrm{low}}$ and $r_{\mathrm{up}}$, in a
 few intermediate upper bounds that are fed back into the ball computation, in the final sign test, and in the printed output. Each
 such conversion moves a lower bound down or an upper bound up, so it can only weaken the certified inequality.
@@ -42,7 +48,9 @@ the band. Cells that fail are bisected adaptively.
 \item Every cell also checks $r(u-1)>\gamma_1$ and $r(u-1)>\gamma_{\max}$, which is the condition for the integrals of the second
 majorant to converge.
 \end{itemize}
-\emph{How to run} (\texttt{pip install python-flint==0.9.0}):
+% Logged correction 54: python-flint must be installed for the interpreter used (independent check R8, C11).
+\emph{How to run} (with \texttt{python-flint} 0.9.0 installed for the interpreter used, e.g.\ in a virtual environment;
+\texttt{-I} ignores the user site directory):
 \begingroup\footnotesize
 \begin{verbatim}
 python3 -I -B certificates/bs-cert/cert_run_arb_patched.py 1.05 10
@@ -69,7 +77,7 @@ $\ell\approx8.3\cdot10^{10}$, $u\in[200,210]$; for $c_0(u)$, $9\,609$ cells on $
 for the one-step inequality of Lemma~\ref{lem:smooth-v}, $13\,823$ cells on $u\in[1,10^6]$, $0$ failures, minimum margin $1.724$;
 and for that inequality on $u\in[1,2]$ with both extra terms, $1\,387$ cells, $0$ failures, minimum margin $0.829$. The script \texttt{cert\_run\_arb.py 1.05 10} gives the same
 result. The double-precision twins \texttt{bs\_cert.py}, \texttt{cert\_run.py} and \texttt{aux\_cert.py} (minimum $2.598\cdot10^6$ for
-the main region) are a cross-check only and are not part of the certificate. In the code, the first majorant is \texttt{betaI},
+the main region) are a cross-check only and are not part of the certificate. In \texttt{bs\_cert\_arb.py}, the first majorant is \texttt{betaI},
 \texttt{alpha}; the second is \texttt{betaII}, \texttt{gam1}, \texttt{gmax}, \texttt{tailII}; the error terms are \texttt{E1},
 \texttt{E2}, \texttt{E3} with \texttt{eta}; the tail is \texttt{ET}, \texttt{T}; and the $v$-cells are \texttt{vmode}.
 
@@ -87,11 +95,13 @@ Section~\ref{sec:noise-bridge}.
 \item Lemma~\ref{lem:cm}(iii): $\sum_p\log p/(p(p-1))$, as a partial sum to $10^7$ plus an explicit tail bound.
 \end{enumerate}
 \emph{Method.} Each supremum over a real variable is reduced to finitely many points by the step structure of the function; the
-reduction is explained in a comment above the corresponding check. Lines 3b and 5 use exact rational arithmetic. The other
-lines are floating-point sums of at most about $10^6$ nonnegative terms; each such line prints a bound on its rounding error,
-which is far below the margin to the bound used in the paper. The script uses only the Python standard library.
+reduction is explained in a comment above the corresponding check.
+% Logged correction 54: finite-n recomputed in ball arithmetic (independent check R8, F1).
+The products in lines 3b and 5 are exact rationals; every other quantity is computed in ball arithmetic
+(\texttt{python-flint} 0.9.0), and each comparison with the bound used in the paper is decided on the ball. Each line prints
+the ball, or the exact value, and the result of that comparison.
 
-\emph{How to run} (about 2 seconds):
+\emph{How to run} (about 3 seconds, with \texttt{python-flint}):
 \begingroup\footnotesize
 \begin{verbatim}
 python3 -I -B certificates/finite-n/finite_checks.py
@@ -100,22 +110,23 @@ python3 -I -B certificates/finite-n/finite_checks.py
 \emph{Expected output} (long lines are wrapped, with the continuation indented; the value on the runtime line varies):
 \begingroup\footnotesize
 \begin{verbatim}
-1  CM(i), N, 1<=x<1500: max (psi(x)-psi(x/2))/x = 0.680239 at x = 5 (paper: 0.6803 <= 0.71);
-    x>=1500: 0.71x - (x log2 + 3log x + 3) >= 0.340 at x=1500, increasing; err < 1e-12
-2  CM(ii), N, 1<=x<=1e7: S(x)-log x in [-0.752039, 0.000000]; inf approached as x -> 3-,
-    sup at x = 1 (paper: [-0.753, 0]); 665134 prime powers; err < 1e-8
-3a Lemma V, N, 72<=Y<1e4: max sum_{Y<n<=2Y} 1/n = 0.696584 for Y in [72.5, 73.0)
-    (paper: 0.69658 <= C0 = 0.70); Y>=1e4: log2 + 1e-4 = 0.693247 (paper: 0.6933);
-    err < 1e-11
-3b Lemma V, N, 1<=Y<72: max sum_{Y<n<=2Y} 1/n = 5/6 = 0.833333 for Y in [1.5, 2.0), exact
-    (paper: 0.8334)
-4  F_{1/2}, N, 1<=y<=1e6: max y^{-1/2} sum_{n<=y} mu^2(n) n^{-1/2} = 1.329635 at y = 7
-    (paper: 1.3296 <= 1.33); err < 1e-9
-5  Lemma threshold-mass, primes p<400: max prod_{q<p}(1-1/q)^{-1} - 1.8 log p = 0.247362
-    at p = 7 (paper: <= 0.25)
-6  CM(iii), rational primes: sum log p/(p(p-1)) <= 0.7553665 + 1.71e-06 = 0.7553682
-    (paper: 0.75537); err < 1e-12
-runtime 2.0 s
+1  CM(i), N, 1<=x<1500: max (psi(x)-psi(x/2))/x = [0.68023948 +/- 3.67e-9] at x = 5
+    (paper: 0.6803 <= 0.71): True; x>=1500: 0.71x - (x log2 + 3log x + 3) =
+    [0.339568 +/- 1.21e-9] at x=1500, derivative >= [0.01485 +/- 2.82e-6] for x>=1500: True
+2  CM(ii), N, 1<=x<=1e7: S(x)-log x in [[-0.75203870 +/- 1.62e-9], 0];
+    inf approached as x -> 3-, sup at x = 1 (paper: [-0.753, 0]): True; 665134 prime powers
+3a Lemma V, N, 72<=Y<1e4: max sum_{Y<n<=2Y} 1/n = [0.69658357 +/- 3.91e-9]
+    for Y in [72.5, 73.0) (paper: 0.69659 <= C0 = 0.70): True;
+    Y>=1e4: log2 + 1e-4 = [0.69324718 +/- 5.61e-10] (paper: 0.6933): True
+3b Lemma V, N, 1<=Y<72: max sum_{Y<n<=2Y} 1/n = 5/6 for Y in [1.5, 2.0), exact
+    (paper: 0.8334): True
+4  F_{1/2}, N, 1<=y<=1e6: max y^{-1/2} sum_{n<=y} mu^2(n) n^{-1/2} = [1.3296349 +/- 4.90e-8]
+    at y = 7 (paper: 1.32964 <= 1.33): True
+5  Lemma threshold-mass, primes p<400: max prod_{q<p}(1-1/q)^{-1} - 1.8 log p =
+    [0.24736173 +/- 1.71e-9] at p = 7 (paper: <= 0.25): True
+6  CM(iii), rational primes: sum log p/(p(p-1)) <= [0.75536651 +/- 8.30e-10] +
+    [1.71e-6 +/- 1.81e-9] = [0.75536822 +/- 2.64e-9] (paper: 0.75537): True
+runtime 2.8 s
 \end{verbatim}
 \endgroup
 Each line states the bound used in the paper as \texttt{(paper: \dots)}.
@@ -128,9 +139,12 @@ Each line states the bound used in the paper as \texttt{(paper: \dots)}.
   X(d)=\sum_{e\mid d,\,1<e<d}\mu^2(e)\,e\,H_{\mathrm{ord}}(d/e),\qquad\lambda=1.0001.
 \end{gathered}
 \]
-The maximum is attained only at $n=6$, where $B(6)=5/12$ exactly. The script also prints the suprema over $n\ge10^a$ for
-$a=1,\dots,5$, and the analytic tail bound $(\tfrac12+1.64\sqrt n)/n+\tfrac14\lambda A(1.8)2^{0.2}n^{-0.2}$ at $n=10^6$, which is
-$\le0.138$. For $n>10^6$ the lemma uses that analytic bound, not the computation.
+% Logged correction 54: exact check of the maximum, and the tail expression of the proof (independent check R8, C7, F2.5).
+The maximum is attained only at $n=6$, where $B(6)=5/12$ exactly; the script checks this exactly, comparing every other
+(inflated) $B(n)$ with $5/12$ as a rational and recomputing $B(6)$ in rationals. It also prints the suprema over $n\ge10^a$ for
+$a=1,\dots,5$, and the analytic tail bound $(\tfrac12+1.64\sqrt n)/n+\tfrac14\cdot7.4915\cdot2^{0.2}n^{-0.2}$ of the proof of
+Proposition~\ref{prop:xb-ranges}(i) at $n=10^6$, which is $0.137383\le0.14$ (the constants $7.4915$ and $0.14$ are certified in
+Section~\ref{app:cert-consts}). For $n>10^6$ the lemma uses that analytic bound, not the computation.
 
 \emph{Method.} Sieves compute, exactly in integers: $\mu^2$; $H_{\mathrm{ord}}(m)$ by $H_{\mathrm{ord}}(1)=1$,
 $H_{\mathrm{ord}}(m)=\sum_{d\mid m,\,d<m}H_{\mathrm{ord}}(d)$; $X(d)$; and the divisor sums. The integer arrays are checked against
@@ -139,7 +153,7 @@ most $\tau(n)\le240$ nonnegative terms, whose relative rounding error is $<10^{-
 $1+10^{-9}$ before taking maxima, so every printed value is an upper bound. All terms are nonnegative and every integer quantity is
 exact, so no interval arithmetic is needed.
 
-\emph{How to run} (standard library only, about 6 seconds):
+\emph{How to run} (standard library only, about 5 seconds):
 \begingroup\footnotesize
 \begin{verbatim}
 cd certificates/x0-band && python3 -I -B x0band_exact.py 1000000
@@ -155,10 +169,70 @@ sup B(n), 100<=n<=N: 0.088059
 sup B(n), 1000<=n<=N: 0.022826
 sup B(n), 10000<=n<=N: 0.007607
 sup B(n), 100000<=n<=N: 0.002121
-analytic tail bound for n>=N: 0.13738898318455534
+B(n) <= 5/12 for 2<=n<=N, equality only at n=6: True
+analytic tail bound for n>=N: 0.137383
 \end{verbatim}
 \endgroup
 The companion script \texttt{x0band.py} is an earlier floating-point exploration up to $2\cdot10^4$; it is not part of the certificate.
+
+% Logged correction 54: new certificate for constants that the text quotes without computing them (independent check R8, F2).
+\subsection{Numerical constants (\texttt{constants})}\label{app:cert-consts}
+\emph{What it certifies.} Constants that the text quotes, in ball arithmetic, without another certificate. Here
+$A(s):=1/(2-\zeta(s))-1=\sum_{m\ge2}\Hord(m)m^{-s}$ for $\NN=\N$.
+\begin{itemize}
+\item The ordered factorisations of Section~\ref{sec:kr}: the root $\rho_0\in(1.7286,1.7287)$ of $\zeta(\rho_0)=2$;
+$A_0(0.03)=A(1.97)=2.06733\le2.07$; $A_1(0.03)=-\zeta'(1.97)/(2-\zeta(1.97))^2=9.40888\le9.42$; $\zeta(1.8)=1.88223$, so
+$\zeta(1.8)+X_0^{-0.7}\le1.883$; and $1/(2-1.883)\le8.6$.
+\item Proposition~\ref{prop:xb-ranges}: $A(1.8-3\cdot10^{-6})=7.49142\le7.4915$; $\frac14\cdot7.4915\cdot2^{0.2}\le2.152$;
+$4/\sqrt6\le1.64$; the tail $(\frac12+1.64\sqrt n)/n+2.152n^{-0.2}=0.13742\le0.14$ at $n=10^6$; $A(1.77)=13.0822\le13.1$;
+$\zeta(1.97)-1=0.67398\le0.674$; and $-\zeta'(1.97)=1.00004\le1.0001$.
+\item Lemma~\ref{lem:margin}(c) and \eqref{eq:mu1sum}: $\operatorname{Ein}(2)=\int_0^2(e^w-1)\,dw/w=3.68387<3.69$;
+$I_1=14.9154$, $I_2=214.7714$ and $I_3=6.6962$; $(2.02/\log2)(I_1+I_2+I_3)=688.88\le690$; and $690/\Lambda\le7\cdot10^{-6}$.
+\end{itemize}
+\emph{Method.} Ball arithmetic (\texttt{python-flint} 0.9.0) throughout: $\zeta$, and $\zeta'$ from the Taylor series of $\zeta$;
+$\operatorname{Ein}(2)=\operatorname{Ei}(2)-\gamma-\log2$; $\rho_0$ from the signs of $\zeta-2$ at $1.7286$ and $1.7287$
+($\zeta$ is decreasing). $I_1$ is evaluated from its antiderivative, and $I_3$ from the closed form
+$2e^\gamma e^{\operatorname{Ein}(2)}\cdot\frac12e^{1/2}E_1(\log4+\frac12)$. For $I_2$, after the substitution $v=e^t$, the range
+$[\log4,60]$ is integrated by Arb's certified integration (\texttt{acb.integral}), and the rest is bounded explicitly by
+$e^{-60}p(121)(\log121+1.01)/121$ with $p(y)=y^4+8y^3+48y^2+192y+384$ (a comment in the script gives the derivation). Each
+comparison with the bound used in the text is decided on the ball.
+
+\emph{How to run} (under a second, with \texttt{python-flint}):
+\begingroup\footnotesize
+\begin{verbatim}
+python3 -I -B certificates/constants/consts.py
+\end{verbatim}
+\endgroup
+\emph{Expected output} (long lines are wrapped, with the continuation indented):
+\begingroup\footnotesize
+\begin{verbatim}
+k1  rho_0 (root of zeta(s) = 2): zeta(1.7286) - 2, zeta(1.7287) - 2 =
+    [8.5893e-5 +/- 2.83e-10], [-9.5920e-5 +/- 1.69e-10]: True
+k2  A_0(0.03) = A(1.97) (paper: 2.0673, used <= 2.07) = [2.0673297 +/- 3.79e-8]: True
+k3  A_1(0.03) = -zeta'(1.97)/(2-zeta(1.97))^2 (paper: 9.409, used <= 9.42) =
+    [9.4088776 +/- 2.57e-8]: True
+k4  zeta(1.8) (paper: zeta(1.8) + X_0^-0.7 <= 1.883) = [1.8822296 +/- 1.82e-8]: True
+k5  1/(2 - 1.883) (paper: sum H_ord(m) m^-1.8 <= 8.6) = [8.5470085 +/- 4.71e-8]: True
+x1  A(1.8 - 3e-6) (paper: <= 7.4915) = [7.49142324 +/- 3.98e-9]: True
+x2  (1/4) 7.4915 2^0.2 (paper: <= 2.152) = [2.1513684 +/- 3.17e-8]: True
+x3  2^omega(n)/sqrt(n) <= prod_{p|n} 2p^-1/2 <= 4/sqrt(6) (paper: 1.64) =
+    [1.6329932 +/- 3.82e-8]: True
+x4  (1/2 + 1.64 sqrt n)/n + 2.152 n^-0.2 at n = 1e6 (paper: <= 0.14 for n > 1e6) =
+    [0.13742252 +/- 5.33e-10]: True
+x5  A(1.77) (paper: 13.08, used <= 13.1; abscissa 1.7286 < 1.77) =
+    [13.082206 +/- 2.21e-7]: True
+x6  sum_{w>=2} w^-1.97 = zeta(1.97) - 1 (paper: 0.674) = [0.67398353 +/- 3.66e-9]: True
+x7  sum_{w>=2} w^-1.97 log w = -zeta'(1.97) (paper: <= 1.0001) = [1.0000389 +/- 3.48e-8]: True
+m1  Ein(2) = int_0^2 (e^w-1)/w dw = Ei(2) - gamma - log 2 (paper: < 3.69) =
+    [3.68387151 +/- 5.41e-10]: True
+m2  I_1 = int_1^4 v(log v + 1.01) dv (paper: 14.92) = [14.915355 +/- 1.12e-7]: True
+m3  I_2 = int_4^oo U^3 (log U + 1.01) v^-2 dv, U = 1 + 2 log v (paper: 214.8) =
+    [214.771420 +/- 2.64e-7]: True
+m4  I_3 = 2 e^gamma e^Ein(2) int_4^oo dv/(U v^2) (paper: 6.7) = [6.6961946 +/- 4.30e-9]: True
+m5  (2.02/log 2)(I_1 + I_2 + I_3) (paper: <= 690) = [688.87765 +/- 2.83e-6]: True
+m6  690/Lambda at Lambda = 1e8 (paper eq:mu1sum: <= 7e-6) = [6.900e-6 +/- 3e-14]: True
+\end{verbatim}
+\endgroup
 
 \subsection{The capacity theorem: numerical cross-check and Rankin constants (\texttt{capl-cert})}\label{app:cert-capl}
 Theorem~\ref{thm:caplw} is proved analytically. Apart from \texttt{rankin\_R.py} (see below), the scripts in
@@ -217,9 +291,10 @@ Unlike the scripts above, this one is a step of the proof, of Lemma~\ref{lem:row
 \item $R(\sigma):=\sum_p\bigl(-\log(1-p^{-\sigma})-p^{-\sigma}\bigr)$ satisfies $R(0.69)\le0.7618\le0.77$ and $R(0.75)\le0.6212\le0.63$.
 The sum over $p\le10^7$ is computed in balls, and the rest is bounded by
 $\sum_{n>N}n^{-2\sigma}/(2(1-n^{-\sigma}))\le N^{1-2\sigma}/(2(2\sigma-1)(1-N^{-\sigma}))$ with $N=10^7$.
-\item $\operatorname{Ei}(11)-e^{11}/11-e^{11}/121\le134$, and $2.75/x+134x^2e^{-x}<1$ on $[11,411]$. Together these give
-$\operatorname{Ei}(x)\le(e^x/x)(1+2/x)$ for $x\ge11$. The second function is decreasing on $[11,\infty)$; the script evaluates it on a
-grid of step $0.1$.
+% Logged correction 54: one evaluation at x = 11 plus monotonicity replaces a grid (independent check R8, C8).
+\item $\operatorname{Ei}(11)-e^{11}/11-e^{11}/121\le134$, and $2.75/x+134x^2e^{-x}<1$ for $x\ge11$. Together these give
+$\operatorname{Ei}(x)\le(e^x/x)(1+2/x)$ for $x\ge11$. The second function has derivative $-2.75/x^2+134x(2-x)e^{-x}<0$ for $x>2$,
+so it suffices that it is $<1$ at $x=11$.
 \item $(3/2)^{3/4}\le1.3555$ and $\operatorname{Ei}(\tfrac14\log2)\ge-1$.
 \end{itemize}
 Expected output (about 2 seconds, with \texttt{python-flint}):
@@ -228,7 +303,7 @@ Expected output (about 2 seconds, with \texttt{python-flint}):
 R(0.69) <= [0.76178247 +/- 3.88e-9]  (claim <= 0.77): OK
 R(0.75) <= [0.62117313 +/- 3.99e-9]  (claim <= 0.63): OK
 Ei(11) - e^11/11 - e^11/121 = [133.47496 +/- 4.33e-6]  (claim <= 134): OK
-2.75/x + 134 x^2 e^-x < 1 on [11, 411]: OK
+2.75/x + 134 x^2 e^-x < 1 at x = 11 (decreasing for x > 2): OK
 (3/2)^(3/4) = [1.355403005 +/- 4.15e-10]  (claim <= 1.3555): OK
 Ei(log(2)/4) = [-0.9944989999 +/- 1.03e-11]  (claim >= -1): OK
 ALL OK
@@ -301,7 +376,9 @@ python3 -I -B certificates/svl-stress/svl_stress.py        # 2-3 s, standard lib
 \subsection{Non-circularity of the dependency graph (\texttt{depcheck})}\label{app:cert-dep}
 Section~\ref{sec:logic} asserts that the dependencies between the results of this paper used at the \emph{same} time form an acyclic
 graph, every loop closing only through an input used at a strictly earlier time or a strictly smaller height. The script
-\texttt{certificates/depcheck/depcheck.py} encodes the full dependency graph, one edge per input, each edge marked ``same time'' or
+% Logged correction 54: external results enter only as leaves (independent check R8, C10, option (a)).
+\texttt{certificates/depcheck/depcheck.py} encodes the full dependency graph, one edge per internal input (external results enter
+only as leaves, and only some are listed), each edge marked ``same time'' or
 ``strictly earlier'' as in the table of Section~\ref{sec:logic}, of which that table is an abridgement. It runs a depth-first search for
 a cycle among the same-time edges.
 \begingroup\footnotesize

@@ -2,7 +2,7 @@
 import math
 from flint import arb
 from ivarb import I, iexp, iexpm1, ilog, isqrt, ipos, isq, lo_, hi_, _fdn, _fup
-B, KP, KMIN, S1 = 11.0, 2.20, 4.0e8, 60.0
+B, KP, KMIN, S1 = 11.0, arb("2.2"), 4.0e8, 60.0          # decimal constants as exact Arb balls
 # ---------- r bounds ----------
 NR = 400000
 _rl = [0.0] * (NR + 1)
@@ -73,8 +73,8 @@ def S_cell(la, lb, ua, ub, vmode=False):
                + (isq(1 + w) / l) * (2 * B * isq(1 + w) * (3 * ilog(2 + w) + 1) / l + isqrt(2) * d / sl)
     E3 = 2 * KP * (eta(u, dv) * iexp(betaI) + iexp(betaII) / u * (eta(w1, dv + S1) / (r0 - gam1) + eta(I(Ub), UbMu0) * iexp(-(r0 - gmax) * S1) / (r0 - gmax)))
     # tail T (Lemma V), tau-free form
-    us = Ub + 0.5
-    aV = (arb(12.8) * arb(us) ** 2 * (arb(us) + 2).log() / la)
+    us = arb(Ub) + arb("0.5")                 # a ball containing Ubar_up + 1/2 (no float rounding)
+    aV = (arb("12.8") * us ** 2 * (us + 2).log() / la)
     U30mu0 = q4 * isqrt(2 * ilog(30) + 4)   # U_30(l) - u0(l)
     a_lu = isq(dpos) / (2 * sl)
     rr0 = r_low(ua - 1)

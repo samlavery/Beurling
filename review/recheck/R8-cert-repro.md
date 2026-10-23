@@ -437,3 +437,63 @@ The independent re-implementations took:
 **Line references.** In F3, E₁ is bs_cert_arb.py l.65, and T is l.76–89 (with tot at l.90). The checker's working files were
 in /tmp/rhscratch/cert-repro/, which is temporary.
 Copies of the checker's independent scripts are kept in `review/recheck/cert-repro/`.
+
+## 9. Re-check of #54, the fixes of the R8 findings
+
+**Verdict: VERIFIED.**
+- All 14 items are resolved: F1, F2 (with F2.5), F3, and C1–C11. Nothing BLOCKING or FIXABLE remains; there is one cosmetic
+  residual, R1.
+- 21 of 21 commands were run. All 16 verbatim blocks in App B reproduce byte for byte, apart from the exceptions App B
+  itself declares (bs-cert omits the run time, the finite-n runtime line varies, and the x0-band `top:` line is abridged).
+- The 7 changed certificates were checked for rigour, and no regression was found.
+
+**Set-up.** The checker worked read-only on the live working tree, compared it with `02bbd5c`, and ran everything from a
+frozen copy. At the end, all 12 checked files were still byte-identical to the live tree.
+
+### 9.1 Re-runs
+
+- **Results unchanged.**
+  - bs-cert: 302,013 cells, 0 failures, minimum ℓS = 2.491e6, from both drivers.
+  - The aux margins are 0.189, 1.724 and 0.829, unchanged by C4 (15 → 22) and C5.
+  - The cross-checks are byte-identical to their R8 runs.
+- **finite-n now needs python-flint.** App B, the finite-n README and the top-level README all say so.
+- **The paper copy** compiles with no undefined references, and every new `\ref` resolves.
+- **Times (s):** bs patched 6.5, bs arb 6.6, aux 0.9, finite 3.0, x0band 4.8, consts 0.06, rankin 1.9.
+
+### 9.2 Item by item
+
+- **F1.** `finite_checks.py` now uses arb (prec 96) and Fractions, and no float enters any computed quantity.
+  - Every comparison is decided on the ball.
+  - The line-6 tail is correct: f(t) = log t/(t−1)² decreases for t ≥ 2, so
+    Σ_{n>N} ≤ (log N + 1)/(N−1) + 1/(N−1)².
+  - The values agree with the checker's own finite_indep.py to every printed digit. The margins are ≥ 1.78e-6, against ball
+    radii ≤ 4.9e-8.
+- **F2.** Every value printed by `consts.py` agrees with the checker's consts_indep.py to every printed digit.
+  - **I₂.** acb.integral is called with the analytic flag forwarded to log, and Re(1+2t) > 3 on the path, so the result is a
+    rigorous enclosure.
+    - The tail derivation is correct: (log y + c)/y is decreasing, and ∫_T^∞ p e^{−t} = e^{−T}(p + p′ + … + p⁗)(T).
+    - An independent closed form via incomplete gamma functions gives 214.771420263705 ± 1.3e-13, which lies in
+      main + [0, tail].
+  - **I₃.** The closed form (e^{1/2}/2)E₁(log 4 + ½) is correct, and matches an independent acb.integral to 12 digits.
+  - **Text.** The App B subsection, the preamble's "Five …" and the 01-setup rewording are correct.
+- **F2.5 and C7.**
+  - **0.137383.** This is the middle expression of the proof at n = 10⁶, before rounding to 2.152. The value 0.137423 uses
+    2.152, and the constants certificate certifies that form. The two are consistent.
+  - **The exact pass is sound.** B(6) = 5/12 is recomputed in Fractions, and every other inflated value is < 5/12.
+- **F3.** The bound S written out in 04c Step 7(iii) matches `bs_cert_arb.py` term by term: Mm1/tailII, E₁, E₂, E₃, η̄, T
+  and tot. Both added facts hold:
+  - π(dw) ≤ e^{−r₀(w−u)}dw/u on w ≥ u, by (R3);
+  - κ_Φ ≤ κ_max, and (w − m^{1/4})₊ ≤ (w − u₀ + c_u)₊.
+- **C1, C2.** 0.69659 and 1.32964 are upper bounds of the true maxima, 0.6965836 and 1.3296349.
+- **C4.** 22 is now used, and the margins are identical.
+- **C5.** The remaining floats are covered.
+  - δ is an exact binary value.
+  - fl(1−δ) has relative error ≤ 2⁻⁵³, and the factor 1 + 2⁻⁵⁰ covers it.
+  - `_fdn` and `_fup` are safe.
+- **C6, C8, C9, C10(a), C11.** Resolved.
+
+### 9.3 Residual
+
+**R1 (COSMETIC).** The places in the paper that use the certified constants did not cite the new certificate. The lead fixed
+this by adding references to Appendix~\ref{app:cert-consts} at 04x (A(1.8−3·10⁻⁶) and the ball-arithmetic ζ values), at 04k
+(A₀ and A₁) and at 06 (eq:mu1sum).
