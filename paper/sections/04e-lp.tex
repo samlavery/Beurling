@@ -113,7 +113,7 @@ $X_{\mathrm{LP}}\le v\le y$:
 \begingroup\emergencystretch=3em
 This is Landau's argument \cite[Lemmas~6.2--6.3 and the proof of Thm.~6.6]{MontgomeryVaughan2007}, with four changes. It is
 run on an extension of $N$ beyond $y$, which is not a Beurling system. Positivity is therefore imported from a finite
-Euler product. Landau's discs have radius $\asymp1/\Lambda$. And the region near the pole is handled with the fine form of
+Euler-type product over the primes $\le y$ (Step~2). Landau's discs have radius $\asymp1/\Lambda$. And the region near the pole is handled with the fine form of
 $\hat E$. Throughout, $s=\sigma+it$.\par\endgroup
 
 \emph{Step 1: the extension.} Put $D:=N-T_0$, so $D=0$ below $\Xm$ and $|D(u)|\le u^{\theta'}$ on $[\Xm,y]$ by (LP-a). Define
@@ -129,8 +129,20 @@ $\int u^{-\sigma}|\cdot|$ for large $\sigma$). Since $\log^*$ is causal, $\Pi^\s
 
 \emph{Step 2: upper bounds on $[1,y]$.} Lemma~\ref{lem:cm} holds on $[1,y]$: (LP-a) and \eqref{eq:T1} give \textup{(H$_{\mathrm{BS}}$)} there. Write $d\psi=\log u\,d\Pi$ and
 $S(z)=\int_{[1,z]}d\psi/u\le\log z+0.43$. By Lemma~\ref{lem:cm}(iv) and the values for $\N$,
-$\int_{[1,y]}d\Pi/u\le\log\log y+4.5$. Let $N_y:=\exp^*(\Pi|_{[1,y]})$ count the $y$-smooth elements, so $N_y=N$ on
-$[1,y]$, and put $P_y(s):=\int u^{-s}dN_y=\exp(\int_{[1,y]}u^{-s}d\Pi)$. Then $P_y(1)\le e^{4.5}\log y$.
+$\int_{[1,y]}d\Pi/u\le\log\log y+4.5$; the same argument gives $\int_{[1,z]}d\Pi/u\le\log\log z+4.5$ for $e\le z\le y$.
+% Logged correction 57 (CORRECTIONS-vs-v3.md): N_y is a positive Euler proxy, not the counting measure of the y-smooth
+% elements (for sqrt(y) < p <= y it gives p^2 the weight 1/2). Only the properties (a)-(d) below are used (Steps 3-4, 7-8, 10).
+% The opening paragraph of the proof now says "Euler-type product" for the same reason.
+Let $N_y:=\exp^*(\Pi|_{[1,y]})$, the convolution exponential of the restricted logarithmic measure. It is a positive Euler
+proxy, not the counting measure of the $y$-smooth elements: for a prime $\sqrt y<p\le y$ it gives $p^2$ the weight
+$\frac12$. Only the following properties are used.
+\begin{enumerate}[label=(\alph*)]
+\item $N_y=N$ on $[1,y]$, since $N=\exp^*(\Pi)$ and $\exp^*$ is causal (all measures live on $[1,\infty)$).
+\item $dN_y\ge0$, since $\exp^*(\mu)=\sum_{k\ge0}\mu^{*k}/k!$ and $\Pi\ge0$.
+\item $P_y(s):=\int u^{-s}dN_y=\exp(\int_{[1,y]}u^{-s}d\Pi)$, since the Mellin transform turns $*$ into products.
+\item $|(dN_y)^{*-1}|=|\exp^*(-\Pi|_{[1,y]})|\le\exp^*(\Pi|_{[1,y]})=dN_y$, term by term.
+\end{enumerate}
+By (c), $P_y(1)\le e^{4.5}\log y$.
 
 \emph{Step 3: positivity transfer.} Put $\Delta:=\zeta^\sharp-P_y=\int_{(y,\infty)}u^{-s}(dT_0-dN_y)$. For $\sigma=1+\eta$
 with $0<\eta\le1/8$, Rankin's trick ($u^{-\eta}\le y^{-\eta/2}u^{-\eta/2}$ for $u>y$) and (LP-a) give
@@ -320,8 +332,33 @@ side of (i) for $w\le y$.
   \eqref{eq:lp-zf} at most doubles the denominator. Together this gives (i) with $c_{\mathrm{LP}}=c_{\mathrm{zf}}/5$. The
   threshold $X_{\mathrm{LP}}$ is chosen above both heights, so $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$, and
   $\log K=O(\Lambda)$.
-\item (ii) is the same argument with $\mathfrak G_1(s):=\log(\zeta^\sharp(s)(s-1)/s)$, the kernel
-  $v^s\hat h_0((s-1)/T)/s$, and the contour near $\sigma=1$.
+% Logged correction 56 (CORRECTIONS-vs-v3.md): (ii) was proved by a second Perron integral whose kernel
+% v^s h_0^((s-1)/T)/s does not match the smoothing of (i) (whose multiplier is h_0^(s/T)); (ii) now follows from (i) by
+% partial summation, with the same c_LP and a constant K' with log K' = O(Lambda).
+\item \emph{Proof of (ii), from (i).} Put $\Phi(w):=\int_{[1,w]}d(\Pi-\Pi_0)/u$; then $\Phi=\Phi^\sharp$ on $[1,y]$, $\Phi$ is
+  right-continuous, and $\Phi(1^-)=0$. Integrating by parts, for $X_{\mathrm{LP}}\le v\le y$,
+  \[
+    \Pi(v)-\Pi_0(v)=\int_{[1,v]}u\,d\Phi(u)=v\,\Phi(v)-\int_1^v\Phi(u)\,du .
+  \]
+  \begin{itemize}
+  \item On $[1,X_{\mathrm{LP}}]$: both $\int_{[1,u]}d\Pi/w$ and $\int_{[1,u]}d\Pi_0/w$ are non-decreasing in $u$. By Step~2 at
+    height $X_{\mathrm{LP}}$, the first is $\le\log\log X_{\mathrm{LP}}+4.5$. The density of $\Pi_0/w$ is
+    $(1-1/w)/(w\log w)\le1/w$ on $[1,e]$ and $\le1/(w\log w)$ beyond, so the second is $\le\log\log X_{\mathrm{LP}}+1$. Hence
+    $|\Phi(u)|\le2\log\log X_{\mathrm{LP}}+5.5$ there.
+  \item On $[X_{\mathrm{LP}},v]$: $|\Phi(u)|\le Ke^{-c_{\mathrm{LP}}\sqrt{\log u}}$ by (i). With $u=e^x$, the function
+    $e^{x-c_{\mathrm{LP}}\sqrt x}$ has derivative $\ge0.99\,e^{x-c_{\mathrm{LP}}\sqrt x}$, so
+    $\int_{X_{\mathrm{LP}}}^ve^{-c_{\mathrm{LP}}\sqrt{\log u}}du\le1.02\,v\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$.
+  \item $v\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$ is increasing, so
+    $X_{\mathrm{LP}}\le e^{c_{\mathrm{LP}}\sqrt{\log X_{\mathrm{LP}}}}\,v\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$.
+  \end{itemize}
+  Hence
+  \[
+    |\Pi(v)-\Pi_0(v)|\le K'v\,e^{-c_{\mathrm{LP}}\sqrt{\log v}},\qquad
+    K':=2.02K+e^{c_{\mathrm{LP}}\sqrt{\log X_{\mathrm{LP}}}}\big(2\log\log X_{\mathrm{LP}}+5.5\big).
+  \]
+  Since $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$ and $c_{\mathrm{LP}}=c_{\mathrm{zf}}/5=0.0176/\Lambda$ (Step~7), both $c_{\mathrm{LP}}\sqrt{\log X_{\mathrm{LP}}}$
+  and $\log\log X_{\mathrm{LP}}$ are $O(\log\Lambda)$, so $\log K'=O(\Lambda)$. As $K'\ge K$, (i) and (ii) hold together with $K'$
+  in place of $K$, and with the same $c_{\mathrm{LP}}$. No second contour integral is needed.
 \end{itemize}
 
 \emph{Step 10: short windows; proof of (iii).}

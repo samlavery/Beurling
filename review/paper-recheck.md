@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#55)
+## Addendum: defects found after the re-check (corrections #31–#57)
 
-After the first public version, a reader reported fourteen defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up eleven more. The full list, with each repair, is entries #31–#55 of `CORRECTIONS-vs-v3.md`:
+After the first public version, a reader reported sixteen defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, turned up eleven more. The full list, with each repair, is entries #31–#57 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -93,9 +93,11 @@ re-checking the repairs, turned up eleven more. The full list, with each repair,
 | 53 | Lemma margin(b) Step 3, (d)(iii) | the one-variable-at-a-time replacement made mixed realised/rational sums that the one-system multiset argument does not cover; now a symmetric telescoping over ordered tuples, with a better bound | independent check R7 |
 | 54 | certificates (App B), quoted constants | finite-n rigour rested on libm and hard-coded error strings; about a dozen constants quoted as "ball arithmetic" had no certificate; bs-cert's bound S was specified only in code; two quoted decimals were not upper bounds; now an arb finite-n, a new constants certificate, S written into §4c | independent check R8 |
 | 55 | App. A Lemma pil, (S3), Thm R, cor:R-Ecl; Prop cover, Lemma reduction(ii) | closes the #48 union gap: block bound summed over every block content (eq:A-Grec); Thm R gains k^k/k! ≤ e^k (eq:A-HK, generating function); Cover Bound's R-only stages pulled out as (1+κλ) and absorbed by the R rows' δ; skeletons in decision order; caps q_j ≥ τ_j | independent checks R6/R6b/R6c |
+| 56 | Thm lp (ii), Step 9 | Perron kernel ĥ₀((s−1)/T) did not match the smoothing defined in 9(i), which gives ĥ₀(s/T); (ii) now follows from (i) by partial summation | reader |
+| 57 | Thm lp, Step 2 | N_y := exp*(Π\|_{[1,y]}) called the y-smooth counting measure (false: p² gets ½ for √y < p ≤ y); now a positive Euler proxy with the four properties used | reader |
 
-**Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47 and #49–#53 in thirteen passes
-(`review/recheck/R4.md` §§1–20); the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+**Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56 and #57 in fourteen passes
+(`review/recheck/R4.md` §§1–21); the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -113,7 +115,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the fifty-five corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the fifty-seven corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and
