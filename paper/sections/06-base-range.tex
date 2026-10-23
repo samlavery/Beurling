@@ -28,7 +28,11 @@ because the window is linear. Write the non-rigid integers as $\bigsqcup_{m'}m'\
 included. The $m'$-component of the target at $x$ equals $1/m'$ times the target's fresh-prime density at $q=x/m'$. So the
 mismatch between nested windows vanishes identically, for every $m'$.
 \item \emph{Partial windows.} When $P^+(m')\in(q,(1+\kappa)q]$, the component is a partial window. Those $m'=pm$ have
-$p\in(\sqrt{x/m},\sqrt{(1+\kappa)x/m}]$ and total weight $\ll\kappa/\log x$, so the correction is a relative $O(\kappa)$.
+% Logged correction 67: v3's "total weight << kappa/log x, a relative O(kappa)" replaced by an explicit bound (needed only in the
+% margin, Lemma margin(b), where it is far below 10^{-3} kappa (log u)^3).
+$p\in(\sqrt{x/m},\sqrt{(1+\kappa)x/m}]$, an interval holding at most $\frac\kappa2\sqrt{x/m}+1$ integers. For $q\ge X_0$ this gives
+$\sum1/m'\le\sum_{m\le x}0.51\kappa/m\le0.51\kappa(\log x+1)$, and the components have density $\le1.01/\Lambda$, so the correction is
+at most $\kappa\log x/\Lambda$.
 \item \emph{Edges near $X_0$.} The ramps of integers in $[X_0,X_0(1+\kappa))$ are truncated at $X_0$. This gives $E$ a constant offset
 $|E_0|\le\kappa X_0+1$, which changes only $C_{X_0}$. In the margin it is part of $\mu_0$, through $\Delta$ (Lemma~\ref{lem:margin}(b),
 Step~1).
@@ -196,7 +200,8 @@ The window $I:=[q,(1+\kappa)q]$ lies in $[q,2q]$ and has $|I|=\kappa q\ge q^{7/1
 \eqref{eq:huxley}, and $\eta_{\mathrm H}(q)\le(\log q)^{-3}$ there (by \eqref{eq:HB} if $|I|\le x/(\log x)^4$ with $x:=(1+\kappa)q$, and by the de
 la Vall\'ee Poussin bound if $|I|$ is longer). Hence $\pi(I)\ge(1-\eta_{\mathrm H}(q))\int_Idt/\log t\ge(1-(\log q)^{-3})\kappa q/\log((1+\kappa)q)$.
 Dividing by $\kappa q$,
-$\mathrm{MA}[\mathbb P](q)\log q\ge(1-(\log q)^{-3})(1-\kappa/\log q)\ge1-10^{-20}$, since $\log q\ge10^8$ and $\kappa=X_0^{-0.3967}$.
+$\mathrm{MA}[\mathbb P](q)\log q\ge(1-(\log q)^{-3})(1-\kappa/\log q)\ge1-10^{-20}$, since $\log q\ge10^8$ and $\kappa=X_0^{-0.39666\ldots}\le X_0^{-0.3966}$.
+% Logged correction 69 (R13, C2): kappa = X_0^{-0.39666...} (was "= X_0^{-0.3967}").
 \end{proof}
 
 \begin{proof}[Proof of (b)]
@@ -261,8 +266,8 @@ the decision-order mismatch, bounded directly as follows. Value order and decisi
 of the cofactor $w=Pw'$ differ only when $u/w$ lies within $H/2$ of $P$, so $|P-\sqrt{u/w'}|\le H/4$: $P$ lies in an interval of
 length $\le H/2$ around $\sqrt{u/w'}$, which holds at most $1.5H+2\le2(H+1)$ realised primes. Summing over $w'$, with $\sum1/w'\le\log u+1$ and $H(v)/v$ decreasing,
 bounds the mismatch by $2.02(H(X_0)+1)(\log u+1)X_0^{-1}\sup|h|$ for the function $h$ the operators act on ($h=f_0$ here, and
-$h=g$ in (d)). The other items are the partial windows of Lemma~\ref{lem:blin}(3) (relative $O(\kappa)$), $f_0-1/\log q=O(\kappa/\log^2q)$,
-and $O(1/(\kappa u))$.
+$h=g$ in (d)). The other items are the partial windows of Lemma~\ref{lem:blin}(3) (at most $\kappa\log u/\Lambda$),
+$|f_0-1/\log q|\le\kappa/\log^2q$, and $O(1/(\kappa u))$.
 \end{proof}
 
 \begin{proof}[Proof of (c)]
@@ -383,8 +388,9 @@ The local prime number theorem (Theorem~\ref{thm:lp}) is used only above a thres
 $T$ uses discs of radius $\asymp1/\log X_0$, because the rigid series is huge at $\sigma=(1+\theta')/2$ ($\theta'$ the exponent of Theorem~\ref{thm:lp}); so the zero-free constant is
 $c_{\mathrm{zf}}\propto1/\Lambda$. Landau's step also needs the zero-free width to beat $17\log\log y/\log y$, which is a binding
 constraint here. Hence
+% Logged correction 70 (CORRECTIONS-vs-v3.md): the explicit value of Theorem lp (was O(Lambda^2 log^2 Lambda)).
 \begin{equation}\label{eq:XLP}
-  \log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)
+  \log X_{\mathrm{LP}}=10^5\Lambda^2\log^2\Lambda
 \end{equation}
 (Theorem~\ref{thm:lp}), still far below $\log x_1\ge X_0^2$. Below $X_{\mathrm{LP}}$ the fresh-prime density
 $\mathrm{MA}_{\kappa q}[\mathbb P]$ comes from \eqref{eq:huxley}, with no local prime number theorem. Above it, Theorem~\ref{thm:lp}

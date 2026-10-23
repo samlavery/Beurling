@@ -124,8 +124,11 @@ Let $y\ge X_0$, and assume:
   $|\hat R_k(s)|\le C\alpha_k|s|x_k^{\theta-\sigma}\le2C|s|x_k^{-0.4}$, which is summable over $k$ since $x_1\ge\exp(X_0^2)$;
   see also \eqref{eq:Rhatbound}.)
 \end{enumerate}
-Then there are $c_{\mathrm{zf}}\ge0.088/\Lambda$, $c_{\mathrm{LP}}:=c_{\mathrm{zf}}/5\ge0.0176/\Lambda$, an effective $K$ with
-$\log K=O(\Lambda)$, and a threshold $X_{\mathrm{LP}}$ with $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$, such that for
+Then there are $c_{\mathrm{zf}}\ge0.088/\Lambda$, $c_{\mathrm{LP}}:=c_{\mathrm{zf}}/5\ge0.0176/\Lambda$, a constant $K$ with
+$\log K\le98+5.9\log\Lambda$, and the threshold
+% Logged correction 70 (CORRECTIONS-vs-v3.md): log K explicit (was "an effective K with log K = O(Lambda)"); see Step 9.
+$X_{\mathrm{LP}}:=\exp(10^5\Lambda^2\log^2\Lambda)$, such that for
+% Logged correction 69 (CORRECTIONS-vs-v3.md): X_LP explicit (was log X_LP = O(Lambda^2 log^2 Lambda)); see Step 9.
 $X_{\mathrm{LP}}\le v\le y$:
 \begin{enumerate}[label=\textup{(\roman*)}]
 \item $\displaystyle\Big|\int_{[1,v]}\frac{d(\Pi-\Pi_0)(u)}u\Big|\le K\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$;
@@ -203,8 +206,11 @@ with $0<\eta\le1/8$.
   \eqref{eq:G1}), and $T_0(u)-u=E_{\mathrm{rig}}(u)+R(u)$ with $|E_{\mathrm{rig}}(u)|\le\kappa X_0+2+\kappa u$ \eqref{eq:Erig} and
   $|R(u)|\le2u^\theta\log^*u$ (Lemma~\ref{lem:T1}). Integrate by parts against $u^{-\sigma}$: the term $u$ of $T_0$ gives exactly
   $y^{-\eta}/\eta$, and the rest, including the boundary term at $y$, is at most
-  $\big(\kappa(1+2\eta)+2(\kappa X_0+2)\eta/y+O(y^{\theta-1}\log y)\big)y^{-\eta}/\eta\le3\kappa\,y^{-\eta}/\eta$, since $y\ge X_0$ and
-  $y^{\theta-1}\log y\le X_0^{-0.49}\ll\kappa$. The same computation against $u^{-\sigma}\log u$ (decreasing for $u\ge e$), whose main
+  $\big(\kappa(1+2\eta)+2(\kappa X_0+2)\eta/y+y^{\theta-1}\log y\big)y^{-\eta}/\eta\le3\kappa\,y^{-\eta}/\eta$, since $y\ge X_0$ and
+  $y^{\theta-1}\log y\le X_0^{-0.49}\le X_0^{-0.09}\kappa$ ($\kappa=X_0^{-0.39666\ldots}\ge X_0^{-0.4}$).
+% Logged correction 69 (R13, C2): kappa = X_0^{-5/12+0.02} = X_0^{-0.39666...} (was "= X_0^{-0.3967}").
+% Logged correction 69: the comparison with kappa made explicit (was "<< kappa").
+The same computation against $u^{-\sigma}\log u$ (decreasing for $u\ge e$), whose main
   term is $\int_y^\infty u^{-\sigma}\log u\,du=y^{-\eta}(\log y/\eta+1/\eta^2)$, gives
   \[
     \int_{(y,\infty)}u^{-\sigma}dT_0\le(1+3\kappa)\frac{y^{-\eta}}\eta,\qquad
@@ -378,22 +384,30 @@ $\mathfrak G(s):=\log\big(\zeta^\sharp(s+1)\,s/(s+1)\big)$. It is analytic in th
 $(\Pi^\sharp-\Pi_0)/u$ on $\mathrm{Re}\,s\ge\eta_y$. Let $\Phi^\sharp(w):=\int_{[1,w]}d(\Pi^\sharp-\Pi_0)/u$; it equals the left
 side of (i) for $w\le y$.
 \begin{itemize}
-\item Take $h_0\in C_c^\infty(-2,-1)$ with $h_0\ge0$, $\int h_0=1$, and put $h:=Th_0(T\cdot)$. Smoothing to the left keeps
-  everything inside $[1,y]$:
-  \[
-    \Phi^h(v):=\int\Phi^\sharp(ve^\tau)h(\tau)\,d\tau=\frac1{2\pi i}\int_{(\eta_y)}\mathfrak G(s)\,\hat h_0(s/T)\,v^s\,\frac{ds}s,
-    \qquad|\hat h_0(w)|\le C_me^{2|\mathrm{Re}\,w|}(1+|w|)^{-m}.
-  \]
+% Logged correction 70: h_0 explicit (an m-fold box spline), so that C_m = 76^m is explicit (was h_0 in C_c^infty).
+\item Let $m:=19$, let $\beta:=m\mathbf 1_{[0,1/m]}$, and put $h_0(x):=\beta^{*m}(x+2)$: so $h_0\ge0$, $\int h_0=1$, $h_0$ is supported in
+  $[-2,-1]$, and $\hat h_0(w):=\int e^{wx}h_0(x)\,dx=e^{-2w}\big(m(e^{w/m}-1)/w\big)^m$. Put $h:=Th_0(T\cdot)$. Smoothing to the
+  left keeps everything inside $[1,y]$:
+  \begin{gather*}
+    \Phi^h(v):=\int\Phi^\sharp(ve^\tau)h(\tau)\,d\tau=\frac1{2\pi i}\int_{(\eta_y)}\mathfrak G(s)\,\hat h_0(s/T)\,v^s\,\frac{ds}s,\\
+    |\hat h_0(w)|\le C_me^{2|\mathrm{Re}\,w|}(1+|w|)^{-m},\qquad C_m:=76^{19}\le e^{82.3},
+  \end{gather*}
+  since $|m(e^{w/m}-1)/w|\le e^{(\mathrm{Re}\,w)_+/m}\min(1,2m/|w|)$ and $2m/|w|\le76/(1+|w|)$ for $|w|\ge1$.
 \item Shift the contour to $\mathrm{Re}\,s=-f\delta_{\mathrm{zf}}(T_1)$ for $|t|\le T_1\le T_y$. There is no residue at $s=0$,
-  because $\mathfrak G(0)=0$. Take $T:=e^{\sqrt{\log v}}$, $T_1:=e^{2\sqrt{\log v}}(\log y)^{2/m}$ and $m:=19$.
-\item The contributions are as follows. The shifted line gives at most
-  $K_8\,v^{-f\delta_{\mathrm{zf}}(T_1)}\log^2(T_1+3)$. The horizontal segments, and the line $\mathrm{Re}\,s=\eta_y$ beyond
-  $T_1$, give at most
-  \[
-    K_9v^{\eta_y}(\log\log y)(T/T_1)^m\le e^{-\sqrt{\log v}},
-  \]
-  using $v^{\eta_y}\le(\log y)^{17}$. The
-  smoothing error is
+  because $\mathfrak G(0)=0$. Take $T:=e^{\sqrt{\log v}}$ and $T_1:=e^{2\sqrt{\log v}}(\log y)^{2/m}$.
+% Logged correction 70: the constants K_8, K_9 of v3 are computed (the three contour pieces bounded explicitly).
+\item The contributions are as follows; put $a:=f\delta_{\mathrm{zf}}(T_1)$, $L_T:=\log T_1$, and take $y=v$ (see the next bullet).
+  \begin{itemize}
+  \item \emph{The shifted line} $\mathrm{Re}\,s=-a$, $|t|\le T_1$. There $|\mathfrak G(s)|=|\mathfrak G_1(s+1)|\le G(L_T)$ by Step~8,
+    $|\hat h_0(s/T)|\le eC_m$, and $\int_{-T_1}^{T_1}dt/|s|\le2\log(3T_1/a)$, so this piece is at most
+    $\pi^{-1}eC_m\,G(L_T)\log(3T_1/a)\,v^{-a}$.
+  \item \emph{The horizontal segments} $t=\pm T_1$, $-a\le\mathrm{Re}\,s\le\eta_y$, where $|\mathfrak G|\le G(L_T)$ (as in (B) of
+    Step~10), and \emph{the line} $\mathrm{Re}\,s=\eta_y$, $|t|>T_1$, where $|\mathfrak G|\le\log P_y(1+\eta_y)+0.02+\pi+0.01\le
+    \log(1/\eta_y)+4$ by Step~3. With $|\hat h_0(s/T)|\le eC_m(T/|t|)^m$, they give at most
+    $\pi^{-1}eC_m\,v^{\eta_y}(T/T_1)^m\big(G(L_T)/T_1+(\log(1/\eta_y)+4)/m\big)\le e^{-\sqrt{\log v}}$, using
+    $v^{\eta_y}\le(\log y)^{17}$ and $(T/T_1)^m=e^{-19\sqrt{\log v}}(\log y)^{-2}$.
+  \end{itemize}
+  The smoothing error is
   \[
     |\Phi^\sharp(v)-\Phi^h(v)|\le\int_{(ve^{-2/T},v]}\frac{d\Pi+d\Pi_0}u\le\frac6T+3v^{\theta'-1},
   \]
@@ -401,9 +415,23 @@ side of (i) for $w\le y$.
 \item The heights used lie below $T_v$ once $\log v\ge1.1\cdot10^4\Lambda^2(\log\log v)^2$; here we apply the argument with
   $y':=v$ in place of $y$, which is allowed since (LP-a) holds on $[1,v]$; and $y'=v$ satisfies \eqref{eq:lp-yrange}.
   For $\log v\ge(1000+4\log\Lambda)^2$ the offset in
-  \eqref{eq:lp-zf} at most doubles the denominator. Together this gives (i) with $c_{\mathrm{LP}}=c_{\mathrm{zf}}/5$. The
-  threshold $X_{\mathrm{LP}}$ is chosen above both heights, so $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$, and
-  $\log K=O(\Lambda)$.
+  \eqref{eq:lp-zf} at most doubles the denominator.
+% Logged correction 69: both height conditions checked at log v = 10^5 Lambda^2 log^2 Lambda (was "X_LP chosen above both").
+  Both conditions hold for $\log v\ge\log X_{\mathrm{LP}}=10^5\Lambda^2\log^2\Lambda$: there $\log\log v\le3\log\Lambda$, so
+  $1.1\cdot10^4\Lambda^2(\log\log v)^2\le9.9\cdot10^4\Lambda^2\log^2\Lambda$, and $\log v/(\log\log v)^2$ is increasing; and
+  $(1000+4\log\Lambda)^2\le10^5\Lambda^2\log^2\Lambda$.
+% Logged correction 70: the constant of (i), K_0 = e^{97} Lambda^2.
+\item \emph{The constant of (i).} Let $\log v\ge\log X_{\mathrm{LP}}$, so $\sqrt{\log v}\ge316\Lambda\log\Lambda$. Then
+  $L_T\le2.01\sqrt{\log v}$, so $G(L_T)\le808\sqrt{\log v}$; by the finite-height width of Step~7,
+  $a\ge0.9c_{\mathrm{zf}}/(L_T+442+2\log\Lambda+\log L_T)\ge0.445\,c_{\mathrm{zf}}/\sqrt{\log v}\ge2.2\,c_{\mathrm{LP}}/\sqrt{\log v}$; and
+  $\log(3T_1/a)\le2.02\sqrt{\log v}$. So the shifted line gives at most
+  \[
+    \pi^{-1}eC_m\cdot1633\log v\cdot e^{-2.2c_{\mathrm{LP}}\sqrt{\log v}}\le e^{82.2}\cdot1633\cdot1214\Lambda^2e^{-c_{\mathrm{LP}}\sqrt{\log v}}
+    \le e^{96.7}\Lambda^2e^{-c_{\mathrm{LP}}\sqrt{\log v}},
+  \]
+  since $\pi^{-1}eC_m\le e^{82.2}$ and $\max_{s>0}s^2e^{-1.2c_{\mathrm{LP}}s}=0.376/c_{\mathrm{LP}}^2\le1214\Lambda^2$. The other pieces and the smoothing
+  error add at most $e^{-\sqrt{\log v}}+6/T+3v^{\theta'-1}\le8e^{-c_{\mathrm{LP}}\sqrt{\log v}}$. Together this gives (i) with
+  $c_{\mathrm{LP}}=c_{\mathrm{zf}}/5$ and the constant $K_0:=e^{97}\Lambda^2$.
 % Logged correction 56 (CORRECTIONS-vs-v3.md): (ii) was proved by a second Perron integral whose kernel
 % v^s h_0^((s-1)/T)/s does not match the smoothing of (i) (whose multiplier is h_0^(s/T)); (ii) now follows from (i) by
 % partial summation, with the same c_LP and a constant K' with log K' = O(Lambda).
@@ -417,7 +445,7 @@ side of (i) for $w\le y$.
     height $X_{\mathrm{LP}}$, the first is $\le\log\log X_{\mathrm{LP}}+4.5$. The density of $\Pi_0/w$ is
     $(1-1/w)/(w\log w)\le1/w$ on $[1,e]$ and $\le1/(w\log w)$ beyond, so the second is $\le\log\log X_{\mathrm{LP}}+1$. Hence
     $|\Phi(u)|\le2\log\log X_{\mathrm{LP}}+5.5$ there.
-  \item On $[X_{\mathrm{LP}},v]$: $|\Phi(u)|\le Ke^{-c_{\mathrm{LP}}\sqrt{\log u}}$ by (i). With $u=e^x$, the function
+  \item On $[X_{\mathrm{LP}},v]$: $|\Phi(u)|\le K_0e^{-c_{\mathrm{LP}}\sqrt{\log u}}$ by (i). With $u=e^x$, the function
     $e^{x-c_{\mathrm{LP}}\sqrt x}$ has derivative $\ge0.99\,e^{x-c_{\mathrm{LP}}\sqrt x}$, so
     $\int_{X_{\mathrm{LP}}}^ve^{-c_{\mathrm{LP}}\sqrt{\log u}}du\le1.02\,v\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$.
   \item $v\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$ is increasing, so
@@ -426,11 +454,13 @@ side of (i) for $w\le y$.
   Hence
   \[
     |\Pi(v)-\Pi_0(v)|\le K'v\,e^{-c_{\mathrm{LP}}\sqrt{\log v}},\qquad
-    K':=2.02K+e^{c_{\mathrm{LP}}\sqrt{\log X_{\mathrm{LP}}}}\big(2\log\log X_{\mathrm{LP}}+5.5\big).
+    K':=2.02K_0+e^{c_{\mathrm{LP}}\sqrt{\log X_{\mathrm{LP}}}}\big(2\log\log X_{\mathrm{LP}}+5.5\big).
   \]
-  Since $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$ and $c_{\mathrm{LP}}=c_{\mathrm{zf}}/5=0.0176/\Lambda$ (Step~7), both $c_{\mathrm{LP}}\sqrt{\log X_{\mathrm{LP}}}$
-  and $\log\log X_{\mathrm{LP}}$ are $O(\log\Lambda)$, so $\log K'=O(\Lambda)$. As $K'\ge K$, (i) and (ii) hold together with $K'$
-  in place of $K$, and with the same $c_{\mathrm{LP}}$. No second contour integral is needed.
+  Since $c_{\mathrm{LP}}=c_{\mathrm{zf}}/5=0.0176/\Lambda$ (Step~7), $c_{\mathrm{LP}}\sqrt{\log X_{\mathrm{LP}}}=0.0176\sqrt{10^5}\log\Lambda\le5.6\log\Lambda$,
+  and $\log\log X_{\mathrm{LP}}\le3\log\Lambda$; so, with $6\log\Lambda+5.5\le\Lambda^{0.3}$,
+  $K'\le2.02e^{97}\Lambda^2+\Lambda^{5.9}\le e^{98}\Lambda^{5.9}$. As $K'\ge K_0$, (i) and (ii) hold together with $K:=K'$, so
+  $\log K\le98+5.9\log\Lambda$, and with the same $c_{\mathrm{LP}}$. No second contour integral is needed.
+% Logged correction 70: K' explicit (was log K' = O(Lambda)).
 \end{itemize}
 
 \emph{Step 10: short windows; proof of (iii).}
@@ -497,7 +527,10 @@ Adding (A)--(C) gives \eqref{eq:lpplus}.
   \eqref{eq:lp-yrange} holds. Second, as $k\le2\Lambda+20\log\Lambda_p+1$,
   $L_1+500\le2\Lambda+2\log\Lambda_p+\log(2\Lambda+20\log\Lambda_p+1)+503.1$, while
   $\log T_y+500\ge\Lambda_p/(51\Lambda\log\Lambda_p)$; the latter exceeds the former for every $\Lambda_p\ge76\Lambda^3$, since both
-  sides increase, the right side faster, and at $\Lambda_p=76\Lambda^3$ the right side is $\ge\Lambda^2/(3\log\Lambda+5)\gg2\Lambda$.
+  sides increase, the right side faster, and at $\Lambda_p=76\Lambda^3$ the right side is $\ge\Lambda^2/(3\log\Lambda+5)\ge10^6\Lambda$,
+  while the left side is $\le2\Lambda+7\log\Lambda+513\le2.01\Lambda$.
+% Logged correction 69 (R13, C1): the left side is <= 2 Lambda + 7 log Lambda + 513 (was "<= 2 Lambda + 640").
+% Logged correction 69: the comparison at Lambda_p = 76 Lambda^3 made explicit (was ">> 2 Lambda").
   Also $L_1\ge2\log\Lambda_p\ge40$. So $5\le L_1\le\log T_y$, and Step~8 applies at $L=L_1$.
 \item \emph{Size.} Let $\eta\ge e^{-2\Lambda}$ and $L_1\le e^{\Lambda/2}$, so that $\log G(L_1)\le\Lambda$. If
   $0.9c_{\mathrm{zf}}\Lambda_p/(L_1+442+2\log\Lambda+\log L_1)\ge3\Lambda+3\log\Lambda_p+6$, then the first term of \eqref{eq:lpplus} is
@@ -512,6 +545,7 @@ Adding (A)--(C) gives \eqref{eq:lpplus}.
 \begin{remark}\label{rem:lp}
 Positivity cannot be dropped: $N=\lfloor u\rfloor+\frac23\cos(3\log u+\pi/2)$ has $|N-u|\le2$, but its $\zeta^\sharp$ has a zero
 near $1+3i$. The theorem uses only the realised $N$ on $[1,y]$, so it holds pathwise on $\Good(<y)$, and the adaptedness of $T$
-plays no role. Parts (i) and (ii) are used only in Proposition~\ref{prop:g1}(B), whose range starts at
-$X_{\mathrm{sw}}\gg X_{\mathrm{LP}}$; part (iii) is used in Lemma~\ref{lem:si}.
+plays no role. Parts (i) and (ii) are used only in Proposition~\ref{prop:g1}(B), whose range starts at $X_{\mathrm{sw}}$, with
+$\log X_{\mathrm{sw}}=X_0^{1/100}=e^{\Lambda/100}\ge10^5\Lambda^2\log^2\Lambda=\log X_{\mathrm{LP}}$; part (iii) is used in Lemma~\ref{lem:si}.
+% Logged correction 69: X_sw >= X_LP made explicit (was "X_sw >> X_LP").
 \end{remark}

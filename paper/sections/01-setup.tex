@@ -67,13 +67,15 @@ $X_0$ & $X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$, an even integer (for instance t
 proof. It is even so that the jump of $T$ at $X_0$ is the jump of $\lfloor x\rfloor$ at the rigid integer $X_0$ (Section~\ref{sec:target}). $X_{\mathrm{Hux}}$ is defined in
 \eqref{eq:huxley}, depends on no parameter, and gives $\mathrm{MA}[\mathbb P](q)\log q\ge0.99$ for every $q\ge X_0$
 (Lemma~\ref{lem:margin}(a)). The local prime number theorem is used only above $X_{\mathrm{LP}}(X_0)$, with
-$\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$ \eqref{eq:XLP}. $X_{\mathrm{Hux}}$ is effective but has not been computed, so $X_0$
+$\log X_{\mathrm{LP}}=10^5\Lambda^2\log^2\Lambda$ \eqref{eq:XLP}. $X_{\mathrm{Hux}}$ is effective but has not been computed, so $X_0$
+% Logged correction 70 (CORRECTIONS-vs-v3.md): X_LP quoted explicitly (Theorem lp), was O(Lambda^2 log^2 Lambda).
 is not fixed at $e^{10^8}$; every quantitative estimate therefore holds uniformly in $\Lambda=\log X_0\ge10^8$, in particular
 Theorem~\ref{thm:bs}, Theorem~\ref{thm:caplw} and \eqref{eq:mu1sum}, which use computer-assisted steps
 (Appendix~\ref{app:cert}). \\
 % Logged correction 54: wording of the computer-assisted steps, consistent with Appendix B (independent check R8, F2).
-$\kappa$ & $\kappa:=X_0^{-5/12+2\eps_\kappa}$ with $\eps_\kappa:=0.01$, i.e.\ $\kappa=X_0^{-0.3967}\approx e^{-3.97\cdot10^7}$ (the window of the
+$\kappa$ & $\kappa:=X_0^{-5/12+2\eps_\kappa}$ with $\eps_\kappa:=0.01$, i.e.\ $\kappa=X_0^{-0.39666\ldots}\approx e^{-3.97\cdot10^7}$ (the window of the
 rigid density; every use needs only $0<\eps_\kappa\le0.04$). \\
+% Logged correction 69 (R13, C2): kappa = X_0^{-5/12+0.02} = X_0^{-0.39666...} (was "= X_0^{-0.3967}").
 $H(x)$ & $H(v):=\max(H_{\mathrm{std}}(v),\bar M_1(v)^2)$ for $v\ge X_0$ and $H(v):=H_{\mathrm{std}}(v)$ for $v<X_0$, with
 $H_{\mathrm{std}}(v):=\exp(8(\log\log v)^2)$, where
 $\bar M_1(v):=\bar r_0+\varphi_v(\bar r_0)+1$ and $\bar r_0(v):=\log v/(3\log\log v)+4$ are smooth majorants of $M_1$ and $r_0$
@@ -100,7 +102,7 @@ cluster window & $\delta_1=2L^{-6}$. \\
 amplitudes & $\kappa'_k=\kappa_0/\log^2x_k$, $\kappa_0\in[X_0^{-1},\tfrac14]$; $\Gamma_k=\kappa_0x_k^{1-\theta}/(2\log^3x_k)$;
 $\gamma_k\in[\Gamma_k,2\Gamma_k]$; $\alpha_k\in[1,2]$; $\kappa_+=0.8$. \\
 switch-on & $x_1\ge\exp(X_0^2)$, $x_{k+1}\ge\exp(x_k)$; $R_k\equiv0$ on $[1,x_k+2H(x_k)]$. \\
-budget & $\Prob(\tau<\infty)\le\sum_m(\Lambda+m\log2)^{-2}+O(X_0^{-1})\le1.5/\log X_0$ (Lemma~\ref{lem:budget}). \\ \hline
+budget & $\Prob(\tau<\infty)\le1.0001\sum_m(\Lambda+m\log2)^{-2}+4.3X_0^{-2}\le1.5/\log X_0$ (Lemma~\ref{lem:budget}). \\ \hline
 \end{tabular}
 \end{center}
 This regime is far beyond anything that can be simulated. Experiments at small scales (with $X_0\le10^7$ and
@@ -111,11 +113,12 @@ the proof.
 \subsection{Logical structure}\label{sec:logic}
 The table lists the main results with their inputs. An input marked $\downarrow$ is used only at a strictly earlier time or a
 strictly smaller height; every other input is used at the same time. The same-time dependencies form an acyclic graph; this was
-checked mechanically on the full dependency graph (78 nodes, 195 edges, 28 of them $\downarrow$; Appendix~\ref{app:cert-dep}).
+checked mechanically on the full dependency graph (78 nodes, 196 edges, 28 of them $\downarrow$; Appendix~\ref{app:cert-dep}).
 % Logged correction 61: Lemma threshold-mass also reads the lag and Lemma P (two strictly-earlier edges added).
 % Logged correction 64: Lemma goodheights no longer uses Broucke--Debruyne or Lemma ZA (two edges and one node removed).
 % Logged correction 66: edges (H_BS) -> Lemma T1, (H_BS) -> lag and Prop g1 -> Lemma P added; Lemma P -> Lemma cm is strictly earlier.
 % Logged correction 66: Lemma P no longer uses the local count (the aside in its step (iv) is deleted); one edge removed.
+% Logged correction 67: Lemma adapted -> Theorem caplw(b),(c) added (log H(r) <= 3e-5 log r).
 The table is an abridgement of that graph. The
 time-ordering of the $\downarrow$ edges is Section~\ref{sec:noncirc}.
 \begin{center}\footnotesize
@@ -123,7 +126,7 @@ time-ordering of the $\downarrow$ edges is Section~\ref{sec:noncirc}.
 \hline
 result & inputs & used in \\ \hline
 \eqref{eq:huxley} & Heath-Brown, de la Vall\'ee Poussin & \eqref{eq:G1}, Lemmas~\ref{lem:blin}, \ref{lem:margin} \\
-Lemma~\ref{lem:adapted} (adaptedness) & Lemma~\ref{lem:C2} (causality), Section~\ref{sec:params} & Section~\ref{sec:noncirc}, Lemma~\ref{lem:budget} \\
+Lemma~\ref{lem:adapted} (adaptedness) & Lemma~\ref{lem:C2} (causality), Section~\ref{sec:params}, Theorem~\ref{thm:caplw}(b),(c) & Section~\ref{sec:noncirc}, Lemma~\ref{lem:budget} \\
 \eqref{eq:G1} (positivity) & \eqref{eq:huxley}, the cap, \eqref{eq:ampl} & slots, \ref{eq:sF1} \\
 \eqref{eq:T1} (target error) & Rankin; Lemma~\ref{lem:lemmaP}$\downarrow$ & Theorem~\ref{thm:A}(i), Section~\ref{sec:noise}, Lemma~\ref{lem:ZA} \\
 Lemmas~\ref{lem:count}--\ref{lem:excess} & the greedy rule & Theorem~\ref{thm:queue}, Corollary~\ref{cor:localcount}, \eqref{eq:La} \\
@@ -217,14 +220,14 @@ bounds at slots $\le z+H(z)$ and the landing event at height $z$.
 % R4 N13: list matched to the citation sites (Remark rem:localcount-uses).
 \item Its uses (Remark~\ref{rem:localcount-uses}) are: step (ii) of Lemma~\ref{lem:threshold-mass} and Lemma~\ref{lem:tau-near},
 at heights $\le\sqrt x$; Lemma~\ref{lem:short-recip}, at heights $\le y/2$; Step~1 of the proof of Proposition~\ref{prop:g1}(B),
-for a window that ends $\delta x\gg H$ before $x$. Each is read at a strictly earlier time than its consumer.
+for a window that ends $\delta x\ge x^{0.98}>H(x)$ before $x$. Each is read at a strictly earlier time than its consumer.
 \item The per-prime increment in Theorem~\ref{thm:queue} uses the cluster event (Corollary~\ref{cor:increment}), never the local
 count, because a local count at height $x/q$ would force $B(x)\ge(3/c')L^2B(x/q)$.
 \end{itemize}
 
 \emph{(N5) Absorption and zeros.}
 \begin{itemize}
-\item Membership in $\Abs$ is decided at the latest prime $r<y(n)\ll n$, and $\rho_{\Abs}$ at $u$ reads only data decided before
+\item Membership in $\Abs$ is decided at the latest prime $r<y(n)\le n^{0.01}$, and $\rho_{\Abs}$ at $u$ reads only data decided before
 $u-H$ (Lemma~\ref{lem:adapted}).
 \item Lemma~\ref{lem:lemmaP} at $u$ reads the cluster event at heights $u/d<u$: an induction on height.
 \item $\gamma_k$ is chosen from $Z_\infty$ (deterministic) and the system on $[1,x_k)$ (Lemma~\ref{lem:goodheights}), and

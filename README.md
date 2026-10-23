@@ -58,16 +58,20 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   target on short intervals.
 >
 > Repairing these and re-checking the repairs, and three further independent AI checks (R6–R8 in `review/recheck/`),
-> turned up thirteen more. The most serious were:
+> turned up seventeen more. The most serious were:
 > - a gap in the label sum of the Pivot-Integration Lemma (Appendix A): the carried Euler factors cancel only after
 >   integration, not pointwise as the argument needed. Its first repair (#48) covered one configuration type only. The
 >   repair now in the paper (#55) covers the summed form the paper uses; see above;
 > - a gap inherited from the refereed draft in the check of the Beurling–Saias hypothesis (H_BS): the decay of the rigid
 >   error that it needs was asserted but never proved. It is now proved (Lemma T1, eq:Erig).
+> - a sweep for unquantified "o(1)", "≪" and "once X₀ is large" (#67–#70), which made every such step explicit for every
+>   admissible X₀. It found that the noise section's stated o(1) convention was smaller than the terms it covered, and
+>   two inherited order-of-magnitude slips (in the positivity margin and in Lemma blin(3)); none changes a conclusion.
 >
-> These are entries #31–#66 of `CORRECTIONS-vs-v3.md`. All are repaired.
-> - **The repairs of #31–#47, #49–#53, #56–#59 and #61–#64** were checked by a fresh AI checker in nineteen passes
->   (`review/recheck/R4.md`). #65 and #66 were checked by the R11 checker (`review/recheck/R11-absorption.md` §§12–13).
+> These are entries #31–#70 of `CORRECTIONS-vs-v3.md`. All are repaired.
+> - **The repairs of #31–#47, #49–#53, #56–#59, #61–#64 and #67** were checked by a fresh AI checker in twenty passes
+>   (`review/recheck/R4.md`). #65 and #66 were checked by the R11 checker (`review/recheck/R11-absorption.md` §§12–13);
+>   #68, #69 and #70 by independent checks R12 and R13.
 > - **The certificate fixes of #54** were checked by the R8 checker (`review/recheck/R8-cert-repro.md` §9).
 > - **The repair of #60** was checked by the R10 checker (`review/recheck/R10-lp-transfer.md`, re-check of #60).
 >   The passes ended with nothing blocking or fixable.
@@ -79,7 +83,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   number theorem's positivity transfer is in `review/recheck/R10-lp-transfer.md`, and of the absorbed-element sparsity chain in
 >   `review/recheck/R11-absorption.md`.
 >
-> None of the sixty-six logged corrections changes a conclusion of the paper. But these
+> None of the seventy logged corrections changes a conclusion of the paper. But these
 > findings show that the AI checks are no substitute for expert review.
 
 ## The result

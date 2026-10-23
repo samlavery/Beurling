@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#66)
+## Addendum: defects found after the re-check (corrections #31–#70)
 
 After the first public version, a reader reported twenty-three defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up thirteen more. The full list, with each repair, is entries #31–#66 of `CORRECTIONS-vs-v3.md`:
+re-checking the repairs, turned up seventeen more. The full list, with each repair, is entries #31–#70 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -104,9 +104,13 @@ re-checking the repairs, turned up thirteen more. The full list, with each repai
 | 64 | Lemma goodheights | bad-height density < 0.018 relied on Broucke's mean value theorem with an unspecified constant and "once X₀ is large"; now explicit for every admissible X₀ via Montgomery–Vaughan (constant 3π/2), a class split with spacing > 2, and explicit bounds for every other term | reader |
 | 65 | Lemma P, step (v); Lemma ZA proof | Rankin bound Ψ(Y,2y)/Y ≤ e^{−0.9u log u} stated for every Y, false for large Y (exponent goes negative); now under (∗) (exponent ≥ 0.69), checked at both uses (Y = 2yh, and Y = x in ZA), where the exponent is ≥ 0.99999 | reader |
 | 66 | Lemma P, rhoA, T1, depcheck | from R11: the proof of Lemma P covered Good(<u) but the statement Good(<t_u); depcheck omitted three real edges; an unchecked localcount aside; plus cosmetic items | independent check R11 |
+| 67 | §2–§3 (Thm zeros, Lemmas ZB, designedzero, latenoise, adapted), (G1), Lemma blin(3) | unquantified o(1) terms made explicit for every admissible X₀; found a gap in Lemma ZB (Z_max assumed, not proved), (G1)'s step false for large u, and blin(3)'s order wrong; none changes a conclusion | sweep (#64) |
+| 68 | §5 (Freedman inputs, budget, Prop ecl, parameter sizes) | load-bearing ≪/o(1) in §5 made explicit (e.g. s₂\|I\| ≤ e^{−√L}) | sweep (#67) |
+| 69 | §4 (noise section) | the stated o(1) convention was smaller than the terms it covered; now o(1) ≤ Λ⁻³ with every term itemised in Prop g1(B) Step 5; other ≪/o(1) explicit | sweep (#67) |
+| 70 | Thm lp | log K = O(Λ) made explicit: log K ≤ 98 + 5.9 log Λ (box-spline kernel, explicit contour constants) | sweep (#69) |
 
-**Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59 and #61–#64 in nineteen passes
-(`review/recheck/R4.md` §§1–26); #54, #60, #65 and #66 were checked by the checkers of R8 §9, R10 and R11 §§12–13; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+**Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59, #61–#64 and #67 in twenty passes
+(`review/recheck/R4.md` §§1–27); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -124,7 +128,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the sixty-six corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the seventy corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and

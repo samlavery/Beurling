@@ -385,10 +385,11 @@ a cycle among the same-time edges.
 % Logged correction 64: Lemma goodheights no longer uses Broucke--Debruyne or Lemma ZA (edges and one node removed).
 % Logged correction 66: edges (H_BS) -> Lemma T1, (H_BS) -> lag and Prop g1 -> Lemma P added; Lemma P -> Lemma cm is strictly earlier.
 % Logged correction 66: the edge Lemma P -> local count is removed (the aside in step (iv) of Lemma P is deleted).
+% Logged correction 67: the edge Lemma adapted -> Theorem caplw(b),(c) is added.
 \begingroup\footnotesize
 \begin{verbatim}
 python3 -I -B certificates/depcheck/depcheck.py
-  same-time subgraph acyclic: True | nodes 78 | edges 195 | strictly-earlier edges 28
+  same-time subgraph acyclic: True | nodes 78 | edges 196 | strictly-earlier edges 28
 \end{verbatim}
 \endgroup
 The time-ordering of the strictly-earlier edges is argued in Section~\ref{sec:noncirc}; the script checks only the bookkeeping.

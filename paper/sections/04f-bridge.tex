@@ -140,7 +140,8 @@ On $\Good(<x)$,
 The cutoff $\Xm$ in $\Kpt$ does not affect $\rhosh$: $c_n(y)=\mu(n)\chi^t_y(n)\mathbf 1[y/n\ge\Xm]$ (Lemma~\ref{lem:lemmaM}),
 and $T'=0$ on $[\Xm,X_0)$. The proof has two ranges. Put $\log X_{\mathrm{sw}}:=X_0^{1/100}$. For every $\Lambda\ge10^8$,
 $X_0^{1.01}\le X_{\mathrm{sw}}$, $\log X_{\mathrm{sw}}\le(0.0048/\kappa)^{1/5}$ (the limit for $\mu_0$ below, which is
-$\ge X_0^{0.079}$), and $\log X_{\mathrm{sw}}\gg\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$.
+$\ge X_0^{0.079}$), and $\log X_{\mathrm{sw}}=e^{\Lambda/100}\ge10^5\Lambda^2\log^2\Lambda=\log X_{\mathrm{LP}}$.
+% Logged correction 69 (CORRECTIONS-vs-v3.md): X_sw >= X_LP made explicit (was ">>").
 
 \begin{proof}[Proof for range \textup{(A)}: $X_0+H\le x\le X_{\mathrm{sw}}$]
 No designed oscillation is active, since $x_1\ge\exp(X_0^2)>X_{\mathrm{sw}}$. So $T'=1-\rhodet+\sigma_{\Abs}$ there.
@@ -155,8 +156,10 @@ $(1+\Kpt)^{-1}(1-\rhodet)=\mathrm{MA}[\mathbb P]+\rho_{\mathrm{edge}}+(1+\Kpt)^{
   \eqref{eq:huxley} and Lemma~\ref{lem:margin}(a) (Huxley and Heath-Brown, $X_0\ge X_{\mathrm{Hux}}$),
   $\mathrm{MA}[\mathbb P](x)\log x\ge0.99$ for every $x\ge X_0$;
 \item $|\mu_0(u)|\le2\kappa(\log u)^3$ for $u\ge X_0$ with $\log\log u\le\Lambda/8$, which contains range (A)
-  (Lemma~\ref{lem:margin}(b)). This smooth part contains the drift $+(\kappa/2)\Psi$, the partial windows, the order mismatch
-  $H(q)/(\kappa q)$, and the $O(1/(\kappa x))$ term of \eqref{eq:ratid};
+  (Lemma~\ref{lem:margin}(b)). This smooth part contains the drift $+(\kappa/2)\Psi$, the partial windows, the decision-order
+  mismatch (bounded by a direct count, $\le2.02(H(X_0)+1)(\log u+1)X_0^{-1}\sup|f_0|$; ``the rest'' in the proof of
+  Lemma~\ref{lem:margin}(b)), and the $O(1/(\kappa x))$ term of \eqref{eq:ratid};
+% Logged correction 70: the mismatch is described as in correction 53 (was "the order mismatch H(q)/(kappa q)"; pass 20, N40).
 \item $\sum_{u\text{ dyadic}\ge X_0}\log(2u)\sup_{[u,2u]}|\mu_1|\le7\cdot10^{-6}$ \eqref{eq:mu1sum};
 \item $\rho_{\mathrm{edge}}:=(1+\Kpt)^{-1}\mu_{\mathrm{edge}}$ is the edge at $X_0$, where $\mu_{\mathrm{edge}}$ is the part of
   $K_{\mathbb Q}\mathrm{MA}[\mathbb P]$ that lies below $X_0$ \eqref{eq:shdecomp}. By Lemma~\ref{lem:margin}(d),
@@ -170,7 +173,8 @@ Now bound the responses.
   \[
     \log x\cdot|(1+\Kpt)^{-1}\mu_0(x)|\le\log x\,(\log x+1)\sup_{u\le x}|\mu_0(u)|\le2.1\,\kappa(\log x)^5\le X_0^{-0.34}
   \]
-  for $\log x\le X_0^{1/100}$, since $\kappa=X_0^{-5/12+2\eps_\kappa}\le X_0^{-0.3967}$.
+  for $\log x\le X_0^{1/100}$, since $\kappa=X_0^{-5/12+2\eps_\kappa}=X_0^{-0.39666\ldots}\le X_0^{-0.3966}$.
+% Logged correction 69 (R13, C2): "kappa <= X_0^{-0.3967}" was false as written; 2.1 X_0^{-0.3966} X_0^{0.05} <= X_0^{-0.34} still.
 \item $\mu_1$: by Corollary~\ref{cor:saias}, $\log x\cdot|(1+\Kpt)^{-1}\mu_1(x)|\le C_S\cdot7\cdot10^{-6}\le6\cdot10^{-4}$.
 \item $\sigma_{\Abs}$: likewise, at most $C_S\sum_v\log(2v)\cdot2L_v^{-4}\mathbf 1[\log\log v>2\log\Lambda+5.97]\le e^{-80}$.
 \end{itemize}
@@ -192,9 +196,11 @@ resolvable $\gamma_j$ ($\gamma_*:=1$ if there is none). Put
 \[
   \delta:=\min\big(\gamma_*^{-2}\log^{-4}x,\ X_0^{-1/2}\big),\qquad J:=[x(1-2\delta),\,x(1-\delta)].
 \]
-The window $J$ ends $\delta x\gg H$ before $x$, so the proof uses only the realised data before $x-H$, on $\Good(<x)$. All old
-oscillations $j<k$ are resolvable: $\log\gamma_j\asymp(1-\theta)\log x_j$, while
-$c_{\mathrm{LP}}\sqrt{\log x}\ge c_{\mathrm{LP}}\sqrt{x_j}\gg\log x_j$.
+% Logged correction 69: the two comparisons below made explicit (were "delta x >> H" and "c_LP sqrt(x_j) >> log x_j").
+The window $J$ ends $\delta x\ge x^{0.98}>H(x)$ before $x$ (as $1/\delta\le x^{0.02}$, Step~3), so the proof uses only the realised
+data before $x-H$, on $\Good(<x)$. All old oscillations $j<k$ are resolvable: $\log\gamma_j\le(1-\theta)\log x_j\le\log x_j$ (as
+$\gamma_j\le2\Gamma_j\le x_j^{1-\theta}$), while $\log x\ge x_{k-1}\ge x_j$ and $x_j\ge\exp(X_0^2)$, so
+$c_{\mathrm{LP}}\sqrt{\log x}/4\ge(0.0044/\Lambda)\sqrt{x_j}\ge\log x_j$.
 
 \emph{Step 1: the window average of $\rhot$.}
 \begin{itemize}
@@ -205,8 +211,17 @@ $c_{\mathrm{LP}}\sqrt{\log x}\ge c_{\mathrm{LP}}\sqrt{x_j}\gg\log x_j$.
   $p^k\in J$ with $k\ge2$ number at most $2\sqrt x$, $\int_J\rhot=\Pi(J)\pm(27H(x)+2K_{\mathrm{loc}}+6+2\sqrt x)$.
 \item By Theorem~\ref{thm:lp}(ii), $\Pi(J)=\delta x\,\pi_0(x)(1+O(\delta))+O(Kxe^{-c_{\mathrm{LP}}\sqrt{\log x}})$, where
   $\pi_0(x):=(1-1/x)/\log x$.
-\item Since $1/\delta\le\Gamma^2\log^4x+X_0^{1/2}$, and $c_{\mathrm{LP}}\sqrt{\log x}\ge(0.0176/\Lambda)X_0^{0.005}$ exceeds
-  $\log K+2\Lambda+5\log\log x$ (recall $\log K=O(\Lambda)$), this gives $\mathrm{avg}_J\rhot=\pi_0(x)+o(1/\log x)$.
+\item Since $1/\delta\le\Gamma^2\log^4x+X_0^{1/2}$ with $\Gamma^2\le e^{c_{\mathrm{LP}}\sqrt{\log x}/2}$, the error term is at most
+  \[
+    \pi_0(x)\bigl(2K\log^5x\,e^{-c_{\mathrm{LP}}\sqrt{\log x}/2}+2K\log x\,X_0^{1/2}e^{-c_{\mathrm{LP}}\sqrt{\log x}}\bigr);
+  \]
+  and
+  $c_{\mathrm{LP}}\sqrt{\log x}\ge2(\log K+\Lambda+10\log\sqrt{\log x})+10$, as $\log K\le98+5.9\log\Lambda\le\Lambda$ and
+  $(0.0176/\Lambda)\sqrt{\log x}\ge4\Lambda+20\log\sqrt{\log x}+10$ for $\sqrt{\log x}\ge X_0^{0.005}$. So the error is at most
+  $\pi_0(x)\,e^{-\Lambda}$, and $\mathrm{avg}_J\rhot=\pi_0(x)+o(1/\log x)$.
+% Logged correction 70 (check R13, C4): the condition is stated against both error terms (c_LP sqrt(log x)/2 must beat
+% log(2K) + 5 log log x); the earlier form covered only log log x <= 0.6 Lambda.
+% Logged correction 70 (CORRECTIONS-vs-v3.md): the comparison with log K made explicit (was "recall log K = O(Lambda)").
 \end{itemize}
 
 \emph{Step 2: $\rhosh$ against $\rhot$ on average.}
@@ -259,8 +274,13 @@ $j>k$. Put $\rho^{(k)}_{\mathrm{osc}}(y):=\sum_nc_n(y)R_k'(y/n)/n$.
 \begin{itemize}
 \item \emph{Separation.} If $\gamma_k$ is not resolvable, then $\gamma_k>\Gamma(x)$. Every $j<k$ is resolvable, and
   $\gamma_*\le\gamma_{k-1}\le x_{k-1}\le\log x$ (as $x_k\ge\exp(x_{k-1})$). So
-  $\gamma_k\delta\ge\Gamma(x)\min(\log^{-6}x,X_0^{-1/2})\ge e^{c_{\mathrm{LP}}\sqrt{\log x}/5}$, since
-  $c_{\mathrm{LP}}\sqrt{\log x}\gg\log X_0+\log\log x$ in range (B).
+  $\gamma_k\delta\ge\Gamma(x)\min(\log^{-6}x,X_0^{-1/2})\ge e^{c_{\mathrm{LP}}\sqrt{\log x}/5}$, since, for
+  $\sqrt{\log x}\ge X_0^{0.005}=e^{\Lambda/200}$,
+  \[
+    c_{\mathrm{LP}}\sqrt{\log x}/20\ge(8.8\cdot10^{-4}/\Lambda)\sqrt{\log x}\ge\max(6\log\log x,\Lambda/2).
+  \]
+% Logged correction 70: the comparison of correction 69 displayed (it overflowed the line).
+% Logged correction 69: the comparison made explicit (was "c_LP sqrt(log x) >> log X_0 + log log x").
 \item \emph{Average.} Where $c_n(y)$ is constant on $J$, $\int_JR_k'(y/n)\,dy/n=R_k(x(1-\delta)/n)-R_k(x(1-2\delta)/n)$, and
   $|R_k(v)|\le2\kappa_kv(v/x_k)^{\theta-1}/((1-\theta)\gamma_k)$ (integrate the oscillation at frequency $\gamma_k$). So, with
   Lemma~\ref{lem:lemmaM}, the $J$-average is at most $4\kappa_k(\log x+B_1)/((1-\theta)\gamma_k\delta)$, plus the threshold
@@ -282,10 +302,28 @@ $j>k$. Put $\rho^{(k)}_{\mathrm{osc}}(y):=\sum_nc_n(y)R_k'(y/n)/n$.
 
 \emph{Step 5.} Combining Steps 1--4,
 $\rhosh(x)\log x\ge\pi_0(x)\log x-\eps_N-E_{\mathrm{BR}}-e^{-59}-o(1)\ge1-10^{-12}-o(1)\ge0.97$.
+% Logged correction 69 (CORRECTIONS-vs-v3.md): the terms behind o(1) listed with explicit bounds; their sum is
+% <= 1.6e-3 Lambda^{-4}, inside the convention o(1) <= Lambda^{-3} of Section sec:noise-notation.
+Here $o(1)$ is the sum of the following contributions to $\rhosh(x)\log x$; we use $\log x\ge X_0^{1/100}=e^{\Lambda/100}$,
+$1/\delta\le x^{0.02}$, $\delta\le\log^{-4}x$, $\log(1/\delta)\le0.6\sqrt{\log x}$ and $H(x)\le x^{0.01}$.
+\begin{itemize}
+\item Step~1: $\le x^{-0.4}$ from the partial boxes and the local count; $\le e^{-0.4c_{\mathrm{LP}}\sqrt{\log x}}$ from
+  Theorem~\ref{thm:lp}(ii) (as $\log K\le98+5.9\log\Lambda$); and $\le3\delta/\log x$ from the variation of $\pi_0$ over $J$.
+\item Step~2: $\le129\log^{-5}x$ from $\bar\nu$ (\S\ref{sec:noise-perscale}); $\le55e^{-0.99\Lambda}$ from $\NT$
+  (Lemma~\ref{lem:tau-near}); and $\le x^{-0.9}$ from the boundary term.
+\item Step~3: $\le160\log^{-1.5}x$ from the threshold changes; $\le\log^{-3}x$ from the jump at $X_0$; $\le X_0^{-0.08}$ from
+  $\rhodet$; $\le\log^{-2}x$ from the resolvable $R_j'$; and $\le4C_S\sum_{L_v>391\Lambda^2}\log(2v)L_v^{-4}\le1.5\cdot10^{-3}\Lambda^{-4}$
+  from $\sigma_{\Abs}$.
+\item Step~4: $\le e^{-c_{\mathrm{LP}}\sqrt{\log x}/6}+40\log^{-1.5}x$ from the average, and $\le2\cdot10^4\Lambda^2X_0^{-2}$ from the
+  pointwise bounds (with $\kappa_0\le\frac14$, $F_\theta\le1.33$ and $C'\le(171\Lambda)^2$).
+\end{itemize}
+In total $o(1)\le1.5\cdot10^{-3}\Lambda^{-4}+e^{-0.01\Lambda}\le1.6\cdot10^{-3}\Lambda^{-4}$, for every $\Lambda\ge10^8$.
 \end{proof}
 
 \begin{remark}
 No twisted M\"obius estimate is used: old oscillations are \emph{resolved} by the window of the local prime number theorem,
 not cancelled. Range (A) uses no local prime number theorem, and range (B) uses no Huxley-type input beyond
-$\jz\le1.0001/\Lambda$. The ranges fit: $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)\ll\log X_{\mathrm{sw}}=X_0^{1/100}\ll(0.0048/\kappa)^{1/5}$.
+$\jz\le1.0001/\Lambda$. The ranges fit: $\log X_{\mathrm{LP}}=10^5\Lambda^2\log^2\Lambda\le\log X_{\mathrm{sw}}=X_0^{1/100}\le X_0^{0.079}
+\le(0.0048/\kappa)^{1/5}$.
+% Logged correction 69: the ranges made explicit (were "<<").
 \end{remark}

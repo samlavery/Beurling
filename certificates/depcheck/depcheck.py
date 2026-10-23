@@ -16,7 +16,7 @@ def dep(a, bs, kind='='):
         if b: E.append((a, b, kind))
 
 # Section 2 (construction), Section 3 (zeros), Section 7 (base range)
-dep('lem:adapted', 'lem:C2')
+dep('lem:adapted', 'lem:C2'); dep('lem:adapted', 'thm:caplw(b)(c)')   # log H(r) <= 3e-5 log r via caplw(c) (#67)
 dep('lem:G1', 'eq:huxley,eq:ampl')
 dep('lem:T1', 'lem:lemmaP', '<'); dep('lem:T1', 'Rankin')
 dep('lem:count..lem:excess', 'sec:greedy')

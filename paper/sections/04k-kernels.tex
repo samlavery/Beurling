@@ -427,7 +427,9 @@ and $\sup_y\log y\cdot\eta(y)\le e^{-0.99\Lambda}$. (At $\Lambda=10^8$ the first
 \begin{proof}
 \emph{Localisation.} Let $w$ be $\tau$-near at $v'$, and write $w=pm$ with $p$ the prime of $w$ that is largest in decision
 order, so that $\tau_w=t(p)$ and $\Pplus(m)\le p+H(p)$. Since $|t(p)-p|\le H(p)$, the condition $|t(p)-v'/(pm)|\le2H(v'/w)$
-gives $|p-v'/(pm)|\le3H(p)(1+o(1))$, i.e. $p^2\in v'/m\pm3.1\,pH(p)$. So $p$ lies in a window of length $3.1H(p_0)$
+gives $|p-v'/(pm)|\le H(p)+2H(v'/(pm))\le3.01H(p)$, since $v'/(pm)\le1.02p$ (as $H(z)\le10^{-3}z$) and $H(1.02p)\le1.0001H(p)$ by \eqref{eq:RH};
+% Logged correction 69 (CORRECTIONS-vs-v3.md): 3H(p)(1+o(1)) made explicit.
+i.e. $p^2\in v'/m\pm3.1\,pH(p)$. So $p$ lies in a window of length $3.1H(p_0)$
 around $p_0:=\sqrt{v'/m}\ge\Xm$.
 
 \emph{Counting.} Let $[P,2P)$ be the dyadic block of $p_0$. The window lies in $[P-1.6H(P),\,2P+1.6H(P)]\subset[P',4P']$ with $P':=0.51P$ and has length
@@ -512,9 +514,14 @@ $u\le L_z$ is $u_y\le\log3v$); the numerical forms follow from $a_V\le13u\log(u+
 $\rho(u)\le e^{-u\log u}$. For $u_y>\log3v$, Rankin's bound with exponent $1-1/(2\log3v)$ and Lemma~\ref{lem:cm} gives
 $\omega_y(v)\le5(\log3v)^{1.65}e^{-u_y/2}$.
 
-(iii) The range $Y<4v^2$ contributes at most $1.2\cdot\frac3{2\log2}(1+o(1))(\log3v)^2\le2.7(\log3v)^2$. The range
-$Y\ge4v^2$ contributes at most $\frac{2\cdot0.70\cdot e^{0.02}}{\log2}(\log3v)^2\int_1^\infty\frac{1+u}{\Gamma(u+1)}\,du\le
-7.11(\log3v)^2$, using $\rho(u)\le1/\Gamma(u+1)$ (from $\rho(u)\le\rho(u-1)/u$) and
+(iii) The range $Y<4v^2$ contributes at most $1.2\cdot\frac3{2\log2}(1+1.1/\log3v)(\log3v)^2\le2.7(\log3v)^2$, comparing the sum
+of $\log(2Y)$ over the dyadic $Y\in[v,4v^2)$ with $\int t\,dt/\log2$ from $\log2v$ to $\log16v^2$ (and $\log3v\ge10^8$). The range
+% Logged correction 69: (1+o(1)) made explicit.
+$Y\ge4v^2$ contributes at most
+\[
+  \frac{2\cdot0.70\cdot e^{0.02}}{\log2}(\log3v)^2\int_1^\infty\frac{1+u}{\Gamma(u+1)}\,du\le7.11(\log3v)^2,
+\]
+using $\rho(u)\le1/\Gamma(u+1)$ (from $\rho(u)\le\rho(u-1)/u$) and
 $\int_1^\infty(1+u)/\Gamma(u+1)\,du=3.4479$. The parts with $u_y>30$ add less than $10^{-20}(\log3v)^2$. The total is
 $\le9.82(\log3v)^2$.
 \end{proof}

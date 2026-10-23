@@ -4,7 +4,8 @@
 
 This section proves that, on an event of probability greater than $\tfrac12$ (Lemma~\ref{lem:budget}), the Lindley queue of
 Section~\ref{sec:construction} satisfies $Q_j\le B(s_j)$ at every slot (Theorem~\ref{thm:queue}). Here $B(x)$ is quasi-polylogarithmic in
-$x$, and is bounded by $H(x)^{O(1)}$ on the raised range of Section~\ref{sec:queue-capl}. Consequently (L-a) holds:
+$x$, and $B(x)\le H(x)$ at every scale (Theorem~\ref{thm:queue}). Consequently (L-a) holds:
+% Logged correction 68 (check R12): v3 has "bounded by H(x)^{O(1)} on the raised range".
 $|D(x)|\le B(x)+\tfrac{H(x)}2(1+\kappa_+/\log x)+4\le x^{\eta}$. The ingredients are:
 % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #15): v3 has H(x)/2+2.
 % Logged correction 36: the symmetric lag constant is +4 (lower constant of eq:lag), not +3.
@@ -47,7 +48,8 @@ These are the choices of Section~\ref{sec:params} and Section~\ref{sec:construct
   \]
   where $\varphi_v$ is $\varphi$ with $c=c(v)$. Then $\bar r_0$ is continuous and increasing, $r_0\le\bar r_0(x)\le r_0+1$,
   and $\bar M_1$ is continuous and non-decreasing. Moreover $M_1\le\bar M_1(x)\le M_1+c^{1/2}+\bar r_0+2\le
-  M_1(1+2c^{-1/2})$ and $\bar M_1\le2c(v)$, since $\bar r_0\le L\ll c^{1/2}$.
+  M_1(1+2c^{-1/2})$ and $\bar M_1\le2c(v)$, since $\bar r_0\le L\le e^{-600}c^{1/2}$ (as $c^{1/2}\ge\tfrac12e^{2\ell^2}$ and
+  $\ell\ge18.4$).
   % Logged correction 32: smooth majorants r0bar, M1bar replace r0, M1 inside H.
 \item $H(v):=\max(\qHstd(v),\bar M_1(v)^2)$, where $\qHstd(v):=\exp(8(\log\log v)^2)$. This is the width of the box jitter
   of Section~\ref{sec:construction}. It is continuous and non-decreasing in $v$, and $H(x)\ge\bar M_1(x)^2\ge M_1^2$.
@@ -212,7 +214,8 @@ define:
   $\mu(J)\le\bar\mu(J)\le(1+\rho_H)|J|+2$. Here the slot-density excess $\kappa_+/\log P+1/(\kappa P)$ in (F1) is absorbed by
   the gap between $H_+$ and the widths $H(s)\le H(4P+1+H)$ of the candidates. Above $x_1$, where $R'\ne0$ (Section~\ref{sec:target}),
   $H=\qHstd$ and this gap is at least $11\ell H/L$, more than the excess $7\cdot0.8H/L$ over the at most $7H$ candidate
-  slots. Below $x_1$, $R'=0$ and the excess is at most $7H/(\kappa P)\ll1$.
+  slots. Below $x_1$, $R'=0$ and the excess is at most $7H(P)/(\kappa P)\le7X_0^{0.4}H(X_0)/X_0\le e^{-0.5\Lambda}$, since
+  $H(v)/v$ is decreasing.
 \end{itemize}
 
 \begin{lemma}[Landing count]\label{lem:landing}
@@ -311,7 +314,8 @@ therefore used only by steps that run after $z+7H(z)$, and always at a strictly 
 \item Lemma~\ref{lem:threshold-mass}, step (ii), through part (i) at a dyadic scale $P_1\le\sqrt x$;
 \item Lemma~\ref{lem:tau-near}, through part (ii) at $P'=0.51P$ (or at $X_0$), at heights $p_0\le\sqrt x$;
 \item Lemma~\ref{lem:short-recip}, through part (ii) at $P=M/2$, at heights $M\le y/2$;
-\item Proposition~\ref{prop:g1}, step 1, for a window that ends $\delta x\gg H$ before $x$.
+\item Proposition~\ref{prop:g1}, step 1, for a window that ends $\delta x\ge x^{0.98}>H(x)$ before $x$.
+% Logged correction 68 (check R12): "delta x >> H" replaced by the explicit bound of Proposition g1.
 \end{itemize}
 % List updated to the current citation sites of the corollary (v3's list predates the X_0-band and LP rewrites).
 It is \emph{not} used for the per-prime increment bound in Theorem~\ref{thm:queue}. A local count there would force
@@ -360,7 +364,7 @@ in $[1,\infty)$, with $L:=\log(2x+12\log x+2)$; this exceeds $\log x$ by less th
 Q_j\le B(x):=\frac{4M_1L^2}{c'}+\frac{16M_1L}{3}+4\sqrt{M_1L(K_d+4)}+8M_1L\Big(\frac L\Lambda+1\Big)+K_d+9.
 \end{equation}
 \end{enumerate}
-In particular $B(x)\le5M_1L^2/c'\le34M_1L^2$. So $B\le L^{O(1)}\qHstd^{1/2}$ off the raised range, and
+In particular $B(x)\le5M_1L^2/c'\le34M_1L^2$. So $B\le17L^2\qHstd^{1/2}$ off the raised range (where $M_1\le\tfrac12\qHstd^{1/2}$), and
 $B\le X_0^{7.6}L^2$ on it (Theorem~\ref{thm:caplw}). Moreover $B\le H$ at every scale: $\log M_1\le\tfrac12\log H$ since
 $H\ge M_1^2$, and $34L^2\le\qHstd^{1/2}=e^{4\ell^2}$, so $B\le(M_1^2\qHstd)^{1/2}\le H$.
 \end{theorem}
@@ -376,10 +380,17 @@ $b:=2M_1$ (by truncation).
 \item Windows with $\qljit(I)>L_0+5$ are never used in (ii).
 % Logged correction 52 (CORRECTIONS-vs-v3.md): the endpoint of s_2 is log X_0^-, not Lambda = log X_0.
 \item For (b): take $b=1$. On the good event,
-  $\sum_q\Prob(X^{(2)}_q(I)\ge1\mid\mathcal F_{q-})\le\qComp^{(2)}(I)\le s_2(x)|I|\ll1$. This is the source $s_2$ of
-  \eqref{eq:s2}, restated in Corollary~\ref{cor:r1}, with \[s_2\le9L\exp\big(-\max(\log\Xm,\tfrac12\sqrt{L\log L})\big).\] Since
-  $\log(12L\,L_0)\le\log M_1+4\ell+10.2$ and $\log M_1+5\ell+13\ll\tfrac12\sqrt{L\log L}$ at every scale (Theorem~\ref{thm:caplw}),
-  $s_2\cdot12L\,L_0\ll1$. Freedman's
+% Logged correction 68: s_2|I| is now bounded explicitly (v3: "<< 1").
+  $\sum_q\Prob(X^{(2)}_q(I)\ge1\mid\mathcal F_{q-})\le\qComp^{(2)}(I)\le s_2(x)|I|$. This is the source $s_2$ of
+  \eqref{eq:s2}, restated in Corollary~\ref{cor:r1}, with \[s_2\le9L\exp\big(-\max(\log\Xm,\tfrac12\sqrt{L\log L})\big).\]
+  Here $|I|\le13L\,L_0$ and $\log L_0\le\max(5\ell,\log M_1+3\ell+7.67)$, and $\log M_1\le\log c+0.7\le0.38\sqrt L+0.7$ at
+  every scale: $4\ell^2\le0.14\sqrt L$, and $\gamma(s)\Lambda\le0.38\Lambda e^{s/2}=0.38\sqrt L$ (for $s\ge s_H$, $\gamma\le7.5\le
+  0.38e^{s_H/2}$; for $s\le s_H$, $\gamma_*\le2.6(A_s+1)e^{s/2}/\sqrt{\Lambda_s}\le0.03e^{s/2}$ by Step 6 of the proof of
+  Theorem~\ref{thm:caplw}). Since $\tfrac12\sqrt{L\log L}\ge2.14\sqrt L$,
+  \[
+  s_2(x)|I|\le117L^2L_0\,e^{-\frac12\sqrt{L\log L}}\le\exp\big(7\ell+13.2-1.76\sqrt L\big)\le e^{-\sqrt L}\le1.
+  \]
+  Freedman's
   inequality then gives $\#\{q:X^{(2)}_q\ge1\}\le1+\sqrt{2\lambda}+\tfrac23\lambda\le\lambda$, except with probability
   $e^{-\lambda}$.
 \item Count: $\#\mathcal I_x\le(x+12L+2)(12L(L_0+1)+3)$, and $e^{-\lambda}=x^{-4}$. \qedhere
@@ -399,7 +410,7 @@ window with integer endpoints containing it. Then:
 Hence $\qexc(W)\le\qCjit(I)-\qljit(I)+6$, by the excess identity (Lemma~\ref{lem:excess}).
 
 \emph{Truncation is inactive.} On $\qEcl^{(x)}$ (whose time $8x/L^{11}+H$ is less than $s_j$), Corollary~\ref{cor:increment} applies
-to $I$, since $|I|/q\le(12L(L_0+1)+2)/y\le13/(HL^5)\ll\delta_1$. It gives $X^{(1)}_q(I)(U)\le2M_1$ for every value $U$ of the
+to $I$, since $|I|/q\le(12L(L_0+1)+2)/y\le13/(HL^5)\le2L^{-6}\le\delta_1(x/q)$, as $H\ge7L$. It gives $X^{(1)}_q(I)(U)\le2M_1$ for every value $U$ of the
 jitter offset of $q$. So $\tilde X_q\equiv X^{(1)}_q(I)$, and the compensators agree.
 
 \emph{Short windows.} Let $\ell:=\qljit(I)\le\qljit(W)+4\le L_0+4$. By R1$'$,
@@ -414,7 +425,7 @@ $a_{\max}\le L/\Lambda+1$. Maximising over $\ell\ge0$ gives $\qexc(W)\le B(x)$.
 \begin{equation}\label{eq:fullblock}
 \frac{c'L_0}{L}\ge\sqrt{16M_1L(L_0+4+K_d)}+\frac{16M_1L}{3}+8M_1L\Big(\frac L\Lambda+1\Big)+L^3+K_d+10.
 \end{equation}
-Indeed, since $M_1\ge c\ge\tfrac14\qHstd^{1/2}\gg L^2$, we have $L_0=48M_1L^3/c'^2$ at every scale. Then
+Indeed, since $M_1\ge c\ge\tfrac14\qHstd^{1/2}=\tfrac14e^{4\ell^2}\ge L^2$, we have $L_0=48M_1L^3/c'^2$ at every scale. Then
 $c'L_0/L=48M_1L^2/c'$ and $\sqrt{16M_1LL_0}=\sqrt{768}\,M_1L^2/c'\le27.72M_1L^2/c'$, so the left side minus the first term
 on the right is at least $20.28M_1L^2/c'\ge135M_1L^2$, which exceeds the rest. So $\qexc(W)\le0$ on full blocks.
 
@@ -424,7 +435,7 @@ Q_j&\le\max\Big(Q_{k'}+\qexc((k',j]),\ \max\{\qexc(W):\ W\in\mathcal W_x,\ W=(k,
 &\le\max(B(s_{k'}),B(x))=B(x).
 \end{align*}
 This uses: additivity of $\qexc$ over slots; $Q_{k'}\le B(s_{k'})$ on $\Good(<t_j)$, which holds because
-$t_{k'}\le s_{k'+1}+2\le s_j$ (a full block has physical length at least $0.99L_0\gg12L$); and that $B$ is non-decreasing
+$t_{k'}\le s_{k'+1}+2\le s_j$ (a full block has physical length at least $0.99L_0\ge0.99L^5\ge12L+2$); and that $B$ is non-decreasing
 across scales, because $M_1$ and $H$ are non-decreasing in $x$ (Theorem~\ref{thm:caplw}(c)). A window $(k,j]$ with
 $\qljit>L_0$ splits at $k'$.
 \end{proof}
@@ -455,7 +466,7 @@ $u=2^mX_0$, with parameters frozen at $u$, in Table~\ref{tab:events}.
 \hline
 event & windows at scale $u$ & $\Prob(E^c\cap\Good(<t(E)))$ & $t(E)$\\
 \hline
-E1: $\qEcl^{(u)}$ (Proposition~\ref{prop:ecl}) & grid windows, left end in $[X_0/2,\,4u/L^{11}]$ & $\le L_u^{-2}$ & $8u/L^{11}+H$\\
+E1: $\qEcl^{(u)}$ (Proposition~\ref{prop:ecl}) & grid windows, left end in $[X_0/2,\,4u/L^{11}]$ & $\le1.0001L_u^{-2}$ & $8u/L^{11}+H$\\
 E2: $\qFr(I)$ (Theorem~\ref{thm:queue}) & grid windows $I\in\mathcal I_u$ (integer endpoints, right end $\le2u+12L+2$, length
   $\le12L(L_0+1)+2$), peeled over $\qljit(I)$ & $\le u^{-2}$ & $b=\max I$\\
 E3: $G^{\mathrm{NV}}_u$ (Lemma~\ref{lem:noise}), including the bound \eqref{eq:F2} & windows with integer endpoints in $[u,2u]$,
@@ -502,7 +513,7 @@ E3$'$ in Lemma~\ref{lem:noise}). Every consumer of an event $E$ runs at a time a
   Theorem~\ref{thm:queue}(ii) ends at $b=\lceil s_{j+1}\rceil<t_j$, and R1$'$ on $I$ holds on $\Good(<\max I)$.
 \item $\Good(<t_j)\cap\bigcap_{t(E)=t_j}E\subset\{Q_j\le B(s_j)\}$ by Theorem~\ref{thm:queue}(ii), and the inputs of that
   theorem have times at most $t_j$.
-\item $t_j\le s_j+11.3L+2$. Every consumer of a queue constraint reads it with margin at least $H\gg12L$:
+\item $t_j\le s_j+11.3L+2$. Every consumer of a queue constraint reads it with margin at least $H\ge e^{8\ell^2}>12L+2$:
   Corollary~\ref{cor:localcount} at height $z$ reads slots $\le z+H$ and runs after $z+7H$; the Lindley step reads $Q_{k'}$ with
   $t_{k'}\le s_j$; and \eqref{eq:La}, Section~\ref{sec:zeros} and Section~\ref{sec:noise} read queue bounds at heights $\le x/2$ or with
   margin at least $H/2$.
@@ -512,9 +523,13 @@ E3$'$ in Lemma~\ref{lem:noise}). Every consumer of an event $E$ runs at a time a
 \emph{First failure.} On $\{\tau=t\}$, $\Good(<t)$ holds and $\Good(\le t)$ fails. If some $E$ with $t(E)=t$ fails, then
 $E^c\cap\Good(<t(E))$ occurred. Otherwise the queue constraint with time $t$ fails, which (D) excludes.
 
+% Logged correction 68: the summation is explicit (v3: "sum O(u^-2) << 1/X_0").
 \emph{Summation.} Summing Table~\ref{tab:events} over $m$, E1 contributes
-$\sum_mL_u^{-2}\le\sum_{m\ge0}(\Lambda+m\log2)^{-2}\le1.45/\Lambda$. Everything else contributes
-$\le\sum_uO(u^{-2})\ll1/X_0$.
+\[
+\sum_m1.0001L_u^{-2}\le1.0001\sum_{m\ge0}(\Lambda+m\log2)^{-2}\le1.0001\Big(\frac1{\Lambda^2}+\frac1{\Lambda\log2}\Big)\le\frac{1.443}\Lambda.
+\]
+Everything else contributes at most $\sum_{m\ge0}(1+1.2+1)(2^mX_0)^{-2}\le4.3X_0^{-2}$, since $146H(u)u^{-3}\le u^{-2}$; and
+$1.443/\Lambda+4.3X_0^{-2}\le1.5/\Lambda$.
 
 The target $T$ is adapted (Section~\ref{sec:construction}), and every bound above holds for any adapted $T$. The union runs over
 dyadic scales, with finitely many windows per scale, never over all $x$; note that $\sum_x1/x$ diverges.
@@ -544,8 +559,10 @@ $t_z:=2z+H(2z)$,
 \Prob(\qEcl(z)^c\cap\Good(<t_z))\le L^{-2}.
 \]
 The event $\qEcl^{(u)}:=\bigcap_{X_0/2\le z\le4u/L_u^{11}}\qEcl(z)$ (over dyadic $z$) is the event E1 of Definition~\ref{def:good}. Its
-new heights at scale $u$ form one dyadic block, so its failure probability on the good event is at most
-$L_u^{-2}(1+o(1))$.
+new heights at scale $u$ lie in $(2u/L_{u/2}^{11},\,4u/L_u^{11}]$, which contains at most one dyadic $z$, and that $z$ has
+$\log z\ge L_u-11\log L_u+\log2$. So its failure probability on the good event is at most
+$(\log z)^{-2}\le L_u^{-2}(1+23\log L_u/L_u)\le1.0001L_u^{-2}$.
+% Logged correction 68: v3 has L_u^{-2}(1+o(1)); the factor is now explicit.
 \end{proposition}
 
 \begin{proof}
@@ -1085,7 +1102,8 @@ $A$), while $\Lambda_s$ is non-increasing in $s$ and $\Lambda\mapsto G$ decrease
 \item If $D^*\ge D$, then $\qCap\ge c$ is impossible, by Lemma~\ref{lem:heavy}(iii) and (V1). Otherwise Lemma~\ref{lem:reduction}(i)
   completes the cover with rows of degree at least $k:=D^*+1\ge\log c/(2(A+1))$. If no such row exists,
   Lemma~\ref{lem:heavy}(iii) gives a contradiction; this includes the case $D^*=D-1$ with $D$ an integer.
-\item Lemma~\ref{lem:rowweights}(b) applies, since $\pi\le m\le\Lambda^3e^{14}\ll\Xm$. It gives
+\item Lemma~\ref{lem:rowweights}(b) applies, since $\pi\le m\le\Lambda^3e^{14}$ and $k\le D\le2\Lambda e^{7}$, so
+  $e(\pi+k)/(k\Xm)\le e(\Lambda^3e^{14}+2\Lambda e^7)/\Xm\le1/3$. It gives
   $\log(1/w)\ge k(\log\Xm-A-1)-\log3\ge k(\Lambda-A-1)-1.1$, since $(\pi+k)/k\le2m$, $\log2m\le A$ and
   $k(\Lambda-\log\Xm)\le De^{-0.98\Lambda}\le10^{-3}$ (here $D\le2\Lambda e^{s_H+1}$).
   % Logged correction 43: the k e^{-0.98 Lambda} loss from X_0^- is absorbed in -1.1 (log 3 = 1.0986).
@@ -1206,8 +1224,12 @@ Appendix~\ref{app:cert-capl}.)
 \begin{remark}\label{rem:caplw-sizes}
 % v3: §4.6, remarks after the cross-check
 At $\Lambda=10^8$, $s_H$ corresponds to $\ell=42.82$ and the ramp ends at $\ell=43.82$. On the raised range,
-$c\le X_0^{7.5}$ and the absorption threshold satisfies $y\le X_0^{22.6}L^9$; elsewhere $y=\qHstd L_0L^6=e^{O(\ell^2)}$. In
-both cases $y\le n^{o(1)}$, as Lemma~\ref{lem:ZA} requires.
+$c\le X_0^{7.5}$ and the absorption threshold satisfies $y\le X_0^{22.6}L^9$; in the standard regime $\ell\ge\ell_{\mathrm{std}}$,
+$y=\qHstd L_0L^6\le e^{12.1\ell^2}$ (as $\log y\le12\ell^2+9\ell+7$). In
+both cases $\log y\le0.01\log n$ wherever $\Abs$ can contain $n$, as Lemma~\ref{lem:ZA} requires: there $\log n\ge
+\Lambda^2e^{s_H}\ge393\Lambda^2$ on the raised range, and $\log n\ge e^{\ell}$ with $\ell\ge\ell_{\mathrm{std}}$ beyond it.
+% Logged correction 68: v3 has y <= n^{o(1)}; the exponent is now explicit.
+% Logged correction 68 (check R12): the bound e^{12.1 l^2} is stated only in the standard regime, where it holds.
 \end{remark}
 
 \subsection{Absorption}\label{sec:queue-abs}
@@ -1223,7 +1245,7 @@ per scale, as in Section~\ref{sec:queue-conv}.
 Put $\theta_b:=\theta/2$
 (so $\theta_b=\tfrac18$ for $\theta=\tfrac14$), $h(u):=u^{\theta_b}$ and $\rho_{\Abs}(u):=\#(\Abs\cap[u,u+h])/h$. The target $T$
 gets a unit jump at each $n\in\Abs$, and $T'$ gets $-\rho_{\Abs}$ (see \eqref{eq:target}). Membership is decided when $r$ is
-decided, at slot approximately $r<y(n)\ll n$, so $T$ is adapted.
+decided, at slot approximately $r<y(n)\le n^{0.01}$ (Remark~\ref{rem:caplw-sizes}), so $T$ is adapted.
 
 Every jittered prime is at least $\Xm=X_0-H(X_0)/2$ (centred placement), so \emph{$\Abs$ has no element at heights where
 $y<\Xm$.} By Theorem~\ref{thm:caplw}(b) these are all heights with $s=\log\log n-2\log\Lambda\le s_H=5.9745$ (that is,
@@ -1240,7 +1262,7 @@ Then $\#(\Abs\cap[u,u+h])\le h\,L^{-4}$ on $\Good(<t)$ for every $t\ge t_u:=9u/L
 $\Good(<t)$ at heights up to $t+1.01H(t)$, since $9(t+1.01H)/L^{11}+H<t$. Condition \eqref{eq:twelvetwo} holds at every $u$ at
 which $\Abs$ meets $[u,2u]$, by Theorem~\ref{thm:caplw}(b). That theorem is proved at dyadic $z$ with $y(z)$; at a
 non-dyadic $u$, with $y$ the supremum over the two scales meeting $[u,2u]$, the quantities in \eqref{eq:twelvetwo} differ from
-their values at the dyadic scale of $u$ by relative factors $1+O(10^{-5})$ (Lemma~\ref{lem:raisedy} for $y$ on the ramp, and
+their values at the dyadic scale of $u$ by relative factors at most $1+10^{-5}$ (Lemma~\ref{lem:raisedy} for $y$ on the ramp, and
 Theorem~\ref{thm:caplw}(c) for $M_1$, $H$ and, through $L_0$, for $y$ in the standard regime), and $L$ by at most $\log2$. Step 5 of the proof of Theorem~\ref{thm:caplw} has
 far more room than this: on the raised range the ratio of its two sides is at least $3.5$ (at $t=1$ on the ramp, and
 larger elsewhere), and in the standard regime the margin is larger still.
@@ -1393,9 +1415,14 @@ jittered prime $q$ lies in $[y_{\mathrm{std}}(n),y(n))$. The consumers of $\Abs$
   is frozen per scale, this sup involves at most two scales, and along the ramp $y(2x)/y(x)\le2^{10^{-5}}(1+2c^{-1/2})$ by
   Theorem~\ref{thm:caplw}(c) and $M_1\le\bar M_1\le M_1(1+2c^{-1/2})$. So this changes nothing numerically.
   % Logged correction 32: v3 has "along the ramp d log y/d log u <= 1e-5"; y is frozen per scale.
-\item Lemma~\ref{lem:ZA}: the bound on the absorbed part holds for $y=X_0^{O(1)}\le n^{o(1)}$.
-\item Queue size and \eqref{eq:La}: $B\le5M_1L^2/c'\le X_0^{7.6}L^2$ enters additively or as $x^{\eta}$, and is $\ll x^{\theta}$
-  at these heights.
+% Logged correction 68: explicit exponents (v3: y = X_0^{O(1)} <= n^{o(1)} and B << x^theta).
+\item Lemma~\ref{lem:ZA}: the bound on the absorbed part holds for $y\le X_0^{22.6}L^9\le n^{0.01}$
+  (Remark~\ref{rem:caplw-sizes}).
+\item Queue size and \eqref{eq:La}: $B\le5M_1L^2/c'\le X_0^{7.6}L^2$ enters additively or as $x^{\eta}$, and
+  $B\le x^{10^{-5}}\le x^{\eta}$ at these heights, since $\eta\ge5\cdot10^{-5}$ and $\log B\le\log c+2\ell+4.3$: for
+  $s>s_H$, $\log c\le7.5\Lambda$ and $\log x\ge393\Lambda^2$; for $s\le s_H$, $\log c=\gamma_*\Lambda\le0.03\Lambda e^{s/2}
+  =0.03\sqrt L$ (Step 6 of the proof of Theorem~\ref{thm:caplw}) and $L\ge10^8$.
+% Logged correction 68 (check R12): the raised range also has s <= s_H, where log x >= 393 Lambda^2 fails; handled separately.
 \item Causality: $y(n)=y(x)$ is a deterministic function of the dyadic scale $x$ of $n$, so membership in $\Abs$ is decided at the decision
   of the latest prime.
 \end{itemize}

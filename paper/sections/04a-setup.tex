@@ -107,11 +107,14 @@ is the pointwise sharp reference.
   $C_N:=C_S(2.04+4.71/\log X_0)\le 158$ (Corollary~\ref{cor:kr-weights}).
 \end{itemize}
 
+% Logged correction 69 (CORRECTIONS-vs-v3.md): the bound of the convention corrected. The earlier bound
+% exp(-1e-3 X_0^{0.005}/Lambda) + 1e5 Lambda^2/X_0^2 missed terms of Proposition g1(B) of size up to ~1.5e-3 Lambda^{-4}
+% (the absorbed source sigma_A) and the noise and threshold terms; all are now listed in Step 5 of that proof.
 \paragraph{Regime and $o(1)$.} $X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$ is fixed; it is never sent to infinity. In this
-section, $o(1)$ denotes a term bounded, at every $\Lambda\ge10^8$ and uniformly in $x$, by
-$\exp(-10^{-3}X_0^{0.005}/\Lambda)+10^5\Lambda^2/X_0^2\le 10^{-3}$. These are the terms of
-Proposition~\ref{prop:g1}(B), Steps~1--4: errors of the local prime number theorem at $\log x\ge X_0^{1/100}$, and
-$\kappa_0$-terms with $\log x_k\ge X_0^2$. So $0.97-o(1)\ge0.969$, $0.96-o(1)\ge0.959$ and $0.82-o(1)\ge0.819$.
+section, $o(1)$ denotes a term bounded, at every $\Lambda\ge10^8$ and uniformly in $x$, by $\Lambda^{-3}$ $(\le10^{-24})$.
+These are the terms collected in Step~5 of the proof of Proposition~\ref{prop:g1}(B), whose sum is at most
+$1.6\cdot10^{-3}\Lambda^{-4}$, together with the passage from $\log y$ to $\log x$ for $|y-x|\le H(x)$, which costs at most
+$X_0^{-0.9}$. So $0.97-o(1)\ge0.969$, $0.96-o(1)\ge0.959$ and $0.82-o(1)\ge0.819$.
 % Logged correction 47: the base value 0.82 of Proposition g1 on [X_0 + H, X_0^{1.01}].
 
 \subsection{Prime inputs}\label{sec:noise-primes}
@@ -145,7 +148,10 @@ $N-\lfloor\cdot\rfloor=(N-T)+(T-\lfloor\cdot\rfloor)$.
   $x_1\ge\exp(X_0^2)$, and $|R(u)|\le2u^{\theta}\log^*u$; and $\{u\}<1$.
 \item On $[\Xm,X_0)$, $N-\lfloor\cdot\rfloor$ counts the jittered primes landing below $X_0$. There are at most
   $\#\{\text{slots in }[X_0,X_0+H]\}\le 2H(X_0)$ of them, so $\eps_1\le 3H(X_0)/X_0$ there.
-\item Hence $\eta_1,\eta_2\le\kappa\Lambda^2+X_0^{-1/2}\ll10^{-3}$. Indeed, in the rigid part the term $(\kappa X_0+1)/u$ contributes
+\item Hence $\eta_1,\eta_2\le\kappa\Lambda^2+X_0^{-1/2}\le X_0^{-0.39}\le10^{-3}$, as $\kappa=X_0^{-0.39666\ldots}\le X_0^{-0.3966}$ and $\Lambda^2\le X_0^{0.0001}$. Indeed,
+% Logged correction 69 (R13, C2): kappa = X_0^{-0.39666...} <= X_0^{-0.3966} (was "= X_0^{-0.3967}").
+% Logged correction 69: "<< 10^{-3}" made explicit.
+in the rigid part the term $(\kappa X_0+1)/u$ contributes
   $\le4.01\kappa$ to $\eta_1$ (a geometric sum over the dyadic blocks above $\Xm$). The minimum equals $1.001\kappa$ on at most
   $\Lambda\log(2700\Lambda/\kappa)/\log2+1\le0.61\Lambda^2$ blocks (as $\log(1/\kappa)\le\tfrac5{12}\Lambda$ for every $\eps_\kappa>0$), and beyond them it
   decays geometrically with ratio $e^{-\log2/\Lambda}$, so it contributes $\le0.62\kappa\Lambda^2+1.45\kappa\Lambda$. For $\eta_2$, the

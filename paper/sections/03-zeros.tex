@@ -67,11 +67,13 @@ this converges absolutely for $\sigma>\eta$.
 
 \begin{lemma}[The base factor]\label{lem:ZB}
 % v3: Lemma 2.0
-Let $Z_\infty(s):=\prod_{p<X_0}(1-p^{-s})^{-1}=\sum_{n\in\mathcal D}n^{-s}$. For $|t|\ge\Gamma_1$ and $\sigma\ge\tfrac12$,
+% Logged correction 67: explicit ranges (|t| >= Gamma_1/2; delta log X_0 <= 0.01) in place of "delta log X_0 -> 0".
+Let $Z_\infty(s):=\prod_{p<X_0}(1-p^{-s})^{-1}=\sum_{n\in\mathcal D}n^{-s}$. For $|t|\ge\Gamma_1/2$ and $\tfrac12\le\sigma\le2$,
 \[
   |Z_B(s)-Z_\infty(s)|\le\exp(-X_0^2/4).
 \]
-On $\sigma\ge1-\delta$ with $\delta\log X_0\to0$: $|Z_\infty|\le2\log X_0=:Z_{\max}$ and $|Z_\infty'|\le4\log^2X_0$.
+On $\sigma\ge1-\delta$ with $\delta\log X_0\le0.01$: $|Z_\infty|\le1.9\log X_0$ and $|Z_\infty'|\le4\log^2X_0$; if also
+$|t|\ge\Gamma_1/2$, then $|Z_B|\le2\log X_0=:Z_{\max}$.
 \end{lemma}
 \begin{proof}
 Each rigid $n\ge X_0(1+\kappa)$ contributes a unit jump at $n$ and the ramp $-du/(\kappa u)$ on $[n/(1+\kappa),n]$. The at most
@@ -82,10 +84,16 @@ $\le3X_0^{1-\sigma}/|t|$. Up to them,
   Z_B=Z_\infty-W(s)S_{\ge X_0}(s)+\frac{X_0^{1-s}}{s-1},\qquad W(s):=\frac{(1+\kappa)^s-1}{s\kappa},\qquad
   S_{\ge X_0}(s):=\sum_{d\in\mathcal D,\,d\ge X_0}d^{-s}.
 \end{equation}
-For $\sigma\le2$, $|W|\le6/(\kappa|t|)$ and $|S_{\ge X_0}(s)|\le Z_\infty(\sigma)$. Also
-$\log Z_\infty(\tfrac12+\delta)\lesssim2X_0^{1/2}/\log X_0$, while $\log(\kappa\Gamma_1)\ge(1-\theta)X_0^2-O(\log X_0)$, since
-$\log x_1\ge X_0^2$; the boundary terms and $X_0^{1-s}/(s-1)$ are $\le4X_0^{1/2}/\Gamma_1$ for $\sigma\ge\frac12$. On $\sigma\ge1-\delta$: $Z_\infty(\sigma)\le e^{\gamma}\log X_0\cdot e^{\delta\log X_0}(1+o(1))$, and
-$|Z_\infty'|\le Z_\infty(\sigma)\sum_{p<X_0}\log p/(p^{\sigma}-1)$.
+For $\sigma\le2$, $|W|\le6/(\kappa|t|)$ and $|S_{\ge X_0}(s)|\le Z_\infty(\sigma)$. Also $\log Z_\infty(\frac12)\le3.42\sum_{2\le n<X_0}n^{-1/2}
+\le6.9X_0^{1/2}$, as $-\log(1-y)\le y/(1-y)$, while $\kappa\Gamma_1\ge x_1^{1-\theta}/(2X_0^2\log^3x_1)\ge e^{0.49X_0^2}$, since
+$\kappa,\kappa_0\ge X_0^{-1}$ and $\log x_1\ge X_0^2$; and the boundary terms and $X_0^{1-s}/(s-1)$ are $\le4X_0^{1/2}/|t|$ for
+$\sigma\ge\frac12$. So for $|t|\ge\Gamma_1/2$ the difference is at most $(12e^{6.9X_0^{1/2}}+8X_0^{1/2})e^{-0.49X_0^2}\le e^{-X_0^2/4}$.
+On $\sigma\ge1-\delta$ with $\delta\Lambda\le0.01$, we have $p^{\sigma}-1\ge0.98(p-1)$, so
+$\sum_{p<X_0}\log p/(p^{\sigma}-1)\le1.03\Lambda$ by Mertens' estimates \cite{RosserSchoenfeld1962}. As
+$(\log Z_\infty)'(\sigma)=-\sum_{p<X_0}\log p/(p^{\sigma}-1)$, this gives
+$Z_\infty(\sigma)\le Z_\infty(1)e^{1.03\delta\Lambda}\le1.01e^{\gamma}\Lambda\cdot1.011\le1.9\Lambda$, and
+$|Z_\infty'(s)|\le Z_\infty(\sigma)\sum_{p<X_0}\log p/(p^{\sigma}-1)\le4\Lambda^2$. Where also $|t|\ge\Gamma_1/2$,
+$|Z_B|\le1.9\Lambda+e^{-X_0^2/4}\le2\Lambda$.
 \end{proof}
 
 \begin{lemma}[The base factor at all heights]\label{lem:ZBlow}
@@ -187,13 +195,18 @@ $\varsigma_*(v)\ge v/(14\log v)$; so that part, and the boundary term, are $\le 
   2|t|\sum_{a\in\Abs,\,a>Y}a^{b-2+\delta_k}\le2Y^{1-b}\,\frac{2-b}{1-b-\delta_k}\,Y^{b-1+\delta_k}e^{-\varsigma_*(\log Y)}\le5.4\,Y^{\delta_k}e^{-\varsigma_*(\log Y)} .
 \]
 Here $Y\le x_k$, so $Y^{\delta_k}\le x_k^{\delta_k}\le(\log x_k)^9$. Also $\log Y\ge0.66\log x_k$, since
-$\log\Gamma_k=(1-\theta)\log x_k-O(\log\log x_k)$ and $(1-\theta)/(1-\theta/2)>\tfrac23$. These $a$ lie in the standard regime
+% Logged correction 67: explicit lower bound for log Gamma_k (v3: "- O(log log x_k)").
+$\log\Gamma_k\ge(1-\theta)\log x_k-4\log\log x_k$ (as $\log(1/\kappa_0)\le\Lambda\le\frac12\log\log x_k$) and
+$(1-\theta)/(1-\theta/2)\ge\tfrac23+8\cdot10^{-5}$. These $a$ lie in the standard regime
 ($\log\log Y\ge2\Lambda-1>\ell_{\mathrm{std}}$), where $\varsigma_*(\log Y)\ge\log Y/(14\log\log Y)\ge\log x_k/(22\log\log x_k)$.
 So these terms are $\le5.4(\log x_k)^9\exp(-\log x_k/(22\log\log x_k))$, which is $\le e^{-10^{11}}$ since $\log x_k\ge X_0^2$.
 
 (b) Mellin--Plancherel gives, at $\sigma=\tfrac34$,
 $(4\pi/\Gamma_k)\sum_{a\in\Abs,\,a\le2x_k}a^{1-2\sigma}\le x_k^{1/2-1/(14\log\log x_k)}/\Gamma_k+2\exp(e^{\ell_{\mathrm{std}}}/2)/\Gamma_k$,
 and $\Gamma_k\asymp x_k^{1-\theta}/\log^3x_k$.
+% Logged correction 67: part (b) is no longer used (correction 64); its o(1) is therefore not load-bearing.
+Part (b) is not used for Theorem~\ref{thm:A}: the proof of Lemma~\ref{lem:goodheights}(ii) bounds this term directly, with explicit
+constants.
 \end{proof}
 
 \begin{remark}\label{rem:EAhuge}
@@ -246,33 +259,48 @@ and $|Z_B+M_k|\ge\tfrac14$ on the circle $|s-s^*|=1/\log x_k$.
 \begin{proof}
 \begin{enumerate}[label=\arabic*.]
 \item The equation is $x_k^w=G(w):=-(\alpha_ks/2)\Phi(w)/(wZ_B(s))$.
-\item Since $\alpha_k\gamma_k=\kappa_0x_k^{1-\theta}/\log^3x_k$, we have $\log|G|=(1-\theta)\log x_k-3\log\log x_k+O_{X_0}(1)$ on the box.
-\item The map $w\mapsto(\log G(w))/\log x_k$ has derivative $O(\log^2X_0/\log x_k)=o(1)$ (as $x_1\ge\exp(X_0^2)$), so it is a
-contraction with a unique fixed point $w^*$, and $\operatorname{Re}s^*=\theta+\operatorname{Re}w^*$.
-\item On the circle, with $\xi:=(w-w^*)\log x_k$: $M_k(s)/M_k(s^*)=e^{-\xi}(1+o(1))$ and $Z_B(s)/Z_B(s^*)=1+o(1)$.
-\item Since $Z_B(s^*)=-M_k(s^*)$, we get $|Z_B+M_k|\ge|Z_B(s^*)|(1-e^{-1}-o(1))\ge\tfrac14$.
+\item Since $\alpha_k\gamma_k=\kappa_0x_k^{1-\theta}/\log^3x_k$, we have $\log|G|=(1-\theta)\log x_k-3\log\log x_k+O_{X_0}(1)$ on the disc $|s-(1+i\gamma_k)|\le\delta_k$.
+% Logged correction 67: the o(1) terms of steps 3-5 are written out with their constants.
+\item On the disc, $|Z_B'|\le4.01\Lambda^2$: Lemma~\ref{lem:ZB} gives $|Z_\infty'|\le4\Lambda^2$, and Cauchy's estimate on discs of radius
+$\frac14$ gives $|(Z_B-Z_\infty)'|\le4e^{-X_0^2/4}$. With $|\Phi'|\le1\le e|\Phi|$ and $|w|\ge0.49$ (step~6), and $|s|\ge\gamma_k-1\ge10^6$,
+\[
+  \Bigl|\frac{G'}{G}\Bigr|=\Bigl|\frac1s+\frac{\Phi'}{\Phi}-\frac1w-\frac{Z_B'}{Z_B}\Bigr|\le4.8+8.02\Lambda^2\le8.1\Lambda^2.
+\]
+Fix the branch of $\log G$ with $|\operatorname{Im}\log G|\le\pi$ at the centre of the disc; then $|\operatorname{Im}\log G|\le\pi+0.01$
+on the disc. The map $F(w):=(\log G(w))/\log x_k$ has $|F'|\le8.1\Lambda^2/\log x_k\le8.1\Lambda^2/X_0^2<1$, and by the bounds of
+step~6, which hold at every point of the disc, it maps the disc (in the variable $w$) into itself. So it has a unique fixed point
+$w^*$, and $\operatorname{Re}s^*=\theta+\operatorname{Re}w^*$.
+\item On the circle, with $\xi:=(w-w^*)\log x_k$: $M_k(s)/M_k(s^*)=e^{-\xi}(1+\epsilon_1)$ and $Z_B(s)/Z_B(s^*)=1+\epsilon_2$, where
+$|\epsilon_1|\le5/\log x_k$, since $\log(s\Phi(w)/w)$ has derivative at most $10^{-6}+e+2.05\le4.8$, and
+$|\epsilon_2|\le8.1\Lambda^2/\log x_k$, by step~3 and $|Z_B(s^*)|\ge\frac12$.
+\item Since $Z_B(s^*)=-M_k(s^*)$, we get $Z_B+M_k=Z_B(s^*)\bigl(1-e^{-\xi}+\epsilon_2-e^{-\xi}\epsilon_1\bigr)$. On $|\xi|=1$ we have
+$|1-e^{-\xi}|\ge1-e^{-1}$ (the minimum is at $\xi=1$) and $|e^{-\xi}|\le e$, so
+$|Z_B+M_k|\ge\frac12(1-e^{-1}-8.1\Lambda^2/X_0^2-5e/X_0^2)\ge0.31\ge\tfrac14$.
 \item The circle lies in the disc. In step~2 the $O_{X_0}(1)$ term lies in $[\log\kappa_0-\log(2\Lambda)-1.5,\ \log\kappa_0+0.72]$,
 since $e^{-1}\le|\Phi(w)|\le1$, $0.49\le|w|\le0.76$ and $\tfrac12\le|Z_B|\le2\Lambda$ there; it is negative, as $\kappa_0\le\tfrac14$.
-Choosing the branch of $\log G$ with $|\operatorname{Im}\log G|\le\pi$ gives $|\operatorname{Im}w^*|\le\pi/\log x_k$. Hence
+With the branch of step~3, $|\operatorname{Im}F|\le(\pi+0.01)/\log x_k$. Hence
 $|s^*-(1+i\gamma_k)|+1/\log x_k\le(3\log\log x_k+\log(1/\kappa_0)+\log(2\Lambda)+5.7)/\log x_k\le\delta_k$, because
 $\kappa_0\ge X_0^{-1}$ and $\log\log x_k\ge2\Lambda$.\qedhere
 \end{enumerate}
 \end{proof}
 
-The discs $|s-(1+i\gamma_k)|\le\delta_k$ are small for every $k\ge1$: $\delta_k\le\delta_1\le18\log X_0/X_0^2\ll1/\log^2X_0$. So
-$Z_B$ is evaluated only where Lemma~\ref{lem:ZB} applies.
+The discs $|s-(1+i\gamma_k)|\le\delta_k$ are small for every $k\ge1$: $\delta_k\le\delta_1\le18\log X_0/X_0^2$, so $\delta_k\log X_0\le0.01$
+and $|t|\ge\Gamma_k-1\ge\Gamma_1/2$ there. So $Z_B$ is evaluated only where Lemma~\ref{lem:ZB} applies.
 
 \begin{lemma}[Late noise]\label{lem:latenoise}
 % v3: Lemma 2.2
+% Logged correction 67: the limit "-> 0" is replaced by the explicit bound 165 Lambda x_k^{-1/8}.
 On the circle of Lemma~\ref{lem:designedzero}, with $\widehat D_{\ge x_k}(s):=\int_{x_k}^\infty x^{-s}\,dD$,
 \[
-  |\widehat D_{\ge x_k}(s)|\le6e\cdot|w^*|\cdot x_k^{\eta-\theta}\cdot\frac{Z_{\max}}{\alpha_k\operatorname{Re}\Phi_{\min}}\longrightarrow0\qquad(|w^*|\le1).
+  |\widehat D_{\ge x_k}(s)|\le6.001e\cdot|w^*|\cdot x_k^{\eta-\theta}\cdot\frac{Z_{\max}}{\alpha_k\operatorname{Re}\Phi_{\min}}
+  \le165\,\Lambda\,x_k^{-1/8}\qquad(|w^*|\le1).
 \]
 \end{lemma}
 \begin{proof}
 By parts, $|\int_{x_k}^\infty x^{-s}\,dD|\le3|s|x_k^{\eta-\sigma}$, using \eqref{eq:La}. On the circle,
-$x_k^{-\sigma}\le e\,x_k^{-\operatorname{Re}s^*}=e\,x_k^{-\theta}/|G(w^*)|$, and $|G(w^*)|\ge|s|\alpha_k\operatorname{Re}\Phi_{\min}/(2|w^*|Z_{\max})$.
-The factor $|s|\approx\gamma_k$ cancels, and the bound tends to $0$ because $\eta<\theta$.
+$x_k^{-\sigma}\le e\,x_k^{-\operatorname{Re}s^*}=e\,x_k^{-\theta}/|G(w^*)|$, and $|G(w^*)|\ge|s^*|\alpha_k\operatorname{Re}\Phi_{\min}/(2|w^*|Z_{\max})$.
+The factor $|s|/|s^*|\le1.0001$ cancels. For the last bound, $|w^*|\le1$, $Z_{\max}=2\Lambda$, $\alpha_k\ge1$,
+$\operatorname{Re}\Phi_{\min}=e^{-1}\cos1\ge0.198$, and $\eta-\theta\le-\theta/2\le-\frac18$.
 \end{proof}
 
 \begin{lemma}[Good heights exist]\label{lem:goodheights}
@@ -387,11 +415,15 @@ $\zeta_{\PP}$ has a zero $\rho_k$ with $|\rho_k-s^*_k|\le1/\log x_k$ for every $
 \begin{proof}
 Apply Rouch\'e's theorem on the circle of Lemma~\ref{lem:designedzero}, comparing $\zeta_{\PP}$ with $Z_B+M_k$. The perturbation is
 bounded by
+% Logged correction 67: the two o(1) terms of v3 are replaced by explicit bounds.
 \[
-  |E_k|+\sum_{j\ne k}|\widehat R_j|+|\widehat D_{<x_k}|+|\widehat D_{\ge x_k}|+|\widehat E_{\Abs}|\le o(1)+\tfrac1{16}+o(1)+e^{-10^{10}}<\tfrac14,
+  |E_k|+\sum_{j\ne k}|\widehat R_j|+|\widehat D_{<x_k}|+|\widehat D_{\ge x_k}|+|\widehat E_{\Abs}|
+  \le3e^{-0.49X_0^2}+\tfrac1{16}+165\Lambda e^{-X_0^2/8}+e^{-10^{10}}<\tfrac14,
 \]
-by the bullets after \eqref{eq:Rhat} and Lemmas~\ref{lem:goodheights}, \ref{lem:latenoise} and~\ref{lem:ZA}. The hypothesis
-$|Z_B|\ge\tfrac12$ on the disc follows from Lemma~\ref{lem:goodheights}(i), Lemma~\ref{lem:ZB} and $|Z_\infty'|\le4\log^2X_0$.
+by the bullets after \eqref{eq:Rhat} (the circle lies in $0.99\le\sigma\le2$, $|t-\gamma_k|\le1$), Lemmas~\ref{lem:goodheights},
+\ref{lem:latenoise} and~\ref{lem:ZA}, and $x_k\ge x_1\ge e^{X_0^2}$. The hypotheses of Lemma~\ref{lem:designedzero} hold: on the
+disc, $|Z_B-Z_B(1+i\gamma_k)|\le\delta_k\cdot4.01\Lambda^2\le0.01$ (step~3 of that proof), so $|Z_B|\ge0.59$ by
+Lemma~\ref{lem:goodheights}(i); and $|Z_B|\le Z_{\max}$ by Lemma~\ref{lem:ZB}.
 \end{proof}
 
 \begin{remark}

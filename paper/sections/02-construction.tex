@@ -85,9 +85,13 @@ every $\omega$.
 $T$ restricted to $[1,u]$ is determined by the decisions and jitters at slots $s_j\le u-H(u)$.
 \end{lemma}
 \begin{proof}
-An element $n\le u+h(u)$ of $\Abs$ has latest prime $r<y(n)\le n^{o(1)}\ll u-H(u)$. So $r$, and every other prime of $n$, is decided
-before slot $u-H(u)$ (by \eqref{eq:C2} below). The set $\mathcal D$ and the density $\rhodet$ are deterministic, and the parameters
-are deterministic functions of the height or of the scale. The oscillation $R$ on $[1,u]$ involves only those $R_k$ with $x_k+2H(x_k)<u$, and each
+% Logged correction 67: "y(n) <= n^{o(1)} << u - H(u)" made explicit.
+An element $n\le u+h(u)$ of $\Abs$ has latest prime $r<y(n)\le n^{0.01}$: at a scale $x$ where $\Abs\ne\emptyset$ we have
+$\log x\ge\Lambda^2e^{s_H}\ge393\Lambda^2$, while $\log y\le22.6\Lambda+9\log\log x$, or $\log2y\le12.1(\log\log x)^2$ in the standard
+regime (Section~\ref{sec:params}), and both are $\le0.01\log x$. As $\log H(r)\le8(\log\log r)^2+10^{-6}\log r\le3\cdot10^{-5}\log r$
+(Theorem~\ref{thm:caplw}(c), as in the proof of Proposition~\ref{prop:La}), $r$, and every other prime of $n$, is decided at a slot
+$\le r+H(r)<2(2u)^{0.01}\le u-H(u)$ (by \eqref{eq:C2} below). The set $\mathcal D$ and the density $\rhodet$ are deterministic, and the
+parameters are deterministic functions of the height or of the scale. The oscillation $R$ on $[1,u]$ involves only those $R_k$ with $x_k+2H(x_k)<u$, and each
 such $\gamma_k$ reads primes decided at slots up to $x_k+H(x_k)/2\le u-H(u)$. Hence $\rho_{\Abs}$ on $[X_0,u]$, $R$ on $[1,u]$ and
 the jumps of $T$ in $[1,u]$ are known before slot $u$.
 \end{proof}
@@ -119,7 +123,9 @@ For the last switched-on $k$: if $x\le x_k^2$ then $\log x\le2\log x_k$; otherwi
 contribute less, by the spacing $x_{k+1}\ge\exp(x_k)$. So
 $|R'(x)|\le16\kappa_0/\log^3x+4\kappa_0x^{-(1-\theta)/2}\le\kappa_+/\log x$, since $\log x\ge X_0^2$.
 \end{itemize}
-Finally $1/(\kappa u)\le X_0^{-7/12}\ll0.09/\log u$ for $u\ge X_0$.
+% Logged correction 67: v3's "1/(kappa u) <= X_0^{-7/12} << 0.09/log u" fails once log u > 0.09 X_0^{7/12}; the bound below holds for all u.
+Finally $\kappa u/\log u$ increases on $u\ge X_0$ and is $\ge X_0^{0.6}/\Lambda\ge100$ at $X_0$, so $1/(\kappa u)\le0.01/\log u$ for every
+$u\ge X_0$.
 \end{proof}
 
 \begin{lemma}[Target error]\label{lem:T1}
