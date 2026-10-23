@@ -8,19 +8,22 @@
   scale $u$.
 \item The per-prime increment bound (Proposition~\ref{prop:ecl}, Corollary~\ref{cor:increment}). On $E_{\mathrm{cl}}^{(u)}$,
   for every slot window $I\subset[u,2u]$ with $|I|\le2H(u)$ (this covers the windows of $\mathcal W'_u$ below, of length
-  $\le1.03H(u)+1$), every non-absorbed latest prime $q\ge y(u)$, every $a\ge1$ and every jitter offset,
+  $\le1.03H(u)+1$), every jittered latest prime $q\ge y(u)$, every $a\ge1$ and every jitter offset,
   $X_q^{(a)}(I)\le2M_1(u)$. The event $E_{\mathrm{cl}}^{(u)}$ fails on $\Good$ with probability
   $\le L_u^{-2}$.
 \item The local count (Corollary~\ref{cor:localcount}). For dyadic $P$ and windows $J\subset[P,4P]$ of length $\le6H(P)$
   (part (i)), the non-absorbed count, and so the prime count, is $\le13.4|J|+K_{\mathrm{loc}}(P)+2$, with
   $K_{\mathrm{loc}}(P)=2B(4P)+7\lambda_P/3+23$ and $\lambda_P=4\log P$. For real $P\ge X_0$ (part (ii)) the same holds with
   $K_{\mathrm{loc}}(P)+K_{\mathrm{loc}}(2P)+4$ in place of $K_{\mathrm{loc}}(P)+2$.
-\item Absorption (Lemmas~\ref{lem:lemmaP}, \ref{lem:rhoA}, Proposition~\ref{prop:S1S2}). Non-absorbed latest primes of elements
-  of $[u,2u]$ satisfy $q\ge y(u)=H(u)L_0L_u^6$, so $|I/q|\le2/(L_0L_u^6)\le L_u^{-6}$ for $|I|\le2H(u)$. The small-$q$ case S1
+\item Absorption (Lemmas~\ref{lem:lemmaP}, \ref{lem:rhoA}, Proposition~\ref{prop:S1S2}). The jittered latest primes of the
+  non-absorbed elements of $[u,2u]$ satisfy $q\ge y(u)=H(u)L_0L_u^6$ (a rational latest prime can be smaller, but then the
+  element is rigid and drops out of the excess), so $|I/q|\le2/(L_0L_u^6)\le L_u^{-6}$ for $|I|\le2H(u)$. The small-$q$ case S1
   does not arise in the present regime.
 \end{itemize}
 % Logged correction 79 (CORRECTIONS-vs-v3.md): v3 states the increment bound for |I| <= H(u), but the windows of W'_u have
 % length up to 1.03H(u)+1; Corollary cor:increment now allows |I| <= 2H(u).
+% Logged correction 83 (CORRECTIONS-vs-v3.md): the latest primes in the inputs above, and the q of X_q(W), X_q^(2)(W) below,
+% are the jittered ones (the increments of Mart and Mart^(2)); a rational latest prime belongs to a rigid element.
 
 \paragraph{The composites with $q^2\mid n$: the source $s_2$.} Recall $C^{(\ge2)}=\Comp^{(2)}+\Mart^{(2)}$
 (\S\ref{sec:noise-identity}). Fix $u$ and a window $I\subset[u,2u]$, and put $\sigma:=\frac12\sqrt{L_u\log L_u}$.
@@ -85,7 +88,7 @@
   contribute $\le10\Lambda^6e^{-3.03\Lambda}+\frac{10}{\log2}\int_{\Lambda^2}^\infty L^3e^{-3.03\sqrt L}\,dL\le10\Lambda^7e^{-3.03\Lambda}$.
   The total is $\le e^{-0.99\Lambda}$.
 \item Put $A_u:=\#\{a\ge2:(\Xm)^a\le2u\}\le1.01L_u/\Lambda$. By Corollary~\ref{cor:increment} (which covers every
-  $a\ge1$), the increment of a prime $q$ to $\Mart^{(2)}(I)$ is at most $b_2:=2A_uM_1(u)$.
+  $a\ge1$), the increment of a jittered prime $q$ to $\Mart^{(2)}(I)$ is at most $b_2:=2A_uM_1(u)$.
 \end{itemize}
 
 % Logged correction 78 (CORRECTIONS-vs-v3.md): v3 defines E3 and E3' as conjunctions over a whole dyadic scale, but gives them the
@@ -110,7 +113,9 @@ $(u+1)(1.03H(u)+2)$ of them. Let $\mathcal W_u\subset\mathcal W'_u$ consist of t
   |\Mart^{(2)}(W)|&\le\sqrt{2\bar V^2_W\lambda'_u}+\tfrac23b_2\lambda'_u,&\bar V^2_W&:=b_2\cdot s_2(u)\cdot|W|.\label{eq:F2}
 \end{align}
 
-\paragraph{Truncation.} As in Theorem~\ref{thm:queue}(i), Freedman's inequality is applied to the truncated increments
+\paragraph{Truncation.} For a jittered prime $q$, let $X_q(W)$ and $X^{(2)}_q(W)$ be its contributions to $C^{(1)}(W)$ and
+$C^{(\ge2)}(W)$: the non-absorbed composites in $W$ with latest prime $q$, and $q\,\|\,n$, respectively $q^2\mid n$. As in
+Theorem~\ref{thm:queue}(i), Freedman's inequality is applied to the truncated increments
 $\tilde X_q(W):=\min(X_q(W),2M_1(u))$ and $\tilde X^{(2)}_q(W):=\min(X^{(2)}_q(W),b_2)$, each compensated by its own
 conditional mean. These are martingales in decision order, with increments $\le2M_1$ and $\le b_2$ surely. Freedman's
 inequality is used in the form
@@ -120,7 +125,7 @@ inequality is used in the form
 for increments bounded by $b$ \cite[(4.1)]{Freedman1975} (with Bennett's bound for the exponent), with the deterministic $a$
 and $v=\bar V_W,\bar V^2_W$ of \eqref{eq:F1}, \eqref{eq:F2}.
 \begin{itemize}
-\item \emph{Truncation is inactive on $\Good(<t(W))$.} For every latest prime $q$ contributing to $W$, the set of cofactors
+\item \emph{Truncation is inactive on $\Good(<t(W))$.} For every jittered latest prime $q$ contributing to $W$, the set of cofactors
   (elements whose primes are all decided before $q$) is $\mathcal F_{q-}$-measurable. So ``$X_q(W)\le2M_1$ for every jitter
   offset of $q$'' is an $\mathcal F_{q-}$-measurable event. It may not yet be certified at time $s_q$ (for $q<\sqrt{2u}$).
   But on $\Good(<t(W))$ the event $E_{\mathrm{cl}}^{(u)}$ holds (its time $8u/L^{11}+H$ is $<t(W)$), and

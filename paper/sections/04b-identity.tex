@@ -24,8 +24,11 @@ $C_{\mathrm{jit}}=C^{(1)}+C^{(\ge2)}$, according to whether $q\,\|\,n$ or $q^2\m
     \Comp(W)=\sum_w\int_{W/w}J(\Pi_{\tau_w}\sigma)\cdot\mathbf 1[qw\notin\Abs],
   \]
   where $\Pi_\tau\sigma$ keeps the slots $s_q>\tau$.
+% Logged correction 83 (CORRECTIONS-vs-v3.md): the sum defining Comp^(2) is over the jittered q (as is C^(>=2)), the m decided
+% before q, and the elements outside Abs; v3 leaves the range of q, the latest-prime filter and the absorption indicator implicit.
 \item $\Comp^{(2)}$ is the predictable compensator of $C^{(\ge2)}$:
-  $\Comp^{(2)}(W):=\sum_q\sum_{a\ge2}\sum_m\Prob(q^am\in W\mid\mathcal F_{q-})$.
+  $\Comp^{(2)}(W):=\sum_q\sum_{a\ge2}\sum_m\Prob(q^am\in W,\ q^am\notin\Abs\mid\mathcal F_{q-})$, over the jittered primes $q$
+  and the $m\in\NN$ with $q\nmid m$ and $\tau_m<s_q$ (including $m=1$).
 \item $\Mart':=(C^{(1)}-\Comp)+(C^{(\ge2)}-\Comp^{(2)})=:\Mart+\Mart^{(2)}$. Both parts are martingales in decision
   order. They are controlled by separate Freedman bounds (\S\ref{sec:noise-perscale}), because the increment of $q$ enters
   $\Mart$ through $W/q$ and $\Mart^{(2)}$ through $W/q^a$.

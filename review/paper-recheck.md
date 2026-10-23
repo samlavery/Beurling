@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#82)
+## Addendum: defects found after the re-check (corrections #31–#85)
 
-After the first public version, a reader reported thirty-two defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, and two end-to-end checks (R14, R15), turned up twenty more. The full list, with each repair, is entries #31–#82 of `CORRECTIONS-vs-v3.md`:
+After the first public version, a reader reported thirty-five defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, and two end-to-end checks (R14, R15), turned up twenty more. The full list, with each repair, is entries #31–#85 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -120,9 +120,12 @@ re-checking the repairs, and two end-to-end checks (R14, R15), turned up twenty 
 | 80 | Cor increment proof; Lemma P (i); 04d s₂ | "q-smooth, so decided no later than q" confuses decision and value order; two more value-from-decision inferences lacked the H/2 allowance | reader |
 | 81 | Lemma S (ii), (iii) | smooth-v applied at u_y < 1; (ii) now from (i) there; (iii) sum-to-integral made explicit (7.10486L² + 4L ≤ 7.11L²) | reader |
 | 82 | Lemma tau-near, V_P | second dyadic block beyond smooth-v's range near u = L; split at L − 1, Rankin above | reader |
+| 83 | X_q, Fr(I), Comp^{(2)}, S1S2 | per-prime counts ran over all latest primes, including rational ones, for which E2(b) is unproved; now jittered only, = C_jit; Comp^{(2)} made the true compensator | reader |
+| 84 | Prop g1(B) Step 4 | k := max{j : x_j ≤ x} undefined on [X_sw, x₁); there R' = 0 and the step is void; k = 1 case stated | reader |
+| 85 | Lemma heavy (ii) | "< φ, so ≤ φ − 1" with real-valued φ; (ii)'s ≥ Q+r+1 false (counterexample c = 100.2, 155 vectors in ℤ³); now > Q+r, which is all (iii) needs | reader |
 
 **Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72 in twenty-two passes
-(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, and #79–#82 by R20; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, #79–#82 by R20, and #83–#85 by R21; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -140,7 +143,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the eighty-two corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the eighty-five corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and

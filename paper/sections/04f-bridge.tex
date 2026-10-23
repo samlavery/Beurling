@@ -201,7 +201,8 @@ The window $J$ ends $\delta x\ge x^{0.98}>H(x)$ before $x$ (as $1/\delta\le x^{0
 data before $x-H$, on $\Good(<x)$. In particular Theorem~\ref{thm:lp} is applied with $y:=x(1-\delta)\le x-H(x)$, below the
 certified horizon of $\Good(<x)$, where (LP-a) holds (Remark~\ref{rem:horizon}).
 % Logged correction 73: the local prime number theorem is applied below the certified horizon of Good(<x).
-All old oscillations $j<k$ are resolvable: $\log\gamma_j\le(1-\theta)\log x_j\le\log x_j$ (as
+% Logged correction 84 (R21, 84-1): k is defined here, before its first use, and only for x >= x_1.
+For $x\ge x_1$ let $k:=\max\{j:x_j\le x\}\ge1$; for $x<x_1$ no $R_j$ is active on $[1,x]$ (Step~4). All old oscillations $j<k$ are resolvable: $\log\gamma_j\le(1-\theta)\log x_j\le\log x_j$ (as
 $\gamma_j\le2\Gamma_j\le x_j^{1-\theta}$), while $\log x\ge x_{k-1}\ge x_j$ and $x_j\ge\exp(X_0^2)$, so
 $c_{\mathrm{LP}}\sqrt{\log x}/4\ge(0.0044/\Lambda)\sqrt{x_j}\ge\log x_j$.
 
@@ -272,11 +273,17 @@ $|N-T|\le H(N_*)$ at both ends of $I$, and under the target \eqref{eq:target},
   weighted sum is at most $4C_S\sum_v\log(2v)L_v^{-4}/\log x\le C_Se^{-80}/\log x$.
 \end{itemize}
 
-\emph{Step 4: the current oscillation, if it is not resolvable.} Let $k:=\max\{j:x_j\le x\}$; $R_j$ vanishes on $[1,x]$ for
-$j>k$. Put $\rho^{(k)}_{\mathrm{osc}}(y):=\sum_nc_n(y)R_k'(y/n)/n$.
+% Logged correction 84 (CORRECTIONS-vs-v3.md): v3 defines k := max{j : x_j <= x}, which is undefined for x < x_1, a range
+% the proposition covers ([X_sw, x_1) is non-empty); there R' = 0 on [1,x] and the step is void. The case k = 1 (gamma_* = 1) is stated.
+\emph{Step 4: the current oscillation, if it is not resolvable.} If $x<x_1$, every $R_j$ vanishes on $[1,x]$ (as $R_j=0$ on
+$[1,x_j^+]$), so $R'=0$ there, the oscillation contributes nothing, and this step is void; this happens on the whole range
+$[X_{\mathrm{sw}},x_1)$, since $\log X_{\mathrm{sw}}=X_0^{0.01}<X_0^2\le\log x_1$. Otherwise $k\ge1$ is as above; $R_j$ vanishes on
+$[1,x]$ for $j>k$. Put $\rho^{(k)}_{\mathrm{osc}}(y):=\sum_nc_n(y)R_k'(y/n)/n$.
 \begin{itemize}
-\item \emph{Separation.} If $\gamma_k$ is not resolvable, then $\gamma_k>\Gamma(x)$. Every $j<k$ is resolvable, and
-  $\gamma_*\le\gamma_{k-1}\le x_{k-1}\le\log x$ (as $x_k\ge\exp(x_{k-1})$). So
+\item \emph{Separation.} If $\gamma_k$ is not resolvable, then $\gamma_k>\Gamma(x)$. Every $j<k$ is resolvable (and no $\gamma_j$ with $j>k$ is, as
+  $\log\gamma_j\ge\log\Gamma_j\ge(1-\theta)\log x_j-\Lambda-3\log\log x_j-1>c_{\mathrm{LP}}\sqrt{\log x}/4$ for $x_j>x$), and
+  $\gamma_*\le\max(1,\gamma_{k-1})\le\log x$ (for $k\ge2$, $\gamma_{k-1}\le x_{k-1}\le\log x$ as $x_k\ge\exp(x_{k-1})$; for $k=1$ there is
+  no resolvable $\gamma_j$, and $\gamma_*=1$). So
   $\gamma_k\delta\ge\Gamma(x)\min(\log^{-6}x,X_0^{-1/2})\ge e^{c_{\mathrm{LP}}\sqrt{\log x}/5}$, since, for
   $\sqrt{\log x}\ge X_0^{0.005}=e^{\Lambda/200}$,
   \[

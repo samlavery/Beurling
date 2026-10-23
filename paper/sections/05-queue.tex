@@ -191,8 +191,10 @@ $1/(2\Lambda^2)+1/X_0+e^{-0.97\Lambda}\le0.01/\Lambda$.
 \paragraph{Absorbed and non-absorbed elements.}
 $\Abs$ (see \eqref{eq:absorbed}) is the extended absorption set: the elements $n$ with $\log n\ge L_*=10^7$ whose latest jittered
 prime $r$ satisfies $r<y(n)$. In Lemma~\ref{lem:lemmaP}, $y(n)$ is replaced by $\sup_{[u,2u]}y$ on the dyadic block of
-$n$. Absorbed elements are counted in the target $T$ and are not arrivals. All statements about arrivals concern
-$\NN\setminus\Abs$.
+$n$. Absorbed elements are counted in the target $T$, as are the rigid composites (whose latest prime is rational, Lemma~\ref{lem:excess});
+both are jumps of $T$ and drop out of the excess. The statements below about the latest primes of arrivals (the counts $X_q$, the
+increment bound and the thresholds $y$, $y_-$) concern the non-absorbed composites whose latest prime is jittered, that is, the
+composites counted by $C_{\mathrm{jit}}$.
 \begin{itemize}
 \item \emph{Stopped process.} Every statement of this section is proved on $\Good(<t)$ for the relevant $t$, that is, for the
   process stopped at the first failure time $\tau$. There Lemma~\ref{lem:lemmaP} gives $\rho_{\Abs}\le L^{-4}<0.1/\log u$, so the
@@ -354,8 +356,14 @@ Fix a dyadic scale $x$ and put $\lambda:=4L$. Recall that $\qljit(\cdot)$ counts
 % Logged correction 79 (CORRECTIONS-vs-v3.md): the lower band of the windows of I_x is stated; v3 applies Corollary
 % cor:increment (stated for windows in [x,2x+12L+2] and q >= y(x)) to these windows.
 \end{itemize}
-For $I\in\mathcal I_x$ and a latest prime $q$, let $X^{(1)}_q(I)$ count the non-absorbed composites $n\in I$ with $q\,\|\,n$
-and $q$ latest; let $X^{(2)}_q(I)$ count those with $q^a\,\|\,n$, $a\ge2$; and put $\tilde X_q:=\min(X^{(1)}_q(I),2M_1)$.
+% Logged correction 83 (CORRECTIONS-vs-v3.md): v3 defines X_q for any latest prime q, but its proof of (b) (the compensator
+% Comp^(2), and a_max <= L/Lambda + 1) covers only jittered q, which are >= X_0^-. Rational latest primes belong to rigid composites, which
+% drop out of the excess (Lemma excess), so they are not needed. Only jittered latest primes are meant, as in C_jit.
+For $I\in\mathcal I_x$ and a \emph{jittered} prime $q$ (one decided at a slot $\ge X_0$, so $q\ge\Xm$), let $X^{(1)}_q(I)$ count
+the non-absorbed composites $n\in I$ with $q\,\|\,n$ and $q$ latest; let $X^{(2)}_q(I)$ count those with $q^a\,\|\,n$, $a\ge2$;
+and put $\tilde X_q:=\min(X^{(1)}_q(I),2M_1)$. Rational primes are excluded: a composite whose latest prime is rational has
+only rational primes, so it is rigid; it sits on its own jump of $T$ and drops out of the excess (Lemma~\ref{lem:excess}). Thus
+$\sum_q(X^{(1)}_q(I)+X^{(2)}_q(I))=\qCjit(I)$.
 These are $\mathcal F_q$-measurable: $n=q^a m$ with $m$ decided before $q$, and absorption is decided by $q<y(n)$. They
 depend neither on $T$ nor on the slot positions. Composites have $q\le b/2$, so every $X_q(I)$ is decided by $b/2+H(b/2)$.
 The event $\qFr(I)$ below also reads $\qljit(I)$ and uses R1$'$ on $I$, which holds on $\Good(<\max I)$
@@ -367,7 +375,7 @@ For $I\in\mathcal I_x$, let $\qFr(I)$ be the event that, with $\ell:=\qljit(I)$ 
   $v_\ell:=2M_1(\ell+K_d)$;
 \item $\#\{q:\ X^{(2)}_q(I)\ge1\}\le\lambda$.
 \end{enumerate}
-The sums run over latest primes, selected by decision slot.
+The sum in (a) and the count in (b) run over the jittered primes $q$, selected by decision slot.
 
 \begin{theorem}[Queue bound]\label{thm:queue}
 % v3: Theorem 4.3
@@ -397,7 +405,8 @@ $b:=2M_1$ (by truncation).
   there only on the event $\{S\ge a(\ell),\,V\le v_\ell\}$, which has probability at most $e^{-\lambda}$.
 \item Windows with $\qljit(I)>L_0+5$ are never used in (ii).
 % Logged correction 52 (CORRECTIONS-vs-v3.md): the endpoint of s_2 is log X_0^-, not Lambda = log X_0.
-\item For (b): take $b=1$. On the good event,
+% Logged correction 83: the sum is over the jittered q, as is the compensator Comp^(2) of Section sec:noise-identity.
+\item For (b): take $b=1$. On the good event, summing over the jittered $q$,
 % Logged correction 68: s_2|I| is now bounded explicitly (v3: "<< 1").
 % Logged correction 79 (R20, F1): I in I_x may meet [x/2,x) and (2x,2x+12L+2], so s_2 is the sup over the scales met (Cor r1).
   $\sum_q\Prob(X^{(2)}_q(I)\ge1\mid\mathcal F_{q-})\le\qComp^{(2)}(I)\le s_2|I|$, where $s_2:=\max(s_2(x/2),s_2(x),s_2(2x))$ is the
@@ -424,7 +433,8 @@ $b:=2M_1$ (by truncation).
 \emph{Sandwich.} Let $W\in\mathcal W_x$ have physical interval $[s_{k+1},s_{j+1})$, and let $I\in\mathcal I_x$ be the smallest
 window with integer endpoints containing it. Then:
 \begin{itemize}
-\item $\qCjit(W)\le\sum_q\big(X^{(1)}_q(I)+X^{(2)}_q(I)\big)$, since $\qCjit$ is monotone in the window;
+\item $\qCjit(W)\le\qCjit(I)=\sum_q\big(X^{(1)}_q(I)+X^{(2)}_q(I)\big)$, the sum over the jittered $q$, since $\qCjit$ is
+  monotone in the window and counts exactly the non-absorbed composites with a jittered latest prime;
 % Logged correction 77: the edges are counted in continuous slots, whose starts are at least 0.99 apart (Section sec:greedy).
 \item $\qljit(I)\le\qljit(W)+4$, since each of the two edges, $[\lfloor s_{k+1}\rfloor,s_{k+1}]$ and $[s_{j+1},\lceil s_{j+1}\rceil)$, holds at most $2$
   continuous slots (their starts are at least $0.99$ apart);
@@ -438,7 +448,7 @@ Hence $\qexc(W)\le\qCjit(I)-\qljit(I)+6$, by the excess identity (Lemma~\ref{lem
 % non-absorbed arrivals below x whose latest prime is only >= y(x/2), and Corollary cor:increment covered only I in [x,2x+12L+2].
 \emph{Truncation is inactive.} On $\qEcl^{(x)}$ (whose time $8x/L^{11}+H$ is less than $s_j$), Corollary~\ref{cor:increment}
 applies with $u=x$: $I\subset[x/2,\,2x+12L+2]$ and $|I|\le12L(L_0+1)+2\le H$, as shown there. By that corollary, every
-latest prime $q$ with $X^{(1)}_q(I)+X^{(2)}_q(I)\ne0$ has $q\ge y_-(x)$, which is $y(x/2)$ for $x\ge2X_0$ (the composites
+jittered latest prime $q$ with $X^{(1)}_q(I)+X^{(2)}_q(I)\ne0$ has $q\ge y_-(x)$, which is $y(x/2)$ for $x\ge2X_0$ (the composites
 of $I$ below $x$ lie in $[x/2,x)$), not $y(x)$. So $|I|/q\le|I|/y_-(x)\le1.00001L^{-11}\le2L^{-6}$, which is at most
 $\delta_1(z)$ at every cofactor height $z\le x$. It gives $X^{(1)}_q(I)(U)\le2M_1$ for every value $U$ of the
 jitter offset of $q$. So $\tilde X_q\equiv X^{(1)}_q(I)$, and the compensators agree.
@@ -449,7 +459,7 @@ $\qComp_{\mathrm{jit}}(I)\le\ell(1-c'/L)+K_d$. Together with (a),
 \qexc(W)\le-\frac{c'\ell}{L}+\sqrt{16M_1L(\ell+K_d)}+\frac43M_1\lambda+(\text{the $a\ge2$ part})+K_d+6.
 \]
 The $a\ge2$ part is at most $\lambda\cdot2a_{\max}M_1\le8M_1L(L/\Lambda+1)$, by (b), Corollary~\ref{cor:increment} (with $u=x$,
-as above; the primes counted in (b) are $\ge y_-(x)$) and $a_{\max}\le L/\Lambda+1$. Maximising over $\ell\ge0$ gives $\qexc(W)\le B(x)$.
+as above; the primes counted in (b) are jittered and $\ge y_-(x)$) and $a_{\max}\le L/\Lambda+1$, as $q\ge\Xm$. Maximising over $\ell\ge0$ gives $\qexc(W)\le B(x)$.
 
 \emph{Full blocks.} If $\qljit(W)=L_0$, then $\ell\ge L_0$ and
 \begin{equation}\label{eq:fullblock}
@@ -546,7 +556,7 @@ E4: $\qLand(J)$ (Lemma~\ref{lem:landing}) & landing windows $J\in\mathcal J_u$ (
 \caption{The events of Definition~\ref{def:good} at the dyadic scale $u=2^mX_0$.}\label{tab:events}
 \end{table}
 
-There is no separate event for small latest primes: since $\Lambda\ge10^8>L_*$, these are absorbed (Section~\ref{sec:queue-abs}), and
+There is no separate event for small jittered latest primes: since $\Lambda\ge10^8>L_*$, these are absorbed (Section~\ref{sec:queue-abs}), and
 the small-$q$ case of S1 needs $L<L_*$ (Proposition~\ref{prop:S1S2}).
 
 \begin{lemma}[First failure; probability budget]\label{lem:budget}
@@ -649,7 +659,9 @@ $(\log z)^{-2}\le L_u^{-2}(1+23\log L_u/L_u)\le1.0001L_u^{-2}$.
 \end{proposition}
 
 \begin{proof}
-Suppose $\#(\NN\cap J)\ge M_1+1$, so $|S(J)|\ge M_1=r_0+\varphi(r_0)+1$. Let $r:=\operatorname{rank}S(J)$.
+% Logged correction 85 (R21, 85-1): M_1 is real, so the failure of E_cl is #(N cap J) > M_1, not >= M_1 + 1 (same class as Lemma heavy (ii)).
+Suppose $\#(\NN\cap J)>M_1$. Since $J$ contains at most one element with no jittered prime, $|S(J)|>M_1-1=r_0+\varphi(r_0)$
+($M_1$ is real, so the complement of $\#(\NN\cap J)\le M_1$ is $\#(\NN\cap J)>M_1$). Let $r:=\operatorname{rank}S(J)$.
 \begin{itemize}
 \item \emph{Low heights, $2z+1<(\Xm)^2$}, in particular every $z\in[X_0/2,X_0)$. Every element of $S(J)$ is $q\cdot d$ with
   exactly one jittered prime $q$, because two jittered primes give a product at least $(\Xm)^2>2z+1$. (Heights $z\ge X_0$ are in
@@ -681,9 +693,10 @@ Summing the two cases gives the claim.
 % Logged correction 79 (CORRECTIONS-vs-v3.md): v3 states this for I in [u,2u+12L_u+2] and q >= y(u), but Theorem queue(ii)
 % applies it to windows of I_x that begin below x, where the non-absorbed arrivals below x only have q >= y(x/2). Extended to
 % I in [u/2,2u+12L_u+2], |I| <= 2H(u) (which also covers the windows of length 1.03H(u)+1 of Lemma noise) and q >= y_-(u).
+% Logged correction 83 (CORRECTIONS-vs-v3.md): stated for jittered q only (every consumer counts jittered latest primes).
 Let $u\ge X_0$ be a height, and put $y_-(u):=y(\max(u/2,X_0))$, the absorption threshold of the dyadic block of
 $\max(u/2,X_0)$; so $y_-(u)=y(u/2)$ for $u\ge2X_0$. On $\qEcl^{(u)}$ the following holds for every window
-$I\subset[u/2,\,2u+12L_u+2]$ (slot window or physical window) with $|I|\le2H(u)$, every non-absorbed latest prime
+$I\subset[u/2,\,2u+12L_u+2]$ (slot window or physical window) with $|I|\le2H(u)$, every jittered latest prime
 $q\ge y_-(u)$, every $a\ge1$ and \emph{every} value of the jitter offset of $q$:
 \[
 X^{(a)}_q(I):=\#\{n\in I\setminus\Abs:\ q^a\,\|\,n,\ q\text{ latest}\}\le2M_1(u).
@@ -748,7 +761,7 @@ $W$ spanned by elements of $S$ \emph{heavy} if $\#(S\cap W)\ge\varphi(\dim W)$. 
 dimension $r$. Then:
 \begin{enumerate}[label=\textup{(\roman*)}]
 \item $\qCap(S\cap V)\ge\varphi(r)-r\ge c$;
-\item every proper subspace $W'\subsetneq V$ spanned by elements of $S$ satisfies $\#(S\cap V\setminus W')\ge Q+r+1$;
+\item every proper subspace $W'\subsetneq V$ spanned by elements of $S$ satisfies $\#(S\cap V\setminus W')>Q+r$;
 \item if the elements of $S\cap V$ of degree at most $k$ number at most $Q$, then the elements of $S\cap V$ of degree at
   least $k+1$ span $V$.
 \end{enumerate}
@@ -758,11 +771,14 @@ dimension $r$. Then:
 $\operatorname{span}S$ is heavy, since $\varphi$ is increasing and $|S|\ge\varphi(r_0)\ge\varphi(\operatorname{rank}S)$. So
 $V$ exists, and (i) follows from $\varphi(r)\ge c+r$.
 
-(ii) $W'$ is not heavy, by minimality of $V$, so $\#(S\cap W')\le\varphi(\dim W')-1\le\varphi(r-1)-1$; and
-$\varphi(r)-\varphi(r-1)=Q+r$.
+% Logged correction 85 (CORRECTIONS-vs-v3.md): v3 concludes #(S cap W') <= phi(dim W') - 1, but phi is real-valued; the correct
+% conclusion is the strict #(S cap V minus W') > Q + r (counterexample to >= Q+r+1: c = 100.2, r_0 = 4, 155 vectors in Z^3). (iii) needs only > Q.
+(ii) $W'$ is not heavy, by minimality of $V$, so $\#(S\cap W')<\varphi(\dim W')\le\varphi(r-1)$ ($\varphi$ is real-valued, so
+non-heaviness gives only this strict inequality); and $\#(S\cap V)\ge\varphi(r)$, $\varphi(r)-\varphi(r-1)=Q+r$. Hence
+$\#(S\cap V\setminus W')>\varphi(r)-\varphi(r-1)=Q+r$.
 
 (iii) Otherwise the elements of high degree lie in a proper element-spanned subspace $W'$, so $S\cap V\setminus W'$
-consists of elements of low degree only, of which there are at most $Q<Q+r+1$. This contradicts (ii).
+consists of elements of low degree only, of which there are at most $Q\le Q+r$. This contradicts (ii).
 \end{proof}
 
 \subsection{Capacity forces thin covers}\label{sec:queue-cover}
@@ -1523,15 +1539,19 @@ Together with (a) this gives $|\sigma_{\Abs}|\le2L^{-4}$. No local count at the 
 used. (c) An oscillation is at most twice the supremum.
 \end{proof}
 
-\begin{proposition}[Small latest primes are absorbed]\label{prop:S1S2}
+\begin{proposition}[Small jittered latest primes are absorbed]\label{prop:S1S2}
 % v3: Proposition 4.20
 \begin{enumerate}[label=\textup{(S\arabic*)}]
 \item (The small-$q$ truncation in the noise bounds of Lemma~\ref{lem:noise}.) The case of latest primes $q<y$ with jittered
-  cofactors needs $\log n<L_*$. Since $L_*=10^7<\Lambda$, it is vacuous. Latest primes
-  $q\in[\Xm,y)$ are absorbed.
+  cofactors needs $\log n<L_*$. Since $L_*=10^7<\Lambda$, it is vacuous. Jittered latest primes $q<y(n)$ (all are $\ge\Xm$)
+  are absorbed. A rational latest prime, even one in $[\Xm,X_0)$, belongs to a rigid composite, which sits on its own jump of
+  $T$ and drops out of the excess (Lemma~\ref{lem:excess}).
+% Logged correction 83 (CORRECTIONS-vs-v3.md): v3 has "latest primes q in [X_0^-, y) are absorbed", false for rational q in
+% [X_0^-, X_0); only jittered latest primes are meant.
 \item (The full blocks of Theorem~\ref{thm:queue} at large heights.) The arrivals that would break \eqref{eq:fullblock} are rigid runs
   $r\cdot r'\cdot d$ driven by small jittered latest primes. These have latest prime less than $y(n)$, so they lie in $\Abs$.
-  A non-absorbed arrival $n$ in a window $I\in\mathcal I_x$ has latest prime $q\ge y(n)\ge y_-(x)$; for $n<x$ (the windows of
+  A non-absorbed composite $n$ in a window $I\in\mathcal I_x$ whose latest prime $q$ is jittered (the only ones counted in
+  $\qCjit$) has $q\ge y(n)\ge y_-(x)$; for $n<x$ (the windows of
   $\mathcal I_x$ may begin below $x$) this is only $q\ge y(x/2)$. Corollary~\ref{cor:increment}, with $u=x$, covers these
   windows and these primes, and \eqref{eq:fullblock} holds as shown in Theorem~\ref{thm:queue}.
 % Logged correction 79 (CORRECTIONS-vs-v3.md): v3 has "non-absorbed arrivals have latest prime q >= y"; in a window crossing x
@@ -1553,11 +1573,12 @@ standard values. So $\Abs_{\mathrm{std}}\subset\Abs$: raising $y$ only \emph{add
 jittered prime $q$ lies in $[y_{\mathrm{std}}(n),y(n))$. The consumers of $\Abs$ are unaffected:
 \begin{itemize}
 % Logged correction 79 (CORRECTIONS-vs-v3.md): the threshold seen by Theorem queue is y_-(x) = y(x/2) on windows that begin below x.
-\item Theorem~\ref{thm:queue} and the noise bounds (Lemma~\ref{lem:noise}) see only latest primes $q\ge y_-(u)$ of
+\item Theorem~\ref{thm:queue} and the noise bounds (Lemma~\ref{lem:noise}) see only jittered latest primes $q\ge y_-(u)$ of
   Corollary~\ref{cor:increment} ($y(u/2)$ on the windows of Theorem~\ref{thm:queue} that begin below $u$, and $y(u)$ in
   Lemma~\ref{lem:noise}). Corollary~\ref{cor:increment} needs $|I/q|\le2H(u)/y_-(u)\le2.00002L_u^{-11}$, which holds because $y$
   uses the same raised $H$, and $L_0\ge L^5$. No consumer assumes $y=y_{\mathrm{std}}$.
-  Latest primes in $[y_{\mathrm{std}},y)$ are absorbed, not repaired.
+  Jittered latest primes in $[y_{\mathrm{std}},y)$ are absorbed, not repaired; a rational latest prime there belongs to a rigid
+  element, which drops out of the excess (Lemma~\ref{lem:excess}).
 \item Lemma~\ref{lem:S}: its ``$y$'' is the start of the operator, not the absorption threshold. Its bound uses Mertens' bound
   over all of $\NN$, so it is independent of $y$. Its threshold $H(v)\ge(\log v)^{8.5+\delta}$ only gets easier as $H$ grows.
 \item Proposition~\ref{prop:pointwise}: its only $\Abs$-input is Lemma~\ref{lem:rhoA}(c), which does not involve $y$ and reads only heights
