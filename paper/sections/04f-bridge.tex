@@ -6,8 +6,11 @@
 \begin{proposition}[the bridge: operator versus sharp]\label{prop:br}
 % v3: Proposition 3.14
 Let $o_u$ be the supremum of $\osc(\Tc)$ over windows of length $2.04H(u)$ meeting $[u,2u)$: the $H$-window oscillation of
-the jump-free source. Only the kernels $C_n$ with $n\ge2$ use it, so it is read at heights $\le x/2+1.1H(x)$. For $x\ge2X_0$
-split
+the jump-free source. Only the kernels $C_n$ with $n\ge2$ use it, so it is read at heights $\le x/2+1.1H(x)$. For $x\ge2\Xm$
+(in particular at every point of $W_x$ for $x\ge2X_0$, since $x-H(x)/2\ge2X_0-H(2X_0)/2>2\Xm$; Theorem~\ref{thm:g2} and
+Proposition~\ref{prop:pointwise}(b) use it there) split
+% Logged correction 90 (CORRECTIONS-vs-v3.md): stated for x >= 2X_0 but applied at the points of W_x; the proof needs only
+% x >= 2X_0^- (starts >= X_0 for Corollary kr-weights(b), and x/n >= X_0^- for every level used).
 \[
   (\Rres T')(x)-\rhosh(x)=\mathrm{BR}_c(x)+J_{X_0}(x),\qquad
   J_{X_0}(x):=\jz\Big[(\Rres\mathbf 1_{[X_0,\infty)})(x)-\sum_nc_n(x)\mathbf 1[x/n\ge X_0]/n\Big],

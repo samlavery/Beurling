@@ -267,7 +267,9 @@ $\frac12\lambda_0$ replaced by $\lambda_0$ and by $(1+\vartheta_{\Xm})\lambda_0$
 For a start $x$ put $W^{\nom}_x(u):=\sum_{x/n\in[u,2u)}\TV(C_n^{x,\nom})/n$ and $W^{\mathrm{sh}}_x(v):=\sum_{x/e\in[v,2v)}|c_e|/e$.
 \begin{enumerate}[label=(\alph*)]
 \item $W^{\nom}_x(u)\le W^{\mathrm{sh}}_x(u)+\frac12\lambda_0\sum_{m\ge2}\Hord(m)m^{\eps-2}W^{\mathrm{sh}}_x(um)$.
-\item Hence, by Corollary~\ref{cor:saias}, for every start $y\in[X_0,x]$ and every $u\ge X_0/2$,
+% Logged correction 90 (CORRECTIONS-vs-v3.md): v3 states (b) for starts y >= X_0, but Proposition true-kernels (ii) uses it at
+% the start x/n' of a tau-source, which is only >= X_0^- (and can lie in [X_0^-, X_0)). The range [X_0^-, X_0) is added.
+\item Hence, by Corollary~\ref{cor:saias} (and directly for $y<X_0$), for every start $y\in[\Xm,x]$ and every $u\ge X_0/2$,
   \[
   \begin{aligned}
     W^{\nom}_y(u)&\le C_S\bigl[(1+\tfrac12\lambda_0A_0)\log(2u)+\tfrac12\lambda_0A_1\bigr]/\log y\le C_N\log(2u)/\log y,\\
@@ -284,7 +286,11 @@ Multiply Theorem~\ref{thm:kr-random} by $\mathbf 1[x/n\in[u,2u)]/n$, sum over $n
 $W^{\mathrm{sh}}_y(v)\le C_S\log(2v)/\log y$ and use $\log(2um)=\log(2u)+\log m$; then
 $1+\frac12\lambda_0A_0(0.03)\le1+1.03367(1+3H(X_0)/X_0)\le2.034\le2.04$ and
 $\frac12\lambda_0A_1(0.03)\le4.7045(1+3H(X_0)/X_0)\le4.71$ (with the values for $\NN$, which differ by $<X_0^{-0.1}$),
-and $\log(2u)\ge\log X_0$. So $C_N$ is the same constant as with frozen widths. For (c), sum (a) over all dyadic $u$ and use
+and $\log(2u)\ge\log X_0$. So $C_N$ is the same constant as with frozen widths. This is for $y\ge X_0$, the range of
+Corollary~\ref{cor:saias}. For $\Xm\le y<X_0$, every level $n\ge2$ has $y/n\le y/2<X_0/2<\Xm$, so every nominal step from $y$ has $\kappa_{d\to n}=0$ and $c_n(y)=0$; hence $C^{y,\nom}_n=0$ for $n\ge2$ by \eqref{eq:kernel-rec}, and
+the right sides of Theorem~\ref{thm:kr-random} vanish as well. So $W^{\nom}_y(u)=\TV(C_1^{y,\nom})\mathbf 1[y\in[u,2u)]
+=\mathbf 1[y\in[u,2u)]$, and if $y\in[u,2u)$ then $\log(2u)>\log y$, so $W^{\nom}_y(u)\le1<C_S\log(2u)/\log y$, as $C_S\ge1.4$; both
+right sides of (b) are at least $C_S\log(2u)/\log y$. For (c), sum (a) over all dyadic $u$ and use
 $\sum_e|c_e|/e\le\log x+B_1$ (Lemma~\ref{lem:lemmaM}). Theorem~\ref{thm:kr-random} and the chain-sum identity hold verbatim
 from every start $y\le x$, with $c_m(y)=\mu(m)\chi^t_y(m)\mathbf 1[y/m\ge\Xm]$.
 \end{proof}
@@ -298,7 +304,8 @@ $\nu\mapsto-\int Q_{n/d}(v,\cdot)\,d\nu(v)$ and its nominal version, so that $C_
 \begin{proposition}[True kernels]\label{prop:true-kernels}
 % v3: Proposition 3.8
 Put $W^{\mathrm{op}}_x(u):=\sum_{x/n\in[u,2u)}\TV(C_n^x)/n$, and let $W^{\mathrm{op,nt}}_x(u)$ be the same sum restricted to
-non-terminal levels $n$. If $\lambda_0C_NE_\eta\le\frac12$ (Lemma~\ref{lem:tau-near}), then on $\Good(<x)$
+non-terminal levels $n$ (every application has a start $x\ge2\Xm$; for $x<2\Xm$ every bound below is trivial, as $C_n^x=0$ for
+$n\ge2$). If $\lambda_0C_NE_\eta\le\frac12$ (Lemma~\ref{lem:tau-near}), then on $\Good(<x)$
 \begin{align*}
   W^{\mathrm{op,nt}}_x(v)&\le2C_N\log(2v)/\log x\quad\text{for every }v,\\
   W^{\mathrm{op}}_x(u)&\le2C_N\log(2u)/\log x\quad(u\ge2X_0),\\
@@ -335,7 +342,9 @@ scalar filters $\kappa$ of the original chains. These are frozen filters, so the
 applies verbatim to it, with masses given by the sharp recursion of those filters, i.e. by $c_{n/n'}(x/n')$, and with widths
 $H(v/g)=H((x/n')/g)(1+O(\vartheta))$ for the cofactors $g$ of the chain. Hence $\TV(\mathcal T^{\nom}_{n'\to n}\delta_v)$ is
 at most $\lambda_0$ times the right side of Theorem~\ref{thm:kr-random} for the start $x/n'$ and level $n/n'$, and
-Corollary~\ref{cor:kr-weights}(b) at the start $x/n'$ gives
+Corollary~\ref{cor:kr-weights}(b) at the start $x/n'$, which is $\ge\Xm$ since $S^\tau_{n'}$ carries the factor
+$\kappa_{X_0}=\mathbf 1[x/n'\ge\Xm]$, gives
+% Logged correction 90: the start x/n' lies in [X_0^-, x], the range of Corollary kr-weights(b) as now stated.
 \[
   \sum_{x/n\in[u,2u)}\frac{\TV(\mathcal T^{\nom}_{n'\to n}S^\tau_{n'})}{n}\le\lambda_0\frac{\TV(S^\tau_{n'})}{n'}\,
   \frac{C_N\log(2u)}{\log(x/n')}.
