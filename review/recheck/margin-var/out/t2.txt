@@ -1,0 +1,13 @@
+X0=100 k=0.2: Me=0.2655 (1/Lam=0.2171); N<= 3000: max N*TV(Nterm)/Me = 2.1235 (paper 3.1/1.0001=3.0997; derived bound 2+2k=2.40); max rise 1.1818 (bound 1+2k), max drop 0.9417 (bound 1)
+   TV(g;[250,2000]) = 0.7915   bound 2.5342   ratio 0.312
+   TV(g;[2000,2e+04]) = 0.6894   bound 2.7178   ratio 0.254
+   TV(g;[2e+04,2e+05]) = 0.4725   bound 2.7178   ratio 0.174
+   TV(g;[1e+05,3e+05]) = 0.2042   bound 1.7270   ratio 0.118
+   TV(g;[250,3e+05]) = 2.0290   bound 6.6575   ratio 0.305
+   sup |g(x)| / (Me (k + X0/x)) over 3000 random x: 0.6836  (paper: <= 1)
+X0=300 k=0.1: Me=0.1388 (1/Lam=0.1753); N<= 1500: max N*TV(Nterm)/Me = 2.0323 (paper 3.1/1.0001=3.0997; derived bound 2+2k=2.20); max rise 1.0717 (bound 1+2k), max drop 0.9606 (bound 1)
+   TV(g;[700,7000]) = 0.4221   bound 1.4209   ratio 0.297
+   TV(g;[7000,7e+04]) = 0.3858   bound 1.4209   ratio 0.272
+   TV(g;[7e+04,4.5e+05]) = 0.2408   bound 1.2308   ratio 0.196
+   TV(g;[700,4.5e+05]) = 1.0486   bound 3.2121   ratio 0.326
+   sup |g(x)| / (Me (k + X0/x)) over 3000 random x: 0.8056  (paper: <= 1)

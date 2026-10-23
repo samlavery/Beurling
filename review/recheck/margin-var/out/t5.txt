@@ -1,0 +1,4 @@
+X0=100 k=0.2 drift: max |rho_edge-g|/triangle = 1.000; max triangle/((log x+1) sup|D|) = 0.194
+X0=100 k=0.2 add: max |rho_edge-g|/triangle = 1.000; max triangle/((log x+1) sup|D|) = 0.147
+X0=1000 k=0.05 drift: max |rho_edge-g|/triangle = 1.000; max triangle/((log x+1) sup|D|) = 0.111
+X0=1000 k=0.05 add: max |rho_edge-g|/triangle = 1.000; max triangle/((log x+1) sup|D|) = 0.109

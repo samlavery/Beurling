@@ -1,0 +1,40 @@
+== jitter eps=0.0: Ginf(bound)=0.2124 T1=0.8229 Dsum=8.311
+   u=     17917 |D_val|=0.000e+00  Abel=2.482e-06  paper-form=1.347e-02  closed=6.769e+00  C_D=2.154e-03
+   u=     27665 |D_val|=9.037e-04  Abel=9.097e-04  paper-form=1.981e-02  closed=7.689e+00  C_D=2.154e-03
+   u=     75995 |D_val|=2.632e-04  Abel=6.860e-04  paper-form=4.907e-02  closed=9.172e+00  C_D=2.154e-03
+   u=    210752 |D_val|=1.661e-04  Abel=1.102e-03  paper-form=8.805e-02  closed=1.080e+01  C_D=2.154e-03
+   u=    285348 |D_val|=1.752e-05  Abel=7.270e-04  paper-form=1.021e-01  closed=1.131e+01  C_D=2.154e-03
+   u=    524188 |D_val|=4.769e-05  Abel=7.110e-04  paper-form=1.321e-01  closed=1.237e+01  C_D=2.154e-03
+   u=    804100 |D_val|=1.244e-05  Abel=1.433e-03  paper-form=1.559e-01  closed=1.314e+01  C_D=2.154e-03
+   u=   2638362 |D_val|=5.496e-05  Abel=1.208e-03  paper-form=2.341e-01  closed=1.541e+01  C_D=2.154e-03
+   max ratios: |D_val|/Abel=0.993  Abel/paper-form=0.046  paper-form/closed=0.016
+== add eps=0.15: Ginf(bound)=0.2124 T1=0.8229 Dsum=8.311
+   u=     17917 |D_val|=5.581e-04  Abel=5.589e-04  paper-form=4.048e-02  closed=2.468e+01  C_D=6.475e-03
+   u=     27665 |D_val|=1.988e-03  Abel=5.435e-03  paper-form=5.953e-02  closed=2.816e+01  C_D=6.475e-03
+   u=     75995 |D_val|=3.290e-04  Abel=1.631e-02  paper-form=1.475e-01  closed=3.360e+01  C_D=6.475e-03
+   u=    210752 |D_val|=1.423e-03  Abel=2.344e-02  paper-form=2.646e-01  closed=3.956e+01  C_D=6.475e-03
+   u=    285348 |D_val|=1.770e-03  Abel=2.483e-02  paper-form=3.068e-01  closed=4.143e+01  C_D=6.475e-03
+   u=    524188 |D_val|=1.431e-03  Abel=3.049e-02  paper-form=3.970e-01  closed=4.531e+01  C_D=6.475e-03
+   u=    804100 |D_val|=1.449e-03  Abel=3.611e-02  paper-form=4.687e-01  closed=4.814e+01  C_D=6.475e-03
+   u=   2638362 |D_val|=1.154e-03  Abel=4.834e-02  paper-form=7.048e-01  closed=5.644e+01  C_D=6.475e-03
+   max ratios: |D_val|/Abel=1.000  Abel/paper-form=0.111  paper-form/closed=0.013
+== del eps=0.15: Ginf(bound)=0.2124 T1=0.8229 Dsum=8.311
+   u=     17917 |D_val|=2.791e-04  Abel=2.828e-04  paper-form=4.493e-02  closed=2.257e+01  C_D=7.187e-03
+   u=     27665 |D_val|=1.265e-03  Abel=4.784e-03  paper-form=6.608e-02  closed=2.563e+01  C_D=7.187e-03
+   u=     75995 |D_val|=2.171e-03  Abel=1.410e-02  paper-form=1.637e-01  closed=3.058e+01  C_D=7.187e-03
+   u=    210752 |D_val|=1.305e-03  Abel=2.418e-02  paper-form=2.937e-01  closed=3.601e+01  C_D=7.187e-03
+   u=    285348 |D_val|=1.192e-03  Abel=2.543e-02  paper-form=3.405e-01  closed=3.771e+01  C_D=7.187e-03
+   u=    524188 |D_val|=1.555e-03  Abel=3.299e-02  paper-form=4.407e-01  closed=4.124e+01  C_D=7.187e-03
+   u=    804100 |D_val|=1.368e-03  Abel=3.916e-02  paper-form=5.202e-01  closed=4.381e+01  C_D=7.187e-03
+   u=   2638362 |D_val|=1.175e-03  Abel=5.300e-02  paper-form=7.798e-01  closed=5.137e+01  C_D=7.187e-03
+   max ratios: |D_val|/Abel=0.992  Abel/paper-form=0.100  paper-form/closed=0.016
+== drift eps=0.1: Ginf(bound)=0.2124 T1=0.8229 Dsum=8.311
+   u=     17917 |D_val|=8.372e-04  Abel=8.372e-04  paper-form=8.936e-02  closed=1.022e+02  C_D=1.429e-02
+   u=     27665 |D_val|=2.711e-03  Abel=1.333e-02  paper-form=1.314e-01  closed=1.204e+02  C_D=1.429e-02
+   u=     75995 |D_val|=3.158e-03  Abel=3.421e-02  paper-form=3.255e-01  closed=1.436e+02  C_D=1.429e-02
+   u=    210752 |D_val|=3.891e-03  Abel=5.799e-02  paper-form=5.841e-01  closed=1.692e+02  C_D=1.429e-02
+   u=    285348 |D_val|=3.242e-03  Abel=6.099e-02  paper-form=6.771e-01  closed=1.771e+02  C_D=1.429e-02
+   u=    524188 |D_val|=3.329e-03  Abel=7.953e-02  paper-form=8.764e-01  closed=1.937e+02  C_D=1.429e-02
+   u=    804100 |D_val|=3.787e-03  Abel=1.006e-01  paper-form=1.035e+00  closed=2.058e+02  C_D=1.429e-02
+   u=   2638362 |D_val|=2.879e-03  Abel=1.484e-01  paper-form=1.559e+00  closed=2.413e+02  C_D=1.429e-02
+   max ratios: |D_val|/Abel=1.000  Abel/paper-form=0.112  paper-form/closed=0.007

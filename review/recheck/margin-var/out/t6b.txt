@@ -1,0 +1,18 @@
+X0=100 drift: U=1.2e+06 l_A=2.0661 l_B=1.0977; realised above rational: max over r,s>=1, r+s<=6 of S_mixed/((l+(r+s)b)^(r+s)/(r+s)!) = 0.5639
+X0=100 drift: U=1.2e+06 l_A=1.0977 l_B=2.0661; rational above realised: max over r,s>=1, r+s<=6 of S_mixed/((l+(r+s)b)^(r+s)/(r+s)!) = 0.4832
+X0=100 del: U=1.2e+06 l_A=0.9083 l_B=1.0977; realised above rational: max over r,s>=1, r+s<=6 of S_mixed/((l+(r+s)b)^(r+s)/(r+s)!) = 0.8143
+X0=100 del: U=1.2e+06 l_A=1.0977 l_B=0.9083; rational above realised: max over r,s>=1, r+s<=6 of S_mixed/((l+(r+s)b)^(r+s)/(r+s)!) = 0.7815
+X0=1000 drift: U=5.25e+05 l_A=0.7994 l_B=0.6416; realised above rational: max over r,s>=1, r+s<=6 of S_mixed/((l+(r+s)b)^(r+s)/(r+s)!) = 0.8177
+X0=1000 drift: U=5.25e+05 l_A=0.6416 l_B=0.7994; rational above realised: max over r,s>=1, r+s<=6 of S_mixed/((l+(r+s)b)^(r+s)/(r+s)!) = 0.7827
+delta=0.05: l_A=0.84338 l_B=0.84337 sup|L_A-L_B|=0.0236  (r,s)=(1,1) S_mixed=0.36308 single-system bound=0.35734 ratio=1.0161
+delta=0.05: l_A=0.84338 l_B=0.84337 sup|L_A-L_B|=0.0236  (r,s)=(2,1) S_mixed=0.10387 single-system bound=0.10105 ratio=1.0279
+delta=0.05: l_A=0.84338 l_B=0.84337 sup|L_A-L_B|=0.0236  (r,s)=(1,2) S_mixed=0.10248 single-system bound=0.10105 ratio=1.0141
+delta=0.05: l_A=0.84338 l_B=0.84337 sup|L_A-L_B|=0.0236  (r,s)=(2,2) S_mixed=0.02223 single-system bound=0.02148 ratio=1.0348
+delta=0.1: l_A=0.84337 l_B=0.84337 sup|L_A-L_B|=0.0402  (r,s)=(1,1) S_mixed=0.36735 single-system bound=0.35733 ratio=1.0280
+delta=0.1: l_A=0.84337 l_B=0.84337 sup|L_A-L_B|=0.0402  (r,s)=(2,1) S_mixed=0.10598 single-system bound=0.10105 ratio=1.0488
+delta=0.1: l_A=0.84337 l_B=0.84337 sup|L_A-L_B|=0.0402  (r,s)=(1,2) S_mixed=0.10405 single-system bound=0.10105 ratio=1.0297
+delta=0.1: l_A=0.84337 l_B=0.84337 sup|L_A-L_B|=0.0402  (r,s)=(2,2) S_mixed=0.02295 single-system bound=0.02148 ratio=1.0684
+delta=0.2: l_A=0.84338 l_B=0.84337 sup|L_A-L_B|=0.0802  (r,s)=(1,1) S_mixed=0.37866 single-system bound=0.35734 ratio=1.0597
+delta=0.2: l_A=0.84338 l_B=0.84337 sup|L_A-L_B|=0.0802  (r,s)=(2,1) S_mixed=0.11195 single-system bound=0.10105 ratio=1.1078
+delta=0.2: l_A=0.84338 l_B=0.84337 sup|L_A-L_B|=0.0802  (r,s)=(1,2) S_mixed=0.10806 single-system bound=0.10105 ratio=1.0693
+delta=0.2: l_A=0.84338 l_B=0.84337 sup|L_A-L_B|=0.0802  (r,s)=(2,2) S_mixed=0.02488 single-system bound=0.02148 ratio=1.1582

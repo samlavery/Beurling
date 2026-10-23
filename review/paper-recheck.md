@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#52)
+## Addendum: defects found after the re-check (corrections #31–#53)
 
 After the first public version, a reader reported fourteen defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up eight more. The full list, with each repair, is entries #31–#52 of `CORRECTIONS-vs-v3.md`:
+re-checking the repairs, turned up nine more. The full list, with each repair, is entries #31–#53 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -90,9 +90,10 @@ re-checking the repairs, turned up eight more. The full list, with each repair, 
 | 50 | Lemma T1, rigid part | explicit Rankin constant at σ = θ < ½ false as written (it defines only the finite C_{X₀}); now the Euler product itself | sweep for #49 |
 | 51 | (H_BS) verification (§4a); Lemma T1 | the rigid error's decay 2κu·min(1, Cρ) was asserted (in v3 too) but never proved, and without decay η₁ is unbounded; now eq:Erig plus Rankin at σ = 1 − 1/Λ give η₁, η₂ ≤ κΛ² + X₀^{−1/2} | re-check |
 | 52 | square-prime source s₂ (eq:s2, §4d) | Γ factor up to 1.129 and range starting at X₀ instead of X₀⁻ (reader); the repair also found the Dickman variable applied the wrong way, e^{a_V} not small, an unchecked range, and an unproved a ≥ 3 claim; re-derived with real constant 0.73 against 9 | reader |
+| 53 | Lemma margin(b) Step 3, (d)(iii) | the one-variable-at-a-time replacement made mixed realised/rational sums that the one-system multiset argument does not cover; now a symmetric telescoping over ordered tuples, with a better bound | independent check R7 |
 
-**Repairs and their check.** All twenty-two are repaired. A fresh AI checker checked #31–#47 and #49–#52 in twelve passes
-(`review/recheck/R4.md` §§1–19); the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+**Repairs and their check.** All except #48 are repaired (see the open gap below). A fresh AI checker checked #31–#47 and #49–#53 in thirteen passes
+(`review/recheck/R4.md` §§1–20); the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -110,8 +111,24 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the fifty-two corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** Apart from the open gap of #48 (below), none of the fifty-three corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
+
+**Known open gap: #48.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and
+`review/recheck/R6b-pil-o3b.md`.
+- **The repair holds only per type.** The #48 repair of the Pivot-Integration Lemma is valid for each full configuration
+  type.
+- **The paper needs more.** Theorem R and Lemma reduction(ii) use the bound summed over all free-prime structures. Summed
+  that way, the step loses a factor of about log D per block boundary, and the per-type envelopes exceed Theorem R's
+  A_top^k by up to k^k/k!. Exact toys break the old step by up to 1.87×.
+- **A partial argument.** R6b's Crossing and Charging Lemmas, not yet checked, close the chain only up to finite heights:
+  log L ≤ 51Λ for cor:R-Ecl, and L ≤ (Λ²/29)^10 for the Cover Bound.
+- **Consequence.** Theorem A's proof is incomplete until this gap is closed.
+
+**Other independent checks.**
+- `review/recheck/R7-margin-var.md` checked #47's large-range estimate: CORRECT WITH FIXES. Its fix is #53.
+- `review/recheck/R8-cert-repro.md` reproduced every certificate and independently re-implemented the four proof-step
+  certificates. All agree, with no blocking items. Its fixable items are being applied as #54.
 
 **Caveat.** These defects survived five rounds of AI checking. The paper should not be regarded as verified until a human
 expert has read it.

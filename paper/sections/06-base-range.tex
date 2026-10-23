@@ -107,8 +107,16 @@ Write the non-rigid rational integers as $\bigsqcup_{m'}m'\cdot\mathbb P_{\ge\ma
 \]
 the window density of the new primes. It vanishes for $(1+\kappa)q\le X_0$, it is a partial window for $X_0/(1+\kappa)<q<X_0$, and
 for $q\ge X_0$ it is the density of all rational primes in $[q,(1+\kappa)q]$. Let $K_{\mathbb Q}$ be the latest-prime renewal operator
-with \emph{rational} cofactors, and let $K_{\mathrm{pt}}$ be the sharp operator of Section~\ref{sec:noise}, with realised cofactors
-and latest prime in decision order (Section~\ref{sec:greedy}). By dilation commutation (Lemma~\ref{lem:blin}(2)) we have, for $x\ge X_0$,
+with \emph{rational} cofactors.
+% Logged correction 53: K_Q given in component form (independent check R7, C1).
+It acts on a window density $h(q)=\mathrm{MA}_{\kappa q}[\nu](q)$ of a signed measure $\nu$ on $[X_0,\infty)$ by components,
+\[
+  (K_{\mathbb Q}h)(x):=\sum_{m'\in\N,\ m'\ge2}\frac1{m'}\,\mathrm{MA}_{\kappa q}\bigl[\nu|_{[P^+(m'),\infty)}\bigr](q)\Big|_{q=x/m'},
+\]
+and $K_{\mathbb Q}(h\mathbf 1_{[X_0,\infty)})$ keeps only the components with $x/m'\ge X_0$. For $h=\mathrm{MA}[\mathbb P]$ the component
+of $m'$ is $m'^{-1}\mathrm{MA}_{\kappa q}[\text{rational primes}\ge\max(P^+(m'),X_0)](q)$ at $q=x/m'$. Let $K_{\mathrm{pt}}$ be the
+sharp operator of Section~\ref{sec:noise}, with realised cofactors and latest prime in decision order (Section~\ref{sec:greedy}).
+By dilation commutation (Lemma~\ref{lem:blin}(2)) we have, for $x\ge X_0$,
 the exact rational identity
 \begin{equation}\label{eq:ratid}
   T'_{\mathrm{cont}}-R'+\bar\rho_{\Abs}=(1+K_{\mathbb Q})\,\mathrm{MA}[\mathbb P]+O(1/(\kappa x)).
@@ -219,34 +227,42 @@ This gives
 \emph{Step 3: telescoping the cofactors.} We have
 $(K_{\mathrm{pt}}-K_{\mathbb Q})f_0(u)=\sum_{w\in\NN}F(w)\chi_w-\sum_{m\in\N}F(m)\chi_m$, where $F(v):=f_0(u/v)/v$ and $\chi$ is the
 latest-prime filter ($P^+\le u/v$, in value order; the decision-order mismatch is treated below). Write each cofactor as
-$d\cdot p_2\cdots p_k$, with $d\in\mathcal D$ (the same set in both systems) and $k-1$ large primes (jittered and $\ge\Xm$,
-respectively rational and $\ge X_0$), ordered $p_2\ge\dots\ge p_k$. Replace the large-prime measure one variable at a time.
+$d\cdot(\text{a multiset of }r=k-1\text{ large primes})$, with $d\in\mathcal D$ (the same set in both systems) and the large primes
+jittered and $\ge\Xm$, respectively rational and $\ge X_0$.
+% Logged correction 53 (CORRECTIONS-vs-v3.md): symmetric telescoping replaces the ordered one-variable-at-a-time replacement,
+% whose intermediate sums mix the two systems with an ordering across them (independent check R7, F1).
 \begin{itemize}
-\item With the other variables fixed, the summand is $G(p)=f_0(u/(m_jp))/(m_jp)$ on an interval $[a,b]\subset[\Xm,u]$ (given by the
-ordering and the filter), with $m_j:=d\prod_{i\ne j}p_i$. The filter now includes $u/(m_jp)\ge X_0$, the support of
-$f_0\mathbf 1_{[X_0,\infty)}$, so $f_0$ is evaluated only on $[X_0,\infty)$, and the cut at $X_0$ is an endpoint of $[a,b]$; the partial
-windows below $X_0$ are in $\mu_{\mathrm{edge}}$, not here. On $[X_0,\infty)$, $|qf_0'(q)|\le f_0(q)/\Lambda$, so $|(G/\log)'|\le1.1G/(p\log p)$.
-\item Integrating by parts against $d(\psi_{\NN}-\psi)/\log$ (prime powers cost $O(\sqrt b\log b)$), one replacement changes the sum by
-at most $10\kappa f_0\log b/m_j+2.8\kappa f_0\log^2b/m_j\le4\kappa\log^2u/(m_j\Lambda)$.
-\item Summing over the other variables: $\sum1/m_j\le1.01e^{\gamma}\Lambda\cdot\ell_u^{k-2}/(k-2)!$, with
-$\ell_u:=\sum_{\Xm\le p\le u}1/p\le\log(\log u/\Lambda)+2.2/\Lambda$ (Lemma~\ref{lem:cm}(iv) and Mertens' theorem), up to replacing
-$\ell_u$ by $\ell_u+e^{-0.8\Lambda}$, which the constants below absorb.
-% Logged correction 47 (justification): the large primes form a multiset, so the sum is a complete homogeneous symmetric sum.
-Indeed, the large primes form a multiset of some size $r$. For weights $a_p=1/p\le b:=1/\Xm$ with $\sum a_p\le\ell_u$, comparing
-$\prod_p(1-a_px)^{-1}=\exp\bigl(\sum_{i\ge1}x^i\sum_pa_p^i/i\bigr)$ coefficientwise with $(1-bx)^{-\ell_u/b}$ bounds the degree-$r$
-multiset sum by $\ell_u(\ell_u+b)\cdots(\ell_u+(r-1)b)/r!\le(\ell_u+rb)^r/r!$, and $rb\le e^{-0.8\Lambda}$ since
-$r\le\log u/\log\Xm\le e^{\Lambda/8}$. With $k-1$ replacements for each $k$, the total is
+\item \emph{Symmetric telescoping.} The sum over multisets of $r$ large primes is $1/r!$ times the sum over ordered $r$-tuples (the
+product measure), plus a diagonal term from the multisets with a repeated large prime. The diagonal term has total weight
+$\le1.01e^{\gamma}\Lambda\,e^{\ell_u}/(\Xm\Lambda)$ in each system, where $\ell_u$ is defined below. Telescope the product measure: the
+$j$-th intermediate sum has its first $j-1$ variables realised and its last $r-j$ rational, with no ordering between them.
+\item \emph{One replacement.} Fix the other variables, and put $m_j:=d\prod_{i\ne j}p_i$ and $M'$ for the largest of them (or $P^+(d)$).
+The admissible set of the $j$-th variable $p$ is an interval $[\Xm,b]$. The filter $\max(p,M')\,m_jp\le u$ reads
+$p\le\sqrt{u/m_j}$ if $M'^2m_j\le u$, and $p\le u/(M'm_j)$ otherwise; the support condition $u/(m_jp)\ge X_0$ of
+$f_0\mathbf 1_{[X_0,\infty)}$ reads $p\le u/(X_0m_j)$; and $b$ is the smaller of the two bounds. So $f_0$ is evaluated only on
+$[X_0,\infty)$; the partial windows below $X_0$ are in $\mu_{\mathrm{edge}}$, not here. The summand is $G(p)=f_0(u/(m_jp))/(m_jp)$, and
+on $[X_0,\infty)$, $|qf_0'(q)|\le f_0(q)/\Lambda$, so $|(G/\log)'|\le1.1G/(p\log p)$. Abel summation against
+$d(\psi_{\NN}-\psi)/\log$ (prime powers cost $O(\sqrt b\log b)$) shows that one replacement changes the sum by at most
+$10\kappa f_0\log b/m_j+2.8\kappa f_0\log^2b/m_j\le4\kappa\log^2u/(m_j\Lambda)$.
+\item \emph{Summing over the other variables.} They range over a product set, so
+$\sum1/m_j\le1.01e^{\gamma}\Lambda\cdot\ell_u^{r-1}$, with $\ell_u:=\sum_{\Xm\le p\le u}1/p\le\log(\log u/\Lambda)+2.2/\Lambda$ in each
+system (Lemma~\ref{lem:cm}(iv) and Mertens' theorem). The $r$ replacements against the factor $1/r!$ give
+$4\kappa(\log^2u/\Lambda)\cdot1.01e^{\gamma}\Lambda\cdot\ell_u^{k-2}/(k-2)!$ for each $k$; with the diagonal terms, the total is
 \[
-  \le4.1e^{\gamma}\kappa\log^2u\,(1+\ell_u)e^{\ell_u}\le\frac{7.4\kappa(\log u)^3(1+\log\log u)}{\Lambda}\le\kappa(\log u)^3
-  \qquad\text{for }\log\log u\le\Lambda/8.
+  \le4.1e^{\gamma}\kappa\log^2u\,e^{\ell_u}\le\frac{7.4\,\kappa(\log u)^3}{\Lambda}\le\kappa(\log u)^3 .
 \]
 \end{itemize}
 
 \emph{The rest.} Each of the following is $\le10^{-3}\kappa(\log u)^3$:
 % Logged correction 47: v3's item "the top-prime cut-off X_0^- versus X_0 (relative H(X_0)/X_0)" understated the edge; the cut-off
 % of K_pt is X_0 (see before eq:shdecomp), and the components below X_0 form mu_edge, treated in (d).
-the decision-order mismatch, $H(q)/(\kappa q)\le H(X_0)/(\kappa X_0)$ per component; the partial windows of Lemma~\ref{lem:blin}(3)
-(relative $O(\kappa)$); $f_0-1/\log q=O(\kappa/\log^2q)$; and $O(1/(\kappa u))$.
+% Logged correction 53: the decision-order mismatch is bounded by a direct count (independent check R7, C3).
+the decision-order mismatch, bounded directly as follows. Value order and decision order of the new prime and the top large prime $P$
+of the cofactor $w=Pw'$ differ only when $u/w$ lies within $H/2$ of $P$, so $|P-\sqrt{u/w'}|\le H/4$: $P$ lies in an interval of
+length $\le H/2$ around $\sqrt{u/w'}$, which holds at most $1.5H+2\le2(H+1)$ realised primes. Summing over $w'$, with $\sum1/w'\le\log u+1$ and $H(v)/v$ decreasing,
+bounds the mismatch by $2.02(H(X_0)+1)(\log u+1)X_0^{-1}\sup|h|$ for the function $h$ the operators act on ($h=f_0$ here, and
+$h=g$ in (d)). The other items are the partial windows of Lemma~\ref{lem:blin}(3) (relative $O(\kappa)$), $f_0-1/\log q=O(\kappa/\log^2q)$,
+and $O(1/(\kappa u))$.
 \end{proof}
 
 \begin{proof}[Proof of (c)]
@@ -288,16 +304,23 @@ $(1+\Lambda^{-3})\kappa q/\Lambda$, and otherwise it holds at most $(2X_0)^{7/12
 \]
 the middle expression being decreasing in $N\ge6$.
 
-(iii) Let $K'_{\mathbb Q}$ be $K_{\mathbb Q}$ with cut-off $X_0$, and $g:=(1+K'_{\mathbb Q})^{-1}\mu_{\mathrm{edge}}$. Expand $g(x)$ as in (i),
-now in the rational system with the latest-prime filter.
-% Logged correction 47 (re-check N20): v3-style closed formula for g replaced by a coefficient bound; it fails for N = 2P with p < P < x/P.
-Fix $N\ge2$ with $x/N\in(X_0/(1+\kappa),X_0)$ and a window prime $p\ge X_0$, and write $N=s\ell$, where $\ell$ collects the prime
-factors of $N$ larger than $p$. The filter admits a factorisation $N=nM$ only if $\ell\mid n$. For such $n<N$ we have $n\le N/2$,
-so $x/n\ge X_0$; and the condition $\chi^t_x(n)=1$ of Lemma~\ref{lem:lemmaM} depends only on $\ell$, because $q\,n\le pN/2<x$ for every
-prime $q\le p$. Writing $\chi_\ell(x)\in\{0,1\}$ for its value, the coefficient of $p$ in the $N$-term is
+(iii)
+% Logged correction 53: K'_Q displayed, with the strict filter of Lemma M (independent check R7, C1).
+Let $K'_{\mathbb Q}$ be the sharp latest-prime operator of the rational system, with cut-off $X_0$:
 \[
-  \chi_\ell(x)\sum_{s'\mid s,\ s'\ne s}\mu(\ell s')=
-  \begin{cases}-\mu(N)\,\chi_\ell(x),&s>1,\\ 0,&s=1.\end{cases}
+  (K'_{\mathbb Q}h)(y):=\sum_{m\in\N,\ m\ge2}\frac1m\,\mathbf 1[P^+(m)<y/m]\,\mathbf 1[y/m\ge X_0]\,h(y/m).
+\]
+Its filter is strict, as in $K_{\mathrm{pt}}$ and Lemma~\ref{lem:lemmaM}. Put $g:=(1+K'_{\mathbb Q})^{-1}\mu_{\mathrm{edge}}$, and expand
+$g(x)$ as in (i), now in the rational system.
+% Logged correction 47 (re-check N20): v3-style closed formula for g replaced by a coefficient bound; it fails for N = 2P with p < P < x/P.
+% Logged correction 53: the parts of N renamed N_<= and N_> (the letter l is used for l_u in (b)) (independent check R7, C4).
+Fix $N\ge2$ with $x/N\in(X_0/(1+\kappa),X_0)$ and a window prime $p\ge X_0$, and write $N=N_{\le}N_{>}$, where $N_{>}$ collects the
+prime factors of $N$ larger than $p$. The filter admits a factorisation $N=nM$ only if $N_{>}\mid n$. For such $n<N$ we have $n\le N/2$,
+so $x/n\ge X_0$; and the condition $\chi^t_x(n)=1$ of Lemma~\ref{lem:lemmaM} depends only on $N_{>}$, because $q\,n\le pN/2<x$ for
+every prime $q\le p$. Writing $\chi_{N_>}(x)\in\{0,1\}$ for its value, the coefficient of $p$ in the $N$-term is
+\[
+  \chi_{N_>}(x)\sum_{s\mid N_{\le},\ s\ne N_{\le}}\mu(N_{>}s)=
+  \begin{cases}-\mu(N)\,\chi_{N_>}(x),&N_{\le}>1,\\ 0,&N_{\le}=1.\end{cases}
 \]
 So each $N$-term is at most $\mathrm{MA}[\mathbb P](x/N)/N$ in absolute value. As $x$ increases, its numerator changes monotonically:
 primes enter the window and coefficients switch on, all with the sign $-\mu(N)$. Hence
@@ -307,13 +330,25 @@ By the resolvent identity,
 \[
   \rho_{\mathrm{edge}}-g=(1+K_{\mathrm{pt}})^{-1}(K'_{\mathbb Q}-K_{\mathrm{pt}})g .
 \]
-The operators $K'_{\mathbb Q}$ and $K_{\mathrm{pt}}$ agree on cofactors $<\Xm$, and $g(u/w)\ne0$ needs $u/w>2X_0/(1+\kappa)$; so
+The operators $K'_{\mathbb Q}$ and $K_{\mathrm{pt}}$ agree on cofactors $<\Xm$ (their primes are decided at their values, and both filters are strict), and $g(u/w)\ne0$ needs $u/w>2X_0/(1+\kappa)$; so
 $(K'_{\mathbb Q}-K_{\mathrm{pt}})g(u)=0$ for $u<2X_0\Xm/(1+\kappa)$. For larger $u$ the telescoping of Step~3 of (b) applies with $f_0$
-replaced by $g$; it uses only $|g|\le0.51/\Lambda$ and the variation of $g$, not a formula for $g$. As $g$ is not smooth, the
-integration by parts uses its variation: by the monotonicity just shown, each $N$-term varies by at most $3.1/(N\Lambda)$ on its
-window (at most $1.0001(1+3\kappa)/(N\Lambda)$ while it grows, and the drop to $0$ at the end), so $g$ has total variation $\le(3.1/\Lambda)(\log(\beta/\alpha)+1)$ on $[\alpha,\beta]$. One
-replacement then costs at most $17\kappa\log^2u/(m_j\Lambda)$ instead of $4\kappa\log^2u/(m_j\Lambda)$, and the remaining items of
-``the rest'' are smaller; so $|(K'_{\mathbb Q}-K_{\mathrm{pt}})g(u)|\le4\kappa(\log u)^3$ for $\log\log u\le\Lambda/8$. By
+replaced by $g$; it uses only $|g|\le0.51/\Lambda$ and the variation of $g$, not a formula for $g$. By the monotonicity just shown,
+each $N$-term varies by at most $3.1/(N\Lambda)$ on its window (at most $1.0001(1+3\kappa)/(N\Lambda)$ while it grows, and the drop
+to $0$ at the end), so $g$ has total variation $\le(3.1/\Lambda)(\log(\beta/\alpha)+1)$ on $[\alpha,\beta]$.
+% Logged correction 53: the Abel summation for a non-smooth g made explicit, with the constant 17 broken down (independent check R7, C2).
+As $g$ is not smooth, the Abel summation of one replacement is done discretely, over the merged atoms of $\psi_{\NN}$ and $\psi$ in
+$[\Xm,b]$. With $\tilde g(t):=g(u/(m_jt))$, the product rule splits each difference of $\tilde g(t)/(m_jt\log t)$ into a
+difference of $1/(m_jt\log t)$ and a difference of $\tilde g$, and $|\Delta_\psi(t)|/(m_jt\log t)\le5\kappa\log b/m_j$ is taken
+out as a supremum. The boundary terms give $5.1\kappa\log b/(m_j\Lambda)$, the differences of $1/(t\log t)$ give
+$1.40\kappa(\log^2b+2\log b)/(m_j\Lambda)$, and the variation of $\tilde g$, which is that of $g$ on $[u/(m_jb),u/(m_j\Xm)]$, gives
+$15.5\kappa\log^2b/(m_j\Lambda)$, as $\log\Xm\ge1$. Since $79\le\log\Xm\le\log b\le\log u$, one replacement costs at most
+\[
+  \bigl(5.1\log b+1.40(\log^2b+2\log b)+15.5\log^2b\bigr)\frac{\kappa}{m_j\Lambda}\le\frac{17\kappa\log^2u}{m_j\Lambda},
+\]
+in place of $4\kappa\log^2u/(m_j\Lambda)$. Summing over the other variables as in Step~3 gives at most
+$17.2e^{\gamma}\kappa\log^2u\,e^{\ell_u}\le31\kappa(\log u)^3/\Lambda$. The remaining items of ``the rest'' are smaller: the
+decision-order count holds with $\sup|g|\le0.51/\Lambda$, and there are no partial windows, as both operators are sharp. So
+$|(K'_{\mathbb Q}-K_{\mathrm{pt}})g(u)|\le4\kappa(\log u)^3$ for $\log\log u\le\Lambda/8$. By
 Lemma~\ref{lem:lemmaM}, $\log x\,|\rho_{\mathrm{edge}}-g|(x)\le4.1\kappa(\log x)^5\le X_0^{-0.34}$ for $\log x\le X_0^{1/100}$.
 \end{proof}
 

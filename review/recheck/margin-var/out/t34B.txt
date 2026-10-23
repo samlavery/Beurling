@@ -1,0 +1,48 @@
+== toyB-jitter: X0=1000 k=0.05 H=4 variant=jitter eps=0.0; |Er|=4534 |Eq|=4534 Me=0.1602
+  Lemma M (realised, decision order) vs recursion: 6321 coefficients, 0 mismatches
+  max |D(u)| for u < 2 X0 X0m/(1+k) = 1900952: 0.00e+00
+  identity rho_edge - g - (1+K_pt)^-1 D : max abs error 1.64e-17 over 10 points
+  sup|D| on 30 points in [1900952,3e+07]: 4.9227e-05; max |D - D_valueorder| = 3.348e-06
+   x= 12905376.2 rho_edge*log x=+0.00091  g*log x=+0.00076  (rho_edge-g)*log x=+1.522e-04  Hsum*supD*log x=8.096e-03
+   x= 12231191.2 rho_edge*log x=+0.00133  g*log x=+0.00136  (rho_edge-g)*log x=-2.669e-05  Hsum*supD*log x=8.026e-03
+   x= 18049063.3 rho_edge*log x=-0.00002  g*log x=-0.00017  (rho_edge-g)*log x=+1.481e-04  Hsum*supD*log x=8.492e-03
+   x=  3246497.5 rho_edge*log x=-0.00850  g*log x=-0.00850  (rho_edge-g)*log x=+4.064e-17  Hsum*supD*log x=6.395e-03
+   x=  4348711.6 rho_edge*log x=-0.00506  g*log x=-0.00506  (rho_edge-g)*log x=+4.723e-17  Hsum*supD*log x=6.740e-03
+   x=  8600763.3 rho_edge*log x=+0.00149  g*log x=+0.00093  (rho_edge-g)*log x=+5.570e-04  Hsum*supD*log x=7.576e-03
+   x=  3919282.4 rho_edge*log x=-0.00333  g*log x=-0.00333  (rho_edge-g)*log x=+8.436e-17  Hsum*supD*log x=6.616e-03
+   x= 12511981.1 rho_edge*log x=+0.00110  g*log x=+0.00097  (rho_edge-g)*log x=+1.306e-04  Hsum*supD*log x=8.056e-03
+   x= 15010522.5 rho_edge*log x=-0.00051  g*log x=-0.00035  (rho_edge-g)*log x=-1.541e-04  Hsum*supD*log x=8.294e-03
+   x=  3530840.6 rho_edge*log x=-0.00171  g*log x=-0.00162  (rho_edge-g)*log x=-8.540e-05  Hsum*supD*log x=6.493e-03
+   Step-3 chain on 25 u: max |D_val|/Abel=0.998 Abel/paper-form=0.046 paper-form/closed=0.0084; last u=2.46e+07: |D_val|=9.77e-06 Abel=8.66e-05 paper=4.73e-03 closed=5.61e-01 C_D=1.43e-04
+== toyB-add: X0=1000 k=0.05 H=4 variant=add eps=0.15; |Er|=5261 |Eq|=4534 Me=0.1602
+  Lemma M (realised, decision order) vs recursion: 11586 coefficients, 0 mismatches
+  max |D(u)| for u < 2 X0 X0m/(1+k) = 1900952: 0.00e+00
+  identity rho_edge - g - (1+K_pt)^-1 D : max abs error 1.64e-17 over 10 points
+  sup|D| on 30 points in [1900952,3e+07]: 1.1966e-04; max |D - D_valueorder| = 1.880e-05
+   x=  4145080.9 rho_edge*log x=-0.00301  g*log x=-0.00206  (rho_edge-g)*log x=-9.558e-04  Hsum*supD*log x=1.024e-02
+   x=  5521163.0 rho_edge*log x=-0.00337  g*log x=-0.00287  (rho_edge-g)*log x=-5.061e-04  Hsum*supD*log x=1.078e-02
+   x=  7764519.0 rho_edge*log x=-0.00441  g*log x=-0.00388  (rho_edge-g)*log x=-5.313e-04  Hsum*supD*log x=1.434e-02
+   x= 13707884.1 rho_edge*log x=-0.00175  g*log x=-0.00117  (rho_edge-g)*log x=-5.754e-04  Hsum*supD*log x=2.007e-02
+   x=  4496237.7 rho_edge*log x=-0.00354  g*log x=-0.00368  (rho_edge-g)*log x=+1.363e-04  Hsum*supD*log x=1.039e-02
+   x=  2927648.4 rho_edge*log x=-0.01231  g*log x=-0.01129  (rho_edge-g)*log x=-1.017e-03  Hsum*supD*log x=5.193e-03
+   x=  8159993.1 rho_edge*log x=-0.00195  g*log x=-0.00234  (rho_edge-g)*log x=+3.901e-04  Hsum*supD*log x=1.446e-02
+   x= 21737943.6 rho_edge*log x=+0.00053  g*log x=+0.00126  (rho_edge-g)*log x=-7.306e-04  Hsum*supD*log x=2.132e-02
+   x= 12680771.3 rho_edge*log x=+0.00119  g*log x=+0.00101  (rho_edge-g)*log x=+1.806e-04  Hsum*supD*log x=1.981e-02
+   x=  5571850.4 rho_edge*log x=-0.00362  g*log x=-0.00362  (rho_edge-g)*log x=+1.330e-16  Hsum*supD*log x=1.080e-02
+   Step-3 chain on 25 u: max |D_val|/Abel=0.180 Abel/paper-form=0.125 paper-form/closed=0.0077; last u=2.46e+07: |D_val|=4.32e-05 Abel=6.47e-03 paper=6.44e-02 closed=8.38e+00 C_D=1.95e-03
+== toyB-drift: X0=1000 k=0.05 H=4 variant=drift eps=0.025; |Er|=5409 |Eq|=4534 Me=0.1602
+  Lemma M (realised, decision order) vs recursion: 11615 coefficients, 0 mismatches
+  max |D(u)| for u < 2 X0 X0m/(1+k) = 1900952: 0.00e+00
+  identity rho_edge - g - (1+K_pt)^-1 D : max abs error 1.09e-17 over 10 points
+  sup|D| on 30 points in [1900952,3e+07]: 1.0291e-04; max |D - D_valueorder| = 0.000e+00
+   x=  9548647.9 rho_edge*log x=+0.00165  g*log x=+0.00158  (rho_edge-g)*log x=+6.733e-05  Hsum*supD*log x=1.626e-02
+   x=  2439522.1 rho_edge*log x=-0.01411  g*log x=-0.01278  (rho_edge-g)*log x=-1.326e-03  Hsum*supD*log x=2.509e-03
+   x=  3771479.1 rho_edge*log x=-0.00691  g*log x=-0.00562  (rho_edge-g)*log x=-1.285e-03  Hsum*supD*log x=2.723e-03
+   x=  6503460.7 rho_edge*log x=-0.00280  g*log x=-0.00193  (rho_edge-g)*log x=-8.684e-04  Hsum*supD*log x=1.356e-02
+   x= 28718244.8 rho_edge*log x=-0.00030  g*log x=+0.00001  (rho_edge-g)*log x=-3.110e-04  Hsum*supD*log x=1.894e-02
+   x=  4196317.1 rho_edge*log x=-0.00196  g*log x=-0.00182  (rho_edge-g)*log x=-1.454e-04  Hsum*supD*log x=1.253e-02
+   x=  5429506.8 rho_edge*log x=-0.00383  g*log x=-0.00377  (rho_edge-g)*log x=-5.712e-05  Hsum*supD*log x=1.313e-02
+   x=  2207329.5 rho_edge*log x=-0.00622  g*log x=-0.00424  (rho_edge-g)*log x=-1.985e-03  Hsum*supD*log x=2.461e-03
+   x= 10442056.9 rho_edge*log x=-0.00133  g*log x=-0.00195  (rho_edge-g)*log x=+6.191e-04  Hsum*supD*log x=1.651e-02
+   x=  8819382.2 rho_edge*log x=-0.00018  g*log x=+0.00044  (rho_edge-g)*log x=-6.165e-04  Hsum*supD*log x=1.604e-02
+   Step-3 chain on 25 u: max |D_val|/Abel=0.073 Abel/paper-form=0.116 paper-form/closed=0.0075; last u=2.46e+07: |D_val|=2.52e-05 Abel=6.97e-03 paper=7.26e-02 closed=9.64e+00 C_D=2.20e-03

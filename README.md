@@ -2,8 +2,21 @@
 
 Samuel Lavery (sam.lavery@gmail.com)
 
-> **Status: independent human review pending.** The proof has not yet been verified by a human expert, and it is not
-> formally verified (see [Lean formalization](#lean-formalization)).
+> **Status: independent human review pending, and the proof has a known open gap.** The proof has not been verified by a
+> human expert, and it is not formally verified (see [Lean formalization](#lean-formalization)).
+>
+> **Open gap (found 2026-10-22, correction #48).** Two independent AI checks found the same problem:
+> `review/recheck/R6-cond-check.md` and `review/recheck/R6b-pil-o3b.md`.
+> - The repaired Pivot-Integration Lemma (Appendix A) proves its label-sum bound only for one fixed configuration type.
+> - Theorem R and the Cover Bound use the bound summed over all free-prime structures. Summed that way, it loses a factor
+>   of about log D at each block boundary. In exact toy models the old step fails by up to 1.87×.
+> - A partial argument, not yet independently checked, closes the chain only up to finite heights:
+>   - log L ≤ 51Λ for cor:R-Ecl;
+>   - L ≤ (Λ²/29)^10 for the Cover Bound.
+> - Theorem A needs every height, including the heights of the zeros, log x_k ≥ X₀².
+>
+> **Until this gap is closed, the proof of Theorem A is incomplete.**
+>
 > The construction, the proofs and the certificate code were developed with extensive use of AI agents (Claude). The systematic
 > reviews so far were done by AI agents; their reports are in `review/`. A reader has also reported defects (below). The author takes responsibility for the manuscript and welcomes
 > scrutiny. See the statement on AI use (Appendix C of the paper, `paper/sections/C-ai-statement.tex`).
@@ -34,16 +47,24 @@ Samuel Lavery (sam.lavery@gmail.com)
 > - a bound for the square-prime source s₂ in the noise section whose Γ factor exceeds 1 and whose range started at X₀
 >   instead of X₀⁻; its repair also found the Dickman variable applied the wrong way round, so the bound is re-derived.
 >
-> Repairing these and re-checking the repairs turned up eight more. The most serious were:
+> Repairing these and re-checking the repairs, and three further independent AI checks (R6–R8 in `review/recheck/`),
+> turned up nine more. The most serious were:
 > - a gap in the label sum of the Pivot-Integration Lemma (Appendix A): the carried Euler factors cancel only after
->   integration, not pointwise as the argument needed. The lemma has been re-proved without changing any constant;
+>   integration, not pointwise as the argument needed. The repair (#48) proves the lemma per configuration type, but not
+>   in the summed form the paper uses, so **this gap is open**; see above;
 > - a gap inherited from the refereed draft in the check of the Beurling–Saias hypothesis (H_BS): the decay of the rigid
 >   error that it needs was asserted but never proved. It is now proved (Lemma T1, eq:Erig).
 >
-> All twenty-two are repaired; they are entries #31–#52 of `CORRECTIONS-vs-v3.md`. The repairs of #31–#47 and #49–#52 were
-> checked by a fresh AI checker in twelve passes (`review/recheck/R4.md`), which ended with nothing blocking or fixable. The repair of #48 was
-> checked by a separate adversarial AI check (`review/recheck/R5-pil-repair.md`). None of the fifty-two logged corrections
-> changes a conclusion of the paper. But these findings show that the AI checks are no substitute for expert review.
+> These are entries #31–#53 of `CORRECTIONS-vs-v3.md`. All are repaired except #48.
+> - **The repairs of #31–#47 and #49–#53** were checked by a fresh AI checker in thirteen passes (`review/recheck/R4.md`).
+>   The passes ended with nothing blocking or fixable.
+> - **The repair of #48** passed one adversarial AI check (`review/recheck/R5-pil-repair.md`). Two later independent checks
+>   found that it holds only per configuration type.
+> - **The reports.** Independent checks of #47's large-range estimate and of every certificate are in
+>   `review/recheck/R7-margin-var.md` and `review/recheck/R8-cert-repro.md`.
+>
+> Apart from the open gap of #48, none of the fifty-three logged corrections changes a conclusion of the paper. But these
+> findings show that the AI checks are no substitute for expert review.
 
 ## The result
 

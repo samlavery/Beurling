@@ -1,0 +1,6 @@
+X0=100 drift: U=1.2e+06 l_A=2.0661 l_B=1.0977; realised above rational: max over r,s>=1, r+s<=6 of S_mixed/((l+(r+s)b)^(r+s)/(r+s)!) = 0.5639
+X0=100 drift: U=1.2e+06 l_A=1.0977 l_B=2.0661; rational above realised: max over r,s>=1, r+s<=6 of S_mixed/((l+(r+s)b)^(r+s)/(r+s)!) = 0.4832
+X0=100 del: U=1.2e+06 l_A=0.9083 l_B=1.0977; realised above rational: max over r,s>=1, r+s<=6 of S_mixed/((l+(r+s)b)^(r+s)/(r+s)!) = 0.8143
+X0=100 del: U=1.2e+06 l_A=1.0977 l_B=0.9083; rational above realised: max over r,s>=1, r+s<=6 of S_mixed/((l+(r+s)b)^(r+s)/(r+s)!) = 0.7815
+X0=1000 drift: U=5.25e+05 l_A=0.7994 l_B=0.6416; realised above rational: max over r,s>=1, r+s<=6 of S_mixed/((l+(r+s)b)^(r+s)/(r+s)!) = 0.8177
+X0=1000 drift: U=5.25e+05 l_A=0.6416 l_B=0.7994; rational above realised: max over r,s>=1, r+s<=6 of S_mixed/((l+(r+s)b)^(r+s)/(r+s)!) = 0.7827
