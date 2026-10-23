@@ -92,7 +92,9 @@ $r_0$, $c$, $M_1$ & $r_0=\lceil L/(3\log L)\rceil+3$, the rank threshold. Capaci
 $s:=\ell-2\log\Lambda$, with the explicit ramp $\gamma\le7.5$ of Theorem~\ref{thm:caplw}; so $c=\tfrac14H_{\mathrm{std}}^{1/2}$ for
 $\ell\ge\ell_{\mathrm{std}}$, and $c\le X_0^{7.5}$ for $\ell\le\ell_{\mathrm{std}}$. $M_1=r_0+\varphi(r_0)+1$ with $\varphi(u)=c+uc^{1/2}+u(u+1)/2$ is
 the cluster bound, and $M_1\le\bar M_1\le2c$. Tolerance: $M_1\le H/L^{14}$. \\
-$L_0$, $q_{\min}$, $B$ & $L_0=\max(L^5,48M_1L^3/c'^2)$; $q_{\min}=L_0L^6$; queue bound $B(x)\le5M_1L^2/c'$ \eqref{eq:queueB};
+% Logged correction 86 (CORRECTIONS-vs-v3.md): the integer block length K_0 = floor(L_0) is listed.
+$L_0$, $K_0$, $q_{\min}$, $B$ & $L_0=\max(L^5,48M_1L^3/c'^2)$, a real size bound, and the integer block length
+$K_0=\lfloor L_0\rfloor$ (slot counts); $q_{\min}=L_0L^6$; queue bound $B(x)\le5M_1L^2/c'$ \eqref{eq:queueB};
 $K_{\mathrm{loc}}=2B(4P)+7\lambda_P/3+23$. \\
 absorption & $L_*=10^7$ (inactive, since $\log X_0\ge10^8$); $y(n):=y(x)=H(x)L_0(x)(\log x)^6$ for $n\in[x,2x)$, $x$ dyadic (frozen per scale), with $y\le X_0^{22.6}L^9$ for $\ell\le\ell_{\mathrm{std}}$ and $\log2y\le12.1\ell^2$ beyond; $\Abs=\emptyset$ wherever
 $y<\Xm=X_0-H(X_0)/2$, which holds for $\ell\le2\log\Lambda+s_H$, $s_H=5.9745$ (Theorem~\ref{thm:caplw}(b)); $h(u)=u^{\theta/2}$;
@@ -181,7 +183,9 @@ one event per window, each with its own time (for E3 and E3$'$, $t(W)=\max W$, \
   \Good(<t):=\{Q_j\le B(s_j)\text{ for all }j\text{ with }t_j<t\}\cap\bigcap_{t(E)<t}E,
 \]
 where the queue constraint at $j$ carries the time $t_j:=\lceil s_{j+1}\rceil+1$, the reach of its outer deterministic window.
-Slots can be longer than $1$, but $s_{j+1}-s_j\le11.3L$ by \eqref{eq:G1}. The time $t_j$ is predictable, since $s_{j+1}$ is
+% Logged correction 87 (CORRECTIONS-vs-v3.md): the slot-length bound uses T'_cont >= 0.0899/log u, i.e. eq:G1 with 1/(kappa u) bounded.
+Slots can be longer than $1$, but $s_{j+1}-s_j\le11.2\log s_j\le11.3L$ for $s_j\in[x,2x)$, by \eqref{eq:G1} with
+$1/(\kappa u)\le10^{-4}/\log u$ (Remark~\ref{rem:horizon}). The time $t_j$ is predictable, since $s_{j+1}$ is
 determined by $T$ on $[1,s_{j+1}]$ (Lemma~\ref{lem:adapted}). Then $\tau:=\min\{t:\Good(\le t)\text{ fails}\}$ is an
 $(\mathcal F_t)$-stopping time.
 % Logged correction 73 (CORRECTIONS-vs-v3.md): the certified horizon of Good(<t).

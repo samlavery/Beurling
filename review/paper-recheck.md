@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#85)
+## Addendum: defects found after the re-check (corrections #31–#87)
 
-After the first public version, a reader reported thirty-five defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, and two end-to-end checks (R14, R15), turned up twenty more. The full list, with each repair, is entries #31–#85 of `CORRECTIONS-vs-v3.md`:
+After the first public version, a reader reported thirty-seven defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, and two end-to-end checks (R14, R15), turned up twenty more. The full list, with each repair, is entries #31–#87 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -123,9 +123,11 @@ re-checking the repairs, and two end-to-end checks (R14, R15), turned up twenty 
 | 83 | X_q, Fr(I), Comp^{(2)}, S1S2 | per-prime counts ran over all latest primes, including rational ones, for which E2(b) is unproved; now jittered only, = C_jit; Comp^{(2)} made the true compensator | reader |
 | 84 | Prop g1(B) Step 4 | k := max{j : x_j ≤ x} undefined on [X_sw, x₁); there R' = 0 and the step is void; k = 1 case stated | reader |
 | 85 | Lemma heavy (ii) | "< φ, so ≤ φ − 1" with real-valued φ; (ii)'s ≥ Q+r+1 false (counterexample c = 100.2, 155 vectors in ℤ³); now > Q+r, which is all (iii) needs | reader |
+| 86 | Thm queue: full blocks, Lindley, peel | real L₀ compared with integer slot counts (the Lindley cut never exists for non-integer L₀); K₀ = ⌊L₀⌋ for counts; Fr(I)(a) restricted to the peeled range | reader |
+| 87 | Thm queue, Windows; slot length | density 0.09/L read off eq:G1 without −1/(κu) and with log x for log u; now 0.0899/log u, length ≤ 11.13L·L₀ | reader |
 
 **Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72 in twenty-two passes
-(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, #79–#82 by R20, and #83–#85 by R21; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, #79–#82 by R20, #83–#85 by R21, and #86 and #87 by R22; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -143,7 +145,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the eighty-five corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the eighty-seven corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and

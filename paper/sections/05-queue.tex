@@ -67,7 +67,11 @@ These are the choices of Section~\ref{sec:params} and Section~\ref{sec:construct
     $\gamma(s)\Lambda>4\ell^2-\log4$ (Theorem~\ref{thm:caplw}). There $H=\max(\qHstd,\bar M_1^2)\ge\qHstd$.
   \item In all cases the tolerance $M_1\le H/L^{14}$ of Section~\ref{sec:params} holds.
   \end{itemize}
-\item $L_0:=\max(L^5,48M_1L^3/c'^2)$ is the block length. We put $q_{\min}:=L_0L^6$ and $y:=H(x)\cdot L_0\cdot L^6$. The
+% Logged correction 86 (CORRECTIONS-vs-v3.md): v3 uses the real L_0 also as a count of continuous slots (full blocks, the
+% Lindley cut, the peel of Theorem queue(i)); the integer block length K_0 := floor(L_0) is used there, L_0 for sizes.
+\item $L_0:=\max(L^5,48M_1L^3/c'^2)$ is the block length, a real number, used as a size bound. Its integer part
+  $K_0:=\lfloor L_0\rfloor\ge\lfloor L^5\rfloor\ge10^{40}$ is the \emph{integer block length}, used wherever a number of continuous slots
+  is compared with the block length (Theorem~\ref{thm:queue}). We put $q_{\min}:=L_0L^6$ and $y:=H(x)\cdot L_0\cdot L^6$. The
   latter is the absorption threshold of Section~\ref{sec:construction}, including its ramp. Like $M_1$, both are frozen per
   scale and built from the integer $r_0$. They are used only through per-scale upper and lower bounds, through monotonicity
   across scales, and (in Lemma~\ref{lem:lemmaP}) through $\sup_{[u,2u]}y$, so their jumps cause no difficulty.
@@ -204,7 +208,9 @@ composites counted by $C_{\mathrm{jit}}$.
 \item \emph{Slot lengths.} This section uses $\rhodet$ only through $T'\le1+1/(\kappa u)\le1.01$, in the linear
   normalisation of Section~\ref{sec:construction} (see \eqref{eq:rhodet} and Lemma~\ref{lem:blin}(1)): $\rhodet\le$ (rigid fraction)
   $+1/(\kappa u)$, and the positivity margin is \eqref{eq:G1}, with no $\kappa/2$ loss. This enters as continuous-slot spacing at least
-  $0.99$ in (F1) and Appendix~\ref{app:rankfull}, and in the candidate counts of Lemma~\ref{lem:landing}. No $\kappa/2$ form is used.
+  $0.99$ in (F1) and Appendix~\ref{app:rankfull}, and in the candidate counts of Lemma~\ref{lem:landing}. No $\kappa/2$ form is used. The lower bound \eqref{eq:G1}, in the form
+  $T'_{\mathrm{cont}}\ge0.0899/\log u$ (Remark~\ref{rem:horizon}), enters only through the slot length $s_{j+1}-s_j\le11.2\log s_j$
+  and the physical length of the windows of $\mathcal W_x$ (Section~\ref{sec:queue-bound}).
 \end{itemize}
 
 \subsection{Landing count and local count}\label{sec:queue-landing}
@@ -344,9 +350,20 @@ Fix a dyadic scale $x$ and put $\lambda:=4L$. Recall that $\qljit(\cdot)$ counts
 
 \paragraph{Windows.}
 \begin{itemize}
+% Logged correction 87 (CORRECTIONS-vs-v3.md): v3 infers "density >= 0.09/L, so length <= (L_0+1)L/0.09" from eq:G1, which
+% has the term -1/(kappa u) and log u (u up to 2x+12L+2), not L = log x. Now 0.0899/log u, log u <= L+0.7, and the unit of
+% continuous mass between continuous-slot starts.
 \item \emph{Blocks are measured in continuous slots.} $\mathcal W_x$ is the set of slot windows $W=(k,j]$ with right end
-  $s_j\in[x,2x)$ and $\qljit(W)\le L_0$, of any total slot count. By \eqref{eq:G1}, continuous slots have density at least
-  $0.09/L$, so such a $W$ has physical length at most $(L_0+1)L/0.09\le12L\,L_0$.
+  $s_j\in[x,2x)$ and $\qljit(W)\le K_0$ (the integer block length), of any total slot count. Such a $W$ has physical length at
+  most $(K_0+1)(L+0.7)/0.0899\le12L\,L_0$. Indeed, its physical interval $[s_{k+1},s_{j+1})$ lies between the last continuous-slot
+  start $\le s_{k+1}$ (or $s_{X_0}$, if there is none) and the first one $\ge s_{j+1}$. Between consecutive continuous-slot starts
+  $T$ gains exactly one unit of continuous mass (\S\ref{sec:greedy}), and from $s_{X_0}$ to the first one, at the start of slot
+  $j_1$, at most one unit (there $T$ rises from $T(s_{X_0}-)\ge X_0+\vartheta_{\mathrm s}-1$ to $j_1+\vartheta_{\mathrm s}$, with
+  exactly $j_1-X_0$ unit jumps); the continuous-slot starts in $(s_{k+1},s_{j+1})$ belong to slots of $W$, as $s$ is
+  non-decreasing; so $\int_{s_{k+1}}^{s_{j+1}}T'_{\mathrm{cont}}\le\qljit(W)+1\le K_0+1$. On the other hand
+  $T'_{\mathrm{cont}}(u)\ge0.0899/\log u$ for $u\ge X_0$ (\eqref{eq:G1} with $1/(\kappa u)\le10^{-4}/\log u$, Remark~\ref{rem:horizon}),
+  and $\log u\le\log(2x+12L+2)\le L+0.7$ on the interval, as $s_{j+1}\le s_j+11.2\log s_j$. Finally
+  $(K_0+1)(L+0.7)/0.0899\le11.124(1+10^{-8})L(L_0+1)\le11.13L\,L_0$, as $L\ge10^8$ and $L_0\ge10^{40}$.
 \item \emph{Freedman's inequality is applied to deterministic windows.} $\mathcal I_x$ is the set of physical windows
   $I=[a,b)$ with $a,b\in\Z$, $b\in[x,\,2x+12L+2]$ and $b-a\le12L(L_0+1)+2$; here $L=\log x$, as in
   Section~\ref{sec:queue-conv} (the larger $L$ in the statement of Theorem~\ref{thm:queue} is used only for R1$'$). So
@@ -370,8 +387,10 @@ The event $\qFr(I)$ below also reads $\qljit(I)$ and uses R1$'$ on $I$, which ho
 (Corollary~\ref{cor:r1}); so $\qFr(I)$ carries the time $t(I):=b$.
 
 For $I\in\mathcal I_x$, let $\qFr(I)$ be the event that, with $\ell:=\qljit(I)$ (an integer, possibly random),
+% Logged correction 86: (a) is required only for l <= K_0+5, the range the peel of (i) covers; a window of I_x can hold about
+% 12L L_0 continuous slots, and (ii) uses (a) only for l <= K_0+4 (v3 states (a) for every l but peels only up to L_0+5).
 \begin{enumerate}[label=\textup{(\alph*)}]
-\item $\sum_q\big(\tilde X_q-\E[\tilde X_q\mid\mathcal F_{q-}]\big)\le\sqrt{2v_\ell\lambda}+\tfrac43M_1\lambda$, where
+\item if $\ell\le K_0+5$, then $\sum_q\big(\tilde X_q-\E[\tilde X_q\mid\mathcal F_{q-}]\big)\le\sqrt{2v_\ell\lambda}+\tfrac43M_1\lambda$, where
   $v_\ell:=2M_1(\ell+K_d)$;
 \item $\#\{q:\ X^{(2)}_q(I)\ge1\}\le\lambda$.
 \end{enumerate}
@@ -382,8 +401,8 @@ The sum in (a) and the count in (b) run over the jittered primes $q$, selected b
 Let $x$ be a dyadic scale. The drift bound R1$'$ is used in the form of Corollary~\ref{cor:r1}, on every window (slot or physical)
 in $[1,\infty)$, with $L:=\log(2x+12\log x+2)$; this exceeds $\log x$ by less than $0.7$, which R1$'$'s slack absorbs.
 \begin{enumerate}[label=\textup{(\roman*)}]
-\item For each $I\in\mathcal I_x$, $\Prob(\qFr(I)^c\cap\Good(<t(I)))\le2(L_0+6)e^{-\lambda}$, with $t(I)=b$. Hence
-  $\sum_{I\in\mathcal I_x}\Prob(\qFr(I)^c\cap\Good(<t(I)))\le30L(L_0+1)(L_0+6)x^{-3}\le x^{-2}$.
+\item For each $I\in\mathcal I_x$, $\Prob(\qFr(I)^c\cap\Good(<t(I)))\le2(K_0+6)e^{-\lambda}$, with $t(I)=b$. Hence
+  $\sum_{I\in\mathcal I_x}\Prob(\qFr(I)^c\cap\Good(<t(I)))\le30L(L_0+1)(K_0+6)x^{-3}\le x^{-2}$.
 \item (Deterministic part.) Put $t_j:=\lceil s_{j+1}\rceil+1$, the time of the queue constraint at slot $j$
   (Definition~\ref{def:good}). On $\Good(<t_j)\cap\bigcap_{I\in\mathcal I_x,\,t(I)\le t_j}\qFr(I)$, with $s_j\in[x,2x)$,
 \begin{equation}\label{eq:queueB}
@@ -396,14 +415,15 @@ $H\ge M_1^2$, and $34L^2\le\qHstd^{1/2}=e^{4\ell^2}$, so $B\le(M_1^2\qHstd)^{1/2
 \end{theorem}
 
 \begin{proof}[Proof of (i)]
-Peel over the value of $\qljit(I)$. For each deterministic $\ell\in\{0,\dots,L_0+5\}$, apply Freedman's inequality in the
+Peel over the value of $\qljit(I)$, an integer. For each deterministic $\ell\in\{0,\dots,K_0+5\}$, apply Freedman's inequality in the
 form \eqref{eq:freedman}, with deterministic $a(\ell):=\sqrt{2v_\ell\lambda}+\tfrac43M_1\lambda$, $v:=v_\ell$ and
 $b:=2M_1$ (by truncation).
 \begin{itemize}
 \item On $\{\qljit(I)=\ell\}\cap\Good(<t(I))$, the predictable variance satisfies
   $V\le2M_1\qComp_{\mathrm{jit}}(I)\le2M_1(\ell+K_d)=v_\ell$, by R1$'$ (Corollary~\ref{cor:r1}) applied to $I$. So (a) fails
   there only on the event $\{S\ge a(\ell),\,V\le v_\ell\}$, which has probability at most $e^{-\lambda}$.
-\item Windows with $\qljit(I)>L_0+5$ are never used in (ii).
+\item If $\qljit(I)>K_0+5$, then (a) holds by definition; such windows are never used in (ii). So (a) fails with
+  probability at most $(K_0+6)e^{-\lambda}$, and with (b) below, $\Prob(\qFr(I)^c\cap\Good(<t(I)))\le(K_0+7)e^{-\lambda}\le2(K_0+6)e^{-\lambda}$.
 % Logged correction 52 (CORRECTIONS-vs-v3.md): the endpoint of s_2 is log X_0^-, not Lambda = log X_0.
 % Logged correction 83: the sum is over the jittered q, as is the compensator Comp^(2) of Section sec:noise-identity.
 \item For (b): take $b=1$. On the good event, summing over the jittered $q$,
@@ -425,7 +445,7 @@ $b:=2M_1$ (by truncation).
 % Logged correction 79 (CORRECTIONS-vs-v3.md): v3 counts x+12L+2 right ends; the integers in [x,2x+12L+2] number at most
 % x+12L+3. The windows beginning below x were already counted (by right end and length).
 \item Count: $\#\mathcal I_x\le(x+12L+3)(12L(L_0+1)+3)$, by right end and length (the windows that begin below $x$ included),
-  and $e^{-\lambda}=x^{-4}$; so the sum is at most $2(L_0+6)x^{-4}\#\mathcal I_x\le25L(L_0+1)(L_0+6)x^{-3}$. \qedhere
+  and $e^{-\lambda}=x^{-4}$; so the sum is at most $2(K_0+6)x^{-4}\#\mathcal I_x\le25L(L_0+1)(K_0+6)x^{-3}$. \qedhere
 \end{itemize}
 \end{proof}
 
@@ -438,8 +458,10 @@ window with integer endpoints containing it. Then:
 % Logged correction 77: the edges are counted in continuous slots, whose starts are at least 0.99 apart (Section sec:greedy).
 \item $\qljit(I)\le\qljit(W)+4$, since each of the two edges, $[\lfloor s_{k+1}\rfloor,s_{k+1}]$ and $[s_{j+1},\lceil s_{j+1}\rceil)$, holds at most $2$
   continuous slots (their starts are at least $0.99$ apart);
-\item $t(I)=b=\lceil s_{j+1}\rceil\le t_j$, and $b\le s_j+11.3L+1\le2x+12L+2$. Indeed a single slot has length at most
-  $11.3L$ by \eqref{eq:G1}; slot lengths up to $2$ occur at primes in $(X_0,2X_0)$, and longer ones where $T'_{\mathrm{cont}}<\tfrac12$.
+% Logged correction 87: the slot length is bounded with T'_cont >= 0.0899/log u (Remark horizon), not with eq:G1 alone.
+\item $t(I)=b=\lceil s_{j+1}\rceil\le t_j$, and $b\le s_j+11.3L+1\le2x+12L+2$. Indeed a single slot has length
+  $s_{j+1}-s_j\le11.2\log s_j\le11.2(L+0.7)\le11.3L$, as $T'_{\mathrm{cont}}\ge0.0899/\log u$ and $T$ rises by at most $1$ on a slot
+  (Remark~\ref{rem:horizon}); slot lengths up to $2$ occur at primes in $(X_0,2X_0)$, and longer ones where $T'_{\mathrm{cont}}<\tfrac12$.
   So $I\in\mathcal I_x$.
 \end{itemize}
 Hence $\qexc(W)\le\qCjit(I)-\qljit(I)+6$, by the excess identity (Lemma~\ref{lem:excess}).
@@ -453,7 +475,7 @@ of $I$ below $x$ lie in $[x/2,x)$), not $y(x)$. So $|I|/q\le|I|/y_-(x)\le1.00001
 $\delta_1(z)$ at every cofactor height $z\le x$. It gives $X^{(1)}_q(I)(U)\le2M_1$ for every value $U$ of the
 jitter offset of $q$. So $\tilde X_q\equiv X^{(1)}_q(I)$, and the compensators agree.
 
-\emph{Short windows.} Let $\ell:=\qljit(I)\le\qljit(W)+4\le L_0+4$. By R1$'$,
+\emph{Short windows.} Let $\ell:=\qljit(I)\le\qljit(W)+4\le K_0+4$, so (a) applies. By R1$'$,
 $\qComp_{\mathrm{jit}}(I)\le\ell(1-c'/L)+K_d$. Together with (a),
 \[
 \qexc(W)\le-\frac{c'\ell}{L}+\sqrt{16M_1L(\ell+K_d)}+\frac43M_1\lambda+(\text{the $a\ge2$ part})+K_d+6.
@@ -461,23 +483,29 @@ $\qComp_{\mathrm{jit}}(I)\le\ell(1-c'/L)+K_d$. Together with (a),
 The $a\ge2$ part is at most $\lambda\cdot2a_{\max}M_1\le8M_1L(L/\Lambda+1)$, by (b), Corollary~\ref{cor:increment} (with $u=x$,
 as above; the primes counted in (b) are jittered and $\ge y_-(x)$) and $a_{\max}\le L/\Lambda+1$, as $q\ge\Xm$. Maximising over $\ell\ge0$ gives $\qexc(W)\le B(x)$.
 
-\emph{Full blocks.} If $\qljit(W)=L_0$, then $\ell\ge L_0$ and
+% Logged correction 86 (CORRECTIONS-vs-v3.md): full blocks, the Lindley cut and the split use the integer K_0 (v3: the real
+% L_0, for which q_jit = L_0 may never hold); (fullblock) is re-checked with K_0 >= L_0 - 1.
+\emph{Full blocks.} If $\qljit(W)=K_0$, then $K_0-1\le\ell\le K_0+4$ (the start of slot $j$ lies outside $I$ only if slot $j$ is
+empty and $s_{j+1}\in\Z$) and
 \begin{equation}\label{eq:fullblock}
-\frac{c'L_0}{L}\ge\sqrt{16M_1L(L_0+4+K_d)}+\frac{16M_1L}{3}+8M_1L\Big(\frac L\Lambda+1\Big)+L^3+K_d+10.
+\frac{c'(K_0-1)}{L}\ge\sqrt{16M_1L(K_0+4+K_d)}+\frac{16M_1L}{3}+8M_1L\Big(\frac L\Lambda+1\Big)+L^3+K_d+10.
 \end{equation}
-Indeed, since $M_1\ge c\ge\tfrac14\qHstd^{1/2}=\tfrac14e^{4\ell^2}\ge L^2$, we have $L_0=48M_1L^3/c'^2$ at every scale. Then
-$c'L_0/L=48M_1L^2/c'$ and $\sqrt{16M_1LL_0}=\sqrt{768}\,M_1L^2/c'\le27.72M_1L^2/c'$, so the left side minus the first term
-on the right is at least $20.28M_1L^2/c'\ge135M_1L^2$, which exceeds the rest. So $\qexc(W)\le0$ on full blocks.
+Indeed, since $M_1\ge c\ge\tfrac14\qHstd^{1/2}=\tfrac14e^{4\ell^2}\ge L^2$, we have $L_0=48M_1L^3/c'^2$ at every scale, and
+$K_0\ge L_0-1$. Then $c'(K_0-1)/L\ge48M_1L^2/c'-2c'/L$ and $\sqrt{16M_1L(K_0+4+K_d)}\le\sqrt{16M_1L(L_0+7)}\le27.72M_1L^2/c'$ (as
+$\sqrt{768}\le27.713$ and $L_0\ge10^{40}$), so the left side minus the first term on the right is at least
+$20.28M_1L^2/c'-2c'/L\ge135M_1L^2$, which exceeds the rest. So $\qexc(W)\le0$ on full blocks.
 
-\emph{Lindley.} Let $k':=\max\{k<j:\ \qljit((k,j])=L_0\}$, if it exists. By \eqref{eq:lindleymax},
+\emph{Lindley.} Let $k':=\max\{k<j:\ \qljit((k,j])=K_0\}$, if it exists; as $k$ decreases, $\qljit((k,j])$ grows by steps of
+$0$ or $1$, so $k'$ exists whenever some $(k,j]$ has $\qljit\ge K_0$. By \eqref{eq:lindleymax},
 \begin{align*}
-Q_j&\le\max\Big(Q_{k'}+\qexc((k',j]),\ \max\{\qexc(W):\ W\in\mathcal W_x,\ W=(k,j],\ \qljit(W)<L_0\}\Big)\\
+Q_j&\le\max\Big(Q_{k'}+\qexc((k',j]),\ \max\{\qexc(W):\ W\in\mathcal W_x,\ W=(k,j],\ \qljit(W)<K_0\}\Big)\\
 &\le\max(B(s_{k'}),B(x))=B(x).
 \end{align*}
-This uses: additivity of $\qexc$ over slots; $Q_{k'}\le B(s_{k'})$ on $\Good(<t_j)$, which holds because
-$t_{k'}\le s_{k'+1}+2\le s_j$ (a full block has physical length at least $0.99L_0\ge0.99L^5\ge12L+2$); and that $B$ is non-decreasing
+This uses: additivity of $\qexc$ over slots; $Q_{k'}\le B(s_{k'})$ on $\Good(<t_j)$ (trivially if $k'=j_0-1$, as $Q_{j_0-1}=0$), which holds because
+$t_{k'}\le s_{k'+1}+2\le s_j$ (the $K_0$ continuous slots of $(k',j]$ have starts at least $0.99$ apart, so
+$s_j-s_{k'+1}\ge0.99(K_0-1)\ge0.99(L^5-2)\ge12L+2$); and that $B$ is non-decreasing
 across scales, because $M_1$ and $H$ are non-decreasing in $x$ (Theorem~\ref{thm:caplw}(c)). A window $(k,j]$ with
-$\qljit>L_0$ splits at $k'$.
+$\qljit>K_0$ splits at $k'$.
 \end{proof}
 
 \begin{remark}[Base scales]\label{rem:basescales}
@@ -542,7 +570,7 @@ E1: $\qEcl^{(u)}$ (Proposition~\ref{prop:ecl}) & grid windows at the dyadic heig
 % Logged correction 79 (CORRECTIONS-vs-v3.md): the E2 windows are those of I_u (right end >= u), which may begin below u;
 % they are not grid windows in the sense of Section sec:queue-conv.
 E2: $\qFr(I)$ (Theorem~\ref{thm:queue}) & windows $I\in\mathcal I_u$ (integer endpoints, right end in $[u,\,2u+12L+2]$, length
-  $\le12L(L_0+1)+2$, so possibly beginning below $u$), peeled over $\qljit(I)$ & $\le u^{-2}$ & $b=\max I$\\
+  $\le12L(L_0+1)+2$, so possibly beginning below $u$), peeled over $\qljit(I)\in\{0,\dots,K_0+5\}$ & $\le u^{-2}$ & $b=\max I$\\
 E3: $\mathrm{E3}_W$, $W\in\mathcal W_u$ (Lemma~\ref{lem:noise}), the bounds \eqref{eq:F1} and \eqref{eq:F2} & windows with integer
   endpoints in $[u,2u]$, length in $[H-1,\,1.03H+1]$, two-sided, $\lambda'_u:=3\log u+2\log\log u+2+\log H(u)$; one event per window
   & summed over the windows, $\le1.2u^{-2}L_u^{-2}$ for E3 and E3$'$ together (on $\qEcl(u)$; sure variance bound
@@ -572,8 +600,8 @@ $|D(x)|\le B(x)+\tfrac{H(x)}2(1+\kappa_+/\log x)+4\le x^{\eta}$ for all $x\ge X_
 
 \begin{proof}
 \emph{($*$) Times of the events.} Each bound in Table~\ref{tab:events} holds on $\Good(<t(E))$. No conditioning is used: Freedman's
-inequality is applied to deterministic windows, with deterministic $(a,v)$ after peeling over $\qljit$ (E2; likewise E3 and
-E3$'$ in Lemma~\ref{lem:noise}). Every consumer of an event $E$ runs at a time at least $t(E)$:
+inequality is applied to deterministic windows, with deterministic $(a,v)$ after peeling over $\qljit$ (E2), or with the deterministic variance bound $\bar V_W$ (E3 and
+E3$'$ in Lemma~\ref{lem:noise}, which need no peeling). Every consumer of an event $E$ runs at a time at least $t(E)$:
 \begin{itemize}
 \item E1 is used by Theorem~\ref{thm:queue}, by the noise bounds of Lemma~\ref{lem:noise} and by Lemma~\ref{lem:lemmaP}, at scales $\ge u$;
 \item E2 is used by the queue constraint at slot $j$, whose time $t_j$ is at least $t(I)$;

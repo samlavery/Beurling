@@ -25,7 +25,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 > the fixes, three fresh AI checkers re-checked every changed passage (`review/paper-recheck.md`, reports in
 > `review/recheck/R1–R3.md`). They found nothing blocking.
 >
-> **Defects found after the AI checks.** After the paper was first published here, a reader reported thirty-five further defects
+> **Defects found after the AI checks.** After the paper was first published here, a reader reported thirty-seven further defects
 > that every earlier AI check had missed:
 > - a strip identity used as exact although the box widths vary;
 > - a jitter width that jumps (through a ceiling and a per-scale freeze) although its regularity is used throughout;
@@ -79,7 +79,10 @@ Samuel Lavery (sam.lavery@gmail.com)
 > - an oscillation index k := max{j : x_j ≤ x} used on a range that starts below x₁, where the set is empty (the
 >   oscillation term is then simply 0);
 > - in the Heavy Subspace Lemma, an integer rounding of a real-valued threshold ("< φ, so ≤ φ − 1"), which made one
->   part of the lemma false (with an explicit counterexample); the correct strict bound is all that is used.
+>   part of the lemma false (with an explicit counterexample); the correct strict bound is all that is used;
+> - in the queue bound, a real block length L₀ compared with integer slot counts: the Lindley step searched for a block
+>   of exactly L₀ continuous slots, which does not exist when L₀ is not an integer; the integer K₀ = ⌊L₀⌋ is now used for
+>   slot counts. A slot-density bound read off the positivity margin without its error term is also corrected.
 >
 > Repairing these and re-checking the repairs, and three further independent AI checks (R6–R8 in `review/recheck/`),
 > turned up twenty more. The most serious were:
@@ -96,10 +99,10 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   (#74); R14 found that grid windows near 2z stick out of the range that Theorem R assumes (#75). The check of #76
 >   found that the existence of the slot offset ϑ_s was unproved, and that a tie made a slot empty (#77).
 >
-> These are entries #31–#85 of `CORRECTIONS-vs-v3.md`. All are repaired.
+> These are entries #31–#87 of `CORRECTIONS-vs-v3.md`. All are repaired.
 > - **The repairs of #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72** were checked by a fresh AI checker in
 >   twenty-two passes (`review/recheck/R4.md`). #65 and #66 were checked by the R11 checker (`review/recheck/R11-absorption.md` §§12–13);
->   #68, #69 and #70 by independent checks R12 and R13; #73–#77 by independent checks R16, R17 and R18; #78 by R19; #79–#82 by R20; #83–#85 by R21.
+>   #68, #69 and #70 by independent checks R12 and R13; #73–#77 by independent checks R16, R17 and R18; #78 by R19; #79–#82 by R20; #83–#85 by R21; #86 and #87 by R22.
 > - **The certificate fixes of #54** were checked by the R8 checker (`review/recheck/R8-cert-repro.md` §9).
 > - **The repair of #60** was checked by the R10 checker (`review/recheck/R10-lp-transfer.md`, re-check of #60).
 >   The passes ended with nothing blocking or fixable.
@@ -112,7 +115,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   `review/recheck/R11-absorption.md`. End-to-end checks of Appendix A and of the base-range section are in
 >   `review/recheck/R14-appA-e2e.md` and `review/recheck/R15-sec6-e2e.md`.
 >
-> None of the eighty-five logged corrections changes a conclusion of the paper. But these
+> None of the eighty-seven logged corrections changes a conclusion of the paper. But these
 > findings show that the AI checks are no substitute for expert review.
 
 ## The result

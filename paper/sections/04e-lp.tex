@@ -427,7 +427,7 @@ side of (i) for $w\le y$.
   Both conditions hold for $\log v\ge\log X_{\mathrm{LP}}=10^5\Lambda^2\log^2\Lambda$: there $\log\log v\le3\log\Lambda$, so
   $1.1\cdot10^4\Lambda^2(\log\log v)^2\le9.9\cdot10^4\Lambda^2\log^2\Lambda$, and $\log v/(\log\log v)^2$ is increasing; and
   $(1000+4\log\Lambda)^2\le10^5\Lambda^2\log^2\Lambda$.
-% Logged correction 70: the constant of (i), K_0 = e^{97} Lambda^2.
+% Logged correction 70: the constant of (i), K_{\mathrm{LP}} = e^{97} Lambda^2.
 \item \emph{The constant of (i).} Let $\log v\ge\log X_{\mathrm{LP}}$, so $\sqrt{\log v}\ge316\Lambda\log\Lambda$. Then
   $L_T\le2.01\sqrt{\log v}$, so $G(L_T)\le808\sqrt{\log v}$; by the finite-height width of Step~7,
   $a\ge0.9c_{\mathrm{zf}}/(L_T+442+2\log\Lambda+\log L_T)\ge0.445\,c_{\mathrm{zf}}/\sqrt{\log v}\ge2.2\,c_{\mathrm{LP}}/\sqrt{\log v}$; and
@@ -438,7 +438,7 @@ side of (i) for $w\le y$.
   \]
   since $\pi^{-1}eC_m\le e^{82.2}$ and $\max_{s>0}s^2e^{-1.2c_{\mathrm{LP}}s}=0.376/c_{\mathrm{LP}}^2\le1214\Lambda^2$. The other pieces and the smoothing
   error add at most $e^{-\sqrt{\log v}}+6/T+3v^{\theta'-1}\le8e^{-c_{\mathrm{LP}}\sqrt{\log v}}$. Together this gives (i) with
-  $c_{\mathrm{LP}}=c_{\mathrm{zf}}/5$ and the constant $K_0:=e^{97}\Lambda^2$.
+  $c_{\mathrm{LP}}=c_{\mathrm{zf}}/5$ and the constant $K_{\mathrm{LP}}:=e^{97}\Lambda^2$.
 % Logged correction 56 (CORRECTIONS-vs-v3.md): (ii) was proved by a second Perron integral whose kernel
 % v^s h_0^((s-1)/T)/s does not match the smoothing of (i) (whose multiplier is h_0^(s/T)); (ii) now follows from (i) by
 % partial summation, with the same c_LP and a constant K' with log K' = O(Lambda).
@@ -452,7 +452,7 @@ side of (i) for $w\le y$.
     height $X_{\mathrm{LP}}$, the first is $\le\log\log X_{\mathrm{LP}}+4.5$. The density of $\Pi_0/w$ is
     $(1-1/w)/(w\log w)\le1/w$ on $[1,e]$ and $\le1/(w\log w)$ beyond, so the second is $\le\log\log X_{\mathrm{LP}}+1$. Hence
     $|\Phi(u)|\le2\log\log X_{\mathrm{LP}}+5.5$ there.
-  \item On $[X_{\mathrm{LP}},v]$: $|\Phi(u)|\le K_0e^{-c_{\mathrm{LP}}\sqrt{\log u}}$ by (i). With $u=e^x$, the function
+  \item On $[X_{\mathrm{LP}},v]$: $|\Phi(u)|\le K_{\mathrm{LP}}e^{-c_{\mathrm{LP}}\sqrt{\log u}}$ by (i). With $u=e^x$, the function
     $e^{x-c_{\mathrm{LP}}\sqrt x}$ has derivative $\ge0.99\,e^{x-c_{\mathrm{LP}}\sqrt x}$, so
     $\int_{X_{\mathrm{LP}}}^ve^{-c_{\mathrm{LP}}\sqrt{\log u}}du\le1.02\,v\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$.
   \item $v\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$ is increasing, so
@@ -461,11 +461,11 @@ side of (i) for $w\le y$.
   Hence
   \[
     |\Pi(v)-\Pi_0(v)|\le K'v\,e^{-c_{\mathrm{LP}}\sqrt{\log v}},\qquad
-    K':=2.02K_0+e^{c_{\mathrm{LP}}\sqrt{\log X_{\mathrm{LP}}}}\big(2\log\log X_{\mathrm{LP}}+5.5\big).
+    K':=2.02K_{\mathrm{LP}}+e^{c_{\mathrm{LP}}\sqrt{\log X_{\mathrm{LP}}}}\big(2\log\log X_{\mathrm{LP}}+5.5\big).
   \]
   Since $c_{\mathrm{LP}}=c_{\mathrm{zf}}/5=0.0176/\Lambda$ (Step~7), $c_{\mathrm{LP}}\sqrt{\log X_{\mathrm{LP}}}=0.0176\sqrt{10^5}\log\Lambda\le5.6\log\Lambda$,
   and $\log\log X_{\mathrm{LP}}\le3\log\Lambda$; so, with $6\log\Lambda+5.5\le\Lambda^{0.3}$,
-  $K'\le2.02e^{97}\Lambda^2+\Lambda^{5.9}\le e^{98}\Lambda^{5.9}$. As $K'\ge K_0$, (i) and (ii) hold together with $K:=K'$, so
+  $K'\le2.02e^{97}\Lambda^2+\Lambda^{5.9}\le e^{98}\Lambda^{5.9}$. As $K'\ge K_{\mathrm{LP}}$, (i) and (ii) hold together with $K:=K'$, so
   $\log K\le98+5.9\log\Lambda$, and with the same $c_{\mathrm{LP}}$. No second contour integral is needed.
 % Logged correction 70: K' explicit (was log K' = O(Lambda)).
 \end{itemize}
