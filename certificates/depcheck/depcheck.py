@@ -73,7 +73,7 @@ dep('thm:queue', 'cor:r1,eq:sF1+eq:sF2,lem:count..lem:excess,cite:Freedman1975,t
 dep('thm:queue', 'prop:ecl,cor:increment,eq:sF3p+eq:sF4,thm:queue', '<')
 dep('lem:budget', 'thm:queue,prop:ecl,lem:landing,lem:noise')
 dep('prop:ecl', 'thm:R,lem:heavy,thm:caplw(a),thm:caplw(b)(c)')
-dep('cor:increment', 'prop:ecl')
+dep('cor:increment', 'prop:ecl,thm:caplw(b)(c)')                      # y non-decreasing, eq:RH ratio (#79, R20)
 dep('prop:cover', 'lem:volume,lem:fac,thm:svl,lem:SC')
 dep('lem:reduction', 'lem:heavy,lem:covering..thm:tcl,prop:cover')
 dep('lem:rowweights', 'Rankin')

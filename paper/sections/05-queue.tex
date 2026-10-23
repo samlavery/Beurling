@@ -346,7 +346,13 @@ Fix a dyadic scale $x$ and put $\lambda:=4L$. Recall that $\qljit(\cdot)$ counts
   $s_j\in[x,2x)$ and $\qljit(W)\le L_0$, of any total slot count. By \eqref{eq:G1}, continuous slots have density at least
   $0.09/L$, so such a $W$ has physical length at most $(L_0+1)L/0.09\le12L\,L_0$.
 \item \emph{Freedman's inequality is applied to deterministic windows.} $\mathcal I_x$ is the set of physical windows
-  $I=[a,b)$ with $a,b\in\Z$, $b\in[x,\,2x+12L+2]$ and $b-a\le12L(L_0+1)+2$.
+  $I=[a,b)$ with $a,b\in\Z$, $b\in[x,\,2x+12L+2]$ and $b-a\le12L(L_0+1)+2$; here $L=\log x$, as in
+  Section~\ref{sec:queue-conv} (the larger $L$ in the statement of Theorem~\ref{thm:queue} is used only for R1$'$). So
+  $I\subset[x-12L(L_0+1)-2,\,2x+12L+2]$: a window of $\mathcal I_x$ may begin below $x$. For $x\ge2X_0$ its elements below $x$
+  lie in the dyadic block $[x/2,x)$, whose absorption threshold is $y(x/2)$, not $y(x)$; for $x=X_0$ there are no composites
+  with a jittered prime below $x$ (Corollary~\ref{cor:increment}).
+% Logged correction 79 (CORRECTIONS-vs-v3.md): the lower band of the windows of I_x is stated; v3 applies Corollary
+% cor:increment (stated for windows in [x,2x+12L+2] and q >= y(x)) to these windows.
 \end{itemize}
 For $I\in\mathcal I_x$ and a latest prime $q$, let $X^{(1)}_q(I)$ count the non-absorbed composites $n\in I$ with $q\,\|\,n$
 and $q$ latest; let $X^{(2)}_q(I)$ count those with $q^a\,\|\,n$, $a\ge2$; and put $\tilde X_q:=\min(X^{(1)}_q(I),2M_1)$.
@@ -393,19 +399,24 @@ $b:=2M_1$ (by truncation).
 % Logged correction 52 (CORRECTIONS-vs-v3.md): the endpoint of s_2 is log X_0^-, not Lambda = log X_0.
 \item For (b): take $b=1$. On the good event,
 % Logged correction 68: s_2|I| is now bounded explicitly (v3: "<< 1").
-  $\sum_q\Prob(X^{(2)}_q(I)\ge1\mid\mathcal F_{q-})\le\qComp^{(2)}(I)\le s_2(x)|I|$. This is the source $s_2$ of
-  \eqref{eq:s2}, restated in Corollary~\ref{cor:r1}, with \[s_2\le9L\exp\big(-\max(\log\Xm,\tfrac12\sqrt{L\log L})\big).\]
+% Logged correction 79 (R20, F1): I in I_x may meet [x/2,x) and (2x,2x+12L+2], so s_2 is the sup over the scales met (Cor r1).
+  $\sum_q\Prob(X^{(2)}_q(I)\ge1\mid\mathcal F_{q-})\le\qComp^{(2)}(I)\le s_2|I|$, where $s_2:=\max(s_2(x/2),s_2(x),s_2(2x))$ is the
+  supremum of \eqref{eq:s2} over the dyadic scales meeting $I$ (Corollary~\ref{cor:r1}; $I$ may begin below $x$ and end above $2x$).
+  With $L':=L-1.4\le\log(x/2)$, \[s_2\le9(L+1)\exp\big(-\max(\log\Xm,\tfrac12\sqrt{L'\log L'})\big).\]
   Here $|I|\le13L\,L_0$ and $\log L_0\le\max(5\ell,\log M_1+3\ell+7.67)$, and $\log M_1\le\log c+0.7\le0.38\sqrt L+0.7$ at
   every scale: $4\ell^2\le0.14\sqrt L$, and $\gamma(s)\Lambda\le0.38\Lambda e^{s/2}=0.38\sqrt L$ (for $s\ge s_H$, $\gamma\le7.5\le
   0.38e^{s_H/2}$; for $s\le s_H$, $\gamma_*\le2.6(A_s+1)e^{s/2}/\sqrt{\Lambda_s}\le0.03e^{s/2}$ by Step 6 of the proof of
-  Theorem~\ref{thm:caplw}). Since $\tfrac12\sqrt{L\log L}\ge2.14\sqrt L$,
+  Theorem~\ref{thm:caplw}). Since $\tfrac12\sqrt{L'\log L'}\ge2.14\sqrt{L'}\ge2.14\sqrt L-10^{-3}$,
   \[
-  s_2(x)|I|\le117L^2L_0\,e^{-\frac12\sqrt{L\log L}}\le\exp\big(7\ell+13.2-1.76\sqrt L\big)\le e^{-\sqrt L}\le1.
+  s_2|I|\le118L^2L_0\,e^{-\frac12\sqrt{L'\log L'}}\le\exp\big(7\ell+13.2-1.76\sqrt L\big)\le e^{-\sqrt L}\le1.
   \]
   Freedman's
   inequality then gives $\#\{q:X^{(2)}_q\ge1\}\le1+\sqrt{2\lambda}+\tfrac23\lambda\le\lambda$, except with probability
   $e^{-\lambda}$.
-\item Count: $\#\mathcal I_x\le(x+12L+2)(12L(L_0+1)+3)$, and $e^{-\lambda}=x^{-4}$. \qedhere
+% Logged correction 79 (CORRECTIONS-vs-v3.md): v3 counts x+12L+2 right ends; the integers in [x,2x+12L+2] number at most
+% x+12L+3. The windows beginning below x were already counted (by right end and length).
+\item Count: $\#\mathcal I_x\le(x+12L+3)(12L(L_0+1)+3)$, by right end and length (the windows that begin below $x$ included),
+  and $e^{-\lambda}=x^{-4}$; so the sum is at most $2(L_0+6)x^{-4}\#\mathcal I_x\le25L(L_0+1)(L_0+6)x^{-3}$. \qedhere
 \end{itemize}
 \end{proof}
 
@@ -423,8 +434,13 @@ window with integer endpoints containing it. Then:
 \end{itemize}
 Hence $\qexc(W)\le\qCjit(I)-\qljit(I)+6$, by the excess identity (Lemma~\ref{lem:excess}).
 
-\emph{Truncation is inactive.} On $\qEcl^{(x)}$ (whose time $8x/L^{11}+H$ is less than $s_j$), Corollary~\ref{cor:increment} applies
-to $I$, since $|I|/q\le(12L(L_0+1)+2)/y\le13/(HL^5)\le2L^{-6}\le\delta_1(x/q)$, as $H\ge7L$. It gives $X^{(1)}_q(I)(U)\le2M_1$ for every value $U$ of the
+% Logged correction 79 (CORRECTIONS-vs-v3.md): v3 bounds |I|/q by (12L(L_0+1)+2)/y(x), but a window I that begins below x has
+% non-absorbed arrivals below x whose latest prime is only >= y(x/2), and Corollary cor:increment covered only I in [x,2x+12L+2].
+\emph{Truncation is inactive.} On $\qEcl^{(x)}$ (whose time $8x/L^{11}+H$ is less than $s_j$), Corollary~\ref{cor:increment}
+applies with $u=x$: $I\subset[x/2,\,2x+12L+2]$ and $|I|\le12L(L_0+1)+2\le H$, as shown there. By that corollary, every
+latest prime $q$ with $X^{(1)}_q(I)+X^{(2)}_q(I)\ne0$ has $q\ge y_-(x)$, which is $y(x/2)$ for $x\ge2X_0$ (the composites
+of $I$ below $x$ lie in $[x/2,x)$), not $y(x)$. So $|I|/q\le|I|/y_-(x)\le1.00001L^{-11}\le2L^{-6}$, which is at most
+$\delta_1(z)$ at every cofactor height $z\le x$. It gives $X^{(1)}_q(I)(U)\le2M_1$ for every value $U$ of the
 jitter offset of $q$. So $\tilde X_q\equiv X^{(1)}_q(I)$, and the compensators agree.
 
 \emph{Short windows.} Let $\ell:=\qljit(I)\le\qljit(W)+4\le L_0+4$. By R1$'$,
@@ -432,8 +448,8 @@ $\qComp_{\mathrm{jit}}(I)\le\ell(1-c'/L)+K_d$. Together with (a),
 \[
 \qexc(W)\le-\frac{c'\ell}{L}+\sqrt{16M_1L(\ell+K_d)}+\frac43M_1\lambda+(\text{the $a\ge2$ part})+K_d+6.
 \]
-The $a\ge2$ part is at most $\lambda\cdot2a_{\max}M_1\le8M_1L(L/\Lambda+1)$, by (b), Corollary~\ref{cor:increment} and
-$a_{\max}\le L/\Lambda+1$. Maximising over $\ell\ge0$ gives $\qexc(W)\le B(x)$.
+The $a\ge2$ part is at most $\lambda\cdot2a_{\max}M_1\le8M_1L(L/\Lambda+1)$, by (b), Corollary~\ref{cor:increment} (with $u=x$,
+as above; the primes counted in (b) are $\ge y_-(x)$) and $a_{\max}\le L/\Lambda+1$. Maximising over $\ell\ge0$ gives $\qexc(W)\le B(x)$.
 
 \emph{Full blocks.} If $\qljit(W)=L_0$, then $\ell\ge L_0$ and
 \begin{equation}\label{eq:fullblock}
@@ -470,8 +486,10 @@ Every event $E$ below carries a time $t(E)$, which is a slot, and is $\mathcal F
 t_j:=\lceil s_{j+1}\rceil+1,\qquad\tau:=\min\{t:\ \Good(\le t)\text{ fails}\},
 \end{gather*}
 with $B(s):=B(x)$ for $s\in[x,2x)$. Then $\tau$ is an $(\mathcal F_t)$-stopping time. The events are listed per dyadic scale
-$u=2^mX_0$, with parameters frozen at $u$, in Table~\ref{tab:events}.
+$u=2^mX_0$, with parameters frozen at $u$, in Table~\ref{tab:events}. E2, E3, E3$'$ and E4 are families with one event per window,
+each with its own time; in particular $\Good(<t)$ contains $\bigcap_{t(W)<t}\mathrm{E3}_W$ (\S\ref{sec:noise-perscale}).
 \end{definition}
+% Logged correction 78 (CORRECTIONS-vs-v3.md): E3 and E3' are one event per window, each with its own time t(W) = max W.
 
 % Logged correction 73 (CORRECTIONS-vs-v3.md): Good(<z) certifies the queue bound only for slots with t_j < z, so not on
 % the last ~12 log z + 3 units below z. The certified horizon is stated here; every use reads queue bounds below it.
@@ -511,13 +529,16 @@ Corollary~\ref{cor:localcount} (Remark~\ref{rem:localcount-uses}).
 event & windows at scale $u$ & $\Prob(E^c\cap\Good(<t(E)))$ & $t(E)$\\
 \hline
 E1: $\qEcl^{(u)}$ (Proposition~\ref{prop:ecl}) & grid windows at the dyadic heights $z\in[X_0/2,\,4u/L^{11}]$ (left end in $[z,2z)$) & $\le1.0001L_u^{-2}$ & $8u/L^{11}+H$\\
-E2: $\qFr(I)$ (Theorem~\ref{thm:queue}) & grid windows $I\in\mathcal I_u$ (integer endpoints, right end $\le2u+12L+2$, length
-  $\le12L(L_0+1)+2$), peeled over $\qljit(I)$ & $\le u^{-2}$ & $b=\max I$\\
-E3: $G^{\mathrm{NV}}_u$ (Lemma~\ref{lem:noise}), including the bound \eqref{eq:F2} & windows with integer endpoints in $[u,2u]$,
-  length in $[H-1,\,1.03H+1]$, two-sided, $\lambda'_u:=3\log u+2\log\log u+2+\log H(u)$ & $\le1.2u^{-2}L_u^{-2}$ for E3 and
-  E3$'$ together (on $\qEcl(u)$; sure variance bound $V_I\le2M_1\qComp(I)$) & each window when it closes, $\le2u$\\
-E3$'$: $G^{\mathrm{sw}}_u$ (Lemma~\ref{lem:noise}), including \eqref{eq:F2} & windows with integer endpoints in $[u,2u]$, length
-  $\le1.03H+1$, $\lambda'_u$ & (with E3) & each window when it closes, $\le2u$\\
+% Logged correction 79 (CORRECTIONS-vs-v3.md): the E2 windows are those of I_u (right end >= u), which may begin below u;
+% they are not grid windows in the sense of Section sec:queue-conv.
+E2: $\qFr(I)$ (Theorem~\ref{thm:queue}) & windows $I\in\mathcal I_u$ (integer endpoints, right end in $[u,\,2u+12L+2]$, length
+  $\le12L(L_0+1)+2$, so possibly beginning below $u$), peeled over $\qljit(I)$ & $\le u^{-2}$ & $b=\max I$\\
+E3: $\mathrm{E3}_W$, $W\in\mathcal W_u$ (Lemma~\ref{lem:noise}), the bounds \eqref{eq:F1} and \eqref{eq:F2} & windows with integer
+  endpoints in $[u,2u]$, length in $[H-1,\,1.03H+1]$, two-sided, $\lambda'_u:=3\log u+2\log\log u+2+\log H(u)$; one event per window
+  & summed over the windows, $\le1.2u^{-2}L_u^{-2}$ for E3 and E3$'$ together (on $\qEcl(u)$; sure variance bound
+  $V_W\le2M_1\qComp(W)$) & $\max W$\\
+E3$'$: $\mathrm{E3}_W$, $W\in\mathcal W'_u$ (Lemma~\ref{lem:noise}) & windows with integer endpoints in $[u,2u]$, length
+  $\le1.03H+1$, $\lambda'_u$; one event per window & (with E3) & $\max W$\\
 E4: $\qLand(J)$ (Lemma~\ref{lem:landing}) & landing windows $J\in\mathcal J_u$ (half-integer grid in $[u,4u+1]$, length
   $\le6H(u)$) & $\le146H(u)u^{-3}$ & $\max J+H(\max J)$\\
 \hline
@@ -547,8 +568,13 @@ E3$'$ in Lemma~\ref{lem:noise}). Every consumer of an event $E$ runs at a time a
 \item E1 is used by Theorem~\ref{thm:queue}, by the noise bounds of Lemma~\ref{lem:noise} and by Lemma~\ref{lem:lemmaP}, at scales $\ge u$;
 \item E2 is used by the queue constraint at slot $j$, whose time $t_j$ is at least $t(I)$;
 % Logged correction 73 (R17, C73-7): the read times of E3 and E4 stated as in Lemma noise and Remark localcount-uses.
-\item E3 is used by $\nu$ on $[u,2u]$, each window read only after it closes;
-\item E3$'$ is used by Proposition~\ref{prop:pointwise} (the pointwise margin);
+% Logged correction 78: E3 and E3' are read window by window, each after its time t(W) = max W.
+\item E3 and E3$'$ are the window events $\mathrm{E3}_W$, with $t(W)=\max W$. Lemma~\ref{lem:noise} reads $\mathrm{E3}_W$ for $\nu(y)$ only
+  when $t(W)\le y+H(y)/2+1$, on $\Good(<y+H(y))$, and for $E(I)$ only when $t(W)\le\max I+1$, on $\Good(<\max I+H(u))$. Through it,
+  $\nu$ is read at points $\le x/2+2H$ (Lemma~\ref{lem:predictable}) and on the window $J$ of Proposition~\ref{prop:g1}(B), and the
+  short windows at points $\le t/2+2.1H(t/2)$ (Proposition~\ref{prop:pointwise}, Step~3), each time on a good event ($\Good(<x)$,
+  respectively $\Good(<t)$) that is contained in the one Lemma~\ref{lem:noise} works on. The bound of each $\mathrm{E3}_W$ reads $\qEcl^{(u)}$, of time $<u\le t(W)$, \textup{(H$_{\mathrm{BS}}$)} at heights $\le4u/X_0$
+(Remark~\ref{rem:horizon}) and sure facts, and no window event;
 \item E4 is used by the local counts, read only after $z+7H(z)$ (Remark~\ref{rem:localcount-uses}).
 \end{itemize}
 
@@ -571,8 +597,9 @@ E3$'$ in Lemma~\ref{lem:noise}). Every consumer of an event $E$ runs at a time a
 \end{itemize}
 
 % Logged correction 77 (CORRECTIONS-vs-v3.md): the slot facts are used off the null event N_= of Section sec:greedy.
-\emph{First failure.} On $\{\tau=t\}$, $\Good(<t)$ holds and $\Good(\le t)$ fails. If some $E$ with $t(E)=t$ fails, then
-$E^c\cap\Good(<t(E))$ occurred. Otherwise the queue constraint with time $t$ fails, which (D) excludes off the null event $\mathcal N_{=}$ of \S\ref{sec:greedy}. So
+% Logged correction 78: a failing event is a single window event (for E2-E4), never a whole-scale conjunction.
+\emph{First failure.} On $\{\tau=t\}$, $\Good(<t)$ holds and $\Good(\le t)$ fails. If some $E$ with $t(E)=t$ fails (for E2--E4 a
+single window event, such as one $\mathrm{E3}_W$ with $t(W)=t$), then $E^c\cap\Good(<t(E))$ occurred. Otherwise the queue constraint with time $t$ fails, which (D) excludes off the null event $\mathcal N_{=}$ of \S\ref{sec:greedy}. So
 $\{\tau<\infty\}\subset \mathcal N_{=}\cup\bigcup_E(E^c\cap\Good(<t(E)))$, and $\Prob(\mathcal N_{=})=0$.
 
 % Logged correction 68: the summation is explicit (v3: "sum O(u^-2) << 1/X_0").
@@ -580,7 +607,8 @@ $\{\tau<\infty\}\subset \mathcal N_{=}\cup\bigcup_E(E^c\cap\Good(<t(E)))$, and $
 \[
 \sum_m1.0001L_u^{-2}\le1.0001\sum_{m\ge0}(\Lambda+m\log2)^{-2}\le1.0001\Big(\frac1{\Lambda^2}+\frac1{\Lambda\log2}\Big)\le\frac{1.443}\Lambda.
 \]
-Everything else contributes at most $\sum_{m\ge0}(1+1.2+1)(2^mX_0)^{-2}\le4.3X_0^{-2}$, since $146H(u)u^{-3}\le u^{-2}$; and
+Everything else contributes at most $\sum_{m\ge0}(1+1.2+1)(2^mX_0)^{-2}\le4.3X_0^{-2}$, since $146H(u)u^{-3}\le u^{-2}$ (the
+E3 and E3$'$ events of a scale are summed over their windows in \S\ref{sec:noise-perscale}); and
 $1.443/\Lambda+4.3X_0^{-2}\le1.5/\Lambda$.
 
 The target $T$ is adapted (Section~\ref{sec:construction}), and every bound above holds for any adapted $T$. The union runs over
@@ -650,26 +678,51 @@ Summing the two cases gives the claim.
 
 \begin{corollary}[Per-prime increment bound]\label{cor:increment}
 % v3: Corollary 4.7
-Let $u\ge X_0$ be a height. On $\qEcl^{(u)}$ the following holds for every window $I\subset[u,2u+12L_u+2]$ (slot window or
-physical window) with $|I|\le\max(H(u),12L_u(L_0(u)+1)+2)$, every non-absorbed latest prime $q\ge y(u)$, every $a\ge1$ and
-\emph{every} value of the jitter offset of $q$:
+% Logged correction 79 (CORRECTIONS-vs-v3.md): v3 states this for I in [u,2u+12L_u+2] and q >= y(u), but Theorem queue(ii)
+% applies it to windows of I_x that begin below x, where the non-absorbed arrivals below x only have q >= y(x/2). Extended to
+% I in [u/2,2u+12L_u+2], |I| <= 2H(u) (which also covers the windows of length 1.03H(u)+1 of Lemma noise) and q >= y_-(u).
+Let $u\ge X_0$ be a height, and put $y_-(u):=y(\max(u/2,X_0))$, the absorption threshold of the dyadic block of
+$\max(u/2,X_0)$; so $y_-(u)=y(u/2)$ for $u\ge2X_0$. On $\qEcl^{(u)}$ the following holds for every window
+$I\subset[u/2,\,2u+12L_u+2]$ (slot window or physical window) with $|I|\le2H(u)$, every non-absorbed latest prime
+$q\ge y_-(u)$, every $a\ge1$ and \emph{every} value of the jitter offset of $q$:
 \[
 X^{(a)}_q(I):=\#\{n\in I\setminus\Abs:\ q^a\,\|\,n,\ q\text{ latest}\}\le2M_1(u).
 \]
+Moreover, every $n\in I\setminus\Abs$ whose latest prime $q$ is jittered has $q\ge y_-(u)$. The admissible windows include
+those of $\mathcal I_u$ (Section~\ref{sec:queue-bound}), which may begin below $u$, and the windows $W\subset[u,2u]$ of
+length $\le1.03H(u)+1$ of Section~\ref{sec:noise-perscale}.
 \end{corollary}
 
 \begin{proof}
-The cofactors $m=n/q^a$ lie in $I/q^a$, which has length at most
+Put $L:=L_u$, and let $x'$ be the dyadic scale of $\max(u/2,X_0)$, so $x'\ge u/4$ and $y_-(u)=y(x')$.
+
+\emph{The threshold.} Let $n\in I\setminus\Abs$ have jittered latest prime $q$. If $n\ge X_0$, then $\log n\ge\Lambda>L_*$, so
+$q\ge y(n)\ge y(x')$, as $n\ge\max(u/2,X_0)$ and $y$ is non-decreasing across scales (Theorem~\ref{thm:caplw}(c)). If $n<X_0$,
+then $u<2X_0$, and $n$ is the jittered prime $q$ itself, since a composite with a jittered prime is at least $2\Xm>X_0$; and
+$q\ge\Xm>y(X_0)=y_-(u)$ by Theorem~\ref{thm:caplw}(b).
+
+\emph{Admissible windows.} As $L_0=48M_1L^3/c'^2$ and $M_1\ge c\ge\frac14e^{4\ell^2}\ge10^5L^4$, we have
+$12L(L_0+1)+2\le25620M_1L^4\le M_1^2\le H(u)\le u/2$. So every $I\in\mathcal I_u$ lies in $[u/2,\,2u+12L+2]$ and has
+$|I|\le H(u)$.
+
+\emph{The cofactor window.} The cofactors $m=n/q^a$ lie in $I/q^a$. Since $L_0\ge L^5$, $y(x')=H(x')L_0(x')L_{x'}^6\ge
+H(x')L_{x'}^{11}$. By \eqref{eq:RH}, $H(u)\le4^{4\cdot10^{-6}}H(x')\le1.000006H(x')$, and $L_{x'}\ge L-\log4\ge(1-1.4\cdot10^{-8})L$.
+Hence
 \[
-|I|/y\le\max\big(1/(L_0L^6),\,13/(HL^5)\big)\le\delta_1(u/q),
+|I/q^a|\le\frac{|I|}{y_-(u)}\le\frac{2H(u)}{H(x')L_{x'}^{11}}\le2.00002\,L^{-11}\le2L^{-6}.
 \]
-since $y=H\cdot L_0\cdot L^6$. They are $q$-smooth, so they are decided no later than $q$.
+% Logged correction 80 (CORRECTIONS-vs-v3.md): v3 says "the cofactors are q-smooth, so they are decided no later than q", which
+% confuses value and decision order (a prime decided before q can be larger than q). Only decision order is used.
+Every prime of a cofactor $m$ is decided before $q$, since $q$ is the latest-decided prime of $n$ and $q\nmid m$. So the
+cofactors are realised elements of $\NN$ that do not depend on the jitter offset of $q$; only the window $I/q^a$ moves with
+it. No bound on the values of their primes is used below: the first case counts realised elements in grid windows, which
+$\qEcl^{(u)}$ bounds for every grid window, and the second uses only $m<\Xm$.
 \begin{itemize}
 % Logged correction 75 (CORRECTIONS-vs-v3.md): v3 covers I/q^a by two grid windows "at that height"; with windows
 % assigned to heights by their left end, a window just above a dyadic point z needs one window at height z/2.
 \item If $I/q^a$ meets $[\Xm,\infty)$, its left end $w$ satisfies $w>\Xm-1>X_0/2$; let $z$ be the dyadic height with
-  $w\in[z,2z)$. Then $z\le(2u+12L+2)/y\le3u/L^{11}$, as $y\ge L_0L^6\ge L^{11}$, and $|I/q^a|\le2L^{-6}\le\delta_1(z)$, as
-  $H\ge7L$, where $\delta_1(z)=2(\log z)^{-6}$ is the grid step at height $z$. Grid windows belong to the dyadic height of
+  $w\in[z,2z)$. Then $z\le(2u+12L+2)/y_-(u)\le3u/L^{11}$, as $y_-(u)\ge H(x')L_{x'}^{11}\ge L^{11}$, and
+  $|I/q^a|\le2L^{-6}\le\delta_1(z)$, as $z\le u$, where $\delta_1(z)=2(\log z)^{-6}$ is the grid step at height $z$. Grid windows belong to the dyadic height of
   their left end (Section~\ref{sec:queue-conv}). If the grid of height $z$ has a point in $[z,w]$, the grid window at
   height $z$ whose left end is the largest such point contains $I/q^a$. Otherwise $w<z+\delta_1(z)$, so $z\ge X_0$ (for $z=X_0/2$, $w>\Xm-1>z+\delta_1(z)$); then
   $I/q^a$ is covered by the first grid window at height $z$ and the last one at height $z/2$, whose right end is at least
@@ -683,8 +736,9 @@ since $y=H\cdot L_0\cdot L^6$. They are $q$-smooth, so they are decided no later
 \begin{remark}\label{rem:increment-uses}
 % v3: §4.4, after Corollary 4.7
 Corollary~\ref{cor:increment} is all that Section~\ref{sec:noise} (Lemma~\ref{lem:noise}, Proposition~\ref{prop:pointwise}) and Theorem~\ref{thm:queue} take from
-$\qEcl$. Shorter windows only make it easier. It covers every window of length at most $L^{-6}$ at any height $\ge X_0$,
-including the cofactor windows at height $u/q^2$ of the $q^2$-composites in Section~\ref{sec:noise}.
+$\qEcl$. Shorter windows only make it easier. Its proof covers, by at most two grid windows of $\qEcl^{(u)}$, every window of
+length at most $2L_u^{-6}$ whose left end lies in $(\Xm-1,\,3u/L_u^{11}]$, including the cofactor windows at height $u/q^2$ of
+the $q^2$-composites in Section~\ref{sec:noise}.
 \end{remark}
 
 \begin{lemma}[Heavy subspace]\label{lem:heavy}
@@ -1349,8 +1403,12 @@ larger elsewhere), and in the standard regime the margin is larger still.
 \end{lemma}
 
 \begin{proof}
-(i) \emph{Smoothness.} Every prime of $n\in\Abs\cap[u,u+h]$ is decided no later than its latest prime $r<y$, so it has value
-less than $r+H(r)<2y$.
+% Logged correction 80 (CORRECTIONS-vs-v3.md): the value bound for primes decided before r is derived with the jitter
+% allowance (v3: "decided no later than r, so value less than r+H(r)").
+(i) \emph{Smoothness.} Every prime $p$ of $n\in\Abs\cap[u,u+h]$ is decided no later than its latest prime $r<y$, so $p<2y$.
+Indeed, a rational $p$ is $<X_0<2\Xm\le2r$. A jittered $p$, decided at a slot $s_p\le s_r$, has
+$p\le s_p+H(s_p)/2\le s_r+H(s_r)/2\le r+H(s_r)$, as $v+H(v)/2$ increases and $s_r-H(s_r)/2\le r$; and $H(s_r)\le e^{-10^6}r$, as
+$H(v)/v\le e^{-10^7}$ for $v\ge X_0$. So $p\le(1+e^{-10^6})r<2y$.
 
 (ii) \emph{Divisor trick.} Multiply the primes of $n$ in any order and stop at the first partial product $d>h$. Then
 $d\in(h,2yh]$ is a $2y$-smooth element of $\NN$, and $n=d\cdot m$ with $m\in\NN$.
@@ -1472,9 +1530,12 @@ used. (c) An oscillation is at most twice the supremum.
   cofactors needs $\log n<L_*$. Since $L_*=10^7<\Lambda$, it is vacuous. Latest primes
   $q\in[\Xm,y)$ are absorbed.
 \item (The full blocks of Theorem~\ref{thm:queue} at large heights.) The arrivals that would break \eqref{eq:fullblock} are rigid runs
-  $r\cdot r'\cdot d$ driven by small jittered latest primes. These have latest prime less than $y$, so they lie in $\Abs$.
-  Non-absorbed arrivals have latest prime $q\ge y$, so Corollary~\ref{cor:increment} applies to them, and \eqref{eq:fullblock} holds as
-  shown in Theorem~\ref{thm:queue}.
+  $r\cdot r'\cdot d$ driven by small jittered latest primes. These have latest prime less than $y(n)$, so they lie in $\Abs$.
+  A non-absorbed arrival $n$ in a window $I\in\mathcal I_x$ has latest prime $q\ge y(n)\ge y_-(x)$; for $n<x$ (the windows of
+  $\mathcal I_x$ may begin below $x$) this is only $q\ge y(x/2)$. Corollary~\ref{cor:increment}, with $u=x$, covers these
+  windows and these primes, and \eqref{eq:fullblock} holds as shown in Theorem~\ref{thm:queue}.
+% Logged correction 79 (CORRECTIONS-vs-v3.md): v3 has "non-absorbed arrivals have latest prime q >= y"; in a window crossing x
+% the arrivals below x have q >= y(x/2) only.
 \end{enumerate}
 In particular no small-latest-prime event appears in the budget (Definition~\ref{def:good}).
 \end{proposition}
@@ -1491,8 +1552,11 @@ $y(n)\ge y_{\mathrm{std}}(n):=\qHstd(x)L_{0,\mathrm{std}}(x)L(x)^6$ (with $x$ th
 standard values. So $\Abs_{\mathrm{std}}\subset\Abs$: raising $y$ only \emph{adds} to $\Abs$ the composites whose latest
 jittered prime $q$ lies in $[y_{\mathrm{std}}(n),y(n))$. The consumers of $\Abs$ are unaffected:
 \begin{itemize}
-\item Theorem~\ref{thm:queue} and the noise bounds (Lemma~\ref{lem:noise}) see only latest primes $q\ge y$. Corollary~\ref{cor:increment} needs
-  $|I/q|\le H/y=1/(L_0L^6)$, which holds because $y$ uses the same raised $H$ and $L_0$. No consumer assumes $y=y_{\mathrm{std}}$.
+% Logged correction 79 (CORRECTIONS-vs-v3.md): the threshold seen by Theorem queue is y_-(x) = y(x/2) on windows that begin below x.
+\item Theorem~\ref{thm:queue} and the noise bounds (Lemma~\ref{lem:noise}) see only latest primes $q\ge y_-(u)$ of
+  Corollary~\ref{cor:increment} ($y(u/2)$ on the windows of Theorem~\ref{thm:queue} that begin below $u$, and $y(u)$ in
+  Lemma~\ref{lem:noise}). Corollary~\ref{cor:increment} needs $|I/q|\le2H(u)/y_-(u)\le2.00002L_u^{-11}$, which holds because $y$
+  uses the same raised $H$, and $L_0\ge L^5$. No consumer assumes $y=y_{\mathrm{std}}$.
   Latest primes in $[y_{\mathrm{std}},y)$ are absorbed, not repaired.
 \item Lemma~\ref{lem:S}: its ``$y$'' is the start of the operator, not the absorption threshold. Its bound uses Mertens' bound
   over all of $\NN$, so it is independent of $y$. Its threshold $H(v)\ge(\log v)^{8.5+\delta}$ only gets easier as $H$ grows.
@@ -1543,7 +1607,7 @@ Theorem~\ref{thm:queue} & Corollary~\ref{cor:r1}, Proposition~\ref{prop:pointwis
 Definition~\ref{def:good}, Lemma~\ref{lem:budget} & Theorem~\ref{thm:queue}, Proposition~\ref{prop:ecl}, Lemma~\ref{lem:landing}, Lemma~\ref{lem:noise} & Theorem~\ref{thm:A}\\
 Proposition~\ref{prop:ecl} & Theorem~\ref{thm:R}, Lemma~\ref{lem:heavy}, Theorem~\ref{thm:caplw} & Corollary~\ref{cor:increment}, Theorem~\ref{thm:queue},
   Lemma~\ref{lem:lemmaP}\\
-Corollary~\ref{cor:increment} & Proposition~\ref{prop:ecl} & Theorem~\ref{thm:queue}, Lemma~\ref{lem:noise}, Proposition~\ref{prop:pointwise}\\
+Corollary~\ref{cor:increment} & Proposition~\ref{prop:ecl}, Theorem~\ref{thm:caplw}(b),(c) (with \eqref{eq:RH}) & Theorem~\ref{thm:queue}, Lemma~\ref{lem:noise}, Proposition~\ref{prop:pointwise}\\
 Lemma~\ref{lem:heavy} & none & Proposition~\ref{prop:ecl}, Lemma~\ref{lem:reduction}, Theorem~\ref{thm:caplw}\\
 Lemma~\ref{lem:covering}, Lemma~\ref{lem:coefsupport}, Theorem~\ref{thm:binomial}, Theorem~\ref{thm:tcl} & none (deterministic) &
   Lemma~\ref{lem:reduction}, Theorem~\ref{thm:caplw}\\
@@ -1553,7 +1617,7 @@ Lemma~\ref{lem:reduction} & Lemma~\ref{lem:heavy}, Lemma~\ref{lem:covering}, The
 Lemma~\ref{lem:rowweights} & Rankin's bound; \cite{RosserSchoenfeld1962}; certificate (Appendix~\ref{app:cert-rankin}) & Theorem~\ref{thm:caplw}\\
 Theorem~\ref{thm:caplw}(a) & Lemma~\ref{lem:heavy}, Lemma~\ref{lem:reduction}, Lemma~\ref{lem:rowweights}, Theorem~\ref{thm:binomial} & Proposition~\ref{prop:ecl}\\
 Theorem~\ref{thm:caplw}(b), (c) & none (definitions of the parameters) & the parameters of Section~\ref{sec:queue-conv}, (F3$'$),
-  Lemma~\ref{lem:landing}, Theorem~\ref{thm:queue}, Lemma~\ref{lem:lemmaP}\\
+  Lemma~\ref{lem:landing}, Theorem~\ref{thm:queue}, Corollary~\ref{cor:increment}, Lemma~\ref{lem:lemmaP}\\
 Lemma~\ref{lem:lemmaP} & Proposition~\ref{prop:ecl} (heights $<u$), Lemma~\ref{lem:cm}, Theorem~\ref{thm:caplw}(b) & Lemma~\ref{lem:rhoA}, \eqref{eq:target},
   Lemma~\ref{lem:ZA}, Section~\ref{sec:noise} ($\sigma_{\Abs}$)\\
 Lemma~\ref{lem:rhoA} & Lemma~\ref{lem:lemmaP} only (heights $<u$) & (c): \eqref{eq:osc}, Proposition~\ref{prop:pointwise} (current height)\\

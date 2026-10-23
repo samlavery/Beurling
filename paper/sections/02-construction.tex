@@ -262,8 +262,8 @@ $A_j$ is $\mathcal F_{s_j-}$-measurable:
 \end{lemma}
 \begin{proof}
 Let $n\in J_j$ be composite. It has a prime factor $p\le n/2<s_{j+1}/2$, which was decided at a slot $j'$ with
-$s_{j'}\le p+H/2\le s_{j+1}/2+H/2<s_j$, once $s_j>2H+4$. Conversely, a prime decided at a slot $\ge j$ lands at
-$\ge s_j-H/2>s_{j+1}/2$, so it is not a factor of any composite in $J_j$.
+$s_{j'}-H(s_{j'})/2\le p<s_{j+1}/2<s_j-H(s_j)/2$, once $s_j>2H(s_j)+4$; as $v-H(v)/2$ increases, $s_{j'}<s_j$. Conversely, a prime
+decided at a slot $\ge j$ lands at $\ge s_j-H(s_j)/2>s_{j+1}/2$, so it is not a factor of any composite in $J_j$.
 \end{proof}
 
 \subsection{Bookkeeping}

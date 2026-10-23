@@ -64,8 +64,11 @@ with $\eps':=\eps+0.015\le0.045$ and $\Hord(M)$ the number of ordered factorisat
 \end{proposition}
 
 \begin{proof}
+% Logged correction 78 (CORRECTIONS-vs-v3.md): the bound on E(I) uses the window events E3_W of the windows around I only.
 \emph{Step 1: short windows.} For a slot window $I\subset[u,2u]$ with $|I|\le H(u)$, Lemma~\ref{lem:noise} gives
-$\sigma(I)=\int_Im+E(I)$, with $|E(I)|\le\hat\nu(u)H(u)$ on $G_u^{\mathrm{sw}}$. Write $\eps_s(z):=\sup|E(I)|$ over windows with
+$\sigma(I)=\int_Im+E(I)$, with $|E(I)|\le\hat\nu(u)H(u)$ on $\Good(<\max I+H(u))$; it reads the events $\mathrm{E3}_W$ of the windows
+$W\in\mathcal W'_u$ around $I$, of time $t(W)\le\max I+1$. A window meeting two dyadic blocks is split there; $E$ is additive, and each
+piece is covered in its own block, with the same times. Write $\eps_s(z):=\sup|E(I)|$ over windows with
 $|I|\le s$ at $z$.
 
 \emph{Step 2: the sub-$H$ increments of $\rhot$ are strip differences of $m$, up to $\delta$.}
@@ -133,8 +136,10 @@ with the supremum over $[z-H,z+0.6H]$.
 \item Base case $t<2\Xm$: there $\Kpt\rhot=\NT_{\mathrm{pt}}=0$, so $m=T'=\Tc+J$ and
   $v(t)\le o_t+\jz\mathbf 1[|t-X_0|\le1.01H(t)]$.
 \item $v(t)$ depends on $v$ and on the noise only at points $\le t/2+2.1H(t/2)<t$. So the recursion is a well-founded
-  induction on $t$, and each short-window event is used only at strictly earlier times. This is the pointwise form of the
-  event ordering in Definition~\ref{def:good} (event E3$'$).
+  induction on $t$. The bound on $E(I)$ of Step~1 is used only for windows $I\subset[u,2u]$ with $\max I\le t/2+2.1H(t/2)$; it holds on
+$\Good(<\max I+H(u))$, which contains $\Good(<t)$ since $\max I+H(u)\le t/2+3.2H(t/2)<t$, and the events $\mathrm{E3}_W$ it reads have
+$t(W)\le\max I+1<t$. This is the pointwise form of the event ordering in Definition~\ref{def:good} (the
+  events E3$'$).
 \end{itemize}
 
 \emph{Step 4: $\log t\cdot S(t)\le E_S$.} Since $H(t)\le w^{\eps_H}H(t/w)$ by \eqref{eq:RH}, $1.02H(t)/w\le0.52H(t/w)$ for

@@ -7,17 +7,20 @@
 \item The queue bound $Q\le B(u)$ (Theorem~\ref{thm:queue}, \eqref{eq:queueB}); so $|\Delta Q(W)|\le B(u)$ on windows at
   scale $u$.
 \item The per-prime increment bound (Proposition~\ref{prop:ecl}, Corollary~\ref{cor:increment}). On $E_{\mathrm{cl}}^{(u)}$,
-  for every slot window $I\subset[u,2u]$ with $|I|\le H(u)$, every non-absorbed latest prime $q\ge y(u)$, every $a\ge1$ and
-  every jitter offset, $X_q^{(a)}(I)\le2M_1(u)$. The event $E_{\mathrm{cl}}^{(u)}$ fails on $\Good$ with probability
+  for every slot window $I\subset[u,2u]$ with $|I|\le2H(u)$ (this covers the windows of $\mathcal W'_u$ below, of length
+  $\le1.03H(u)+1$), every non-absorbed latest prime $q\ge y(u)$, every $a\ge1$ and every jitter offset,
+  $X_q^{(a)}(I)\le2M_1(u)$. The event $E_{\mathrm{cl}}^{(u)}$ fails on $\Good$ with probability
   $\le L_u^{-2}$.
 \item The local count (Corollary~\ref{cor:localcount}). For dyadic $P$ and windows $J\subset[P,4P]$ of length $\le6H(P)$
   (part (i)), the non-absorbed count, and so the prime count, is $\le13.4|J|+K_{\mathrm{loc}}(P)+2$, with
   $K_{\mathrm{loc}}(P)=2B(4P)+7\lambda_P/3+23$ and $\lambda_P=4\log P$. For real $P\ge X_0$ (part (ii)) the same holds with
   $K_{\mathrm{loc}}(P)+K_{\mathrm{loc}}(2P)+4$ in place of $K_{\mathrm{loc}}(P)+2$.
-\item Absorption (Lemmas~\ref{lem:lemmaP}, \ref{lem:rhoA}, Proposition~\ref{prop:S1S2}). Non-absorbed latest primes satisfy
-  $q\ge y(u)=H(u)L_0L_u^6$, so $|I/q|\le L_u^{-6}$ for $|I|\le H(u)$. The small-$q$ case S1 does not arise in the present
-  regime.
+\item Absorption (Lemmas~\ref{lem:lemmaP}, \ref{lem:rhoA}, Proposition~\ref{prop:S1S2}). Non-absorbed latest primes of elements
+  of $[u,2u]$ satisfy $q\ge y(u)=H(u)L_0L_u^6$, so $|I/q|\le2/(L_0L_u^6)\le L_u^{-6}$ for $|I|\le2H(u)$. The small-$q$ case S1
+  does not arise in the present regime.
 \end{itemize}
+% Logged correction 79 (CORRECTIONS-vs-v3.md): v3 states the increment bound for |I| <= H(u), but the windows of W'_u have
+% length up to 1.03H(u)+1; Corollary cor:increment now allows |I| <= 2H(u).
 
 \paragraph{The composites with $q^2\mid n$: the source $s_2$.} Recall $C^{(\ge2)}=\Comp^{(2)}+\Mart^{(2)}$
 (\S\ref{sec:noise-identity}). Fix $u$ and a window $I\subset[u,2u]$, and put $\sigma:=\frac12\sqrt{L_u\log L_u}$.
@@ -26,7 +29,11 @@
 % smooth-element weight with a smaller Dickman variable and without its factor e^{a_V}. The bound is re-derived below, with
 % the endpoint X_0^-, and s_2 is defined by its closed form.
 \begin{itemize}
-\item The latest-prime filter forces $\tau_m<t(q)$ for $q^am$, so $\Pplus(m)\le2q$.
+% Logged correction 80 (CORRECTIONS-vs-v3.md): the value bound P+(m) <= 2q is derived from decision order with the jitter
+% allowance (v3 states it without one).
+\item The latest-prime filter forces $\tau_m<t(q)$ for $q^am$: every prime of $m$ is decided before $q$. So $\Pplus(m)\le2q$:
+  a rational prime is $<X_0<2q$, and a jittered prime decided at a slot $s<s_q$ is at most
+  $s+H(s)/2\le s_q+H(s_q)/2\le q+H(s_q)\le2q$, as $v+H(v)/2$ increases and $H(s_q)\le e^{-10^6}q$.
 \item \emph{Interchange the sums.} Fix $a\ge2$ and $m$. Then $q^am\in I$ means $q\in I_{m,a}:=(I/m)^{1/a}$, and the $q$-sum of
   the landing probabilities is $\int_{I_{m,a}}\rhot\le1.01\,|I_{m,a}\cap[\Xm,\infty)|$, since $\rhot\le1.01$ surely (see the
   variance bound below) and $\rhot=0$ below $\Xm$. With $y=q^am\in I$ we have $dq=dy/(amq^{a-1})$, and on
@@ -81,13 +88,22 @@
   $a\ge1$), the increment of a prime $q$ to $\Mart^{(2)}(I)$ is at most $b_2:=2A_uM_1(u)$.
 \end{itemize}
 
-\paragraph{The per-scale Freedman events.} Put $\lambda'_u:=3\log u+2\log\log u+2+\log H(u)$. For dyadic $u\ge X_0$, let
+% Logged correction 78 (CORRECTIONS-vs-v3.md): v3 defines E3 and E3' as conjunctions over a whole dyadic scale, but gives them the
+% times of single windows and reads single windows before the scale has closed (Lemma noise). They are now one event per window,
+% with an explicit time; the conjunctions are kept only as shorthand.
+\paragraph{The per-window Freedman events.} Put $\lambda'_u:=3\log u+2\log\log u+2+\log H(u)$. For dyadic $u\ge X_0$, let
 $\mathcal W'_u$ be the set of windows $[a,b]\subset[u,2u]$ with integer endpoints and $b-a\le1.03H(u)+1$; there are at most
 $(u+1)(1.03H(u)+2)$ of them. Let $\mathcal W_u\subset\mathcal W'_u$ consist of those with $b-a\ge H(u)-1$.
 \begin{itemize}
-\item $G_u^{\mathrm{NV}}$ (the event E3 of Definition~\ref{def:good}): every $W\in\mathcal W_u$ satisfies \eqref{eq:F1}
-  and \eqref{eq:F2}.
-\item $G_u^{\mathrm{sw}}$ (the event E3$'$): every $W\in\mathcal W'_u$ satisfies \eqref{eq:F1} and \eqref{eq:F2}.
+\item For $W=[a,b]\in\mathcal W'_u$, let $\mathrm{E3}_W$ be the event that $W$ satisfies \eqref{eq:F1} and \eqref{eq:F2}, with the time
+  $t(W):=b=\max W$. The events $\mathrm{E3}_W$ with $W\in\mathcal W_u$ are the events E3 of Definition~\ref{def:good}, and those with
+  $W\in\mathcal W'_u$ are the events E3$'$; each is a single event with its own time.
+\item $G_u^{\mathrm{NV}}:=\bigcap_{W\in\mathcal W_u}\mathrm{E3}_W$ and $G_u^{\mathrm{sw}}:=\bigcap_{W\in\mathcal W'_u}\mathrm{E3}_W$ are shorthand only, and
+  are not used below. They are not events of Definition~\ref{def:good} and carry no time.
+\item \emph{The time $t(W)$.} A composite $n\in W$ has latest prime $q\le n/2\le b/2$. Such a $q$ is decided at a slot
+  $s\le b/2+0.51H(b/2)$, as $s-H(s)/2\le q$ and $s-H(s)/2$ increases. A slot $s$ enters $\Comp(W)$ or $\Comp^{(2)}(W)$ only if its box meets $W/w$ for a cofactor $w\ge2$ (for $\Comp^{(2)}$, $(W/m)^{1/a}\subset[0,\sqrt b]$), which again forces $s\le b/2+0.51H(b/2)$. So $\Mart(W)$ and $\Mart^{(2)}(W)$,
+  their truncations, and hence $\mathrm{E3}_W$, are determined by the decisions and offsets at slots $\le b/2+0.51H(b/2)<b$. Thus $\mathrm{E3}_W$
+  is $\mathcal F_{t(W)}$-measurable, with room, and $t(W)\le2u$ for every window at scale $u$.
 \end{itemize}
 \begin{align}
   |\Mart(W)|&\le\sqrt{2\bar V_W\lambda'_u}+\tfrac43M_1(u)\lambda'_u,&\bar V_W&:=2M_1(u)\cdot50\log(2u)\cdot|W|;\label{eq:F1}\\
@@ -115,6 +131,8 @@ and $v=\bar V_W,\bar V^2_W$ of \eqref{eq:F1}, \eqref{eq:F2}.
   $\mathrm{Var}(\tilde X_q\mid\mathcal F_{q-})\le2M_1\E[X_q\mid\mathcal F_{q-}]$, so $V_W\le2M_1\Comp(W)$; likewise
   $V^2_W\le b_2\Comp^{(2)}(W)\le b_2s_2|W|$. Next,
   $\Comp(W)=\int_W(\Kpt\rhot-K_{\Abs}\rhot+\NT_{\mathrm{pt}})\le1.01\sum_v\omega_y(v)\cdot|W|+\int_W|\NT_{\mathrm{pt}}|\le50\log(2u)\,|W|$.
+  Here $|\NT_{\mathrm{pt}}(y)|\le2.02\,\eta(y)\le2.02(\log y+B_1)$ by \eqref{eq:NT}, with the crude harmonic bound for $\eta$ (no
+  $\tau$-near or local-count input), which reads $\NN$ only up to $y/\Xm$.
 % Logged correction 73: v3 says (H_BS) "at heights <= u"; a short window W may close at t(W) < u + 12 log u + 3, where that is
 % not certified. Lemma S(i) at y in W reads only cofactors w <= y/v <= 4u/X_0, far below the horizon of Good(<t(W)).
   This uses $\sum_v\omega_y(v)\le1.2\log_2(4u/X_0)$ (Lemma~\ref{lem:S}(i), that is, \textup{(H$_{\mathrm{BS}}$)} at heights
@@ -128,21 +146,25 @@ and $v=\bar V_W,\bar V^2_W$ of \eqref{eq:F1}, \eqref{eq:F2}.
   truncated martingale; likewise for \eqref{eq:F2}. No positivity of the margin is used.
 \end{itemize}
 
+% Logged correction 78: the probability bound is a sum over windows, each estimated on its own Good(<t(W)).
 \paragraph{Probability.} With $a=\sqrt{2v\lambda'_u}+\frac23b\lambda'_u$, Freedman's inequality gives, per window and per
-martingale, a two-sided failure probability $\le2e^{-\lambda'_u}=2e^{-2}u^{-3}L_u^{-2}H(u)^{-1}$. With four bounds per window,
-\[
-  \Prob\big((G_u^{\mathrm{NV}}\cap G_u^{\mathrm{sw}})^c\cap\Good(<t)\big)\le8e^{-2}(u+1)(1.03H(u)+2)u^{-3}L_u^{-2}H(u)^{-1}
-  \le1.2\,u^{-2}L_u^{-2}.
-\]
-Each window's bound is an event whose time is the moment the window closes ($\le2u$). These are the events E3 and E3$'$ of
-Definition~\ref{def:good}. Together with $E_{\mathrm{cl}}$ they enter $\Good(<t)$ and the budget $\Prob(\tau<\infty)\le1.5/\Lambda$
-of Lemma~\ref{lem:budget}. The budget is dominated by $E_{\mathrm{cl}}$: $\sum_uL_u^{-2}\le1.45/\Lambda$, while the
+martingale, a two-sided failure probability $\le2e^{-\lambda'_u}=2e^{-2}u^{-3}L_u^{-2}H(u)^{-1}$. By the bullets above,
+$\Prob(\mathrm{E3}_W^c\cap\Good(<t(W)))\le4e^{-\lambda'_u}$ for each $W\in\mathcal W'_u$. The inputs of this bound are $E_{\mathrm{cl}}^{(u)}$, of time $8u/L^{11}+H<u\le t(W)$; \textup{(H$_{\mathrm{BS}}$)} on $[1,4u/X_0]$, which holds on
+$\Good(<t(W))$ far below its certified horizon (Remark~\ref{rem:horizon}); and sure facts. No window event (E2, E3, E3$'$, E4) is read. Counting the E3 and the E3$'$ events separately,
+\begin{multline*}
+  \sum_{W\in\mathcal W_u}\Prob\big(\mathrm{E3}_W^c\cap\Good(<t(W))\big)+\sum_{W\in\mathcal W'_u}\Prob\big(\mathrm{E3}_W^c\cap\Good(<t(W))\big)\\
+  \le8e^{-2}(u+1)(1.03H(u)+2)u^{-3}L_u^{-2}H(u)^{-1}\le1.2\,u^{-2}L_u^{-2}.
+\end{multline*}
+Each $\mathrm{E3}_W$ is one event of Definition~\ref{def:good}, with time $t(W)$. With $E_{\mathrm{cl}}$ they enter $\Good(<t)$ (as
+$\bigcap_{t(W)<t}\mathrm{E3}_W$) and the budget $\Prob(\tau<\infty)\le1.5/\Lambda$ of Lemma~\ref{lem:budget}. The budget is dominated by $E_{\mathrm{cl}}$: $\sum_uL_u^{-2}\le1.45/\Lambda$, while the
 Freedman part is $\le2X_0^{-2}$.
 
 \begin{lemma}[per-scale noise]\label{lem:noise}
 % v3: Lemma 3.11
-For $y\in[u,2u]$, work on $\Good(<y+H(y))$. This event contains the E3/E3$'$ windows of the blocks
-$u'\in\{u/2,u,2u\}$ that close by $y+H(y)/2$, and $E_{\mathrm{cl}}^{(u')}$. Put
+% Logged correction 78: the windows read here are named, with their times.
+For $y\in[u,2u]$, work on $\Good(<y+H(y))$. This event contains $\mathrm{E3}_W$ for every window $W$ of the blocks $u'\in\{u/2,u,2u\}$ with
+$t(W)<y+H(y)$, in particular for the windows used below, which have $t(W)\le y+H(y)/2+1$, and it contains $E_{\mathrm{cl}}^{(u')}$.
+Put
 \begin{multline*}
   \nu_0(u'):=\sqrt{\frac{206M_1(u')\lambda'_{u'}\log(2u')}{H(u')}}\Big(1+\frac1{H(u')}\Big)
   +\sqrt{\frac{4.2A_{u'}M_1(u')s_2(u')\lambda'_{u'}}{H(u')}}\\
@@ -170,7 +192,7 @@ $H(y)\nu(y)=\Mart(W_y)+\Mart^{(2)}(W_y)-\Delta Q(W_y)+\Comp^{(2)}(W_y)+E_{\mathr
 \item $E_{\mathrm{edge}}$ counts the two partial slot cells at the ends of $W_y$. Each holds at most one slot and at most
   $A_j\le B(u)+1$ composites, so $|E_{\mathrm{edge}}|\le2B(u)+4$.
 \item $|\Delta Q|\le B(u)$ by Theorem~\ref{thm:queue}, and $\Comp^{(2)}(W_y)\le s_2|W_y|$ by \eqref{eq:s2}.
-\item Choose $W^-\subset W_y\subset W^+$ in $\mathcal W_u$ with $|W^+\setminus W^-|\le2$. Counts and compensators are
+\item Choose $W^-\subset W_y\subset W^+$ in $\mathcal W'_u$ ($W^+\in\mathcal W_u$) with $|W^+\setminus W^-|\le2$. Counts and compensators are
   monotone in the window, so $\Mart(W^-)-\Comp(W^+\setminus W^-)\le\Mart(W_y)\le\Mart(W^+)+\Comp(W^+\setminus W^-)$, with
   $\Comp(W^+\setminus W^-)\le100\log(2u)$. The same holds for $\Mart^{(2)}$, with $2s_2$ in place of $100\log(2u)$.
 \item Apply \eqref{eq:F1} and \eqref{eq:F2} with $|W^\pm|\le1.03H(u)+1$, and divide by $H(y)\ge H(u)$.
@@ -181,8 +203,9 @@ $H(y)\nu(y)=\Mart(W_y)+\Mart^{(2)}(W_y)-\Delta Q(W_y)+\Comp^{(2)}(W_y)+E_{\mathr
 
 \emph{The bound on $E(I)$.} The bookkeeping \eqref{eq:bookkeeping} on the slot window $I$ has no partial cells. By the
 computation of \eqref{eq:margin-identity} without the $B$-average,
-$\sigma(I)=\int_Im-\Comp^{(2)}(I)-\Mart(I)-\Mart^{(2)}(I)+\Delta Q(I)\pm2$. Now sandwich $I$ between windows of
-$\mathcal W'_u$ as above, and apply \eqref{eq:F1}, \eqref{eq:F2} and \eqref{eq:s2}.
+$\sigma(I)=\int_Im-\Comp^{(2)}(I)-\Mart(I)-\Mart^{(2)}(I)+\Delta Q(I)\pm2$. Now sandwich $I$ between windows $W$ of
+$\mathcal W'_u$ as above, with $t(W)\le\max I+1<\max I+H(u)$, and apply \eqref{eq:F1}, \eqref{eq:F2} (that is, $\mathrm{E3}_W$) and
+\eqref{eq:s2}.
 \end{proof}
 
 \paragraph{The \textup{(SW)} sums.} Under the tolerance $M_1\le H/L^{14}$ of \eqref{eq:params}, with $B\le28M_1L^2$,

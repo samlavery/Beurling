@@ -426,7 +426,7 @@ and $\sup_y\log y\cdot\eta(y)\le e^{-0.99\Lambda}$. (At $\Lambda=10^8$ the first
 
 \begin{proof}
 \emph{Localisation.} Let $w$ be $\tau$-near at $v'$, and write $w=pm$ with $p$ the prime of $w$ that is largest in decision
-order, so that $\tau_w=t(p)$ and $\Pplus(m)\le p+H(p)$. Since $|t(p)-p|\le H(p)$, the condition $|t(p)-v'/(pm)|\le2H(v'/w)$
+order, so that $\tau_w=t(p)$ and $\Pplus(m)\le p+H(t(p))\le p+2H(p)$. Since $|t(p)-p|\le H(p)$, the condition $|t(p)-v'/(pm)|\le2H(v'/w)$
 gives $|p-v'/(pm)|\le H(p)+2H(v'/(pm))\le3.01H(p)$, since $v'/(pm)\le1.02p$ (as $H(z)\le10^{-3}z$) and $H(1.02p)\le1.0001H(p)$ by \eqref{eq:RH};
 % Logged correction 69 (CORRECTIONS-vs-v3.md): 3H(p)(1+o(1)) made explicit.
 i.e. $p^2\in v'/m\pm3.1\,pH(p)$. So $p$ lies in a window of length $3.1H(p_0)$
@@ -472,9 +472,14 @@ $v(\ell,4P)$ with $\ell\le(u+1)L$.
 \begin{itemize}
 \item If $u<1$: each of the two dyadic blocks has $\sum1/m\le1$ (the harmonic sum over $(Y,2Y]$, by \eqref{eq:HBS} above
   $\Xm$), so $V_P(y)\le2$ and $\log y\cdot V_P(y)\le2(u+2)L\le6L$.
-\item If $1\le u\le L$: Lemma~\ref{lem:smooth-v} with $z=4P$ gives $V_P(y)\le2C_0\rho(u)e^{a_V}$ with
-  $a_V\le4\cdot3.2\,u^2\log(u+2)/(uL)\le12.8\log(L+2)$. Since $(u+2)\rho(u)\le3$, $\log y\cdot V_P(y)\le4.2L(L+2)^{12.8}$.
-\item If $u>L$: Lemma~\ref{lem:rankin-crude} gives $V_P(y)\le2e^{14}Le^{-u}$, and $(u+2)L\cdot2e^{14}Le^{-u}\le2e^{14}L^2(L+2)e^{-L}\le1$.
+% Logged correction 82 (CORRECTIONS-vs-v3.md): the two blocks have Dickman variables u and u + log2/L; both lie in [1,L], the
+% range of Lemma smooth-v, only for u <= L - log2/L, so the split is now at L - 1 and Lemma rankin-crude covers the rest.
+\item If $1\le u\le L-1$: the two blocks have Dickman variables $u$ and $u+\log2/L$, both in $[1,L]$, so Lemma~\ref{lem:smooth-v}
+  with $z=4P$, applied to each block, gives $V_P(y)\le2C_0\rho(u)e^{a_V}$, since $\rho$ is non-increasing and $a_V$ increasing, with $a_V$
+  taken at the larger variable $u':=u+\log2/L\le L$: $a_V=4\cdot3.2\,u'\log(u'+2)/L\le12.8\log(L+2)$. Since $(u+2)\rho(u)\le3$,
+  $\log y\cdot V_P(y)\le4.2L(L+2)^{12.8}$.
+\item If $u>L-1$: Lemma~\ref{lem:rankin-crude} gives $V_P(y)\le2e^{14}Le^{-u}$, and
+  $(u+2)L\cdot2e^{14}Le^{-u}\le2e^{15}L^2(L+1)e^{-L}\le1$.
 \end{itemize}
 In every case $\log y\cdot V_P(y)\le5(L+2)^{14}$. Summing over $P$ (the terms $H(P)(\log4P+2)^{14}/P$ decay geometrically, with
 ratio $\le0.53$, and the first is $\le2.01H(X_0)(\Lambda+4)^{14}/X_0$),
@@ -499,7 +504,7 @@ For a start $y$ and a scale $v\ge X_0/2$ put $\omega_y(v):=\sum_{w\in\NN:\ y/w\i
 \item $\omega_y(v)\le1.2$;
 \item for $y\ge4v^2$ the filter forces $\Pplus(w)\le3v$. Put $u_y:=\log(y/2v)/\log3v$. If $u_y\le\log3v$, then
   $\omega_y(v)\le2C_0\rho(u_y)e^{a_V}$ with $a_V\le13u_y\log(u_y+2)/\log3v$; so $\omega_y(v)\le2C_0\rho(u_y)e^{0.02}$ for
-  $u_y\le30$ and $\omega_y(v)\le2C_0e^{-0.9u_y\log u_y}$ for $30<u_y\le\log3v$. If $u_y>\log3v$, then
+  $u_y\le30$ and $\omega_y(v)\le2C_0e^{-0.7u_y\log u_y}$ for $30<u_y\le\log3v$. If $u_y>\log3v$, then
   $\omega_y(v)\le5(\log3v)^{1.65}e^{-u_y/2}$;
 \item $\sum_{Y=2^k\ge v}\log(2Y)\sup_{y\in[Y,2Y)}\omega_y(v)\le C_S'(\log3v)^2$ with $C_S':=10$.
 \end{enumerate}
@@ -509,9 +514,13 @@ For a start $y$ and a scale $v\ge X_0/2$ put $\omega_y(v):=\sum_{w\in\NN:\ y/w\i
 (i) $\omega_y(v)\le\sum_{w\in(y/2v,y/v]}1/w\le\log2+2\eta_1+2v/y\le1.2$ by \eqref{eq:HBS} (and $\le1$ below $\Xm$).
 
 (ii) If $w$ passes the filter then $\tau_w<y/w\le2v$, so every prime of $w$ is decided before slot $2v$ and is $\le2v+H(2v)\le3v$.
-Since $w\in(y/2v,y/v]$, Lemma~\ref{lem:smooth-v} with $z=3v$ and $\ell=\log(y/2v)$ gives the first bound (its hypothesis
-$u\le L_z$ is $u_y\le\log3v$); the numerical forms follow from $a_V\le13u\log(u+2)/\log3v$ and $\log3v\ge10^8$, and from
-$\rho(u)\le e^{-u\log u}$. For $u_y>\log3v$, Rankin's bound with exponent $1-1/(2\log3v)$ and Lemma~\ref{lem:cm} gives
+% Logged correction 81 (CORRECTIONS-vs-v3.md): v3 applies Lemma smooth-v for every u_y <= log 3v, but that lemma needs u >= 1,
+% and u_y < 1 for 4v^2 <= y < 6v^2. That range is now covered by (i).
+Since $w\in(y/2v,y/v]$, for $1\le u_y\le\log3v$ Lemma~\ref{lem:smooth-v} with $z=3v$ and $\ell=\log(y/2v)$ gives the first bound (its
+hypotheses $L_z\ge100$ and $1\le u\le L_z$ read $\log3v\ge100$ and $1\le u_y\le\log3v$). If $u_y<1$, which happens for
+$4v^2\le y<6v^2$, then $\rho(u_y)=1$, and (i) gives $\omega_y(v)\le1.2\le2C_0=1.4\le2C_0\rho(u_y)e^{a_V}$. The numerical forms
+follow from $a_V\le13u\log(u+2)/\log3v$ and $\log3v\ge10^8$, so that $a_V\le2.4\cdot10^{-6}u$ for $u\le\log3v$, and from
+$\rho(u)\le1/\Gamma(u+1)\le(e/u)^u$ (see (iii)); for $u>30$, $u\log u-1.0000024u\ge0.7u\log u$. For $u_y>\log3v$, Rankin's bound with exponent $1-1/(2\log3v)$ and Lemma~\ref{lem:cm} gives
 $\omega_y(v)\le5(\log3v)^{1.65}e^{-u_y/2}$.
 
 (iii) The range $Y<4v^2$ contributes at most $1.2\cdot\frac3{2\log2}(1+1.1/\log3v)(\log3v)^2\le2.7(\log3v)^2$, comparing the sum
@@ -519,11 +528,20 @@ of $\log(2Y)$ over the dyadic $Y\in[v,4v^2)$ with $\int t\,dt/\log2$ from $\log2
 % Logged correction 69: (1+o(1)) made explicit.
 $Y\ge4v^2$ contributes at most
 \[
-  \frac{2\cdot0.70\cdot e^{0.02}}{\log2}(\log3v)^2\int_1^\infty\frac{1+u}{\Gamma(u+1)}\,du\le7.11(\log3v)^2,
+  \frac{2\cdot0.70\cdot e^{0.02}}{\log2}(\log3v)^2\cdot3.4480+4\log3v\le7.11(\log3v)^2,
 \]
-using $\rho(u)\le1/\Gamma(u+1)$ (from $\rho(u)\le\rho(u-1)/u$) and
-$\int_1^\infty(1+u)/\Gamma(u+1)\,du=3.4479$. The parts with $u_y>30$ add less than $10^{-20}(\log3v)^2$. The total is
-$\le9.82(\log3v)^2$.
+using $\rho(u)\le1/\Gamma(u+1)$ (from $\rho(u)\le\rho(u-1)/u$, and on $[0,1]$ from $\rho=1\le1/\Gamma(u+1)$) and
+$\int_1^\infty(1+u)/\Gamma(u+1)\,du=3.4479$; the first term is $\le7.1049(\log3v)^2$, and $4\log3v\le10^{-7}(\log3v)^2$.
+% Logged correction 81: the passage from the dyadic sum to the integral is made explicit, with the first terms.
+In detail, put $L:=\log3v$ and, for a dyadic $Y\ge4v^2$, $u_Y:=\log(Y/2v)/L$. Every $y\in[Y,2Y)$ has $u_y\ge u_Y$, so (ii) gives
+$\sup_{y\in[Y,2Y)}\omega_y(v)\le2C_0e^{0.02}/\Gamma(u_Y+1)$ for $u_Y\le30$, also when $u_Y<1$. The $u_Y$ form a progression of step
+$\Delta:=\log2/L$ starting at $u_0\ge\log2v/L\ge1-5\cdot10^{-9}$, and $\log(2Y)=(1+u_Y)L+\log\frac43$. The function
+$(1+u)/\Gamma(u+1)$ is log-concave, with maximum $\le2.007$, and $1/\Gamma(u+1)$ is decreasing on $[0.47,\infty)$, with
+$\int_1^\infty du/\Gamma(u+1)=1.1814$. For a unimodal function the sum of its values at the points of such a progression is at most
+$1/\Delta$ times its integral plus its maximum. So the terms with $u_Y\le30$ add at most
+$2C_0e^{0.02}\bigl[3.4480\,L^2/\log2+2.01L+\log\tfrac43\,(1.1815\,L/\log2+1.0001)\bigr]$, where $3.4480$ bounds the integral of
+$(1+u)/\Gamma(u+1)$ from $u_0$; the last two terms contribute $\le3.58L+0.42\le4L$. This is the display.
+The parts with $u_y>30$ add less than $10^{-20}(\log3v)^2$. The total is $\le(2.7+7.11+10^{-20})(\log3v)^2\le9.82(\log3v)^2$.
 \end{proof}
 
 The filter forces a dense cofactor ($v<\sqrt y$) to be $3v$-smooth, hence Dickman-small. No Riemann-sum or

@@ -216,9 +216,14 @@ Two ways of bounding $M$ are used.
 \end{itemize}
 The indicator cannot simply be dropped: $D$ grows like $Bw^3\log w/\ell$, so $\int\pi\,e^D$ diverges.
 
+% Logged correction 81 (sweep): Lemma smooth-v's range 1 <= u* <= L_z is now checked in the text (it held, but was not stated).
+% Here ell > 30 tau is unbounded, so U(ell) <= 4.3 ell^{1/4} (true only for ell <= 31 tau, Step 4) is not used.
 \emph{Step 6: the tail.} The primes with $w>U(m)$ correspond exactly to the $n$ that are $e^{\ell/u^*}$-smooth, with
 $u^*:=U(\ell)+\frac12$. This uses $U(m)\ge U(\ell)-\frac12$ for $m\ge\ell(1-1/U)$. Dropping the density condition and
-applying Lemma~\ref{lem:smooth-v} gives a tail contribution to $\Psi$ of at most $(\ell/\tau)C_0\rho(u^*)e^{a_V(u^*)}$.
+applying Lemma~\ref{lem:smooth-v} (with $z=e^{\ell/u^*}$; its hypotheses hold: $u^*\ge U(\ell)\ge1$, and
+$u^*\le\ell^{1/4}\bigl(2+\sqrt{2\log(\ell/\tau)+4}\bigr)$, so $u^{*2}\le\ell^{1/2}(4\log\ell+16)\le\ell$, which gives $u^*\le L_z=\ell/u^*$
+and $L_z\ge\ell^{1/2}\ge100$) gives a tail contribution to $\Psi$ of at most
+$(\ell/\tau)C_0\rho(u^*)e^{a_V(u^*)}$.
 Divide by $G(\ell,u)$, and use $\Phi_\infty\ge C_0$, $Q\ge a$ and
 $\rho(u^*)/\rho(u-1)\le e^{-r(u-1)(u^*-u+1)}$ \ref{R3}. With $y:=\log(\ell/\tau)\ge\log30$,
 \[

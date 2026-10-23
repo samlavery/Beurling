@@ -113,7 +113,7 @@ the proof.
 \subsection{Logical structure}\label{sec:logic}
 The table lists the main results with their inputs. An input marked $\downarrow$ is used only at a strictly earlier time or a
 strictly smaller height; every other input is used at the same time. The same-time dependencies form an acyclic graph; this was
-checked mechanically on the full dependency graph (78 nodes, 196 edges, 28 of them $\downarrow$; Appendix~\ref{app:cert-dep}).
+checked mechanically on the full dependency graph (78 nodes, 197 edges, 28 of them $\downarrow$; Appendix~\ref{app:cert-dep}).
 % Logged correction 61: Lemma threshold-mass also reads the lag and Lemma P (two strictly-earlier edges added).
 % Logged correction 64: Lemma goodheights no longer uses Broucke--Debruyne or Lemma ZA (two edges and one node removed).
 % Logged correction 66: edges (H_BS) -> Lemma T1, (H_BS) -> lag and Prop g1 -> Lemma P added; Lemma P -> Lemma cm is strictly earlier.
@@ -174,7 +174,9 @@ jitters $U_j$.
 
 \emph{(N1) First failure} (Definition~\ref{def:good}, Lemma~\ref{lem:budget}).
 \begin{itemize}
-\item Every bad event $E$ carries a time $t(E)$, a slot, and is $\mathcal F_{t(E)}$-measurable. Put
+% Logged correction 78 (CORRECTIONS-vs-v3.md): the window events are single events with their own times.
+\item Every bad event $E$ carries a time $t(E)$, a slot, and is $\mathcal F_{t(E)}$-measurable. The events E2, E3, E3$'$ and E4 are
+one event per window, each with its own time (for E3 and E3$'$, $t(W)=\max W$, \S\ref{sec:noise-perscale}). Put
 \[
   \Good(<t):=\{Q_j\le B(s_j)\text{ for all }j\text{ with }t_j<t\}\cap\bigcap_{t(E)<t}E,
 \]
@@ -207,9 +209,15 @@ $u(1-\delta)\le u-u^{0.98}\le\max I-H$, and (LP-a) holds there on $\Good(<\max I
 event is needed;
 \item local counts at heights $\le u/2$ or $\le\sqrt u$, and one local count at height $u(1-\delta)$
 (the proof of Proposition~\ref{prop:g1}(B), Step~1), read before $u-\delta u+7H<u$;
-\item the per-scale noise event for the noise on $[1,u/2]$, at time $2v\le u$;
-\item the short-window events, internally ordered by window start, each window's variance bound coming from strictly earlier
-windows (Proposition~\ref{prop:pointwise});
+% Logged correction 78: the noise is read through single window events E3_W, each of time max W before its consumer; the
+% variance bound inside each E3_W is sure on its own good event and reads no other window.
+\item the noise $\nu$ (Lemma~\ref{lem:noise}) at points $y\le u/2+2H$, and on the window $J$ of Proposition~\ref{prop:g1}(B) at points
+$y\le u(1-\delta)$. Lemma~\ref{lem:noise} at $y$ works on $\Good(<y+H(y))$, and $y+H(y)\le\max(u/2+3H,\,u-\delta u+H)\le\max I-H$, so it
+contains $\Good(<\max I)$; the events $\mathrm{E3}_W$ it reads have $t(W)\le y+H(y)/2+1$;
+\item the bound on $E(I')$ of Lemma~\ref{lem:noise}, read by Proposition~\ref{prop:pointwise} for short windows $I'$ with
+$\max I'\le u/2+2.1H(u/2)$, on $\Good(<\max I'+H)$, where $\max I'+H\le u/2+3.2H\le\max I-H$; its events $\mathrm{E3}_W$ have
+$t(W)\le\max I'+1$. The bound of each $\mathrm{E3}_W$ holds on $\Good(<t(W))$ and reads $E_{\mathrm{cl}}$ and \textup{(H$_{\mathrm{BS}}$)} at
+heights $\le4t(W)/X_0$, and no window event;
 \item the cluster event at heights $\le8u/L^{11}+H$.
 \end{itemize}
 
