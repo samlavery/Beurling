@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#45)
+## Addendum: defects found after the re-check (corrections #31–#48)
 
-After the first public version, a reader reported ten defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up five more. The full list, with each repair, is entries #31–#45 of `CORRECTIONS-vs-v3.md`:
+After the first public version, a reader reported twelve defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, turned up six more. The full list, with each repair, is entries #31–#48 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -72,10 +72,10 @@ re-checking the repairs, turned up five more. The full list, with each repair, i
 | 32 | jitter width H; Thm 6.22(c) | H jumped (ceiling in r₀; per-scale freeze), breaking its regularity | reader |
 | 33 | decomposition of ζ_P | absorbed-element weight bound \|w_a\| ≤ 1 false | reader |
 | 34 | Lemma T1, absorbed part | smoothed elements assumed to have unit mass | reader |
-| 35 | Lemma ZA(a) | statement stronger than proof; saving not monotone on the ramp | re-check |
+| 35 | Lemma ZA(a) | statement stronger than proof; saving not monotone on the ramp | repair of #33 |
 | 36 | Lemma count, Cor lag, X₀ | unproved initial value; lag's lower constant; initialisation at X₀ | reader |
 | 37 | Cor localcount | proved for dyadic P, used at non-dyadic P and below X₀ | re-check |
-| 38 | Lemma threshold-mass | stated for x ≥ X₀, valid for x ≥ X₀³ (all uses) | re-check |
+| 38 | Lemma threshold-mass | stated for x ≥ X₀, valid for x ≥ X₀³ (all uses) | repair of #37 |
 | 39 | Lemma designedzero | unspecified constant C₁; now C₁ := 0 with κ₀ ≥ X₀⁻¹ | re-check |
 | 40 | Thm bs, t-dense | definition omitted the j = 0 condition p₁ ≤ t | reader |
 | 41 | standing fact (F2) | claimed the slots of distinct primes are independent; only the conditional jitter law holds (and is all that is used) | reader |
@@ -83,9 +83,13 @@ re-checking the repairs, turned up five more. The full list, with each repair, i
 | 43 | standing fact (F3′); λ_D; degree cap D; Lemma rowweights | Euler-product partition missed jittered primes in [X₀⁻, X₀); a "read X₀ as X₀⁻" convention replaced by explicit X₀⁻ bounds | reader |
 | 44 | Prop cover, Lemma 4.14(ii) | uniform excess weight X₀⁻¹ does not give the claimed pattern-sum bound; per-index weights τ_j⁻¹ needed | re-check |
 | 45 | Thm 3.13(iii) (LP⁺), Step 10 | unspecified smoothing window; high-frequency Mellin tail beyond T₁ never bounded; now an explicit k-fold box kernel with T₁ ∝ k and every contour piece bounded | reader |
+| 46 | Prop cover (Cover Bound) | right side was a sum over the realised (random) primes, compared with an expectation; now a deterministic envelope Σ̄_τ (per-row chain bound Ch, R-row labels at τ_j) | reader |
+| 47 | margin decomposition; Prop g1, Thm g2, Prop pointwise(b), Cor r1 | no support convention for MA[ℙ] and f₀ at X₀; the exact convention gives an edge term just below small multiples of X₀; margin constant 0.97 → 0.82 up to X₀^1.01 (new Lemma margin(d)); c′ = 0.15 and K_d = 3 stand | reader |
+| 48 | App. A Pivot-Integration Lemma, label sum | the label sum needs the integrand free of the slot label pointwise, but the carried Euler factors cancel only after integration; re-proved with the label sum first (at the first slot u_t after the latest free column f_t, with support indicator χ_t), then the pivot integrals, then a joint block bound; no constant changes | re-check |
 
-**Repairs and their check.** All fifteen are repaired. A fresh AI checker checked them in seven passes
-(`review/recheck/R4.md` §§1–14). Its work included:
+**Repairs and their check.** All eighteen are repaired. A fresh AI checker checked #31–#47 in ten passes
+(`review/recheck/R4.md` §§1–17); the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
 - an independent derivation of the count identity's initial value;
@@ -97,10 +101,12 @@ re-checking the repairs, turned up five more. The full list, with each repair, i
   - statement constants stronger than the proof;
   - comments that hide rendered text.
 
-The final pass ended with nothing blocking, fixable or cosmetic.
+Pass 9 ended with one FIXABLE item (N20, a displayed identity in Lemma margin(d)(iii) that was false although the bounds
+hold). Its fix was confirmed in pass 10 (§17), which ended with nothing blocking or fixable. R5 found the #48 repair CORRECT
+WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the forty-five corrections changes a conclusion of the paper. Several required new
-arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44 and #45.
+**Effect on the conclusions.** None of the forty-eight corrections changes a conclusion of the paper. Several required new
+arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47 and #48.
 
 **Caveat.** These defects survived five rounds of AI checking. The paper should not be regarded as verified until a human
 expert has read it.
@@ -109,4 +115,5 @@ expert has read it.
 undercounts repeated free-prime powers, which would need the Euler product ∏(1 − 1/q)⁻¹. It does not. In the allocation of
 Prop. cover, each free prime keeps exactly one occurrence, in one row of C. Free primes belong to P(C), and their further
 occurrences (counted with multiplicity, including repeated powers in one row) are excess, weighted by ∏_j τ_j^{−e_j} in the
-next factor. The text now says this explicitly. No constant changes.
+next factor. The text now says this explicitly. No constant changes. (The factor e^{λ_D} itself was later replaced by the
+per-row chain bound Ch, in the repair of #46.)

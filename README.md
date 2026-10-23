@@ -13,7 +13,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 > the fixes, three fresh AI checkers re-checked every changed passage (`review/paper-recheck.md`, reports in
 > `review/recheck/R1–R3.md`). They found nothing blocking.
 >
-> **Defects found after the AI checks.** After the paper was first published here, a reader reported ten further defects
+> **Defects found after the AI checks.** After the paper was first published here, a reader reported twelve further defects
 > that every earlier AI check had missed:
 > - a strip identity used as exact although the box widths vary;
 > - a jitter width that jumps (through a ceiling and a per-scale freeze) although its regularity is used throughout;
@@ -24,12 +24,20 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   holds, and that is all the proofs use);
 > - lower bounds on jittered primes written with X₀ where only X₀⁻ = X₀ − H(X₀)/2 holds (in Appendix A and in an
 >   Euler-product bound);
-> - a high-frequency Mellin tail in the short-window prime number theorem that was declared negligible but never bounded.
+> - a high-frequency Mellin tail in the short-window prime number theorem that was declared negligible but never bounded;
+> - a Cover Bound whose right side was a sum over the realised (random) primes, compared with an expectation;
+> - a missing support convention for the prime density at X₀. With the convention that makes the margin identity exact,
+>   the margin has an edge term just below small multiples of X₀ (from 2X₀ on), and its constant drops from 0.97 to 0.82
+>   up to X₀^1.01.
 >
-> Repairing these and re-checking the repairs turned up five more. All fifteen are repaired; they are entries #31–#45 of
-> `CORRECTIONS-vs-v3.md`. The repairs were checked by a fresh AI checker in seven passes (`review/recheck/R4.md`), which ended
-> with nothing blocking or fixable. None of the forty-five logged corrections changes a conclusion of the paper. But these
-> findings show that the AI checks are no substitute for expert review.
+> Repairing these and re-checking the repairs turned up six more. The most serious was a gap in the label sum of the
+> Pivot-Integration Lemma (Appendix A): the carried Euler factors cancel only after integration, not pointwise as the
+> argument needed. The lemma has been re-proved without changing any constant.
+>
+> All eighteen are repaired; they are entries #31–#48 of `CORRECTIONS-vs-v3.md`. The repairs of #31–#47 were checked by a
+> fresh AI checker in ten passes (`review/recheck/R4.md`), which ended with nothing blocking or fixable. The repair of #48 was
+> checked by a separate adversarial AI check (`review/recheck/R5-pil-repair.md`). None of the forty-eight logged corrections
+> changes a conclusion of the paper. But these findings show that the AI checks are no substitute for expert review.
 
 ## The result
 

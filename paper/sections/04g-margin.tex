@@ -5,11 +5,13 @@
 \begin{theorem}[the margin on $H$-windows, uniformly in $x$]\label{thm:g2}
 % v3: Theorem 3.17
 On $\Good(<x)$, for every $x\ge2X_0$, the compensator margin \eqref{eq:M} satisfies
+% Logged correction 47 (CORRECTIONS-vs-v3.md): v3 has 0.97 for all x >= 2X_0; piecewise after Proposition g1.
 \[
-  \log x\cdot M(x)=\log x\cdot(\tilde T'-B\Kpt\rhot)(x)\ge0.97-o(1)-\eps_N-E_{\mathrm{BR}}-j_{X_0}(x),\qquad
+  \log x\cdot M(x)=\log x\cdot(\tilde T'-B\Kpt\rhot)(x)\ge c_{\mathrm{sh}}(x)-o(1)-\eps_N-E_{\mathrm{BR}}-j_{X_0}(x),\qquad
   \eps_N+E_{\mathrm{BR}}\le10^{-13},
 \]
-where $j_{X_0}$ is defined in \eqref{eq:jX0}. By Proposition~\ref{prop:xb-ranges}, $j_{X_0}\le0.4209$ for
+where $c_{\mathrm{sh}}(x):=0.82$ for $2X_0\le x<X_0^{1.01}$ and $c_{\mathrm{sh}}(x):=0.97$ for $x\ge X_0^{1.01}$, and
+$j_{X_0}$ is defined in \eqref{eq:jX0}. By Proposition~\ref{prop:xb-ranges}, $j_{X_0}\le0.4209$ for
 $x\le X_0e^{0.01\Lambda}$, $j_{X_0}\le e^{-0.0009\Lambda}$ for $X_0e^{0.01\Lambda}\le x\le X_0e^{600\Lambda^4}$, and
 $j_{X_0}\le e^{-59}$ for $x\ge X_0e^{600\Lambda^4}$.
 % Logged correction 19 (CORRECTIONS-vs-v3.md): v3 states e^{-0.0009 Lambda} for all x beyond the small range.
@@ -20,7 +22,9 @@ $j_{X_0}\le e^{-59}$ for $x\ge X_0e^{600\Lambda^4}$.
 \item By \eqref{eq:predictable} and Lemma~\ref{lem:predictable}, $\log x\cdot M(x)\ge\log x\cdot(B\Rres T')(x)-\eps_N$.
 \item By Proposition~\ref{prop:br}, Lemma~\ref{lem:xb} and \eqref{eq:jX0} at each point $y$ of $W_x$,
   $\Rres T'(y)\ge\rhosh(y)-(E_{\mathrm{BR}}+j_{X_0}(x))/\log y$. (For $y<2\Xm$, $\Rres T'=\rhosh=T'$.)
-\item By Proposition~\ref{prop:g1} at each point of $W_x$, $B\rhosh(x)\cdot\log x\ge0.97-o(1)$.
+\item By Proposition~\ref{prop:g1} at each point of $W_x$, $B\rhosh(x)\cdot\log x\ge c_{\mathrm{sh}}(x)-o(1)$. For
+  $x\ge X_0^{1.01}$ we have $W_x\subset[X_0^{1.01}/2,\infty)$, where its bound is $0.97-o(1)$; for $2X_0\le x<X_0^{1.01}$ both of
+  its ranges give at least $0.82-o(1)$ on $W_x\subset[X_0+H(X_0),\infty)$.
 \item Every noise input lives at scales $\le x/2+2H$. Proposition~\ref{prop:g1} at points of $W_x$ uses only data up to
   $x-H/2$ (its windows $J$ end before $x$).\qedhere
 \end{itemize}
@@ -49,7 +53,8 @@ with $\eps':=\eps+0.015\le0.045$ and $\Hord(M)$ the number of ordered factorisat
     m(t)\log t\ge0.97-o(1)-\eps_N-E_{\mathrm{BR}}-54\sup_y\log y\cdot\eta(y)-6.5E_S-j_{X_0}(t)-V_{X_0}(t)\ge0.96-o(1);
   \]
 \item for $2X_0\le t\le X_0^{1.01}$ the jump is paid once:
-  $m(t)\log t\ge\rhosh(t)\log t-j_{X_0}(t)-10^{-12}\ge0.97-0.4209-10^{-12}\ge0.549$;
+  $m(t)\log t\ge\rhosh(t)\log t-j_{X_0}(t)-10^{-12}\ge0.82-0.4209-10^{-12}\ge0.399$;
+% Logged correction 47: v3 has 0.97 - 0.4209 >= 0.549; the base value on this range is 0.82 (Proposition g1).
 \item for $X_0\le t<2X_0$: $m(t)\log t\ge0.73$, surely (no event is used). Below $X_0$ there are no slots.
 \end{enumerate}
 \end{proposition}
@@ -185,8 +190,11 @@ Theorem~\ref{thm:g2}.
   $[\Xm,X_0+H]$. So $|\rhosh_c(y)-\rhosh_c(t)|\le\sum_uo_u+o_{X_0}\le11H(X_0)X_0^{-7/12}$, which is at most
   $e^{-10^7}/\log t$. (Here $o_R=0$, and $o_{\Abs}=0$ because $\Abs$ is empty while $\log\log n\le2\log\Lambda+5.97$.)
 \item \emph{Sum.} $m(t)\ge\rhosh_c(t)+\jz\rho^{\mathrm{sh}}_1(t)-\jz\mathfrak B(t)-(\eps_N+E_{\mathrm{BR}}+6.5E_S+e^{-10^7})/\log t-6/H$,
-  and $\rhosh_c+\jz\rho^{\mathrm{sh}}_1=\rhosh$. Then use $\rhosh(t)\log t\ge0.97$ (Proposition~\ref{prop:g1}(A); the range
-  $2X_0\le t\le X_0^{1.01}$ lies in range (A) for every $\Lambda$).
+  and $\rhosh_c+\jz\rho^{\mathrm{sh}}_1=\rhosh$. Then use $\rhosh(t)\log t\ge0.82$ (Proposition~\ref{prop:g1}(A); the range
+  $2X_0\le t\le X_0^{1.01}$ lies in range (A) for every $\Lambda$, and the proof for range (A) gives $0.822$ there with no
+  $o(1)$ term). The edge term of Lemma~\ref{lem:margin}(d) is part of $\rhosh$, and the two lower bounds are simply added; so it
+  does not matter whether its dips and the worst case of $j_{X_0}$ occur at the same $t$.
+% Logged correction 47: v3 uses 0.97 here.
 \end{itemize}
 
 \emph{Step 6(c): below $2X_0$.} Here $\Abs=\emptyset$, $R=0$, and $\Kpt\rhot(t)$ can be nonzero only through $w$ with
@@ -222,7 +230,7 @@ endpoints, of any length, anywhere in $[1,\infty)$. It may start below $X_0$ and
 $\ell_{\mathrm{jit}}(I):=\#\{\text{continuous slots in }I\}\le1.01|I\cap[X_0,\infty)|+1$, and let
 $L\ge\log\max(I\cup\{X_0\})$. On $\Good(<\max I)$,
 \[
-  \ell_{\mathrm{jit}}(I)-\Comp(I)=\int_Im\pm2\ge0.549\,\frac{|I\cap[X_0,\infty)|}L-2\ge\frac{c'}L\,\ell_{\mathrm{jit}}(I)-K_d,
+  \ell_{\mathrm{jit}}(I)-\Comp(I)=\int_Im\pm2\ge0.399\,\frac{|I\cap[X_0,\infty)|}L-2\ge\frac{c'}L\,\ell_{\mathrm{jit}}(I)-K_d,
   \qquad\Comp^{(2)}(I)\le s_2\,|I|,
 \]
 with $c'=0.15$, $K_d=3$, and $s_2$ the supremum of $s_2(u)$ \eqref{eq:s2} over the dyadic scales meeting $I$.
@@ -236,9 +244,10 @@ with $c'=0.15$, $K_d=3$, and $s_2$ the supremum of $s_2(u)$ \eqref{eq:s2} over t
   $[1,X_0)$ and that part contributes nothing.
 \item $\Comp$ is the compensator $\Comp_{\mathrm{jit}}$ of \S\ref{sec:queue} (latest prime dividing once). The $q^2$-part is
   the separate source $\Comp^{(2)}$, bounded by \eqref{eq:s2}.
-\item $m\log t\ge0.549$ pointwise on all of $[X_0,\infty)$, by Proposition~\ref{prop:pointwise}(a)--(c): it is $\ge0.73$ on
-  $[X_0,2X_0)$, $\ge0.549$ up to $X_0^{1.01}$, and $\ge0.959$ beyond. Since $0.549\ge1.01c'$, the $+1$ in the slot count only
-  enters $K_d$.
+% Logged correction 47: v3 has 0.549 here (from 0.97 - 0.4209); the base value up to X_0^{1.01} is now 0.82.
+\item $m\log t\ge0.399$ pointwise on all of $[X_0,\infty)$, by Proposition~\ref{prop:pointwise}(a)--(c): it is $\ge0.73$ on
+  $[X_0,2X_0)$, $\ge0.399$ up to $X_0^{1.01}$, and $\ge0.959$ beyond. Since $0.399\ge1.01c'=0.1515$, the $+1$ in the slot count
+  only enters $K_d$.
 \end{itemize}
 In the form used in Theorem~\ref{thm:queue}: $\Comp(I)\le\ell_{\mathrm{jit}}(I)(1-c'/L)+K_d$ for every such $I$ with
 $L\ge\log\max I$. Above $X_0^{1.01}$ the hole rate is at least $0.959/\log x$, independently of the block length $L_0$ and of

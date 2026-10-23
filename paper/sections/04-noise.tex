@@ -7,7 +7,9 @@ This section proves that the predictable compensator of the jittered composites 
 scale. Write $L:=\log x$.
 \begin{itemize}
 \item Theorem~\ref{thm:g2} shows that the $H(x)$-window average $M$ of the margin satisfies
-  $\log x\cdot M(x)\ge 0.97-o(1)-j_{X_0}(x)$, uniformly in $x\ge 2X_0$.
+  $\log x\cdot M(x)\ge 0.97-o(1)-j_{X_0}(x)$ for $x\ge X_0^{1.01}$, and the same with $0.82$ in place of $0.97$ for
+  $2X_0\le x<X_0^{1.01}$.
+% Logged correction 47 (CORRECTIONS-vs-v3.md): piecewise base value, after Proposition g1.
 \item Proposition~\ref{prop:pointwise} extends this to the pointwise margin density $m$.
 \item Corollary~\ref{cor:r1} deduces the drift inequality R1$'$ on every window, with $c'=0.15$. This is the input of
   Theorem~\ref{thm:queue}.

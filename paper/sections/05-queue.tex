@@ -727,23 +727,26 @@ over the $2z/\delta$ grid windows at height $z$, where $\delta:=2\delta_1=|J|$. 
 $B'\subset S(J)$ of rank $r<r_0$, together with a minimum cover $C\subset B'$ of $P(B')$, so $|C|=\kappa$. Write $R:=B'\setminus
 C$ for the \emph{rows outside the cover}. For $y\in B'$ write $n_y=M_yd_y$, with $M_y$ jittered and $d_y$ rigid. The
 \emph{type} $\tau$ of a configuration is its exponent pattern, that is, the matrix of exponents of its distinct jittered
-primes, up to relabelling by value. Let $\pi:=|P(C)|\le\kappa D$ be the number of jittered primes, and put
-$\lambda_D:=\sum_{\Xm\le q\le2z}1/q$ over the realised primes in that range; on the good event, $\lambda_D\le\log D+1$ by
-(F4), that is, Lemma~\ref{lem:cm}(iv) with $y=\Xm-1$.
-% Logged correction 43: v3 starts lambda_D at X_0; free primes can lie in [X_0^-, X_0).
+primes, up to relabelling by value. Let $\pi:=|P(C)|\le\kappa D$ be the number of jittered primes.
+% v3 also defines lambda_D here; it is no longer used, since the free primes enter only through the chain bound Ch.
 
 \begin{proposition}[Cover Bound]\label{prop:cover}
 % v3: Proposition 4.13
-For every type $\tau$,
-\begin{multline}\label{eq:coverbound}
-\E\big[\#\{\text{configurations of type $\tau$ in $J$}\};\ \Good(<t_z)\big]\\
-\le(\theta\delta)^r\sum\Big(\prod_{y\in C}d_y^{-1}\cdot\prod_{j=1}^{\pi}\tau_j^{-e_j}\cdot\prod_{f\in F}q_f^{-1}
-\cdot\prod_{y\in R}n_y^{-1}\Big),
-\end{multline}
+For every type $\tau$, let $X_\tau$ be the number of configurations of type $\tau$ in $J$, and let $\bar S_\tau$ be the
+envelope of Lemma~\ref{lem:pil} (with $t_J:=t_z$). Then
+\begin{equation}\label{eq:coverbound}
+\E\big[X_\tau;\ \Good(<t_z)\big]\le\theta^r\bar S_\tau\le(\theta\delta)^r\bar\Sigma_\tau,\qquad
+\bar\Sigma_\tau:=\sum\Big(\mathrm{Ch}^{\kappa}\cdot\prod_{j=1}^{\pi}\tau_j^{-e_j}\cdot\prod_{y\in R}z^{-1}\Big),
+\end{equation}
 where:
 \begin{itemize}
-\item the sum runs over the realised jittered primes $F$ that are not used as pivots, over the tails of the rows of $C$, and,
-  for each $y\in R$, over its monomial $M_y$ in the labels of $P(C)$ and its tail $d_y$, subject to $n_y\in J$;
+\item $\mathrm{Ch}:=e^{\gamma}\log(2z+H(2z))\exp(2.21/\Lambda+10^{-9})$ is at least the bound $A_{\mathrm{top}}$ of
+  Lemma~\ref{lem:fac}\,(S3) (as $5H(X_0)/X_0\le10^{-9}$), which bounds the whole Euler chain of a row of $C$: its free
+  pieces in all blocks, its early block and its tail;
+\item the sum runs, for each $y\in R$, over its monomial $M_y$ in the labels of $P(C)$, with the $j$-th label evaluated at
+  $\tau_j$, and over its $X_0$-smooth tail $d_y$, subject to $M_yd_y\le2z$;
+  % Logged correction 46: v3's right side is a realised (random) sum; it is now deterministic by construction. The
+  % C-row chains (free primes and tails) are replaced by the sure chain bound, and the R-row labels by tau_j.
 \item the primes of $P(C)$ are indexed $j=1,\dots,\pi$ in decision order; the excess $e_j\ge0$ of the $j$-th prime is the
   number of its occurrences in rows of $C$, counted with multiplicity (that is, its total exponent in the rows of $C$),
   minus $1$; and $\mathrm{exc}:=\sum_je_j$;
@@ -756,6 +759,19 @@ where:
 \end{proposition}
 
 \begin{proof}
+\emph{From Lemma~\ref{lem:pil}.} The first inequality in \eqref{eq:coverbound} is Lemma~\ref{lem:pil}, applied with
+$t_J:=t_z$ (every element of $J$ has all its primes decided before $2z+H(2z)$). Its recursion processes the runs latest
+first. For each run $P_t$ it (i) records the label sum at $u_t$, with $\chi_t:=\mathbf 1(u_t\le s_{\max})\mathbf 1(G_{<u_t})$;
+(ii) integrates the pivots of the run; and (iii) applies the joint block bound (S3)(a) to the late block below the run,
+with the carried factor of each row passed on by (S3)(b). So each row's harmonic pieces form a slot-indexed Euler chain
+(Lemma~\ref{lem:fac}\,(S3)). The end step treats the early block and the tails by (S3)(c), which absorbs the last carried
+factor. So $\bar S_\tau$ is deterministic, and the top of each chain is bounded once, at the block where the row joins,
+by $A_{\mathrm{top}}\le\mathrm{Ch}$ ((S3)(d), as $u_t\le s_{\max}\le2z+H(2z)$). The block sum in (S3)(a) is taken
+jointly over the block and does not factorise over the rows; only its output is a product of per-row factors. The steps
+below show $\bar S_\tau\le\delta^r\bar\Sigma_\tau$, which gives the second inequality.
+% Logged correction 48: the order of Lemma pil is now label sum (i), pivot integrals (ii), joint block bound (iii);
+% v3 summed each block before the label sum.
+
 \emph{Exact identity.} By the Volume Lemma (Lemma~\ref{lem:volume}), the pivot-integral of $\prod_{y\in B'}\mathbf 1(n_y\in J)$
 equals $\int_{J^r}\prod_{\mathrm{piv}}q\big/\big(|\det E_P|\prod_yn_y\big)\,dn$.
 \begin{itemize}
@@ -778,9 +794,10 @@ equals $\int_{J^r}\prod_{\mathrm{piv}}q\big/\big(|\det E_P|\prod_yn_y\big)\,dn$.
 \item the remaining occurrences in rows of $C$ are the excess: the $e_j$ remaining occurrences of the $j$-th prime each
   contribute at most $\tau_j^{-1}$.
 \end{itemize}
-The resulting weights are as follows. A row of $C$ gets at most $d_y^{-1}$. A row of $R$ gets exactly
-$c_y^{-1}\cdot\prod_{p\in M_y}p^{-E}=1/n_y$; its tail cancels, so it is summed with counting weight, which is a deterministic
-rigid count. Free primes are harmonic, and the excess contributes $\prod_j\tau_j^{-e_j}$.
+The resulting weights are as follows. A row of $C$ gets its tail $d_y^{-1}$ and its kept free primes, which are harmonic;
+together they form the row's Euler chain, which is at most $A_{\mathrm{top}}\le\mathrm{Ch}$ by (S3). A row of $R$ gets exactly $c_y^{-1}\cdot\prod_{p\in M_y}p^{-E}=1/n_y\le1/z$; its tail cancels, so it
+is summed with counting weight. This is a rigid count, and it only grows when each label is lowered to $\tau_j$. The excess
+contributes $\prod_j\tau_j^{-e_j}$.
 
 \emph{Bookkeeping.} The factor $\theta=1+1/\Lambda$ per element comes from (F1)--(F2) and the slot sums, and $|\det E_P|\ge1$.
 \end{proof}
@@ -807,7 +824,8 @@ the rows of $C$ in Lemma~\ref{lem:reduction}(ii).
   \begin{equation}\label{eq:typeunion}
   13L^{5.1}\cdot z\cdot\prod_{y\in R}w_y,\qquad w_y:=z^{-1}\sum_{M_y}\Psi(2z/M_y,X_0),
   \end{equation}
-  where $M_y$ runs over the monomials of the degree class of the row in the $\pi$ labels.
+  where $M_y$ runs over the monomials of the degree class of the row in the $\pi$ labels, with the $j$-th label evaluated
+  at $\tau_j$, as in \eqref{eq:coverbound}.
 \item (Consequence.) The probability that some window at height $z$ contains a configuration with $|R|\ge1+j$ and all
   $w_y\le w$ is at most $r_0\cdot13L^{5.1}z\cdot w^{1+j}$. It is at most $L^{-3}$ as soon as
   \begin{equation}\label{eq:criterion}
@@ -817,14 +835,20 @@ the rows of $C$ in Lemma~\ref{lem:reduction}(ii).
 \end{lemma}
 
 \begin{proof}
-\emph{Proof of (ii).} Per row, the type and sum factors are:
+\emph{Proof of (ii).} The quantity $\bar\Sigma_\tau$ of \eqref{eq:coverbound} is deterministic and, by construction, a
+product of per-row factors. The factor $\mathrm{Ch}$ of a row of $C$ is the per-row output of the joint block bounds of
+Lemma~\ref{lem:fac}\,(S3); the block sums themselves do not factorise. The factors below bound $\bar\Sigma_\tau$ row by
+row.
+% Logged correction 46: (ii) now bounds the deterministic envelope; the free primes are bounded through the per-row
+% chain bound Ch.
+Per row, the type and sum factors are:
 \begin{itemize}
-\item the free primes kept in a row of $C$: by the allocation in the proof of Proposition~\ref{prop:cover}, each free
-  prime is kept with exactly one occurrence, in one row, so the primes kept in a row are distinct. Sorted by value, they
-  contribute $\sum_k\lambda_D^k/k!\le e^{\lambda_D}\le eD$. All further occurrences of free primes, including repeated
-  powers in the same row, are excess and are counted in the next item;
+\item the Euler chain of a row of $C$, that is, its kept free primes in all blocks together with its tail: at most
+  $\mathrm{Ch}\le e^{\gamma}(L+0.7)(1+10^{-7})\le2L$. Each free prime is kept with exactly one occurrence, in one row, by
+  the allocation in the proof of Proposition~\ref{prop:cover}; all further occurrences of free primes, including repeated
+  powers in the same row, are excess and are counted two items below;
   % Clarification (external reader's question): free primes lie in P(C), and e_j counts multiplicity, so repeated
-  % free-prime powers are in the excess sum; no Euler-product correction is needed here.
+  % free-prime powers are in the excess sum.
 \item the pivot positions: at most $D$ per row;
 \item the excess patterns of the rows of $C$: distributing the excess $e_j$ of the $j$-th prime over the $\kappa$ rows
   of $C$, the sum over patterns of $\prod_j\tau_j^{-e_j}$ is at most
@@ -835,7 +859,6 @@ the rows of $C$ in Lemma~\ref{lem:reduction}(ii).
   by the estimate in the proof of Lemma~\ref{lem:pattern} (with $\pi$ in place of $k$). Since $\pi\le L^2$ and $L\ge\Lambda\ge10^8$, this is at most $L^{2.1}$ per row of $C$: if
   $L^2\le X_0$ the base is at most $2.1$, and otherwise it is at most $2.1L^{2.04}\le L^{2.1}$;
   % Logged correction 44: v3 bounds this by prod_p (1-1/p)^{-kappa} with uniform weights, which does not follow.
-\item the tail of a row of $C$: $\sum_d1/d\le e^{\gamma}\Lambda(1+1/\Lambda^2)\le2L$.
 \end{itemize}
 The minimum cover used is a fixed choice determined by the type, so its choice costs nothing. So each row costs at most
 $C':=6L^{5.1}$, and $(2z/\delta)(\theta\delta C')^r\le2z\cdot\theta C'\cdot(\theta\delta C')^{r-1}\le13L^{5.1}z$, since
@@ -911,16 +934,15 @@ $k'=1$ term is at most $2\pi\exp(-0.9(D-1)\log(D-1)+e^{-0.48\Lambda})/\Xm$.
 
 (e) We have
 \[
-w_y\le z^{-1}\sum_{(M,d)}\Big(\frac{2z}{Md}\Big)^{1-\eta}\le2z^{-\eta}\prod_{p\in P(C)}(1-p^{\eta-1})^{-1}
+w_y\le z^{-1}\sum_{(M,d)}\Big(\frac{2z}{Md}\Big)^{1-\eta}\le2z^{-\eta}\prod_{j\le\pi}(1-\tau_j^{\eta-1})^{-1}
 \prod_{p<X_0}(1-p^{\eta-1})^{-1}.
 \]
 \begin{itemize}
 \item The rigid product is at most $\exp(\log\Lambda+2+1.3X_0^{\eta}/(\eta\Lambda))$, by partial summation as in (c).
-\item The jittered primes of $P(C)$ are $\pi$ distinct primes in distinct slots. The $i$ smallest occupy $i$ distinct
-  slots, the largest of which is at least $X_0+0.99(i-1)$. Since the jitter offset satisfies $|q-s|\le H(s)/2\le s/3$
-  (see \eqref{eq:C2}), the $i$-th smallest prime is at least $\tfrac23(X_0+0.99(i-1))$. So
+\item The labels are evaluated at $\tau_i=\max(\Xm,\sigma_i-2H(\sigma_i))\ge\sigma_i-2H(\sigma_i)\ge\tfrac23\sigma_i
+  =\tfrac23(X_0+0.99(i-1))$, since $H(v)\le v/6$. So
   \[
-  \sum_{p\in P(C)}p^{\eta-1}\le(3/2)^{1-\eta}\sum_{i=1}^{\pi}(X_0+0.99(i-1))^{\eta-1}\le\frac{1.36(X_0+\pi)^{\eta}}{0.99\,\eta},
+  \sum_{i\le\pi}\tau_i^{\eta-1}\le(3/2)^{1-\eta}\sum_{i=1}^{\pi}(X_0+0.99(i-1))^{\eta-1}\le\frac{1.36(X_0+\pi)^{\eta}}{0.99\,\eta},
   \]
   using $(3/2)^{1-\eta}\le1.36$ for $\eta\ge\tfrac14$. \qedhere
 \end{itemize}

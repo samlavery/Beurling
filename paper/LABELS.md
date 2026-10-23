@@ -53,9 +53,9 @@
 | sec:baserange | Base range: B-lin (v3 §5) | 06-base-range.tex |
 | lem:blin | properties of B-lin (v3 Lemma 5.1) | 06-base-range.tex |
 | eq:huxley | Huxley/Heath-Brown input, η(q), X_Hux (v3 (5.2)) | 06-base-range.tex |
-| lem:margin | margin decomposition (v3 Lemma 5.2), parts (a)–(c) | 06-base-range.tex |
+| lem:margin | margin decomposition (v3 Lemma 5.2), parts (a)–(c); (d) edge at X₀ (correction 47) | 06-base-range.tex |
 | eq:ratid | exact rational identity (v3 (5.4)) | 06-base-range.tex |
-| eq:shdecomp | ρ^sh = MA[ℙ] + ρ_osc + (1+K_pt)^{−1}(μ₀+μ₁) (v3 (5.5)) | 06-base-range.tex |
+| eq:shdecomp | ρ^sh = MA[ℙ] + ρ_osc + ρ_edge + (1+K_pt)^{−1}(μ₀+μ₁) (v3 (5.5); ρ_edge by correction 47) | 06-base-range.tex |
 | eq:mu1sum | Σ log(2u) sup|μ₁| ≤ 690/log X₀ (v3 (5.6)) | 06-base-range.tex |
 | eq:XLP | X_LP and its size (v3 (5.3)) | 06-base-range.tex |
 | app:cert | Appendix B, certificates | B-certificates.tex |
@@ -83,7 +83,7 @@
 | eq:osc | (Osc) oscillation bounds for T′_c | sections/04f-bridge.tex |
 | lem:predictable | Lemma 3.15 and (3.5) | sections/04f-bridge.tex |
 | eq:predictable | (3.5) predictable form | sections/04f-bridge.tex |
-| prop:g1 | Proposition 3.16, G1′ (ρ^sh log x ≥ 0.97) | sections/04f-bridge.tex |
+| prop:g1 | Proposition 3.16, G1′ (ρ^sh log x ≥ 0.82 on [X₀+H, X₀^{1.01}], ≥ 0.97 from X₀^{1.01}/2; correction 47) | sections/04f-bridge.tex |
 | thm:g2 | Theorem 3.17, H-window margin | sections/04g-margin.tex |
 | prop:pointwise | Proposition 3.18, pointwise margin (a)–(c) | sections/04g-margin.tex |
 | cor:r1 | Corollary 3.19, R1′ on every window | sections/04g-margin.tex |
@@ -171,3 +171,5 @@
 | lem:rhoA | UPDATE (correction #16): v3 4.19(b) deleted; parts are now (a) sup ρ_𝒜 ≤ L⁻⁴, (b) |σ_𝒜| ≤ 2L⁻⁴ (was (c)), (c) current-height form o_𝒜 ≤ 4L⁻⁴ (was (d)) | 05-queue.tex |
 | cor:localcount | UPDATE: K_loc(P) := 2B(4P) + 7λ_P/3 + 23 (was +13; landing windows 𝒥_P specified, E4 total 146H u⁻³) | 05-queue.tex |
 | cor:localcount | UPDATE (correction 37): part (i) dyadic P (as before); part (ii) any real P ≥ X₀, bound 11.4|J| + K_loc(P) + K_loc(2P) (non-absorbed 13.4|J| + K_loc(P) + K_loc(2P) + 4) | 05-queue.tex |
+| eq:A-exactcount | App. A, Lemma fac (S3) proof: exact-count bound for r-sets of realised primes (correction #48) | A-rankfull.tex |
+| eq:A-telescope | App. A, Lemma fac (S3) proof: telescoping bound for the joining top factor (correction #48) | A-rankfull.tex |

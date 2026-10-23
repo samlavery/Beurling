@@ -124,9 +124,15 @@ $30.6C_NC_S'e^{-41}$, from the oscillation of $\sigma_{\Abs}$.
 
 \begin{proposition}[positivity of the sharp reference]\label{prop:g1}
 % v3: Proposition 3.16
-For every $x\ge X_0+H(X_0)$, on $\Good(<x)$,
+On $\Good(<x)$,
+% Logged correction 47 (CORRECTIONS-vs-v3.md): v3 states 0.97 - o(1) for all x >= X_0 + H(X_0); the edge term rho_edge of
+% Lemma margin(d) lowers it to 0.82 on [X_0 + H, X_0^{1.01}].
 \[
-  \rhosh(x)\cdot\log x\ge0.97-o(1).
+  \rhosh(x)\cdot\log x\ge
+  \begin{cases}
+    0.82-o(1), & X_0+H(X_0)\le x\le X_0^{1.01},\\
+    0.97-o(1), & x\ge X_0^{1.01}/2.
+  \end{cases}
 \]
 \end{proposition}
 
@@ -138,16 +144,23 @@ $\ge X_0^{0.079}$), and $\log X_{\mathrm{sw}}\gg\log X_{\mathrm{LP}}=O(\Lambda^2
 \begin{proof}[Proof for range \textup{(A)}: $X_0+H\le x\le X_{\mathrm{sw}}$]
 No designed oscillation is active, since $x_1\ge\exp(X_0^2)>X_{\mathrm{sw}}$. So $T'=1-\rhodet+\sigma_{\Abs}$ there.
 Lemma~\ref{lem:margin} (\eqref{eq:ratid}, \eqref{eq:shdecomp}) gives
-$(1+\Kpt)^{-1}(1-\rhodet)=\mathrm{MA}[\mathbb P]+(1+\Kpt)^{-1}(\mu_0+\mu_1)$, where:
+$(1+\Kpt)^{-1}(1-\rhodet)=\mathrm{MA}[\mathbb P]+\rho_{\mathrm{edge}}+(1+\Kpt)^{-1}(\mu_0+\mu_1)$, where:
+% Logged correction 47: support convention for MA[P] (primes >= X_0 only), the edge term moved out of mu_0 into its own
+% item (d), and the conclusion stated piecewise.
 \begingroup\emergencystretch=3em
 \begin{enumerate}[label=(\alph*)]
-\item $\mathrm{MA}[\mathbb P](q):=\mathrm{MA}_{\kappa q}[\text{rational primes}](q)$ is the density of rational primes in the linear
-  window at $q$ (\S\ref{sec:baserange}). By \eqref{eq:huxley} and Lemma~\ref{lem:margin}(a) (Huxley and Heath-Brown,
-  $X_0\ge X_{\mathrm{Hux}}$), $\mathrm{MA}[\mathbb P](x)\log x\ge0.99$ for every $x\ge X_0$;
+\item $\mathrm{MA}[\mathbb P](q):=\mathrm{MA}_{\kappa q}[\text{rational primes}\ge X_0](q)$ is the density of the new primes (the
+  rational primes $\ge X_0$) in the linear window at $q$ (\S\ref{sec:baserange}); it vanishes for $(1+\kappa)q\le X_0$. By
+  \eqref{eq:huxley} and Lemma~\ref{lem:margin}(a) (Huxley and Heath-Brown, $X_0\ge X_{\mathrm{Hux}}$),
+  $\mathrm{MA}[\mathbb P](x)\log x\ge0.99$ for every $x\ge X_0$;
 \item $|\mu_0(u)|\le2\kappa(\log u)^3$ for $u\ge X_0$ with $\log\log u\le\Lambda/8$, which contains range (A)
   (Lemma~\ref{lem:margin}(b)). This smooth part contains the drift $+(\kappa/2)\Psi$, the partial windows, the order mismatch
-  $H(q)/(\kappa q)$, the edge at $X_0$, and the $O(1/(\kappa x))$ term of \eqref{eq:ratid};
-\item $\sum_{u\text{ dyadic}\ge X_0}\log(2u)\sup_{[u,2u]}|\mu_1|\le7\cdot10^{-6}$ \eqref{eq:mu1sum}.
+  $H(q)/(\kappa q)$, and the $O(1/(\kappa x))$ term of \eqref{eq:ratid};
+\item $\sum_{u\text{ dyadic}\ge X_0}\log(2u)\sup_{[u,2u]}|\mu_1|\le7\cdot10^{-6}$ \eqref{eq:mu1sum};
+\item $\rho_{\mathrm{edge}}:=(1+\Kpt)^{-1}\mu_{\mathrm{edge}}$ is the edge at $X_0$, where $\mu_{\mathrm{edge}}$ is the part of
+  $K_{\mathbb Q}\mathrm{MA}[\mathbb P]$ that lies below $X_0$ \eqref{eq:shdecomp}. By Lemma~\ref{lem:margin}(d),
+  $\rho_{\mathrm{edge}}(x)\log x\ge-0.167$ for $X_0\le x\le X_0^{1.01}$, and
+  $|\rho_{\mathrm{edge}}(x)|\log x\le3X_0^{-0.01}+X_0^{-0.34}$ for $X_0^{1.01}/2\le x\le X_{\mathrm{sw}}$.
 \end{enumerate}
 \endgroup
 Now bound the responses.
@@ -160,8 +173,16 @@ Now bound the responses.
 \item $\mu_1$: by Corollary~\ref{cor:saias}, $\log x\cdot|(1+\Kpt)^{-1}\mu_1(x)|\le C_S\cdot7\cdot10^{-6}\le6\cdot10^{-4}$.
 \item $\sigma_{\Abs}$: likewise, at most $C_S\sum_v\log(2v)\cdot2L_v^{-4}\mathbf 1[\log\log v>2\log\Lambda+5.97]\le e^{-80}$.
 \end{itemize}
-So $\rhosh\log x\ge0.99-6\cdot10^{-4}-X_0^{-0.34}-e^{-80}\ge0.989\ge0.97$, pointwise, for every
-$X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$; no constant here depends on $\Lambda$.
+So, pointwise, for $X_0+H\le x\le X_0^{1.01}$,
+\[
+  \rhosh(x)\log x\ge0.99-0.167-6\cdot10^{-4}-X_0^{-0.34}-e^{-80}\ge0.822,
+\]
+and for $X_0^{1.01}/2\le x\le X_{\mathrm{sw}}$,
+\[
+  \rhosh(x)\log x\ge0.99-6\cdot10^{-4}-2X_0^{-0.34}-3X_0^{-0.01}-e^{-80}\ge0.989\ge0.97,
+\]
+for every $X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$; no constant here depends on $\Lambda$. By Lemma~\ref{lem:margin}(d)(i), the loss
+$0.167$ occurs only on the windows $N\cdot(X_0/(1+\kappa),X_0)$ with $\mu(N)=1$, each of relative length $\kappa$.
 \end{proof}
 
 \begin{proof}[Proof for range \textup{(B)}: $x\ge X_{\mathrm{sw}}$]

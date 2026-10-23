@@ -86,7 +86,8 @@ what Lemma~\ref{lem:margin}(c) needs.
 
 \emph{Consequence used throughout.} For every $q\ge X_0\ge X_{\mathrm{Hux}}$,
 $\mathrm{MA}[\mathbb P](q)\log q\ge(1-(\log q)^{-3})(1-\kappa/\log q)\ge0.99$ (Lemma~\ref{lem:margin}(a)). This feeds \eqref{eq:G1},
-the bound $1-\rhodet\ge0.99/\log u-1/(\kappa u)$, and the base value $0.97$ of Proposition~\ref{prop:g1}.
+the bound $1-\rhodet\ge0.99/\log u-1/(\kappa u)$, and the base values of Proposition~\ref{prop:g1} ($0.82$ for $x\le X_0^{1.01}$ and
+$0.97$ for $x\ge X_0^{1.01}/2$; Lemma~\ref{lem:margin}(d)).
 
 \begin{remark}[A fully explicit route, not used]
 Johnston and Yang \cite[Thm.~1.1 and Table~1, row $X=10^8$]{JohnstonYang2023} prove $|\psi(x)-x|\le2.18\cdot10^{-4694}x$ for
@@ -98,29 +99,56 @@ Proposition~\ref{prop:g1}.
 \end{remark}
 
 \subsection{The margin decomposition}
+% Logged correction 47 (CORRECTIONS-vs-v3.md): support convention for MA[P], f_0, f_1 below X_0, and the edge term mu_edge.
+% Numerical illustration of the edge term (exact integer toy model, X_0 = 2000, kappa = 0.05): review/recheck/edge_toy_c47.py.
 Write the non-rigid rational integers as $\bigsqcup_{m'}m'\cdot\mathbb P_{\ge\max(P^+(m'),X_0)}$, and put
-$\mathrm{MA}[\mathbb P](q):=\mathrm{MA}_{\kappa q}[\text{rational primes}](q)$. Let $K_{\mathbb Q}$ be the latest-prime renewal operator
+\[
+  \mathrm{MA}[\mathbb P](q):=\mathrm{MA}_{\kappa q}[\text{rational primes}\ge X_0](q),
+\]
+the window density of the new primes. It vanishes for $(1+\kappa)q\le X_0$, it is a partial window for $X_0/(1+\kappa)<q<X_0$, and
+for $q\ge X_0$ it is the density of all rational primes in $[q,(1+\kappa)q]$. Let $K_{\mathbb Q}$ be the latest-prime renewal operator
 with \emph{rational} cofactors, and let $K_{\mathrm{pt}}$ be the sharp operator of Section~\ref{sec:noise}, with realised cofactors
-and latest prime in decision order (Section~\ref{sec:greedy}). By dilation commutation (Lemma~\ref{lem:blin}(2)) we have the exact
-rational identity
+and latest prime in decision order (Section~\ref{sec:greedy}). By dilation commutation (Lemma~\ref{lem:blin}(2)) we have, for $x\ge X_0$,
+the exact rational identity
 \begin{equation}\label{eq:ratid}
   T'_{\mathrm{cont}}-R'+\bar\rho_{\Abs}=(1+K_{\mathbb Q})\,\mathrm{MA}[\mathbb P]+O(1/(\kappa x)).
 \end{equation}
-Put $\rho^{\mathrm{sh}}:=(1+K_{\mathrm{pt}})^{-1}(T'_{\mathrm{cont}}-R'+\bar\rho_{\Abs})$. Then
+The identity is stated only for $x\ge X_0$, where $T'_{\mathrm{cont}}$ is defined by \eqref{eq:target}; below $X_0$ the target
+has $T'_{\mathrm{cont}}=0$, although $\mathrm{MA}[\mathbb P]>0$ on $(X_0/(1+\kappa),X_0)$. That window enters \eqref{eq:ratid} only through
+$K_{\mathbb Q}$: a cofactor $N\ge2$ with $x/N\in(X_0/(1+\kappa),X_0)$ contributes the partial window of the integers $Np$, $p\ge X_0$, in
+$[x,(1+\kappa)x]$.
+
+Put $\rho^{\mathrm{sh}}:=(1+K_{\mathrm{pt}})^{-1}(T'_{\mathrm{cont}}-R'+\bar\rho_{\Abs})$, a function on $[\Xm,\infty)$ that vanishes on
+$[\Xm,X_0)$. Near the cut-off the two operators include the following components.
+\begin{itemize}
+\item $K_{\mathbb Q}$ (rational system): every cofactor $N$ whose new prime $p\ge X_0$ lies in the window at $q=u/N$; for
+$q\in(X_0/(1+\kappa),X_0)$ this is a partial window.
+\item $K_{\mathrm{pt}}$ (cut-off $u/w\ge\Xm$): every realised cofactor $w$ with $u/w\ge\Xm$. On $[\Xm,X_0)$ it reads only functions that
+vanish there ($\rho^{\mathrm{sh}}$ and the functions in \eqref{eq:shdecomp} below), so its cut-off may be taken to be $X_0$; and it never
+reads $(X_0/(1+\kappa),\Xm)$.
+\end{itemize}
+So on $(X_0/(1+\kappa),X_0)$ only $K_{\mathbb Q}$ contributes, and its contribution there is exactly $\mu_{\mathrm{edge}}$ below. Writing
+$T'_{\mathrm{cont}}-R'+\bar\rho_{\Abs}=(1+K_{\mathrm{pt}})(\mathrm{MA}[\mathbb P]\mathbf 1_{[X_0,\infty)})+(K_{\mathbb Q}-K_{\mathrm{pt}})(\mathrm{MA}[\mathbb P]\mathbf 1_{[X_0,\infty)})+\mu_{\mathrm{edge}}+O(1/(\kappa x))$
+on $[X_0,\infty)$, and applying $(1+K_{\mathrm{pt}})^{-1}$, gives, for $x\ge X_0$,
 \begin{equation}\label{eq:shdecomp}
-  \rho^{\mathrm{sh}}=\mathrm{MA}[\mathbb P]+\rho_{\mathrm{osc}}+(1+K_{\mathrm{pt}})^{-1}(\mu_0+\mu_1),
+  \rho^{\mathrm{sh}}=\mathrm{MA}[\mathbb P]+\rho_{\mathrm{osc}}+\rho_{\mathrm{edge}}+(1+K_{\mathrm{pt}})^{-1}(\mu_0+\mu_1),\qquad
+  \rho_{\mathrm{edge}}:=(1+K_{\mathrm{pt}})^{-1}\mu_{\mathrm{edge}},
 \end{equation}
 where $\rho_{\mathrm{osc}}$ is the response to $R'$ and the absorbed source is carried in Section~\ref{sec:noise}. Here we split
-$\mathrm{MA}[\mathbb P]=f_0+f_1$ with $f_0(q):=\mathrm{MA}_{\kappa q}[dt/\log t](q)$ and $f_1:=\mathrm{MA}[\mathbb P]-f_0$, so that
-$|f_1(q)|\le\eta_{\mathrm H}(q)f_0(q)\le\eta_{\mathrm H}(q)/\log q$, and we set
+$\mathrm{MA}[\mathbb P]=f_0+f_1$ with $f_0(q):=\mathrm{MA}_{\kappa q}[\mathbf 1_{t\ge X_0}\,dt/\log t](q)$ and $f_1:=\mathrm{MA}[\mathbb P]-f_0$, so
+that $|f_1(q)|\le\eta_{\mathrm H}(q)f_0(q)\le\eta_{\mathrm H}(q)/\log q$ for $q\ge X_0$, and we set
 \[
 \begin{gathered}
-  \mu_1:=(K_{\mathbb Q}-K_{\mathrm{pt}})f_1,\\
-  \mu_0:=(K_{\mathbb Q}-K_{\mathrm{pt}})f_0+(\text{decision-order and cut-off mismatches})+O(1/(\kappa x)).
+  \mu_{\mathrm{edge}}(u):=\sum_{N\ge2}\frac1N\,\mathrm{MA}_{\kappa q}[\text{rational primes}\ge\max(P^+(N),X_0)](q)\Big|_{q=u/N}
+  \mathbf 1\Bigl[\frac uN\in\Bigl(\frac{X_0}{1+\kappa},X_0\Bigr)\Bigr],\\
+  \mu_1:=(K_{\mathbb Q}-K_{\mathrm{pt}})(f_1\mathbf 1_{[X_0,\infty)}),\\
+  \mu_0:=(K_{\mathbb Q}-K_{\mathrm{pt}})(f_0\mathbf 1_{[X_0,\infty)})+(\text{decision-order mismatches})+O(1/(\kappa x)).
 \end{gathered}
 \]
-For $u<2X_0$ every component has $m'=1$, so $K_{\mathbb Q}$, $K_{\mathrm{pt}}$ and the mismatches vanish there: $\mu_0=O(1/(\kappa u))$
-and $\mu_1=0$.
+So $\mu_{\mathrm{edge}}$ is the part of $K_{\mathbb Q}\mathrm{MA}[\mathbb P]$ that lies below $X_0$; for $N<X_0$ its summand is
+$\mathrm{MA}[\mathbb P](u/N)/N$. For $u<2X_0$ every cofactor $w\ge2$ has $u/w<X_0$, so $\mu_0=O(1/(\kappa u))$ and $\mu_1=0$ there;
+and $\mu_{\mathrm{edge}}(u)=0$ for $u\le2X_0/(1+\kappa)$, while $\mu_{\mathrm{edge}}(u)=\tfrac12\mathrm{MA}[\mathbb P](u/2)$ on
+$(2X_0/(1+\kappa),2X_0)$.
 
 \begin{lemma}[The margin decomposition]\label{lem:margin}
 % v3: Lemma 5.2
@@ -144,6 +172,14 @@ Consequently
 \begin{equation}\label{eq:mu1sum}
   \sum_{u\text{ dyadic}\ge X_0}\log(2u)\sup_{[u,2u]}|\mu_1|\le\frac{690}{\log X_0}\le7\cdot10^{-6}.
 \end{equation}
+% Logged correction 47: new part (d), the response to the edge term.
+\item \emph{(Edge at $X_0$.)} On $\Good(<x)$:
+\begin{enumerate}[label=(\roman*)]
+\item for $X_0\le x\le X_0^{1.9}$, $\displaystyle\rho_{\mathrm{edge}}(x)=-\sum_{N\ge2:\ x/N\in(X_0/(1+\kappa),\,X_0)}\mu(N)\,
+  \frac{\mathrm{MA}[\mathbb P](x/N)}N$;
+\item for $X_0\le x\le X_0^{1.01}$, at most one $N$ occurs in (i), and $\rho_{\mathrm{edge}}(x)\log x\ge-0.167$;
+\item for $x\ge X_0^{1.01}/2$ with $\log x\le X_0^{1/100}$, $|\rho_{\mathrm{edge}}(x)|\log x\le3X_0^{-0.01}+X_0^{-0.34}$.
+\end{enumerate}
 \end{enumerate}
 \end{lemma}
 
@@ -187,19 +223,28 @@ $d\cdot p_2\cdots p_k$, with $d\in\mathcal D$ (the same set in both systems) and
 respectively rational and $\ge X_0$), ordered $p_2\ge\dots\ge p_k$. Replace the large-prime measure one variable at a time.
 \begin{itemize}
 \item With the other variables fixed, the summand is $G(p)=f_0(u/(m_jp))/(m_jp)$ on an interval $[a,b]\subset[\Xm,u]$ (given by the
-ordering and the filter), with $m_j:=d\prod_{i\ne j}p_i$. Since $|qf_0'(q)|\le f_0(q)/\Lambda$, we have $|(G/\log)'|\le1.1G/(p\log p)$.
+ordering and the filter), with $m_j:=d\prod_{i\ne j}p_i$. The filter now includes $u/(m_jp)\ge X_0$, the support of
+$f_0\mathbf 1_{[X_0,\infty)}$, so $f_0$ is evaluated only on $[X_0,\infty)$, and the cut at $X_0$ is an endpoint of $[a,b]$; the partial
+windows below $X_0$ are in $\mu_{\mathrm{edge}}$, not here. On $[X_0,\infty)$, $|qf_0'(q)|\le f_0(q)/\Lambda$, so $|(G/\log)'|\le1.1G/(p\log p)$.
 \item Integrating by parts against $d(\psi_{\NN}-\psi)/\log$ (prime powers cost $O(\sqrt b\log b)$), one replacement changes the sum by
 at most $10\kappa f_0\log b/m_j+2.8\kappa f_0\log^2b/m_j\le4\kappa\log^2u/(m_j\Lambda)$.
 \item Summing over the other variables: $\sum1/m_j\le1.01e^{\gamma}\Lambda\cdot\ell_u^{k-2}/(k-2)!$, with
-$\ell_u:=\sum_{\Xm\le p\le u}1/p\le\log(\log u/\Lambda)+2.2/\Lambda$ (Lemma~\ref{lem:cm}(iv) and Mertens' theorem). With $k-1$
-replacements for each $k$, the total is
+$\ell_u:=\sum_{\Xm\le p\le u}1/p\le\log(\log u/\Lambda)+2.2/\Lambda$ (Lemma~\ref{lem:cm}(iv) and Mertens' theorem), up to replacing
+$\ell_u$ by $\ell_u+e^{-0.8\Lambda}$, which the constants below absorb.
+% Logged correction 47 (justification): the large primes form a multiset, so the sum is a complete homogeneous symmetric sum.
+Indeed, the large primes form a multiset of some size $r$. For weights $a_p=1/p\le b:=1/\Xm$ with $\sum a_p\le\ell_u$, comparing
+$\prod_p(1-a_px)^{-1}=\exp\bigl(\sum_{i\ge1}x^i\sum_pa_p^i/i\bigr)$ coefficientwise with $(1-bx)^{-\ell_u/b}$ bounds the degree-$r$
+multiset sum by $\ell_u(\ell_u+b)\cdots(\ell_u+(r-1)b)/r!\le(\ell_u+rb)^r/r!$, and $rb\le e^{-0.8\Lambda}$ since
+$r\le\log u/\log\Xm\le e^{\Lambda/8}$. With $k-1$ replacements for each $k$, the total is
 \[
   \le4.1e^{\gamma}\kappa\log^2u\,(1+\ell_u)e^{\ell_u}\le\frac{7.4\kappa(\log u)^3(1+\log\log u)}{\Lambda}\le\kappa(\log u)^3
   \qquad\text{for }\log\log u\le\Lambda/8.
 \]
 \end{itemize}
 
-\emph{The rest.} Each of the following is $\le10^{-3}\kappa(\log u)^3$: the top-prime cut-off $\Xm$ versus $X_0$ (relative $H(X_0)/X_0$);
+\emph{The rest.} Each of the following is $\le10^{-3}\kappa(\log u)^3$:
+% Logged correction 47: v3's item "the top-prime cut-off X_0^- versus X_0 (relative H(X_0)/X_0)" understated the edge; the cut-off
+% of K_pt is X_0 (see before eq:shdecomp), and the components below X_0 form mu_edge, treated in (d).
 the decision-order mismatch, $H(q)/(\kappa q)\le H(X_0)/(\kappa X_0)$ per component; the partial windows of Lemma~\ref{lem:blin}(3)
 (relative $O(\kappa)$); $f_0-1/\log q=O(\kappa/\log^2q)$; and $O(1/(\kappa u))$.
 \end{proof}
@@ -223,11 +268,64 @@ terms of the second bound. The integrands are elementary, and the total is $\le6
 so it holds uniformly in $\Lambda\ge10^8$.
 \end{proof}
 
-\emph{Use.} Proposition~\ref{prop:g1} uses (a)--(c) on its range (A), $\log x\le X_0^{1/100}$. For (b), Lemma~\ref{lem:lemmaM} gives
+\begin{proof}[Proof of (d)]
+(i) If $\mu_{\mathrm{edge}}(x/n)\ne0$ then $x/n>2X_0/(1+\kappa)$, so $n<X_0^{0.9}<\Xm$ for $x\le X_0^{1.9}$. Such $n$ are rational
+integers whose primes are decided before $X_0$; each product in the condition $\chi^t_x(n)=1$ of Lemma~\ref{lem:lemmaM} is at most
+$n^2<x$, so the coefficient $c_n(x)$ of that lemma is $\mu(n)$; and the $N$ with
+$x/N\in(X_0/(1+\kappa),X_0)$ satisfy $N<1.01X_0^{0.9}<X_0$. Writing $N=dM$ with $M\ge2$,
+\[
+  \rho_{\mathrm{edge}}(x)=\sum_n\frac{\mu(n)}n\,\mu_{\mathrm{edge}}\Bigl(\frac xn\Bigr)=\sum_{N\ge2}\frac{\mathrm{MA}[\mathbb P](x/N)}N\,
+  \mathbf 1\Bigl[\frac xN\in\Bigl(\frac{X_0}{1+\kappa},X_0\Bigr)\Bigr]\sum_{d\mid N,\,d<N}\mu(d),
+\]
+since every proper divisor $d$ of such an $N$ has $x/d\ge2x/N>X_0$; and $\sum_{d\mid N,\,d<N}\mu(d)=-\mu(N)$.
+
+(ii) The $N$ in (i) lie in $(x/X_0,(1+\kappa)x/X_0)$, an interval of length $\kappa x/X_0\le X_0^{-0.38}<1$. A negative term needs
+$\mu(N)=1$, so $N\ge6$. For $q\in(X_0/(1+\kappa),X_0)$ we have $\mathrm{MA}[\mathbb P](q)\le1.0001/\Lambda$: the window
+$[X_0,(1+\kappa)q]$ lies in $[X_0,2X_0]$, so if its length is $\ge(2X_0)^{7/12}$, \eqref{eq:huxley} at $X_0$ bounds its primes by
+$(1+\Lambda^{-3})\kappa q/\Lambda$, and otherwise it holds at most $(2X_0)^{7/12}+1\le X_0^{-0.01}\kappa q$ primes. As $x<NX_0$,
+\[
+  \rho_{\mathrm{edge}}(x)\log x\ge-\frac{1.0001}{N}\Bigl(1+\frac{\log N}\Lambda\Bigr)\ge-\frac{1.0001}6\Bigl(1+\frac2\Lambda\Bigr)\ge-0.167,
+\]
+the middle expression being decreasing in $N\ge6$.
+
+(iii) Let $K'_{\mathbb Q}$ be $K_{\mathbb Q}$ with cut-off $X_0$, and $g:=(1+K'_{\mathbb Q})^{-1}\mu_{\mathrm{edge}}$. Expand $g(x)$ as in (i),
+now in the rational system with the latest-prime filter.
+% Logged correction 47 (re-check N20): v3-style closed formula for g replaced by a coefficient bound; it fails for N = 2P with p < P < x/P.
+Fix $N\ge2$ with $x/N\in(X_0/(1+\kappa),X_0)$ and a window prime $p\ge X_0$, and write $N=s\ell$, where $\ell$ collects the prime
+factors of $N$ larger than $p$. The filter admits a factorisation $N=nM$ only if $\ell\mid n$. For such $n<N$ we have $n\le N/2$,
+so $x/n\ge X_0$; and the condition $\chi^t_x(n)=1$ of Lemma~\ref{lem:lemmaM} depends only on $\ell$, because $q\,n\le pN/2<x$ for every
+prime $q\le p$. Writing $\chi_\ell(x)\in\{0,1\}$ for its value, the coefficient of $p$ in the $N$-term is
+\[
+  \chi_\ell(x)\sum_{s'\mid s,\ s'\ne s}\mu(\ell s')=
+  \begin{cases}-\mu(N)\,\chi_\ell(x),&s>1,\\ 0,&s=1.\end{cases}
+\]
+So each $N$-term is at most $\mathrm{MA}[\mathbb P](x/N)/N$ in absolute value. As $x$ increases, its numerator changes monotonically:
+primes enter the window and coefficients switch on, all with the sign $-\mu(N)$. Hence
+$|g(x)|\le(1.0001/\Lambda)\sum_{x/X_0<N<(1+\kappa)x/X_0}1/N\le(1.0001/\Lambda)(\kappa+X_0/x)$, and $|g|\le0.51/\Lambda$
+everywhere. For $x\ge X_0^{1.01}/2$ and $\log x\le X_0^{1/100}$ this gives $|g(x)|\log x\le1.0001(\log x/\Lambda)(\kappa+X_0/x)\le3X_0^{-0.01}$.
+By the resolvent identity,
+\[
+  \rho_{\mathrm{edge}}-g=(1+K_{\mathrm{pt}})^{-1}(K'_{\mathbb Q}-K_{\mathrm{pt}})g .
+\]
+The operators $K'_{\mathbb Q}$ and $K_{\mathrm{pt}}$ agree on cofactors $<\Xm$, and $g(u/w)\ne0$ needs $u/w>2X_0/(1+\kappa)$; so
+$(K'_{\mathbb Q}-K_{\mathrm{pt}})g(u)=0$ for $u<2X_0\Xm/(1+\kappa)$. For larger $u$ the telescoping of Step~3 of (b) applies with $f_0$
+replaced by $g$; it uses only $|g|\le0.51/\Lambda$ and the variation of $g$, not a formula for $g$. As $g$ is not smooth, the
+integration by parts uses its variation: by the monotonicity just shown, each $N$-term varies by at most $3.1/(N\Lambda)$ on its
+window (at most $1.0001(1+3\kappa)/(N\Lambda)$ while it grows, and the drop to $0$ at the end), so $g$ has total variation $\le(3.1/\Lambda)(\log(\beta/\alpha)+1)$ on $[\alpha,\beta]$. One
+replacement then costs at most $17\kappa\log^2u/(m_j\Lambda)$ instead of $4\kappa\log^2u/(m_j\Lambda)$, and the remaining items of
+``the rest'' are smaller; so $|(K'_{\mathbb Q}-K_{\mathrm{pt}})g(u)|\le4\kappa(\log u)^3$ for $\log\log u\le\Lambda/8$. By
+Lemma~\ref{lem:lemmaM}, $\log x\,|\rho_{\mathrm{edge}}-g|(x)\le4.1\kappa(\log x)^5\le X_0^{-0.34}$ for $\log x\le X_0^{1/100}$.
+\end{proof}
+
+\emph{Use.} Proposition~\ref{prop:g1} uses (a)--(d) on its range (A), $\log x\le X_0^{1/100}$. For (b), Lemma~\ref{lem:lemmaM} gives
 $\log x\,|(1+K_{\mathrm{pt}})^{-1}\mu_0(x)|\le\log x(\log x+B_1)\sup_{u\le x}|\mu_0(u)|\le2.1\kappa(\log x)^5\le X_0^{-0.34}$ there. For (c),
 the Saias-weighted response (Corollary~\ref{cor:saias}) needs $\sum\log(2u)\sup|\mu_1|$ below the budget
 $c'/(8C_S)\approx2.4\cdot10^{-4}$ ($c'=0.15$, $C_S\le77$), and
-\eqref{eq:mu1sum} has a factor $\ge30$ to spare.
+\eqref{eq:mu1sum} has a factor $\ge30$ to spare. For (d), $\rho_{\mathrm{edge}}$ enters \eqref{eq:shdecomp} directly. It lowers
+$\rho^{\mathrm{sh}}\log x$ by at most $0.167$ for $X_0+H\le x\le X_0^{1.01}$, and only on the windows $N\cdot(X_0/(1+\kappa),X_0)$ with
+$\mu(N)=1$; for $x\ge X_0^{1.01}/2$ it changes it by at most $3X_0^{-0.01}+X_0^{-0.34}$. So the lower bound
+$0.99-6\cdot10^{-4}-X_0^{-0.34}-e^{-80}$ of range (A) becomes $\ge0.822$ on $[X_0+H,X_0^{1.01}]$ and stays $\ge0.97$ on
+$[X_0^{1.01}/2,X_{\mathrm{sw}}]$; the two ranges overlap.
 
 \subsection{Where the local prime number theorem is used}
 The local prime number theorem (Theorem~\ref{thm:lp}) is used only above a threshold $X_{\mathrm{LP}}(X_0)$. Landau's argument against
