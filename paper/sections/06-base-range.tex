@@ -270,13 +270,23 @@ $|\mu_1|\le|K_{\mathbb Q}f_1|+|K_{\mathrm{pt}}f_1|$, and both are bounded in the
 dropped.
 \begin{itemize}
 \item Components with $q=x/m'\ge y:=x^{1/U}$ have $\eta_{\mathrm H}(q)\le(\log x/U)^{-3}$, and
-$\sum_{m'\le x/y}1/(m'\log(x/m'))\le\log U+0.01$. This uses $\sum_{m\le t}1/m=\log t+\gamma+O(2\kappa)$ on $\Good(<x)$ for
-$t\le x/X_0$, from Step~1 of (b).
+$\sum_{m'\le x/y}1/(m'\log(x/m'))\le\log U+0.01$.
+% Logged correction 63 (CORRECTIONS-vs-v3.md): v3 cites sum_{m<=t}1/m = log t + gamma + O(2 kappa) "from Step 1 of (b)";
+% partial summation of an error 2 kappa t only gives O(kappa log t). The bound actually used follows from (H_BS) directly.
+  Indeed, on $\Good(<x)$ the hypothesis \eqref{eq:HBS} holds on $[1,x]$, so with $S(t):=\sum_{m\le t}1/m$ and $E:=N-\lfloor\cdot\rfloor$,
+  $S(t)-H_{\lfloor t\rfloor}=E(t)/t+\int_1^tE(u)\,du/u^2$ has absolute value at most $\eta_1+\eta_1\log2\le0.0017$ (where
+  $H_n:=\sum_{k\le n}1/k$). As $|H_{\lfloor t\rfloor}-\log t|\le1$ for $t\ge1$, $e(t):=S(t)-\log t$ satisfies $|e(t)|\le1.002$, and
+  $e(1^-)=0$. Stieltjes integration by parts against the increasing weight $1/\log(x/t)$ on $[1,x/y]$ gives
+  \begin{align*}
+    \sum_{m'\le x/y}\frac1{m'\log(x/m')}&=\int_1^{x/y}\frac{dt}{t\log(x/t)}+\int_{[1,x/y]}\frac{de(t)}{\log(x/t)}\\
+    &\le\log U+\frac{1.002}{\log y}+1.002\Bigl(\frac1{\log y}-\frac1{\log x}\Bigr)\le\log U+\frac{2.004}{\log y},
+  \end{align*}
+  which is $\le\log U+0.01$ as $y\ge X_0$.
 \item Components with $q\in[X_0,y)$ have $\eta_{\mathrm H}\le\Lambda^{-3}$, $1/\log q\le1/\Lambda$, and $m'\ge x/y$ with $P^+(m')\le y$. Rankin's
 method with exponent $1-2/\log y$ bounds $\sum1/m'$ by
 $e^{-2(U-1)}\prod_{p\le y}(1-p^{2/\log y-1})^{-1}\le e^{-2(U-1)}\cdot2e^{\gamma}e^{\operatorname{Ein}(2)}\log y$. Mertens' theorem for the
 realised primes is Lemma~\ref{lem:cm}(iii),(iv), and $\NN$ is free on its primes.
-\item The first bound is the case $U=1$, with $\sum_{m'\le x/X_0}1/(m'\log(x/m'))\le\log v+0.01$.
+\item The first bound is the case $y=X_0$ (that is, $U=v$), with $\sum_{m'\le x/X_0}1/(m'\log(x/m'))\le\log v+0.01$.
 \end{itemize}
 Summing over dyadic $u$, with $\log(2u)\le1.01\log u$, gives $(2.02/\log2)\Lambda^{-1}(I_1+I_2+I_3)$. Here
 $I_1=\int_1^4v(\log v+1.01)\,dv=14.92$ ($U=1$ on $v\le4$), and $I_2=214.8$ and $I_3=6.7$ are the integrals over $v\ge4$ of the two
