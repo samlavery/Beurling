@@ -87,12 +87,12 @@ all decisions and jitter offsets at slots $\le t$, and $\mathcal F_{s-}$ is the 
 $\NN_{\prec s}$ denotes the set of elements of $\NN$ all of whose primes are decided at slots $<s$. It is
 $\mathcal F_{s-}$-measurable.
 
-\paragraph{Convention on $X_0$.}
+\paragraph{The threshold $\Xm$.}
 With centred placement (Section~\ref{sec:construction}), jittered primes have values at least
-$\Xm:=X_0-H(X_0)/2=X_0(1-O(e^{2715-\Lambda}))$. Wherever this section or Appendix~\ref{app:rankfull} says that ``a jittered prime is
-at least $X_0$'' (in (F3$'$), (V1), Lemma~\ref{lem:rowweights}, the $\tau_j$ of Appendix~\ref{app:rankfull}, and $\mathrm{Proj}_t$), read
-$\Xm$. Every such use has a margin far larger than $e^{-10^7}$, and Lemma~\ref{lem:rowweights}(e) already uses the weaker bound
-$\tfrac23(X_0+0.99(i-1))$.
+$\Xm:=X_0-H(X_0)/2$. Since $H(X_0)/X_0=e^{8\log^2\Lambda-\Lambda}\le e^{-0.98\Lambda}$, we have
+$\log\Xm\ge\Lambda-e^{-0.98\Lambda}$. Every lower bound for a jittered prime below is stated with $\Xm$.
+% Logged correction 43: v3's convention "read X_0 as X_0^-" is replaced by explicit X_0^- throughout; v3 also has
+% X_0(1-O(e^{2715-Lambda})), which is uniform only near Lambda = 1e8.
 
 \paragraph{The Lindley recursion.}
 By Lemma~\ref{lem:lindley}, the queue is $Q_0=0$ and
@@ -151,15 +151,26 @@ Moreover $A_s(Y)\le A':=1.8(\log z+1)$ for $s\le 2z$ and $Y\le 2z$.
 If $Y+H(Y)\le s$, then all of $\NN\cap[1,Y]$ is decided before $s$, and the bound is the sure harmonic bound of
 Lemma~\ref{lem:cm}(iv), which holds on $\Good(<s)$. Otherwise we bound the sum by
 $\prod_{p\text{ decided before }s}(1-1/p)^{-1}$.
+Put $y_0:=\Xm-1$. Every realised prime $p\le y_0$ is rational, since jittered primes are at least $\Xm$. We split the primes
+decided before $s$ into three groups.
+% Logged correction 43: v3 splits at X_0 and omits the jittered primes landing in [X_0^-, X_0); the split is now at y_0.
 \begin{itemize}
-\item The rational primes $p<X_0$ give at most $e^{\gamma}\Lambda(1+1/(2\Lambda^2))$ \cite[Thm.~8, (3.29)]{RosserSchoenfeld1962}, valid for
-  $X_0\ge286$.
-\item The realised primes in $[X_0,s-H(s)]$ give at most $(\log s/\Lambda)e^{2.20/\Lambda+1/X_0}$, by the sure local Mertens
-  bound of Lemma~\ref{lem:cm}(iv). That bound reads $\NN$ only on $[1,s-H]$ and holds on $\Good(<s)$.
+\item The rational primes $p\le y_0$ give at most $e^{\gamma}\log y_0\,(1+1/(2\log^2y_0))\le e^{\gamma}\Lambda(1+1/(2\Lambda^2))$
+  \cite[Thm.~8, (3.29)]{RosserSchoenfeld1962}, valid for $y_0\ge286$.
+\item The realised primes in $(y_0,s-H(s)]$ are the rational primes in $(y_0,X_0)$, the jittered primes that land in
+  $[\Xm,X_0)$, and all realised primes in $[X_0,s-H(s)]$. By the sure local Mertens bound of Lemma~\ref{lem:cm}(iv) with
+  $y=y_0$, which sums over all realised primes, they give at most $(\log s/\log y_0)\,e^{2.20/\log y_0+1/y_0}$. That bound
+  reads $\NN$ only on $[1,s-H]$ and holds on $\Good(<s)$. Since $\log y_0\ge\Lambda-H(X_0)/X_0$ and
+  $H(X_0)/X_0=e^{8\log^2\Lambda-\Lambda}\le e^{-0.98\Lambda}$, this is at most
+  $(\log s/\Lambda)\,e^{2.20/\Lambda+1/X_0+e^{-0.97\Lambda}}$.
 \item The remaining primes decided before $s$ have values in $(s-H,s+H/2]$, hence values greater than $s/2$. There are at most
   $2H+1$ of them, so they contribute a factor at most $(1-2/s)^{-(2H+1)}\le e^{5H(s)/s}$. Since
-  $\log H\le8\ell^2+10^{-6}\log s$ (Theorem~\ref{thm:caplw}(c)), this factor is at most $e^{10^{-9}}$. \qedhere
+  $\log H\le8\ell^2+10^{-6}\log s$ (Theorem~\ref{thm:caplw}(c)), this factor is at most $e^{10^{-9}}$.
 \end{itemize}
+These groups cover every prime decided before $s$: such a prime has value at most $s+H(s)/2$, and a value below $\Xm$ is a
+rational prime. Multiplying the three bounds gives
+$e^{\gamma}\log s\cdot\exp\big(2.20/\Lambda+1/(2\Lambda^2)+1/X_0+e^{-0.97\Lambda}+5H(s)/s\big)$, and
+$1/(2\Lambda^2)+1/X_0+e^{-0.97\Lambda}\le0.01/\Lambda$.
 \end{proof}
 \begin{enumerate}[label=\textup{(F4)},leftmargin=*]
 \item\label{eq:sF4} \emph{(Sure Mertens and Chebyshev bounds on $\Good(<s)$.)} These are the realised-prime bounds of
@@ -517,10 +528,10 @@ window at height $z$, so $|J|=2\delta_1=4L^{-6}<1$. Since $|J|<1$, $J$ contains 
 Write $S(J)$ for the set of elements of $\NN$ in $J$ that have a jittered prime. For $n=M\cdot d$, with $M$ the jittered part
 and $d$ the rigid ($X_0$-smooth) part, the \emph{exponent vector} $f_n\in\Z_{\ge0}^{\mathcal P_{\mathrm{jit}}}$ of $n$ is
 that of $M$. \emph{Rank}, \emph{span} and \emph{degree} $\qdeg f:=\|f\|_1$ refer to these vectors. Every degree is at most
-$D:=\log2z/\log\Xm$, which equals $\log2z/\Lambda$ up to a relative error $O(H(X_0)/X_0)$.
+$D:=\log2z/\log\Xm$, which equals $\log2z/\Lambda$ up to a relative error at most $e^{-0.98\Lambda}$.
 \begin{itemize}
 \item \emph{(V1) One element per vector.} Two elements of $J$ with the same exponent vector $f$ have the same jittered part
-  $M_f\ge X_0$. They differ by $M_f|d-d'|\ge X_0>|J|$ unless $d=d'$. So distinct elements of $S(J)$ have distinct exponent
+  $M_f\ge\Xm$. They differ by $M_f|d-d'|\ge\Xm>|J|$ unless $d=d'$. So distinct elements of $S(J)$ have distinct exponent
   vectors.
 \item \emph{Capacity.} For $S'\subset S(J)$ of rank $r$, put $\qCap(S'):=|S'|-r$.
 \end{itemize}
@@ -708,27 +719,39 @@ lies strictly inside a triangle of points of $S$. Projecting to $[0,D]^2$ gives 
 \subsection{High-capacity configurations are rare at every scale}\label{sec:queue-capl}
 % v3: §4.6 (CapL-w)
 
-\paragraph{Setting.} Fix a dyadic height $z\ge X_0$, and put $L:=\log z$, $\ell:=\log L$ and $D:=\log2z/\Lambda$. Let $J$ range
+\paragraph{Setting.} Fix a dyadic height $z\ge X_0$, and put $L:=\log z$, $\ell:=\log L$ and $D:=\log2z/\log\Xm$, as in
+Section~\ref{sec:queue-ecl}; every degree is at most $D$, and $L/\Lambda\le D\le2L/\Lambda$.
+% Logged correction 43: v3 has D := log 2z/Lambda here, which is not a degree cap.
+Let $J$ range
 over the $2z/\delta$ grid windows at height $z$, where $\delta:=2\delta_1=|J|$. A \emph{configuration} is a rank-full set
 $B'\subset S(J)$ of rank $r<r_0$, together with a minimum cover $C\subset B'$ of $P(B')$, so $|C|=\kappa$. Write $R:=B'\setminus
 C$ for the \emph{rows outside the cover}. For $y\in B'$ write $n_y=M_yd_y$, with $M_y$ jittered and $d_y$ rigid. The
 \emph{type} $\tau$ of a configuration is its exponent pattern, that is, the matrix of exponents of its distinct jittered
 primes, up to relabelling by value. Let $\pi:=|P(C)|\le\kappa D$ be the number of jittered primes, and put
-$\lambda_D:=\sum_{X_0\le q\le2z}1/q$; on the good event, $\lambda_D\le\log D+1$ by (F4).
+$\lambda_D:=\sum_{\Xm\le q\le2z}1/q$ over the realised primes in that range; on the good event, $\lambda_D\le\log D+1$ by
+(F4), that is, Lemma~\ref{lem:cm}(iv) with $y=\Xm-1$.
+% Logged correction 43: v3 starts lambda_D at X_0; free primes can lie in [X_0^-, X_0).
 
 \begin{proposition}[Cover Bound]\label{prop:cover}
 % v3: Proposition 4.13
 For every type $\tau$,
-\begin{equation}\label{eq:coverbound}
-\E\big[\#\{\text{configurations of type $\tau$ in $J$}\};\ \Good(<t_z)\big]\le(\theta\delta)^r\sum\Big(\prod_{y\in C}d_y^{-1}
-\cdot X_0^{-\mathrm{exc}}\cdot\prod_{f\in F}q_f^{-1}\cdot\prod_{y\in R}n_y^{-1}\Big),
-\end{equation}
+\begin{multline}\label{eq:coverbound}
+\E\big[\#\{\text{configurations of type $\tau$ in $J$}\};\ \Good(<t_z)\big]\\
+\le(\theta\delta)^r\sum\Big(\prod_{y\in C}d_y^{-1}\cdot\prod_{j=1}^{\pi}\tau_j^{-e_j}\cdot\prod_{f\in F}q_f^{-1}
+\cdot\prod_{y\in R}n_y^{-1}\Big),
+\end{multline}
 where:
 \begin{itemize}
 \item the sum runs over the realised jittered primes $F$ that are not used as pivots, over the tails of the rows of $C$, and,
   for each $y\in R$, over its monomial $M_y$ in the labels of $P(C)$ and its tail $d_y$, subject to $n_y\in J$;
-\item $\mathrm{exc}:=\sum_p(\#\{\text{occurrences of $p$ in rows of $C$}\}-1)\ge0$.
+\item the primes of $P(C)$ are indexed $j=1,\dots,\pi$ in decision order; the excess $e_j\ge0$ of the $j$-th prime is the
+  number of its occurrences in rows of $C$, minus $1$; and $\mathrm{exc}:=\sum_je_j$;
+\item $\tau_j:=\max(\Xm,\sigma_j-2H(\sigma_j))$ with $\sigma_j:=X_0+0.99(j-1)$, as in \eqref{eq:A-tau}. The $j$-th prime of
+  $P(C)$ in decision order has value at least $\tau_j$, because the primes of $P(C)$ are distinct jittered primes in
+  distinct slots (Section~\ref{sec:A-setting}).
 \end{itemize}
+% Logged correction 44: v3 weights every excess occurrence uniformly by X_0^{-1}; the pattern sum then needs the
+% per-index weights tau_j^{-e_j} of Appendix A.
 \end{proposition}
 
 \begin{proof}
@@ -751,11 +774,12 @@ equals $\int_{J^r}\prod_{\mathrm{piv}}q\big/\big(|\det E_P|\prod_yn_y\big)\,dn$.
 \item each free prime $f$ keeps, for its harmonic sure sum, one occurrence in a row of $C$
   (Lemma~\ref{lem:fac}, (S1$'$) and~(S3));
 \item all occurrences in rows of $R$ stay with their row;
-\item the remaining occurrences in rows of $C$ are the excess, each at most $X_0^{-1}$.
+\item the remaining occurrences in rows of $C$ are the excess: the $e_j$ remaining occurrences of the $j$-th prime each
+  contribute at most $\tau_j^{-1}$.
 \end{itemize}
 The resulting weights are as follows. A row of $C$ gets at most $d_y^{-1}$. A row of $R$ gets exactly
 $c_y^{-1}\cdot\prod_{p\in M_y}p^{-E}=1/n_y$; its tail cancels, so it is summed with counting weight, which is a deterministic
-rigid count. Free primes are harmonic, and the excess contributes $X_0^{-\mathrm{exc}}$.
+rigid count. Free primes are harmonic, and the excess contributes $\prod_j\tau_j^{-e_j}$.
 
 \emph{Bookkeeping.} The factor $\theta=1+1/\Lambda$ per element comes from (F1)--(F2) and the slot sums, and $|\det E_P|\ge1$.
 \end{proof}
@@ -764,8 +788,8 @@ rigid count. Free primes are harmonic, and the excess contributes $X_0^{-\mathrm
 % v3: §4.6, Remark after Proposition 4.13
 Every row of the basis $B'$ is a Jacobian row. Only extras outside $B'$ would be mere indicators, and none occur
 (Lemma~\ref{lem:reduction}(i)). Being a Jacobian row is what supplies the factor $1/n_y\le1/z$ of a row of $R$, and it does not
-cost the rigid count. The per-row weights below never credit $X_0^{-\mathrm{exc}}$ beyond the pattern sum over the rows of
-$C$ in Lemma~\ref{lem:reduction}(ii).
+cost the rigid count. The per-row weights below never credit the excess weights $\prod_j\tau_j^{-e_j}$ beyond the pattern sum over
+the rows of $C$ in Lemma~\ref{lem:reduction}(ii).
 \end{remark}
 
 \begin{lemma}[Reduction to configurations; type union]\label{lem:reduction}
@@ -796,9 +820,15 @@ $C$ in Lemma~\ref{lem:reduction}(ii).
 \begin{itemize}
 \item the free primes of a row of $C$, sorted by value: $\sum_k\lambda_D^k/k!\le e^{\lambda_D}\le eD$;
 \item the pivot positions: at most $D$ per row;
-\item the excess patterns of the rows of $C$: the sum over patterns of $X_0^{-\mathrm{exc}}$ is at most
-  $\prod_{p\in P(C)}(1-1/p)^{-\kappa}\le L^{2.1}$ per row of $C$, using that the realised primes $p\ge X_0$ are distinct and
-  $\pi\le L^2$;
+\item the excess patterns of the rows of $C$: distributing the excess $e_j$ of the $j$-th prime over the $\kappa$ rows
+  of $C$, the sum over patterns of $\prod_j\tau_j^{-e_j}$ is at most
+  \[
+  \prod_{j\le\pi}\sum_{e\ge0}\binom{\kappa+e-1}{e}\tau_j^{-e}=\prod_{j\le\pi}(1-1/\tau_j)^{-\kappa}
+  \le\big(e^{(3H(X_0)+2)/X_0}(1+\pi/X_0)^{1.02}\big)^{\kappa},
+  \]
+  by the estimate in the proof of Lemma~\ref{lem:pattern} (with $\pi$ in place of $k$). Since $\pi\le L^2$ and $L\ge\Lambda\ge10^8$, this is at most $L^{2.1}$ per row of $C$: if
+  $L^2\le X_0$ the base is at most $2.1$, and otherwise it is at most $2.1L^{2.04}\le L^{2.1}$;
+  % Logged correction 44: v3 bounds this by prod_p (1-1/p)^{-kappa} with uniform weights, which does not follow.
 \item the tail of a row of $C$: $\sum_d1/d\le e^{\gamma}\Lambda(1+1/\Lambda^2)\le2L$.
 \end{itemize}
 The minimum cover used is a fixed choice determined by the type, so its choice costs nothing. So each row costs at most
@@ -812,16 +842,17 @@ $r_0\cdot13L^{5.1}z\,w^{1+j}$ is at most $L^{-3}$ once $(1+j)\log(1/w)\ge L+9.1\
 
 \begin{lemma}[Row weights]\label{lem:rowweights}
 % v3: Lemma 4.15
-Let $y\in R$ have degree $k\ge1$, so that $M_y\ge X_0^k$ and $d_y\le2z/X_0^k$.
+Let $y\in R$ have degree $k\ge1$, so that $M_y\ge(\Xm)^k$ and $d_y\le2z/(\Xm)^k$.
+% Logged correction 43: X_0 replaced by X_0^- in (a), (b), (d); (d) gets the -e^{-0.4 Lambda} term and the hypothesis on D.
 \begin{enumerate}[label=\textup{(\alph*)}]
-\item $w_y\le\sum_{k'\ge k}\binom{\pi+k'-1}{k'}\Psi(2z/X_0^{k'},X_0)/z$.
-\item (High degree.) If $e(\pi+k)/(kX_0)\le1/3$, then $w_y\le3\,(e(\pi+k)/k)^kX_0^{-k}$; that is,
-  $\log(1/w_y)\ge k(\Lambda-1-\log((\pi+k)/k))-\log3$.
+\item $w_y\le\sum_{k'\ge k}\binom{\pi+k'-1}{k'}\Psi(2z/(\Xm)^{k'},X_0)/z$.
+\item (High degree.) If $e(\pi+k)/(k\Xm)\le1/3$, then $w_y\le3\,(e(\pi+k)/k)^k(\Xm)^{-k}$; that is,
+  $\log(1/w_y)\ge k(\log\Xm-1-\log((\pi+k)/k))-\log3$.
 \item (Smooth tails.) Put $u:=\log Y/\Lambda$. For $\max(10^4,\log\Lambda)\le u\le X_0^{1/2}$ we have
   $\Psi(Y,X_0)\le Y\exp(-0.9u\log u)$. For $u>X_0^{1/2}$ we have
   \[\Psi(Y,X_0)\le\exp\big(1.26X_0\log(2\log Y)/\Lambda\big).\]
-\item (Low degree, smooth tails.) If $10^4\le D-1\le X_0^{1/2}$ and $\pi X_0^{-1}(eD)^{0.9}\le1/3$, then
-  $\log(1/w_y)\ge g:=\Lambda-\log(3\pi)+0.9(D-1)\log(D-1)$.
+\item (Low degree, smooth tails.) Put $u_1:=\max(10^4,\log\Lambda)$. If $2u_1\le D-1$, $D\le X_0^{1/2}$ and
+  $\pi(\Xm)^{-1}(eD)^{0.9}\le1/3$, then $\log(1/w_y)\ge g:=\log\Xm-\log(3\pi)+0.9(D-1)\log(D-1)-e^{-0.4\Lambda}$.
 \item (Joint Rankin bound; any $L$.) For every $\eta\in[\tfrac14,1)$,
   \[
   \log(1/w_y)\ge\eta L-\log2-\log\Lambda-2-\frac{1.3X_0^{\eta}}{\eta\Lambda}-\frac{1.36(X_0+\pi)^{\eta}}{0.99\,\eta}.
@@ -832,9 +863,9 @@ Let $y\in R$ have degree $k\ge1$, so that $M_y\ge X_0^k$ and $d_y\le2z/X_0^k$.
 \begin{proof}
 (a) Count the pairs $(M_y,d_y)$.
 
-(b) Use $\Psi(Y,X_0)\le Y$. The terms $\binom{\pi+k'-1}{k'}\cdot2X_0^{-k'}$ have consecutive ratio
-$(\pi+k')/((k'+1)X_0)\le1/(3e)$, by the hypothesis. So the sum over $k'\ge k$ is at most
-$2.3\binom{\pi+k-1}{k}X_0^{-k}\le3(e(\pi+k)/k)^kX_0^{-k}$.
+(b) Use $\Psi(Y,X_0)\le Y$. The terms $\binom{\pi+k'-1}{k'}\cdot2(\Xm)^{-k'}$ have consecutive ratio
+$(\pi+k')/((k'+1)\Xm)\le1/(3e)$, by the hypothesis. So the sum over $k'\ge k$ is at most
+$2.3\binom{\pi+k-1}{k}(\Xm)^{-k}\le3(e(\pi+k)/k)^k(\Xm)^{-k}$.
 
 (c) We use Rankin's bound $\Psi(Y,y)\le Y^{\sigma}\prod_{p\le y}(1-p^{-\sigma})^{-1}$ with $y=X_0$ and $\sigma=1-\eta$, where
 $\eta:=\log(u\log u)/\Lambda\in(0,1)$.
@@ -857,14 +888,19 @@ $\eta:=\log(u\log u)/\Lambda\in(0,1)$.
   $1.26X_0/\Lambda$ primes $p<X_0$.
 \end{itemize}
 
-(d) Put $u_1:=\max(10^4,\log\Lambda)$. The $k=1$ term of (a), with (c) at $u=D-1$, is at most
-$2\pi\exp(-0.9(D-1)\log(D-1))/X_0$.
+(d) The $k'$-th term of (a) has $Y=2z/(\Xm)^{k'}$, so $u=\log Y/\Lambda=(D-k')\log\Xm/\Lambda$. For $k'=1$ this gives
+$(D-1)(1-\eps)\le u\le D-1$ with $\eps:=e^{-0.98\Lambda}/\Lambda$, so $u_1\le u\le X_0^{1/2}$ and (c) applies. Since
+$D-1\le e^{\Lambda/2}$, we have $u\log u\ge(D-1)\log(D-1)-(D-1)\eps(\log(D-1)+2)\ge(D-1)\log(D-1)-e^{-0.48\Lambda}$. So the
+$k'=1$ term is at most $2\pi\exp(-0.9(D-1)\log(D-1)+e^{-0.48\Lambda})/\Xm$.
 \begin{itemize}
-\item For $D-k'\ge u_1$, the ratio of consecutive terms is at most $\pi X_0^{-1}(eD)^{0.9}\le1/3$, by hypothesis.
-\item For $D-k'<u_1$, bound the term by $\Psi\le Y$ instead. The first such term is at most
-  $\pi X_0^{-1}e^{0.9(u_1+1)\log(u_1+1)}$, which is far less than $\tfrac13$ times the last term of type (c), and the
-  following ratios are at most $(\pi+k')/((k'+1)X_0)\le\tfrac13$.
-\item So $g$ is unchanged. Where (d) is used (Steps 3--4 of the proof of Theorem~\ref{thm:caplw}), $D-1\ge\Lambda e^{s_H+1}\gg u_1$.
+\item Consecutive values of $u$ differ by $\log\Xm/\Lambda\le1$. So, while the next term still has $u\ge u_1$, the ratio
+  of consecutive terms is at most $\pi(\Xm)^{-1}(eD)^{0.9}$, which is at most $1/3$ by hypothesis.
+\item Once $u<u_1$, bound the term by $\Psi\le Y$ instead. The first such term is at most
+  $\pi(\Xm)^{-1}e^{0.9(u_1+1)\log(u_1+1)}$ times the previous one, which is far less than $\tfrac13$, and the
+  following ratios are at most $(\pi+k')/((k'+1)\Xm)\le\tfrac13$.
+\item So $w_y\le\tfrac32(1+e^{-\Lambda})\cdot2\pi\exp(-0.9(D-1)\log(D-1)+e^{-0.48\Lambda})/\Xm$, which gives $g$. Where (d)
+  is used (Steps 3--4 of the proof of Theorem~\ref{thm:caplw}), $D-1\ge\Lambda e^{s_H+1}-1\ge2u_1$ and $D\le2L/\Lambda\le
+  X_0^{1/2}$.
 \end{itemize}
 
 (e) We have
@@ -960,8 +996,10 @@ $A$), while $\Lambda_s$ is non-increasing in $s$ and $\Lambda\mapsto G$ decrease
 \item If $D^*\ge D$, then $\qCap\ge c$ is impossible, by Lemma~\ref{lem:heavy}(iii) and (V1). Otherwise Lemma~\ref{lem:reduction}(i)
   completes the cover with rows of degree at least $k:=D^*+1\ge\log c/(2(A+1))$. If no such row exists,
   Lemma~\ref{lem:heavy}(iii) gives a contradiction; this includes the case $D^*=D-1$ with $D$ an integer.
-\item Lemma~\ref{lem:rowweights}(b) applies, since $\pi\le m\le\Lambda^3e^{14}\ll X_0$. It gives
-  $\log(1/w)\ge k(\Lambda-A-1)-1.1$.
+\item Lemma~\ref{lem:rowweights}(b) applies, since $\pi\le m\le\Lambda^3e^{14}\ll\Xm$. It gives
+  $\log(1/w)\ge k(\log\Xm-A-1)-\log3\ge k(\Lambda-A-1)-1.1$, since $(\pi+k)/k\le2m$, $\log2m\le A$ and
+  $k(\Lambda-\log\Xm)\le De^{-0.98\Lambda}\le10^{-3}$ (here $D\le2\Lambda e^{s_H+1}$).
+  % Logged correction 43: the k e^{-0.98 Lambda} loss from X_0^- is absorbed in -1.1 (log 3 = 1.0986).
 \item Therefore, using $(A+1)/\log c\le(2\ell+1)/(3.9\ell^2)\le0.03$,
   \[
   (1+j)\log(1/w)\ge\frac{(\log c)^2(\Lambda-A-1)}{4A(A+1)}(1-0.031)\ge1.69\cdot0.969\cdot\Lambda^2e^s\ge1.63L\ge L+10\ell+10,
@@ -972,9 +1010,10 @@ $A$), while $\Lambda_s$ is non-increasing in $s$ and $\Lambda\mapsto G$ decrease
   $\gamma_*(s_H+t)\le\gamma_*(s_H)e^{0.532t}\le\gamma_*(s_H)+0.24t\le\gamma(s_H+t)$ for $t\in[0,1]$.
 \end{itemize}
 
-\emph{Step 3 (Dickman rows: $s\ge s_H+1$).} Here $\log c\ge7.5\Lambda$. We have $D-1\ge\Lambda e^s-1\ge10^4$, and for
-$\ell\le0.3\Lambda$ the hypotheses of Lemma~\ref{lem:rowweights}(d) hold, since $\pi X_0^{-1}(eD)^{0.9}\le e^{0.87\Lambda-\Lambda+1}$.
-So $\log(1/w)\ge g\ge0.9\Lambda e^s(\log\Lambda+s)(1-10^{-9})$. Also $1+j\ge(\log c-1-a)/(2a)\ge(7.5\Lambda-1-a)/(2a)$, with
+\emph{Step 3 (Dickman rows: $s\ge s_H+1$).} Here $\log c\ge7.5\Lambda$. We have $D-1\ge\Lambda e^s-1\ge2u_1$, and for
+$\ell\le0.3\Lambda$ the other hypotheses of Lemma~\ref{lem:rowweights}(d) hold: $D\le2L/\Lambda\le X_0^{1/2}$ and
+$\pi(\Xm)^{-1}(eD)^{0.9}\le e^{0.87\Lambda-\Lambda+1}$. So $\log(1/w)\ge g\ge0.9\Lambda e^s(\log\Lambda+s)(1-10^{-9})$; the
+term $-e^{-0.4\Lambda}$ in $g$ is absorbed by the factor $1-10^{-9}$, and $\log\Xm-\log(3\pi)\ge0$. Also $1+j\ge(\log c-1-a)/(2a)\ge(7.5\Lambda-1-a)/(2a)$, with
 $a\le a_+:=3\log\Lambda+2s-2.9\le0.6\Lambda$ (as $\ell\le0.3\Lambda$). Hence, since the bound decreases in $a$,
 \[
 \frac{(1+j)g}{L}\ge0.45\,(1-10^{-9})\Big(7.5-\frac{1+a_+}{\Lambda}\Big)\frac{\log\Lambda+s}{a_+},\qquad
@@ -987,7 +1026,7 @@ Where the standard term dominates $\log c$, $j$ is only larger.
 
 \emph{Step 4 (tails).}
 \begin{itemize}
-\item (T1) $\ell_{\mathrm{std}}\le\ell\le0.3\Lambda$. Here $\log c=4\ell^2-\log4$ and $j\ge\ell-2$. Lemma~\ref{lem:rowweights}(d)
+\item (T1) $\ell_{\mathrm{std}}\le\ell\le0.3\Lambda$. Here $\log c=4\ell^2-\log4$ and $j\ge\ell-2$. The hypotheses of Lemma~\ref{lem:rowweights}(d) hold as in Step 3, and it
   gives $(1+j)g/L\ge0.9(\ell-1)(\ell-\log\Lambda-0.01)(1-\Lambda/L)/\Lambda\ge0.9\cdot1.87>1.6$.
 \item (T2) $\ell\ge0.3\Lambda$. Lemma~\ref{lem:rowweights}(e) with $\eta=\tfrac14$ gives
   $\log(1/w)\ge L/4-5.3X_0^{1/4}/\Lambda-5.6(X_0+L^2)^{1/4}-\log\Lambda-3\ge0.24L$, since $L\ge e^{0.3\Lambda}$. Then $j\ge4$
@@ -1001,7 +1040,7 @@ So (a) holds at every scale, including the scales $L\ge X_0^2$ of the zeros.
   $\log L_0\le\log48-2\log c'+\log M_1+3\ell=7.67+\log M_1+3\ell$ (with $c'=0.15$) give $\log y\le3\log c+9\ell+11.14$. The
   constant is $11.14$ when $\qHstd$ dominates ($8\ell^2\le2\log c+2\log4$), and $9.8$ when $\bar M_1^2$ does. If
   $\log c=\gamma\Lambda\le(\tfrac13-10^{-5})\Lambda$, this is at most $\Lambda-2597<\log\Xm$, since
-  $9\ell+11.14\le3\cdot10^{-5}\Lambda-2597$ for $\ell\le2\log\Lambda+6$, and $\log\Xm=\Lambda-O(e^{2715-\Lambda})$. If
+  $9\ell+11.14\le3\cdot10^{-5}\Lambda-2597$ for $\ell\le2\log\Lambda+6$, and $\log\Xm\ge\Lambda-e^{-0.98\Lambda}$. If
   $\log c=4\ell^2-\log4$, it is at most $12\ell^2+9\ell+7\le\Lambda$.
 \item \emph{$s\ge s_H$ with $\log c=\gamma\Lambda\le7.5\Lambda$.} Here $\log2y\le3.01\gamma\Lambda$ and
   $\log C_d+4\ell\le1.01\gamma\Lambda$. With $u_0\ge\theta_b\Lambda e^s/(3.01\gamma)$, condition \eqref{eq:twelvetwo} follows from
@@ -1184,7 +1223,7 @@ used. (c) An oscillation is at most twice the supremum.
 \begin{enumerate}[label=\textup{(S\arabic*)}]
 \item (The small-$q$ truncation in the noise bounds of Lemma~\ref{lem:noise}.) The case of latest primes $q<y$ with jittered
   cofactors needs $\log n<L_*$. Since $L_*=10^7<\Lambda$, it is vacuous. Latest primes
-  $q\in[X_0,y)$ are absorbed.
+  $q\in[\Xm,y)$ are absorbed.
 \item (The full blocks of Theorem~\ref{thm:queue} at large heights.) The arrivals that would break \eqref{eq:fullblock} are rigid runs
   $r\cdot r'\cdot d$ driven by small jittered latest primes. These have latest prime less than $y$, so they lie in $\Abs$.
   Non-absorbed arrivals have latest prime $q\ge y$, so Corollary~\ref{cor:increment} applies to them, and \eqref{eq:fullblock} holds as

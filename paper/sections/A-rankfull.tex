@@ -78,20 +78,24 @@ belong to $P_{\le t}$.
 
 \paragraph{Slot positions.}
 Pivots are distinct primes, one per slot. Slot spacing is $\ge 0.99$, and the value $q$ of a jittered prime differs
-from its slot $s_q$ by at most $H(s_q)/2$ (Section~\ref{sec:queue-standing}). Put $\sigma_j:=X_0+0.99(j-1)$. The $j$-th
-earliest pivot has slot $\ge\sigma_j$, and $v\mapsto v-H(v)/2$ is increasing. Hence, whatever the labels are, the $j$-th
-earliest pivot has value at least
+from its slot $s_q$ by at most $H(s_q)/2$ (Section~\ref{sec:queue-standing}). Jittered primes are decided at slots
+$\ge X_0$. Put $\sigma_j:=X_0+0.99(j-1)$. The $j$-th earliest pivot has slot $\ge\sigma_j$, and $v\mapsto v-H(v)/2$ is
+increasing. So its value is at least $\sigma_j-H(\sigma_j)/2$, and at least $X_0-H(X_0)/2=\Xm$. Hence, whatever the labels
+are, the $j$-th earliest pivot has value at least
 \begin{equation}\label{eq:A-tau}
-  \tau_j:=\max\bigl(X_0,\ \sigma_j-2H(\sigma_j)\bigr).
+  \tau_j:=\max\bigl(\Xm,\ \sigma_j-2H(\sigma_j)\bigr).
 \end{equation}
+% Logged correction 42: v3 has max(X0, ...); jittered primes near X0 can have values in [X0^-, X0).
 % Logged correction 32: H continuous (H := max(H_std, Mbar_1^2)); used for the monotonicity of v - H(v)/2 above.
 Recall that $H$ is continuous and non-decreasing, and that $H(v)/v$ is decreasing (Theorem~\ref{thm:caplw}(c)). This
 makes $v\mapsto v-H(v)/2$ increasing above: for $v<v'$, since $H(v')/v'\le H(v)/v<2$,
 $H(v')-H(v)\le(v'-v)H(v)/v<2(v'-v)$. By \eqref{eq:jitter} and
 Theorem~\ref{thm:caplw}(c), $\log H(X_0)\le8(\log\Lambda)^2+10^{-6}\Lambda$, so $H(X_0)/X_0\le e^{-0.99\Lambda}\le
 e^{-10^{7}}$.
-Here and below, ``a jittered prime is $\ge X_0$'' is read with $X_0^{-}=X_0-H(X_0)/2$ in place of $X_0$, as in
-Section~\ref{sec:queue-standing}. Every such use has a margin far larger than $H(X_0)/X_0$.
+Values of jittered primes are only bounded below by $\Xm=X_0-H(X_0)/2$, as in Section~\ref{sec:queue-standing}; every
+lower bound on such a value below uses $\Xm$, while slots are $\ge X_0$. Since $H(X_0)/X_0\le e^{-10^7}$, replacing $X_0$ by
+$\Xm$ changes each constant by a relative amount at most $e^{-10^{7}}$.
+% Logged correction 42.
 
 \paragraph{Probabilistic set-up.}
 $\mathcal F_{s-}$ is the information available before the decision at slot~$s$. $\Good(<s)$ is the good event of
@@ -112,8 +116,9 @@ is injective on $\R_{+}^{k}$, and
   \qquad
   \prod_jq_j=\frac{\prod_i(n_i/c_i)}{\prod_jq_j^{\,s_j-1}},
 \end{equation}
-where $s_j:=\sum_iE_{ij}\ge1$ is the $j$-th column sum. In particular, if all $q_j\ge X_0$, then the volume is at most
-$\delta^k/\bigl(|\det E_P|\prod_ic_i\,X_0^{M-k}\bigr)$, with $M:=\sum_{i,j}E_{ij}$.
+where $s_j:=\sum_iE_{ij}\ge1$ is the $j$-th column sum. In particular, if all $q_j\ge\Xm$, then the volume is at most
+$\delta^k/\bigl(|\det E_P|\prod_ic_i\,(\Xm)^{M-k}\bigr)$, with $M:=\sum_{i,j}E_{ij}$.
+% Logged correction 42: v3 has q_j >= X0 and X0^{M-k}.
 \end{lemma}
 
 \begin{proof}
@@ -124,8 +129,8 @@ integral in \eqref{eq:volume}.
 
 For the second identity, multiply the relations $n_i/c_i=\prod_jq_j^{E_{ij}}$ over $i$. This gives
 $\prod_jq_j^{s_j}=\prod_i(n_i/c_i)$, hence $\prod_jq_j=\prod_i(n_i/c_i)\big/\prod_jq_j^{s_j-1}$. No column of the
-invertible matrix $E_P$ vanishes, so $s_j\ge1$. If all $q_j\ge X_0$, then $\prod_jq_j^{s_j-1}\ge X_0^{M-k}$. Hence the
-integrand is at most $1/\bigl(|\det E_P|\prod_ic_iX_0^{M-k}\bigr)$, and $J^k$ has volume $\delta^k$.
+invertible matrix $E_P$ vanishes, so $s_j\ge1$. If all $q_j\ge\Xm$, then $\prod_jq_j^{s_j-1}\ge(\Xm)^{M-k}$. Hence the
+integrand is at most $1/\bigl(|\det E_P|\prod_ic_i(\Xm)^{M-k}\bigr)$, and $J^k$ has volume $\delta^k$.
 \end{proof}
 
 \begin{remark}
@@ -157,14 +162,16 @@ map $E_P\mapsto(\sigma,X)$ injective. Hence
 since a column of extra mass $m$ can be distributed over the $k$ rows in $\binom{k+m-1}{m}$ ways. Next,
 $(1-1/\tau)^{-k}\le\exp\bigl(k/(\tau-1)\bigr)$. Since $H(v)/v$ is decreasing, $H(\sigma+0.99)-H(\sigma)\le0.99\,H(X_0)/X_0$ for
 $\sigma\ge X_0$. So $\sigma_j-2H(\sigma_j)$ increases by at least $0.989$ from one index to the next. Let $N_0$ be the
-number of indices with $\tau_j=X_0$. These satisfy $0.99(j-1)\le2H(\sigma_j)\le2H(X_0)(1+10^{-8})$, so
-$N_0\le2.03H(X_0)+1$. The remaining indices satisfy $\tau_{N_0+i}\ge X_0+0.989(i-1)$ for $i\ge1$. Hence
+number of indices with $\tau_j=\Xm$. These satisfy $0.99(j-1)\le2H(\sigma_j)-H(X_0)/2\le2H(X_0)(1+10^{-8})$, so
+$N_0\le2.03H(X_0)+1$. The remaining indices satisfy $\tau_{N_0+i}\ge\Xm+0.989(i-1)$ for $i\ge1$. Hence
 \[
-  \sum_{j\le k}\frac1{\tau_j-1}\le\frac{N_0+1}{X_0-1}+\sum_{i=1}^{k}\frac1{X_0-1+0.989i}
-  \le\frac{3H(X_0)}{X_0}+\frac1{X_0-1}+1.02\log\Bigl(1+\frac{k}{X_0}\Bigr),
+  \sum_{j\le k}\frac1{\tau_j-1}\le\frac{N_0+1}{\Xm-1}+\sum_{i=1}^{k}\frac1{\Xm-1+0.989i}
+  \le\frac{3H(X_0)+2}{X_0}+1.02\log\Bigl(1+\frac{k}{X_0}\Bigr).
 \]
-using $(2.03H(X_0)+1)/(X_0-1)\le3H(X_0)/X_0$ and $1/0.989\le1.02$. Since $1/(X_0-1)\le2/X_0$, exponentiating gives
+Here we used $\Xm-1\ge X_0(1-H(X_0)/X_0)$, which gives $(2.03H(X_0)+2)/(\Xm-1)\le(3H(X_0)+2)/X_0$. We also used
+$0.989/(\Xm-1)\le1/X_0$ and $1/0.989\le1.02$. Exponentiating gives the same bound as before,
 $\prod_j(1-1/\tau_j)^{-k}\le e^{(3H(X_0)+2)k/X_0}(1+k/X_0)^{1.02k}$.
+% Logged correction 42: floor X0^- in tau_j; the stated constant is unchanged.
 \end{proof}
 
 \subsection{The Pivot-Integration Lemma}\label{sec:A-pil}
@@ -343,7 +350,7 @@ $\mathrm{Eu}_s(s_T)$.
 (d) At the top no carried factor is available. The second case of the proof of \ref{eq:sF3p} bounds exactly the product
 over the realised primes decided before $s$, on $\Good(<s)$, by $e^{\gamma}\log s\cdot\exp(2.21/\Lambda+5H(s)/s)$. That
 bound uses the rational primes \cite[Thm.~8, (3.29)]{RosserSchoenfeld1962} and the sure local Mertens bound of
-Lemma~\ref{lem:cm}\,(iv) on $[X_0,s-H(s)]$, applied once per chain (Remark~\ref{rem:cm-chain}). At this point the event
+Lemma~\ref{lem:cm}\,(iv) for the realised primes with values in $[\Xm,s-H(s)]$, applied once per chain (Remark~\ref{rem:cm-chain}). At this point the event
 carried is $G_{<s_{\mathrm{top}}}$ (Lemma~\ref{lem:pil}).
 
 Finally, for $s_{\mathrm{top}}\le2z+H(2z)$ we have $\log s_{\mathrm{top}}\le\log z+0.7$ and $5H(s)/s\le5H(X_0)/X_0\le
@@ -458,10 +465,12 @@ change of variables $q_{P_t}\mapsto(n_y)_{y\in C_t}$. Then the following hold.
   slot range of $F_t$), carried as in Lemma~\ref{lem:fac}\,(S3). The indicators of the remaining rows do not involve $f$.
 \item \emph{(Later stages; projected feasibility.)} After the block bound of each block, multiply by $\mathbf 1(\mathrm{Proj}_t)$.
   Here $\mathrm{Proj}_t$ is the projection onto the remaining variables of the real completions: summed primes
-  $\ge X_0$, and integrated pivots $\ge\tau_j$ in slot order. It is deterministic, and $\mathcal F_{p-}$-measurable at
+  $\ge\Xm$, and integrated pivots $\ge\tau_j$ in slot order.
+  % Logged correction 42: summed primes >= X0^- (v3: >= X0).
+  It is deterministic, and $\mathcal F_{p-}$-measurable at
   the next pivot $p$. On $\mathrm{Proj}_t$, a row $y$ joining at a stage $t'>t$ satisfies
   \begin{equation}\label{eq:B1}
-    n_y\ \ge\ c_y^{\mathrm{noF}}\prod_{j\in P_{t'}}q_j^{E_{yj}}\prod_{j\in P_{<t'}}\tau_j^{E_{yj}}\,X_0^{e_y(F_{\le t})}.
+    n_y\ \ge\ c_y^{\mathrm{noF}}\prod_{j\in P_{t'}}q_j^{E_{yj}}\prod_{j\in P_{<t'}}\tau_j^{E_{yj}}\,(\Xm)^{e_y(F_{\le t})}.
   \end{equation}
   Here $c_y^{\mathrm{noF}}$ is $c_y^{(\le t')}$ with the primes of $F_{\le t}$ removed, and $e_y(F_{\le t})$ is the total
   exponent of those primes in $y$. This is the only inequality the later stages use. In particular, the pivot mass of
@@ -538,7 +547,7 @@ For a row $y$ joining at stage $t'>t$, write
   \prod_{j\in P_{<t'}}q_j^{E_{yj}} .
 \]
 The left side, as a function of the remaining variables, does not depend on the completion. On $\mathrm{Proj}_t$ some
-completion has all summed primes $\ge X_0$ and all integrated pivots $\ge\tau_j$. This gives \eqref{eq:B1}. In the
+completion has all summed primes $\ge\Xm$ and all integrated pivots $\ge\tau_j$. This gives \eqref{eq:B1}. In the
 stage-$t'$ identity, this inequality replaces the exact factorisation of the rows joining at $t'$; it drops the summed
 primes from their cofactors and keeps $\tau_j^{-E_{yj}}$ for their earlier-integrated pivot mass.
 

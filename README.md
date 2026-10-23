@@ -13,7 +13,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 > the fixes, three fresh AI checkers re-checked every changed passage (`review/paper-recheck.md`, reports in
 > `review/recheck/R1–R3.md`). They found nothing blocking.
 >
-> **Defects found after the AI checks.** After the paper was first published here, a reader reported seven further defects
+> **Defects found after the AI checks.** After the paper was first published here, a reader reported nine further defects
 > that every earlier AI check had missed:
 > - a strip identity used as exact although the box widths vary;
 > - a jitter width that jumps (through a ceiling and a per-scale freeze) although its regularity is used throughout;
@@ -21,11 +21,13 @@ Samuel Lavery (sam.lavery@gmail.com)
 > - an unproved initial value in the count identity, and an initialisation issue at X₀;
 > - a missing base condition in the definition of t-dense numbers;
 > - an overstated independence claim (the slots of distinct primes are not independent; only the conditional jitter law
->   holds, and that is all the proofs use).
+>   holds, and that is all the proofs use);
+> - lower bounds on jittered primes written with X₀ where only X₀⁻ = X₀ − H(X₀)/2 holds (in Appendix A and in an
+>   Euler-product bound).
 >
-> Repairing these and re-checking the repairs turned up four more. All eleven are repaired; they are entries #31–#41 of
-> `CORRECTIONS-vs-v3.md`. The repairs were checked by a fresh AI checker in five passes (`review/recheck/R4.md`), which ended
-> with nothing blocking or fixable. None of the forty-one logged corrections changes a conclusion of the paper. But these
+> Repairing these and re-checking the repairs turned up five more. All fourteen are repaired; they are entries #31–#44 of
+> `CORRECTIONS-vs-v3.md`. The repairs were checked by a fresh AI checker in six passes (`review/recheck/R4.md`), which ended
+> with nothing blocking or fixable. None of the forty-four logged corrections changes a conclusion of the paper. But these
 > findings show that the AI checks are no substitute for expert review.
 
 ## The result

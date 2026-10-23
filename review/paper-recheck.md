@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#41)
+## Addendum: defects found after the re-check (corrections #31–#44)
 
-After the first public version, a reader reported seven defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up four more. The full list, with each repair, is entries #31–#41 of `CORRECTIONS-vs-v3.md`:
+After the first public version, a reader reported nine defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, turned up five more. The full list, with each repair, is entries #31–#44 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -79,9 +79,12 @@ re-checking the repairs, turned up four more. The full list, with each repair, i
 | 39 | Lemma designedzero | unspecified constant C₁; now C₁ := 0 with κ₀ ≥ X₀⁻¹ | re-check |
 | 40 | Thm bs, t-dense | definition omitted the j = 0 condition p₁ ≤ t | reader |
 | 41 | standing fact (F2) | claimed the slots of distinct primes are independent; only the conditional jitter law holds (and is all that is used) | reader |
+| 42 | App. A slot positions τ_j | lower bound X₀ for pivot values; jittered primes can land in [X₀⁻, X₀) | reader |
+| 43 | standing fact (F3′); λ_D; degree cap D; Lemma rowweights | Euler-product partition missed jittered primes in [X₀⁻, X₀); a "read X₀ as X₀⁻" convention replaced by explicit X₀⁻ bounds | reader |
+| 44 | Prop cover, Lemma 4.14(ii) | uniform excess weight X₀⁻¹ does not give the claimed pattern-sum bound; per-index weights τ_j⁻¹ needed | re-check |
 
-**Repairs and their check.** All eleven are repaired. A fresh AI checker checked them in five passes
-(`review/recheck/R4.md` §§1–11). Its work included:
+**Repairs and their check.** All fourteen are repaired. A fresh AI checker checked them in six passes
+(`review/recheck/R4.md` §§1–13). Its work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
 - an independent derivation of the count identity's initial value;
@@ -95,8 +98,8 @@ re-checking the repairs, turned up four more. The full list, with each repair, i
 
 The final pass ended with nothing blocking, fixable or cosmetic.
 
-**Effect on the conclusions.** None of the forty-one corrections changes a conclusion of the paper. Several required new
-arguments, not just new constants: #31, #32, #36, #37 and #40.
+**Effect on the conclusions.** None of the forty-four corrections changes a conclusion of the paper. Several required new
+arguments, not just new constants: #31, #32, #36, #37, #40, #43 and #44.
 
 **Caveat.** These defects survived five rounds of AI checking. The paper should not be regarded as verified until a human
 expert has read it.

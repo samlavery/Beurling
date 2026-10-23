@@ -4,7 +4,9 @@ LAM = 1e8; THETA_B = 1/8; SLACK = 1.0
 def lse(a, b): m = max(a, b); return m + math.log(math.exp(a - m) + math.exp(b - m))
 def base(l, lam=LAM):
     """log L, log D, log r0, log(pi) with pi = r0*D (worst-case labels)."""
-    logD = l - math.log(lam)
+    # degree cap D = log 2z / log X0^- (paper, Section 6.4/6.6); the e^{-0.98 Lam} difference between log X0^- and Lam
+    # is below double precision, so D = (L + log 2)/Lam
+    logD = (math.log(math.exp(l) + math.log(2)) if l < 700 else l) - math.log(lam)
     r0 = None
     logr0 = math.log(math.exp(l - math.log(3*l)) + 4) if l < 700 else l - math.log(3*l)   # r0 = ceil(L/(3l)) + 3 <= L/(3l) + 4
     return logD, logr0, logr0 + max(logD, 0.0)
@@ -36,7 +38,7 @@ def highdeg_ok(logc, l_hi, l_lo, lam=LAM):
             else: hi = mid
         kstar = lo
     Dstar = math.floor(kstar)
-    logD_hi_cap = l_hi - math.log(lam)   # degree cap at the TOP of the cell (worst corner: upper end of the cell)
+    logD_hi_cap = logD   # degree cap D = log 2z/log X0^- at the TOP of the cell (worst corner: upper end of the cell)
     if logD_hi_cap < 700 and Dstar >= math.exp(logD_hi_cap) - 1: return True   # every element has degree <= D*: Cap >= c impossible
     k = Dstar + 1
     row_gain = k*(lam - 1 - (lse(m_log, math.log(k)) - math.log(k))) - math.log(3)   # -log w_row, Lemma rowweights(b)
