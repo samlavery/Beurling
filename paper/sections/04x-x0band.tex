@@ -402,38 +402,46 @@ $(J-1)/\Lambda_1\ge3\Lambda-10^{-20}\ge2\Lambda+\log J+3\log\Lambda+34$ at $J=J_
 right logarithmically in $J$.
 
 \emph{(A) $p\ge P_1$: the prime sum.} For fixed $m$, $p$ runs over primes in $I/m=[X,X(1+\eta)]$ with $X:=N/m$ and
-$\Lambda_p:=\log X\ge\Lambda_1-1$; in particular $X\ge X_{\mathrm{LP}}$, since $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$, and
-$X\le N\le y$. We apply Theorem~\ref{thm:lp}(iii), which is stated for $\Lambda_p\ge76\Lambda^3$; here
-$\Lambda_p\ge\Lambda_1-1\ge76\Lambda^3$. There $\mathrm{Rel}\le0.1$ as soon as the exponent in \eqref{eq:lpplus} is at least
-$\log(180\,G(L_1)\Lambda_p^3\eta^{-1})$. Put $\ell_p:=\log\Lambda_p$, so that
-$L_1=2\ell_p+\log(1/\eta)+5\le2\Lambda+2\ell_p+5$, and write $D:=L_1+442+2\log\Lambda+\log L_1$ for the denominator of the
-exponent. Since $c_{\mathrm{zf}}\ge0.088/\Lambda$, the exponent is at least $0.0792\,\Lambda_p/(\Lambda D)$.
+$\Lambda_p:=\log X\ge\Lambda_1-1$; in particular $X\ge X_{\mathrm{LP}}$, since $\log X_{\mathrm{LP}}=O(\Lambda^2\log^2\Lambda)$.
+% Logged correction 45: new L_1 (log k + 3.08), the extra term Lambda_p^{-2} in Rel, the hypothesis v(1+2 eta) <= y, and the
+% explicit window of Theorem lp(iii)
+Since $m\ge2$ and $\eta\le\frac12$, also $X(1+2\eta)\le N\le y$, which is the hypothesis $v(1+2\eta)\le y$ of
+Theorem~\ref{thm:lp}(iii) with $v=X$. We apply Theorem~\ref{thm:lp}(iii), which is stated for $\Lambda_p\ge76\Lambda^3$; here
+$\Lambda_p\ge\Lambda_1-1\ge76\Lambda^3$. There $\mathrm{Rel}\le0.05+\Lambda_p^{-2}\le0.1$ as soon as the exponent in
+\eqref{eq:lpplus} is at least $\log(360\,G(L_1)\Lambda_p^3\eta^{-1})$. Put $\ell_p:=\log\Lambda_p$, so that
+$k\le\log(1/\eta)+20\ell_p+1\le2\Lambda+20\ell_p+1$ and
+$L_1=2\ell_p+\log(1/\eta)+\log k+3.08\le2\Lambda+2\ell_p+\log(2\Lambda+20\ell_p+1)+3.08$, and write
+$D:=L_1+442+2\log\Lambda+\log L_1$ for the denominator of the exponent. Since $c_{\mathrm{zf}}\ge0.088/\Lambda$, the exponent
+is at least $0.0792\,\Lambda_p/(\Lambda D)$.
 \begin{itemize}
 \item \emph{Case $\ell_p\le e^{\Lambda/2}/3$.} Then $L_1\le e^{\Lambda/2}$, so $\log G(L_1)\le\Lambda$ by Theorem~\ref{thm:lp}(iii).
-  Write $\Lambda_p=76\Lambda^3r$ with $r\ge1$, and $\ell_0:=\log(76\Lambda^3)\le0.001\Lambda$. Then $\ell_p=\ell_0+\log r$ and
-  $\log L_1\le\log(3\Lambda)+\log r$, so
+  Write $\Lambda_p=76\Lambda^3r$ with $r\ge1$, and $\ell_0:=\log(76\Lambda^3)\le0.001\Lambda$. Then $\ell_p=\ell_0+\log r$; since
+  $k$ and $L_1$ are at most $3\Lambda(1+\log r)$ and $1+\log r\le r$, both $\log k$ and $\log L_1$ are at most
+  $\log(3\Lambda)+\log r$. So
   \[
-    D\le2.003\Lambda+3\log r,\qquad \log\bigl(180\,G(L_1)\Lambda_p^3\eta^{-1}\bigr)\le3\Lambda+3\ell_p+5.2\le3.002\Lambda+3\log r,
+    D\le2.003\Lambda+4\log r,\qquad \log\bigl(360\,G(L_1)\Lambda_p^3\eta^{-1}\bigr)\le3\Lambda+3\ell_p+5.9\le3.002\Lambda+3\log r,
   \]
-  since $2\ell_0+447+2\log\Lambda+\log(3\Lambda)\le0.003\Lambda$ and $3\ell_0+5.2\le0.002\Lambda$. Using $\log r\le r$ and
+  since $2\ell_0+446+2\log\Lambda+2\log(3\Lambda)\le0.003\Lambda$ and $3\ell_0+5.9\le0.002\Lambda$. Using $\log r\le r$ and
   $\log^2r\le r$,
   \[
   \begin{aligned}
-    \Lambda D\,(3.002\Lambda+3\log r)&\le\Lambda\bigl(6.0131\Lambda^2+15.02\Lambda\log r+9\log^2r\bigr)\le6.0132\,\Lambda^3r\\
+    \Lambda D\,(3.002\Lambda+3\log r)&\le\Lambda\bigl(6.0131\Lambda^2+18.02\Lambda\log r+12\log^2r\bigr)\le6.0132\,\Lambda^3r\\
     &<0.0792\cdot76\,\Lambda^3r=0.0792\,\Lambda_p ,
   \end{aligned}
   \]
   which is the required inequality.
-\item \emph{Case $\ell_p>e^{\Lambda/2}/3$.} Then $\ell_p\ge\Lambda^2$. Since $L_1\le2\ell_p+2\Lambda+5$ and
-  $2\Lambda+455+2\log\Lambda+\log(3\ell_p)\le\ell_p$ (with huge room, as $\ell_p\ge\Lambda^2\ge10^{16}$), both
-  $L_1+450+2\log\Lambda\le3\ell_p$ and $D=L_1+442+2\log\Lambda+\log L_1\le3\ell_p$. So
-  $G(L_1)\le400\cdot3\ell_p\le\Lambda_p$, hence $\log(180\,G\Lambda_p^3\eta^{-1})\le4\ell_p+2\Lambda+5.2\le5\ell_p$, and the
+\item \emph{Case $\ell_p>e^{\Lambda/2}/3$.} Then $\ell_p\ge\Lambda^2$, so $k\le21\ell_p$ and
+  $L_1\le2\ell_p+2\Lambda+\log(21\ell_p)+3.08$. Since $2\Lambda+457+2\log\Lambda+2\log(21\ell_p)\le\ell_p$ (with huge room, as
+  $\ell_p\ge\Lambda^2\ge10^{16}$), both $L_1+450+2\log\Lambda\le3\ell_p$ and $D=L_1+442+2\log\Lambda+\log L_1\le3\ell_p$. So
+  $G(L_1)\le400\cdot3\ell_p\le\Lambda_p$, hence $\log(360\,G\Lambda_p^3\eta^{-1})\le4\ell_p+2\Lambda+5.9\le5\ell_p$, and the
   required inequality $0.0792\,\Lambda_p\ge\Lambda\cdot3\ell_p\cdot5\ell_p$ holds because
   $190\Lambda\ell_p^2\le\ell_p^3\le e^{\ell_p}=\Lambda_p$.
 \end{itemize}
-So $\mathrm{Rel}\le0.1$ for every $\Lambda_p\ge\Lambda_1-1$. The smooth window $\varphi$ there majorises
-$\mathbf 1_{[X,X(1+\eta)]}$, so $\Pi([X,X(1+\eta)])\le\int\varphi\,d\Pi\le1.1\int\varphi\,d\Pi_0\le1.1\,(1+3\Lambda_p^{-2})\,\eta X/\log X$,
-the factor $1+3\Lambda_p^{-2}$ covering the width $\eta(1+2\Lambda_p^{-2})$ and the lower transition layer. As
+So $\mathrm{Rel}\le0.1$ for every $\Lambda_p\ge\Lambda_1-1$. The window $\varphi$ of Theorem~\ref{thm:lp}(iii) majorises
+$\mathbf 1_{[X,X(1+\eta)]}$, takes values in $[0,1]$ and is supported in $[X(1-w),X(1+\eta+w)]$ with $w=\eta\Lambda_p^{-2}$. As
+$d\Pi_0\le du/\log u$, this gives
+$\Pi([X,X(1+\eta)])\le\int\varphi\,d\Pi\le1.1\int\varphi\,d\Pi_0\le1.1\,(1+3\Lambda_p^{-2})\,\eta X/\log X$: the support has
+length $\eta(1+2\Lambda_p^{-2})X$, and $\log u\ge\log X-2w$ on it. As
 $\Lambda_p\ge10^{25}$, $1.1(1+3\Lambda_p^{-2})\le1.1001$. Hence
 \[
   \sum_{p\in I/m}\frac1p\le\frac1X\,\Pi\bigl([X,X(1+\eta)]\bigr)\le1.1001\,\frac{\eta}{\log X}=\frac{1.1001\,\eta}{\log(N/m)} .

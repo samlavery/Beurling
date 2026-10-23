@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#44)
+## Addendum: defects found after the re-check (corrections #31–#45)
 
-After the first public version, a reader reported nine defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up five more. The full list, with each repair, is entries #31–#44 of `CORRECTIONS-vs-v3.md`:
+After the first public version, a reader reported ten defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, turned up five more. The full list, with each repair, is entries #31–#45 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -82,9 +82,10 @@ re-checking the repairs, turned up five more. The full list, with each repair, i
 | 42 | App. A slot positions τ_j | lower bound X₀ for pivot values; jittered primes can land in [X₀⁻, X₀) | reader |
 | 43 | standing fact (F3′); λ_D; degree cap D; Lemma rowweights | Euler-product partition missed jittered primes in [X₀⁻, X₀); a "read X₀ as X₀⁻" convention replaced by explicit X₀⁻ bounds | reader |
 | 44 | Prop cover, Lemma 4.14(ii) | uniform excess weight X₀⁻¹ does not give the claimed pattern-sum bound; per-index weights τ_j⁻¹ needed | re-check |
+| 45 | Thm 3.13(iii) (LP⁺), Step 10 | unspecified smoothing window; high-frequency Mellin tail beyond T₁ never bounded; now an explicit k-fold box kernel with T₁ ∝ k and every contour piece bounded | reader |
 
-**Repairs and their check.** All fourteen are repaired. A fresh AI checker checked them in six passes
-(`review/recheck/R4.md` §§1–13). Its work included:
+**Repairs and their check.** All fifteen are repaired. A fresh AI checker checked them in seven passes
+(`review/recheck/R4.md` §§1–14). Its work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
 - an independent derivation of the count identity's initial value;
@@ -98,8 +99,14 @@ re-checking the repairs, turned up five more. The full list, with each repair, i
 
 The final pass ended with nothing blocking, fixable or cosmetic.
 
-**Effect on the conclusions.** None of the forty-four corrections changes a conclusion of the paper. Several required new
-arguments, not just new constants: #31, #32, #36, #37, #40, #43 and #44.
+**Effect on the conclusions.** None of the forty-five corrections changes a conclusion of the paper. Several required new
+arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44 and #45.
 
 **Caveat.** These defects survived five rounds of AI checking. The paper should not be regarded as verified until a human
 expert has read it.
+
+**Reported but not a defect.** The reader also asked whether Lemma 4.14(ii)'s free-prime factor Σ_k λ_D^k/k! ≤ e^{λ_D}
+undercounts repeated free-prime powers, which would need the Euler product ∏(1 − 1/q)⁻¹. It does not. In the allocation of
+Prop. cover, each free prime keeps exactly one occurrence, in one row of C. Free primes belong to P(C), and their further
+occurrences (counted with multiplicity, including repeated powers in one row) are excess, weighted by ∏_j τ_j^{−e_j} in the
+next factor. The text now says this explicitly. No constant changes.

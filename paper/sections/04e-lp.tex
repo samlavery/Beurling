@@ -90,15 +90,20 @@ $X_{\mathrm{LP}}\le v\le y$:
 \begin{enumerate}[label=\textup{(\roman*)}]
 \item $\displaystyle\Big|\int_{[1,v]}\frac{d(\Pi-\Pi_0)(u)}u\Big|\le K\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$;
 \item $|\Pi(v)-\Pi_0(v)|\le K\,v\,e^{-c_{\mathrm{LP}}\sqrt{\log v}}$;
-\item \emph{(short windows)} let $\Lambda_p:=\log v\ge76\Lambda^3$, $\eta\in[e^{-2\Lambda},\frac12]$, and let $\varphi\ge\mathbf 1_{[v,v(1+\eta)]}$ be the
-  smooth window of relative width $\eta(1+2\Lambda_p^{-2})$ with transition layers $\eta\Lambda_p^{-2}$. Put
-  $L_1:=2\log\Lambda_p+\log(1/\eta)+5$. Then $\int\varphi\,d\Pi\le(1+\mathrm{Rel})\int\varphi\,d\Pi_0$, with
+\item \emph{(short windows)} let $\Lambda_p:=\log v\ge76\Lambda^3$, $\eta\in[e^{-2\Lambda},\frac12]$ with $v(1+2\eta)\le y$, and
+  $w:=\eta\Lambda_p^{-2}$. Put
+  \[
+    k:=\big\lceil\log(1/\eta)+20\log\Lambda_p\big\rceil,\qquad L_1:=2\log\Lambda_p+\log(1/\eta)+\log k+3.08 ,
+  \]
+  and let $\varphi\ge\mathbf 1_{[v,v(1+\eta)]}$ be the window of Step~10 (built with this $k$): $0\le\varphi\le1$, supported in
+  $[v(1-w),v(1+\eta+w)]$. Then $\int\varphi\,d\Pi\le(1+\mathrm{Rel})\int\varphi\,d\Pi_0$, with
   \begin{equation}\label{eq:lpplus}
-    \mathrm{Rel}(\Lambda_p,\eta)\le18\,G(L_1)\,\Lambda_p^3\,\eta^{-1}\exp\Big(-\frac{0.9\,c_{\mathrm{zf}}\Lambda_p}{L_1+442+2\log\Lambda+\log L_1}\Big),
+    \mathrm{Rel}(\Lambda_p,\eta)\le18\,G(L_1)\,\Lambda_p^3\,\eta^{-1}\exp\Big(-\frac{0.9\,c_{\mathrm{zf}}\Lambda_p}{L_1+442+2\log\Lambda+\log L_1}\Big)
+    +\Lambda_p^{-2},
   \end{equation}
-  where $G(L):=\sup|\log(\zeta^\sharp(s)(s-1)/s)|$ on the shifted contour up to height $e^L$. Moreover
-  $G(L)\le400(L+450+2\log\Lambda)$ for $5\le L\le\log T_y$, with $\log T_y:=\log y/(51\Lambda\log\log y)-500$; so
-  $\log G(L)\le\Lambda$ for such $L$ with $L\le e^{\Lambda/2}$.
+  where $G(L):=400(L+450+2\log\Lambda)$; so $\log G(L)\le\Lambda$ for $L\le e^{\Lambda/2}$.
+% Logged correction 45 (CORRECTIONS-vs-v3.md): explicit window, L_1 with the extra log k + 3.08 (v3: + 5), the tail term
+% Lambda_p^{-2}, and v(1+2 eta) <= y so that the window lies in [1,y]; G(L) is now the explicit bound of Step 8.
 % Logged correction 24 (CORRECTIONS-vs-v3.md): (iii) restricted to Lambda_p >= 76 Lambda^3; G defined via the integrand
 % log(zeta#(s)(s-1)/s) with the explicit bound above (v3: L_1 <= 3000 Lambda and log G <= Lambda unconditionally).
 \end{enumerate}
@@ -277,9 +282,9 @@ A point $s=\sigma+it$ of the contour $\sigma=1-f\delta_{\mathrm{zf}}(T_1)$, with
 $|s-s_1|=\eta_t+f\delta_{\mathrm{zf}}(T_1)\le r_1$, because $\delta_{\mathrm{zf}}$ decreases in $|t|$. For $|t|<1/16$ the contour
 lies in $|s-1|\le1/16+10^{-8}$. There Step~6 gives $|\log((s-1)\zeta^\sharp(s))|\le-\log(1-0.075)\le0.078$, and
 $|\log s|\le-\log(1-|s-1|)\le0.0646$, so $|\mathfrak G_1|\le0.1426$. Since
-$Y\le2X$, it follows that for $5\le L\le\log T_y$ the quantity $G(L)$ of (iii) satisfies
+$Y\le2X$, it follows that for $5\le L\le\log T_y$, on the contour $\sigma=1-f\delta_{\mathrm{zf}}(e^L)$, $|t|\le e^L$,
 \[
-  G(L)\le190\,Y(e^L)\le400\,(L+450+2\log\Lambda);
+  |\mathfrak G_1|\le190\,Y(e^L)\le G(L):=400\,(L+450+2\log\Lambda);
 \]
 in particular $\log G(L)\le\Lambda$ for $L\le e^{\Lambda/2}$.
 
@@ -319,24 +324,79 @@ side of (i) for $w\le y$.
   $v^s\hat h_0((s-1)/T)/s$, and the contour near $\sigma=1$.
 \end{itemize}
 
-\emph{Step 10: short windows; proof of (iii).} With the smooth window $\varphi$, write $\int\varphi\,d(\Pi^\sharp-\Pi_0)$ as the
-contour integral of $\log(\zeta^\sharp(s)(s-1)/s)$ against the Mellin transform $\tilde\varphi$ of $\varphi$. Since $\varphi$ has
-transition layers $\eta\Lambda_p^{-2}$, $\int|\tilde\varphi(\sigma+it)|\,dt\le4.04\,C_\varphi v^\sigma\Lambda_p^2$ with
-$C_\varphi\le4$, and the integrand is negligible beyond height $T_1=e^5\Lambda_p^2/\eta$, i.e.\ $L_1=\log T_1$. No $1/T$
-smoothing term arises, so $T_1$ is fixed by $\eta$ alone. Shifting to $\sigma=1-f\delta_{\mathrm{zf}}(T_1)$ and using Step~7 for
-the width at height $e^{L_1}$ gives \eqref{eq:lpplus}.
+\emph{Step 10: short windows; proof of (iii).}
+% Logged correction 45 (CORRECTIONS-vs-v3.md): v3 asserts an unproved bound on int|phi~| and calls the integrand beyond
+% T_1 = e^5 Lambda_p^2/eta "negligible". Here phi is explicit, T_1 is enlarged by the factor ~k, and every piece of the
+% contour is bounded; the tail beyond T_1 gives the term Lambda_p^{-2} in eq:lpplus.
+\begin{itemize}
+\item \emph{The window.} Put $a:=\log v$, $b:=\log(v(1+\eta))$, $\omega:=w/4=\eta\Lambda_p^{-2}/4$, and let $\kappa:=\beta_\omega^{*k}$ be the
+  $k$-fold convolution of the box $\beta_\omega:=(k/2\omega)\mathbf 1_{[-\omega/k,\,\omega/k]}$; so $\kappa\ge0$, $\int\kappa=1$ and
+  $\kappa$ is supported in $[-\omega,\omega]$. Put $\psi:=\mathbf 1_{[a-\omega,\,b+\omega]}*\kappa$ and $\varphi(u):=\psi(\log u)$.
+  Then $0\le\psi\le1$, $\psi=1$ on $[a,b]$ and $\psi=0$ outside $[a-2\omega,b+2\omega]$; so $\varphi\ge\mathbf 1_{[v,v(1+\eta)]}$,
+  $0\le\varphi\le1$, and $\varphi$ is supported in $[ve^{-2\omega},v(1+\eta)e^{2\omega}]\subset[v(1-w),v(1+\eta+w)]\subset[1,y]$.
+\item \emph{Its Mellin transform.} For $s=\sigma+it$ with $0<\sigma\le2$,
+  $\tilde\varphi(s):=\int_0^\infty\varphi(u)u^{s-1}du=\int\psi(x)e^{sx}dx=\hat I(s)\,\hat\kappa(s)$, where
+  $\hat I(s)=\int_{a-\omega}^{b+\omega}e^{sx}dx$ and $\hat\kappa(s)=\hat\beta_\omega(s)^k$ with $\hat\beta_\omega(s)=\sinh(s\omega/k)/(s\omega/k)$. Hence
+  \[
+    |\hat I(s)|\le\min\Big(1.0001\,\eta,\ \frac2{|t|}\Big)e^{\sigma(b+\omega)},\qquad
+    |\hat\kappa(s)|\le e^{\sigma\omega}\min\Big(1,\frac k{|t|\omega}\Big)^k,
+  \]
+  using $b-a+2\omega\le1.0001\eta$, $|e^{s\beta'}-e^{s\alpha'}|\le2e^{\sigma\beta'}$, $|\hat\beta_\omega(s)|\le e^{\sigma\omega/k}$ and
+  $|\hat\beta_\omega(s)|\le e^{\sigma\omega/k}k/(|t|\omega)$. Also $e^{\sigma(b+2\omega)}\le1.51\,v^\sigma$ for $\sigma\le1.0001$, as $\eta\le\frac12$.
+  Since $T_1\omega=e^{L_1}\eta\Lambda_p^{-2}/4=e^{3.08}k/4\ge2ek$, we have $(k/(|t|\omega))^k\le(2e)^{-k}(T_1/|t|)^k$ for $|t|\ge T_1$.
+\item \emph{The contour.} Put $c:=1+17\log\Lambda_p/\Lambda_p$. As $y\ge v$, $c-1\ge17\log\log y/\log y=\eta_y$, and $c-1\le1/8$; so
+  by Step~3, $\Pi^\sharp$ has $\int u^{-c}|d\Pi^\sharp|<\infty$, its Mellin transform there is $\log\zeta^\sharp$, and that of $\Pi_0$ is
+  $\log(s/(s-1))$. Since $\varphi$ is supported in $[1,y]$, where $\Pi^\sharp=\Pi$, Mellin inversion gives
+  \[
+    \int\varphi\,d(\Pi-\Pi_0)=\frac1{2\pi i}\int_{(c)}\tilde\varphi(s)\,\mathfrak G_1(s)\,ds,\qquad\mathfrak G_1(s)=\log\frac{\zeta^\sharp(s)(s-1)}s .
+  \]
+  Put $T_1:=e^{L_1}$ and $c':=1-f\delta_{\mathrm{zf}}(T_1)$, with $f=0.9$ and $\delta_{\mathrm{zf}}(T_1)$ the width of Step~7. The function
+  $\mathfrak G_1$ is analytic on the rectangle $[c',c]\times[-T_1,T_1]$: it lies in $|s-1|\le1/8$ for $|t|<1/16$ (Step~6), and in the
+  zero-free region of Step~7 for $1/16\le|t|\le T_1\le T_y$ (by the Range bullet below). By Cauchy's theorem the line $(c)$ may be
+  replaced by: (A) the segment $\sigma=c'$, $|t|\le T_1$; (B) the two horizontal segments $c'\le\sigma\le c$, $t=\pm T_1$; and
+  (C) the two half-lines $\sigma=c$, $|t|\ge T_1$.
+\item \emph{Bounds for $\mathfrak G_1$.} On (A), $|\mathfrak G_1|\le G(L_1)$ by Step~8. On (B), the part with
+  $\sigma\le1+2\eta_{T_1}+f\delta_{T_1}$ lies in the disc $|s-s_1|\le r_1$ of Step~8 (with $t=\pm T_1$), where
+  $|\mathfrak G_1|\le190Y(T_1)\le G(L_1)$; on the rest, $\sigma-1\ge2\eta_{T_1}\ge\eta_y$, and Step~3 gives
+  $|\mathfrak G_1(s)|\le\log P_y(\sigma)+0.02+\log(|s|/|s-1|)+\pi\le2\log(1/(\sigma-1))+4\le G(L_1)$ (as $\sigma-1\le1/8$). On
+  (C), $|\mathfrak G_1(c+it)|\le2\log(1/(c-1))+4\le2\log\Lambda_p$, in the same way.
+\item \emph{The main term.} $\int\varphi\,d\Pi_0\ge\int_v^{v(1+\eta)}(1-1/u)\,du/\log u\ge\eta v/(1.0001\Lambda_p)$.
+\item \emph{(A).} By the bounds above, $\int_{|t|\le T_1}|\tilde\varphi(c'+it)|\,dt\le1.51v^{c'}\big[2.0002+4\log(\eta T_1)\big]$ (use
+  $1.0001\eta$ for $|t|\le1/\eta$ and $2/|t|$ beyond), and $\log(\eta T_1)=2\log\Lambda_p+\log k+3.08$. With
+  $v^{c'-1}=\exp(-f\delta_{\mathrm{zf}}(T_1)\Lambda_p)$ and the finite-height width of Step~7 at $L=L_1\ge5$, the contribution of
+  (A), divided by the main term, is at most
+  \[
+    0.2404\,G(L_1)\,\Lambda_p\big(14.33+8\log\Lambda_p+4\log k\big)\,\eta^{-1}
+    \exp\Big(-\frac{0.9\,c_{\mathrm{zf}}\Lambda_p}{L_1+442+2\log\Lambda+\log L_1}\Big),
+  \]
+  which is at most the first term of \eqref{eq:lpplus}, since $0.2404(14.33+8\log\Lambda_p+4\log k)\le18\Lambda_p^2$.
+\item \emph{(C).} $\int_{|t|\ge T_1}|\tilde\varphi(c+it)|\,dt\le1.51v^c\int_{|t|\ge T_1}\frac2{|t|}(2e)^{-k}\Big(\frac{T_1}{|t|}\Big)^kdt
+  =6.04\,v^c(2e)^{-k}/k$, with $v^c=v\Lambda_p^{17}$. So (C), divided by the main term, is at most
+  \[
+    \frac1{2\pi}\cdot2\log\Lambda_p\cdot6.04\cdot1.0001\,\frac{\Lambda_p^{18}(2e)^{-k}}{k\eta}\le1.93\,\frac{\Lambda_p^{18}\log\Lambda_p\,e^{-k}}{k\eta}
+    \le0.1\Lambda_p^{-2},
+  \]
+  because $e^{-k}\le\eta\Lambda_p^{-20}$ and $\log\Lambda_p\le k/20$.
+\item \emph{(B).} On the segments, $|\tilde\varphi|\le1.51v^c(2/T_1)(2e)^{-k}$ and the length is $c-c'\le1$; so (B), divided by
+  the main term, is at most $\frac2{2\pi}\cdot G(L_1)\cdot3.02\cdot1.0001\,\Lambda_p^{18}(2e)^{-k}/(T_1\eta)\le\Lambda_p^{-2}G(L_1)/T_1
+  \le10^{-3}\Lambda_p^{-2}$.
+\end{itemize}
+Adding (A)--(C) gives \eqref{eq:lpplus}.
 \begin{itemize}
 \item \emph{Range.} Step~7 gives the width at height $e^{L_1}$ if \eqref{eq:lp-yrange} holds and $L_1\le\log T_y$. Both hold for
   $\Lambda_p\ge76\Lambda^3$. First, $\log y\ge\Lambda_p\ge76\Lambda^3$, and $\log y/\log\log y$ is increasing, so
-  \eqref{eq:lp-yrange} holds. Second, $L_1+500\le2\Lambda+2\log\Lambda_p+505$, while $\log T_y+500\ge\Lambda_p/(51\Lambda\log\Lambda_p)$;
-  the latter exceeds the former for every $\Lambda_p\ge76\Lambda^3$, since both sides increase and at $\Lambda_p=76\Lambda^3$ the
-  right side is $\ge\Lambda^2/(3\log\Lambda+5)\gg2\Lambda$. Also $L_1\ge2\log\Lambda_p\ge40$. So $5\le L_1\le\log T_y$, and the
-  bound on $G(L_1)$ of Step~8 applies.
-\item \emph{Size.} For $\eta\ge e^{-2\Lambda}$ and $L_1\le e^{\Lambda/2}$ (so that $\log G(L_1)\le\Lambda$ by Step~8),
-  $\mathrm{Rel}\le0.1$ needs $0.9c_{\mathrm{zf}}\Lambda_p/(L_1+442+2\log\Lambda+\log L_1)\ge3\Lambda+3\log\Lambda_p+6$, that is,
-  $\Lambda_p\ge76\Lambda^3$. If $L_1>e^{\Lambda/2}$, then $\log\Lambda_p\ge e^{\Lambda/2}/3$ and $G(L_1)\le\Lambda_p$ by Step~8, and the
-  same comparison holds with room to spare. The threshold $76\Lambda^3$ is below $\Lambda_1=100\Lambda^3$ of
-  Lemma~\ref{lem:si}.\qedhere
+  \eqref{eq:lp-yrange} holds. Second, as $k\le2\Lambda+20\log\Lambda_p+1$,
+  $L_1+500\le2\Lambda+2\log\Lambda_p+\log(2\Lambda+20\log\Lambda_p+1)+503.1$, while
+  $\log T_y+500\ge\Lambda_p/(51\Lambda\log\Lambda_p)$; the latter exceeds the former for every $\Lambda_p\ge76\Lambda^3$, since both
+  sides increase, the right side faster, and at $\Lambda_p=76\Lambda^3$ the right side is $\ge\Lambda^2/(3\log\Lambda+5)\gg2\Lambda$.
+  Also $L_1\ge2\log\Lambda_p\ge40$. So $5\le L_1\le\log T_y$, and Step~8 applies at $L=L_1$.
+\item \emph{Size.} Let $\eta\ge e^{-2\Lambda}$ and $L_1\le e^{\Lambda/2}$, so that $\log G(L_1)\le\Lambda$. If
+  $0.9c_{\mathrm{zf}}\Lambda_p/(L_1+442+2\log\Lambda+\log L_1)\ge3\Lambda+3\log\Lambda_p+6$, then the first term of \eqref{eq:lpplus} is
+  $\le18e^{-6}\le0.045$, and $\mathrm{Rel}\le0.05$. This inequality holds for $\Lambda_p\ge76\Lambda^3$: at $\Lambda_p=76\Lambda^3$ (with the
+  largest $L_1$, at $\eta=e^{-2\Lambda}$) the left side is at least $1.003$ times the right side for every $\Lambda\ge10^8$, and the left
+  side grows linearly in $\Lambda_p$ while the right side and $L_1$ grow logarithmically. If $L_1>e^{\Lambda/2}$, then
+  $\log\Lambda_p\ge e^{\Lambda/2}/3$ and $G(L_1)\le\Lambda_p$, and the same comparison holds with room to spare. The threshold
+  $76\Lambda^3$ is below $\Lambda_1-1=100\Lambda^3-1$ of Lemma~\ref{lem:si}.\qedhere
 \end{itemize}
 \end{proof}
 

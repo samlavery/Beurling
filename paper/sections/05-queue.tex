@@ -745,7 +745,8 @@ where:
 \item the sum runs over the realised jittered primes $F$ that are not used as pivots, over the tails of the rows of $C$, and,
   for each $y\in R$, over its monomial $M_y$ in the labels of $P(C)$ and its tail $d_y$, subject to $n_y\in J$;
 \item the primes of $P(C)$ are indexed $j=1,\dots,\pi$ in decision order; the excess $e_j\ge0$ of the $j$-th prime is the
-  number of its occurrences in rows of $C$, minus $1$; and $\mathrm{exc}:=\sum_je_j$;
+  number of its occurrences in rows of $C$, counted with multiplicity (that is, its total exponent in the rows of $C$),
+  minus $1$; and $\mathrm{exc}:=\sum_je_j$;
 \item $\tau_j:=\max(\Xm,\sigma_j-2H(\sigma_j))$ with $\sigma_j:=X_0+0.99(j-1)$, as in \eqref{eq:A-tau}. The $j$-th prime of
   $P(C)$ in decision order has value at least $\tau_j$, because the primes of $P(C)$ are distinct jittered primes in
   distinct slots (Section~\ref{sec:A-setting}).
@@ -771,7 +772,7 @@ equals $\int_{J^r}\prod_{\mathrm{piv}}q\big/\big(|\det E_P|\prod_yn_y\big)\,dn$.
 \emph{Allocation.} Every prime has an occurrence in some row of $C$, since $C$ covers $P(B')$. So:
 \begin{itemize}
 \item each pivot $p$ cancels the factor $q_p^{+1}$ of the Jacobian against one occurrence chosen in a row of $C$;
-\item each free prime $f$ keeps, for its harmonic sure sum, one occurrence in a row of $C$
+\item each free prime $f$ keeps, for its harmonic sure sum, exactly one occurrence, in one row of $C$
   (Lemma~\ref{lem:fac}, (S1$'$) and~(S3));
 \item all occurrences in rows of $R$ stay with their row;
 \item the remaining occurrences in rows of $C$ are the excess: the $e_j$ remaining occurrences of the $j$-th prime each
@@ -818,7 +819,12 @@ the rows of $C$ in Lemma~\ref{lem:reduction}(ii).
 \begin{proof}
 \emph{Proof of (ii).} Per row, the type and sum factors are:
 \begin{itemize}
-\item the free primes of a row of $C$, sorted by value: $\sum_k\lambda_D^k/k!\le e^{\lambda_D}\le eD$;
+\item the free primes kept in a row of $C$: by the allocation in the proof of Proposition~\ref{prop:cover}, each free
+  prime is kept with exactly one occurrence, in one row, so the primes kept in a row are distinct. Sorted by value, they
+  contribute $\sum_k\lambda_D^k/k!\le e^{\lambda_D}\le eD$. All further occurrences of free primes, including repeated
+  powers in the same row, are excess and are counted in the next item;
+  % Clarification (external reader's question): free primes lie in P(C), and e_j counts multiplicity, so repeated
+  % free-prime powers are in the excess sum; no Euler-product correction is needed here.
 \item the pivot positions: at most $D$ per row;
 \item the excess patterns of the rows of $C$: distributing the excess $e_j$ of the $j$-th prime over the $\kappa$ rows
   of $C$, the sum over patterns of $\prod_j\tau_j^{-e_j}$ is at most
