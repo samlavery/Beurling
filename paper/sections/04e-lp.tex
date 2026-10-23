@@ -8,13 +8,14 @@ For squarefree $n$ put $\tau(n):=\max_{p\mid n}t(p)\prod_{q\mid n,\,t(q)\ge t(p)
 $\tau(n)<y$. Assume $|N-T|\le D:=B+\frac12H(1+\kappa_+/\log x)+4$ at the relevant heights (Corollary~\ref{cor:lag}). For $x\ge X_0^3$ and
 % Logged correction 38 (CORRECTIONS-vs-v3.md): x >= X0^3 (v3: x >= X0), so that every p in case (ii) exceeds X0.
 % Logged correction 36 (CORRECTIONS-vs-v3.md): +4 (lower lag constant -4); D <= H still, as B << H.
-$\delta\in(0,\frac14]$,
+% Logged correction 59 (CORRECTIONS-vs-v3.md): the lower bound on delta is a hypothesis (v3 and the first version stated the
+% lemma for every delta in (0,1/4], but case (ii) of the proof needs delta >= 6H(x)x^{-1/3}).
+$6H(x)x^{-1/3}\le\delta\le\frac14$,
 \[
   \sum_{n:\ \tau(n)\in[x(1-\delta),x)}\frac1n\le55\,\delta\log x\,\big(\log H(x)+\log(1/\delta)+2\big)
   +14\big(K_{\mathrm{loc}}(\sqrt x)+2\big)\log x\,\sqrt{\frac{H(x)}{\delta x}} .
 \]
-It is used only with $\delta\ge6H(x)x^{-1/3}$, and only in Proposition~\ref{prop:g1}(B), where $x\ge X_{\mathrm{sw}}$ with
-$\log X_{\mathrm{sw}}=X_0^{1/100}>3\Lambda$.
+It is used only in Proposition~\ref{prop:g1}(B), where $x\ge X_{\mathrm{sw}}$ with $\log X_{\mathrm{sw}}=X_0^{1/100}>3\Lambda$.
 \end{lemma}
 
 \begin{proof}
@@ -33,30 +34,46 @@ $\sum_k1/k\le\prod_{q<P}(1-1/q)^{-1}$, which we bound as follows.
 \end{itemize}
 In all cases $\sum_k1/k\le1.8\log p+1\le2\log x$, as $p\le x$ and $\log x\ge10^8$. Also $1/m\le2p/x$.
 
-Write $m=p\,m'$, so that $p^2m'\in I:=[x(1-\delta),x]\,(1+O(H(p)/p))$. In case (ii) below, $H(p)/p\le\delta/10$, since
-$\delta\ge6H(x)x^{-1/3}$.
+Write $m=p\,m'$, where $m'$ is the product of the primes $q\ne p$ of $n$ with $t(q)\ge t(p)$. Then
+$p^2m'=\tau(n)\,p/t(p)\in I_p:=[x(1-\delta),x)\cdot p/t(p)$. The jitter is centred: $|t(p)-p|\le H(t(p))/2$ (and $t(p)=p$ for a
+rational prime $p$).
+% Logged correction 58 (CORRECTIONS-vs-v3.md): case (ii) used |t(p)-p| <= H(p) and a factor 1 +- 0.11 delta, which give the
+% coefficient 0.6385 > 0.6 at delta = 1/4. With the centred jitter (|t(p)-p| <= delta p/20) the coefficient is 0.58259; and
+% m' = 1 in case (ii), so the sum over m' <= 2H/delta disappears.
 \begin{enumerate}[label=(\roman*)]
-\item $p\le\sqrt{\delta x/(2H(x))}$. The interval $I/p^2$ has length $\ge2D$, so it holds at most $4\delta x/p^2$
+\item $p\le\sqrt{\delta x/(2H(x))}$. The interval $I_p/p^2$ has length $\ge2D$, so it holds at most $4\delta x/p^2$
   elements $m'$ (by $|N-T|\le D$). These pairs contribute at most $4\delta x\sum_{p\le\sqrt x}1/p$ to $\sum p$.
-\item $p$ larger. Then $m'\le2H(x)/\delta$. For each $m'$, the $p$-interval $\sqrt{I/m'}$ has length
-  $\ell_{m'}\le0.6\,\delta\sqrt{x/m'}$. Since $p^2m'=pm=\tau(n)\,p/t(p)$ and $|t(p)-p|\le H(p)\le\delta p/10$, the factor
-  $1+O(H(p)/p)$ in $I$ lies within $1\pm0.11\delta$. So, with $m'\le2H(x)/\delta$, $\delta\le\frac14$, $\delta\ge6H(x)x^{-1/3}$ and
-  $x\ge X_0^3$, the interval has minimum $\ge\sqrt{(1-\delta)(1-0.11\delta)}\,\sqrt{\delta x/(2H(x))}\ge0.85\sqrt3\,x^{1/3}\ge1.47X_0$
-  and endpoint ratio $\le\big((1+0.11\delta)/((1-\delta)(1-0.11\delta))\big)^{1/2}\le1.19$. Let $P_1\le\sqrt x$ be the dyadic scale
-  with $P_1\le\min\sqrt{I/m'}<2P_1$; then $P_1\ge X_0$ and the interval lies in $[P_1,2.38P_1)\subset[P_1,4P_1)$. Cut it into
-  $\lceil\ell_{m'}/(6H(P_1))\rceil$ windows of length $\le6H(P_1)$ and apply the local count at the dyadic scale $P_1$
-  (Corollary~\ref{cor:localcount}(i)) to each. This gives at most
-  $13.4\ell_{m'}+\lceil\ell_{m'}/(6H(P_1))\rceil(K_{\mathrm{loc}}(P_1)+2)\le13.5\ell_{m'}+K_{\mathrm{loc}}(\sqrt x)+2$ primes, since
-  $K_{\mathrm{loc}}\le H/100$ and $K_{\mathrm{loc}}$ is non-decreasing.
+\item $p>\sqrt{\delta x/(2H(x))}$; then $p\ge\sqrt3\,x^{1/3}$, since $\delta\ge6H(x)x^{-1/3}$.
+  \begin{itemize}
+  \item \emph{The jitter.} $H(p)/p\le H(x)/(\sqrt3x^{1/3})\le\delta/(6\sqrt3)$. Also $t(p)\le p+H(t(p))/2\le p+t(p)/2$, so
+    $t(p)\le2p$, and $H(t(p))\le2^{4\cdot10^{-6}}H(p)\le1.000003\,H(p)$ (by \eqref{eq:RH} if $t(p)>p$, by monotonicity otherwise). So
+    $|t(p)-p|\le0.0482\,\delta p\le\delta p/20$, and $p/t(p)\in[1/(1+\delta/20),\,1/(1-\delta/20)]$.
+  \item \emph{$m'=1$.} A prime $q$ of $m'$ has $t(q)\ge t(p)$, so $q\ge t(q)/2\ge t(p)/2\ge p/3$ (as $H(z)\le z$ here, and
+    $p\le t(p)+H(t(p))/2\le1.5\,t(p)$). Then $p^2m'\ge p^3/3\ge\sqrt3\,x$, while $p^2m'<x/(1-\delta/20)<1.02\,x$ by $I_p$. So
+    $m'=1$.
+  \item \emph{The interval.} Now $p^2\in[x(1-\delta)/(1+\delta/20),\,x/(1-\delta/20))$. This $p$-interval has length
+    $\ell:=f(\delta)\sqrt x$, where $f(\delta):=(1-\delta/20)^{-1/2}-((1-\delta)/(1+\delta/20))^{1/2}$. On $[0,\frac14]$, $f$ is convex
+    with $f(0)=0$ (the first term is convex; the second is $\sqrt h$ with $h:=(1-\delta)/(1+\delta/20)$, and $2hh''-h'^2<0$), so
+    $f(\delta)/\delta$ is non-decreasing and $f(\delta)\le4f(\frac14)\,\delta=0.58259\,\delta$. Hence $\ell\le0.6\,\delta\sqrt x$.
+  \item \emph{The local count.} The $p$-interval has minimum $\ge((1-\delta)/(1+\delta/20))^{1/2}\sqrt x\ge0.86\sqrt x\ge X_0$ (as
+    $x\ge X_0^3$), maximum $\le(1-\delta/20)^{-1/2}\sqrt x\le1.0064\sqrt x$, and endpoint ratio
+    $\big((1+\delta/20)/((1-\delta)(1-\delta/20))\big)^{1/2}\le1.17$. Let $P_1\le\sqrt x$ be the dyadic scale with $P_1\le\min<2P_1$;
+    then $P_1\ge X_0$ and the interval lies in $[P_1,2.34P_1)\subset[P_1,4P_1)$. Cut it into $\lceil\ell/(6H(P_1))\rceil$ windows
+    of length $\le6H(P_1)$ and apply the local count at the dyadic scale $P_1$ (Corollary~\ref{cor:localcount}(i)) to each. This
+    gives at most $13.4\ell+\lceil\ell/(6H(P_1))\rceil(K_{\mathrm{loc}}(P_1)+2)\le13.5\ell+K_{\mathrm{loc}}(\sqrt x)+2$ primes, since
+    $K_{\mathrm{loc}}\le H/100$ and $K_{\mathrm{loc}}$ is non-decreasing.
+  \end{itemize}
 % Logged correction 37 (CORRECTIONS-vs-v3.md): v3 applies the local count at the non-dyadic height sqrt(x). Each p-interval
 % lies in one block [P_1,4P_1) with P_1 dyadic, so part (i) applies there and the constant K_loc(sqrt x) is unchanged.
 % (Part (ii), for real P, would give K_loc(P)+K_loc(2P) and turn the constant 14 of the statement into 23.)
 \end{enumerate}
-Each pair $(p,m')$ contributes at most $2\log x\cdot2p/x$. Collecting, with $p\le\sqrt{x/m'}$, the sum is at most
-\[
-  \frac{4\log x}x\Big[4\delta x(\log\log x+1)+8.1\,\delta x\big(\log(2H(x)/\delta)+1\big)+2(K_{\mathrm{loc}}+2)\sqrt x\,\sqrt{2H(x)/\delta}\Big].
-\]
-Since $\log H\ge8(\log\log x)^2\ge16\log\log x$, this is at most the stated bound.
+Each pair $(p,m')$ contributes at most $2\log x\cdot2p/x$. Collecting, with $p\le1.0064\sqrt x$ and $\ell\le0.6\,\delta\sqrt x$ in
+case (ii), the sum is at most
+\begin{multline*}
+  \frac{4\log x}x\Big[4\delta x(\log\log x+1)+1.0064\sqrt x\,\big(8.1\,\delta\sqrt x+K_{\mathrm{loc}}(\sqrt x)+2\big)\Big]\\
+  \le\delta\log x\,(16\log\log x+48.7)+4.05\big(K_{\mathrm{loc}}(\sqrt x)+2\big)\frac{\log x}{\sqrt x}.
+\end{multline*}
+Since $\log H\ge8(\log\log x)^2\ge16\log\log x$ and $H(x)/\delta\ge1$, this is at most the stated bound.
 \end{proof}
 
 \paragraph{Notation for the local prime number theorem.}

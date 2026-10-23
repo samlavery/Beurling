@@ -224,6 +224,10 @@ $\rhosh(x)-\rhosh(y)=\sum_n[c_n(x)T'(x/n)-c_n(y)T'(y/n)]/n$.
 \begin{itemize}
 \item \emph{Threshold changes:} at most $2\cdot$(Lemma~\ref{lem:threshold-mass} at $2\delta$) $=o(1/\log x)$, since $|T'|\le2$,
   $\delta\le\log^{-4}x$ and $\log H(x)=8(\log\log x)^2$.
+% Logged correction 59: the hypothesis 6H(x)x^{-1/3} <= 2 delta <= 1/4 of Lemma threshold-mass, checked here.
+  The lemma applies at $2\delta$: $2\delta\le2X_0^{-1/2}\le\frac14$; and $1/\delta\le\Gamma(x)^2\log^4x+X_0^{1/2}\le x^{0.02}$ (as
+  $\gamma_*\le\Gamma(x)$ and $\log x\ge X_0^{1/100}$), while $6H(x)x^{-1/3}\le x^{-0.3}$ by Theorem~\ref{thm:caplw}(c), so
+  $2\delta\ge6H(x)x^{-1/3}$.
 \item \emph{The jump of $T'$ at $X_0$:} only $n\in[y/X_0,x/X_0]$ see it. Put $N_*:=x/X_0$, $I:=[N_*(1-2\delta),N_*]$ and
   $L_*:=\log(N_*/2)$. By the lag bound, $|N-T|\le H(N_*)$ at both ends of $I$, and under the target \eqref{eq:target},
   $T(I)\le2|I|+2+\#\Abs(I)$. Cover $I$ by $\lceil|I|/h(N_*(1-2\delta))\rceil$ consecutive windows $[u,u+h(u)]$,

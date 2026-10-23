@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#57)
+## Addendum: defects found after the re-check (corrections #31–#59)
 
-After the first public version, a reader reported sixteen defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up eleven more. The full list, with each repair, is entries #31–#57 of `CORRECTIONS-vs-v3.md`:
+After the first public version, a reader reported eighteen defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, turned up eleven more. The full list, with each repair, is entries #31–#59 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -95,9 +95,11 @@ re-checking the repairs, turned up eleven more. The full list, with each repair,
 | 55 | App. A Lemma pil, (S3), Thm R, cor:R-Ecl; Prop cover, Lemma reduction(ii) | closes the #48 union gap: block bound summed over every block content (eq:A-Grec); Thm R gains k^k/k! ≤ e^k (eq:A-HK, generating function); Cover Bound's R-only stages pulled out as (1+κλ) and absorbed by the R rows' δ; skeletons in decision order; caps q_j ≥ τ_j | independent checks R6/R6b/R6c |
 | 56 | Thm lp (ii), Step 9 | Perron kernel ĥ₀((s−1)/T) did not match the smoothing defined in 9(i), which gives ĥ₀(s/T); (ii) now follows from (i) by partial summation | reader |
 | 57 | Thm lp, Step 2 | N_y := exp*(Π\|_{[1,y]}) called the y-smooth counting measure (false: p² gets ½ for √y < p ≤ y); now a positive Euler proxy with the four properties used | reader |
+| 58 | Lemma threshold-mass, case (ii) | interval coefficient 0.6 not given by the written factor 1 ± 0.11δ (0.6385 at δ = ¼); now the centred jitter gives 0.5826, and m′ = 1 in case (ii) | reader |
+| 59 | Lemma threshold-mass, statement | allowed every δ ∈ (0, ¼] although case (ii) needs δ ≥ 6H(x)x^{−1/3}; now a hypothesis, checked at its one use | reader |
 
-**Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56 and #57 in fourteen passes
-(`review/recheck/R4.md` §§1–21); the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+**Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53 and #56–#59 in fifteen passes
+(`review/recheck/R4.md` §§1–22); the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -115,7 +117,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the fifty-seven corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the fifty-nine corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and
