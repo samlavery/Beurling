@@ -144,7 +144,11 @@ So $\hat D^\sharp$ is entire, with $|\hat D^\sharp(s)|\le|s|(\Xm)^{\theta'-\sigm
 $\sigma>\theta'$. Let $\Pi^\sharp:=\log^*(dN^\sharp)$, a signed measure (the series converges in the weighted norm
 $\int u^{-\sigma}|\cdot|$ for large $\sigma$). Since $\log^*$ is causal, $\Pi^\sharp=\Pi$ on $[1,y]$.
 
-\emph{Step 2: upper bounds on $[1,y]$.} Lemma~\ref{lem:cm} holds on $[1,y]$: (LP-a) and \eqref{eq:T1} give \textup{(H$_{\mathrm{BS}}$)} there. Write $d\psi=\log u\,d\Pi$ and
+% Logged correction 60 (CORRECTIONS-vs-v3.md): (H_BS) on [1,y] comes from (LP-a) with eq:Erig and |R| <= 2u^theta log*u
+% (Lemma T1), not from eq:T1, whose constant C_{X_0} is useless near X_0 (independent check R10, C1).
+\emph{Step 2: upper bounds on $[1,y]$.} Lemma~\ref{lem:cm} holds on $[1,y]$: there $T_0-\lfloor\cdot\rfloor=E_{\mathrm{rig}}+R+\{\cdot\}$ on
+$[X_0,y]$, so (LP-a), \eqref{eq:Erig} and $|R|\le2u^\theta\log^*u$ (Lemma~\ref{lem:T1}) give \textup{(H$_{\mathrm{BS}}$)}, as in
+\S\ref{sec:noise-primes}. Write $d\psi=\log u\,d\Pi$ and
 $S(z)=\int_{[1,z]}d\psi/u\le\log z+0.43$. By Lemma~\ref{lem:cm}(iv) and the values for $\N$,
 $\int_{[1,y]}d\Pi/u\le\log\log y+4.5$; the same argument gives $\int_{[1,z]}d\Pi/u\le\log\log z+4.5$ for $e\le z\le y$.
 % Logged correction 57 (CORRECTIONS-vs-v3.md): N_y is a positive Euler proxy, not the counting measure of the y-smooth
@@ -161,20 +165,48 @@ $\frac12$. Only the following properties are used.
 \end{enumerate}
 By (c), $P_y(1)\le e^{4.5}\log y$.
 
-\emph{Step 3: positivity transfer.} Put $\Delta:=\zeta^\sharp-P_y=\int_{(y,\infty)}u^{-s}(dT_0-dN_y)$. For $\sigma=1+\eta$
-with $0<\eta\le1/8$, Rankin's trick ($u^{-\eta}\le y^{-\eta/2}u^{-\eta/2}$ for $u>y$) and (LP-a) give
+\emph{Step 3: positivity transfer.} Put $\Delta:=\zeta^\sharp-P_y=\int_{(y,\infty)}u^{-s}(dT_0-dN_y)$, and let $\sigma=1+\eta$
+with $0<\eta\le1/8$.
+% Logged correction 60 (CORRECTIONS-vs-v3.md): the T_0-tail bounds were attributed to "Rankin's trick and (LP-a)", but (LP-a)
+% says nothing about T_0 beyond y; their source is dT_0 >= 0 (eq:target, eq:G1) and T_0(u) - u = E_rig + R (Lemma T1). The
+% Rankin split is not needed: u^{-eta} <= y^{-eta} for u > y (independent check R10, F1 and C2).
+\begin{itemize}
+\item \emph{On $[1,y]$}, $N_y=N$, and \textup{(H$_{\mathrm{BS}}$)} gives
+  \[
+    \int_{[1,y]}u^{-\sigma}dN\le\sum_{n\le y}n^{-\sigma}+\eps_1(y)y^{-\eta}+\sigma\int_{\Xm}^y\eps_1(u)u^{-1-\eta}du
+    \le1/\eta+1+2\eta_1\le1/\eta+2.01 .
+  \]
+\item \emph{The $T_0$ part on $(y,\infty)$.} There $dT_0=d\Psi(\cdot,X_0)+(1-\rhodet+R')\,du\ge0$ (\eqref{eq:target},
+  \eqref{eq:G1}), and $T_0(u)-u=E_{\mathrm{rig}}(u)+R(u)$ with $|E_{\mathrm{rig}}(u)|\le\kappa X_0+2+\kappa u$ \eqref{eq:Erig} and
+  $|R(u)|\le2u^\theta\log^*u$ (Lemma~\ref{lem:T1}). Integrate by parts against $u^{-\sigma}$: the term $u$ of $T_0$ gives exactly
+  $y^{-\eta}/\eta$, and the rest, including the boundary term at $y$, is at most
+  $\big(\kappa(1+2\eta)+2(\kappa X_0+2)\eta/y+O(y^{\theta-1}\log y)\big)y^{-\eta}/\eta\le3\kappa\,y^{-\eta}/\eta$, since $y\ge X_0$ and
+  $y^{\theta-1}\log y\le X_0^{-0.49}\ll\kappa$. The same computation against $u^{-\sigma}\log u$ (decreasing for $u\ge e$), whose main
+  term is $\int_y^\infty u^{-\sigma}\log u\,du=y^{-\eta}(\log y/\eta+1/\eta^2)$, gives
+  \[
+    \int_{(y,\infty)}u^{-\sigma}dT_0\le(1+3\kappa)\frac{y^{-\eta}}\eta,\qquad
+    \int_{(y,\infty)}u^{-\sigma}\log u\,dT_0\le(1+3\kappa)\,y^{-\eta}\Big(\frac{\log y}\eta+\frac1{\eta^2}\Big).
+  \]
+\item \emph{The $N_y$ part on $(y,\infty)$} uses only $dN_y\ge0$ and $u^{-\eta}\le y^{-\eta}$ for $u>y$:
+  $\int_{(y,\infty)}u^{-\sigma}dN_y\le y^{-\eta}P_y(1)$, and $\int_{(y,\infty)}u^{-\sigma}\log u\,dN_y\le y^{-\eta}(-P_y'(1))=y^{-\eta}P_y(1)S(y)$,
+  since $-P_y'/P_y(1)=\int_{[1,y]}d\psi/u=S(y)$.
+\end{itemize}
+Hence, as $1+3\kappa\le2$,
 \begin{gather*}
-  P_y(\sigma)\le1/\eta+6+y^{-\eta/2}P_y(1),\qquad|\Delta(s)|\le2y^{-\eta}/\eta+y^{-\eta/2}P_y(1),\\
-  |\Delta'(s)|\le2y^{-\eta}(\log y/\eta+1/\eta^2)+y^{-\eta/2}P_y(1)\,S(y),\qquad|P_y(s)|\ge1/P_y(\sigma),\qquad
+  P_y(\sigma)\le1/\eta+2.01+y^{-\eta}P_y(1),\qquad|\Delta(s)|\le2y^{-\eta}/\eta+y^{-\eta}P_y(1),\\
+  |\Delta'(s)|\le2y^{-\eta}(\log y/\eta+1/\eta^2)+y^{-\eta}P_y(1)\,S(y),\qquad|P_y(s)|\ge1/P_y(\sigma),\qquad
   |P_y'/P_y(s)|\le S(y).
 \end{gather*}
-The last two hold because $\Pi\ge0$. Set $\eta_y:=17\log\log y/\log y$, so that $y^{-\eta/2}\le(\log y)^{-8.5}$ for
+The last two hold because $\Pi\ge0$. Set $\eta_y:=17\log\log y/\log y$, so that $y^{-\eta}\le(\log y)^{-17}$ for
 $\eta\ge\eta_y$. Then, for $1+\eta_y\le\sigma\le1+1/8$,
 \begin{equation}\label{eq:lp-transfer}
   P_y(\sigma)\le2/\eta,\qquad|\Delta/P_y|\le10^{-2},\qquad\Big|\frac{d}{ds}\log(1+\Delta/P_y)\Big|\le(\eta\log y)^{-1}.
 \end{equation}
 Let $F:=(dT_0-dN_y)|_{(y,\infty)}*(dN_y)^{*-1}$. Since $|(dN_y)^{*-1}|\le dN_y$, the same bounds give
-$\int u^{-\sigma}|dF|\le10^{-2}$. Hence $\Pi^\sharp=\Pi|_{[1,y]}+\log^*(\delta_1+F)$ satisfies $\int u^{-\sigma}|d\Pi^\sharp|<\infty$,
+$\int u^{-\sigma}|dF|\le10^{-2}$ for $1+\eta_y\le\sigma\le1+1/8$, and so for every $\sigma\ge1+\eta_y$, since $F$ lives on $(y,\infty)$
+and $\int u^{-\sigma}|dF|$ is non-increasing in $\sigma$.
+% Logged correction 60: the bound for sigma > 9/8, used in Step 6 (independent check R10, C3).
+Hence $\Pi^\sharp=\Pi|_{[1,y]}+\log^*(\delta_1+F)$ satisfies $\int u^{-\sigma}|d\Pi^\sharp|<\infty$,
 $\zeta^\sharp$ has no zeros in $\sigma\ge1+\eta_y$, and $\log\zeta^\sharp=\log P_y+\log(1+\Delta/P_y)$ is the Mellin transform of
 $\Pi^\sharp$ there. The coefficients of $-P_y'/P_y$ form the positive measure $d\psi|_{[1,y]}$. So for the nonnegative
 polynomial

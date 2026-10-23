@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#59)
+## Addendum: defects found after the re-check (corrections #31–#60)
 
 After the first public version, a reader reported eighteen defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up eleven more. The full list, with each repair, is entries #31–#59 of `CORRECTIONS-vs-v3.md`:
+re-checking the repairs, turned up twelve more. The full list, with each repair, is entries #31–#60 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -97,9 +97,10 @@ re-checking the repairs, turned up eleven more. The full list, with each repair,
 | 57 | Thm lp, Step 2 | N_y := exp*(Π\|_{[1,y]}) called the y-smooth counting measure (false: p² gets ½ for √y < p ≤ y); now a positive Euler proxy with the four properties used | reader |
 | 58 | Lemma threshold-mass, case (ii) | interval coefficient 0.6 not given by the written factor 1 ± 0.11δ (0.6385 at δ = ¼); now the centred jitter gives 0.5826, and m′ = 1 in case (ii) | reader |
 | 59 | Lemma threshold-mass, statement | allowed every δ ∈ (0, ¼] although case (ii) needs δ ≥ 6H(x)x^{−1/3}; now a hypothesis, checked at its one use | reader |
+| 60 | Thm lp, Steps 2–3 | the T₀-tail bounds beyond y were credited to (LP-a), which says nothing past y; now dT₀ ≥ 0 and T₀ − u = E_rig + R (eq:Erig, Lemma T1); (H_BS) sourced to eq:Erig, not eq:T1; Rankin split dropped; F bound extended to all σ | independent check R10 |
 
 **Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53 and #56–#59 in fifteen passes
-(`review/recheck/R4.md` §§1–22); the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+(`review/recheck/R4.md` §§1–22); #54 and #60 were re-checked by the checkers that found them (R8 §9, R10); the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -117,7 +118,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the fifty-nine corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the sixty corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and

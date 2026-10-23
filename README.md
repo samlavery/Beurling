@@ -51,25 +51,27 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   that the written derivation did not give.
 >
 > Repairing these and re-checking the repairs, and three further independent AI checks (R6–R8 in `review/recheck/`),
-> turned up eleven more. The most serious were:
+> turned up twelve more. The most serious were:
 > - a gap in the label sum of the Pivot-Integration Lemma (Appendix A): the carried Euler factors cancel only after
 >   integration, not pointwise as the argument needed. Its first repair (#48) covered one configuration type only. The
 >   repair now in the paper (#55) covers the summed form the paper uses; see above;
 > - a gap inherited from the refereed draft in the check of the Beurling–Saias hypothesis (H_BS): the decay of the rigid
 >   error that it needs was asserted but never proved. It is now proved (Lemma T1, eq:Erig).
 >
-> These are entries #31–#59 of `CORRECTIONS-vs-v3.md`. All are repaired.
+> These are entries #31–#60 of `CORRECTIONS-vs-v3.md`. All are repaired.
 > - **The repairs of #31–#47, #49–#53 and #56–#59** were checked by a fresh AI checker in fifteen passes
 >   (`review/recheck/R4.md`).
 > - **The certificate fixes of #54** were checked by the R8 checker (`review/recheck/R8-cert-repro.md` §9).
+> - **The repair of #60** was checked by the R10 checker (`review/recheck/R10-lp-transfer.md`, re-check of #60).
 >   The passes ended with nothing blocking or fixable.
 > - **The first repair of #48** passed one adversarial AI check (`review/recheck/R5-pil-repair.md`). Two later
 >   independent checks found that it holds only per configuration type. Its replacement, #55, passed two independent
 >   adversarial checks (R9, R9b).
 > - **The reports.** Independent checks of #47's large-range estimate and of every certificate are in
->   `review/recheck/R7-margin-var.md` and `review/recheck/R8-cert-repro.md`.
+>   `review/recheck/R7-margin-var.md` and `review/recheck/R8-cert-repro.md`. An independent check of the local prime
+>   number theorem's positivity transfer is in `review/recheck/R10-lp-transfer.md`.
 >
-> None of the fifty-nine logged corrections changes a conclusion of the paper. But these
+> None of the sixty logged corrections changes a conclusion of the paper. But these
 > findings show that the AI checks are no substitute for expert review.
 
 ## The result
