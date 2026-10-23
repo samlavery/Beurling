@@ -25,7 +25,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 > the fixes, three fresh AI checkers re-checked every changed passage (`review/paper-recheck.md`, reports in
 > `review/recheck/R1–R3.md`). They found nothing blocking.
 >
-> **Defects found after the AI checks.** After the paper was first published here, a reader reported twenty-one further defects
+> **Defects found after the AI checks.** After the paper was first published here, a reader reported twenty-three further defects
 > that every earlier AI check had missed:
 > - a strip identity used as exact although the box widths vary;
 > - a jitter width that jumps (through a ceiling and a per-scale freeze) although its regularity is used throughout;
@@ -49,21 +49,25 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   proxy misdescribed as the counting measure of y-smooth elements;
 > - in the edge term of Lemma margin(d), a single-integer argument written over a wider range of x than the one
 >   where it holds, and in Lemma margin(c) a harmonic-sum approximation cited from an estimate that does not give it;
+> - a bad-height density bound in the good-heights lemma that rested on a mean value theorem with an unspecified
+>   constant ("once X₀ is large"), now explicit via Montgomery–Vaughan;
+> - a Rankin bound in Lemma P stated for every Y, although its exponent goes negative for large Y (it is used only where
+>   the exponent is near 1);
 > - in the threshold-mass lemma, a statement wider than its proof (a missing lower bound on δ), an interval constant
 >   that the written derivation did not give, and a count of cofactors that used the lag bound without bounding the
 >   target on short intervals.
 >
 > Repairing these and re-checking the repairs, and three further independent AI checks (R6–R8 in `review/recheck/`),
-> turned up twelve more. The most serious were:
+> turned up thirteen more. The most serious were:
 > - a gap in the label sum of the Pivot-Integration Lemma (Appendix A): the carried Euler factors cancel only after
 >   integration, not pointwise as the argument needed. Its first repair (#48) covered one configuration type only. The
 >   repair now in the paper (#55) covers the summed form the paper uses; see above;
 > - a gap inherited from the refereed draft in the check of the Beurling–Saias hypothesis (H_BS): the decay of the rigid
 >   error that it needs was asserted but never proved. It is now proved (Lemma T1, eq:Erig).
 >
-> These are entries #31–#63 of `CORRECTIONS-vs-v3.md`. All are repaired.
-> - **The repairs of #31–#47, #49–#53, #56–#59 and #61–#63** were checked by a fresh AI checker in eighteen passes
->   (`review/recheck/R4.md`).
+> These are entries #31–#66 of `CORRECTIONS-vs-v3.md`. All are repaired.
+> - **The repairs of #31–#47, #49–#53, #56–#59 and #61–#64** were checked by a fresh AI checker in nineteen passes
+>   (`review/recheck/R4.md`). #65 and #66 were checked by the R11 checker (`review/recheck/R11-absorption.md` §§12–13).
 > - **The certificate fixes of #54** were checked by the R8 checker (`review/recheck/R8-cert-repro.md` §9).
 > - **The repair of #60** was checked by the R10 checker (`review/recheck/R10-lp-transfer.md`, re-check of #60).
 >   The passes ended with nothing blocking or fixable.
@@ -72,9 +76,10 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   adversarial checks (R9, R9b).
 > - **The reports.** Independent checks of #47's large-range estimate and of every certificate are in
 >   `review/recheck/R7-margin-var.md` and `review/recheck/R8-cert-repro.md`. An independent check of the local prime
->   number theorem's positivity transfer is in `review/recheck/R10-lp-transfer.md`.
+>   number theorem's positivity transfer is in `review/recheck/R10-lp-transfer.md`, and of the absorbed-element sparsity chain in
+>   `review/recheck/R11-absorption.md`.
 >
-> None of the sixty-three logged corrections changes a conclusion of the paper. But these
+> None of the sixty-six logged corrections changes a conclusion of the paper. But these
 > findings show that the AI checks are no substitute for expert review.
 
 ## The result

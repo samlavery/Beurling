@@ -382,10 +382,13 @@ only as leaves, and only some are listed), each edge marked ``same time'' or
 ``strictly earlier'' as in the table of Section~\ref{sec:logic}, of which that table is an abridgement. It runs a depth-first search for
 a cycle among the same-time edges.
 % Logged correction 61: edges lag -> threshold-mass and Lemma P -> threshold-mass (strictly earlier) added.
+% Logged correction 64: Lemma goodheights no longer uses Broucke--Debruyne or Lemma ZA (edges and one node removed).
+% Logged correction 66: edges (H_BS) -> Lemma T1, (H_BS) -> lag and Prop g1 -> Lemma P added; Lemma P -> Lemma cm is strictly earlier.
+% Logged correction 66: the edge Lemma P -> local count is removed (the aside in step (iv) of Lemma P is deleted).
 \begingroup\footnotesize
 \begin{verbatim}
 python3 -I -B certificates/depcheck/depcheck.py
-  same-time subgraph acyclic: True | nodes 79 | edges 195 | strictly-earlier edges 29
+  same-time subgraph acyclic: True | nodes 78 | edges 195 | strictly-earlier edges 28
 \end{verbatim}
 \endgroup
 The time-ordering of the strictly-earlier edges is argued in Section~\ref{sec:noncirc}; the script checks only the bookkeeping.

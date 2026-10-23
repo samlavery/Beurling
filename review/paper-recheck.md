@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#63)
+## Addendum: defects found after the re-check (corrections #31–#66)
 
-After the first public version, a reader reported twenty-one defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up twelve more. The full list, with each repair, is entries #31–#63 of `CORRECTIONS-vs-v3.md`:
+After the first public version, a reader reported twenty-three defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, turned up thirteen more. The full list, with each repair, is entries #31–#66 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -101,9 +101,12 @@ re-checking the repairs, turned up twelve more. The full list, with each repair,
 | 61 | Lemma threshold-mass, case (i) | counted cofactors m′ by the lag bound alone, without bounding T on intervals possibly shorter than the absorption scale; now split: p ≤ 1.01x^{1/4} (h-windows, Lemma P) and p larger (m′ a single prime, counted by slots); 2.1δx/p² ≤ 4δx/p² | reader |
 | 62 | Lemma margin(d)(ii), proof | the length bound κx/X₀ ≤ X₀^{−0.38} < 1 was written for all x ≤ X₀^{1.9}, where it fails (X₀^{0.503}); now stated for x ≤ X₀^{1.01}, the range of (ii) | reader |
 | 63 | Lemma margin(c), proof | Σ_{m≤t}1/m = log t + γ + O(2κ) cited from the element-count estimate, which gives only O(κ log t); the bound used is now proved from (H_BS): \|S(t) − log t\| ≤ 1.002, then ≤ log U + 2.004/log y | reader |
+| 64 | Lemma goodheights | bad-height density < 0.018 relied on Broucke's mean value theorem with an unspecified constant and "once X₀ is large"; now explicit for every admissible X₀ via Montgomery–Vaughan (constant 3π/2), a class split with spacing > 2, and explicit bounds for every other term | reader |
+| 65 | Lemma P, step (v); Lemma ZA proof | Rankin bound Ψ(Y,2y)/Y ≤ e^{−0.9u log u} stated for every Y, false for large Y (exponent goes negative); now under (∗) (exponent ≥ 0.69), checked at both uses (Y = 2yh, and Y = x in ZA), where the exponent is ≥ 0.99999 | reader |
+| 66 | Lemma P, rhoA, T1, depcheck | from R11: the proof of Lemma P covered Good(<u) but the statement Good(<t_u); depcheck omitted three real edges; an unchecked localcount aside; plus cosmetic items | independent check R11 |
 
-**Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59 and #61–#63 in eighteen passes
-(`review/recheck/R4.md` §§1–25); #54 and #60 were re-checked by the checkers that found them (R8 §9, R10); the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+**Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59 and #61–#64 in nineteen passes
+(`review/recheck/R4.md` §§1–26); #54, #60, #65 and #66 were checked by the checkers of R8 §9, R10 and R11 §§12–13; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -121,7 +124,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the sixty-three corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the sixty-six corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and

@@ -70,8 +70,10 @@ $\Psi(x,X_0)-\Psi(X_0,X_0)$ counts the $d\in\mathcal D\cap(X_0,x]$.
 Every probabilistic statement in Sections~\ref{sec:zeros}--\ref{sec:queue} concerns the process stopped at the first failure time
 $\tau$ of Definition~\ref{def:good}.
 \begin{itemize}
-\item Before $\tau$, i.e.\ on $\Good(<u)$, the event of Lemma~\ref{lem:lemmaP} for the window $[u,u+h(u)]$ holds, since its time is
-$\le u-H(u)$ (Lemma~\ref{lem:adapted}). So $\rho_{\Abs}(u)\le(\log u)^{-4}<0.1/\log u$ and $\bar\rho_{\Abs}(u)=\rho_{\Abs}(u)$.
+\item Before $\tau$, i.e.\ on $\Good(<u)$, the event of Lemma~\ref{lem:lemmaP} for the window $[u,u+h(u)]$ holds, since that
+lemma needs only $\Good(<t_u)$, and $t_u=9u/(\log u)^{11}+H(u)<u$.
+% Logged correction 66: v3 attributes this to Lemma adapted; the reason is t_u < u in Lemma lemmaP.
+So $\rho_{\Abs}(u)\le(\log u)^{-4}<0.1/\log u$ and $\bar\rho_{\Abs}(u)=\rho_{\Abs}(u)$.
 \item The cap can bind only after $\tau$, where nothing is claimed. Its role is to keep $T$, the slots and the construction defined on
 every $\omega$.
 \item The cap is adapted, being a deterministic function of the adapted $\rho_{\Abs}$.
@@ -162,8 +164,8 @@ An element $a$ contributes to $\rho_{\Abs}(u)$ exactly for $u\in[u_a,a]$, so
 \[
   \#\Abs(\le x)-\int^x\rho_{\Abs}=\sum_{a\in\Abs,\,a\le x}(1-M_a)-\sum_{a\in\Abs,\,u_a<x<a}\int_{u_a}^x\frac{du}{h(u)} .
 \]
-The second sum runs over $a\in(x,x+h(x))$, and is at most $\#(\Abs\cap[x-h,x+h])\le2h(x)(\log x)^{-4}$ by
-Lemma~\ref{lem:lemmaP}. In the first, $h$ is increasing, so $(u_a/a)^b=h(u_a)/h(a)\le M_a\le1$; with $a-u_a=h(u_a)\le a^b$ this gives
+The second sum runs over $a\in(x,x+h(x))$, since $a=u_a+h(u_a)<x+h(x)$, and each of its terms is at most $M_a\le1$; so
+it is at most $\#(\Abs\cap(x,x+h(x)))\le h(x)(\log x)^{-4}$ by Lemma~\ref{lem:lemmaP}. In the first, $h$ is increasing, so $(u_a/a)^b=h(u_a)/h(a)\le M_a\le1$; with $a-u_a=h(u_a)\le a^b$ this gives
 $0\le1-M_a\le-b\log(u_a/a)\le b\,u_a^{b-1}\le1.01\,b\,a^{b-1}$. To sum this, note that
 $a^{b-1}\le M_a^{-1}\int_{u_a}^au^{b-1}du/h(u)$ with $M_a^{-1}\le1.001$, and that $\sum_{a\in\Abs}\mathbf 1[u_a\le u\le a]/h(u)=\rho_{\Abs}(u)
 \le(\log u)^{-4}$ by Lemma~\ref{lem:rhoA}(a), where $\log u\ge10^7-1$ wherever $\rho_{\Abs}(u)\ne0$ (since $L_*=10^7$). Hence
@@ -172,7 +174,9 @@ $a^{b-1}\le M_a^{-1}\int_{u_a}^au^{b-1}du/h(u)$ with $M_a^{-1}\le1.001$, and tha
 \]
 because $u^{b-1}(\log u)^{-4}\le(1-4/(b\log u))^{-1}\frac{d}{du}\bigl(u^b(\log u)^{-4}/b\bigr)$ and $4/(b\log u)\le4\cdot10^{-6}$. So the
 first sum is at most $1.01\,b\cdot1.01\,b^{-1}x^{\theta/2}(\log x)^{-4}\le1.03\,x^{\theta/2}(\log x)^{-4}$, and
-$|\#\Abs(\le x)-\int^x\rho_{\Abs}|\le3.1\,x^{\theta/2}(\log x)^{-4}+O(1)$, well within \eqref{eq:T1}.
+$|\#\Abs(\le x)-\int^x\rho_{\Abs}|\le3.1\,x^{\theta/2}(\log x)^{-4}$ (there is no boundary term, since $\Abs$ is empty near
+$X_0$), well within \eqref{eq:T1}.
+% Logged correction 66: only Abs cap (x, x+h(x)) enters the second sum, and v3's +O(1) is superfluous.
 
 \emph{Oscillations.} $|R(x)|\le2x^{\theta}\cdot\#\{k:x_k\le x\}\le2x^{\theta}\log^*x$.
 \end{proof}

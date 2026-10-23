@@ -149,9 +149,12 @@ $t\in[\Gamma_k,2\Gamma_k]$, $\sigma\in[\tfrac34,\tfrac54]$.
 \end{enumerate}
 \end{lemma}
 \begin{proof}
-The elements of $\Abs$ are $2y$-smooth, and Rankin's method for the realised system (Lemma~\ref{lem:lemmaP}, proof steps (i) and (v)) gives
-$\#\Abs\cap[1,x]\le x\exp(-0.9u\log u)$, with $u=\log x/\log(2y)\ge100$. Moreover $\Abs=\emptyset$ wherever $y<\Xm$, which holds for
-$\log L\le2\log\Lambda+s_H$ (Theorem~\ref{thm:caplw}(b)). Where $\Abs\ne\emptyset$ and $\ell\le\ell_{\mathrm{std}}$,
+The elements of $\Abs$ are $2y$-smooth, and Rankin's method for the realised system (Lemma~\ref{lem:lemmaP}, proof steps (i) and (v),
+with $Y=x$) gives $\#\Abs\cap[1,x]\le x\exp(-0.9u\log u)$, with $u=\log x/\log(2y)$.
+% Logged correction 65 (CORRECTIONS-vs-v3.md): step (v) of Lemma P now carries the hypothesis (*); "u >= 100" was too weak for it.
+If $\Abs\cap[1,x]\ne\emptyset$, the hypothesis $(*)$ of step (v) holds exactly as in step (vi) there: $u\ge u_0\ge2\Lambda$, with $u_0$
+as in \eqref{eq:twelvetwo} at height $x$, $\log\log2y\le1.79u$, and $\log u/\log2y\le10^{-4}$ (the $\eta$ of step (v)); otherwise there is nothing to prove. Moreover
+$\Abs=\emptyset$ wherever $y<\Xm$, which holds for $\log L\le2\log\Lambda+s_H$ (Theorem~\ref{thm:caplw}(b)). Where $\Abs\ne\emptyset$ and $\ell\le\ell_{\mathrm{std}}$,
 $\log2y\le22.6\Lambda$ (Section~\ref{sec:params}). In the standard regime $\ell\ge\ell_{\mathrm{std}}$ instead $H=H_{\mathrm{std}}$,
 $c=\tfrac14H_{\mathrm{std}}^{1/2}$ and $\log2y\le12\ell^2+9\ell+8\le12.1\ell^2$.
 % R4 N12: an increasing minorant of the saving replaces v3's "rate >= 0.18/Lambda" (u = v/log 2y is not monotone across the ramp).
@@ -206,12 +209,21 @@ Put $\Phi(w):=\int_0^1e^{-wv}\phi'(v)\,dv$. Then
   w'=s-\theta+i\gamma_k.
 \end{equation}
 \begin{itemize}
-\item $\Phi$ is entire, with $\Phi(0)=1$ and $|\Phi(w)|\le C_m|w|^{-m}$ for $\operatorname{Re}w\ge0$.
+% Logged correction 67 (CORRECTIONS-vs-v3.md): the decay constants C_m, C_2 and the o(1) bounds near gamma_k are replaced by
+% explicit bounds that use only |Phi| <= 1.
+\item $\Phi$ is entire, with $\Phi(0)=1$, and $|\Phi(w)|\le1$ and $|\Phi'(w)|\le1$ for $\operatorname{Re}w\ge0$, as $\phi'\ge0$ and
+$\int_0^1\phi'=1$.
 \item $\operatorname{Re}\Phi(w)\ge e^{-1}\cos1=:\operatorname{Re}\Phi_{\min}$ for $0\le\operatorname{Re}w\le1$ and $|\operatorname{Im}w|\le1$.
 \item So $\zeta_{\PP}$ continues to $\sigma>\max(\theta,\eta)$, except for the simple pole at $1$.
-\item Write $M_k$ for the resonant term (the one with $w$) and $E_k$ for the conjugate one. Near $t=\gamma_k$:
-$|E_k|\le2\alpha_kC_2x_k^{\theta-\sigma}/\gamma_k^2$; $\sum_{j<k}|\widehat R_j|\ll\sum_j|\gamma_k-\gamma_j|^{-m}$; and
-$\sum_{j>k}|\widehat R_j|\ll x_j^{\theta-\sigma}\gamma_k$, since $x_j\ge\exp(x_k)$. All three are $o(1)$.
+\item Write $M_k$ for the resonant term (the one with $w$) and $E_k$ for the conjugate one. On $0.99\le\sigma\le2$, $|t-\gamma_k|\le1$,
+\[
+  |E_k|\le0.51\,x_k^{\theta-\sigma},\qquad\sum_{j<k}|\widehat R_j|\le2.02\,x_1^{\theta-\sigma},\qquad
+  \sum_{j>k}|\widehat R_j|\le4.2\,x_ke^{-0.49x_k}.
+\]
+Indeed $\operatorname{Re}w,\operatorname{Re}w'\ge0.49$ there and $|\Phi|\le1$. For $E_k$, $|s|\le0.5001|w'|$. For $j<k$, $|s|\le1.0001|w|$
+and $|s|\le|w'|$, since $\gamma_j\le x_j\le2\log x_k$ is negligible against $\gamma_k\ge\Gamma_k$; and the $x_j$ grow
+super-exponentially. For $j>k$, $|w|,|w'|\ge0.49$, $|s|\le\gamma_k+3\le x_k$ and $x_j^{\theta-\sigma}\le x_j^{-0.49}$ with
+$x_j\ge\exp(x_{j-1})\ge\exp(x_k)$. Together the three bounds are at most $3e^{-0.49X_0^2}$.
 \item On $\sigma\ge1-8/\log X_0$, at every height,
 \begin{equation}\label{eq:Rhatbound}
   |\widehat R(s)|\le|s|\,e^{-0.39X_0^2}.
@@ -274,39 +286,95 @@ The choice uses only the system on $[1,x_k)$, which does not depend on $\gamma_k
 (Lemma~\ref{lem:adapted}).
 \end{lemma}
 \begin{proof}
-\emph{(i)} We use the mean value theorem of Montgomery and Vaughan \cite{MontgomeryVaughan1974} for the absolutely convergent
-$Z_\infty$ and $Z_\infty^2$ on $\sigma=1$. Over $t\in[\Gamma,2\Gamma]$:
+% Logged correction 64 (CORRECTIONS-vs-v3.md): v3 used a mean value theorem with an unspecified constant and concluded that the
+% bad set is small "once X_0 is large"; every constant below is explicit, so the lemma holds for every admissible X_0.
+Put $\Gamma:=\Gamma_k$. Both parts use the mean value theorem of Montgomery and Vaughan. Let $\mu_r$ be distinct reals,
+$\delta_r:=\min_{r'\ne r}|\mu_r-\mu_{r'}|$, and $b_r$ coefficients with $\sum_r|b_r|<\infty$ and $\sum_r|b_r|^2/\delta_r<\infty$. Then, for
+all $T_0\in\R$ and $T>0$,
+\begin{equation}\label{eq:MV}
+  \Bigl|\int_{T_0}^{T_0+T}\Bigl|\sum_rb_re^{i\mu_rt}\Bigr|^2dt-T\sum_r|b_r|^2\Bigr|\le3\pi\sum_r\frac{|b_r|^2}{\delta_r}.
+\end{equation}
+For finite sums, expanding the square leaves the difference of two sums $\sum_{r\ne r'}c_r\bar c_{r'}/(i(\mu_r-\mu_{r'}))$ with
+$|c_r|=|b_r|$, and each is at most $\frac{3\pi}2\sum_r|b_r|^2/\delta_r$ by the weighted Hilbert inequality of
+\cite{MontgomeryVaughan1974}. Infinite sums follow by truncation, which does not decrease the $\delta_r$.
+
+\emph{(i)} Apply \eqref{eq:MV} with $\mu_n=-\log n$, $n\in\mathcal D$, for which $\delta_n\ge\log(1+1/n)\ge1/(2n)$, to $Z_\infty(1+it)$
+and to $Z_\infty(1+it)^2=\sum_{n\in\mathcal D}\tau(n)n^{-1-it}$. Over $t\in[\Gamma,2\Gamma]$,
 \[
 \begin{gathered}
-  \E|Z_\infty(1+it)|^2=\prod_{p<X_0}(1-p^{-2})^{-1}+O(\log X_0/\Gamma)\in[1,\zeta(2)],\\
-  \E|Z_\infty|^4\le\sum_{n\in\mathcal D}\tau(n)^2n^{-2}+o(1)\le\frac{\zeta(2)^4}{\zeta(4)}+o(1)\le6.8.
+  \Bigl|\E|Z_\infty(1+it)|^2-\prod_{p<X_0}(1-p^{-2})^{-1}\Bigr|\le\frac{6\pi Z_\infty(1)}\Gamma,\\
+  \E|Z_\infty|^4\le\sum_{n\in\mathcal D}\frac{\tau(n)^2}{n^2}+\frac{6\pi}\Gamma\sum_{n\in\mathcal D}\frac{\tau(n)^2}n
+  \le\frac{\zeta(2)^4}{\zeta(4)}+\frac{6\pi Z_\infty(1)^4}\Gamma\le6.8.
 \end{gathered}
 \]
-The Paley--Zygmund inequality gives $|Z_\infty(1+it)|\ge2^{-1/2}$ on a set of $t$ of density $\ge\frac14/6.8>0.036$, independently of
-$X_0$. Lemma~\ref{lem:ZB} moves this by at most $\exp(-X_0^2/4)$.
+Here $\sum_{n\in\mathcal D}\tau(n)^2/n=\prod_{p<X_0}(1+p^{-1})(1-p^{-1})^{-3}\le Z_\infty(1)^4$, $Z_\infty(1)\le1.01e^{\gamma}\Lambda$ by
+Mertens' theorem, $\zeta(2)^4/\zeta(4)=5\pi^4/72<6.77$, and $\Gamma\ge e^{X_0^2/3}$ by \eqref{eq:Gammalow} below; so the error terms are
+at most $200\Lambda^4e^{-X_0^2/3}$, and $\E|Z_\infty(1+it)|^2\in[1,\zeta(2)]$. The Paley--Zygmund inequality gives
+$|Z_\infty(1+it)|\ge2^{-1/2}$ on a set of $t$ of density $\ge\frac14/6.8>0.036$, independently of $X_0$. Lemma~\ref{lem:ZB} moves this by
+at most $\exp(-X_0^2/4)$.
 
-\emph{(ii)} We have
-\[
-  \widehat D_{<x_k}=\sum_{n\in\NN\setminus(\mathcal D\cup\Abs),\ \Xm\le n<x_k}n^{-s}-\int_{X_0}^{x_k}x^{-s}(1-\rhodet-\rho_{\Abs}+R')\,dx.
-\]
+\emph{(ii)} Write $f:=\widehat D_{<x_k}$ and $V:=\log x_k\ge X_0^2$, and work on $\Good(<x_k)$, where \eqref{eq:La} holds below $x_k$.
+Since $\kappa_0\ge X_0^{-1}$,
+\begin{equation}\label{eq:Gammalow}
+  \Gamma\ge\frac{x_k^{1-\theta}}{2X_0V^3},\qquad 1-\theta\ge\tfrac12+10^{-4}.
+\end{equation}
+Let $Q:=[\frac34,\frac54]\times[\Gamma-\frac14,2\Gamma+\frac14]$ in the coordinates $(\sigma,t)$, and
+$\|F\|:=(\Gamma^{-1}\iint_Q|F|^2\,d\sigma\,dt)^{1/2}$. As the area of $Q$ is at most $\Gamma$, $\|F\|\le\sup_Q|F|$.
 \begin{itemize}
-\item The $R'$ and $1$ parts are $O(x_k^{1-\sigma}/\Gamma)+O(\sum_{j<k}|\widehat R_j|)$.
-\item The $\rhodet$ part is a truncated $\sum_{d\in\mathcal D}d^{-s}W$, and it is $\le6Z_\infty(\tfrac34)/(\kappa\Gamma)+O(1/\Gamma)\le\exp(-X_0^2/4)$
-pointwise on $\sigma\ge\tfrac34$.
-\item The $\rho_{\Abs}$ part is Lemma~\ref{lem:ZA}(b).
-\item For the Dirichlet sum, on each dyadic block $(N,2N]$ use the mean value theorem for generalised Dirichlet polynomials
-\cite[Thm.~2.1]{Broucke2024} (from \cite{BrouckeDebruyne2023}):
+\item \emph{Reduction.} The function $f$ is entire. If $|s-(1+i\gamma)|\le\frac18$, the disc $|z-s|\le\frac18$ lies in
+$Q_\gamma:=[\frac34,\frac54]\times[\gamma-\frac14,\gamma+\frac14]$, so by subharmonicity $|f(s)|^2\le(64/\pi)\iint_{Q_\gamma}|f|^2$. If (ii)
+fails at $\gamma$, then $\iint_{Q_\gamma}|f|^2>\pi/16384$. Each point of $Q$ lies in $Q_\gamma$ for a set of $\gamma$ of measure
+$\le\frac12$, so the $\gamma\in[\Gamma,2\Gamma]$ at which (ii) fails have measure $\le(8192/\pi)\,\Gamma\|f\|^2$. We show
+$\|f\|\le12X_0^{-3/16}$; then this measure is $\le3.8\cdot10^5X_0^{-3/8}\,\Gamma<0.018\,\Gamma$.
+\item \emph{Decomposition.} With $\mathcal B:=\NN\setminus(\mathcal D\cup\Abs)$, counted with multiplicity,
 \[
-  \int_\Gamma^{2\Gamma}\Bigl|\sum_{n\in(N,2N]}n^{-\sigma-it}\Bigr|^2dt\ll(\Gamma+N)\,K(N)\,N^{1-2\sigma},
+  f=\sum_{n\in\mathcal B,\ \Xm\le n<x_k}n^{-s}-\int_{X_0}^{x_k}x^{-s}(1-\rhodet-\bar\rho_{\Abs}+R')\,dx,
 \]
-where $K(N)$ is the largest number of elements of $\NN\setminus(\mathcal D\cup\Abs)$ in a window of length $2$ at scale $\le2N$. Those
-elements are counted by $D+\int T'_{\mathrm{cont}}$, so \eqref{eq:lag} and \eqref{eq:La} below $x_k$ give $K(N)\le2(2N)^{\eta}+5$.
-\item Sum the blocks by Cauchy--Schwarz and average over $\sigma\in[\tfrac34,\tfrac54]$. The mean of $|\widehat D_{<x_k}|^2$ over the
-strip is $\ll K(X_0)X_0^{-1/2}+x_k^{\theta+\eta-1/2}\log^3x_k+x_k^{\theta-1/2-o(1)}$.
-\item By subharmonicity, $|f(s)|^2\le(64/\pi)\iint_{|z-s|\le1/8}|f|^2$, so the bad set has density $<0.018$ once $X_0$ is large.
+by \eqref{eq:target}, and by Minkowski's inequality it suffices to bound the norms of the five pieces.
+\item \emph{The $1$ and $\rhodet$ parts.} On $Q$, $|\int_{X_0}^{x_k}x^{-s}dx|\le2x_k^{1/4}/|t|$. The $\rhodet$ part is a truncated
+$\sum_{d\in\mathcal D}d^{-s}W(s)$, with $W$ as in \eqref{eq:ZBformula}. Each rigid $d$ with $[d/(1+\kappa),d]\subset[X_0,x_k]$ contributes
+$d^{-s}W(s)$, and $|W(s)|\le3/(\kappa|t|)$. The at most $\kappa X_0+1$ rigid $d\in[X_0,(1+\kappa)X_0)$, and the at most $\kappa x_k+1$
+rigid $d\in(x_k,(1+\kappa)x_k]$, have truncated ramps, each of modulus $\le2.01a^{-\sigma}/(\kappa|t|)$, with $a=X_0$, respectively
+$a=x_k/(1+\kappa)$. So this part is at most $(3Z_\infty(\frac34)/\kappa+3X_0^{1/4}+3x_k^{1/4})/|t|$, where
+$\log Z_\infty(\frac34)\le2.47\sum_{2\le n<X_0}n^{-3/4}\le10X_0^{1/4}$ and $1/\kappa\le X_0$. As $|t|\ge0.99\Gamma$, the two parts together
+are at most $6x_k^{1/4}/\Gamma\le12X_0V^3x_k^{-1/4}$ on $Q$, by \eqref{eq:Gammalow}.
+\item \emph{The $R'$ part.} On $[X_0,x_k]$ we have $R'=\sum_{j<k}R'_j$, and
+$\int_{X_0}^{x_k}x^{-s}R'_j\,dx=\widehat R_j(s)-\int_{x_k}^\infty x^{-s}R'_j\,dx$. On $Q$, $\operatorname{Re}w,\operatorname{Re}w'\ge\frac14$ in
+\eqref{eq:Rhat}, so $|\Phi|\le1$ there; and $|s|\le1.0001\min(|w|,|w'|)$, since $\gamma_j\le x_j\le V$ is negligible against $\Gamma$. So
+$|\widehat R_j(s)|\le2.01x_j^{-1/4}$. Beyond $x_k$ we have $\phi=1$ in $R_j$, so $|R'_j(x)|\le2(\gamma_j+1)x^{\theta-1}$, and the tail
+is at most $8(\gamma_j+1)x_k^{-1/4}$. With $\sum_{j<k}(\gamma_j+1)\le12V$, the $R'$ part is at most
+$2.02x_1^{-1/4}+100Vx_k^{-1/4}\le2.02e^{-X_0^2/4}+100Vx_k^{-1/4}$ on $Q$.
+\item \emph{The $\bar\rho_{\Abs}$ part.} By Plancherel in $\log x$, for each $\sigma$,
+$\int_\R|\int_{X_0}^{x_k}x^{-\sigma-it}\bar\rho_{\Abs}(x)\,dx|^2dt=2\pi\int_{X_0}^{x_k}x^{1-2\sigma}\bar\rho_{\Abs}(x)^2\,dx$. Here
+$\bar\rho_{\Abs}\le0.1/\log x\le0.1/\Lambda$ by the cap in \eqref{eq:target}, and $x^{1-2\sigma}\le x^{-1/2}$ on $Q$. So the norm of this part
+is at most $(0.02\pi x_k^{1/2}/(\Lambda^2\Gamma))^{1/2}\le(X_0V^3x_k^{\theta-1/2})^{1/2}\le(X_0V^3)^{1/2}x_k^{-5\cdot10^{-5}}$.
+\item \emph{The Dirichlet sum} $S:=\sum_{n\in\mathcal B,\ \Xm\le n<x_k}n^{-s}$. For $\Xm\le a\le b\le x_k$, the elements of $\mathcal B$ in
+$[a,b]$ number $D(b)-D(a-)+\int_{[a,b]\cap[X_0,\infty)}T'_{\mathrm{cont}}$, where $T'_{\mathrm{cont}}\le1+|R'|\le1.01$ and $|D|\le x^{\eta}$.
+So a window of length $2$ in $[\Xm,2N+2]$ holds at most $K(N):=2(2N)^{\eta}+5$ of them, and $(N,2N]$ holds at most $1.02N$. Split $S$
+into blocks $S_N$ over $n\in(N,2N]$, $N=2^{j-1}\Xm$ ($j\ge0$). List $\mathcal B\cap(N,2N]$ in increasing order, and split it into
+$\lfloor K(N)\rfloor$ classes by the index modulo $\lfloor K(N)\rfloor$. Consecutive elements $n<n'$ of a class are $\lfloor K(N)\rfloor$ places
+apart, so $n'>n+2$ and $\log n'-\log n\ge\log(1+1/N)\ge1/(N+1)$. By \eqref{eq:MV} for each class, and Cauchy--Schwarz over the classes,
+\[
+  \int_{\Gamma-1/4}^{2\Gamma+1/4}|S_N(\sigma+it)|^2\,dt\le K(N)\bigl(\Gamma+\tfrac12+3\pi(N+1)\bigr)\cdot1.02N^{1-2\sigma}.
+\]
+For $\sigma\ge\frac34$, $N\ge\Xm/2$ and $\eta\le\frac18$ this gives $\|S_N\|^2\le1.2N^{\eta-1/2}(1+10N/\Gamma)$. Summing $\|S_N\|$ over the
+blocks gives two geometric series, with ratios $\le2^{-3/16}$ and $\ge2^{1/4}$; so, by \eqref{eq:Gammalow},
+\[
+  \|S\|\le11X_0^{-3/16}+22\,x_k^{\eta/2+1/4}\,\Gamma^{-1/2}\le11X_0^{-3/16}+32(X_0V^3)^{1/2}x_k^{(\theta+\eta)/2-1/4}.
+\]
+Here $(\theta+\eta)/2-\frac14\le-2.5\cdot10^{-5}$, since $\eta\le(\frac12-\theta)/2$ and $\theta\le\frac12-10^{-4}$.
+\item \emph{Conclusion.} Since $V\ge X_0^2$ and $X_0\ge e^{10^8}$, each of the other four bounds is below $0.1X_0^{-3/16}$. So
+$\|f\|\le12X_0^{-3/16}$.
 \end{itemize}
 Intersecting with (i) leaves a set of density $\ge0.018$.
 \end{proof}
+
+% Logged correction 64: the mean value theorem with an unspecified constant is now only a remark; the proof does not use it.
+\begin{remark}
+The mean value theorem for generalised Dirichlet polynomials \cite[Thm.~2.1]{Broucke2024} (from \cite{BrouckeDebruyne2023}) gives the
+bound $\int_\Gamma^{2\Gamma}|S_N|^2\ll(\Gamma+N)K(N)N^{1-2\sigma}$ directly, with an implied constant that is not explicit. The split into
+well-spaced classes above makes the constant explicit, so that (ii) holds for every admissible $X_0$.
+\end{remark}
 
 \begin{theorem}[Zeros]\label{thm:zeros}
 % v3: Theorem 2.4

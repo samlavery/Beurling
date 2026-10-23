@@ -111,8 +111,11 @@ the proof.
 \subsection{Logical structure}\label{sec:logic}
 The table lists the main results with their inputs. An input marked $\downarrow$ is used only at a strictly earlier time or a
 strictly smaller height; every other input is used at the same time. The same-time dependencies form an acyclic graph; this was
-checked mechanically on the full dependency graph (79 nodes, 195 edges, 29 of them $\downarrow$; Appendix~\ref{app:cert-dep}).
+checked mechanically on the full dependency graph (78 nodes, 195 edges, 28 of them $\downarrow$; Appendix~\ref{app:cert-dep}).
 % Logged correction 61: Lemma threshold-mass also reads the lag and Lemma P (two strictly-earlier edges added).
+% Logged correction 64: Lemma goodheights no longer uses Broucke--Debruyne or Lemma ZA (two edges and one node removed).
+% Logged correction 66: edges (H_BS) -> Lemma T1, (H_BS) -> lag and Prop g1 -> Lemma P added; Lemma P -> Lemma cm is strictly earlier.
+% Logged correction 66: Lemma P no longer uses the local count (the aside in its step (iv) is deleted); one edge removed.
 The table is an abridgement of that graph. The
 time-ordering of the $\downarrow$ edges is Section~\ref{sec:noncirc}.
 \begin{center}\footnotesize
@@ -125,12 +128,12 @@ Lemma~\ref{lem:adapted} (adaptedness) & Lemma~\ref{lem:C2} (causality), Section~
 \eqref{eq:T1} (target error) & Rankin; Lemma~\ref{lem:lemmaP}$\downarrow$ & Theorem~\ref{thm:A}(i), Section~\ref{sec:noise}, Lemma~\ref{lem:ZA} \\
 Lemmas~\ref{lem:count}--\ref{lem:excess} & the greedy rule & Theorem~\ref{thm:queue}, Corollary~\ref{cor:localcount}, \eqref{eq:La} \\
 Lemmas~\ref{lem:ZB}, \ref{lem:ZBlow} & \eqref{eq:rhodet}; partial summation & Section~\ref{sec:zeros}; Theorem~\ref{thm:lp} \\
-Lemma~\ref{lem:ZA} & Lemma~\ref{lem:lemmaP}$\downarrow$, Theorem~\ref{thm:caplw}(b)$\downarrow$ & Lemma~\ref{lem:goodheights}, Theorem~\ref{thm:zeros} \\
-Lemmas~\ref{lem:designedzero}--\ref{lem:goodheights} & Lemma~\ref{lem:ZB}; mean values; \eqref{eq:La}$\downarrow$ on $[1,x_k)$, Lemma~\ref{lem:ZA}$\downarrow$ & Theorem~\ref{thm:zeros}, choice of $\gamma_k$ \\
+Lemma~\ref{lem:ZA} & Lemma~\ref{lem:lemmaP}$\downarrow$, Theorem~\ref{thm:caplw}(b)$\downarrow$ & Theorem~\ref{thm:zeros} \\
+Lemmas~\ref{lem:designedzero}--\ref{lem:goodheights} & Lemma~\ref{lem:ZB}; Montgomery--Vaughan mean values; \eqref{eq:La}$\downarrow$ on $[1,x_k)$ & Theorem~\ref{thm:zeros}, choice of $\gamma_k$ \\
 \eqref{eq:La} & \eqref{eq:lag}, Theorem~\ref{thm:queue}, Lemma~\ref{lem:budget} & Theorem~\ref{thm:A}, Theorem~\ref{thm:zeros} \\
 Theorem~\ref{thm:zeros} & \eqref{eq:La}, Lemmas~\ref{lem:ZB}, \ref{lem:ZA}, \ref{lem:designedzero}--\ref{lem:goodheights}; Rouch\'e & Theorem~\ref{thm:A}(ii) \\
 Lemmas~\ref{lem:blin}, \ref{lem:margin} & \eqref{eq:huxley}; Lemma~\ref{lem:cm}$\downarrow$, \eqref{eq:T1}$\downarrow$, \eqref{eq:La}$\downarrow$ on cofactors & Proposition~\ref{prop:g1} \\
-Lemma~\ref{lem:cm} (Chebyshev--Mertens) & \eqref{eq:HBS} from Theorem~\ref{thm:queue}$\downarrow$ & Section~\ref{sec:noise}, \ref{eq:sF3p}, \ref{eq:sF4} \\
+Lemma~\ref{lem:cm} (Chebyshev--Mertens) & \eqref{eq:HBS} from Corollary~\ref{cor:lag}, Lemma~\ref{lem:T1} and Theorem~\ref{thm:queue}$\downarrow$ & Section~\ref{sec:noise}, \ref{eq:sF3p}, \ref{eq:sF4} \\
 Theorem~\ref{thm:bs}, Lemma~\ref{lem:bs-profile} & Lemmas~\ref{lem:cm}, \ref{lem:smooth-v}; certificate & Corollary~\ref{cor:saias}, Lemma~\ref{lem:si} \\
 Theorems~\ref{thm:kr}, \ref{thm:kr-random}, Corollary~\ref{cor:kr-weights}, Proposition~\ref{prop:true-kernels} & Lemmas~\ref{lem:lemmaM}, \ref{lem:tau-near}, Corollary~\ref{cor:saias}, \eqref{eq:RH}; for the absorbed count: Corollary~\ref{cor:lag}, Lemma~\ref{lem:lemmaP}, Proposition~\ref{prop:ecl} & Proposition~\ref{prop:br}, Lemma~\ref{lem:xb} \\
 Lemma~\ref{lem:threshold-mass} (threshold mass) & Lemma~\ref{lem:cm}; Corollaries~\ref{cor:localcount}$\downarrow$, \ref{cor:lag}$\downarrow$, Lemma~\ref{lem:lemmaP}$\downarrow$ & Proposition~\ref{prop:g1} \\
@@ -140,13 +143,13 @@ Theorem~\ref{thm:lp} (local PNT) & Lemma~\ref{lem:ZBlow}, \eqref{eq:Rhatbound}, 
 Lemmas~\ref{lem:xb}, \ref{lem:si} (jump at $X_0$) & Theorem~\ref{thm:kr-random}, Corollary~\ref{cor:kr-weights}, Propositions~\ref{prop:true-kernels}, \ref{prop:br}, Lemma~\ref{lem:tau-near}, Theorem~\ref{thm:lp}, Lemma~\ref{lem:bs-profile}; Corollary~\ref{cor:localcount}$\downarrow$, Lemma~\ref{lem:lemmaP}$\downarrow$ & Propositions~\ref{prop:g1}, \ref{prop:pointwise}, Theorem~\ref{thm:g2} \\
 Proposition~\ref{prop:g1}, Theorem~\ref{thm:g2}, Proposition~\ref{prop:pointwise} & Lemma~\ref{lem:margin}, Proposition~\ref{prop:br}, Theorem~\ref{thm:lp}, Lemmas~\ref{lem:xb}, \ref{lem:noise}, \eqref{eq:osc} & Corollary~\ref{cor:r1} \\
 Corollary~\ref{cor:r1} (R1$'$, every window) & Proposition~\ref{prop:pointwise} & Theorem~\ref{thm:queue} \\
-Lemma~\ref{lem:landing}, Corollary~\ref{cor:localcount} & \ref{eq:sF1}, \ref{eq:sF2}, Freedman, Lemma~\ref{lem:count}, Theorem~\ref{thm:caplw}(c); Theorem~\ref{thm:queue}$\downarrow$ & Section~\ref{sec:noise}, Lemma~\ref{lem:lemmaP} ($\downarrow$ uses) \\
+Lemma~\ref{lem:landing}, Corollary~\ref{cor:localcount} & \ref{eq:sF1}, \ref{eq:sF2}, Freedman, Lemma~\ref{lem:count}, Theorem~\ref{thm:caplw}(c); Theorem~\ref{thm:queue}$\downarrow$ & Section~\ref{sec:noise} ($\downarrow$ uses) \\
 Theorem~\ref{thm:queue} (queue bound) & Corollary~\ref{cor:r1}, \ref{eq:sF1}, \ref{eq:sF2}, Lemmas~\ref{lem:lindley}, \ref{lem:excess}, Theorem~\ref{thm:caplw}(b),(c), Freedman; Proposition~\ref{prop:ecl}$\downarrow$, Corollary~\ref{cor:increment}$\downarrow$, \ref{eq:sF3p}$\downarrow$, Theorem~\ref{thm:queue}$\downarrow$ & \eqref{eq:La}, Lemma~\ref{lem:budget} \\
 Definition~\ref{def:good}, Lemma~\ref{lem:budget} & Theorem~\ref{thm:queue}, Proposition~\ref{prop:ecl}, Lemmas~\ref{lem:landing}, \ref{lem:noise} & Theorem~\ref{thm:A} \\
 Proposition~\ref{prop:ecl}, Corollary~\ref{cor:increment} & Theorem~\ref{thm:R}, Lemma~\ref{lem:heavy}, Theorem~\ref{thm:caplw} & Theorem~\ref{thm:queue}, Lemmas~\ref{lem:noise}, \ref{lem:lemmaP}, Proposition~\ref{prop:true-kernels} \\
 Theorem~\ref{thm:caplw}(a) (capacity) & combinatorial covering lemmas, Rankin, Rosser--Schoenfeld & Proposition~\ref{prop:ecl} \\
 Theorem~\ref{thm:caplw}(b),(c) & none (definitions of the parameters) & \ref{eq:sF3p}, Lemmas~\ref{lem:landing}, \ref{lem:lemmaP}, \ref{lem:ZA}, Theorem~\ref{thm:queue} \\
-Lemmas~\ref{lem:lemmaP}, \ref{lem:rhoA} (absorption) & Lemma~\ref{lem:cm}, Theorem~\ref{thm:caplw}(b), Corollary~\ref{cor:increment}; Proposition~\ref{prop:ecl}$\downarrow$, Corollary~\ref{cor:localcount}$\downarrow$ & \eqref{eq:target}, \eqref{eq:T1}, Lemma~\ref{lem:ZA}, \eqref{eq:osc}, Proposition~\ref{prop:true-kernels} \\
+Lemmas~\ref{lem:lemmaP}, \ref{lem:rhoA} (absorption) & Theorem~\ref{thm:caplw}(b), Corollary~\ref{cor:increment}; Lemma~\ref{lem:cm}$\downarrow$, Proposition~\ref{prop:ecl}$\downarrow$ & \eqref{eq:target}, \eqref{eq:T1}, Lemma~\ref{lem:ZA}, \eqref{eq:osc}, Proposition~\ref{prop:true-kernels} \\
 Theorem~\ref{thm:R} (Appendix~\ref{app:rankfull}) & \ref{eq:sF1}--\ref{eq:sF4} & Proposition~\ref{prop:ecl} \\ \hline
 \end{tabular}
 \end{center}
@@ -214,8 +217,7 @@ bounds at slots $\le z+H(z)$ and the landing event at height $z$.
 % R4 N13: list matched to the citation sites (Remark rem:localcount-uses).
 \item Its uses (Remark~\ref{rem:localcount-uses}) are: step (ii) of Lemma~\ref{lem:threshold-mass} and Lemma~\ref{lem:tau-near},
 at heights $\le\sqrt x$; Lemma~\ref{lem:short-recip}, at heights $\le y/2$; Step~1 of the proof of Proposition~\ref{prop:g1}(B),
-for a window that ends $\delta x\gg H$ before $x$; and optionally step (iv) of Lemma~\ref{lem:lemmaP}, at heights
-$u/d\le u^{1-\theta/2}$. Each is read at a strictly earlier time than its consumer.
+for a window that ends $\delta x\gg H$ before $x$. Each is read at a strictly earlier time than its consumer.
 \item The per-prime increment in Theorem~\ref{thm:queue} uses the cluster event (Corollary~\ref{cor:increment}), never the local
 count, because a local count at height $x/q$ would force $B(x)\ge(3/c')L^2B(x/q)$.
 \end{itemize}
@@ -224,7 +226,7 @@ count, because a local count at height $x/q$ would force $B(x)\ge(3/c')L^2B(x/q)
 \begin{itemize}
 \item Membership in $\Abs$ is decided at the latest prime $r<y(n)\ll n$, and $\rho_{\Abs}$ at $u$ reads only data decided before
 $u-H$ (Lemma~\ref{lem:adapted}).
-\item Lemma~\ref{lem:lemmaP} at $u$ reads the cluster event and local counts at heights $u/d<u$: an induction on height.
+\item Lemma~\ref{lem:lemmaP} at $u$ reads the cluster event at heights $u/d<u$: an induction on height.
 \item $\gamma_k$ is chosen from $Z_\infty$ (deterministic) and the system on $[1,x_k)$ (Lemma~\ref{lem:goodheights}), and
 $R_k\equiv0$ on $[1,x_k+2H(x_k)]$. So $T$ is adapted.
 \item \eqref{eq:La} and Section~\ref{sec:zeros} are pathwise consequences on $\mathcal G$.

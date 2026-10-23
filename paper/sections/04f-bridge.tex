@@ -229,10 +229,12 @@ $\rhosh(x)-\rhosh(y)=\sum_n[c_n(x)T'(x/n)-c_n(y)T'(y/n)]/n$.
   $\gamma_*\le\Gamma(x)$ and $\log x\ge X_0^{1/100}$), while $6H(x)x^{-1/3}\le x^{-0.3}$ by Theorem~\ref{thm:caplw}(c), so
   $2\delta\ge6H(x)x^{-1/3}$.
 \item \emph{The jump of $T'$ at $X_0$:} only $n\in[y/X_0,x/X_0]$ see it. Put $N_*:=x/X_0$, $I:=[N_*(1-2\delta),N_*]$ and
-  $L_*:=\log(N_*/2)$. By the lag bound, $|N-T|\le H(N_*)$ at both ends of $I$, and under the target \eqref{eq:target},
+  $L_I:=\log(N_*/2)$. By the lag bound,
+% Logged correction 66: renamed from L_*, which clashes with L_* = 10^7 of eq:absorbed.
+$|N-T|\le H(N_*)$ at both ends of $I$, and under the target \eqref{eq:target},
   $T(I)\le2|I|+2+\#\Abs(I)$. Cover $I$ by $\lceil|I|/h(N_*(1-2\delta))\rceil$ consecutive windows $[u,u+h(u)]$,
   $h(u)=u^{\theta/2}$; by Lemma~\ref{lem:lemmaP} each holds at most $h(u)L_u^{-4}$ absorbed elements, so
-  $\#\Abs(I)\le(2.01\,\delta N_*+N_*^{\theta/2})L_*^{-4}$. Hence $\#(\NN\cap I)\le4.01\,\delta N_*+2H(N_*)+2+N_*^{\theta/2}$, and
+  $\#\Abs(I)\le(2.01\,\delta N_*+N_*^{\theta/2})L_I^{-4}$. Hence $\#(\NN\cap I)\le4.01\,\delta N_*+2H(N_*)+2+N_*^{\theta/2}$, and
   this part is at most $\jz\sum_{n\in\NN\cap I}1/n\le\jz\big(4.1\,\delta+3H(N_*)/N_*+2N_*^{\theta/2-1}\big)=o(1/\log x)$.
 % Logged correction 14 (CORRECTIONS-vs-v3.md): v3 omits #A(I) here (same omission as correction 4); with T(I) <= 2|I|+2+#A(I)
 % the constant 2.1 delta becomes 4.1 delta (noted under #14).

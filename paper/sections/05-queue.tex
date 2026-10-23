@@ -311,8 +311,7 @@ therefore used only by steps that run after $z+7H(z)$, and always at a strictly 
 \item Lemma~\ref{lem:threshold-mass}, step (ii), through part (i) at a dyadic scale $P_1\le\sqrt x$;
 \item Lemma~\ref{lem:tau-near}, through part (ii) at $P'=0.51P$ (or at $X_0$), at heights $p_0\le\sqrt x$;
 \item Lemma~\ref{lem:short-recip}, through part (ii) at $P=M/2$, at heights $M\le y/2$;
-\item Proposition~\ref{prop:g1}, step 1, for a window that ends $\delta x\gg H$ before $x$;
-\item optionally, step (iv) of Lemma~\ref{lem:lemmaP}, through part (ii), at heights $u/d\le u^{1-\theta/2}$.
+\item Proposition~\ref{prop:g1}, step 1, for a window that ends $\delta x\gg H$ before $x$.
 \end{itemize}
 % List updated to the current citation sites of the corollary (v3's list predates the X_0-band and LP rewrites).
 It is \emph{not} used for the per-prime increment bound in Theorem~\ref{thm:queue}. A local count there would force
@@ -1239,7 +1238,13 @@ Let $u\ge X_0$ and $L:=\log u$, and put $y:=\sup_{v\in[u,2u]}y(v)$ and $C_d:=M_1
 \end{equation}
 Then $\#(\Abs\cap[u,u+h])\le h\,L^{-4}$ on $\Good(<t)$ for every $t\ge t_u:=9u/L^{11}+H(u)$. In particular this holds on
 $\Good(<t)$ at heights up to $t+1.01H(t)$, since $9(t+1.01H)/L^{11}+H<t$. Condition \eqref{eq:twelvetwo} holds at every $u$ at
-which $\Abs$ meets $[u,2u]$, by Theorem~\ref{thm:caplw}(b).
+which $\Abs$ meets $[u,2u]$, by Theorem~\ref{thm:caplw}(b). That theorem is proved at dyadic $z$ with $y(z)$; at a
+non-dyadic $u$, with $y$ the supremum over the two scales meeting $[u,2u]$, the quantities in \eqref{eq:twelvetwo} differ from
+their values at the dyadic scale of $u$ by relative factors $1+O(10^{-5})$ (Lemma~\ref{lem:raisedy} for $y$ on the ramp, and
+Theorem~\ref{thm:caplw}(c) for $M_1$, $H$ and, through $L_0$, for $y$ in the standard regime), and $L$ by at most $\log2$. Step 5 of the proof of Theorem~\ref{thm:caplw} has
+far more room than this: on the raised range the ratio of its two sides is at least $3.5$ (at $t=1$ on the ramp, and
+larger elsewhere), and in the standard regime the margin is larger still.
+% Logged correction 66: caplw(b) is proved at dyadic z; the passage to non-dyadic u and two-scale y is made explicit.
 \end{lemma}
 
 \begin{proof}
@@ -1252,26 +1257,59 @@ $d\in(h,2yh]$ is a $2y$-smooth element of $\NN$, and $n=d\cdot m$ with $m\in\NN$
 (iii) Hence $\#(\Abs\cap[u,u+h])\le\sum_{d\in\mathcal G_{2y}\cap(h,2yh]}N(I_d)$, where $\mathcal G_{2y}$ is the set of
 $2y$-smooth elements of $\NN$ and $I_d:=[u/d,(u+h)/d]$ has length less than $1$.
 
-(iv) \emph{Window count.} $I_d$ lies at height $u/d\le u^{1-\theta_b}$, and it is covered by at most $L^6/4+1$ grid windows
-there. On $\Good(<u)\subset\qEcl^{(u)}$ each of them holds at most $M_1(u/d)\le M_1(u)$ elements, so $N(I_d)\le C_d$.
-(Alternatively, use Corollary~\ref{cor:localcount} at height $u/d$.)
+(iv) \emph{Window count.} $I_d$ lies at height $u/d\le u^{1-\theta_b}\le2u/L^{11}$, and it is covered by at most $L^6/4+1$
+grid windows there. Let $x'$ be the dyadic scale of $u$. The event E1 at scale $x'$, namely $\qEcl^{(x')}$, has time
+$8x'/L_{x'}^{11}+H(x')\le8.0001u/L^{11}+H(u)<t_u$, so $\Good(<t_u)\subset\qEcl^{(x')}$; and it covers every height up to
+$4x'/L_{x'}^{11}\ge2u/L^{11}$, hence every $u/d$. On it each grid window at height $u/d$ holds at most $M_1(u/d)\le M_1(u)$
+elements, so $N(I_d)\le C_d$. Lemma~\ref{lem:cm} at heights $\le2y$, used in (v), also holds on $\Good(<t_u)$, as
+$2y<t_u$. So the bound holds on $\Good(<t)$ for every $t\ge t_u$.
+% Logged correction 66: v3 argues on Good(<u) only; the statement and its uses need Good(<t_u).
+% v3's aside "(Alternatively, use Corollary 4.2 at height u/d.)" is deleted: it was never checked against (12.2).
 
-(v) \emph{Rankin's bound for the realised system.} The primes below $2y$ are the rational primes below $X_0$, together with
-jittered primes, which satisfy $\pi_{\NN}(s)\le2s/\log s$ (Lemma~\ref{lem:cm}(i); the local prime number theorem itself is not
-needed below $X_{\mathrm{LP}}$, \eqref{eq:XLP}). For $Y\ge h$ put $u_*:=\log Y/\log(2y)$ and $\sigma:=1-\log u_*/\log(2y)$, and suppose $u_*\ge2\Lambda$ and
-$\log\log2y\le1.79u_*$. (In use $u_*\ge u_0$, and
-$u_0\ge2\Lambda$ wherever $\Abs\ne\emptyset$: by Step 5 of the proof of Theorem~\ref{thm:caplw}, $u_0\ge\theta_b\Lambda e^s/(3.01\gamma)\ge5\Lambda$
-on the raised range, and $u_0\ge e^\ell/(97\ell^2)$ beyond it. The same step gives $\log2y\le\max(22.6\Lambda,12.1\ell^2)$,
-so $\log\log2y\le1.79u_*$ as well.) Rankin's bound and partial summation as in
-Lemma~\ref{lem:rowweights}(c), with $2s/\log s$ in place of $1.26s/\log s$, give
+(v) \emph{Rankin's bound for the realised system.} Let $Y\ge2y$, and put $u_*:=\log Y/\log(2y)$ and
+$\eta:=\log u_*/\log(2y)$. Suppose
 \[
-\Psi_{\NN}(Y,2y)/Y\le\exp\big(-u_*\log u_*+2.3u_*/\log u_*+\log\log2y\big)\le\exp(-0.9u_*\log u_*);
+u_*\ge2\Lambda,\qquad\log\log2y\le1.79u_*,\qquad\eta\le0.31.\tag{$*$}
 \]
-here $2.3$ bounds $2(1+2/\log u_*)$ plus the absolute constants, since $\log u_*\ge19$.
-For $Y\ge h$ we have $u_*\ge u_0$.
+Then
+\[
+\Psi_{\NN}(Y,2y)/Y\le\exp\big(-u_*\log u_*+2.3u_*/\log u_*+\log\log2y\big)\le\exp(-0.9u_*\log u_*).
+\]
+% Logged correction 65: v3 states this for every Y >= h; for large Y the Rankin exponent 1-eta goes to 0 or below
+% (with Y = z^U, z = 2y, U = z^2 the claim would give Psi/Y <= Y^{-1.8} < 1/Y). It now carries (*), and the proof is explicit.
+\begin{itemize}
+\item Rankin's bound with $\sigma:=1-\eta\ge0.69$ gives $\Psi_{\NN}(Y,2y)\le Y^{\sigma}\prod_p(1-p^{-\sigma})^{-1}$, over the
+  realised primes $p<2y$, and $Y^{\sigma}=Y\exp(-u_*\log u_*)$.
+\item The realised primes satisfy $\pi(s)\le2s/\log s$ for all $s\ge2$. Below $\Xm$ they are the rational primes, with
+  $\pi(s)\le1.26s/\log s$ \cite[(3.6)]{RosserSchoenfeld1962}. Above, $\pi(s)\le\vartheta(s)/(0.9\log s)+\pi(s^{0.9})\le1.578s/\log s+2.05s^{0.9}\le2s/\log s$, since
+  $\vartheta(t)\le\psi(t)\le1.42t$ and $\pi(t)\le\psi(t)/\log2\le2.05t$ for all $t$ (Lemma~\ref{lem:cm}(i)), and $s\ge\Xm$.
+\item The logarithm of the product is $\sum_pp^{-\sigma}+R_{\NN}(\sigma)$, where $R_{\NN}(\sigma)\le R(0.69)+0.01\le0.78$: the
+  rational primes contribute at most $R(\sigma)\le R(0.69)$ (Lemma~\ref{lem:rowweights}, proof of (c)), and the jittered
+  primes, which are at least $\Xm$, contribute at most $\sum_{p\ge\Xm}2p^{-2\sigma}\le0.01$.
+\item $\sum_{p<2y}1/p\le\log\log2y+4.1$, by Lemma~\ref{lem:cm}(iv) with $y=2$. The partial summation of
+  Lemma~\ref{lem:rowweights}(c), with $2s/\log s$ in place of $1.26s/\log s$, gives
+  \[
+  \sum_{p<2y}\frac{p^{\eta}-1}p\le2\Big(\frac{\eta}{1-\eta}+\mathrm{Ein}(\log u_*)\Big)\le1+\frac{2u_*}{\log u_*}\Big(1+\frac2{\log u_*}\Big),
+  \]
+  since $\eta\log2y=\log u_*\ge\log(2\cdot10^8)\ge19.11$.
+\item Altogether
+  \[
+  \log(\Psi/Y)\le-u_*\log u_*+\log\log2y+5.9+2.22\,u_*/\log u_*,
+  \]
+  and $5.9\le0.08u_*/\log u_*$. This is the first bound. The second needs $0.1u_*\log u_*\ge2.3u_*/\log u_*+\log\log2y$; since $0.1\log u_*-2.3/\log u_*\ge1.79$, it
+  follows from $(*)$.
+\end{itemize}
+In step (vi), $Y=2yh$, so $u_*=1+u_0$. Wherever $\Abs$ meets $[u,2u]$, $(*)$ holds there:
+\begin{itemize}
+\item $u_*\ge u_0\ge2\Lambda$, by Step 5 of the proof of Theorem~\ref{thm:caplw} ($u_0\ge\theta_b\Lambda e^s/(3.01\gamma)\ge5\Lambda$
+  on the raised range, and $u_0\ge e^\ell/(97\ell^2)$ beyond it);
+\item the same step gives $\log2y\le\max(22.6\Lambda,12.1\ell^2)$, so $\log\log2y\le1.79u_*$;
+\item $\log2y\ge\max(\Lambda-1,7.9\ell^2)\ge\ell\sqrt{7.9(\Lambda-1)}$, since $y\ge\Xm$ (as $\Abs\ne\emptyset$) and $y\ge H\ge\qHstd$;
+  and $u_*\le1+L/8\le L$. So $\eta\le\ell/\log2y\le(7.9(\Lambda-1))^{-1/2}\le10^{-4}$.
+\end{itemize}
 
-(vi) So $\#(\Abs\cap[u,u+h])\le C_d\Psi_{\NN}(2yh,2y)\le C_d\cdot2yh\cdot\exp(-0.9u_0\log u_0)\le hL^{-4}$, by
-\eqref{eq:twelvetwo}.
+(vi) So $\#(\Abs\cap[u,u+h])\le C_d\Psi_{\NN}(2yh,2y)\le C_d\cdot2yh\cdot\exp(-0.9u_0\log u_0)\le hL^{-4}$, by (v) with
+$u_*\ge u_0$ and by \eqref{eq:twelvetwo}.
 \end{proof}
 
 No Diophantine input is used: rigid runs are tamed in step (iv), where every count is moved into windows of length less
@@ -1280,7 +1318,8 @@ than $1$.
 \begin{lemma}[Consequences for $T'$]\label{lem:rhoA}
 % v3: Lemma 4.19
 \begin{enumerate}[label=\textup{(\alph*)}]
-\item $\sup\rho_{\Abs}\le L^{-4}$ at every height.
+\item On $\Good(<t)$, $\rho_{\Abs}(u)\le L^{-4}$, with $L:=\log u$, at every height $u\le t+1.01H(t)$; and $\rho_{\Abs}=0$
+  below $X_0$.
 % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #16): v3's part (b), an oscillation bound via the local count, is
 % deleted (unused, and its proof does not bound the absorbed count). Parts (c), (d) of v3 are (b), (c) here.
 \item The source perturbation $\sigma_{\Abs}:=K_{\Abs}\tilde\rho-\rho_{\Abs}$ of Section~\ref{sec:noise} satisfies
@@ -1300,11 +1339,20 @@ Part (c) is the form used where $o_u$ enters R1$'$ at the current height (see \e
 \end{lemma}
 
 \begin{proof}
-(a) is Lemma~\ref{lem:lemmaP}. (b) $K_{\Abs}$ is the part of $K_{\mathrm{pt}}$ whose landing is absorbed, that is,
-whose latest prime is less than $y(\cdot)$. So its cofactors $w$ are $y$-smooth with $w\ge y/y(y)$. With the \emph{sure} bound
-$\tilde\rho\le1.01$ (at most one prime per continuous slot), $K_{\Abs}\tilde\rho\le1.01\sum1/w$ over such $w$. This is at
-most $L^{-4}$ by Rankin's bound, with $u=L/\log2y\ge10^8$ and Lemma~\ref{lem:cm}(i) for the realised primes below $y(y)$, which
-are decided long before. Together with (a) this gives $|\sigma_{\Abs}|\le2L^{-4}$. No local count at the current height is
+(a) is Lemma~\ref{lem:lemmaP}. (b) Consider the kernel at height $v$, with $L:=\log v$. $K_{\Abs}$ is the part of
+$K_{\mathrm{pt}}$ whose landing is absorbed, that is, whose latest prime is less than $y(v)$. So its cofactors $w$ are
+$2y(v)$-smooth (their primes are decided before the latest prime, as in step (i) of Lemma~\ref{lem:lemmaP}), with
+$w\ge v/y(v)$. With the \emph{sure} bound $\tilde\rho\le1.01$ (at most one prime per continuous slot),
+$K_{\Abs}\tilde\rho\le1.01\sum1/w$ over such $w$. Rankin's bound with exponent $1-\beta$, $\beta:=1/\log2y(v)$, gives
+\[
+\sum_{w\ge v/y(v)}\frac1w\le\Big(\frac v{y(v)}\Big)^{-\beta}\prod_{p<2y(v)}\big(1-p^{\beta-1}\big)^{-1}\le e^{8.2}\log(2y(v))\,e^{-u},
+\qquad u:=\frac L{\log2y(v)},
+\]
+where the product, over the realised primes below $2y(v)$ (decided long before), is at most $e^{7.2}\log2y(v)$ as in the
+proof of Lemma~\ref{lem:rankin-crude} (Lemma~\ref{lem:cm}(iii),(iv)), and $(v/y(v))^{-\beta}\le e^{1-u}$. Wherever $K_{\Abs}\ne0$ (so $s>s_H$),
+$u\ge L/\max(22.6\Lambda,12.1\ell^2)\ge4\ell+\log\log2y(v)+9$, and this gives $K_{\Abs}\tilde\rho\le L^{-4}$.
+% Logged correction 66: the Rankin exponent and the use of Lemma cm(iii),(iv) are now stated.
+Together with (a) this gives $|\sigma_{\Abs}|\le2L^{-4}$. No local count at the current height is
 used. (c) An oscillation is at most twice the supremum.
 \end{proof}
 
