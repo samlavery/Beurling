@@ -168,8 +168,9 @@ The second is a Rankin bound for smooth elements, valid at every height.
 
 \begin{lemma}[Rankin bound]\label{lem:rankin-crude}
 % v3: Lemma 3.14B, proof ("Rankin gives ..."); fix-Bprime §12.3 (B)
-Assume \eqref{eq:HBS} on $[1,z]$ (for instance, work on $\Good(<z)$; cf.\ Lemma~\ref{lem:cm}). Let $z\ge e^{10}$, $\ell\ge0$,
-and $v(\ell,z):=\sum_{n\in\NN\cap(e^\ell,2e^\ell],\,\Pplus(n)\le z}1/n$. Then $v(\ell,z)\le e^{14}\,(\log z)\,e^{-\ell/\log z}$.
+% Logged correction 73: on Good(<z') the hypothesis holds on [1,z] only for z below the horizon of z' (Remark rem:horizon).
+Assume \eqref{eq:HBS} on $[1,z]$; for instance, work on $\Good(<z')$ for some $z'$ with $z\le\check z'$
+(Remark~\ref{rem:horizon}; cf.\ Lemma~\ref{lem:cm}). Let $z\ge e^{10}$, $\ell\ge0$, and $v(\ell,z):=\sum_{n\in\NN\cap(e^\ell,2e^\ell],\,\Pplus(n)\le z}1/n$. Then $v(\ell,z)\le e^{14}\,(\log z)\,e^{-\ell/\log z}$.
 \end{lemma}
 
 \begin{proof}
@@ -412,8 +413,11 @@ $\Lambda_p:=\log X\ge\Lambda_1-1$; in particular $X\ge X_{\mathrm{LP}}$, since $
 % Logged correction 70 (CORRECTIONS-vs-v3.md): X >= X_LP made explicit (was "log X_LP = O(Lambda^2 log^2 Lambda)").
 % Logged correction 45: new L_1 (log k + 3.08), the extra term Lambda_p^{-2} in Rel, the hypothesis v(1+2 eta) <= y, and the
 % explicit window of Theorem lp(iii)
-Since $m\ge2$ and $\eta\le\frac12$, also $X(1+2\eta)\le N\le y$, which is the hypothesis $v(1+2\eta)\le y$ of
-Theorem~\ref{thm:lp}(iii) with $v=X$. We apply Theorem~\ref{thm:lp}(iii), which is stated for $\Lambda_p\ge76\Lambda^3$; here
+% Logged correction 73 (CORRECTIONS-vs-v3.md): v3 applies Theorem lp with its parameter y equal to the cutoff of Good(<y),
+% where (LP-a) is not certified up to y; it is now applied with y' = 2N^{0.55}, far below the horizon.
+Since $m\ge\sqrt{N/t}\ge N^{0.45}$ and $\eta\le\frac12$, also $X(1+2\eta)\le2N^{0.55}=:y'$. We apply Theorem~\ref{thm:lp}(iii)
+with $y'$ in place of its parameter $y$ and $v=X$, so that its hypothesis $v(1+2\eta)\le y'$ holds; (LP-a) holds up to $y'$ on
+$\Good(<y)$ by Remark~\ref{rem:horizon}, as $y'\le0.9N\le0.9y$. Theorem~\ref{thm:lp}(iii) is stated for $\Lambda_p\ge76\Lambda^3$; here
 $\Lambda_p\ge\Lambda_1-1\ge76\Lambda^3$. There $\mathrm{Rel}\le0.05+\Lambda_p^{-2}\le0.1$ as soon as the exponent in
 \eqref{eq:lpplus} is at least $\log(360\,G(L_1)\Lambda_p^3\eta^{-1})$. Put $\ell_p:=\log\Lambda_p$, so that
 $k\le\log(1/\eta)+20\ell_p+1\le2\Lambda+20\ell_p+1$ and

@@ -177,3 +177,4 @@
 | eq:A-HK | App. A, proof of Theorem R: H_K, the sum of the chain recursion over run structures; H_K(0) = K^K/K! (correction #55) | A-rankfull.tex |
 | eq:A-exactcount | WITHDRAWN (correction #55): the per-type exact count is replaced by the variable-content block bound (S3)(a) | A-rankfull.tex |
 | eq:A-telescope | WITHDRAWN (correction #55): replaced by the variable-content block bound (S3)(a) | A-rankfull.tex |
+| rem:horizon | Remark (certified horizon, correction #73): on Good(<z) the queue bound, lag, (H_BS), Lemma cm, (LP-a), (La) hold only at heights ≤ ž := z − 12 log z − 3 | 05-queue.tex |

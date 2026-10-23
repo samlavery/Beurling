@@ -115,11 +115,15 @@ and $v=\bar V_W,\bar V^2_W$ of \eqref{eq:F1}, \eqref{eq:F2}.
   $\mathrm{Var}(\tilde X_q\mid\mathcal F_{q-})\le2M_1\E[X_q\mid\mathcal F_{q-}]$, so $V_W\le2M_1\Comp(W)$; likewise
   $V^2_W\le b_2\Comp^{(2)}(W)\le b_2s_2|W|$. Next,
   $\Comp(W)=\int_W(\Kpt\rhot-K_{\Abs}\rhot+\NT_{\mathrm{pt}})\le1.01\sum_v\omega_y(v)\cdot|W|+\int_W|\NT_{\mathrm{pt}}|\le50\log(2u)\,|W|$.
+% Logged correction 73: v3 says (H_BS) "at heights <= u"; a short window W may close at t(W) < u + 12 log u + 3, where that is
+% not certified. Lemma S(i) at y in W reads only cofactors w <= y/v <= 4u/X_0, far below the horizon of Good(<t(W)).
   This uses $\sum_v\omega_y(v)\le1.2\log_2(4u/X_0)$ (Lemma~\ref{lem:S}(i), that is, \textup{(H$_{\mathrm{BS}}$)} at heights
-  $\le u$), and the sure bound $\rhot\le1.01$. The latter holds because each continuous slot decides at most one prime, and
-  the starts of consecutive continuous slots are at least $1-10^{-8}$ apart (a continuous slot needs
-  $\int T'_{\mathrm{cont}}=1$, with $T'_{\mathrm{cont}}\le1+10^{-8}$). No upper bound on the length of a slot is used in this
-  section.
+  $\le4u/X_0$, below the certified horizon of $\Good(<t(W))$, Remark~\ref{rem:horizon}), and the sure bound $\rhot\le1.01$. The latter holds because each continuous
+  slot decides at most one prime, and the starts of consecutive continuous slots are at least $1-10^{-8}$ apart (between them
+  $\int T'_{\mathrm{cont}}=1$, \S\ref{sec:greedy}, with $T'_{\mathrm{cont}}\le1+10^{-8}$). No upper bound on the length of a slot is used
+  in this section.
+% Logged correction 77: one unit of continuous mass lies between consecutive continuous-slot starts, not in each continuous slot
+% (a continuous slot followed by a jump slot, or an empty one in the tie case, carries less).
 \item So on $\Good(<t(W))$ the event $\{|\Mart(W)|>$ the bound of \eqref{eq:F1}$\}$ lies in Freedman's event for the
   truncated martingale; likewise for \eqref{eq:F2}. No positivity of the margin is used.
 \end{itemize}
@@ -148,8 +152,9 @@ Then
 \[
   |\nu(y)|\le\bar\nu(u):=2.05\max_{u'\in\{u/2,u,2u\}}\nu_0(u').
 \]
+% Logged correction 73 (R17, C73-6): the good event of the bound on E(I) is stated.
 For every slot window $I\subset[u,2u]$ with $|I|\le H(u)$, put $E(I):=\sigma(I)-\int_Im$, where
-$m=T'-\Kpt\rhot-\NT_{\mathrm{pt}}$ is the pointwise margin density (\S\ref{sec:noise-identity}). Then
+$m=T'-\Kpt\rhot-\NT_{\mathrm{pt}}$ is the pointwise margin density (\S\ref{sec:noise-identity}). Then, on $\Good(<\max I+H(u))$,
 \begin{multline*}
   |E(I)|\le\sqrt{200M_1(u)\lambda'_u\log(2u)(|I|+2)}+\sqrt{4A_uM_1(u)s_2(u)\lambda'_u(|I|+2)}\\
   +\tfrac43(1+A_u)M_1(u)\lambda'_u+B(u)+100\log(2u)+s_2(u)(|I|+2)+2 .

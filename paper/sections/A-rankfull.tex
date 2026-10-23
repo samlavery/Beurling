@@ -37,7 +37,10 @@ the free primes decided between stages by sure sums, each against a weight that 
 % v3: Appendix A, A.0
 
 Throughout, $L=\log x$, $\ell=\log\log x$ and $\Lambda=\log X_0\ge 10^{8}$, as in Section~\ref{sec:queue-standing}.
-Fix a dyadic height $z\ge X_0/2$ and a window $J\subset[z,2z]$ of length $\delta\le 1$, and put $\eps:=\delta/z$.
+% Logged correction 75 (CORRECTIONS-vs-v3.md): v3 has J in [z,2z]; a grid window with left end just below 2z
+% extends past 2z by less than 4L^{-6}, so every grid window of the queue section at height z lies in [z,2z+1].
+Fix a dyadic height $z\ge X_0/2$ and a window $J\subset[z,2z+1]$ of length $\delta\le 1$ (every grid window at height $z$
+is one, Section~\ref{sec:queue-conv}), and put $\eps:=\delta/z$.
 
 \begin{definition}[Configuration types]\label{def:config-type}
 % v3: Appendix A, A.0
@@ -82,13 +85,14 @@ belong to $P_{\le t}$.
 The \emph{skeleton} $\mathfrak s$ of a rank-full type is its pivot pattern $E_P$, with the pivot columns in decision
 order, together with its run structure $(|P_1|,\dots,|P_T|)$, a composition of $k$. Types with the same skeleton differ
 only in their free columns: their number, their exponents, and the blocks in which they lie. The runs, the blocks
-$F_t$ (as slot ranges) and the stage rows of Lemma~\ref{lem:SC} depend only on the skeleton. For $t<T$ the block $F_t$ is non-empty, since the runs are maximal; the early block may be
+$F_t$ (as positions in the decision order, between consecutive runs) and the stage rows of Lemma~\ref{lem:SC} depend only on the skeleton; the slots of the blocks are random. For $t<T$ the block $F_t$ is non-empty, since the runs are maximal; the early block may be
 empty. There are $2^{k-1}$ run structures.
 % Logged correction 55: Theorem R and the Cover Bound sum over all free structures; the lemmas below are stated for
 % skeletons, i.e. for the union over the free columns, not for one full type.
 
 \paragraph{Slot positions.}
-Pivots are distinct primes, one per slot. Slot spacing is $\ge 0.99$, and the value $q$ of a jittered prime differs
+Pivots are distinct primes, decided at distinct continuous slots, whose starts are at least $0.99$ apart
+(Section~\ref{sec:greedy}), and the value $q$ of a jittered prime differs
 from its slot $s_q$ by at most $H(s_q)/2$ (Section~\ref{sec:queue-standing}). Jittered primes are decided at slots
 $\ge X_0$. Put $\sigma_j:=X_0+0.99(j-1)$. The $j$-th earliest pivot has slot $\ge\sigma_j$, and $v\mapsto v-H(v)/2$ is
 increasing. So its value is at least $\sigma_j-H(\sigma_j)/2$, and at least $X_0-H(X_0)/2=\Xm$. Hence, whatever the labels
@@ -110,8 +114,9 @@ $\Xm$ changes each constant by a relative amount at most $e^{-10^{7}}$.
 
 \paragraph{Probabilistic set-up.}
 $\mathcal F_{s-}$ is the information available before the decision at slot~$s$. $\Good(<s)$ is the good event of
-Definition~\ref{def:good}, and $G_{<s}$ abbreviates it. For a window $J$, $t_J$ denotes the time at which the
-cluster event of $J$ is examined; it satisfies $t_J\le t(E1)$ (Definition~\ref{def:good}). Every bound below is proved
+Definition~\ref{def:good}, and $G_{<s}$ abbreviates it. For a window $J$ at height $z$, put $t_J:=t_z=2z+H(2z)$, the
+time at which the cluster event of $J$ is examined (Proposition~\ref{prop:ecl}). It satisfies $t_J\le t(E1)$
+(Definition~\ref{def:good}) and $t_J>s_{\max}$ (Lemma~\ref{lem:pil}), so every pivot is decided before $t_J$. Every bound below is proved
 on $\Good(<t_J)$, which is carried progressively along the pivots. No queue bound at heights inside the window is
 used quantitatively.
 
@@ -198,8 +203,12 @@ all contents, since this only enlarges them.
 % v3: Lemma A.3
 For each run $P_t$, let $s_t$ be the slot of its last (earliest decided) pivot, let $f_t$ be the latest-decided column
 of the block $F_t$ below it, and let $u_t$ be the first slot after the slot of $f_t$. For $t<T$ the block $F_t$ is
-non-empty, since the runs are maximal. If the early block $F_T$ is empty, put $u_T:=X_0$, the first slot. Every pivot value is at most $2z$, since it divides some $n_i\in J$, and
-$|q-s|\le H(s)/2$; so every slot label is at most $s_{\max}:=2z+0.51H(2z)$. The decision order gives $u_t\le s_t$. Put
+non-empty, since the runs are maximal. If the early block $F_T$ is empty, put $u_T:=X_0$, the first slot.
+% Logged correction 75 (CORRECTIONS-vs-v3.md): v3 bounds pivot values by 2z; the windows reach 2z+1, and s_max is unchanged.
+Every pivot value is at most $2z+1$, since it divides some $n_i\in J$, and
+$|q-s|\le H(s)/2$; so every slot label is at most $s_{\max}:=2z+0.51H(2z)$, because $v\mapsto v-H(v)/2$ is increasing
+and $s_{\max}-H(s_{\max})/2>2z+1$ (as $H(s_{\max})\le H(2z)\,s_{\max}/(2z)\le1.001H(2z)$ and $H(2z)\ge H(X_0)>200$). The
+decision order gives $u_t\le s_t$. Put
 \[
   \chi_t:=\mathbf 1(u_t\le s_{\max})\,\mathbf 1(G_{<u_t}),
 \]
@@ -241,7 +250,7 @@ call it the \emph{envelope} and also write $\bar S_{\mathfrak s}:=S_{\mathfrak s
 
 \begin{proof}
 Write $X_{\mathfrak s}$ as a sum, over the slot labels of the pivots and over the realised free data, of
-$\prod_i\mathbf 1(n_i\in J)$; the caps may be inserted, since they hold for every realised configuration. Every pivot is decided before $t_J$. Along the pivots, latest first, the good events are
+$\prod_i\mathbf 1(n_i\in J)$; the caps may be inserted, since they hold for every realised configuration. Every pivot is decided before $t_J$, since its slot is at most $s_{\max}<2z+H(2z)=t_J$. Along the pivots, latest first, the good events are
 nested:
 \[
   \mathbf 1(G_{<t_J})\le\mathbf 1(G_{<s_{p_1}})\le\mathbf 1(G_{<s_{p_2}})\le\cdots .
@@ -289,7 +298,7 @@ $1+0.8/\Lambda+3/H(X_0)+o(1/\Lambda)\le1+1/\Lambda=\theta$.
 \[
   \theta\,\mathbf 1(G_{<s'})\int\chi_t\,\Psi|_{s_t=u_t}\,dq_p ,
 \]
-where $s'$ is the slot of the first pivot of $P_{t+1}$. The factor $\chi_t$ is a function of the block data and of
+where $s'$ is the slot of the latest-decided pivot of $P_{t+1}$, the next pivot to be processed. The factor $\chi_t$ is a function of the block data and of
 $\omega$, so it is carried through the integrals unchanged. The factor $\mathbf 1(G_{<s'})$ does not involve the block
 $F_t$, whose primes are decided after $s'$. Sum over the realised block data, and replace the sum by the bound
 of~(iii). The slot $u_t$ is a function of the block data: it is known inside the conditional expectation at $s_t$, but
@@ -327,6 +336,9 @@ Taking expectations completes the induction.
 \begin{lemma}[Factorisation; sure sums]\label{lem:fac}\label{lem:FAC}
 % v3: Lemma A.4
 \begin{enumerate}[label=(\arabic*),leftmargin=*]
+\item[] \emph{Only (S3) is used in the proofs of Theorem~\ref{thm:R} and Proposition~\ref{prop:cover}. Items (FAC),
+  (S1$'$) and (S2$'$) are kept from v3 for comparison; in (FAC), $\Psi_0$ is the remaining factor, free of $q_f$, that
+  the substitution in the proof produces.}
 \item[\textup{(FAC)}] Let $f$ be a free column and $P_{\mathrm{late}}$ the set of pivots decided later than $f$, so
   $e_f=E_{P_{\mathrm{late}}}v_f$ for a unique $v_f$ by \eqref{eq:A-span}. After the pivots in $P_{\mathrm{late}}$ have
   been integrated,
@@ -460,10 +472,11 @@ so $A_{\mathrm{top}}\le e^{\gamma}(\log z+0.7)e^{2.21/\Lambda}(1+10^{-8})\le1.8(
 
 \begin{remark}[Widened caps; an optional route]\label{rem:widened}
 % v3: Lemma A.4, Remark (widened caps; optional)
-Widen the caps of (FAC) by the pinned range $\rho_t$ of the later pivots, instead of by $O(\eps)$. Then they become
+Widen the caps of the later pivots by their pinned range $\rho_t$, instead of by $O(\eps)$. Then they become
 functions of outer variables only, the block sums commute with the later integrals, and the recursion of
 Lemma~\ref{lem:pil} becomes a monotone functional of the final summand. The widened box costs a factor $e^{O(k\rho_t)}$.
-Let $m:=\log2z/\Lambda$, the maximal exponent sum of a row. Then $\|E_P^{-1}\|_\infty\le k\,m^{k-1}$, by Cramer's rule and
+% Logged correction 75 (CORRECTIONS-vs-v3.md): v3 has m := log 2z/Lambda; rows lie in J, below 2z+1, with primes >= X_0^-.
+Let $m:=\log(2z+1)/\log\Xm$, a bound for the exponent sum of a row. Then $\|E_P^{-1}\|_\infty\le k\,m^{k-1}$, by Cramer's rule and
 Hadamard's inequality. The order is attained: rows $n_i=q_iq_{i+1}^{m-1}$ give $E_P=I+(m-1)N$ with $N$ the nilpotent
 shift, whose inverse has a row of $\ell^1$-norm $\sum_{l<k}(m-1)^l$. So the route is harmless when
 \[
@@ -574,15 +587,17 @@ change of variables $q_{P_t}\mapsto(n_y)_{y\in C_t}$. Then the following hold.
   It is deterministic, and $\mathcal F_{p-}$-measurable at
   the next pivot $p$. On $\mathrm{Proj}_t$, a row $y$ joining at a stage $t'>t$ satisfies
   \begin{equation}\label{eq:B1}
-    n_y\ \ge\ c_y^{\mathrm{noF}}\prod_{j\in P_{t'}}q_j^{E_{yj}}\prod_{j\in P_{<t'}}\tau_j^{E_{yj}}\,(\Xm)^{e_y(F_{\le t})}.
+    n_y\ \ge\ c_y^{\mathrm{noF}}\prod_{j\in P_{t'}}q_j^{E_{yj}}\prod_{j\in P_{<t'}}\tau_j^{E_{yj}}.
   \end{equation}
-  Here $c_y^{\mathrm{noF}}$ is $c_y^{(\le t')}$ with the primes of $F_{\le t}$ removed, and $e_y(F_{\le t})$ is the total
-  exponent of those primes in $y$. This is the only inequality the later stages use. In particular, the pivot mass of
+  Here $c_y^{\mathrm{noF}}$ is $c_y^{(\le t')}$ with the primes of $F_{\le t}$ removed. Each removed prime is $\ge\Xm>1$
+  in every completion, so removing it only weakens the bound, and the right side is a function of the remaining
+  variables; the content of $F_{\le t}$, which has been summed, does not enter. This is the only inequality the later
+  stages use. In particular, the pivot mass of
   later rows carries $\tau_j^{-E}$, not $X_0^{-E}$.
 \item \emph{(Slot-indexed chains.)} The Euler chains are indexed by slot, as in Lemma~\ref{lem:fac}\,(S3). They are
   carried from block to block by the functions $\Phi_t$ of Lemma~\ref{lem:fac}\,(S3)(b), and the end step (S3)(c) closes
   them. The block sums do not factorise over the rows.
-\item \emph{(Joint caps.)} A row's free pieces across blocks, together with its tail, take one joint cap:
+\item \emph{(Joint caps.)} (Not used in Theorem~\ref{thm:R} or Proposition~\ref{prop:cover}.) A row's free pieces across blocks, together with its tail, take one joint cap:
   $\mathbf 1\bigl(\prod_tc_t\le Y\bigr)\le Y/\prod_tc_t$. Capping block by block would give $Y^{T}$. For rows outside the
   cover the joint cap is not needed: their free part is a monomial in primes of the cover rows, and it is fixed in
   advance together with their $X_0$-smooth tail (skeleton (s4) of Proposition~\ref{prop:cover}).
@@ -626,7 +641,9 @@ By Lemma~\ref{lem:SC}\,(3), $f$ has a nonzero entry in a cover row of $\mathcal 
 $W_t^{\mathrm{cov}}=\prod_{y\in C\cap\mathcal R_{\le t}}c_{y,F_t}^{-1}\cdot(\text{factors free of }F_t)$, with every
 prime of $F_t$ appearing to a power $\ge1$. Before the block bound, replace $q_j^{1-s_j^{\mathrm{cov}}}$ by
 $\tau_j^{1-s_j^{\mathrm{cov}}}$; this is valid at every point of the domain, by the caps of Lemma~\ref{lem:pil}, since
-$s_j^{\mathrm{cov}}\ge1$. After that, the only dependence on $F_t$ is through the cover-row pieces. By injectivity, the
+$s_j^{\mathrm{cov}}\ge1$. Then bound the caps of the pivots of $P_{\le t}$, and $\mathbf 1(\mathrm{Proj}_{t-1})$, by $1$: as
+functions of the integration variables they may involve $F_t$, but they have now been used (the latter in \eqref{eq:B1} for the
+rows joining at $t$), and $\mathbf 1(\mathrm{Proj}_t)$, which is free of $F_{\le t}$, is carried instead (see (iii)). After that, the only dependence on $F_t$ is through the cover-row pieces. By injectivity, the
 block sum is a sum over the realised primes of the columns of $F_t$ and their cover-row exponents, with weight
 $\prod_{y\in C\cap\mathcal R_{\le t}}c_{y,F_t}^{-1}=\prod_{g\in F_t}g^{-a_g}$, $a_g\ge1$. Its sum over all contents of
 $F_t$ is bounded by Lemma~\ref{lem:fac}\,(S3)(a), with the rows of $C$ as chain rows, each starting at the stage where it
@@ -640,11 +657,14 @@ the pivots of $P_{\le t}$, is
 So their indicators do not involve $f$. The non-cover rows of $\mathcal R_{\le t}$ carry $1/n_y$ with $n_y$ an
 integration variable, which does not involve $f$ either.
 
-\emph{(iii).} After a block bound, the summed primes are no longer variables. The remaining integrand is a function of the
-variables not yet processed, and every actual configuration lies in $\mathrm{Proj}_t$. So inserting
-$\mathbf 1(\mathrm{Proj}_t)$ costs nothing; with the caps of Lemma~\ref{lem:pil} it holds automatically for the
-integrated pivots. $\mathrm{Proj}_t$ is defined by real inequalities among deterministic
-quantities and variables decided before the next pivot, so it has the stated measurability.
+\emph{(iii).} $\mathrm{Proj}_t$ is a condition on the variables not yet processed at stage $t$. At every point of the
+integration domain where the initial integrand $\Psi$ of Lemma~\ref{lem:pil} is non-zero, the caps hold and every summed
+prime is a realised prime $\ge\Xm$; these values form a real completion, so the point lies in $\mathrm{Proj}_t$. Hence
+$\mathbf 1(\mathrm{Proj}_t)$ may be inserted into $\Psi$ at no cost, for every $t$ at once. Being a function of the
+unprocessed variables only, it passes unchanged through the integrals and block sums of the stages $\le t$, so it
+multiplies the output of the block bound of stage $t$; this is what ``multiply by $\mathbf 1(\mathrm{Proj}_t)$'' means.
+$\mathrm{Proj}_t$ is defined by real inequalities among deterministic quantities and variables decided before the next
+pivot, so it has the stated measurability.
 
 For a row $y$ joining at stage $t'>t$, write
 \[
@@ -654,7 +674,18 @@ For a row $y$ joining at stage $t'>t$, write
 The left side, as a function of the remaining variables, does not depend on the completion. On $\mathrm{Proj}_t$ some
 completion has all summed primes $\ge\Xm$ and all integrated pivots $\ge\tau_j$. This gives \eqref{eq:B1}. In the
 stage-$t'$ identity, this inequality replaces the exact factorisation of the rows joining at $t'$; it drops the summed
-primes from their cofactors and keeps $\tau_j^{-E_{yj}}$ for their earlier-integrated pivot mass.
+primes from their cofactors and keeps $\tau_j^{-E_{yj}}$ for their earlier-integrated pivot mass. Explicitly, after the
+block bound of stage $t$ the integrand $\Psi$ of the recursion of Lemma~\ref{lem:pil}, before the integrals over
+$n_{\mathcal R_{\le t}}\in J^{\mathcal R_{\le t}}$, is
+\[
+  \Phi_t(s_{t+1})\,\frac{\mathbf 1(\mathrm{Proj}_t)}{|\det E_{\mathcal R_{\le t},P_{\le t}}|}
+  \prod_{y\in C\cap\mathcal R_{\le t}}\frac1{c_y'}\prod_{y\in\mathcal R_{\le t}\setminus C}\frac1{n_y}
+  \prod_{j\in P_{\le t}}\tau_j^{\,1-s_j^{\mathrm{cov}}}
+  \prod_{y\notin\mathcal R_{\le t}}\mathbf 1(n_y\in J)\prod_{j\in P_{>t}}\mathbf 1(q_j\ge\tau_j),
+\]
+where $c_y'$ is $c_y^{(\le t)}$ with the primes of $F_{\le t}$ removed, times the indicators $\mathbf 1(\mathrm{Proj}_{t'})$,
+$t'>t$, inserted at the start, which are free of $F_{\le t'}$ and pass through unchanged. Identity \eqref{eq:svl-identity} describes the
+integrand before any block is summed; the recursion uses it in this summed form.
 
 \emph{(iv)} is Lemma~\ref{lem:fac}\,(S3). \emph{(v)}: if $\prod_tc_t\le Y$ then $Y/\prod_tc_t\ge1$. For a row outside
 the cover, every prime lies in some cover row, and its exponents and its tail are fixed in advance (skeleton (s4) of
@@ -680,7 +711,8 @@ The identity \eqref{eq:svl-identity} itself is not part of that check.
 
 \begin{theorem}[Rank-full clusters]\label{thm:R}
 % v3: Theorem A.6 (Theorem R)
-For every window $J\subset[z,2z]$ of length $\delta\le1$ and every $k\ge1$,
+% Logged correction 75 (CORRECTIONS-vs-v3.md): v3 has J in [z,2z]; the grid windows at height z lie in [z,2z+1].
+For every window $J\subset[z,2z+1]$ of length $\delta\le1$ and every $k\ge1$,
 \[
 \begin{aligned}
   &\E\Bigl[\#\{\text{rank-}k\ k\text{-subsets of }\NN\cap J\}\cdot\mathbf 1\bigl(\Good(<t_J)\bigr)\Bigr]\\
@@ -770,8 +802,8 @@ Theorem~\ref{thm:R} contains two simpler cases:
 \begin{corollary}[The case of rank at least $r_0$]\label{cor:R-Ecl}
 % v3: Theorem A.6, application to E_cl
 Let $k=r_0=\lceil L/(3\ell)\rceil+3$ and $\delta=4L^{-6}$, and let $L\ge465$. Then the right side of
-Theorem~\ref{thm:R}, multiplied by the number $2z/\delta$ of (overlapping) grid windows at height $z\le x$, is at most
-$L^{-4}$. This is the
+Theorem~\ref{thm:R}, multiplied by $2z/\delta+1$, which bounds the number of (overlapping) grid windows at height
+$z\le x$, is at most $L^{-4}$. This is the
 rank-$\ge r_0$ case of Proposition~\ref{prop:ecl}, and it is valid for every $L\ge465$.
 \end{corollary}
 
@@ -788,10 +820,12 @@ Hence the factor is at most
 \[
   e\cdot1.8(L+4)\cdot4L^{-6}\cdot(2L)^{1.02}\cdot1.01\le15e\,L^{-3.98}\qquad(L\ge465).
 \]
-Since $2z/\delta\le e^{L}L^{6}/2$ and $\log(15e)-3.98\ell<0$, and $r_0\ge L/(3\ell)+3$,
+% Logged correction 75 (CORRECTIONS-vs-v3.md): v3 counts 2z/delta windows; with left ends in [z,2z) there are at most
+% 2z/delta+1, and 2z/delta+1 <= e^L L^6/2+1 <= e^L L^6 leaves the chain unchanged.
+Since $2z/\delta+1\le e^{L}L^{6}/2+1\le e^LL^6$ and $\log(15e)-3.98\ell<0$, and $r_0\ge L/(3\ell)+3$,
 \[
 \begin{aligned}
-  \log\Bigl(\frac{2z}\delta\cdot\mathrm{RHS}\Bigr)&\le L+6\ell+r_0\bigl(\log(15e)-3.98\ell\bigr)
+  \log\Bigl(\Bigl(\frac{2z}\delta+1\Bigr)\mathrm{RHS}\Bigr)&\le L+6\ell+r_0\bigl(\log(15e)-3.98\ell\bigr)
   \le L+6\ell+\Bigl(\frac L{3\ell}+3\Bigr)\bigl(\log(15e)-3.98\ell\bigr)\\
   &\le L\Bigl(-0.32666+\frac{1.2361}{\ell}\Bigr)-5.94\,\ell+11.13\ \le\ -4\ell
 \end{aligned}

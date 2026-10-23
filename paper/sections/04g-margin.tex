@@ -26,7 +26,11 @@ $j_{X_0}\le e^{-59}$ for $x\ge X_0e^{600\Lambda^4}$.
   $x\ge X_0^{1.01}$ we have $W_x\subset[X_0^{1.01}/2,\infty)$, where its bound is $0.97-o(1)$; for $2X_0\le x<X_0^{1.01}$ both of
   its ranges give at least $0.82-o(1)$ on $W_x\subset[X_0+H(X_0),\infty)$.
 \item Every noise input lives at scales $\le x/2+2H$. Proposition~\ref{prop:g1} at points of $W_x$ uses only data up to
-  $x-H/2$ (its windows $J$ end before $x$).\qedhere
+  $x-H/2$ (its windows $J$ end before $x$). Likewise Lemma~\ref{lem:xb} and Propositions~\ref{prop:true-kernels},
+  \ref{prop:xb-ranges} and~\ref{prop:g1} at $y\in W_x$ read queue-derived bounds only at heights $\le y/\Xm$ or
+  $\le y-y^{0.98}\le x-H$, and events of time $<x-H/2$; so they hold at every $y\in W_x$ on $\Good(<x)$, although
+  $\Good(<x)\not\subset\Good(<y)$.\qedhere
+% Logged correction 73 (R17, C73-5): statements "on Good(<y)" read at y in W_x, y > x, hold on Good(<x) by their heights.
 \end{itemize}
 \end{proof}
 

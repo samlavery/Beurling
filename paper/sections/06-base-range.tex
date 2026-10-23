@@ -98,7 +98,7 @@ Johnston and Yang \cite[Thm.~1.1 and Table~1, row $X=10^8$]{JohnstonYang2023} pr
 $\log x\ge10^8$; for $\theta(x)$ their Corollary~1.2 gives the same form with $A_1=A+0.01$. With $\kappa\approx200\cdot e^{-10807.6}$
 in place of the short-interval input above, this would remove the threshold $X_{\mathrm{Hux}}$. It would not by itself make $X_0$
 explicit: the constants of the local prime number theorem are not explicit, and with this $\kappa$ the range
-$\log x\le(0.0048/\kappa)^{1/5}\approx e^{2159}$ of the $\mu_0$ bound in Lemma~\ref{lem:margin}(b) would no longer cover range (A) of
+$\log x\le(0.0048/\kappa)^{1/5}\approx e^{2159}$ of the response bound for $\mu_0$ in Proposition~\ref{prop:g1} would no longer cover range (A) of
 Proposition~\ref{prop:g1}.
 \end{remark}
 
@@ -143,21 +143,33 @@ So on $(X_0/(1+\kappa),X_0)$ only $K_{\mathbb Q}$ contributes, and its contribut
 $T'_{\mathrm{cont}}-R'+\bar\rho_{\Abs}=(1+K_{\mathrm{pt}})(\mathrm{MA}[\mathbb P]\mathbf 1_{[X_0,\infty)})+(K_{\mathbb Q}-K_{\mathrm{pt}})(\mathrm{MA}[\mathbb P]\mathbf 1_{[X_0,\infty)})+\mu_{\mathrm{edge}}+O(1/(\kappa x))$
 on $[X_0,\infty)$, and applying $(1+K_{\mathrm{pt}})^{-1}$, gives, for $x\ge X_0$,
 \begin{equation}\label{eq:shdecomp}
-  \rho^{\mathrm{sh}}=\mathrm{MA}[\mathbb P]+\rho_{\mathrm{osc}}+\rho_{\mathrm{edge}}+(1+K_{\mathrm{pt}})^{-1}(\mu_0+\mu_1),\qquad
-  \rho_{\mathrm{edge}}:=(1+K_{\mathrm{pt}})^{-1}\mu_{\mathrm{edge}},
+  \rho^{\mathrm{sh}}=\mathrm{MA}[\mathbb P]+\rho_{\mathrm{edge}}+(1+K_{\mathrm{pt}})^{-1}(\mu_0+\mu_1),\qquad
+  \rho_{\mathrm{edge}}:=(1+K_{\mathrm{pt}})^{-1}\mu_{\mathrm{edge}}.
 \end{equation}
-where $\rho_{\mathrm{osc}}$ is the response to $R'$ and the absorbed source is carried in Section~\ref{sec:noise}. Here we split
+This $\rho^{\mathrm{sh}}$ is the part of the sharp reference of Section~\ref{sec:noise} that comes from $1-\rhodet$; the responses
+to $R'$ and to the absorbed source are carried in Section~\ref{sec:noise}. Here we split
 $\mathrm{MA}[\mathbb P]=f_0+f_1$ with $f_0(q):=\mathrm{MA}_{\kappa q}[\mathbf 1_{t\ge X_0}\,dt/\log t](q)$ and $f_1:=\mathrm{MA}[\mathbb P]-f_0$, so
 that $|f_1(q)|\le\eta_{\mathrm H}(q)f_0(q)\le\eta_{\mathrm H}(q)/\log q$ for $q\ge X_0$, and we set
 \[
 \begin{gathered}
   \mu_{\mathrm{edge}}(u):=\sum_{N\ge2}\frac1N\,\mathrm{MA}_{\kappa q}[\text{rational primes}\ge\max(P^+(N),X_0)](q)\Big|_{q=u/N}
   \mathbf 1\Bigl[\frac uN\in\Bigl(\frac{X_0}{1+\kappa},X_0\Bigr)\Bigr],\\
-  \mu_1:=(K_{\mathbb Q}-K_{\mathrm{pt}})(f_1\mathbf 1_{[X_0,\infty)}),\\
-  \mu_0:=(K_{\mathbb Q}-K_{\mathrm{pt}})(f_0\mathbf 1_{[X_0,\infty)})+(\text{decision-order mismatches})+O(1/(\kappa x)).
+  \mu_1:=(K^{\mathrm{sh}}_{\mathbb Q}-K_{\mathrm{pt}})(f_1\mathbf 1_{[X_0,\infty)}),\\
+  \mu_0:=(K^{\mathrm{sh}}_{\mathbb Q}-K_{\mathrm{pt}})(f_0\mathbf 1_{[X_0,\infty)})
+  +(K_{\mathbb Q}-K^{\mathrm{sh}}_{\mathbb Q})(\mathrm{MA}[\mathbb P]\mathbf 1_{[X_0,\infty)})+O(1/(\kappa x)).
 \end{gathered}
 \]
-So $\mu_{\mathrm{edge}}$ is the part of $K_{\mathbb Q}\mathrm{MA}[\mathbb P]$ that lies below $X_0$; for $N<X_0$ its summand is
+% Logged correction 74 (CORRECTIONS-vs-v3.md): mu_1 used the window-filtered K_Q, so it contained the partial windows of
+% nu_1 = (primes - dt/log t) on [X_0,oo), which the proof of (c) does not bound; mu_1 now uses the sharp K_Q^sh, and all partial
+% windows of MA[P] above X_0 are in mu_0, as Lemma blin(3) and "the rest" of (b) already assumed (independent check R15, F1).
+Here $K^{\mathrm{sh}}_{\mathbb Q}h(x):=\sum_{m\ge2}m^{-1}\mathbf 1[P^+(m)\le x/m]\,h(x/m)$ is the sharp form of $K_{\mathbb Q}$. The
+difference $K_{\mathbb Q}-K^{\mathrm{sh}}_{\mathbb Q}$ consists exactly of the partial windows $P^+(m')\in(q,(1+\kappa)q]$ of
+Lemma~\ref{lem:blin}(3), so all partial windows of $\mathrm{MA}[\mathbb P]$ above $X_0$ are in $\mu_0$, and
+$\mu_0+\mu_1=(K_{\mathbb Q}-K_{\mathrm{pt}})(\mathrm{MA}[\mathbb P]\mathbf 1_{[X_0,\infty)})+O(1/(\kappa x))$. Write
+$K^{\mathrm{val}}_{\mathrm{pt}}$ for $K_{\mathrm{pt}}$ with its filter $\tau_w<y/w$ replaced by $P^+(w)\le y/w$ (value order, with the
+non-strict filter of $K^{\mathrm{sh}}_{\mathbb Q}$). Since $K_{\mathrm{pt}}$ uses decision order, $\mu_0$ contains the decision-order mismatch
+$(K^{\mathrm{val}}_{\mathrm{pt}}-K_{\mathrm{pt}})(f_0\mathbf 1_{[X_0,\infty)})$, which is bounded in the proof of (b); in $\mu_1$ the operator
+$K_{\mathrm{pt}}$ is bounded directly in the proof of (c), so no separate mismatch term arises there. The term $\mu_{\mathrm{edge}}$ is the part of $K_{\mathbb Q}\mathrm{MA}[\mathbb P]$ that lies below $X_0$; for $N<X_0$ its summand is
 $\mathrm{MA}[\mathbb P](u/N)/N$. For $u<2X_0$ every cofactor $w\ge2$ has $u/w<X_0$, so $\mu_0=O(1/(\kappa u))$ and $\mu_1=0$ there;
 and $\mu_{\mathrm{edge}}(u)=0$ for $u\le2X_0/(1+\kappa)$, while $\mu_{\mathrm{edge}}(u)=\tfrac12\mathrm{MA}[\mathbb P](u/2)$ on
 $(2X_0/(1+\kappa),2X_0)$.
@@ -167,7 +179,7 @@ $(2X_0/(1+\kappa),2X_0)$.
 \leavevmode
 \begin{enumerate}[label=(\alph*)]
 \item \emph{(Huxley part.)} For every $q\ge X_0\ge X_{\mathrm{Hux}}$, $\mathrm{MA}[\mathbb P](q)\log q\ge0.99$, and the left side tends to $1$.
-\item \emph{(Smooth part.)} On $\Good(<u)$, for every $u\ge X_0$ with $\log\log u\le\Lambda/8$,
+\item \emph{(Smooth part.)} On $\Good(<u)$, for every $u\ge X_0$,
 \[
   |\mu_0(u)|\le2\kappa(\log u)^3.
 \]
@@ -180,7 +192,8 @@ and, for $v\ge4$ with $U:=1+2\log v$,
   |\mu_1(x)|\le2\Bigl[\Bigl(\frac U{\log x}\Bigr)^3(\log U+1.01)+2e^{\gamma}e^{\operatorname{Ein}(2)}\frac vUv^{-4}\Lambda^{-3}\Bigr],
   \qquad\operatorname{Ein}(2)<3.69.
 \]
-Consequently
+Here $\operatorname{Ein}(a):=\int_0^a(e^t-1)\,dt/t$, the convention of Section~\ref{sec:zeros}, so that
+$\operatorname{Ein}(2)=3.6838\ldots$ (Appendix~\ref{app:cert-consts}). Consequently
 \begin{equation}\label{eq:mu1sum}
   \sum_{u\text{ dyadic}\ge X_0}\log(2u)\sup_{[u,2u]}|\mu_1|\le\frac{690}{\log X_0}\le7\cdot10^{-6}.
 \end{equation}
@@ -205,8 +218,10 @@ $\mathrm{MA}[\mathbb P](q)\log q\ge(1-(\log q)^{-3})(1-\kappa/\log q)\ge1-10^{-2
 \end{proof}
 
 \begin{proof}[Proof of (b)]
+% Logged correction 73 (CORRECTIONS-vs-v3.md): v3 bounds Delta and Delta_psi for all t <= u on Good(<u), where the queue bound
+% is certified only up to u - 12 log u - 3. Step 3 needs them only for t <= sqrt(u): each replaced prime is <= sqrt(u/m_j).
 \emph{Step 1: the element count.} Put $\Delta:=N_{\NN}-\lfloor\cdot\rfloor$. Then $\Delta=0$ on $[1,\Xm)$, and on $\Good(<u)$, for
-$t\le u$,
+$t\le\sqrt u$ (the only heights used in Step~3, and below the certified horizon of $\Good(<u)$, Remark~\ref{rem:horizon}),
 \[
   |\Delta(t)|\le\delta(t):=2\kappa t+2t^{\theta}\log^*t+2t^{\theta/2}+B(t)+3H(t)+6.
 \]
@@ -226,12 +241,13 @@ $\le\kappa t\,X_0^{-0.1}$, using $(B+3H+3)(s)\le s^{3\cdot10^{-5}}$ (proof of Pr
 Invert with the M\"obius measure $\mu_{\NN}$ of $\NN$, using $|\mu_{\NN}|\le dN_{\NN}$ and $\sum_{v\in\NN,\,v\le s}1/v\le\log s+1$ on $\Good$.
 This gives
 \[
-  |\psi_{\NN}(t)-\psi(t)|\le5\kappa t\log^2t\qquad(t\le u).
+  |\psi_{\NN}(t)-\psi(t)|\le5\kappa t\log^2t\qquad(t\le\sqrt u).
 \]
 
 \emph{Step 3: telescoping the cofactors.} We have
-$(K_{\mathrm{pt}}-K_{\mathbb Q})f_0(u)=\sum_{w\in\NN}F(w)\chi_w-\sum_{m\in\N}F(m)\chi_m$, where $F(v):=f_0(u/v)/v$ and $\chi$ is the
-latest-prime filter ($P^+\le u/v$, in value order; the decision-order mismatch is treated below). Write each cofactor as
+$(K^{\mathrm{val}}_{\mathrm{pt}}-K^{\mathrm{sh}}_{\mathbb Q})(f_0\mathbf 1_{[X_0,\infty)})(u)=\sum_{w\in\NN}F(w)\chi_w-\sum_{m\in\N}F(m)\chi_m$,
+where $F(v):=f_0(u/v)/v$ and $\chi$ is the latest-prime filter ($P^+\le u/v$, in value order; the decision-order mismatch
+$K_{\mathrm{pt}}-K^{\mathrm{val}}_{\mathrm{pt}}$ is treated below). Write each cofactor as
 $d\cdot(\text{a multiset of }r=k-1\text{ large primes})$, with $d\in\mathcal D$ (the same set in both systems) and the large primes
 jittered and $\ge\Xm$, respectively rational and $\ge X_0$.
 % Logged correction 53 (CORRECTIONS-vs-v3.md): symmetric telescoping replaces the ordered one-variable-at-a-time replacement,
@@ -245,13 +261,16 @@ $j$-th intermediate sum has its first $j-1$ variables realised and its last $r-j
 The admissible set of the $j$-th variable $p$ is an interval $[\Xm,b]$. The filter $\max(p,M')\,m_jp\le u$ reads
 $p\le\sqrt{u/m_j}$ if $M'^2m_j\le u$, and $p\le u/(M'm_j)$ otherwise; the support condition $u/(m_jp)\ge X_0$ of
 $f_0\mathbf 1_{[X_0,\infty)}$ reads $p\le u/(X_0m_j)$; and $b$ is the smaller of the two bounds. So $f_0$ is evaluated only on
-$[X_0,\infty)$; the partial windows below $X_0$ are in $\mu_{\mathrm{edge}}$, not here. The summand is $G(p)=f_0(u/(m_jp))/(m_jp)$, and
-on $[X_0,\infty)$, $|qf_0'(q)|\le f_0(q)/\Lambda$, so $|(G/\log)'|\le1.1G/(p\log p)$. Abel summation against
-$d(\psi_{\NN}-\psi)/\log$ (prime powers cost $O(\sqrt b\log b)$) shows that one replacement changes the sum by at most
+$[X_0,\infty)$; the partial windows below $X_0$ are in $\mu_{\mathrm{edge}}$, not here. In both cases of the filter
+$b\le\sqrt{u/m_j}\le\sqrt u$ (in the second, $u/(M'm_j)<\sqrt{u/m_j}$ as $M'^2m_j>u$), so Step~2 is needed only on
+$[1,\sqrt u]$. The summand is $G(p)=f_0(u/(m_jp))/(m_jp)$, and on $[X_0,\infty)$, $|qf_0'(q)|\le f_0(q)/\Lambda$, so
+$|(G/\log)'|\le1.1G/(p\log p)$. Abel summation against
+$d(\psi_{\NN}-\psi)/\log$ (the prime powers of the large primes cost at most $\sup f_0/(m_j\Xm)$) shows that one replacement changes the sum by at most
 $10\kappa f_0\log b/m_j+2.8\kappa f_0\log^2b/m_j\le4\kappa\log^2u/(m_j\Lambda)$.
 \item \emph{Summing over the other variables.} They range over a product set, so
-$\sum1/m_j\le1.01e^{\gamma}\Lambda\cdot\ell_u^{r-1}$, with $\ell_u:=\sum_{\Xm\le p\le u}1/p\le\log(\log u/\Lambda)+2.2/\Lambda$ in each
-system (Lemma~\ref{lem:cm}(iv) and Mertens' theorem). The $r$ replacements against the factor $1/r!$ give
+$\sum1/m_j\le1.01e^{\gamma}\Lambda\cdot\ell_u^{r-1}$, with $\ell_u:=\sum_{\Xm\le p\le u/X_0}1/p\le\log(\log u/\Lambda)+2.2/\Lambda$ in
+each system (Lemma~\ref{lem:cm}(iv) and Mertens' theorem; the large primes of a cofactor $w$ are $\le u/X_0$, as
+$u/w\ge X_0$). The $r$ replacements against the factor $1/r!$ give
 $4\kappa(\log^2u/\Lambda)\cdot1.01e^{\gamma}\Lambda\cdot\ell_u^{k-2}/(k-2)!$ for each $k$; with the diagonal terms, the total is
 \[
   \le4.1e^{\gamma}\kappa\log^2u\,e^{\ell_u}\le\frac{7.4\,\kappa(\log u)^3}{\Lambda}\le\kappa(\log u)^3 .
@@ -266,19 +285,26 @@ the decision-order mismatch, bounded directly as follows. Value order and decisi
 of the cofactor $w=Pw'$ differ only when $u/w$ lies within $H/2$ of $P$, so $|P-\sqrt{u/w'}|\le H/4$: $P$ lies in an interval of
 length $\le H/2$ around $\sqrt{u/w'}$, which holds at most $1.5H+2\le2(H+1)$ realised primes. Summing over $w'$, with $\sum1/w'\le\log u+1$ and $H(v)/v$ decreasing,
 bounds the mismatch by $2.02(H(X_0)+1)(\log u+1)X_0^{-1}\sup|h|$ for the function $h$ the operators act on ($h=f_0$ here, and
-$h=g$ in (d)). The other items are the partial windows of Lemma~\ref{lem:blin}(3) (at most $\kappa\log u/\Lambda$),
-$|f_0-1/\log q|\le\kappa/\log^2q$, and $O(1/(\kappa u))$.
+$h=g$ in (d)). The other items are the partial windows $(K_{\mathbb Q}-K^{\mathrm{sh}}_{\mathbb Q})(\mathrm{MA}[\mathbb P]\mathbf 1_{[X_0,\infty)})$
+(at most $\kappa\log u/\Lambda$ by Lemma~\ref{lem:blin}(3), each component having density $\le1.01/\Lambda$) and $O(1/(\kappa u))$.
 \end{proof}
 
 \begin{proof}[Proof of (c)]
-$|\mu_1|\le|K_{\mathbb Q}f_1|+|K_{\mathrm{pt}}f_1|$, and both are bounded in the same way; the restrictions $P^+(m')\le x/m'$ are simply
-dropped.
+% Logged correction 74 (CORRECTIONS-vs-v3.md): both operators are sharp, so |f_1(q)| <= eta_H(q) f_0(q) applies to every
+% component; the filter is dropped only in the first bullet.
+$|\mu_1|\le|K^{\mathrm{sh}}_{\mathbb Q}(f_1\mathbf 1_{[X_0,\infty)})|+|K_{\mathrm{pt}}(f_1\mathbf 1_{[X_0,\infty)})|$. Each is at most a
+sum of $|f_1(x/m')|/m'$ over cofactors $m'$ with $x/m'\ge X_0$ (realised cofactors $w$ for $K_{\mathrm{pt}}$), so $m'\le x/X_0$ in
+both systems, and $|f_1(q)|\le\eta_{\mathrm H}(q)f_0(q)$ for every such component: both operators are sharp, so no partial window
+occurs. The two are bounded in the same way. The latest-prime filter is dropped in the first bullet and kept in the second, where
+it reads $P^+(m')\le y$ for $K^{\mathrm{sh}}_{\mathbb Q}$ and $P^+(w)<y+H(y)$ for $K_{\mathrm{pt}}$.
 \begin{itemize}
 \item Components with $q=x/m'\ge y:=x^{1/U}$ have $\eta_{\mathrm H}(q)\le(\log x/U)^{-3}$, and
 $\sum_{m'\le x/y}1/(m'\log(x/m'))\le\log U+0.01$.
 % Logged correction 63 (CORRECTIONS-vs-v3.md): v3 cites sum_{m<=t}1/m = log t + gamma + O(2 kappa) "from Step 1 of (b)";
 % partial summation of an error 2 kappa t only gives O(kappa log t). The bound actually used follows from (H_BS) directly.
-  Indeed, on $\Good(<x)$ the hypothesis \eqref{eq:HBS} holds on $[1,x]$, so with $S(t):=\sum_{m\le t}1/m$ and $E:=N-\lfloor\cdot\rfloor$,
+% Logged correction 73: on Good(<x), (H_BS) is certified only up to the horizon; the sum needs it only on [1,x/X_0].
+  Indeed, on $\Good(<x)$ the hypothesis \eqref{eq:HBS} holds on $[1,x/X_0]$, below the certified horizon (Remark~\ref{rem:horizon}),
+  and only $m'\le x/y\le x/X_0$ occur. So with $S(t):=\sum_{m\le t}1/m$ and $E:=N-\lfloor\cdot\rfloor$,
   $S(t)-H_{\lfloor t\rfloor}=E(t)/t+\int_1^tE(u)\,du/u^2$ has absolute value at most $\eta_1+\eta_1\log2\le0.0017$ (where
   $H_n:=\sum_{k\le n}1/k$). As $|H_{\lfloor t\rfloor}-\log t|\le1$ for $t\ge1$, $e(t):=S(t)-\log t$ satisfies $|e(t)|\le1.002$, and
   $e(1^-)=0$. Stieltjes integration by parts against the increasing weight $1/\log(x/t)$ on $[1,x/y]$ gives
@@ -287,8 +313,10 @@ $\sum_{m'\le x/y}1/(m'\log(x/m'))\le\log U+0.01$.
     &\le\log U+\frac{1.002}{\log y}+1.002\Bigl(\frac1{\log y}-\frac1{\log x}\Bigr)\le\log U+\frac{2.004}{\log y},
   \end{align*}
   which is $\le\log U+0.01$ as $y\ge X_0$.
-\item Components with $q\in[X_0,y)$ have $\eta_{\mathrm H}\le\Lambda^{-3}$, $1/\log q\le1/\Lambda$, and $m'\ge x/y$ with $P^+(m')\le y$. Rankin's
-method with exponent $1-2/\log y$ bounds $\sum1/m'$ by
+\item Components with $q\in[X_0,y)$ have $\eta_{\mathrm H}\le\Lambda^{-3}$, $1/\log q\le1/\Lambda$, and $m'\ge x/y$ with
+$P^+(m')\le y+H(y)$. The realised primes in $(y,y+H(y)]$ number at most $2.01H(y)$ (their slots start in an interval of length
+$2H(y)(1+10^{-6})$, and consecutive continuous-slot starts are almost $1$ apart), and each has $p^{2/\log y-1}\le7.4/y$; so they
+change the Euler product below by a factor $\le\exp(15H(X_0)/X_0)\le1+e^{-0.9\Lambda}$, which its factor $2$ absorbs. Rankin's method with exponent $1-2/\log y$ bounds $\sum1/m'$ by
 $e^{-2(U-1)}\prod_{p\le y}(1-p^{2/\log y-1})^{-1}\le e^{-2(U-1)}\cdot2e^{\gamma}e^{\operatorname{Ein}(2)}\log y$. Mertens' theorem for the
 realised primes is Lemma~\ref{lem:cm}(iii),(iv), and $\NN$ is free on its primes.
 \item The first bound is the case $y=X_0$ (that is, $U=v$), with $\sum_{m'\le x/X_0}1/(m'\log(x/m'))\le\log v+0.01$.
@@ -358,7 +386,8 @@ each $N$-term varies by at most $3.1/(N\Lambda)$ on its window (at most $1.0001(
 to $0$ at the end), so $g$ has total variation $\le(3.1/\Lambda)(\log(\beta/\alpha)+1)$ on $[\alpha,\beta]$.
 % Logged correction 53: the Abel summation for a non-smooth g made explicit, with the constant 17 broken down (independent check R7, C2).
 As $g$ is not smooth, the Abel summation of one replacement is done discretely, over the merged atoms of $\psi_{\NN}$ and $\psi$ in
-$[\Xm,b]$. With $\tilde g(t):=g(u/(m_jt))$, the product rule splits each difference of $\tilde g(t)/(m_jt\log t)$ into a
+$[\Xm,b]$; the prime powers of the large primes among these atoms cost at most $\sup|g|/(m_j\Xm)$. With
+$\tilde g(t):=g(u/(m_jt))$, the product rule splits each difference of $\tilde g(t)/(m_jt\log t)$ into a
 difference of $1/(m_jt\log t)$ and a difference of $\tilde g$, and $|\Delta_\psi(t)|/(m_jt\log t)\le5\kappa\log b/m_j$ is taken
 out as a supremum. The boundary terms give $5.1\kappa\log b/(m_j\Lambda)$, the differences of $1/(t\log t)$ give
 $1.40\kappa(\log^2b+2\log b)/(m_j\Lambda)$, and the variation of $\tilde g$, which is that of $g$ on $[u/(m_jb),u/(m_j\Xm)]$, gives
@@ -369,7 +398,7 @@ $15.5\kappa\log^2b/(m_j\Lambda)$, as $\log\Xm\ge1$. Since $79\le\log\Xm\le\log b
 in place of $4\kappa\log^2u/(m_j\Lambda)$. Summing over the other variables as in Step~3 gives at most
 $17.2e^{\gamma}\kappa\log^2u\,e^{\ell_u}\le31\kappa(\log u)^3/\Lambda$. The remaining items of ``the rest'' are smaller: the
 decision-order count holds with $\sup|g|\le0.51/\Lambda$, and there are no partial windows, as both operators are sharp. So
-$|(K'_{\mathbb Q}-K_{\mathrm{pt}})g(u)|\le4\kappa(\log u)^3$ for $\log\log u\le\Lambda/8$. By
+$|(K'_{\mathbb Q}-K_{\mathrm{pt}})g(u)|\le4\kappa(\log u)^3$. By
 Lemma~\ref{lem:lemmaM}, $\log x\,|\rho_{\mathrm{edge}}-g|(x)\le4.1\kappa(\log x)^5\le X_0^{-0.34}$ for $\log x\le X_0^{1/100}$.
 \end{proof}
 

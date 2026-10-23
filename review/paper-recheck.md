@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#72)
+## Addendum: defects found after the re-check (corrections #31–#77)
 
-After the first public version, a reader reported twenty-five defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, turned up seventeen more. The full list, with each repair, is entries #31–#72 of `CORRECTIONS-vs-v3.md`:
+After the first public version, a reader reported twenty-seven defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, and two end-to-end checks (R14, R15), turned up twenty more. The full list, with each repair, is entries #31–#77 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -110,9 +110,14 @@ re-checking the repairs, turned up seventeen more. The full list, with each repa
 | 70 | Thm lp | log K = O(Λ) made explicit: log K ≤ 98 + 5.9 log Λ (box-spline kernel, explicit contour constants) | sweep (#69) |
 | 71 | Prop ecl, low heights | "direct (F1)–(F2) count (1.01\|J\|)^{r₀}/r₀!" omitted the rigid-cofactor sums Σ1/d; the case is now handled by Theorem R, which includes them | reader |
 | 72 | Thm caplw, Steps 1 and 5 | "log(2Λ/ℓ) ≥ 16" (actually 15.357) and "107.6(0.334+7.17t)² ≤ 6053" (6058.96 at t = 1) false at Λ = 10⁸; replaced by ≥ 15.3 > 6 and 107.6γ² ≤ 6052.5 | reader |
+| 73 | Def good and its consumers; new Remark horizon | Good(<z) certifies queue bounds only up to ž = z − 12 log z − 3 (slots can be ≈ 11 log z long), but the lag bound, (H_BS), Lemma cm, (LP-a) and others were claimed up to z; 10 sites had insufficient written margin (one feeds the E3/E3′ event); now stated once and swept (66 sites) | reader |
+| 74 | Lemma margin, μ₀/μ₁ and (c) | μ₁ used the window-filtered K_ℚ, so it contained ν₁ partial windows its proof did not bound; μ₁ now uses the sharp operator and the partial windows sit in μ₀ (already budgeted) | end-to-end check R15 |
+| 75 | grid windows; Thm R, PIL, Prop ecl, Cor increment, Lemma P(iv), rowweights | windows near 2z stuck out of J ⊂ [z,2z]; now assigned by left end, J ⊂ [z,2z+1], D = log(2z+1)/log X₀⁻, explicit margins; boundary coverage in Cor increment and Lemma P(iv) repaired | end-to-end check R14 |
+| 76 | §2 choice of γ_k; Lemmas goodheights, latenoise; Thm zeros | with "in §3 x_k means x_k⁺", γ_k was chosen from data that depend on R_k(γ_k): circular; and γ_k was not defined pathwise; now chosen below the unshifted scale a_k by an explicit measurable rule | reader |
+| 77 | §2 Slots (ϑ_s, s_j) | "only countably many ϑ_s are excluded" false once Abs or R is active; a tie made J_j empty; slots are now hitting times, defined for every ϑ_s and ω | independent check R17 |
 
 **Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72 in twenty-two passes
-(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -130,7 +135,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the seventy-two corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the seventy-seven corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and

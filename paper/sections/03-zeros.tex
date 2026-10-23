@@ -231,12 +231,15 @@ $\int_0^1\phi'=1$.
 \item Write $M_k$ for the resonant term (the one with $w$) and $E_k$ for the conjugate one. On $0.99\le\sigma\le2$, $|t-\gamma_k|\le1$,
 \[
   |E_k|\le0.51\,x_k^{\theta-\sigma},\qquad\sum_{j<k}|\widehat R_j|\le2.02\,x_1^{\theta-\sigma},\qquad
-  \sum_{j>k}|\widehat R_j|\le4.2\,x_ke^{-0.49x_k}.
+  \sum_{j>k}|\widehat R_j|\le4.2\,x_ke^{-0.24x_k}.
 \]
 Indeed $\operatorname{Re}w,\operatorname{Re}w'\ge0.49$ there and $|\Phi|\le1$. For $E_k$, $|s|\le0.5001|w'|$. For $j<k$, $|s|\le1.0001|w|$
 and $|s|\le|w'|$, since $\gamma_j\le x_j\le2\log x_k$ is negligible against $\gamma_k\ge\Gamma_k$; and the $x_j$ grow
 super-exponentially. For $j>k$, $|w|,|w'|\ge0.49$, $|s|\le\gamma_k+3\le x_k$ and $x_j^{\theta-\sigma}\le x_j^{-0.49}$ with
-$x_j\ge\exp(x_{j-1})\ge\exp(x_k)$. Together the three bounds are at most $3e^{-0.49X_0^2}$.
+$x_j\ge\exp(x_k/2)$ (the spacing $x_j\ge\exp(x_{j-1})$ of Section~\ref{sec:params} holds for the construction scales). Together
+the three bounds are at most $3e^{-0.49X_0^2}$.
+% Logged correction 76 (R17, C76-3): with x_j = x_j^+ here, only x_j >= exp(x_k/2) holds for j > k; the exponent 0.49x_k
+% becomes 0.24x_k, and the total 3e^{-0.49 X_0^2} is unaffected.
 \item On $\sigma\ge1-8/\log X_0$, at every height,
 \begin{equation}\label{eq:Rhatbound}
   |\widehat R(s)|\le|s|\,e^{-0.39X_0^2}.
@@ -290,33 +293,59 @@ and $|t|\ge\Gamma_k-1\ge\Gamma_1/2$ there. So $Z_B$ is evaluated only where Lemm
 \begin{lemma}[Late noise]\label{lem:latenoise}
 % v3: Lemma 2.2
 % Logged correction 67: the limit "-> 0" is replaced by the explicit bound 165 Lambda x_k^{-1/8}.
-On the circle of Lemma~\ref{lem:designedzero}, with $\widehat D_{\ge x_k}(s):=\int_{x_k}^\infty x^{-s}\,dD$,
+% Logged correction 76 (CORRECTIONS-vs-v3.md): the tail now starts at the construction scale a_k (Lemma goodheights), so it
+% contains the strip [a_k, x_k]; the comparison with s^* (built from x_k = x_k^+) is redone with a_k.
+On the circle of Lemma~\ref{lem:designedzero}, with $a_k$ as in Lemma~\ref{lem:goodheights} and
+$\widehat D_{\ge a_k}(s):=\int_{[a_k,\infty)}x^{-s}\,dD$,
 \[
-  |\widehat D_{\ge x_k}(s)|\le6.001e\cdot|w^*|\cdot x_k^{\eta-\theta}\cdot\frac{Z_{\max}}{\alpha_k\operatorname{Re}\Phi_{\min}}
+  |\widehat D_{\ge a_k}(s)|\le6.001e\cdot|w^*|\cdot x_k^{\eta-\theta}\cdot\frac{Z_{\max}}{\alpha_k\operatorname{Re}\Phi_{\min}}
   \le165\,\Lambda\,x_k^{-1/8}\qquad(|w^*|\le1).
 \]
 \end{lemma}
 \begin{proof}
-By parts, $|\int_{x_k}^\infty x^{-s}\,dD|\le3|s|x_k^{\eta-\sigma}$, using \eqref{eq:La}. On the circle,
+By parts, $|\int_{[a_k,\infty)}x^{-s}\,dD|\le3|s|a_k^{\eta-\sigma}$, using \eqref{eq:La}. On the circle $\sigma\le1.01$, so
+$a_k^{\eta-\sigma}\le x_k^{\eta-\sigma}(x_k/a_k)^{\sigma}\le(1+5H(a_k)/a_k)\,x_k^{\eta-\sigma}$, as $x_k=a_k+2H(a_k)$. Also
 $x_k^{-\sigma}\le e\,x_k^{-\operatorname{Re}s^*}=e\,x_k^{-\theta}/|G(w^*)|$, and $|G(w^*)|\ge|s^*|\alpha_k\operatorname{Re}\Phi_{\min}/(2|w^*|Z_{\max})$.
-The factor $|s|/|s^*|\le1.0001$ cancels. For the last bound, $|w^*|\le1$, $Z_{\max}=2\Lambda$, $\alpha_k\ge1$,
-$\operatorname{Re}\Phi_{\min}=e^{-1}\cos1\ge0.198$, and $\eta-\theta\le-\theta/2\le-\frac18$.
+The factors $|s|/|s^*|\le1.0001$ and $1+5H(a_k)/a_k\le1+10^{-10}$ cost at most $6\cdot1.0001\cdot(1+10^{-10})\le6.001$ in place of
+$6$. For the last bound, $|w^*|\le1$,
+$Z_{\max}=2\Lambda$, $\alpha_k\ge1$, $\operatorname{Re}\Phi_{\min}=e^{-1}\cos1\ge0.198$, and $\eta-\theta\le-\theta/2\le-\frac18$.
 \end{proof}
 
 \begin{lemma}[Good heights exist]\label{lem:goodheights}
 % v3: Lemma 2.3
-Let $\Gamma_k:=\kappa_0x_k^{1-\theta}/(2\log^3x_k)$. There is $\gamma_k\in[\Gamma_k,2\Gamma_k]$ with:
+% Logged correction 76 (CORRECTIONS-vs-v3.md): v3 reads D up to x_k, which in this section means x_k^+ = a_k + 2H(a_k); the
+% system on [1,x_k^+) involves slots past x_k^+, where R_k, and so gamma_k, enters T. The information cutoff is now the
+% construction scale a_k, and gamma_k is defined for every omega by an explicit measurable rule (v3 only asserts existence).
+Let $\Gamma_k:=\kappa_0x_k^{1-\theta}/(2\log^3x_k)$, and let $a_k$ be the construction scale of Section~\ref{sec:target}, so that
+$x_k=a_k+2H(a_k)$ in this section. Put $\widehat D_{<a_k}(s):=\int_{[\Xm,a_k)}x^{-s}\,dD$, and let $\mathcal S_k$ be the set of
+$\gamma\in[\Gamma_k,2\Gamma_k]$ with:
 \begin{enumerate}[label=(\roman*)]
-\item $|Z_B(1+i\gamma_k)|\ge0.6$;
-\item $|\widehat D_{<x_k}(s)|\le1/16$ on $|s-(1+i\gamma_k)|\le\tfrac18$, where $\widehat D_{<x_k}(s):=\int_{\Xm}^{x_k}x^{-s}\,dD$.
+\item $|Z_B(1+i\gamma)|\ge0.6$;
+\item $|\widehat D_{<a_k}(s)|\le1/16$ on $|s-(1+i\gamma)|\le\tfrac18$.
 \end{enumerate}
-The choice uses only the system on $[1,x_k)$, which does not depend on $\gamma_k$. So $R_k$, and hence $T$, is adapted
-(Lemma~\ref{lem:adapted}).
+Put $\gamma_k:=\min\mathcal S_k$ if $\mathcal S_k\ne\emptyset$, and $\gamma_k:=\Gamma_k$ otherwise. Then $\gamma_k\in[\Gamma_k,2\Gamma_k]$ is
+defined for every $\omega$, and it is a measurable function of the system on $[1,a_k)$, which is decided at slots
+$\le a_k+0.51H(a_k)<x_k$ and so does not depend on $\gamma_k$. So $R_k$, and hence $T$, is adapted (Lemma~\ref{lem:adapted}).
+On $\Good(<a_k+H(a_k))$, which contains $\mathcal G$, the set $\mathcal S_k$ has measure at least $0.018\,\Gamma_k$; in particular
+$\gamma_k\in\mathcal S_k$ there.
 \end{lemma}
 \begin{proof}
 % Logged correction 64 (CORRECTIONS-vs-v3.md): v3 used a mean value theorem with an unspecified constant and concluded that the
 % bad set is small "once X_0 is large"; every constant below is explicit, so the lemma holds for every admissible X_0.
-Put $\Gamma:=\Gamma_k$. Both parts use the mean value theorem of Montgomery and Vaughan. Let $\mu_r$ be distinct reals,
+% Logged correction 76 (R17, C76-5): the bound a_k + 0.51H(a_k) on the slots also uses eq:RH.
+\emph{The rule.} Both conditions are closed in $\gamma$: $Z_B$ is continuous on $\sigma=1$, $t\ne0$ \eqref{eq:ZBformula}, and
+$\widehat D_{<a_k}$ is entire, so $g(\gamma):=\max_{|s-(1+i\gamma)|\le1/8}|\widehat D_{<a_k}(s)|$ is continuous. Hence $\mathcal S_k$ is
+compact, and $\min\mathcal S_k$ exists if $\mathcal S_k\ne\emptyset$. Put $h(\gamma):=\max(0.6-|Z_B(1+i\gamma)|,\,g(\gamma)-\frac1{16})$, a
+continuous function of $\gamma$ and a measurable function of the system on $[1,a_k)$ (which determines the finite measure $dD$ on
+$[\Xm,a_k)$). For $c\in[\Gamma_k,2\Gamma_k)$, $\{\gamma_k\le c\}=\{\min_{[\Gamma_k,c]}h\le0\}\cup\{\min_{[\Gamma_k,2\Gamma_k]}h>0\}$, and each
+minimum is an infimum over a countable dense set; so $\gamma_k$ is measurable. The system on $[1,a_k)$ consists of the elements
+below $a_k$, whose primes are decided at slots $\le a_k+0.51H(a_k)$ (as $s-H(s)/2$ increases, and $H(a_k+0.51H(a_k))\le1.01H(a_k)$
+by \eqref{eq:RH}), and of $T$ on $[1,a_k)$; those slots
+and their decisions are read off $T$ on $[1,a_k+H(a_k)]$, where $R_k\equiv0$ (\S\ref{sec:target}). The fallback $\gamma_k=\Gamma_k$
+gives $\alpha_k=2$ in Theorem~\ref{thm:zeros}, so $\alpha_k\in[1,2]$ and \eqref{eq:ampl}, hence \eqref{eq:G1}, hold for every
+$\omega$.
+
+Put $\Gamma:=\Gamma_k$. The bounds on $\mathcal S_k$ use the mean value theorem of Montgomery and Vaughan. Let $\mu_r$ be distinct reals,
 $\delta_r:=\min_{r'\ne r}|\mu_r-\mu_{r'}|$, and $b_r$ coefficients with $\sum_r|b_r|<\infty$ and $\sum_r|b_r|^2/\delta_r<\infty$. Then, for
 all $T_0\in\R$ and $T>0$,
 \begin{equation}\label{eq:MV}
@@ -341,10 +370,16 @@ at most $200\Lambda^4e^{-X_0^2/3}$, and $\E|Z_\infty(1+it)|^2\in[1,\zeta(2)]$. T
 $|Z_\infty(1+it)|\ge2^{-1/2}$ on a set of $t$ of density $\ge\frac14/6.8>0.036$, independently of $X_0$. Lemma~\ref{lem:ZB} moves this by
 at most $\exp(-X_0^2/4)$.
 
-\emph{(ii)} Write $f:=\widehat D_{<x_k}$ and $V:=\log x_k\ge X_0^2$, and work on $\Good(<x_k)$, where \eqref{eq:La} holds below $x_k$.
-Since $\kappa_0\ge X_0^{-1}$,
+% Logged correction 73 (CORRECTIONS-vs-v3.md): v3 works on Good(<x_k), where the queue bound, hence eq:La, is certified only
+% up to x_k - 12 log x_k - 3; the cutoff is raised to a_k + H(a_k). This changes no event time: the choice of gamma_k still
+% reads only the system on [1,a_k), and only its existence on G is used (Theorem thm:zeros).
+% Logged correction 76: the proof of (ii) runs with a_k in place of x_k^+; Gamma and the disc are unchanged.
+% Logged correction 76 (R17, C76-2): gamma_j <= x_j <= 2V, as x_{k-1} = x_{k-1}^+ <= 2a_{k-1} <= 2V.
+\emph{(ii)} Write $f:=\widehat D_{<a_k}$ and $V:=\log a_k\ge X_0^2$, and work on $\Good(<a_k+H(a_k))$, where \eqref{eq:La} holds on
+$[\Xm,a_k+2]$ (Remark~\ref{rem:horizon}). This event contains $\mathcal G$, on which Theorem~\ref{thm:zeros} uses (ii).
+Since $\kappa_0\ge X_0^{-1}$, and $u^{1-\theta}/\log^3u$ increases for $\log u\ge6$ while $x_k\ge a_k$,
 \begin{equation}\label{eq:Gammalow}
-  \Gamma\ge\frac{x_k^{1-\theta}}{2X_0V^3},\qquad 1-\theta\ge\tfrac12+10^{-4}.
+  \Gamma\ge\frac{a_k^{1-\theta}}{2X_0V^3},\qquad 1-\theta\ge\tfrac12+10^{-4}.
 \end{equation}
 Let $Q:=[\frac34,\frac54]\times[\Gamma-\frac14,2\Gamma+\frac14]$ in the coordinates $(\sigma,t)$, and
 $\|F\|:=(\Gamma^{-1}\iint_Q|F|^2\,d\sigma\,dt)^{1/2}$. As the area of $Q$ is at most $\Gamma$, $\|F\|\le\sup_Q|F|$.
@@ -356,28 +391,28 @@ $\le\frac12$, so the $\gamma\in[\Gamma,2\Gamma]$ at which (ii) fails have measur
 $\|f\|\le12X_0^{-3/16}$; then this measure is $\le3.8\cdot10^5X_0^{-3/8}\,\Gamma<0.018\,\Gamma$.
 \item \emph{Decomposition.} With $\mathcal B:=\NN\setminus(\mathcal D\cup\Abs)$, counted with multiplicity,
 \[
-  f=\sum_{n\in\mathcal B,\ \Xm\le n<x_k}n^{-s}-\int_{X_0}^{x_k}x^{-s}(1-\rhodet-\bar\rho_{\Abs}+R')\,dx,
+  f=\sum_{n\in\mathcal B,\ \Xm\le n<a_k}n^{-s}-\int_{X_0}^{a_k}x^{-s}(1-\rhodet-\bar\rho_{\Abs}+R')\,dx,
 \]
 by \eqref{eq:target}, and by Minkowski's inequality it suffices to bound the norms of the five pieces.
-\item \emph{The $1$ and $\rhodet$ parts.} On $Q$, $|\int_{X_0}^{x_k}x^{-s}dx|\le2x_k^{1/4}/|t|$. The $\rhodet$ part is a truncated
-$\sum_{d\in\mathcal D}d^{-s}W(s)$, with $W$ as in \eqref{eq:ZBformula}. Each rigid $d$ with $[d/(1+\kappa),d]\subset[X_0,x_k]$ contributes
-$d^{-s}W(s)$, and $|W(s)|\le3/(\kappa|t|)$. The at most $\kappa X_0+1$ rigid $d\in[X_0,(1+\kappa)X_0)$, and the at most $\kappa x_k+1$
-rigid $d\in(x_k,(1+\kappa)x_k]$, have truncated ramps, each of modulus $\le2.01a^{-\sigma}/(\kappa|t|)$, with $a=X_0$, respectively
-$a=x_k/(1+\kappa)$. So this part is at most $(3Z_\infty(\frac34)/\kappa+3X_0^{1/4}+3x_k^{1/4})/|t|$, where
+\item \emph{The $1$ and $\rhodet$ parts.} On $Q$, $|\int_{X_0}^{a_k}x^{-s}dx|\le2a_k^{1/4}/|t|$. The $\rhodet$ part is a truncated
+$\sum_{d\in\mathcal D}d^{-s}W(s)$, with $W$ as in \eqref{eq:ZBformula}. Each rigid $d$ with $[d/(1+\kappa),d]\subset[X_0,a_k]$ contributes
+$d^{-s}W(s)$, and $|W(s)|\le3/(\kappa|t|)$. The at most $\kappa X_0+1$ rigid $d\in[X_0,(1+\kappa)X_0)$, and the at most $\kappa a_k+1$
+rigid $d\in(a_k,(1+\kappa)a_k]$, have truncated ramps, each of modulus $\le2.01X_0^{-\sigma}/(\kappa|t|)$, respectively
+$\le2.01(a_k/(1+\kappa))^{-\sigma}/(\kappa|t|)$. So this part is at most $(3Z_\infty(\frac34)/\kappa+3X_0^{1/4}+3a_k^{1/4})/|t|$, where
 $\log Z_\infty(\frac34)\le2.47\sum_{2\le n<X_0}n^{-3/4}\le10X_0^{1/4}$ and $1/\kappa\le X_0$. As $|t|\ge0.99\Gamma$, the two parts together
-are at most $6x_k^{1/4}/\Gamma\le12X_0V^3x_k^{-1/4}$ on $Q$, by \eqref{eq:Gammalow}.
-\item \emph{The $R'$ part.} On $[X_0,x_k]$ we have $R'=\sum_{j<k}R'_j$, and
-$\int_{X_0}^{x_k}x^{-s}R'_j\,dx=\widehat R_j(s)-\int_{x_k}^\infty x^{-s}R'_j\,dx$. On $Q$, $\operatorname{Re}w,\operatorname{Re}w'\ge\frac14$ in
-\eqref{eq:Rhat}, so $|\Phi|\le1$ there; and $|s|\le1.0001\min(|w|,|w'|)$, since $\gamma_j\le x_j\le V$ is negligible against $\Gamma$. So
-$|\widehat R_j(s)|\le2.01x_j^{-1/4}$. Beyond $x_k$ we have $\phi=1$ in $R_j$, so $|R'_j(x)|\le2(\gamma_j+1)x^{\theta-1}$, and the tail
-is at most $8(\gamma_j+1)x_k^{-1/4}$. With $\sum_{j<k}(\gamma_j+1)\le12V$, the $R'$ part is at most
-$2.02x_1^{-1/4}+100Vx_k^{-1/4}\le2.02e^{-X_0^2/4}+100Vx_k^{-1/4}$ on $Q$.
+are at most $6a_k^{1/4}/\Gamma\le12X_0V^3a_k^{-1/4}$ on $Q$, by \eqref{eq:Gammalow}.
+\item \emph{The $R'$ part.} On $[X_0,a_k]$ we have $R'=\sum_{j<k}R'_j$, and
+$\int_{X_0}^{a_k}x^{-s}R'_j\,dx=\widehat R_j(s)-\int_{a_k}^\infty x^{-s}R'_j\,dx$. On $Q$, $\operatorname{Re}w,\operatorname{Re}w'\ge\frac14$ in
+\eqref{eq:Rhat}, so $|\Phi|\le1$ there; and $|s|\le1.0001\min(|w|,|w'|)$, since $\gamma_j\le x_j\le2V$ is negligible against $\Gamma$. So
+$|\widehat R_j(s)|\le2.01x_j^{-1/4}$. Beyond $a_k$ we have $\phi=1$ in $R_j$, so $|R'_j(x)|\le2(\gamma_j+1)x^{\theta-1}$, and the tail
+is at most $8(\gamma_j+1)a_k^{-1/4}$. With $\sum_{j<k}(\gamma_j+1)\le12V$, the $R'$ part is at most
+$2.02x_1^{-1/4}+100Va_k^{-1/4}\le2.02e^{-X_0^2/4}+100Va_k^{-1/4}$ on $Q$.
 \item \emph{The $\bar\rho_{\Abs}$ part.} By Plancherel in $\log x$, for each $\sigma$,
-$\int_\R|\int_{X_0}^{x_k}x^{-\sigma-it}\bar\rho_{\Abs}(x)\,dx|^2dt=2\pi\int_{X_0}^{x_k}x^{1-2\sigma}\bar\rho_{\Abs}(x)^2\,dx$. Here
+$\int_\R|\int_{X_0}^{a_k}x^{-\sigma-it}\bar\rho_{\Abs}(x)\,dx|^2dt=2\pi\int_{X_0}^{a_k}x^{1-2\sigma}\bar\rho_{\Abs}(x)^2\,dx$. Here
 $\bar\rho_{\Abs}\le0.1/\log x\le0.1/\Lambda$ by the cap in \eqref{eq:target}, and $x^{1-2\sigma}\le x^{-1/2}$ on $Q$. So the norm of this part
-is at most $(0.02\pi x_k^{1/2}/(\Lambda^2\Gamma))^{1/2}\le(X_0V^3x_k^{\theta-1/2})^{1/2}\le(X_0V^3)^{1/2}x_k^{-5\cdot10^{-5}}$.
-\item \emph{The Dirichlet sum} $S:=\sum_{n\in\mathcal B,\ \Xm\le n<x_k}n^{-s}$. For $\Xm\le a\le b\le x_k$, the elements of $\mathcal B$ in
-$[a,b]$ number $D(b)-D(a-)+\int_{[a,b]\cap[X_0,\infty)}T'_{\mathrm{cont}}$, where $T'_{\mathrm{cont}}\le1+|R'|\le1.01$ and $|D|\le x^{\eta}$.
+is at most $(0.02\pi a_k^{1/2}/(\Lambda^2\Gamma))^{1/2}\le(X_0V^3a_k^{\theta-1/2})^{1/2}\le(X_0V^3)^{1/2}a_k^{-5\cdot10^{-5}}$.
+\item \emph{The Dirichlet sum} $S:=\sum_{n\in\mathcal B,\ \Xm\le n<a_k}n^{-s}$. For $\Xm\le u\le v\le a_k$, the elements of $\mathcal B$ in
+$[u,v]$ number $D(v)-D(u-)+\int_{[u,v]\cap[X_0,\infty)}T'_{\mathrm{cont}}$, where $T'_{\mathrm{cont}}\le1+|R'|\le1.01$ and $|D|\le x^{\eta}$.
 So a window of length $2$ in $[\Xm,2N+2]$ holds at most $K(N):=2(2N)^{\eta}+5$ of them, and $(N,2N]$ holds at most $1.02N$. Split $S$
 into blocks $S_N$ over $n\in(N,2N]$, $N=2^{j-1}\Xm$ ($j\ge0$). List $\mathcal B\cap(N,2N]$ in increasing order, and split it into
 $\lfloor K(N)\rfloor$ classes by the index modulo $\lfloor K(N)\rfloor$. Consecutive elements $n<n'$ of a class are $\lfloor K(N)\rfloor$ places
@@ -388,13 +423,14 @@ apart, so $n'>n+2$ and $\log n'-\log n\ge\log(1+1/N)\ge1/(N+1)$. By \eqref{eq:MV
 For $\sigma\ge\frac34$, $N\ge\Xm/2$ and $\eta\le\frac18$ this gives $\|S_N\|^2\le1.2N^{\eta-1/2}(1+10N/\Gamma)$. Summing $\|S_N\|$ over the
 blocks gives two geometric series, with ratios $\le2^{-3/16}$ and $\ge2^{1/4}$; so, by \eqref{eq:Gammalow},
 \[
-  \|S\|\le11X_0^{-3/16}+22\,x_k^{\eta/2+1/4}\,\Gamma^{-1/2}\le11X_0^{-3/16}+32(X_0V^3)^{1/2}x_k^{(\theta+\eta)/2-1/4}.
+  \|S\|\le11X_0^{-3/16}+22\,a_k^{\eta/2+1/4}\,\Gamma^{-1/2}\le11X_0^{-3/16}+32(X_0V^3)^{1/2}a_k^{(\theta+\eta)/2-1/4}.
 \]
 Here $(\theta+\eta)/2-\frac14\le-2.5\cdot10^{-5}$, since $\eta\le(\frac12-\theta)/2$ and $\theta\le\frac12-10^{-4}$.
 \item \emph{Conclusion.} Since $V\ge X_0^2$ and $X_0\ge e^{10^8}$, each of the other four bounds is below $0.1X_0^{-3/16}$. So
 $\|f\|\le12X_0^{-3/16}$.
 \end{itemize}
-Intersecting with (i) leaves a set of density $\ge0.018$.
+Intersecting with (i), which holds on a set of measure $\ge0.036\,\Gamma$, leaves $\mathcal S_k$ with measure $\ge0.018\,\Gamma$ on
+$\Good(<a_k+H(a_k))$.
 \end{proof}
 
 % Logged correction 64: the mean value theorem with an unspecified constant is now only a remark; the proof does not use it.
@@ -406,8 +442,9 @@ well-spaced classes above makes the constant explicit, so that (ii) holds for ev
 
 \begin{theorem}[Zeros]\label{thm:zeros}
 % v3: Theorem 2.4
-Choose $\gamma_k$ by Lemma~\ref{lem:goodheights}, and $\alpha_k:=\kappa_0x_k^{1-\theta}/(\gamma_k\log^3x_k)\in[1,2]$. On $\mathcal G$,
-$\zeta_{\PP}$ has a zero $\rho_k$ with $|\rho_k-s^*_k|\le1/\log x_k$ for every $k$. Hence
+% Logged correction 76: gamma_k is the height defined by the rule of Lemma goodheights (for every omega).
+Let $\gamma_k$ be as in Lemma~\ref{lem:goodheights}, and $\alpha_k:=\kappa_0x_k^{1-\theta}/(\gamma_k\log^3x_k)\in[1,2]$. On
+$\mathcal G$, $\zeta_{\PP}$ has a zero $\rho_k$ with $|\rho_k-s^*_k|\le1/\log x_k$ for every $k$. Hence
 \[
   \operatorname{Re}\rho_k=1-\frac{3\log\log x_k+O_{X_0}(1)}{\log x_k}\longrightarrow1.
 \]
@@ -417,13 +454,14 @@ Apply Rouch\'e's theorem on the circle of Lemma~\ref{lem:designedzero}, comparin
 bounded by
 % Logged correction 67: the two o(1) terms of v3 are replaced by explicit bounds.
 \[
-  |E_k|+\sum_{j\ne k}|\widehat R_j|+|\widehat D_{<x_k}|+|\widehat D_{\ge x_k}|+|\widehat E_{\Abs}|
+  |E_k|+\sum_{j\ne k}|\widehat R_j|+|\widehat D_{<a_k}|+|\widehat D_{\ge a_k}|+|\widehat E_{\Abs}|
   \le3e^{-0.49X_0^2}+\tfrac1{16}+165\Lambda e^{-X_0^2/8}+e^{-10^{10}}<\tfrac14,
 \]
 by the bullets after \eqref{eq:Rhat} (the circle lies in $0.99\le\sigma\le2$, $|t-\gamma_k|\le1$), Lemmas~\ref{lem:goodheights},
-\ref{lem:latenoise} and~\ref{lem:ZA}, and $x_k\ge x_1\ge e^{X_0^2}$. The hypotheses of Lemma~\ref{lem:designedzero} hold: on the
-disc, $|Z_B-Z_B(1+i\gamma_k)|\le\delta_k\cdot4.01\Lambda^2\le0.01$ (step~3 of that proof), so $|Z_B|\ge0.59$ by
-Lemma~\ref{lem:goodheights}(i); and $|Z_B|\le Z_{\max}$ by Lemma~\ref{lem:ZB}.
+\ref{lem:latenoise} and~\ref{lem:ZA}, and $x_k\ge x_1\ge e^{X_0^2}$; here $\gamma_k\in\mathcal S_k$ on $\mathcal G$, and the circle lies in the
+disc $|s-(1+i\gamma_k)|\le\delta_k\le\frac18$ (step~6 of the proof of Lemma~\ref{lem:designedzero}). The hypotheses of
+Lemma~\ref{lem:designedzero} hold: on the disc, $|Z_B-Z_B(1+i\gamma_k)|\le\delta_k\cdot4.01\Lambda^2\le0.01$ (step~3 of that
+proof), so $|Z_B|\ge0.59$ by Lemma~\ref{lem:goodheights}(i); and $|Z_B|\le Z_{\max}$ by Lemma~\ref{lem:ZB}.
 \end{proof}
 
 \begin{remark}

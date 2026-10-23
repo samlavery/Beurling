@@ -57,8 +57,10 @@ rational primes $p<X_0$, $t(p)=p$. For $w\in\NN$ put $\tau_w:=\max_{p\mid w}t(p)
   $\Good(<u)$ the cap is inactive: $\bar\rho_{\Abs}=\rho_{\Abs}$ (Remark~\ref{rem:stopped}).
 \item $R=\sum_k R_k$ is the designed oscillation. It vanishes below $x_1\ge\exp(X_0^2)$, has frequency
   $\gamma_k\in[\Gamma_k,2\Gamma_k]$, and $x_{k+1}\ge\exp(x_k)$.
+% Logged correction 76 (R17, C76-4): eq:ampl is exact at x_k^+, and holds at x_k up to the factor of Section sec:target.
 \item The amplitude condition \eqref{eq:ampl} reads $\alpha_k\gamma_kx_k^{\theta-1}=\kappa_k'/\log x_k$, with
-  $\kappa_k'=\kappa_0/\log^2x_k$ and $\kappa_0\le\frac14$. Hence
+  $\kappa_k'=\kappa_0/\log^2x_k$ and $\kappa_0\le\frac14$. (Exactly so with $x_k^+$ in place of $x_k$; with $x_k$, up to the factor
+  $1+2H(x_k)/x_k$ of Section~\ref{sec:target}.) Hence
   \begin{equation}\label{eq:Rkprime}
     |R_k'(v)|\le\kappa_k\,(v/x_k)^{\theta-1},\qquad \kappa_k:=2\kappa_k'/\log x_k.
   \end{equation}
@@ -129,8 +131,12 @@ $|N(v)-\lfloor v\rfloor|\le\eps_1(v)\,v$ for $v\ge\Xm$. Put
 and require $\eta_1,\eta_2\le 10^{-3}$. In the construction, write
 $N-\lfloor\cdot\rfloor=(N-T)+(T-\lfloor\cdot\rfloor)$.
 \begin{itemize}
-\item On $\Good(<z)$ (Definition~\ref{def:good}), $|N-T|\le B(u)+\frac12H(u)(1+\kappa_+/\log u)+4$ at scales $u<z$, by
-  Theorem~\ref{thm:queue} and Corollary~\ref{cor:lag}.
+% Logged correction 73 (CORRECTIONS-vs-v3.md): v3 claims the lag bound at all heights u < z; on Good(<z) the queue bound
+% is certified only up to the horizon z - 12 log z - 3 (Remark rem:horizon).
+\item On $\Good(<z)$ (Definition~\ref{def:good}), $|N-T|\le B(u)+\frac12H(u)(1+\kappa_+/\log u)+4$ at heights
+  $X_0+2H(u)\le u\le\check z:=z-12\log z-3$, and $|N-T|\le B(X_0)+H(X_0)+5$ at heights $X_0\le u\le\min(X_0+2H,\check z)$, by Theorem~\ref{thm:queue},
+  Corollary~\ref{cor:lag} and Remark~\ref{rem:horizon}. Above $\check z$ the queue bound need not be certified on $\Good(<z)$;
+  so on $\Good(<z)$ the verification below gives \textup{(H$_{\mathrm{BS}}$)} on $[1,\check z]$.
 % Logged correction 15 (CORRECTIONS-vs-v3.md): lag bound (H/2)(1+kappa_+/log x)+3 (v3: H/2+2).
 % Logged correction 36 (CORRECTIONS-vs-v3.md): the lower lag constant is -4, so the two-sided bound has +4.
 % Logged correction 51 (CORRECTIONS-vs-v3.md): v3's bound 2*kappa*u*min(1, C rho(log u/log X_0)) for the rigid error was never
@@ -161,6 +167,29 @@ in the rigid part the term $(\kappa X_0+1)/u$ contributes
 \end{itemize}
 No sup-norm power saving is assumed; for the target \eqref{eq:target} it would fail near $u\approx X_0^2$.
 
+% Logged correction 73 (CORRECTIONS-vs-v3.md): the statements that assume (H_BS) globally read N only below an explicit height
+% Y', and every use on a good event keeps Y' below the certified horizon (R17, F73-1).
+\emph{Where the statements that assume \textup{(H$_{\mathrm{BS}}$)} read $\NN$.} Lemmas~\ref{lem:cm} and~\ref{lem:rankin-crude} state
+the range on which they use \textup{(H$_{\mathrm{BS}}$)}. Theorem~\ref{thm:bs}, Lemma~\ref{lem:smooth-v},
+Lemma~\ref{lem:S}(i), (iii), Corollary~\ref{cor:saias}, the constant $B_1$, the values $\zeta_{\NN}(1.8)$, $A_0$, $A_1$ of
+\S\ref{sec:kernels} and $F_\theta$ (\S\ref{sec:noise-bridge}) assume \textup{(H$_{\mathrm{BS}}$)}, but each reads $\NN$ only on some
+$[1,Y']$:
+\begin{itemize}
+\item $Y'=2Y$ for the sums over $\NN\cap(Y,2Y]$ in Theorem~\ref{thm:bs} and Lemma~\ref{lem:smooth-v}, whose recursions go down to
+  smaller heights and read Lemma~\ref{lem:cm} only below $2Y$;
+\item $Y'=y/v\le2y/\Xm$ for Lemma~\ref{lem:S}(i), (iii) and Corollary~\ref{cor:saias} at the start $y$ and scale $v\ge\Xm/2$
+  (for (iii), the starts $y\le x$ of $\Rres$ at $x$, \S\ref{sec:noise-bridge});
+% Logged correction 73 (R18, F1-F3): B_1 is read through Lemma M up to y/X_0^-, levels up to 2y/X_0^-, and Lemma S(iii) at starts y<=x.
+\item $Y'=y/\Xm$ for $B_1$: outside \ref{eq:sF3p} it enters only through $\sum_{n\in\NN,\,n\le y/\Xm}1/n\le\log y+B_1$
+  (Lemma~\ref{lem:lemmaM}) at a start $y$;
+\item for $\zeta_{\NN}(1.8)$, $A_0$, $A_1$, the largest $m$ summed, since every factor of $m$ is at most $m$, so
+  $\sum_{m\le Y'}\Hord(m)m^{-s}\le1/(2-\sum_{m\le Y'}m^{-s})$; the sums used run over levels $m\le2y/\Xm$ from a start $y$;
+\item $Y'=x/x_k$ for $F_\theta$, which is used only in Step~4 of the proof of Proposition~\ref{prop:g1}.
+\end{itemize}
+In every use on a good event $\Good(<z)$ the start is $y\le z+H(z)$, so these $Y'$ are at most $0.9z$, except for the harmonic sum
+of $B_1$ in \ref{eq:sF3p} on $\Good(<s)$, which stops at $Y\le\max(s/2,\,s-H(s/2))$. In all cases $Y'\le\check z$, and
+\textup{(H$_{\mathrm{BS}}$)} holds on $[1,Y']$ there (Remark~\ref{rem:horizon}).
+
 \begin{lemma}[Chebyshev--Mertens]\label{lem:cm}
 % v3: Lemma 3.1
 Assume \textup{(H$_{\mathrm{BS}}$)} on $[1,z]$, and let $\psi(x):=\sum_{p^k\le x}\log p$, summed over the realised
@@ -174,8 +203,11 @@ primes. Then for all $1\le x\le z$:
     \Big|\sum_{y<p\le x}\frac1p-\log\frac{\log x}{\log y}\Big|\le\frac{2.20}{\log y}=:\frac{K'}{\log y}.
   \]
 \end{enumerate}
-The proof at $x$ uses $N$ only on $[1,x]$. In particular \textup{(i)--(iv)} hold surely on $\Good(<z)$.
+The proof at $x$ uses $N$ only on $[1,x]$. On $\Good(<z)$, \textup{(H$_{\mathrm{BS}}$)} holds on $[1,\check z]$
+(Remark~\ref{rem:horizon}); so there \textup{(i)--(iv)} hold surely for every $x\le\check z$, in particular at every height
+$\le0.9z$ or $\le z-H(z)/2$.
 \end{lemma}
+% Logged correction 73: v3 states (i)-(iv) on Good(<z) for all x <= z; they are certified only up to the horizon.
 
 \begin{proof}
 Write $N=\lfloor\cdot\rfloor+E_1$, with $E_1$ supported on $[\Xm,\infty)$ and $|E_1(v)|\le\eps_1(v)v$. Since $\log$ is

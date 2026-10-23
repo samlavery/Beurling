@@ -182,6 +182,12 @@ where the queue constraint at $j$ carries the time $t_j:=\lceil s_{j+1}\rceil+1$
 Slots can be longer than $1$, but $s_{j+1}-s_j\le11.3L$ by \eqref{eq:G1}. The time $t_j$ is predictable, since $s_{j+1}$ is
 determined by $T$ on $[1,s_{j+1}]$ (Lemma~\ref{lem:adapted}). Then $\tau:=\min\{t:\Good(\le t)\text{ fails}\}$ is an
 $(\mathcal F_t)$-stopping time.
+% Logged correction 73 (CORRECTIONS-vs-v3.md): the certified horizon of Good(<t).
+% Logged correction 73 (R17, C73-1): the direct readers of Q are listed too.
+\item So $\Good(<t)$ certifies $Q_j\le B(s_j)$ for $s_j\le\check t:=t-12\log t-3$, but not always for $s_j\in(\check t,t)$
+(Remark~\ref{rem:horizon}). Every bound derived from the queue (Theorem~\ref{thm:queue} itself, in Lemma~\ref{lem:noise} and
+Corollary~\ref{cor:localcount}; Corollary~\ref{cor:lag}, \textup{(H$_{\mathrm{BS}}$)},
+Lemma~\ref{lem:cm}, (LP-a) of Theorem~\ref{thm:lp}, \eqref{eq:La}) is read on $\Good(<t)$ only at heights $\le\check t$.
 \item Each event's bound holds on $\Good(<t(E))$. Freedman's inequality is used in the form $\Prob(S\ge a,\ V\le v)$, or peeled,
 so no conditioning on the future enters.
 \item (D) The queue bound at $s_j$ is deterministic on $\Good(<t_j)\cap\bigcap_{t(E)\le t_j}E$ (Theorem~\ref{thm:queue}(ii)). The
@@ -193,8 +199,12 @@ holds at every scale.
 \emph{(N2) The inputs of the queue bound at $s_j\in[x,2x)$ all have time $\le t_j$.} R1$'$ (Corollary~\ref{cor:r1}) on a window $I$
 with $\max I\le t_j$ holds on $\Good(<\max I)$, and it reads:
 \begin{itemize}
-\item the local prime number theorem (Theorem~\ref{thm:lp}, against the target without the absorbed part) on $[1,u(1-2\delta)]$,
-which is pathwise in the realised count below, so no event is needed;
+% Logged correction 73: the local prime number theorem is read up to u(1-delta) (the window J of Proposition g1(B) ends
+% there), not u(1-2 delta); it needs (LP-a) there, i.e. queue bounds below the certified horizon.
+\item the local prime number theorem (Theorem~\ref{thm:lp}, against the target without the absorbed part) on $[1,u(1-\delta)]$,
+which is pathwise in the realised count below given (LP-a) there. The points $u$ of evaluation satisfy $u\le\max I+H$, so
+$u(1-\delta)\le u-u^{0.98}\le\max I-H$, and (LP-a) holds there on $\Good(<\max I)$ (Remark~\ref{rem:horizon}); no further
+event is needed;
 \item local counts at heights $\le u/2$ or $\le\sqrt u$, and one local count at height $u(1-\delta)$
 (the proof of Proposition~\ref{prop:g1}(B), Step~1), read before $u-\delta u+7H<u$;
 \item the per-scale noise event for the noise on $[1,u/2]$, at time $2v\le u$;
@@ -230,7 +240,10 @@ count, because a local count at height $x/q$ would force $B(x)\ge(3/c')L^2B(x/q)
 \item Membership in $\Abs$ is decided at the latest prime $r<y(n)\le n^{0.01}$, and $\rho_{\Abs}$ at $u$ reads only data decided before
 $u-H$ (Lemma~\ref{lem:adapted}).
 \item Lemma~\ref{lem:lemmaP} at $u$ reads the cluster event at heights $u/d<u$: an induction on height.
-\item $\gamma_k$ is chosen from $Z_\infty$ (deterministic) and the system on $[1,x_k)$ (Lemma~\ref{lem:goodheights}), and
-$R_k\equiv0$ on $[1,x_k+2H(x_k)]$. So $T$ is adapted.
+% Logged correction 76 (CORRECTIONS-vs-v3.md): gamma_k is given by an explicit measurable rule, for every omega, from the
+% system below the construction scale x_k (written a_k in Section 3, where x_k means x_k + 2H(x_k)).
+\item $\gamma_k$ is defined for every $\omega$, by the explicit rule of Lemma~\ref{lem:goodheights}, from $Z_B$ (deterministic) and
+the system on $[1,x_k)$, which is decided at slots $\le x_k+0.51H(x_k)$; and $R_k\equiv0$ on $[1,x_k+2H(x_k)]$. So $T$ is adapted.
+In Section~\ref{sec:zeros} this scale is written $a_k$, and $x_k$ there means $x_k+2H(x_k)$.
 \item \eqref{eq:La} and Section~\ref{sec:zeros} are pathwise consequences on $\mathcal G$.
 \end{itemize}

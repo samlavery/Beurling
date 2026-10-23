@@ -155,7 +155,7 @@ $(1+\Kpt)^{-1}(1-\rhodet)=\mathrm{MA}[\mathbb P]+\rho_{\mathrm{edge}}+(1+\Kpt)^{
   rational primes $\ge X_0$) in the linear window at $q$ (\S\ref{sec:baserange}); it vanishes for $(1+\kappa)q\le X_0$. By
   \eqref{eq:huxley} and Lemma~\ref{lem:margin}(a) (Huxley and Heath-Brown, $X_0\ge X_{\mathrm{Hux}}$),
   $\mathrm{MA}[\mathbb P](x)\log x\ge0.99$ for every $x\ge X_0$;
-\item $|\mu_0(u)|\le2\kappa(\log u)^3$ for $u\ge X_0$ with $\log\log u\le\Lambda/8$, which contains range (A)
+\item $|\mu_0(u)|\le2\kappa(\log u)^3$ for every $u\ge X_0$, in particular on range (A)
   (Lemma~\ref{lem:margin}(b)). This smooth part contains the drift $+(\kappa/2)\Psi$, the partial windows, the decision-order
   mismatch (bounded by a direct count, $\le2.02(H(X_0)+1)(\log u+1)X_0^{-1}\sup|f_0|$; ``the rest'' in the proof of
   Lemma~\ref{lem:margin}(b)), and the $O(1/(\kappa x))$ term of \eqref{eq:ratid};
@@ -198,7 +198,10 @@ resolvable $\gamma_j$ ($\gamma_*:=1$ if there is none). Put
 \]
 % Logged correction 69: the two comparisons below made explicit (were "delta x >> H" and "c_LP sqrt(x_j) >> log x_j").
 The window $J$ ends $\delta x\ge x^{0.98}>H(x)$ before $x$ (as $1/\delta\le x^{0.02}$, Step~3), so the proof uses only the realised
-data before $x-H$, on $\Good(<x)$. All old oscillations $j<k$ are resolvable: $\log\gamma_j\le(1-\theta)\log x_j\le\log x_j$ (as
+data before $x-H$, on $\Good(<x)$. In particular Theorem~\ref{thm:lp} is applied with $y:=x(1-\delta)\le x-H(x)$, below the
+certified horizon of $\Good(<x)$, where (LP-a) holds (Remark~\ref{rem:horizon}).
+% Logged correction 73: the local prime number theorem is applied below the certified horizon of Good(<x).
+All old oscillations $j<k$ are resolvable: $\log\gamma_j\le(1-\theta)\log x_j\le\log x_j$ (as
 $\gamma_j\le2\Gamma_j\le x_j^{1-\theta}$), while $\log x\ge x_{k-1}\ge x_j$ and $x_j\ge\exp(X_0^2)$, so
 $c_{\mathrm{LP}}\sqrt{\log x}/4\ge(0.0044/\Lambda)\sqrt{x_j}\ge\log x_j$.
 

@@ -27,16 +27,28 @@ where:
 \begin{itemize}
 \item $\phi\in C^\infty$, $0\le\phi\le1$, $\phi=0$ on $(-\infty,0]$, $\phi=1$ on $[1,\infty)$ and $\phi'\ge0$. So $R_k\equiv0$ on
 $[1,x_k+2H(x_k)]$. The term $2H$ makes Lemma~\ref{lem:adapted} exact: $\gamma_k$ reads primes decided at slots up to
-$x_k+H(x_k)/2$, and $T$ on $[1,u]$ is read by slots $\le u-H(u)$.
+$x_k+0.51H(x_k)$, and $T$ on $[1,u]$ is read by slots $\le u-H(u)$.
 \item The \emph{amplitude condition}:
 \begin{equation}\label{eq:ampl}
   \alpha_k\gamma_kx_k^{\theta-1}=\kappa'_k/\log x_k,\qquad \kappa'_k:=\kappa_0/\log^2x_k,\quad \kappa_0\in[X_0^{-1},\tfrac14].
 \end{equation}
 It gives $|R'(x)|\le\kappa_+/\log x$ with $\kappa_+=0.8$ (see \eqref{eq:G1}).
-\item $\gamma_k\in[\Gamma_k,2\Gamma_k]$ is chosen in Lemma~\ref{lem:goodheights} from data on $[1,x_k)$ only, and
-$\alpha_k\in[1,2]$.
+% Logged correction 76 (CORRECTIONS-vs-v3.md): gamma_k is defined for every omega by the rule of Lemma goodheights, from the
+% system on [1,x_k) of this section; v3's convention "x_k means x_k^+ in Section 3" also moved this information cutoff to
+% x_k^+, where the choice would read slots that depend on gamma_k. The convention is now split.
+\item $\gamma_k\in[\Gamma_k,2\Gamma_k]$ is defined for every $\omega$ by the rule of Lemma~\ref{lem:goodheights}, as a measurable
+function of the system on $[1,x_k)$ only, and $\alpha_k\in[1,2]$.
 \end{itemize}
-In Section~\ref{sec:zeros}, $x_k$ means $x_k^+$. The difference is a relative $O(H(x_k)/x_k)$, which is invisible in every estimate.
+% Logged correction 76 (R17, C76-1, C76-4): x_k^+ is used throughout Section 3; the range of gamma_k with Gamma_k from x_k is
+% included among the statements that hold up to the factor 1 + 2H(x_k)/x_k.
+In Section~\ref{sec:zeros}, $x_k$ denotes $x_k^+$ throughout (in particular in $R_k$, $\widehat R_k$, $\Gamma_k$, $\alpha_k$, $\delta_k$, $M_k$
+and $s^*_k$), and $a_k$ denotes
+the scale $x_k$ of this section, which is the information cutoff of the choice of $\gamma_k$: that choice reads only the system on
+$[1,a_k)$. There $\alpha_k$ is defined from $x_k^+$, so \eqref{eq:ampl} holds exactly with $x_k^+$ in place of $x_k$, and so do the
+bounds derived from it (the proof of \eqref{eq:G1} below, and \eqref{eq:Rkprime}), since $R_k$ vanishes below $x_k^+$. Read with $x_k$,
+\eqref{eq:ampl}, \eqref{eq:Rkprime} and the range $\gamma_k\in[\Gamma_k,2\Gamma_k]$ with $\Gamma_k$ computed from $x_k$
+(Section~\ref{sec:params}) hold up to a factor in $[1,1+2H(x_k)/x_k]$, as $u^{1-\theta}/\log^3u$ increases; every bound built on them
+has far more room than this factor.
 
 \emph{The rigid density.} With $\kappa:=X_0^{-5/12+2\eps_\kappa}$, $\eps_\kappa:=0.01$, put
 \begin{equation}\label{eq:rhodet}
@@ -92,7 +104,7 @@ regime (Section~\ref{sec:params}), and both are $\le0.01\log x$. As $\log H(r)\l
 (Theorem~\ref{thm:caplw}(c), as in the proof of Proposition~\ref{prop:La}), $r$, and every other prime of $n$, is decided at a slot
 $\le r+H(r)<2(2u)^{0.01}\le u-H(u)$ (by \eqref{eq:C2} below). The set $\mathcal D$ and the density $\rhodet$ are deterministic, and the
 parameters are deterministic functions of the height or of the scale. The oscillation $R$ on $[1,u]$ involves only those $R_k$ with $x_k+2H(x_k)<u$, and each
-such $\gamma_k$ reads primes decided at slots up to $x_k+H(x_k)/2\le u-H(u)$. Hence $\rho_{\Abs}$ on $[X_0,u]$, $R$ on $[1,u]$ and
+such $\gamma_k$ reads primes decided at slots up to $x_k+0.51H(x_k)\le u-H(u)$ (Lemma~\ref{lem:goodheights}, with $a_k=x_k$). Hence $\rho_{\Abs}$ on $[X_0,u]$, $R$ on $[1,u]$ and
 the jumps of $T$ in $[1,u]$ are known before slot $u$.
 \end{proof}
 
@@ -114,12 +126,15 @@ rational primes among its at most $\kappa u+1$ integers. With the linear normali
 $\kappa/2$; such a loss belongs to the logarithmically normalised kernel, and a bound of the form $0.99/\log u-\kappa/2$ would be
 negative once $\log u>2/\kappa\approx e^{3.97\cdot10^7}$, which is still below $x_1$.
 \item \emph{Absorbed part.} $\bar\rho_{\Abs}\le0.1/\log u$, by the cap.
-\item \emph{Oscillations.} $R\equiv0$ below $x_1+2H(x_1)$. For $x\ge x_k$, by \eqref{eq:ampl},
+% Logged correction 76: the bound is run at x_k^+, where eq:ampl holds exactly for every omega (alpha_k is defined from x_k^+,
+% and the fallback height of Lemma goodheights gives alpha_k = 2).
+\item \emph{Oscillations.} $R\equiv0$ below $x_1^+$, and $R_k\equiv0$ below $x_k^+$. For $x\ge x_k^+$, by \eqref{eq:ampl} at $x_k^+$
+(see after \eqref{eq:ampl}), for every $\omega$,
 \[
   |R_k'(x)|\le\alpha_kx^{\theta-1}(\gamma_k+\theta+\|\phi'\|_\infty)\le2\alpha_k\gamma_kx^{\theta-1}
-  =\frac{2\kappa_0(x/x_k)^{\theta-1}}{\log^3x_k}.
+  =\frac{2\kappa_0(x/x_k^+)^{\theta-1}}{\log^3x_k^+}.
 \]
-For the last switched-on $k$: if $x\le x_k^2$ then $\log x\le2\log x_k$; otherwise $(x/x_k)^{\theta-1}\le x^{-(1-\theta)/2}$. Earlier $k$
+For the last switched-on $k$: if $x\le(x_k^+)^2$ then $\log x\le2\log x_k^+$; otherwise $(x/x_k^+)^{\theta-1}\le x^{-(1-\theta)/2}$. Earlier $k$
 contribute less, by the spacing $x_{k+1}\ge\exp(x_k)$. So
 $|R'(x)|\le16\kappa_0/\log^3x+4\kappa_0x^{-(1-\theta)/2}\le\kappa_+/\log x$, since $\log x\ge X_0^2$.
 \end{itemize}
@@ -189,14 +204,30 @@ $X_0$), well within \eqref{eq:T1}.
 
 \subsection{Slots and the greedy rule}\label{sec:greedy}
 % Logged correction 36: theta-offset restricted to (0,1/2] (used in Corollary cor:lag).
-\emph{Slots.} Fix $\vartheta_{\mathrm s}\in(0,\tfrac12]$ such that almost surely no jump of $T$ starts on a level $j+\vartheta_{\mathrm s}$. This is possible,
-since only countably many $\vartheta_{\mathrm s}$ are excluded: the
-deterministic jump levels form a countable set, and for $n\in\Abs$ the level $T(n-)$ is a continuous strictly increasing function
-of the landing position of $n$, which has a continuous law. For integers $j\ge X_0$, \emph{slot $j$} is
-$J_j:=T^{-1}([j+\vartheta_{\mathrm s},j+1+\vartheta_{\mathrm s}))$, with $s_j:=\inf J_j$. Each unit jump of $T$ (at $d\in\mathcal D$ or $n\in\Abs$) crosses
-exactly one level and lies in its own \emph{jump slot}. Every other slot is a \emph{continuous slot}. Consecutive continuous-slot
-starts are at least $1/(1+1/(\kappa u)+\kappa_+/\log u)$ apart at height $u$, since
-$T'_{\mathrm{cont}}\le1+1/(\kappa u)+\kappa_+/\log u$. A single continuous slot can be shorter than $1$ where rigid integers are dense.
+% Logged correction 77 (CORRECTIONS-vs-v3.md): v3 fixes the offset so that a.s. no jump of T starts on a level j+theta_s, and
+% claims only countably many offsets are excluded. Above the onset of Abs or R the jump levels T(d-) are random and depend on
+% the offset through the slots, so that claim is unproved; on a tie J_j is empty and s_j = inf J_j is undefined. Now every
+% offset is allowed, s_j is a hitting time defined for every omega, and the tie case is an empty continuous slot.
+\emph{Slots.} Fix any $\vartheta_{\mathrm s}\in(0,\tfrac12]$. For integers $j\ge X_0$ put $s_j:=\min\{x\ge1:\ T(x)\ge j+\vartheta_{\mathrm s}\}$,
+which exists for every $\omega$, as $T$ is non-decreasing, right-continuous and unbounded. \emph{Slot $j$} is
+$J_j:=T^{-1}([j+\vartheta_{\mathrm s},j+1+\vartheta_{\mathrm s}))=[s_j,s_{j+1})$, and $T(x)\in[j+\vartheta_{\mathrm s},j+1+\vartheta_{\mathrm s})$ for
+$x\in J_j$. The jumps of $T$ are at $d\in\mathcal D$ and $n\in\Abs$. They are unit jumps off the event $\mathcal N_{=}$ that two distinct
+elements of $\NN$ have equal values. $\mathcal N_{=}$ is null for every $\vartheta_{\mathrm s}$: after cancelling common factors, the latest-decided
+prime of such a pair divides one side only, so it would have to land on a point fixed by the past, which has probability $0$ by the
+box-uniform landing law below (and two products of rational primes with disjoint supports differ). The slot facts below are used
+off $\mathcal N_{=}$; this costs no probability in Lemma~\ref{lem:budget}. Statements below called sure or pathwise that rest on slot
+facts hold for every $\omega\notin\mathcal N_{=}$. Slot $j$ is a \emph{jump slot} if $T(s_j-)<j+\vartheta_{\mathrm s}$, that is, if a unit jump of $T$
+reaches the level $j+\vartheta_{\mathrm s}$; that jump sits at $s_j$ and is the only one in $J_j$, as $T$ varies by less than $1$ on $J_j$. So
+each unit jump of $T$ in $[s_{X_0},\infty)$ lies in exactly one jump slot. Every other slot is a \emph{continuous slot}: there $T(s_j-)=j+\vartheta_{\mathrm s}$. A
+continuous slot is empty, $s_j=s_{j+1}$, exactly when a jump of $T$ starts on the level, $T(d-)=j+\vartheta_{\mathrm s}$; that jump then
+lies in the jump slot $j+1$, and $J_j$ holds no element. If $j<j'$ are consecutive continuous slots, then $T(s_j-)=j+\vartheta_{\mathrm s}$, $T(s_{j'}-)=j'+\vartheta_{\mathrm s}$, and the jumps of $T$
+in $[s_j,s_{j'})$ are exactly the unit jumps at the starts of the jump slots $j+1,\dots,j'-1$ (a jump that starts on the level
+$j+\vartheta_{\mathrm s}$ sits at $s_j=s_{j+1}$ and belongs to slot $j+1$). So $\int_{s_j}^{s_{j'}}T'_{\mathrm{cont}}=1$: between
+consecutive continuous-slot starts $T$ gains exactly one unit of continuous mass, and distinct continuous slots have distinct starts. Hence consecutive
+continuous-slot starts are at least $1/(1+1/(\kappa u)+\kappa_+/\log u)$ apart at height $u$, since
+$T'_{\mathrm{cont}}\le1+1/(\kappa u)+\kappa_+/\log u$. A single continuous slot can be shorter than $1$ where rigid integers are dense,
+and has length $0$ when a jump starts on its level. A slot lies in a physical window $I$ when its start $s_j$ lies in $I$; so an
+empty slot lies in $I$ exactly when its start does.
 
 \emph{The hard greedy rule with box-centred jitter.} Process $j=X_0,X_0+1,\dots$ in order, keeping $Q_{j-1}\ge0$.
 \begin{itemize}
@@ -277,6 +308,8 @@ With $D:=N-T$, for $x\ge X_0+2H(x)$,
 \end{corollary}
 \begin{proof}
 % Logged correction 36: exact accounting, including the offset 1 of Lemma count, the rounding j - T(x) and the arrivals inside slot j.
+% Logged correction 77: x lies in exactly one (non-empty) slot; the continuous-slot spacing is the one of Section sec:greedy, which
+% now covers a jump that starts on a level.
 Let $j$ be the slot with $x\in J_j$, so $s_j\le x<s_{j+1}$ and $T(x)\in[j+\vartheta_{\mathrm s},j+1+\vartheta_{\mathrm s})$. Let $E_+$ be the number of
 primes decided at slots $>j$ that land in $[1,x]$, let $E_-$ be the number decided at slots $\le j$ that land in $(x,\infty)$, and
 let $C((x,s_{j+1}))$ be the number of composites of value in $(x,s_{j+1})$. The rational primes are decided before slot $j_0$ and
@@ -290,9 +323,9 @@ The terms are bounded as follows.
 \item $C((x,s_{j+1}))\le A_j$, and $Q_j-A_j=Q_{j-1}+P_j-1\ge-1$.
 \item A prime decided at slot $j'$ lands within $H(s_{j'})/2$ of $s_{j'}$, and only continuous slots receive primes. The slots
 counted by $E_-$ therefore start in $(x-H(x)/2,x]$, since $H$ is non-decreasing. Those counted by $E_+$ start in
-$(x,x+H(s_{j'})/2]$, and $H(s_{j'})\le H(x)+10^{-6}$ by Theorem~\ref{thm:caplw}(c), since $s_{j'}-x\le x^{0.1}$. Each unit jump
-of $T$ crosses exactly one level, so $T$ gains exactly one unit of continuous mass between consecutive continuous-slot starts;
-an interval $I$ therefore contains at most $\int_IT'_{\mathrm{cont}}+1$ of them. With
+$(x,x+H(s_{j'})/2]$, and $H(s_{j'})\le H(x)+10^{-6}$ by Theorem~\ref{thm:caplw}(c), since $s_{j'}-x\le x^{0.1}$. Between
+consecutive continuous-slot starts $T$ gains exactly one unit of continuous mass (\S\ref{sec:greedy}, also when a jump starts on a
+level); an interval $I$ therefore contains at most $\int_IT'_{\mathrm{cont}}+1$ of them. With
 $T'_{\mathrm{cont}}\le1+1/(\kappa u)+\kappa_+/\log u$ this gives
 $E_\pm\le\frac{H(x)}2(1+\kappa_+/\log x)+1+\epsilon$, where $\epsilon<10^{-6}$ covers the term $H/(\kappa x)$ and the variation
 of $H$ and $\log u$ across the window. (Where $R'>0$ the slot density exceeds $1$ by up to $\kappa_+/\log x$, so $H/2+O(1)$ would
