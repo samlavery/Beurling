@@ -1,5 +1,12 @@
 # R6b: an independent attempt at #48, which finds the repair valid only per type
 
+> **Later note (2026-10-22), from pil-o3b's own check of the repair #55 (R9b §1(b)).** The "intrinsic loss ≈ 1 + 0.56·log D"
+> below holds only at boundaries where no chain row joins (j_t = 0). The crossing toy here had exactly that shape. At a
+> boundary where a row joins (j_t ≥ 1), the Crossing Lemma bounded the joining rows' top Eu(s) by A_top pointwise in s, and so
+> wasted their slack. #55 integrates over the top instead, which absorbs the extra crossings of the passing rows. In Theorem R
+> every boundary has j_t ≥ 1, so there is no log D loss there. The only cost is the factor k^k/k! ≤ e^k from summing over run
+> structures. The finite-height limits derived below are superseded by #55, which R9 and R9b checked.
+
 This report is by pil-o3b, a separate AI agent that attempted #48 independently of the author of the repair (verify-cl). It
 read verify-cl's scratch notes, but its arguments and scripts are its own. It was not allowed to write files, so the lead
 saved its messages here.

@@ -2,20 +2,19 @@
 
 Samuel Lavery (sam.lavery@gmail.com)
 
-> **Status: independent human review pending, and the proof has a known open gap.** The proof has not been verified by a
-> human expert, and it is not formally verified (see [Lean formalization](#lean-formalization)).
+> **Status: independent human review pending.** The proof has not been verified by a human expert, and it is not formally
+> verified (see [Lean formalization](#lean-formalization)).
 >
-> **Open gap (found 2026-10-22, correction #48).** Two independent AI checks found the same problem:
-> `review/recheck/R6-cond-check.md` and `review/recheck/R6b-pil-o3b.md`.
-> - The repaired Pivot-Integration Lemma (Appendix A) proves its label-sum bound only for one fixed configuration type.
-> - Theorem R and the Cover Bound use the bound summed over all free-prime structures. Summed that way, it loses a factor
->   of about log D at each block boundary. In exact toy models the old step fails by up to 1.87×.
-> - A partial argument, not yet independently checked, closes the chain only up to finite heights:
->   - log L ≤ 51Λ for cor:R-Ecl;
->   - L ≤ (Λ²/29)^10 for the Cover Bound.
-> - Theorem A needs every height, including the heights of the zeros, log x_k ≥ X₀².
->
-> **Until this gap is closed, the proof of Theorem A is incomplete.**
+> **A gap found and closed after publication (corrections #48 and #55, 2026-10-22).**
+> - Two independent AI checks found that the first repair of #48 (the label sum of Appendix A's Pivot-Integration Lemma)
+>   held only for one configuration type. Theorem R and the Cover Bound use the bound summed over all free-prime structures
+>   (`review/recheck/R6-cond-check.md`, `review/recheck/R6b-pil-o3b.md`). For a time, the proof of Theorem A was
+>   therefore incomplete.
+> - Correction #55 replaces the block bound with one that sums over every block content. Theorem R gains a factor
+>   k^k/k! ≤ e^k, and the Cover Bound's extra factors are absorbed by the rows outside the cover. No conclusion changes.
+> - #55 passed two further independent adversarial AI checks (`review/recheck/R9-cond-check-55.md`,
+>   `review/recheck/R9b-pil-o3b-55.md`). One was by the agent that found the gap. Neither found anything blocking or fixable.
+>   Like every other repair here, #55 has not been checked by a human.
 >
 > The construction, the proofs and the certificate code were developed with extensive use of AI agents (Claude). The systematic
 > reviews so far were done by AI agents; their reports are in `review/`. A reader has also reported defects (below). The author takes responsibility for the manuscript and welcomes
@@ -48,23 +47,24 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   instead of X₀⁻; its repair also found the Dickman variable applied the wrong way round, so the bound is re-derived.
 >
 > Repairing these and re-checking the repairs, and three further independent AI checks (R6–R8 in `review/recheck/`),
-> turned up ten more. The most serious were:
+> turned up eleven more. The most serious were:
 > - a gap in the label sum of the Pivot-Integration Lemma (Appendix A): the carried Euler factors cancel only after
->   integration, not pointwise as the argument needed. The repair (#48) proves the lemma per configuration type, but not
->   in the summed form the paper uses, so **this gap is open**; see above;
+>   integration, not pointwise as the argument needed. Its first repair (#48) covered one configuration type only. The
+>   repair now in the paper (#55) covers the summed form the paper uses; see above;
 > - a gap inherited from the refereed draft in the check of the Beurling–Saias hypothesis (H_BS): the decay of the rigid
 >   error that it needs was asserted but never proved. It is now proved (Lemma T1, eq:Erig).
 >
-> These are entries #31–#54 of `CORRECTIONS-vs-v3.md`. All are repaired except #48.
+> These are entries #31–#55 of `CORRECTIONS-vs-v3.md`. All are repaired.
 > - **The repairs of #31–#47 and #49–#53** were checked by a fresh AI checker in thirteen passes (`review/recheck/R4.md`).
 > - **The certificate fixes of #54** were checked by the R8 checker (`review/recheck/R8-cert-repro.md` §9).
 >   The passes ended with nothing blocking or fixable.
-> - **The repair of #48** passed one adversarial AI check (`review/recheck/R5-pil-repair.md`). Two later independent checks
->   found that it holds only per configuration type.
+> - **The first repair of #48** passed one adversarial AI check (`review/recheck/R5-pil-repair.md`). Two later
+>   independent checks found that it holds only per configuration type. Its replacement, #55, passed two independent
+>   adversarial checks (R9, R9b).
 > - **The reports.** Independent checks of #47's large-range estimate and of every certificate are in
 >   `review/recheck/R7-margin-var.md` and `review/recheck/R8-cert-repro.md`.
 >
-> Apart from the open gap of #48, none of the fifty-four logged corrections changes a conclusion of the paper. But these
+> None of the fifty-five logged corrections changes a conclusion of the paper. But these
 > findings show that the AI checks are no substitute for expert review.
 
 ## The result

@@ -171,7 +171,9 @@
 | lem:rhoA | UPDATE (correction #16): v3 4.19(b) deleted; parts are now (a) sup ρ_𝒜 ≤ L⁻⁴, (b) |σ_𝒜| ≤ 2L⁻⁴ (was (c)), (c) current-height form o_𝒜 ≤ 4L⁻⁴ (was (d)) | 05-queue.tex |
 | cor:localcount | UPDATE: K_loc(P) := 2B(4P) + 7λ_P/3 + 23 (was +13; landing windows 𝒥_P specified, E4 total 146H u⁻³) | 05-queue.tex |
 | cor:localcount | UPDATE (correction 37): part (i) dyadic P (as before); part (ii) any real P ≥ X₀, bound 11.4|J| + K_loc(P) + K_loc(2P) (non-absorbed 13.4|J| + K_loc(P) + K_loc(2P) + 4) | 05-queue.tex |
-| eq:A-exactcount | App. A, Lemma fac (S3) proof: exact-count bound for r-sets of realised primes (correction #48) | A-rankfull.tex |
-| eq:A-telescope | App. A, Lemma fac (S3) proof: telescoping bound for the joining top factor (correction #48) | A-rankfull.tex |
 | eq:Erig | Lemma T1: explicit rigid error \|E_rig(x)\| ≤ min(Ψ(2x,X₀), κX₀+1+min(κx+1, Ψ(2x,X₀))) (correction #51) | 02-construction.tex |
 | app:cert-rankin | App. B: rankin_R.py, the Rankin constants of Lemma rowweights(c),(e) (correction #49) | B-certificates.tex |
+| eq:A-Grec | App. A, Lemma fac (S3): the chain recursion G_t(E) = ∫_E^{A_top} K_t x^{j_t−1} G_{t−1}(x) dx (correction #55) | A-rankfull.tex |
+| eq:A-HK | App. A, proof of Theorem R: H_K, the sum of the chain recursion over run structures; H_K(0) = K^K/K! (correction #55) | A-rankfull.tex |
+| eq:A-exactcount | WITHDRAWN (correction #55): the per-type exact count is replaced by the variable-content block bound (S3)(a) | A-rankfull.tex |
+| eq:A-telescope | WITHDRAWN (correction #55): replaced by the variable-content block bound (S3)(a) | A-rankfull.tex |

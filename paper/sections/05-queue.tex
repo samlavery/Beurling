@@ -559,10 +559,11 @@ Suppose $\#(\NN\cap J)\ge M_1+1$, so $|S(J)|\ge M_1=r_0+\varphi(r_0)+1$. Let $r:
   (F1)--(F2) count $E\le(1.01|J|)^{r_0}/r_0!$, to which Theorem~\ref{thm:R} applies; Theorem~\ref{thm:R} is stated for $z\ge X_0/2$.
 \item \emph{Case $r\ge r_0$.} $S(J)$ contains a rank-full $r_0$-subset. By Theorem~\ref{thm:R} with $k=r_0$ and
   $\delta=|J|=4L^{-6}$, the expected number of rank-full $r_0$-subsets of $\NN\cap J$ on $\Good(<t_z)$ is at most
-  $(\theta A_R\delta)^{r_0}e^{(3H(X_0)+2)r_0/X_0}(1+r_0/X_0)^{1.02r_0}e^{2.2r_0/\Lambda}$; the factor $e^{(3H(X_0)+2)r_0/X_0}$
+  $(e\,\theta A_R\delta)^{r_0}e^{(3H(X_0)+2)r_0/X_0}(1+r_0/X_0)^{1.02r_0}e^{2.2r_0/\Lambda}$; the factor $e^{(3H(X_0)+2)r_0/X_0}$
   is absorbed in the per-element factor $1.01$. There are at most $2z/\delta$ windows. The total is at most $L^{-4}$ for
   $L\ge465$, by Corollary~\ref{cor:R-Ecl}.
   % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #1): v3 has e^{2r_0/X_0} in place of e^{(3H(X_0)+2)r_0/X_0}.
+  % Logged correction 55: the factor e per element (k^k/k! <= e^k in Theorem R).
 \item \emph{Case $r<r_0$.} Then $|S(J)|>r_0+\varphi(r_0)\ge r+\varphi(r)$. So $J$ is a window as in
   Theorem~\ref{thm:caplw}(a): with $V$ a heavy subspace of $S(J)$ of least dimension, Lemma~\ref{lem:heavy} gives
   $\qCap(S(J)\cap V)\ge c$. By Theorem~\ref{thm:caplw}(a), the probability that some window at height $z$ is of this kind
@@ -726,88 +727,116 @@ Section~\ref{sec:queue-ecl}; every degree is at most $D$, and $L/\Lambda\le D\le
 Let $J$ range
 over the $2z/\delta$ grid windows at height $z$, where $\delta:=2\delta_1=|J|$. A \emph{configuration} is a rank-full set
 $B'\subset S(J)$ of rank $r<r_0$, together with a minimum cover $C\subset B'$ of $P(B')$, so $|C|=\kappa$. Write $R:=B'\setminus
-C$ for the \emph{rows outside the cover}. For $y\in B'$ write $n_y=M_yd_y$, with $M_y$ jittered and $d_y$ rigid. The
-\emph{type} $\tau$ of a configuration is its exponent pattern, that is, the matrix of exponents of its distinct jittered
-primes, up to relabelling by value. Let $\pi:=|P(C)|\le\kappa D$ be the number of jittered primes.
-% v3 also defines lambda_D here; it is no longer used, since the free primes enter only through the chain bound Ch.
+C$ for the \emph{rows outside the cover}. For $y\in B'$ write $n_y=M_yd_y$, with $M_y$ jittered and $d_y$ rigid. Every
+prime of $B'$ lies in $P(C)$, and every row has degree at most $D$, so $|P(C)|\le\pi:=\kappa D$.
+% v3 also defines lambda_D here; it is no longer used, since the free primes enter only through the chain recursion.
+
+\paragraph{Skeletons.}
+The greedy pivots of $B'$ (Appendix~\ref{app:rankfull}) are $r$ primes of $P(C)$. Since $E_P$ is invertible, some term
+of its Leibniz expansion is nonzero; it matches the rows bijectively with the pivots, each row with a pivot occurring in
+it. Choose the matching by a fixed rule (say, the lexicographically first permutation with a nonzero Leibniz term), and
+index the rows by the decision rank of their pivots, the $i$-th pivot being the $i$-th earliest. Index the primes of $P(C)$ by decision rank, earliest first; these are the \emph{labels}. The \emph{skeleton}
+$\mathfrak s$ of a configuration records:
+\begin{enumerate}[label=\textup{(s\arabic*)}]
+\item $r$, and the indices of the rows of $C$;
+\item the labels of the $r$ pivots;
+\item the exponents of the pivots in the rows of $C$;
+\item for each row $y\in R$, its monomial $M_y$ in the labels, and its tail $d_y$.
+\end{enumerate}
+The skeleton determines the pivot pattern $E_P$ in decision order, the run structure (two consecutive pivots lie in one
+run if and only if their labels are adjacent) and the number of free primes in each block. It does not record the free
+primes of the rows of $C$, their exponents in the rows of $C$, or the tails of the rows of $C$; these are summed by
+Lemma~\ref{lem:pil}. Skeletons are decision-ordered, and the decision order of the pivots is recorded by~(s2), whose
+count is part of Lemma~\ref{lem:reduction}(ii).
+% Logged correction 55: v3 uses types "up to relabelling by value" that fix the free structure of the rows of C, while
+% the Cover Bound sums over that structure and the PIL needs the decision order. Skeletons fix exactly what the PIL
+% needs; the free structure of the rows of C is summed by the variable-content block bound (S3)(a).
 
 \begin{proposition}[Cover Bound]\label{prop:cover}
 % v3: Proposition 4.13
-For every type $\tau$, let $X_\tau$ be the number of configurations of type $\tau$ in $J$, and let $\bar S_\tau$ be the
-envelope of Lemma~\ref{lem:pil} (with $t_J:=t_z$). Then
+For every skeleton $\mathfrak s$, let $X_{\mathfrak s}$ be the number of configurations with skeleton $\mathfrak s$ in
+$J$, and let $\bar S_{\mathfrak s}$ be the envelope of Lemma~\ref{lem:pil} (with $t_J:=t_z$). Then
 \begin{equation}\label{eq:coverbound}
-\E\big[X_\tau;\ \Good(<t_z)\big]\le\theta^r\bar S_\tau\le(\theta\delta)^r\bar\Sigma_\tau,\qquad
-\bar\Sigma_\tau:=\sum\Big(\mathrm{Ch}^{\kappa}\cdot\prod_{j=1}^{\pi}\tau_j^{-e_j}\cdot\prod_{y\in R}z^{-1}\Big),
+\E\big[X_{\mathfrak s};\ \Good(<t_z)\big]\le\theta^r\bar S_{\mathfrak s}\le(\theta\delta)^r\bar\Sigma_{\mathfrak s},\qquad
+\bar\Sigma_{\mathfrak s}:=(1+\kappa\lambda)^{s_R}\,\frac{\kappa^\kappa}{\kappa!}\,\mathrm{Ch}^{\kappa}\cdot
+\prod_{i=1}^{r}\tau_i^{-e_i}\cdot z^{-|R|},
 \end{equation}
 where:
 \begin{itemize}
-\item $\mathrm{Ch}:=e^{\gamma}\log(2z+H(2z))\exp(2.21/\Lambda+10^{-9})$ is at least the bound $A_{\mathrm{top}}$ of
-  Lemma~\ref{lem:fac}\,(S3) (as $5H(X_0)/X_0\le10^{-9}$), which bounds the whole Euler chain of a row of $C$: its free
-  pieces in all blocks, its early block and its tail;
-\item the sum runs, for each $y\in R$, over its monomial $M_y$ in the labels of $P(C)$, with the $j$-th label evaluated at
-  $\tau_j$, and over its $X_0$-smooth tail $d_y$, subject to $M_yd_y\le2z$;
-  % Logged correction 46: v3's right side is a realised (random) sum; it is now deterministic by construction. The
-  % C-row chains (free primes and tails) are replaced by the sure chain bound, and the R-row labels by tau_j.
-\item the primes of $P(C)$ are indexed $j=1,\dots,\pi$ in decision order; the excess $e_j\ge0$ of the $j$-th prime is the
-  number of its occurrences in rows of $C$, counted with multiplicity (that is, its total exponent in the rows of $C$),
-  minus $1$; and $\mathrm{exc}:=\sum_je_j$;
-\item $\tau_j:=\max(\Xm,\sigma_j-2H(\sigma_j))$ with $\sigma_j:=X_0+0.99(j-1)$, as in \eqref{eq:A-tau}. The $j$-th prime of
-  $P(C)$ in decision order has value at least $\tau_j$, because the primes of $P(C)$ are distinct jittered primes in
-  distinct slots (Section~\ref{sec:A-setting}).
+\item the constant $\mathrm{Ch}:=e^{\gamma}\log(2z+H(2z))\exp(2.21/\Lambda+10^{-9})$ is at least the constant
+  $A_{\mathrm{top}}$ of Lemma~\ref{lem:fac}\,(S3), as $5H(X_0)/X_0\le10^{-9}$;
+\item $\lambda:=\log(A_{\mathrm{top}}/\mathrm{Eu}_{\mathrm{rat}})$, and $s_R\le|R|$ is the number of runs at which no row of
+  $C$ joins (in the staging of Lemma~\ref{lem:SC});
+\item $e_i\ge0$ is the total exponent of the $i$-th pivot in the rows of $C$, minus $1$;
+\item $\tau_i:=\max(\Xm,\sigma_i-2H(\sigma_i))$ with $\sigma_i:=X_0+0.99(i-1)$, as in \eqref{eq:A-tau}; the $i$-th pivot
+  has value at least $\tau_i$. More generally, the label of rank $j$ has value at least $\tau_j$, because the primes of
+  $P(C)$ are distinct jittered primes in distinct slots (Section~\ref{sec:A-setting}).
 \end{itemize}
 % Logged correction 44: v3 weights every excess occurrence uniformly by X_0^{-1}; the pattern sum then needs the
 % per-index weights tau_j^{-e_j} of Appendix A.
+% Logged correction 55: v3's Sigma-bar has Ch^kappa and the free-prime excess per value-ordered type; the union over the
+% free structure of the rows of C costs (1+kappa lambda)^{s_R} kappa^kappa/kappa!, and the free-prime excess is inside the
+% chain recursion.
 \end{proposition}
 
 \begin{proof}
 \emph{From Lemma~\ref{lem:pil}.} The first inequality in \eqref{eq:coverbound} is Lemma~\ref{lem:pil}, applied with
-$t_J:=t_z$ (every element of $J$ has all its primes decided before $2z+H(2z)$). Its recursion processes the runs latest
-first. For each run $P_t$ it (i) records the label sum at $u_t$, with $\chi_t:=\mathbf 1(u_t\le s_{\max})\mathbf 1(G_{<u_t})$;
-(ii) integrates the pivots of the run; and (iii) applies the joint block bound (S3)(a) to the late block below the run,
-with the carried factor of each row passed on by (S3)(b). So each row's harmonic pieces form a slot-indexed Euler chain
-(Lemma~\ref{lem:fac}\,(S3)). The end step treats the early block and the tails by (S3)(c), which absorbs the last carried
-factor. So $\bar S_\tau$ is deterministic, and the top of each chain is bounded once, at the block where the row joins,
-by $A_{\mathrm{top}}\le\mathrm{Ch}$ ((S3)(d), as $u_t\le s_{\max}\le2z+H(2z)$). The block sum in (S3)(a) is taken
-jointly over the block and does not factorise over the rows; only its output is a product of per-row factors. The steps
-below show $\bar S_\tau\le\delta^r\bar\Sigma_\tau$, which gives the second inequality.
+$t_J:=t_z$ (every element of $J$ has all its primes decided before $2z+H(2z)$) and with the data (s1)--(s4) fixed in
+advance. Its recursion processes the runs latest first. For each run $P_t$ it (i) records the label sum at $u_t$, with
+$\chi_t:=\mathbf 1(u_t\le s_{\max})\mathbf 1(G_{<u_t})$; (ii) integrates the pivots of the run; and (iii) bounds the sum
+over the contents of the late block below the run by Lemma~\ref{lem:fac}\,(S3)(a). The chain rows are the rows of $C$,
+each starting at the stage where it joins; the covering hypothesis of (S3) is Lemma~\ref{lem:SC}\,(3). The block sums
+run over the contents compatible with~(s1)--(s4), and are bounded by the sums over all contents. The entries of the rows
+of $R$ in the block columns are fixed by~(s4) and carry no weight. The end step treats the early block and the tails of
+the rows of $C$ by (S3)(c). So $\bar S_{\mathfrak s}$ is deterministic.
 % Logged correction 48: the order of Lemma pil is now label sum (i), pivot integrals (ii), joint block bound (iii);
 % v3 summed each block before the label sum.
+
+\emph{The chain recursion.} Let $K_t$ be the number of rows of $C$ in $\mathcal R_{\le t}$, and $j_t$ the number of rows of
+$C$ joining at stage $t$; $K_T=\kappa$. By Lemma~\ref{lem:fac}\,(S3), the free primes of the rows of $C$, in all blocks,
+and their tails, contribute at most $\mathrm{Fin}:=G_T(\mathrm{Eu}_{\mathrm{rat}})+\mathrm{Eu}_{\mathrm{rat}}^{\,j_T}
+G_{T-1}(\mathrm{Eu}_{\mathrm{rat}})$, with the recursion \eqref{eq:A-Grec}. At a stage with $j_t=0$, since $G_{t-1}$ is
+non-increasing and $E\ge\mathrm{Eu}_{\mathrm{rat}}$,
+\[
+  G_t(E)=\int_E^{A_{\mathrm{top}}}\frac{K_t}xG_{t-1}(x)\,dx\le K_t\lambda\,G_{t-1}(E),
+\]
+and at the end, if $j_T=0$, $\mathrm{Fin}\le(1+\kappa\lambda)G_{T-1}(\mathrm{Eu}_{\mathrm{rat}})$. Every step of the
+recursion is positive and monotone, so these factors can be pulled out. What remains is the recursion of
+Theorem~\ref{thm:R} for the composition of $\kappa$ formed by the non-zero $j_t$, with the same $K_t$. By the proof of
+Theorem~\ref{thm:R}, its output is at most $F_\kappa(\rho)A_{\mathrm{top}}^\kappa\le(\kappa^\kappa/\kappa!)A_{\mathrm{top}}^\kappa$.
+Hence $\mathrm{Fin}\le(1+\kappa\lambda)^{s_R}(\kappa^\kappa/\kappa!)\,\mathrm{Ch}^\kappa$. (Every stage has $K_t\ge1$, by
+Lemma~\ref{lem:SC}\,(3) applied to the pivot columns of $P_1$; so no stage has $K_t=0$.)
 
 \emph{Exact identity.} By the Volume Lemma (Lemma~\ref{lem:volume}), the pivot-integral of $\prod_{y\in B'}\mathbf 1(n_y\in J)$
 equals $\int_{J^r}\prod_{\mathrm{piv}}q\big/\big(|\det E_P|\prod_yn_y\big)\,dn$.
 \begin{itemize}
 \item Order the pivots latest first, and stage the rows by Lemma~\ref{lem:SC} (nested lexicographically-first bases with the
   rows of $C$ listed first).
-\item The Staged Volume Lemma (Theorem~\ref{thm:svl}) then integrates the pivots stage by stage. Every late free block is handled by
-  a block bound (the realised block sum, bounded as in Lemma~\ref{lem:fac}\,(S3)) against a weight that is harmonic in
-  some row of $C$ of its stage. This is the condition that Lemma~\ref{lem:SC}
-  guarantees.
-\item $\prod_{\mathrm{piv}}q/\prod_yn_y=\prod_yc_y^{-1}\cdot\prod_{\mathrm{piv}}q^{1-s_p}$, where $c_y:=n_y/(\text{pivot part
-  of }n_y)$ and $s_p$ is the column sum of $p$.
+\item The Staged Volume Lemma (Theorem~\ref{thm:svl}) then integrates the pivots stage by stage. Every late block is
+  handled by the block bound (S3)(a), against the weight $\prod_gg^{-a_g}$ of the rows of $C$ of its stage. This is the
+  condition that Lemma~\ref{lem:SC} guarantees.
+\item $\prod_{\mathrm{piv}}q/\prod_yn_y=\prod_{y\in C}c_y^{-1}\cdot\prod_{y\in R}n_y^{-1}\cdot\prod_{\mathrm{piv}}q^{1-s^C_p}$,
+  where $c_y:=n_y/(\text{pivot part of }n_y)$ and $s^C_p$ is the column sum of $p$ over the rows of $C$.
 \end{itemize}
 
 \emph{Allocation.} Every prime has an occurrence in some row of $C$, since $C$ covers $P(B')$. So:
 \begin{itemize}
-\item each pivot $p$ cancels the factor $q_p^{+1}$ of the Jacobian against one occurrence chosen in a row of $C$;
-\item each free prime $f$ keeps, for its harmonic sure sum, exactly one occurrence, in one row of $C$
-  (Lemma~\ref{lem:fac}, (S1$'$) and~(S3));
-\item all occurrences in rows of $R$ stay with their row;
-\item the remaining occurrences in rows of $C$ are the excess: the $e_j$ remaining occurrences of the $j$-th prime each
-  contribute at most $\tau_j^{-1}$.
+\item each pivot $p$ cancels the factor $q_p^{+1}$ of the Jacobian against one occurrence in a row of $C$, and its
+  remaining $e_i=s^C_p-1$ occurrences there contribute at most $\tau_i^{-e_i}$, by the caps of Lemma~\ref{lem:pil};
+\item the free primes of the rows of $C$ keep their weight $g^{-a_g}$ in the block bounds, and the tails of the rows of
+  $C$ their weight $1/d_y$; together they give $\mathrm{Fin}$;
+\item a row of $R$ gets $1/n_y\le1/z$; its monomial and tail are fixed by~(s4).
 \end{itemize}
-The resulting weights are as follows. A row of $C$ gets its tail $d_y^{-1}$ and its kept free primes, which are harmonic;
-together they form the row's Euler chain, which is at most $A_{\mathrm{top}}\le\mathrm{Ch}$ by (S3). A row of $R$ gets exactly $c_y^{-1}\cdot\prod_{p\in M_y}p^{-E}=1/n_y\le1/z$; its tail cancels, so it
-is summed with counting weight. This is a rigid count, and it only grows when each label is lowered to $\tau_j$. The excess
-contributes $\prod_j\tau_j^{-e_j}$.
 
-\emph{Bookkeeping.} The factor $\theta=1+1/\Lambda$ per element comes from (F1)--(F2) and the slot sums, and $|\det E_P|\ge1$.
+\emph{Bookkeeping.} The factor $\theta=1+1/\Lambda$ per pivot comes from (F1)--(F2) and the slot sums, each row's $n_y$ is
+integrated over $J$ once, which gives $\delta^r$, and $|\det E_P|\ge1$.
 \end{proof}
 
 \begin{remark}\label{rem:jacobianrows}
 % v3: §4.6, Remark after Proposition 4.13
 Every row of the basis $B'$ is a Jacobian row. Only extras outside $B'$ would be mere indicators, and none occur
 (Lemma~\ref{lem:reduction}(i)). Being a Jacobian row is what supplies the factor $1/n_y\le1/z$ of a row of $R$, and it does not
-cost the rigid count. The per-row weights below never credit the excess weights $\prod_j\tau_j^{-e_j}$ beyond the pattern sum over
+cost the rigid count. The per-row weights below never credit the excess weights $\prod_i\tau_i^{-e_i}$ beyond the pattern sum over
 the rows of $C$ in Lemma~\ref{lem:reduction}(ii).
 \end{remark}
 
@@ -820,8 +849,8 @@ the rows of $C$ in Lemma~\ref{lem:reduction}(ii).
   (Lemma~\ref{lem:covering}(a)). So $|R|=r-\kappa\ge1+j(c)$. If moreover the elements of $S'$ of degree at most $k$ number at most
   $Q$, the completion can be chosen with every row of $R$ of degree at least $k+1$ (Lemma~\ref{lem:heavy}(iii) and Steinitz
   exchange).
-\item (Type union.) Sum \eqref{eq:coverbound} over types and multiply by the $2z/\delta$ windows. For $L\ge60$, the result is,
-  per height, at most
+\item (Type union.) Sum \eqref{eq:coverbound} over skeletons and multiply by the $2z/\delta$ windows. For $L\ge60$, the result
+  is, per height, at most
   \begin{equation}\label{eq:typeunion}
   13L^{5.1}\cdot z\cdot\prod_{y\in R}w_y,\qquad w_y:=z^{-1}\sum_{M_y}\Psi(2z/M_y,X_0),
   \end{equation}
@@ -836,34 +865,39 @@ the rows of $C$ in Lemma~\ref{lem:reduction}(ii).
 \end{lemma}
 
 \begin{proof}
-\emph{Proof of (ii).} The quantity $\bar\Sigma_\tau$ of \eqref{eq:coverbound} is deterministic and, by construction, a
-product of per-row factors. The factor $\mathrm{Ch}$ of a row of $C$ is the per-row output of the joint block bounds of
-Lemma~\ref{lem:fac}\,(S3); the block sums themselves do not factorise. The factors below bound $\bar\Sigma_\tau$ row by
-row.
-% Logged correction 46: (ii) now bounds the deterministic envelope; the free primes are bounded through the per-row
-% chain bound Ch.
-Per row, the type and sum factors are:
+\emph{Proof of (ii).} Fix $r$. The quantity $\bar\Sigma_{\mathfrak s}$ of \eqref{eq:coverbound} is deterministic. We sum
+it over the data (s1)--(s4) of the skeletons:
+% Logged correction 55: v3 sums per-type bounds with factors Ch (kept free primes "in all blocks"), D (pivot positions)
+% and the excess over pi labels; the free structure was not counted. Now the free structure of the rows of C is summed
+% inside Fin (Proposition cover), and the skeleton data are counted here.
 \begin{itemize}
-\item the Euler chain of a row of $C$, that is, its kept free primes in all blocks together with its tail: at most
-  $\mathrm{Ch}\le e^{\gamma}(L+0.7)(1+10^{-7})\le2L$. Each free prime is kept with exactly one occurrence, in one row, by
-  the allocation in the proof of Proposition~\ref{prop:cover}; all further occurrences of free primes, including repeated
-  powers in the same row, are excess and are counted two items below;
-  % Clarification (external reader's question): free primes lie in P(C), and e_j counts multiplicity, so repeated
-  % free-prime powers are in the excess sum.
-\item the pivot positions: at most $D$ per row;
-\item the excess patterns of the rows of $C$: distributing the excess $e_j$ of the $j$-th prime over the $\kappa$ rows
-  of $C$, the sum over patterns of $\prod_j\tau_j^{-e_j}$ is at most
-  \[
-  \prod_{j\le\pi}\sum_{e\ge0}\binom{\kappa+e-1}{e}\tau_j^{-e}=\prod_{j\le\pi}(1-1/\tau_j)^{-\kappa}
-  \le\big(e^{(3H(X_0)+2)/X_0}(1+\pi/X_0)^{1.02}\big)^{\kappa},
-  \]
-  by the estimate in the proof of Lemma~\ref{lem:pattern} (with $\pi$ in place of $k$). Since $\pi\le L^2$ and $L\ge\Lambda\ge10^8$, this is at most $L^{2.1}$ per row of $C$: if
-  $L^2\le X_0$ the base is at most $2.1$, and otherwise it is at most $2.1L^{2.04}\le L^{2.1}$;
-  % Logged correction 44: v3 bounds this by prod_p (1-1/p)^{-kappa} with uniform weights, which does not follow.
+\item (s1): at most $2^r$ choices;
+\item (s2): the labels of the pivots form an $r$-subset of $\{1,\dots,\pi\}$, so there are at most
+  $\binom{\pi}{r}\le(e\pi/r)^r\le(eD)^r$ choices, as $\kappa\le r$;
+\item (s3): if the $i$-th pivot is matched to a row of $C$, its exponent there is at least $1$, and the sum of
+  $\tau_i^{-e_i}$ over its exponents in the $\kappa$ rows of $C$ is $(1-1/\tau_i)^{-\kappa}$. If it is matched to a row of
+  $R$, it still occurs in a row of $C$, and the sum is $\tau_i\big((1-1/\tau_i)^{-\kappa}-1\big)\le\kappa(1-1/\tau_i)^{-\kappa-1}$.
+  By the estimate in the proof of Lemma~\ref{lem:pattern} (with $r$ in place of $k$),
+  $\prod_{i\le r}(1-1/\tau_i)^{-1}\le B:=e^{(3H(X_0)+2)/X_0}(1+r/X_0)^{1.02}\le2.1L^{1.02}$, as $r\le L$. So (s3)
+  contributes at most $\kappa^{|R|}B^{\kappa+1}\le\kappa^{|R|}B^{2\kappa}$;
+\item (s4): the label of rank $j$ has value at least $\tau_j$, so a row of $R$ with $n_y\le2z$ has
+  $M_y(\tau)d_y\le2z$, where $M_y(\tau)$ is $M_y$ with the $j$-th label evaluated at $\tau_j$. With the factor $z^{-1}$
+  of $\bar\Sigma_{\mathfrak s}$, the sum over $(M_y,d_y)$ is at most $w_y$.
 \end{itemize}
-The minimum cover used is a fixed choice determined by the type, so its choice costs nothing. So each row costs at most
-$C':=6L^{5.1}$, and $(2z/\delta)(\theta\delta C')^r\le2z\cdot\theta C'\cdot(\theta\delta C')^{r-1}\le13L^{5.1}z$, since
-$\theta\delta C'=24\theta L^{-0.9}\le1$ for $L\ge60$. The monomials and tails of the rows of $R$ are inside $w_y$.
+In $\bar\Sigma_{\mathfrak s}$ we have $\kappa^\kappa/\kappa!\le e^\kappa$, $\mathrm{Ch}\le e^{\gamma}(L+0.7)(1+10^{-7})\le2L$,
+and $1+\kappa\lambda\le L$ for $L\ge60$, since $\mathrm{Eu}_{\mathrm{rat}}\ge1$ gives $\lambda\le\log(2L)$, and
+$\kappa\le r-1\le r_0-2\le L/(3\ell)+2$. Also $\kappa\le r\le L$ and $D\le2L/\Lambda\le L$. Distributing the factors over the rows, a row of $C$ costs at most $\theta\delta C'$, with
+\[
+  C':=2\cdot eD\cdot e\cdot\mathrm{Ch}\cdot B^2\le2e^2\cdot L\cdot2L\cdot4.41L^{2.04}\le131L^{4.04}\le6L^{5.1}\qquad(L\ge60),
+\]
+and a row of $R$ costs at most $\theta\delta\cdot2\cdot eD\cdot\kappa(1+\kappa\lambda)\cdot w_y\le8e\theta L^{-3}w_y\le w_y$.
+Hence the sum is at most
+\[
+  \frac{2z}\delta\,(\theta\delta C')^{\kappa}\prod_{y\in R}w_y\le2z\cdot\theta C'\cdot(\theta\delta C')^{\kappa-1}
+  \prod_{y\in R}w_y\le13L^{5.1}z\prod_{y\in R}w_y,
+\]
+since $\kappa\ge1$ and $\theta\delta C'=24\theta L^{-0.9}\le1$ for $L\ge60$. The rows are indexed by their pivots, so the
+decision order costs nothing beyond~(s2).
 
 \emph{Proof of (iii).} Sum (ii) over the fewer than $r_0$ possible ranks. Since $w\le1$, we have
 $\prod_{y\in R}w_y\le w^{|R|}\le w^{1+j}$. As $z=e^L$, $r_0\le L=e^{\ell}$ and $\log13\le2.6$, the bound
@@ -1029,7 +1063,7 @@ Lemma~\ref{lem:reduction}(i) and Theorem~\ref{thm:binomial}, $S'$ yields a confi
 $a:=\log(r_0(D+1))$. By Lemma~\ref{lem:reduction}(iii) it suffices to show $(1+j)\log(1/w)\ge L+10\ell+10$ for a common bound $w$
 on the row weights. We use:
 \begin{itemize}
-\item $r_0\le L/(2\ell)$ and $L/\Lambda\le D\le2L/\Lambda$;
+\item $r_0\le L/(2\ell)$ (as $L\ge\Lambda\ge10^8$) and $L/\Lambda\le D\le2L/\Lambda$;
 \item $m:=r_0D\le L^2/(\ell\Lambda)$, so $\log2m\le A$. Also $a\le A-\log2+\log(1+1/D)\le A$, since $D\ge1$, and
   $a\le A-\log2+10^{-9}$ when $D\ge10^9$ (as in Step 3);
 \item $A\le2\ell$, and $\log c\ge4\ell^2-\log4\ge3.9\ell^2$ (since $\ell\ge\log\Lambda\ge18.42$).
