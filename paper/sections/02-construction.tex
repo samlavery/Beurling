@@ -25,7 +25,18 @@ Write $\Psi(x,X_0):=\#\mathcal D\cap[1,x]$ and $\Psi(I,X_0):=\#\mathcal D\cap I$
 \end{equation}
 where:
 \begin{itemize}
-\item $\phi\in C^\infty$, $0\le\phi\le1$, $\phi=0$ on $(-\infty,0]$, $\phi=1$ on $[1,\infty)$ and $\phi'\ge0$. So $R_k\equiv0$ on
+% Logged correction 94 (CORRECTIONS-vs-v3.md): v3 fixes phi only by smoothness, range and monotonicity, which bound no derivative,
+% while Lemma G1 needs theta + ||phi'||_oo <= gamma_k and Proposition g1 a bound on R''. phi is now the standard smooth step,
+% with ||phi'||_oo <= 2 (proved here) and ||phi''||_oo <= 10 (certified in Appendix app:cert-consts).
+\item $\phi(t):=\psi(t)/(\psi(t)+\psi(1-t))$, where $\psi(t):=e^{-1/t}$ for $t>0$ and $\psi(t):=0$ for $t\le0$. So $\phi\in C^\infty$,
+$0\le\phi\le1$, $\phi=0$ on $(-\infty,0]$, $\phi=1$ on $[1,\infty)$ and $\phi(1-t)=1-\phi(t)$, and on $(0,1)$
+\begin{equation}\label{eq:phibounds}
+  \phi'=\phi(1-\phi)\Bigl(\frac1{t^2}+\frac1{(1-t)^2}\Bigr)\ge0,\qquad\|\phi'\|_\infty\le2,\qquad\|\phi''\|_\infty\le10 .
+\end{equation}
+Indeed $\phi=1/(1+e^g)$ on $(0,1)$, with $g:=1/t-1/(1-t)$. Put $s:=t(1-t)\le\frac14$ and $r:=(1-2t)/(2s)=g/2$. Then
+$\phi(1-\phi)=1/(4\cosh^2r)$, $1/t^2+1/(1-t)^2=(1-2s)/s^2$ and $\cosh^2r\ge1+r^2=(1-2s)^2/(4s^2)$, so $\phi'\le1/(1-2s)\le2$, with
+equality at $t=\frac12$. The bound on $\phi''$ is certified in ball arithmetic (Appendix~\ref{app:cert-consts}); the largest value of
+$|\phi''|$ is $9.841\ldots$, near $t=0.218$ and $t=0.782$. As $\phi=0$ on $(-\infty,0]$, $R_k\equiv0$ on
 $[1,x_k+2H(x_k)]$. The term $2H$ makes Lemma~\ref{lem:adapted} exact: $\gamma_k$ reads primes decided at slots up to
 $x_k+0.51H(x_k)$, and $T$ on $[1,u]$ is read by slots $\le u-H(u)$.
 \item The \emph{amplitude condition}:
@@ -134,7 +145,9 @@ negative once $\log u>2/\kappa\approx e^{3.97\cdot10^7}$, which is still below $
   |R_k'(x)|\le\alpha_kx^{\theta-1}(\gamma_k+\theta+\|\phi'\|_\infty)\le2\alpha_k\gamma_kx^{\theta-1}
   =\frac{2\kappa_0(x/x_k^+)^{\theta-1}}{\log^3x_k^+}.
 \]
-For the last switched-on $k$: if $x\le(x_k^+)^2$ then $\log x\le2\log x_k^+$; otherwise $(x/x_k^+)^{\theta-1}\le x^{-(1-\theta)/2}$. Earlier $k$
+% Logged correction 94: the step theta + ||phi'||_oo <= gamma_k is now justified.
+Here $\theta+\|\phi'\|_\infty\le\theta+2\le\Gamma_k\le\gamma_k$ by \eqref{eq:phibounds}, as $\Gamma_k\ge X_0^{-1}x_k^{1/2}/(2\log^3x_k)$
+and $x_k\ge\exp(X_0^2)$. For the last switched-on $k$: if $x\le(x_k^+)^2$ then $\log x\le2\log x_k^+$; otherwise $(x/x_k^+)^{\theta-1}\le x^{-(1-\theta)/2}$. Earlier $k$
 contribute less, by the spacing $x_{k+1}\ge\exp(x_k)$. So
 $|R'(x)|\le16\kappa_0/\log^3x+4\kappa_0x^{-(1-\theta)/2}\le\kappa_+/\log x$, since $\log x\ge X_0^2$.
 \end{itemize}

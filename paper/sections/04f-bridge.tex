@@ -281,9 +281,22 @@ $|N-T|\le H(N_*)$ at both ends of $I$, and under the target \eqref{eq:target},
   \end{multline*}
   using $\delta\le X_0^{-1/2}$. Both terms decrease with $\Lambda$, so this holds for every $\Lambda\ge10^8$; at $\Lambda=10^8$ (with
   $C_S\le77$) the logarithm of the bound is $\le-8.33\cdot10^6$.
-\item \emph{Resolvable $R_j'$, smooth change:} by \eqref{eq:Rk} and \eqref{eq:ampl},
-  $|R_j''(w)|\le\alpha_j\gamma_j^2w^{\theta-2}(1+O(1/\gamma_j))$, so at a level with $|v-v'|\le2\delta v$,
-  $|R_j'(v)-R_j'(v')|\le1.01\,\delta\gamma_j\kappa_j(v/x_j)^{\theta-1}$. Summed with the weights $\mu^2(n)/n$ over $n\le x/x_j$, this is at
+% Logged correction 94 (CORRECTIONS-vs-v3.md): the O(1/gamma_j) in the bound on R_j'' is made explicit with the bounds on
+% phi' and phi'' of eq:phibounds, and the factor 1.01 is derived.
+\item \emph{Resolvable $R_j'$, smooth change:} by \eqref{eq:Rk}, $R_j(e^u)=\alpha_je^{\theta u}\cos(\gamma_ju)\,\phi(u-\log x_j^+)$, and
+  differentiating twice in $x=e^u$,
+  \[
+    |R_j''(w)|\le\alpha_jw^{\theta-2}\bigl(\gamma_j^2+(1+2\|\phi'\|_\infty)\gamma_j+\theta(1-\theta)+\|\phi'\|_\infty+\|\phi''\|_\infty\bigr)
+    \le\alpha_j\gamma_j^2w^{\theta-2}\Bigl(1+\frac6{\gamma_j}\Bigr),
+  \]
+  by \eqref{eq:phibounds} and $\gamma_j\ge\Gamma_1\ge13$ (indeed $\Gamma_1\ge X_0^{-1}x_1^{1/2}/(2\log^3x_1)\ge e^{X_0^2/3}$, as in the proof of Lemma~\ref{lem:G1}). At a level with $|v-v'|\le2\delta v$, the points $w$ between $v$ and
+  $v'$ have $w\ge(1-2\delta)v$, and $2\alpha_j\gamma_jv^{\theta-1}\le(1+\epsilon_j)\kappa_j(v/x_j)^{\theta-1}$ by \eqref{eq:ampl}, with
+  $\epsilon_j:=2H(x_j)/x_j$ (Section~\ref{sec:target}); so
+  \[
+    |R_j'(v)-R_j'(v')|\le\Bigl(1+\frac6{\gamma_j}\Bigr)(1-2\delta)^{\theta-2}(1+\epsilon_j)\,\delta\gamma_j\kappa_j(v/x_j)^{\theta-1}
+    \le1.01\,\delta\gamma_j\kappa_j(v/x_j)^{\theta-1},
+  \]
+  as $\delta\le X_0^{-1/2}$, $\epsilon_j\le2x_j^{-0.99}$ (as $H(x)\le x^{0.01}$) and $6/\gamma_j\le6e^{-X_0^2/3}$, so the three factors multiply to at most $1+10^{-6}$. Summed with the weights $\mu^2(n)/n$ over $n\le x/x_j$, this is at
   most $1.01F_\theta\,\delta\gamma_j\kappa_j\le2\delta\gamma_j\kappa_j/(1-\theta)\le2\kappa_j/((1-\theta)\gamma_j\log^4x)$, as $F_\theta\le1.33$
   and $\delta\gamma_j^2\le\log^{-4}x$ for resolvable $\gamma_j\le\gamma_*$. This is summable over $j$.
 \item \emph{$\sigma_{\Abs}$:} $|\sigma_{\Abs}|\le2L_v^{-4}$, and it vanishes unless $\log\log v>2\log\Lambda+5.97$. So the
@@ -309,7 +322,11 @@ $[1,x]$ for $j>k$. Put $\rho^{(k)}_{\mathrm{osc}}(y):=\sum_nc_n(y)R_k'(y/n)/n$.
 % Logged correction 70: the comparison of correction 69 displayed (it overflowed the line).
 % Logged correction 69: the comparison made explicit (was "c_LP sqrt(log x) >> log X_0 + log log x").
 \item \emph{Average.} Where $c_n(y)$ is constant on $J$, $\int_JR_k'(y/n)\,dy/n=R_k(x(1-\delta)/n)-R_k(x(1-2\delta)/n)$, and
-  $|R_k(v)|\le2\kappa_kv(v/x_k)^{\theta-1}/((1-\theta)\gamma_k)$ (integrate the oscillation at frequency $\gamma_k$). So, with
+% Logged correction 94: the bound on R_k(v) follows from |R_k| <= alpha_k v^theta and eq:ampl; it needs no property of phi
+% beyond 0 <= phi <= 1 (v3: "integrate the oscillation").
+  $|R_k(v)|\le2\kappa_kv(v/x_k)^{\theta-1}/((1-\theta)\gamma_k)$: by \eqref{eq:ampl}, $\kappa_k=2\alpha_k\gamma_kx_k^{\theta-1}$ up to the
+  factor $1+2H(x_k)/x_k$ of Section~\ref{sec:target}, so the right side is at least $3\alpha_kv^\theta/(1-\theta)$, while
+  $|R_k(v)|\le\alpha_kv^\theta$ by \eqref{eq:Rk}. So, with
   Lemma~\ref{lem:lemmaM}, the $J$-average is at most $4\kappa_k(\log x+B_1)/((1-\theta)\gamma_k\delta)$, plus the threshold
   part $\le\kappa_k\cdot R(2\delta)$, where $R(\cdot)$ is the bound of Lemma~\ref{lem:threshold-mass}. Both are $o(1/\log x)$.
 \item \emph{Pointwise.} $|c_n|\le\mu^2(n)$, and $R_k'(x/n)\ne0$ forces $n\le x/x_k$. So

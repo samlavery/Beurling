@@ -8,7 +8,7 @@ method, the command, and the expected output. Commands are run from the reposito
 % Logged correction 54: the constants certificate is a fifth proof step (independent check R8, F2).
 Five of them are steps of the proof: the Beurling--Saias certificate (Section~\ref{app:cert-bs}), the finite computations on
 the integers (Section~\ref{app:cert-finite}), the small range of the $X_0$-band bound (Section~\ref{app:cert-x0band}), the
-numerical constants of Sections~\ref{sec:noise} and~\ref{sec:baserange} (Section~\ref{app:cert-consts}), and the
+numerical constants of Sections~\ref{sec:construction}, \ref{sec:noise} and~\ref{sec:baserange} (Section~\ref{app:cert-consts}), and the
 Rankin constants of Lemma~\ref{lem:rowweights} (\texttt{rankin\_R.py}, Section~\ref{app:cert-rankin}). The
 others are independent numerical cross-checks of statements proved in the text (Theorem~\ref{thm:caplw}, Lemma~\ref{lem:sc},
 Theorem~\ref{thm:svl}) or of the bookkeeping of Section~\ref{sec:logic}.
@@ -191,6 +191,9 @@ $4/\sqrt6\le1.64$; the tail $(\frac12+1.64\sqrt n)/n+2.152n^{-0.2}=0.13742\le0.1
 $\zeta(1.97)-1=0.67398\le0.674$; and $-\zeta'(1.97)=1.00004\le1.0001$.
 \item Lemma~\ref{lem:margin}(c) and \eqref{eq:mu1sum}: $\operatorname{Ein}(2)=\int_0^2(e^w-1)\,dw/w=3.68387<3.69$;
 $I_1=14.9154$, $I_2=214.7714$ and $I_3=6.6962$; $(2.02/\log2)(I_1+I_2+I_3)=688.88\le690$; and $690/\Lambda\le7\cdot10^{-6}$.
+% Logged correction 94 (CORRECTIONS-vs-v3.md): new item, the bound on phi'' of eq:phibounds (script phi_bounds.py).
+\item The cutoff $\phi$ of \eqref{eq:Rk} (\texttt{phi\_bounds.py}): $\|\phi''\|_\infty\le10$ (the largest value of $|\phi''|$ is
+$9.84104$), and a cross-check of the analytic bound $\|\phi'\|_\infty\le2$ of \eqref{eq:phibounds}, to $2.001$.
 \end{itemize}
 \emph{Method.} Ball arithmetic (\texttt{python-flint} 0.9.0) throughout: $\zeta$, and $\zeta'$ from the Taylor series of $\zeta$;
 $\operatorname{Ein}(2)=\operatorname{Ei}(2)-\gamma-\log2$; $\rho_0$ from the signs of $\zeta-2$ at $1.7286$ and $1.7287$
@@ -199,11 +202,18 @@ $2e^\gamma e^{\operatorname{Ein}(2)}\cdot\frac12e^{1/2}E_1(\log4+\frac12)$. For 
 $[\log4,60]$ is integrated by Arb's certified integration (\texttt{acb.integral}), and the rest is bounded explicitly by
 $e^{-60}p(121)(\log121+1.01)/121$ with $p(y)=y^4+8y^3+48y^2+192y+384$ (a comment in the script gives the derivation). Each
 comparison with the bound used in the text is decided on the ball.
+% Logged correction 94: the method of phi_bounds.py.
+For $\phi$, write $\phi=1/(1+e^g)$ on $(0,1)$, $g=1/t-1/(1-t)$. On $[0.02,0.98]$, $\phi'$ and $\phi''$ are enclosed by Taylor
+arithmetic (\texttt{arb\_series} of length $3$) at a ball covering a whole cell, so no derivative formula is typed in by hand; the
+script starts from $960$ cells of width $10^{-3}$ and bisects every cell whose enclosure does not decide the bound. On $(0,0.02]$,
+$\phi'\le e^{-g}q$ and $|\phi''|\le e^{-g}(q^2+|q'|)$ with $q=1/t^2+1/(1-t)^2$, and, after $e^{1/(1-t)}\le e^{1/0.98}$ and $(1-t)^{-1}\le1/0.98$, each term $e^{-1/t}t^{-k}$ ($k\le6$) increases there, so the values at $t=0.02$ bound the whole range ($\le1.4\cdot10^{-18}$ and $\le3.5\cdot10^{-15}$). The range $[0.98,1)$
+follows from $\phi(1-t)=1-\phi(t)$, and $\phi$ is constant outside $(0,1)$.
 
-\emph{How to run} (under a second, with \texttt{python-flint}):
+\emph{How to run} (under a second each, with \texttt{python-flint}):
 \begingroup\footnotesize
 \begin{verbatim}
 python3 -I -B certificates/constants/consts.py
+python3 -I -B certificates/constants/phi_bounds.py
 \end{verbatim}
 \endgroup
 \emph{Expected output} (long lines are wrapped, with the continuation indented):
@@ -234,6 +244,18 @@ m3  I_2 = int_4^oo U^3 (log U + 1.01) v^-2 dv, U = 1 + 2 log v (paper: 214.8) =
 m4  I_3 = 2 e^gamma e^Ein(2) int_4^oo dv/(U v^2) (paper: 6.7) = [6.6961946 +/- 4.30e-9]: True
 m5  (2.02/log 2)(I_1 + I_2 + I_3) (paper: <= 690) = [688.87765 +/- 2.83e-6]: True
 m6  690/Lambda at Lambda = 1e8 (paper eq:mu1sum: <= 7e-6) = [6.900e-6 +/- 3e-14]: True
+\end{verbatim}
+\endgroup
+and, for \texttt{phi\_bounds.py},
+\begingroup\footnotesize
+\begin{verbatim}
+c1  [0.02,0.98]: 4410 cells evaluated, 1725 bisections
+c2  [0.02,0.98]: largest cell bound for |phi'| = [2.00099 +/- 4.82e-6] (<= 2.001: True),
+    for |phi''| = [9.99997 +/- 3.06e-6] (<= 10: True)
+c3  (0,0.02], analytic: phi' <= [1.338e-18 +/- 3.03e-22],
+    |phi''| <= [3.481e-15 +/- 7.38e-20]: True
+c4  values: phi'(1/2) = 2.000000000; phi''(0.7817) = [-9.8410409 +/- 4.44e-9]
+c5  sup|phi'| <= 2 (analytic, cross-checked to 2.001) and sup|phi''| <= 10 on R: True
 \end{verbatim}
 \endgroup
 

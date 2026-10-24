@@ -178,3 +178,4 @@
 | eq:A-exactcount | WITHDRAWN (correction #55): the per-type exact count is replaced by the variable-content block bound (S3)(a) | A-rankfull.tex |
 | eq:A-telescope | WITHDRAWN (correction #55): replaced by the variable-content block bound (S3)(a) | A-rankfull.tex |
 | rem:horizon | Remark (certified horizon, correction #73): on Good(<z) the queue bound, lag, (H_BS), Lemma cm, (LP-a), (La) hold only at heights ≤ ž := z − 12 log z − 3 | 05-queue.tex |
+| eq:phibounds | the cutoff φ(t) = ψ(t)/(ψ(t)+ψ(1−t)), ψ(t) = e^{−1/t}: φ′ = φ(1−φ)(t^{−2}+(1−t)^{−2}) ≥ 0, ‖φ′‖ ≤ 2, ‖φ″‖ ≤ 10 (correction #94) | 02-construction.tex |
