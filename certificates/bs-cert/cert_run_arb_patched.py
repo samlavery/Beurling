@@ -1,4 +1,4 @@
-# Independent driver: cert_run_arb.py with the two band seams closed by directed rounding (otherwise identical).
+# Alias of cert_run_arb.py: same cell code (imports run_cells/LMIN/LMAX/MAXD from it); kept for the documented command line. Not an independent check.
 import sys, math, time
 from multiprocessing import Pool
 sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__)))

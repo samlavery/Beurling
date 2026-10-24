@@ -15,7 +15,7 @@ def cA_cell(ua, ub):
     r = I(r_low(ua), r_up(ub)); r0l = r_low(ua - 1); r0u = r_up(ub - 1)
     L1, L2 = ilog(1 + u), ilog(2 + u)
     u3 = u * u * u
-    jA = 3 * (1 - 1 / r) - (1 + u) * (1 + u) * (1 + u) * L2 / (u3 * L1) - 144 * (1 + u) * (1 + u) * L2 / (u3 * (r0l * r0l) * L1)
+    jA = 3 * (1 - 1 / r) - (1 + u) * (1 + u) * (1 + u) * L2 / (u3 * L1) - 144 * (1 + u) * (1 + u) * L2 / (u3 * arb(r0l) ** 2 * L1)
     val = 5 * L1 * jA - 2 * r0u - (u + 1) / (u * u) - L1
     return lo_(val)
 K, KM = arb("3.2"), arb("1.01")

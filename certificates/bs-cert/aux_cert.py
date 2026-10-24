@@ -2,7 +2,7 @@
 #  (1) positivity of c_0(u), u >= 27:  5 log(1+u)[3(1-1/r(u)) - (1+u)^3 log(2+u)/(u^3 log(1+u)) - 144(1+u)^2 log(2+u)/(u^3 r0^2 log(1+u))]
 #                      - 2 r(u-1) - (u+1)/u^2  >=  log(1+u),   with r -> r_low, r0 -> r_low(u-1), r(u-1) -> r_up.
 #  (2) Lemma V one-step, closed form, u in [1, L], L >= 100, worst case L = max(100, u) (L*Q_V increasing in L):
-#      L(1-e^{-alpha}) * max(1/2, 1 - 1/r_low(u-1)) - 2 K_M r_up(u) - 15 e^{-0.4 L}  >  0   (last term: prime powers p^k > z),
+#      L(1-e^{-alpha}) * max(1/2, 1 - 1/r_low(u-1)) - 2 K_M r_up(u) - 22 e^{-0.4 L}  >  0   (last term: prime powers p^k > z),
 #      alpha = 4K(log(u+1) + (u-1)/(u+1))/L.
 import sys, math
 sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__)))
@@ -22,7 +22,7 @@ def lemV_cell(ua, ub):
     alpha = 4 * K * (ilog(u + 1) + (u - 1) / (u + 1)) / L
     E = max(0.5, 1 - 1 / r_low(ua - 1)) if ua >= 2 else 0.5
     ru = r_up(ub) if ub > 1 else 1.0
-    val = L * (-iexpm1(-alpha)) * E - 2 * KM * ru - 15 * iexp(-0.4 * L)
+    val = L * (-iexpm1(-alpha)) * E - 2 * KM * ru - 22 * iexp(-0.4 * L)
     return lo_(val)
 def cover(f, a, b, ratio, name):
     cells, x, worst, n, stack = [], a, math.inf, 0, []

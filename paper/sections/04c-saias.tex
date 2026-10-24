@@ -548,12 +548,18 @@ $c_u:=u_0/(3u)$, $k_u:=1+1/(2(u-1))$ and $\varphi(w):=(w-u_0+c_u)_+^2/(2\sqrt\el
   \begin{itemize}
   \item $\beta_I:=A(\ell,u)/u+\beta_a-\kappa_{\min}/(u\ell)$;
   \item $\alpha:=(B/\ell)u^3(3u-4)\log(1+u)/(u-1)^2+k_u(v-1+c_u)_+/\sqrt\ell$;
-  \item $\beta_a:=(k_u-1)(v+c_u)_+^2/(2\sqrt\ell)+c_u(2v_++c_u)/(2\sqrt\ell)$.
+% Logged correction 101 (CORRECTIONS-vs-v3.md): the shift term of beta_a vanishes for v+c_u<=0, as in the certificate code
+% (bs_cert_arb.py); without that condition the printed bound is too weak and 44,861 of the u-cells fail (independent audit R30).
+  \item $\beta_a:=(k_u-1)(v+c_u)_+^2/(2\sqrt\ell)+\sigma_u$, where $\sigma_u:=c_u(2v_++c_u)/(2\sqrt\ell)$ if $v+c_u>0$ and
+    $\sigma_u:=0$ if $v+c_u\le0$. This bounds $k_u\varphi(u)-a(\ell,u)=\big[(k_u-1)(v+c_u)_+^2+(v+c_u)_+^2-v_+^2\big]/(2\sqrt\ell)$,
+    since $(v+c_u)_+^2-v_+^2\le c_u(2v_++c_u)$, and both $(v+c_u)_+$ and $v_+$ vanish when $v\le-c_u$.
   \end{itemize}
   Then use $e^{-\alpha t}\le1-(1-e^{-\alpha})t$ and $E_\pi(u-w)_+=1-1/r(u)$ \ref{R1}.
 \item \emph{Part II, $w\in[u,\bar U]$, $s=w-u$.} Here $D\le\beta_{II}+\gamma(s)s$, with $\beta_{II}:=A(\ell,u)/u+\beta_a$ and a
   two-piece slope: $\gamma(s)=\gamma_1$ for $s\le60$ and $\gamma(s)=\gamma_{\max}$ beyond. These are the slopes of
-  $(B/\ell)h+k_u\varphi$ bounded via $h'(w)\le8(1+w)^2\log(2+w)$ at $w=u+60$ and at $w=\bar U$, respectively. This is
+  $(B/\ell)h+k_u\varphi$ bounded via $h'(w)\le8(1+w)^2\log(2+w)$ at $w=u+60$ and at $w=\bar U$, respectively:
+  $\gamma_1=(B/\ell)\,8(1+u+60)^2\log(2+u+60)+k_u(v+60+c_u)_+/\sqrt\ell$ and
+  $\gamma_{\max}=(B/\ell)\,8(1+\bar U)^2\log(2+\bar U)+k_u(\bar U-u_0+c_u)_+/\sqrt\ell$. This is
   combined with $\rho(w-1)/\rho(u-1)\le e^{-r(u-1)s}$ \ref{R3}. The integrals converge because $r(u-1)>\gamma_1$ and
   $r(u-1)>\gamma_{\max}$, which is checked in every cell.
 \item \emph{What the induction needs.} It needs an upper bound for $\int\pi\,e^D\mathbf 1[w\le U(m)]-1$. The Part I/II
@@ -594,7 +600,7 @@ $c_u:=u_0/(3u)$, $k_u:=1+1/(2(u-1))$ and $\varphi(w):=(w-u_0+c_u)_+^2/(2\sqrt\el
   for every $\ell$ in the band. On each cell, $S$ is evaluated in ball arithmetic, with $r_{\mathrm{low}}$ and $r_{\mathrm{up}}$
   computed in the same arithmetic. The enclosure bounds $S$ on the whole cell, so no Lipschitz or interpolation argument is
   needed.
-\item \emph{Result.} $302{,}013$ cells (including adaptive bisections), no failures, and minimum certified $\ell S=2.491\cdot10^6$.
+\item \emph{Result.} $302{,}013$ cells (every cell passed at its first evaluation, so no bisection was needed), no failures, and minimum certified $\ell S=2.491\cdot10^6$.
 \end{itemize}
 
 \emph{Step 8: conclusion.} By Steps 4--7, \eqref{eq:bs-claim} holds for all $\ell\ge\tau$ and $0\le u\le U(\ell)$, and

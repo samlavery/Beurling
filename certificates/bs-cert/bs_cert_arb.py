@@ -16,7 +16,7 @@ def r_low(x):  # rigorous lower bound for r on [x, inf), x >= 1
     return _rl[min(int(math.floor(x)), NR)]
 def r_up(x):   # rigorous upper bound for r on (1, x], via (R4) with the best of a few deltas (+ exact on [1,2])
     if x <= 2: return _fup((1 / (arb(x) * (1 - arb(x).log()))).upper())
-    return min(_fup(((arb(x) + 1) / arb(d)).log().upper() / (1 - d)) * (1 + 2**-50) for d in (0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5))
+    return min(_fup((((arb(x) + 1) / arb(d)).log() / (1 - arb(d))).upper()) for d in (0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5))
 def r_enc(ua, ub):  # enclosure of r(u) for u in [ua, ub]
     return I(r_low(ua), r_up(ub))
 # ---------- the bound ----------

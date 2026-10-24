@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#100)
+## Addendum: defects found after the re-check (corrections #31–#101)
 
 After the first public version, a reader reported forty-nine defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, and two end-to-end checks (R14, R15), turned up twenty more. The full list, with each repair, is entries #31–#100 of `CORRECTIONS-vs-v3.md` (number 94 is unused):
+re-checking the repairs, two end-to-end checks (R14, R15) and an audit of the certificate code (R30), turned up twenty-one more. The full list, with each repair, is entries #31–#101 of `CORRECTIONS-vs-v3.md` (number 94 is unused):
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -137,9 +137,10 @@ re-checking the repairs, and two end-to-end checks (R14, R15), turned up twenty 
 | 98 | Lemma si, Region 1 | e^Q ≤ e²ℓ/τ dropped e^A; A ≤ 2·10⁻³ kept, tail and 60.786 unchanged | reader |
 | 99 | Lemma margin(b), decision-order mismatch | \|P − √(u/w′)\| ≤ H/4 fails below P; now H/4 + H²/(8P), prime count derived (≤ 1.51H + 2) | reader |
 | 100 | Lemma cm proof | blocks [A, 2A) with ψ(2A) − ψ(A), which counts (A, 2A]; blocks now (A, 2A] | reader |
+| 101 | Thm bs Step 7(iii) β_a; App. B bs-cert | printed β_a lacks the code's v + c_u ≤ 0 condition (literal formula fails 44,861 u-cells); code and run descriptions corrected; certificate re-run, unchanged | bs-cert audit R30 |
 
 **Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72 in twenty-two passes
-(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, #79–#82 by R20, #83–#85 by R21, #86 and #87 by R22, #88 and #89 by R23, #90 by R24, #91 by R25, #92 by R26, #93 by R27, #95 and #96 by R28, and #97–#100 by R29; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, #79–#82 by R20, #83–#85 by R21, #86 and #87 by R22, #88 and #89 by R23, #90 by R24, #91 by R25, #92 by R26, #93 by R27, #95 and #96 by R28, #97–#100 by R29, and #101 came from the bs-cert code audit R30; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -157,7 +158,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the ninety-nine corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the one hundred corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and

@@ -35,7 +35,7 @@ operation and transcendental function is enclosed. The bounds $r_{\mathrm{low}}$
 $r(v)\ge r(v-1)/(1-e^{-r(v-1)})$, $r(2)=1/(2-2\log2)$) and $r_{\mathrm{up}}$ (from $r(x)\le\log((x+1)/\delta)/(1-\delta)$, minimised
 over $\delta\in\{0.05,0.1,0.15,0.2,0.3,0.4,0.5\}$) are computed in balls. Decimal constants (such as $K'=2.2$, $K=3.2$,
 $C_0=0.70$ and $0.4$) enter as exact balls. Floating-point numbers enter only as exactly representable cell endpoints and
-parameters (the float complement $1-\delta$ in $r_{\mathrm{up}}$ is compensated by a factor $1+2^{-50}$), and as
+parameters (including the values of $\delta$; $1-\delta$ is formed in balls), and as
 outward-rounded (\texttt{nextafter}) images of ball endpoints: in the table lookups for $r_{\mathrm{low}}$ and $r_{\mathrm{up}}$, in a
 few intermediate upper bounds that are fed back into the ball computation, in the final sign test, and in the printed output. Each
 such conversion moves a lower bound down or an upper bound up, so it can only weaken the certified inequality.
@@ -54,7 +54,7 @@ majorant to converge.
 \begingroup\footnotesize
 \begin{verbatim}
 python3 -I -B certificates/bs-cert/cert_run_arb_patched.py 1.05 10
-    # main region, 10 workers, ~20 s
+    # main region, 10 workers, about 10 s
 python3 -I -B certificates/bs-cert/aux_cert_arb.py
     # the one-variable checks, ~1 s
 \end{verbatim}
@@ -72,14 +72,17 @@ Lemma V one-step on [1,2] with both extra terms: [1,2] cells=1387 failed=0
     min certified margin=0.829
 \end{verbatim}
 \endgroup
-That is: $302\,013$ cells (adaptive bisections included), $0$ failures, minimum certified $\ell\cdot S=2.491\cdot10^6$, at
+That is: $302\,013$ cells (each passed at its first evaluation; no bisection was needed), $0$ failures, minimum certified $\ell\cdot S=2.491\cdot10^6$, at
 $\ell\approx8.3\cdot10^{10}$, $u\in[200,210]$; for $c_0(u)$, $9\,609$ cells on $[27,4\cdot10^5]$, $0$ failures, minimum margin $0.189$;
 for the one-step inequality of Lemma~\ref{lem:smooth-v}, $13\,823$ cells on $u\in[1,10^6]$, $0$ failures, minimum margin $1.724$;
-and for that inequality on $u\in[1,2]$ with both extra terms, $1\,387$ cells, $0$ failures, minimum margin $0.829$. The script \texttt{cert\_run\_arb.py 1.05 10} gives the same
-result. The double-precision twins \texttt{bs\_cert.py}, \texttt{cert\_run.py} and \texttt{aux\_cert.py} (minimum $2.598\cdot10^6$ for
+and for that inequality on $u\in[1,2]$ with both extra terms, $1\,387$ cells, $0$ failures, minimum margin $0.829$. The script \texttt{cert\_run\_arb.py 1.05 10} runs the same cover
+(it shares the cell code with \texttt{cert\_run\_arb\_patched.py}, so it is not an independent confirmation). The double-precision twins \texttt{bs\_cert.py}, \texttt{cert\_run.py} and \texttt{aux\_cert.py} (minimum $2.598\cdot10^6$ for
 the main region) are a cross-check only and are not part of the certificate. In \texttt{bs\_cert\_arb.py}, the first majorant is \texttt{betaI},
 \texttt{alpha}; the second is \texttt{betaII}, \texttt{gam1}, \texttt{gmax}, \texttt{tailII}; the error terms are \texttt{E1},
 \texttt{E2}, \texttt{E3} with \texttt{eta}; the tail is \texttt{ET}, \texttt{T}; and the $v$-cells are \texttt{vmode}.
+The term $\sigma_u$ of $\beta_a$ is \texttt{shift}; it is set to $0$ when the ball for $v+c_u$ lies in $(-\infty,0]$, and this is the case on
+every $u$-cell, since there $u\le u_0/2$ and $c_u\le u_0/6$, so $v+c_u\le-u_0/3<0$. With $\sigma_u=c_u(2v_++c_u)/(2\sqrt\ell)$ on these
+cells instead, $44{,}861$ of the $59{,}997$ $u$-cells fail.
 
 \subsection{Finite computations (\texttt{finite-n})}\label{app:cert-finite}
 \emph{What it certifies.} The finite computations on $\N$ quoted in Section~\ref{sec:noise}. Each is a supremum or a sum over a
