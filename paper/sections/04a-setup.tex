@@ -225,8 +225,10 @@ $\lfloor x/a\rfloor=x/a-\{x/a\}$ gives
 
 \emph{Two error integrals.} By partial summation,
 $\int_{[1,x]}\log v\,dE_1(v)=E_1(x)\log x-\int_{\Xm}^xE_1(v)\,dv/v$, so its absolute value is at most
-$x(\eta_2+\sup\eps_1)$. Next, group $a$ into dyadic blocks $[A,2A)$ with $x/A\ge\Xm$. On such a block,
-$|E_1(x/a)|\le\eps_1(x/a)\,x/a$, and $\int_{[A,2A)}(x/a)\,d\psi(a)\le(x/A)(\psi(2A)-\psi(A))\le 1.42x$ by (i) at the
+% Logged correction 100 (CORRECTIONS-vs-v3.md): v3 used blocks [A,2A) with psi(2A)-psi(A), which counts (A,2A]; the blocks are now (A,2A].
+$x(\eta_2+\sup\eps_1)$. Next, group $a$ into the dyadic blocks $(A,2A]$, $A=2^k$ ($k\ge0$), which cover $(1,\infty)$, keeping those
+with $x/(2A)\ge\Xm/2$ (on the others $E_1(x/a)=0$). On such a block $x/a\in[x/(2A),x/A)$ lies in one dyadic interval of the definition
+of $\eta_1$, $|E_1(x/a)|\le\eps_1(x/a)\,x/a$, and $\int_{(A,2A]}(x/a)\,d\psi(a)\le(x/A)(\psi(2A)-\psi(A))\le 1.42x$ by (i) at the
 smaller scale $2A\le 2x/\Xm$. Summing over the blocks,
 \begin{equation}\label{eq:cm-psi}
   \int|E_1(x/a)|\,d\psi(a)\le 1.42\,\eta_1\,x .

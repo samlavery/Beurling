@@ -254,7 +254,7 @@ $\rhosh(x)-\rhosh(y)=\sum_n[c_n(x)T'(x/n)-c_n(y)T'(y/n)]/n$.
   $L_I:=\log(N_*/2)$. By the lag bound,
 % Logged correction 66: renamed from L_*, which clashes with L_* = 10^7 of eq:absorbed.
 $|N-T|\le H(N_*)$ at both ends of $I$, and under the target \eqref{eq:target},
-  $T(I)\le2|I|+2+\#\Abs(I)$. Cover $I$ by $\lceil|I|/h(N_*(1-2\delta))\rceil$ consecutive windows $[u,u+h(u)]$,
+  $T(I)\le2.0001|I|+1+\#\Abs(I)$ (as in Corollary~\ref{cor:localcount}(i)). Cover $I$ by $\lceil|I|/h(N_*(1-2\delta))\rceil$ consecutive windows $[u,u+h(u)]$,
   $h(u)=u^{\theta/2}$; by Lemma~\ref{lem:lemmaP} each holds at most $h(u)L_u^{-4}$ absorbed elements, so
   $\#\Abs(I)\le(2.01\,\delta N_*+N_*^{\theta/2})L_I^{-4}$. Hence $\#(\NN\cap I)\le4.01\,\delta N_*+2H(N_*)+2+N_*^{\theta/2}$, and
   this part is at most $\jz\sum_{n\in\NN\cap I}1/n\le\jz\big(4.1\,\delta+3H(N_*)/N_*+2N_*^{\theta/2-1}\big)=o(1/\log x)$.

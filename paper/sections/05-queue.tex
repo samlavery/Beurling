@@ -281,8 +281,12 @@ $s_j\le\max J+H(\max J)$, and, if $|J|\le6H(P)-1$, on $\qLand(J^+)$,
 \end{equation}
 where $\qKloc(P):=2B(4P)+\tfrac73\lambda_P+23$.
 % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #20): v3 has +13 in K_loc; the extra 10 pays for the passage from J to the landing window J^+.
-Under the target \eqref{eq:target} of Section~\ref{sec:construction},
-$T(J)\le2|J|+2+\#\Abs(J)$, so the non-absorbed count satisfies $N(J)-\#\Abs(J)\le13.4|J|+\qKloc(P)+2$.
+% Logged correction 97 (CORRECTIONS-vs-v3.md): v3 has T(J) <= 2|J|+2+#Abs(J), which the crude bounds (rigid integers, and
+% T'_cont <= 1.0001) do not give on long J; the chain to 13.4|J| is now explicit, with the middle bound of eq:localcount.
+Under the target \eqref{eq:target} of Section~\ref{sec:construction}, $T(J)\le2.0001|J|+1+\#\Abs(J)$: the rigid integers in
+$J$ number at most $|J|+1$, and $T'_{\mathrm{cont}}\le1+1/(\kappa u)+\kappa_+/\log u\le1.0001$ (\S\ref{sec:greedy}). So the
+non-absorbed count satisfies $N(J)-\#\Abs(J)\le(4\rho_H+6.0001+2.0001)|J|+\qKloc(P)+1\le13.4|J|+\qKloc(P)+2$, as
+$\rho_H\le1.33$.
 \item Let $P\ge X_0$ be real, let $P_1$ be the dyadic scale with $P_1\le P<2P_1$, and let $J\subset[P,4P]$ with
 $|J|\le6H(P)$. Split $J$ at $4P_1$ into $J_1:=J\cap[P_1,4P_1)$ and $J_2:=J\cap[4P_1,8P_1)$. On the queue bound at the
 slots $s_j\le\max J+H(\max J)$, and on the events $\qLand(J_i^+)$ of (i) at the dyadic scales $P_1$ and $2P_1$ (for the
@@ -311,7 +315,10 @@ gives the bound directly.
 
 (ii) We have $J_1\subset[P_1,4P_1]$ and $J_2\subset[2P_1,8P_1]$, so (i) applies to $J_1$ at the dyadic scale $P_1$ and to
 $J_2$ at the dyadic scale $2P_1$, provided $|J_i|\le6H(2^{i-1}P_1)$. A piece with $6H(2^{i-1}P_1)<|J_i|\le6H(P)$ has
-$|J_i|\ge H$, and Remark~\ref{rem:longwindows} together with $T(J_i)\le2|J_i|+2+\#\Abs(J_i)$ gives the same two bounds for it.
+% Logged correction 97: the long piece uses T(J_i) <= 2.0001|J_i|+1+#Abs(J_i), as in (i).
+$|J_i|\ge H$, and Remark~\ref{rem:longwindows} together with $T(J_i)\le2.0001|J_i|+1+\#\Abs(J_i)$ (as in (i)) gives the same
+two bounds for it: $|N(J_i)-T(J_i)|\le1.01|J_i|+2B+6$, and $N(J_i)-\#\Abs(J_i)\le3.0101|J_i|+2B+7$, with
+$2B\le2B(4\cdot2^{i-1}P_1)\le\qKloc(2^{i-1}P_1)-23$.
 Add the bounds for the two pieces, and use $\qKloc(P_1)\le\qKloc(P)$ and $\qKloc(2P_1)\le\qKloc(2P)$, since $\qKloc$ is
 non-decreasing.
 \end{proof}
@@ -323,7 +330,8 @@ the start-up bound $|D|\le B(X_0)+\frac{H(X_0)}2(1+\kappa_+/\log X_0)+5$ from th
 $|N(J)-T(J)|\le2\sup|D|\le2B+H(1+\kappa_+/L)+10\le1.01|J|+2B+6$ for $|J|\ge H$, since $H(0.01-\kappa_+/L)\ge4$.
 % Logged correction 36: v3/#15 have +6 in the middle term; the start-up range near X_0 needs +10.
 % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #15): v3 has 2B+H+4 <= |J|+2B+4.
-Alternatively, splitting $J$ into $\lceil|J|/H\rceil$ pieces gives $N(J)-\#\Abs(J)\le13.5|J|+\qKloc(P)+2$.
+% Logged correction 97: v3's alternative "splitting J into ceil(|J|/H) pieces gives N(J)-#Abs(J) <= 13.5|J|+K_loc(P)+2" is
+% true (the extra per-piece errors cost <= 0.0101|J|, as K_loc <= H/100) but not derived in the text and uncited; it is deleted.
 \end{remark}
 
 \begin{remark}[Uses of Corollary~\ref{cor:localcount}, and non-circularity]\label{rem:localcount-uses}
@@ -333,7 +341,7 @@ therefore used only by steps that run after $z+7H(z)$, and always at a strictly 
 \begin{itemize}
 \item Lemma~\ref{lem:threshold-mass}, step (ii), through part (i) at a dyadic scale $P_1\le\sqrt x$;
 \item Lemma~\ref{lem:tau-near}, through part (ii) at $P'=0.51P$ (or at $X_0$), at heights $p_0\le\sqrt x$;
-\item Lemma~\ref{lem:short-recip}, through part (ii) at $P=M/2$, at heights $M\le y/2$;
+\item Lemma~\ref{lem:short-recip}, through part (ii) at $P=M/2$ or at $X_0$ (for $|I|>6H(P)$ it uses Remark~\ref{rem:longwindows} instead, which reads no landing event), at heights $M\le y/2$;
 \item Proposition~\ref{prop:g1}, step 1, for a window that ends $\delta x\ge x^{0.98}>H(x)$ before $x$.
 % Logged correction 68 (check R12): "delta x >> H" replaced by the explicit bound of Proposition g1.
 \end{itemize}

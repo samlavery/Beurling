@@ -370,14 +370,14 @@ $2C_N\log(2u)/\log x$ for $u\ge2X_0$, where there are no terminal levels.
 \item For $v\le X_0^2/2$ the $w$-window has length $2.04H(v)/\Xm<1$ and lies below $\Xm$, where $\NN=\N$; so it holds at most
   one $w$, and $\eta_{X_0}(v)\le1.01X_0/v$.
 \item For $v>X_0^2/2$, the window $I_v$ has length $\le2.1H(v)/X_0$ at height $v/X_0$. By the lag bound
-  Corollary~\ref{cor:lag}, $|N-T|\le H$ at that height, and under the target \eqref{eq:target}, $T(I_v)\le2|I_v|+2+\#\Abs(I_v)$;
+  Corollary~\ref{cor:lag}, $|N-T|\le H$ at that height, and under the target \eqref{eq:target}, $T(I_v)\le2.0001|I_v|+1+\#\Abs(I_v)$ (as in Corollary~\ref{cor:localcount}(i));
   by Lemma~\ref{lem:lemmaP}, $\#\Abs(I_v)\le2(v/X_0)^{\theta/2}$. Here $|I_v|\le2.1H(v)/X_0\le h(v/X_0)$, so $I_v$ is covered
   by two windows $[u,u+h(u)]$ of Lemma~\ref{lem:lemmaP}; and $\Abs$ is empty at heights below $X_0$, where that lemma is not
   stated.
 % Logged correction 66: the window size and the range of Lemma lemmaP are made explicit here.
   So $I_v$ holds at most
-  $4.2H(v)/X_0+2H(v/X_0)+4+2(v/X_0)^{\theta/2}$ elements, and
-  $\eta_{X_0}(v)\le1.01\bigl(4.2H(v)+2X_0H(v/X_0)+4X_0+2X_0(v/X_0)^{\theta/2}\bigr)/v$.
+  $4.21H(v)/X_0+2H(v/X_0)+4+2(v/X_0)^{\theta/2}$ elements, and
+  $\eta_{X_0}(v)\le1.01\bigl(4.21H(v)+2X_0H(v/X_0)+4X_0+2X_0(v/X_0)^{\theta/2}\bigr)/v$.
 \item Since $\eta_{X_0}(v)=0$ for $v<2\Xm-1.1H(X_0)$, these give
   $\sum_{v\ \text{dyadic}}\log(2v)\sup_{[v,2v)}\eta_{X_0}\le1.52\log(2X_0)$ and $\sum_v\sup_{[v,2v)}\eta_{X_0}\le1.52$: the first
   bullet contributes $0.506\log(2X_0)$ from the block $[X_0,2X_0)$ and $1.01\sum_{j\ge1}2^{-j}(\log(2X_0)+j\log2)$ from the

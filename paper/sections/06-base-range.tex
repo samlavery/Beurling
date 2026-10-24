@@ -282,8 +282,12 @@ $4\kappa(\log^2u/\Lambda)\cdot1.01e^{\gamma}\Lambda\cdot\ell_u^{k-2}/(k-2)!$ for
 % of K_pt is X_0 (see before eq:shdecomp), and the components below X_0 form mu_edge, treated in (d).
 % Logged correction 53: the decision-order mismatch is bounded by a direct count (independent check R7, C3).
 the decision-order mismatch, bounded directly as follows. Value order and decision order of the new prime and the top large prime $P$
-of the cofactor $w=Pw'$ differ only when $u/w$ lies within $H/2$ of $P$, so $|P-\sqrt{u/w'}|\le H/4$: $P$ lies in an interval of
-length $\le H/2$ around $\sqrt{u/w'}$, which holds at most $1.5H+2\le2(H+1)$ realised primes. Summing over $w'$, with $\sum1/w'\le\log u+1$ and $H(v)/v$ decreasing,
+% Logged correction 99 (CORRECTIONS-vs-v3.md): v3's |P - sqrt(u/w')| <= H/4 fails below P (square-root curvature); now H/4 + H^2/(8P),
+% and the prime count is derived explicitly (v3's 1.5H+2 also needed 1.51H+2); the count 2(H+1) is unchanged.
+of the cofactor $w=Pw'$ differ only when $u/w$ lies within $H/2$ of $P$, so $|P-\sqrt{u/w'}|\le\frac H4+\frac{H^2}{8P}\le0.2501H$ (as $u/w'=P\cdot(u/w)$, and
+$1-\sqrt{1-\eps}\le\eps/2+\eps^2/2$ for $0\le\eps\le\frac12$, while $\sqrt{1+\eps}-1\le\eps/2$): $P$ lies in an interval of
+length $\le0.5002H$ around $\sqrt{u/w'}$. The realised primes there are decided at continuous slots starting within $H(1+10^{-6})/2$
+of it, so there are at most $1.0001\cdot1.5003H+1\le1.51H+2\le2(H+1)$ of them. Summing over $w'$, with $\sum1/w'\le\log u+1$ and $H(v)/v$ decreasing,
 bounds the mismatch by $2.02(H(X_0)+1)(\log u+1)X_0^{-1}\sup|h|$ for the function $h$ the operators act on ($h=f_0$ here, and
 $h=g$ in (d)). The other items are the partial windows $(K_{\mathbb Q}-K^{\mathrm{sh}}_{\mathbb Q})(\mathrm{MA}[\mathbb P]\mathbf 1_{[X_0,\infty)})$
 (at most $\kappa\log u/\Lambda$ by Lemma~\ref{lem:blin}(3), each component having density $\le1.01/\Lambda$) and $O(1/(\kappa u))$.
