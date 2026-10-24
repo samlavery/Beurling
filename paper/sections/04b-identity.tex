@@ -8,20 +8,46 @@ continuous slot, so on every window $W$
 \[
   \#\{\text{continuous slots in }W\}=\int_WT'_{\mathrm{cont}}\pm2 .
 \]
-By Lemma~\ref{lem:count}, on a slot window $W$ the number of primes decided equals the number of continuous slots,
-minus the non-absorbed jittered composites landing in $W$, plus the change in the queue:
+% Logged correction 95 (CORRECTIONS-vs-v3.md): v3 states the bookkeeping on slot windows with a +-2 for "the two slot
+% boundaries", but the margin identity applies it to the physical window W_y, whose end cells are cut, and its nu has no edge
+% term (Lemma noise adds one). On slot windows the identity is exact; for any interval the residual E_edge of the two
+% partial end cells is defined and bounded below, and it now enters nu.
+By Lemma~\ref{lem:count}, on a slot window $W=(k,j]$ (the slots $k+1,\dots,j$, with physical interval $[s_{k+1},s_{j+1})$) the
+number of primes decided equals the number of continuous slots, minus the non-absorbed jittered composites landing in $W$,
+plus the change in the queue:
 \begin{equation}\label{eq:bookkeeping}
-  \sigma(W)=\#\{\text{continuous slots in }W\}-C_{\mathrm{jit}}(W)+\Delta Q(W)\pm2 ,
+  \sigma(W)=\#\{\text{continuous slots in }W\}-C_{\mathrm{jit}}(W)+\Delta Q(W),\qquad\Delta Q(W):=Q_j-Q_k .
 \end{equation}
-where the $\pm2$ accounts for the two slot boundaries. Here $C_{\mathrm{jit}}$ counts the composites $n\notin\Abs$ whose
+Indeed $\sum_{i=k+1}^j(P_i+A_i-1)=Q_j-Q_k$ by the greedy rule, and the composites with value in $[s_{k+1},s_{j+1})$, counted by
+$\sum_{i=k+1}^jA_i$, are the elements of the jump slots of $W$, one each, and the $C_{\mathrm{jit}}(W)$ others. Here $C_{\mathrm{jit}}$ counts the composites $n\notin\Abs$ whose
 latest prime $q$ (in decision order) is jittered; the cofactor may be any element of $\NN$. Write
 $C_{\mathrm{jit}}=C^{(1)}+C^{(\ge2)}$, according to whether $q\,\|\,n$ or $q^2\mid n$.
+
+\emph{Physical windows.} For an arbitrary interval $W$, let $k$ be the last slot that starts before $W$ ($k:=j_0-1$ if there
+is none), and let $k+1,\dots,j$ ($j\ge k$) be the slots that start in $W$. Then $\sigma(W)$ and the continuous slots in $W$
+refer to these slots (\S\ref{sec:greedy}), while $C_{\mathrm{jit}}(W)$ counts by value. Put $\Delta Q(W):=Q_j-Q_k$, and let
+$W^\circ:=[s_{k+1},s_{j+1})$ be the physical interval of the slot window $(k,j]$. The \emph{edge residual} of $W$ is
+\begin{equation}\label{eq:edge}
+\begin{aligned}
+  E_{\mathrm{edge}}(W)&:=\sigma(W)-\#\{\text{continuous slots in }W\}+C_{\mathrm{jit}}(W)-\Delta Q(W)\\
+  &=C_{\mathrm{jit}}(W\setminus W^\circ)-C_{\mathrm{jit}}(W^\circ\setminus W),
+\end{aligned}
+\end{equation}
+where the second form is \eqref{eq:bookkeeping} for $(k,j]$. Here $W\setminus W^\circ$ lies in the cell $J_k$ (for $k=j_0-1$,
+below $s_{j_0}$, where there are no jittered composites, Lemma~\ref{lem:count}), and $W^\circ\setminus W$ (empty if $j=k$) lies
+in the cell $J_j$, which ends after $W$. These are the two partial end cells. Since $\sigma(W)$, the continuous-slot count and
+$\Delta Q(W)$ refer to the same slots, the slot starts cancel, and only the composites in the cut parts of the two end cells
+remain. As $A_i\le Q_i+1$ (by $Q_i=Q_{i-1}+A_i+P_i-1$ with $Q_{i-1},P_i\ge0$),
+\[
+  -A_j\le E_{\mathrm{edge}}(W)\le A_k,\qquad|E_{\mathrm{edge}}(W)|\le1+\max(Q_k,Q_j),
+\]
+with $A_{j_0-1}:=0$. If $W$ is the physical interval of a slot window, then $W^\circ=W$ and $E_{\mathrm{edge}}(W)=0$. (Its $k,j$ may differ from those of the slot window by an empty slot at an end; $W^\circ$ is the same.)
 \begin{itemize}
 \item $\Comp$ is the predictable compensator of $C^{(1)}$. Given $\mathcal F_{q-}$, the element $q\cdot w$ ($q\nmid w$)
   lands in $W$ with conditional probability $|J_q\cap W/w|/H(s_q)$, and $q\cdot w$ is formed only if $q$ is decided
   after every prime of $w$, i.e.\ $s_q>\tau_w$. Hence
   \[
-    \Comp(W)=\sum_w\int_{W/w}J(\Pi_{\tau_w}\sigma)\cdot\mathbf 1[qw\notin\Abs],
+    \Comp(W)=\sum_{w\ge2}\int_{W/w}J(\Pi_{\tau_w}\sigma)\cdot\mathbf 1[qw\notin\Abs],
   \]
   where $\Pi_\tau\sigma$ keeps the slots $s_q>\tau$.
 % Logged correction 83 (CORRECTIONS-vs-v3.md): the sum defining Comp^(2) is over the jittered q (as is C^(>=2)), the m decided
@@ -52,26 +78,42 @@ Since $\int_{W_x/w}g=\frac1w\int_{W_x}g(y/w)\,dy$,
 
 \begin{proposition}[the margin identity]\label{prop:margin-identity}
 % v3: Identity (3.1)
+% Logged correction 95: nu contains the edge residual of W_y (eq:edge) and the box term E_box, so the identity is exact.
 For every $y\ge X_0$,
 \begin{equation}\label{eq:margin-identity}
-  \rhot+B\Kpt\rhot=F,\qquad F:=\tilde T'-\nu-\NT,\qquad
-  \nu(y):=\frac{\Mart'(W_y)-\Delta Q(W_y)+\Comp^{(2)}(W_y)}{H(y)} .
+\begin{gathered}
+  \rhot+B\Kpt\rhot=F,\qquad F:=\tilde T'-\nu-\NT,\\
+  \nu(y):=\frac{\Mart'(W_y)-\Delta Q(W_y)-E_{\mathrm{edge}}(W_y)+\Comp^{(2)}(W_y)+E_{\mathrm{box}}(y)}{H(y)},
+\end{gathered}
 \end{equation}
+where $\Delta Q(W_y)$ and $E_{\mathrm{edge}}(W_y)$ are those of the physical window $W_y$ \eqref{eq:edge}, and
+$E_{\mathrm{box}}(y):=\sigma(W_y)-H(y)\rhot(y)$. Moreover $|E_{\mathrm{box}}|\le2.01$.
 \end{proposition}
 
 \begin{proof}
-Apply \eqref{eq:bookkeeping} to the window $W_y$ and divide by $H(y)$. On the left, $\rhot(y)=\sigma(W_y)/H(y)+O(2/H(y))$:
-every box is centred and has width $H(s_q)=H(y)(1+O(\eps H(y)/y))$, so at most two slots near the ends of $W_y$ are
-counted differently. On the right, write $C_{\mathrm{jit}}=\Comp+\Comp^{(2)}+\Mart'$, use the display for
-$\Comp(W_y)/H(y)$ above, and move $B\Kpt\rhot$ to the left. The terms $BK_{\Abs}\rhot$ and $\#\{\text{continuous slots in }W_y\}/H$
-make up $\tilde T'$. The $O(1/H)$ terms are part of $\vartheta$ in \eqref{eq:Ttilde}.
+% Logged correction 95: v3 applies the slot-window bookkeeping to W_y and puts the box term into theta, although tilde T' is
+% defined without it; both residuals are now explicit terms of nu.
+By \eqref{eq:edge} for the physical window $W_y$, exactly,
+\[
+  \sigma(W_y)=\#\{\text{continuous slots in }W_y\}-C_{\mathrm{jit}}(W_y)+\Delta Q(W_y)+E_{\mathrm{edge}}(W_y).
+\]
+Divide by $H(y)$. On the left,
+$\sigma(W_y)/H(y)=\rhot(y)+E_{\mathrm{box}}(y)/H(y)$. On the right, write $C_{\mathrm{jit}}=\Comp+\Comp^{(2)}+\Mart'$, use the display
+for $\Comp(W_y)/H(y)$ above, and move $B\Kpt\rhot$ to the left. The terms $BK_{\Abs}\rhot$ and
+$\#\{\text{continuous slots in }W_y\}/H$ make up $\tilde T'$, the term $-\NT$ remains, and the rest is $-\nu$; there is no error term.
+
+The box term: $H(y)\rhot(y)=\sum_qH(y)H(s_q)^{-1}\mathbf 1[y-H(s_q)/2<s_q\le y+H(s_q)/2]$, while $\sigma(W_y)$ counts the $q$ with
+$s_q\in W_y$. Every box is centred, with width $H(s_q)=H(y)(1+O(\eps H(y)/y))$ for these $q$ by \eqref{eq:RH}, and distinct
+decided primes have slot starts at least $1-10^{-8}$ apart (they are continuous-slot starts, \S\ref{sec:greedy}). So at most one prime near each end of
+$W_y$ is counted differently, and the weights $H(y)/H(s_q)$ change the rest by $O(\eps H(y)^2/y)\le0.01$. Hence
+$|E_{\mathrm{box}}|\le2.01$.
 \end{proof}
 
 The compensator margin density at $y$ is
 \begin{equation}\label{eq:M}
   M(y):=\tilde T'(y)-(B\Kpt\rhot)(y)=\rhot(y)+\nu(y)+\NT(y).
 \end{equation}
-The noise $\nu$ enters only at the current scale $y$, as an $H(y)$-window function (Lemma~\ref{lem:noise}). Every other
+The noise $\nu$ enters only at the current scale $y$: it depends on the data on $W_y$ and on the two slot cells at its ends (Lemma~\ref{lem:noise}). Every other
 quantity in \eqref{eq:margin-identity} at $y$ involves $\sigma$ only at scales $\le y/2+H$.
 
 \paragraph{The push-through form.} $\Kpt$ maps functions supported on scales $\ge v$ to functions supported on scales

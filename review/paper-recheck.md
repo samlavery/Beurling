@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#90)
+## Addendum: defects found after the re-check (corrections #31–#96)
 
-After the first public version, a reader reported forty defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, and two end-to-end checks (R14, R15), turned up twenty more. The full list, with each repair, is entries #31–#90 of `CORRECTIONS-vs-v3.md`:
+After the first public version, a reader reported forty-five defects that all the AI checks above had missed. Repairing them, and
+re-checking the repairs, and two end-to-end checks (R14, R15), turned up twenty more. The full list, with each repair, is entries #31–#96 of `CORRECTIONS-vs-v3.md` (number 94 is unused):
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -128,9 +128,14 @@ re-checking the repairs, and two end-to-end checks (R14, R15), turned up twenty 
 | 88 | Lemma tau-near | p₀ ≥ X₀⁻ false for a rational latest prime just below X₀⁻; now p₀ > X₀/2, already covered by the counting | reader |
 | 89 | Lemma noise E(I); Prop pointwise Step 2 | E-bound proved for slot windows, applied to physical intervals A±; extended to all intervals with a 70 log²(2u) boundary term, absorbed by ν̂'s constant | reader |
 | 90 | Cor kr-weights(b); Lemma xb; Prop br | stated from X₀ (resp. 2X₀) but applied at τ-near starts ≥ X₀⁻ (resp. points of W_x ≥ 2X₀ − H/2); ranges extended (identity kernel below X₀) | reader |
+| 91 | Lemmas ZB, ZBlow | truncated-ramp transform written as (X₀^{−s} − n^{−s})/(sκ) (vanishes at n = X₀); ZBlow's 3n^{−σ} fails for large σ; corrected formula and a support-based bound, allowances unchanged | reader |
+| 92 | Thm lp Steps 7–9 | Step 8 discs reached above T_y, where Step 7's zero-free region was not proved; region extended to T_y + 1; a threshold claim reworded | reader |
+| 93 | Prop g1(B) Steps 3, 5 | ρ_det and R′_j smooth-change bounds stated at displacement δ, applied at 2δ; restated at 2δ, budgets unchanged | reader |
+| 95 | eq:bookkeeping, margin identity, Lemma noise | slot-window bookkeeping applied to physical windows (a slot can carry composites past the window's end); edge residual defined (≤ B + 1) and put in ν with the box term, so the identity is exact | reader |
+| 96 | decision order τ_w | τ₁ undefined although Comp^{(2)} uses m = 1; τ₁ := 0 | reader |
 
 **Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72 in twenty-two passes
-(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, #79–#82 by R20, #83–#85 by R21, #86 and #87 by R22, #88 and #89 by R23, and #90 by R24; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, #79–#82 by R20, #83–#85 by R21, #86 and #87 by R22, #88 and #89 by R23, #90 by R24, #91 by R25, #92 by R26, #93 by R27, and #95 and #96 by R28; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -148,7 +153,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the ninety corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the ninety-five corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and

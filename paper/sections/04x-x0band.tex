@@ -328,8 +328,8 @@ element $d$ is $t_w$-dense with $t_w:=4.01wX_0$, and the element $e\in I_w/m$ is
 \begin{itemize}
 \item For $m\le N^{1/100}/w$: the height of $I_w/m$ is $\ge N^{0.99}/1.01$, so its logarithm $J'$ is $\ge0.99J-1\ge J_1$;
   and $t_{wm}\le4.01N^{1/100}X_0\le(N^{0.99})^{1/10}$ because $X_0\le N^{1/(600\Lambda^3)}$. So Lemma~\ref{lem:si} applies, with
-  $\tau_{wm}/J'\le0.0103$ and factor $1+2.1\tau_{wm}/J'\le1.022$:
-  $\sum_{e\in I_w/m}|c_e|/e\le2\cdot61.1\cdot1.022\cdot1.02\,\delta_w\,\tau_{wm}/J'$, with $\tau_{wm}=\tau_0+\log w+\log m$.
+  $\tau'_{wm}/J'\le0.0103$ and factor $1+2.1\tau'_{wm}/J'\le1.022$:
+  $\sum_{e\in I_w/m}|c_e|/e\le2\cdot61.1\cdot1.022\cdot1.02\,\delta_w\,\tau'_{wm}/J'$, with $\tau'_{wm}=\tau_0+\log w+\log m$.
 \item For $m>N^{1/100}/w$: Lemma~\ref{lem:short-recip} gives $\sum_{e\in I_w/m}1/e\le29\delta_w+7$, and
   \[
     \sum_{m>N^{1/100}/w}\Hord(m)m^{\eps-2}\le(N^{1/100}/W_1)^{-0.2}A(1.77)\le e^{22.6}N^{-0.002}.
@@ -338,7 +338,7 @@ element $d$ is $t_w$-dense with $t_w:=4.01wX_0$, and the element $e\in I_w/m$ is
 With $A_0\le2.07$ and $A_1=A_1(\eps)\le9.42$, and $J'\ge0.99J-1$,
 \[
   \sum_{d\in I_w}\frac{\TV(D_d)}{2d}\le\frac{127.4\,\delta_w}{0.99J-1}\Bigl(\tau_w\bigl(1+\tfrac{A_0}4\bigr)+\tfrac{A_1}4\Bigr)
-  +e^{26}N^{-0.002},\qquad \tau_w:=\tau_0+\log w .
+  +e^{26}N^{-0.002},\qquad \tau'_w:=\tau_0+\log w .
 \]
 Weighting by $1/w$ and summing over $2\le w\le W_1$, with
 \[
@@ -353,7 +353,7 @@ Weighting by $1/w$ and summing over $2\le w\le W_1$, with
 $\le1.05\delta$ around $y/(wX_0)$, and by \eqref{eq:TVD-sums} with the factor $\frac14w^{\eps-1}$ and the same use of
 Lemma~\ref{lem:si} (now including $m=1$),
 this part is $\le\frac14\sum_{2\le w\le W_1}w^{\eps-2}\cdot\frac{2\cdot61.1\cdot1.022\cdot1.06\,\delta}{0.99J-1}
-\bigl(\tau_w(1+A_0)+A_1\bigr)+e^{31}N^{-0.002}\le72\,\delta\tau_0/J$.
+\bigl(\tau'_w(1+A_0)+A_1\bigr)+e^{31}N^{-0.002}\le72\,\delta\tau_0/J$.
 
 \emph{($\gamma'$) Pairs with $w>W_1$.} Fix $d$; then $y/d>W_1X_0/2$. Group $d$ by the dyadic block $y/d\in[v,2v)$,
 $v\ge W_1X_0/2$. For $X_0$-near pairs, the $w$-window has relative half-width $\le1.02H(v)/v\le1.02\delta(X_0/v)^{1-\eps}$

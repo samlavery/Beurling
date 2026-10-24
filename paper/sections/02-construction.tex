@@ -249,7 +249,9 @@ scale; it is continuous and non-decreasing. The definition below $X_0$ makes $H$
 $H_{\mathrm{std}}$ on $[\Xm/2,X_0^2]$. \emph{Box-centred} means that the landing law of a prime decided at $s_j$ is uniform on
 $[s_j-H(s_j)/2,s_j+H(s_j)/2)$.
 \item \emph{Decision order.} $t(p)$ is the slot at which $p$ is decided, with $t(p):=p$ for the rational primes $p<X_0$. For an
-element $w$, $\tau_w:=\max_{p\mid w}t(p)$ is the decision time of its latest prime.
+% Logged correction 96 (CORRECTIONS-vs-v3.md): tau_w is a max over the primes of w, undefined for w = 1, which Comp^(2) uses (q^a = q^a*1).
+element $w\ne1$, $\tau_w:=\max_{p\mid w}t(p)$ is the decision time of its latest prime; for the unit put $\tau_1:=0$, which
+precedes every decision time (so the condition $\tau_1<s_q$ always holds, and $q^a=q^a\cdot1$ is formed by $q$ alone).
 \item $\mathcal F_t$ is the $\sigma$-field of all decisions and offsets at slots $\le t$.
 \end{itemize}
 

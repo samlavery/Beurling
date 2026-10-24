@@ -195,24 +195,35 @@ enters.
 \end{lemma}
 
 \begin{proof}
-\emph{The bound on $\nu$.} By \eqref{eq:margin-identity},
-$H(y)\nu(y)=\Mart(W_y)+\Mart^{(2)}(W_y)-\Delta Q(W_y)+\Comp^{(2)}(W_y)+E_{\mathrm{edge}}$.
+% Logged correction 95 (CORRECTIONS-vs-v3.md): the identity below is the definition of nu in eq:margin-identity, term by term;
+% v3 adds here an edge term that its nu does not contain. E_edge is that of eq:edge, and its bound is re-derived.
+\emph{The bound on $\nu$.} By \eqref{eq:margin-identity}, exactly,
+$H(y)\nu(y)=\Mart(W_y)+\Mart^{(2)}(W_y)-\Delta Q(W_y)-E_{\mathrm{edge}}(W_y)+\Comp^{(2)}(W_y)+E_{\mathrm{box}}(y)$, with
+$\Delta Q$ and $E_{\mathrm{edge}}$ of the physical window $W_y$ \eqref{eq:edge}, and $|E_{\mathrm{box}}|\le2.01$.
 \begin{itemize}
-\item $E_{\mathrm{edge}}$ counts the two partial slot cells at the ends of $W_y$. Each holds at most one slot and at most
-  $A_j\le B(u)+1$ composites, so $|E_{\mathrm{edge}}|\le2B(u)+4$.
-\item $|\Delta Q|\le B(u)$ by Theorem~\ref{thm:queue}, and $\Comp^{(2)}(W_y)\le s_2|W_y|$ by \eqref{eq:s2}.
+\item Let $k$ be the last slot that starts before $W_y$, and $j$ the last one that starts in $W_y$. By \eqref{eq:edge},
+  $|\Delta Q(W_y)|=|Q_j-Q_k|\le\max(Q_k,Q_j)$ and $|E_{\mathrm{edge}}(W_y)|\le1+\max(Q_k,Q_j)$: the two partial end cells
+  contribute only the composites in their cut parts, at most $A_k\le Q_k+1$ and $A_j\le Q_j+1$. If $W_y\subset[u,2u)$, both slots
+  start in $[u/2,2u)$ (slots are shorter than $11.2\log(2u)$), and both start at or below $y+H(y)/2$, so on $\Good(<y+H(y))$ their queue bounds are certified
+  (Remark~\ref{rem:horizon}(i), (iii)), and $Q_k,Q_j\le B(u)$ by Theorem~\ref{thm:queue}, as $B$ is non-decreasing. Hence
+  $|\Delta Q(W_y)|+|E_{\mathrm{edge}}(W_y)|+|E_{\mathrm{box}}(y)|\le2B(u)+3.01$, within the term $3B(u)+6$ of $\nu_0(u)$.
+\item $\Comp^{(2)}(W_y)\le s_2|W_y|$ by \eqref{eq:s2}.
 \item Choose $W^-\subset W_y\subset W^+$ in $\mathcal W'_u$ ($W^+\in\mathcal W_u$) with $|W^+\setminus W^-|\le2$. Counts and compensators are
   monotone in the window, so $\Mart(W^-)-\Comp(W^+\setminus W^-)\le\Mart(W_y)\le\Mart(W^+)+\Comp(W^+\setminus W^-)$, with
   $\Comp(W^+\setminus W^-)\le100\log(2u)$. The same holds for $\Mart^{(2)}$, with $2s_2$ in place of $100\log(2u)$.
 \item Apply \eqref{eq:F1} and \eqref{eq:F2} with $|W^\pm|\le1.03H(u)+1$, and divide by $H(y)\ge H(u)$.
 \item If $W_y$ crosses $u$ or $2u$ (that is, $y$ is within $H(y)/2$ of it), split $W_y$ there. Each piece lies in one
   dyadic block $u'$ and has length $\le1.03H(u')$, so the above applies to it in block $u'$. The two bounds add, and
-  $H(y)/H(u')\le1.02$ by \eqref{eq:RH}; the factor $2.05$ covers this.
+  $H(y)/H(u')\le1.02$ by \eqref{eq:RH}; the factor $2.05$ covers this. Here $\Mart$, $\Mart^{(2)}$, $\Comp^{(2)}$ and, by
+  \eqref{eq:edge}, $\Delta Q+E_{\mathrm{edge}}=\sigma-\#\{\text{continuous slots}\}+C_{\mathrm{jit}}$ are additive over the pieces,
+  and $E_{\mathrm{box}}$ is not split; it is bounded once.
 \end{itemize}
 
-\emph{The bound on $E(I)$.} The bookkeeping \eqref{eq:bookkeeping} on the slot window $I$ has no partial cells. By the
-computation of \eqref{eq:margin-identity} without the $B$-average,
-$\sigma(I)=\int_Im-\Comp^{(2)}(I)-\Mart(I)-\Mart^{(2)}(I)+\Delta Q(I)\pm2$. Now sandwich $I$ between windows $W$ of
+% Logged correction 95: on a slot window the bookkeeping is exact; the +-2 is the slot count against the integral of T'_cont.
+\emph{The bound on $E(I)$.} The bookkeeping \eqref{eq:bookkeeping} on the slot window $I$ is exact: it has no partial cells. By the
+computation of \eqref{eq:margin-identity} without the $B$-average (so without $E_{\mathrm{box}}$),
+$\sigma(I)=\int_Im-\Comp^{(2)}(I)-\Mart(I)-\Mart^{(2)}(I)+\Delta Q(I)\pm2$, where the $\pm2$ is the continuous-slot count against
+$\int_IT'_{\mathrm{cont}}$ (\S\ref{sec:noise-identity}). Now sandwich $I$ between windows $W$ of
 $\mathcal W'_u$ as above, with $t(W)\le\max I+1<\max I+H(u)$, and apply \eqref{eq:F1}, \eqref{eq:F2} (that is, $\mathrm{E3}_W$) and
 \eqref{eq:s2}. For a slot window this gives the display without the term $70\log^2(2u)$.
 

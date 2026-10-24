@@ -350,14 +350,17 @@ they stay in $\sigma\ge1-8/\Lambda$, where (LP-b) and (LP-c) apply. For $|t|\ge1
   \begin{equation}\label{eq:lp-yrange}
     \log y\ge10^4\Lambda^2\log\log y,\qquad\text{so that}\quad Q_y:=\frac{\log y}{\Lambda\log\log y}\ge10^4\Lambda ,
   \end{equation}
-  and put $\log T_y:=Q_y/51-500$. For $|t|\le T_y$ we have $X(t)\le Q_y$ and
-  $Y(t)\le Q_y/51-57.3+2\log\Lambda+\log Q_y\le Q_y/50.35$, because $(1/50.35-1/51)Q_y\ge2.53\cdot10^{-4}Q_y\ge2\log\Lambda+\log Q_y$.
+  and put $\log T_y:=Q_y/51-500$. For $|t|\le T_y+1$ we have $L_t\le\log(T_y+4)\le\log T_y+4/T_y$, where $T_y\ge e^{10^{10}}$ (as $\log T_y\ge10^4\Lambda/51-500$); so
+  $X(t)\le Q_y$ and $Y(t)\le Q_y/51-57+2\log\Lambda+\log Q_y\le Q_y/50.35$, because
+  $(1/50.35-1/51)Q_y\ge2.53\cdot10^{-4}Q_y\ge2\log\Lambda+\log Q_y$.
+% Logged correction 92 (CORRECTIONS-vs-v3.md): the zero-free region is proved up to |t| <= T_y + 1, not only T_y, so that the
+% discs of Step 8 centred at heights |t| <= T_y (radius <= 10^{-9}) lie inside it.
   Since $0.33769\cdot50.35\ge17.002$, this gives $\eta=0.33769/(\Lambda Y)\ge17/(\Lambda Q_y)=\eta_y$. So the zero-free region is
   \begin{equation}\label{eq:lp-zf}
-    \sigma\ge1-\frac{c_{\mathrm{zf}}}{\log(|t|+3)+460+2\log\Lambda}\qquad\text{for }|t|\le T_y,\qquad
+    \sigma\ge1-\frac{c_{\mathrm{zf}}}{\log(|t|+3)+460+2\log\Lambda}\qquad\text{for }|t|\le T_y+1,\qquad
     \log T_y:=\frac{\log y}{51\Lambda\log\log y}-500 .
   \end{equation}
-  Together with Step~6 this covers all $|t|\le T_y$. Every application below satisfies \eqref{eq:lp-yrange}.
+  Together with Step~6 this covers all $|t|\le T_y+1$. Every application below satisfies \eqref{eq:lp-yrange}.
 \item By (LP-c), $\hat R$ enters only through the growth bound, like $\hat D^\sharp$. The region \eqref{eq:lp-zf} is
   consistent with the designed zeros, which have $1-\beta_k\asymp\log\log\gamma_k/\log\gamma_k$ (\S\ref{sec:zeros}).
 \end{itemize}
@@ -366,12 +369,15 @@ they stay in $\sigma\ge1-8/\Lambda$, where (LP-b) and (LP-c) apply. For $|t|\ge1
 the branch that is real on $(1,\infty)$; it is analytic in the zero-free region, including near $s=1$. Fix $f:=0.9$, and
 for $1/16\le|t|\le T_y$ let $s_1:=1+\eta_t+it$ with $\eta_t:=\kappa_L\delta_t$. Consider the discs centred at $s_1$ of
 radii $R_1=\eta_t+\frac{1+f}2\delta_t$ and $r_1=\eta_t+f\delta_t$. They avoid the pole, and they lie in the zero-free
-region, since $\delta_{\mathrm{zf}}$ changes by a relative $10^{-8}$ over them. The function
-$h:=\log\zeta^\sharp-\log\zeta^\sharp(s_1)$ vanishes at $s_1$, and $\mathrm{Re}\,h\le\log M_1\le Y(t)$ on the larger disc, by
+region: $R_1=(\kappa_L+0.95)\delta_t\le10^{-9}$, so their points have $|\mathrm{Im}\,s|\le T_y+1$, the range of \eqref{eq:lp-width} and \eqref{eq:lp-zf} (points with $|\mathrm{Im}\,s|<1/16$ lie in the disc of Step~6), and
+$\delta_{\mathrm{zf}}$ changes by a relative $10^{-8}$ over them.
+% Logged correction 92: v3 places these discs in the zero-free region for |t| <= T_y although they reach above T_y; the
+% region now extends to T_y + 1.
+The function $h:=\log\zeta^\sharp-\log\zeta^\sharp(s_1)$ vanishes at $s_1$, and $\mathrm{Re}\,h\le\log M_1\le Y(t)$ on the larger disc, by
 \eqref{eq:lp-growth} with $\eta=\eta_t$ (as in Step~7). Borel--Carath\'eodory gives
 $|h|\le\frac{2r_1}{R_1-r_1}Y(t)=\frac{4(\kappa_L+f)}{1-f}Y(t)\le187.6\,Y(t)$ on the smaller disc. At the anchor, Step~3 gives
 $|\log\zeta^\sharp(s_1)|\le\log P_y(1+\eta_t)+0.02\le\log(2/\eta_t)+0.02\le0.5\,Y(t)$. Finally
-$|\log((s-1)/s)|\le\log17+\pi\le6$ for $|t|\ge1/16$ and $\sigma\le1.1$. Hence
+$|\log((s-1)/s)|\le\log17.01+\pi\le6$ on these discs, where $|\mathrm{Im}\,s|\ge1/16-10^{-9}$ and $\sigma\le1.1$. Hence
 \[
   |\mathfrak G_1(s)|\le190\,Y(t)\qquad\text{for }|s-s_1|\le r_1 .
 \]
@@ -424,8 +430,10 @@ side of (i) for $w\le y$.
   For $\log v\ge(1000+4\log\Lambda)^2$ the offset in
   \eqref{eq:lp-zf} at most doubles the denominator.
 % Logged correction 69: both height conditions checked at log v = 10^5 Lambda^2 log^2 Lambda (was "X_LP chosen above both").
-  Both conditions hold for $\log v\ge\log X_{\mathrm{LP}}=10^5\Lambda^2\log^2\Lambda$: there $\log\log v\le3\log\Lambda$, so
-  $1.1\cdot10^4\Lambda^2(\log\log v)^2\le9.9\cdot10^4\Lambda^2\log^2\Lambda$, and $\log v/(\log\log v)^2$ is increasing; and
+% Logged correction 92: log log v <= 3 log Lambda holds at the threshold only; monotonicity carries the condition to larger v.
+  Both conditions hold for $\log v\ge\log X_{\mathrm{LP}}=10^5\Lambda^2\log^2\Lambda$. At the threshold $\log\log v\le3\log\Lambda$, so
+  $1.1\cdot10^4\Lambda^2(\log\log v)^2\le9.9\cdot10^4\Lambda^2\log^2\Lambda\le\log v$ there; as $\log v/(\log\log v)^2$ is
+  increasing for $\log v\ge e^2$, the first condition then holds for every larger $v$; and
   $(1000+4\log\Lambda)^2\le10^5\Lambda^2\log^2\Lambda$.
 % Logged correction 70: the constant of (i), K_{\mathrm{LP}} = e^{97} Lambda^2.
 \item \emph{The constant of (i).} Let $\log v\ge\log X_{\mathrm{LP}}$, so $\sqrt{\log v}\ge316\Lambda\log\Lambda$. Then

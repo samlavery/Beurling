@@ -37,7 +37,9 @@ Every use below needs only $\eps\le0.03$, or $\eps\le4\cdot10^{-6}$.
 % Logged correction 32 (CORRECTIONS-vs-v3.md): (R_H) stated with eps := 4e-6 for all Lambda (v3: eps <= 8(2loglogX0+0.65)/logX0).
 
 \paragraph{Decision order} (\S\ref{sec:construction}). $t(p)$ is the decision slot of $p$, so $|t(p)-p|\le H(p)$; for
-rational primes $p<X_0$, $t(p)=p$. For $w\in\NN$ put $\tau_w:=\max_{p\mid w}t(p)$.
+% Logged correction 96 (CORRECTIONS-vs-v3.md): tau_w is a max over the primes of w, undefined for w = 1, which Comp^(2) uses (q^a = q^a*1).
+rational primes $p<X_0$, $t(p)=p$. For $w\in\NN$, $w\ne1$, put $\tau_w:=\max_{p\mid w}t(p)$, and $\tau_1:=0$ (the
+unit has no prime factor; $0$ precedes every decision time).
 
 \paragraph{Operators on functions of $y\ge \Xm$.}
 \begin{itemize}
@@ -84,8 +86,11 @@ rational primes $p<X_0$, $t(p)=p$. For $w\in\NN$ put $\tau_w:=\max_{p\mid w}t(p)
   \begin{equation}\label{eq:Ttilde}
     \tilde T'=BT'+\vartheta/H,\qquad|\vartheta|\le 6,
   \end{equation}
-  where $\vartheta=\vartheta(y)$ collects the granularity: slots against $\int T'_{\mathrm{cont}}$, the two slot
-  boundaries, and $\rhot$ against $\sigma(W_y)/H(y)$.
+% Logged correction 95 (CORRECTIONS-vs-v3.md): v3 lets theta also collect the two slot boundaries and rho~ against
+% sigma(W_y)/H(y), which tilde T' does not contain; these are now the terms E_edge and E_box of nu (Proposition margin-identity).
+  where $\vartheta(y):=\#\{\text{continuous slots in }W_y\}-\int_{W_y}T'_{\mathrm{cont}}$ is the granularity of the slots
+  against $\int T'_{\mathrm{cont}}$, so in fact $|\vartheta|\le2$ (\S\ref{sec:noise-identity}); only $|\vartheta|\le6$ is used below. The partial slot cells at the ends of
+  $W_y$, and $\rhot$ against $\sigma(W_y)/H(y)$, are terms of the noise $\nu$ (Proposition~\ref{prop:margin-identity}).
 \end{itemize}
 
 \paragraph{Sharp coefficients.} Put

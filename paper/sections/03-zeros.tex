@@ -73,13 +73,16 @@ Let $Z_\infty(s):=\prod_{p<X_0}(1-p^{-s})^{-1}=\sum_{n\in\mathcal D}n^{-s}$. For
   |Z_B(s)-Z_\infty(s)|\le\exp(-X_0^2/4).
 \]
 On $\sigma\ge1-\delta$ with $\delta\log X_0\le0.01$: $|Z_\infty|\le1.9\log X_0$ and $|Z_\infty'|\le4\log^2X_0$; if also
-$|t|\ge\Gamma_1/2$, then $|Z_B|\le2\log X_0=:Z_{\max}$.
+$|t|\ge\Gamma_1/2$ and $\sigma\le2$, then $|Z_B|\le2\log X_0=:Z_{\max}$.
 \end{lemma}
 \begin{proof}
+% Logged correction 91 (CORRECTIONS-vs-v3.md): v3 gives the truncation as (X_0^{-s} - n^{-s})/(s kappa), which is not the omitted ramp
+% (it vanishes at n = X_0); the omitted part is on [n/(1+kappa), X_0), with transform ((n/(1+kappa))^{-s} - X_0^{-s})/(s kappa).
 Each rigid $n\ge X_0(1+\kappa)$ contributes a unit jump at $n$ and the ramp $-du/(\kappa u)$ on $[n/(1+\kappa),n]$. The at most
-$\kappa X_0+1$ rigid $n\in[X_0,X_0(1+\kappa))$ have ramps truncated at $X_0$; each truncation changes the transform by
-$(X_0^{-s}-n^{-s})/(s\kappa)$, of modulus $\le2X_0^{-\sigma}/(\kappa|s|)$, so these boundary terms total
-$\le3X_0^{1-\sigma}/|t|$. Up to them,
+$\kappa X_0+1$ rigid $n\in[X_0,X_0(1+\kappa))$ have ramps truncated at $X_0$: the part of the ramp on $[n/(1+\kappa),X_0)$ is
+omitted, which adds $\bigl((n/(1+\kappa))^{-s}-X_0^{-s}\bigr)/(s\kappa)$ to $Z_B$ compared with \eqref{eq:ZBformula}, of modulus
+$\le2(1+\kappa)^{\sigma}X_0^{-\sigma}/(\kappa|s|)\le2.01X_0^{-\sigma}/(\kappa|s|)$ for $\sigma\le2$. So these boundary terms total
+$\le2.01(X_0+1/\kappa)X_0^{-\sigma}/|s|\le3X_0^{1-\sigma}/|t|$. Up to them,
 \begin{equation}\label{eq:ZBformula}
   Z_B=Z_\infty-W(s)S_{\ge X_0}(s)+\frac{X_0^{1-s}}{s-1},\qquad W(s):=\frac{(1+\kappa)^s-1}{s\kappa},\qquad
   S_{\ge X_0}(s):=\sum_{d\in\mathcal D,\,d\ge X_0}d^{-s}.
@@ -132,7 +135,12 @@ $\le2+2\int_1^{X_0}x^{a/\Lambda-1}\,dx\le2+2e^a\Lambda$. So the bracket is $\le 
 \]
 So $Z_\infty(\sigma)\le1.01e^{\operatorname{Ein}(a)}e^{\gamma}\Lambda$ by Mertens' product.
 
-\emph{Boundary.} The at most $\kappa X_0+1$ rigid $n\in[X_0,X_0(1+\kappa))$ each contribute $\le3n^{-\sigma}\le3X_0^{a/\Lambda-1}$.
+% Logged correction 91: v3's '<= 3 n^{-sigma}' fails for large sigma ((1+kappa)^sigma); the omitted ramp lies on [n/(1+kappa),X_0), above 1.
+\emph{Boundary.} The at most $\kappa X_0+1$ rigid $n\in[X_0,X_0(1+\kappa))$ each contribute the transform of the omitted ramp on
+$[n/(1+\kappa),X_0)$, of modulus at most $\frac1\kappa\int_{n/(1+\kappa)}^{X_0}u^{-\sigma-1}\,du\le\frac{\log(1+\kappa)}\kappa
+\bigl(\frac{X_0}{1+\kappa}\bigr)^{-\sigma}\le\bigl(\frac{X_0}{1+\kappa}\bigr)^{a/\Lambda-1}\le1.01X_0^{a/\Lambda-1}$: the support lies
+above $1$, so the bound decreases in $\sigma$, and $\sigma\ge1-a/\Lambda$. In total this is
+$\le1.01(\kappa X_0+1)e^aX_0^{-1}\le3\kappa e^a$.
 \end{proof}
 
 The local prime number theorem (Theorem~\ref{thm:lp}) compares $N$ with the target without its absorbed part,

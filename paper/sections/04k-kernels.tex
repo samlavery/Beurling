@@ -525,7 +525,7 @@ For a start $y$ and a scale $v\ge X_0/2$ put $\omega_y(v):=\sum_{w\in\NN:\ y/w\i
 \end{lemma}
 
 \begin{proof}
-(i) $\omega_y(v)\le\sum_{w\in(y/2v,y/v]}1/w\le\log2+2\eta_1+2v/y\le1.2$ by \eqref{eq:HBS} (and $\le1$ below $\Xm$).
+(i) For $y\ge4v$, $\omega_y(v)\le\sum_{w\in(y/2v,y/v]}1/w\le\log2+2\eta_1+2v/y\le1.2$ by \eqref{eq:HBS} (and $\le1$ below $\Xm$). For $y<4v$ only $w\le3$ occurs, and $\omega_y(v)\le1$.
 
 (ii) If $w$ passes the filter then $\tau_w<y/w\le2v$, so every prime of $w$ is decided before slot $2v$ and is $\le2v+H(2v)\le3v$.
 % Logged correction 81 (CORRECTIONS-vs-v3.md): v3 applies Lemma smooth-v for every u_y <= log 3v, but that lemma needs u >= 1,

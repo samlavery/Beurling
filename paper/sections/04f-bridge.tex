@@ -216,8 +216,8 @@ $c_{\mathrm{LP}}\sqrt{\log x}/4\ge(0.0044/\Lambda)\sqrt{x_j}\ge\log x_j$.
 % Logged correction 31 (CORRECTIONS-vs-v3.md): the same partial-box effect; v3 has +-2. Absorbed by the +-27H(x) below.
   By the local count, and since the prime powers
   $p^k\in J$ with $k\ge2$ number at most $2\sqrt x$, $\int_J\rhot=\Pi(J)\pm(27H(x)+2K_{\mathrm{loc}}+6+2\sqrt x)$.
-\item By Theorem~\ref{thm:lp}(ii), $\Pi(J)=\delta x\,\pi_0(x)(1+O(\delta))+O(Kxe^{-c_{\mathrm{LP}}\sqrt{\log x}})$, where
-  $\pi_0(x):=(1-1/x)/\log x$.
+\item By Theorem~\ref{thm:lp}(ii), $\Pi(J)=\delta x\,\pi_0(x)(1+\eps_J)+O(Kxe^{-c_{\mathrm{LP}}\sqrt{\log x}})$ with
+  $0\le\eps_J\le2.01\,\delta/\log x$, where $\pi_0(x):=(1-1/x)/\log x$ (which decreases, and $J\subset[x(1-2\delta),x]$).
 \item Since $1/\delta\le\Gamma^2\log^4x+X_0^{1/2}$ with $\Gamma^2\le e^{c_{\mathrm{LP}}\sqrt{\log x}/2}$, the error term is at most
   \[
     \pi_0(x)\bigl(2K\log^5x\,e^{-c_{\mathrm{LP}}\sqrt{\log x}/2}+2K\log x\,X_0^{1/2}e^{-c_{\mathrm{LP}}\sqrt{\log x}}\bigr);
@@ -260,18 +260,32 @@ $|N-T|\le H(N_*)$ at both ends of $I$, and under the target \eqref{eq:target},
   this part is at most $\jz\sum_{n\in\NN\cap I}1/n\le\jz\big(4.1\,\delta+3H(N_*)/N_*+2N_*^{\theta/2-1}\big)=o(1/\log x)$.
 % Logged correction 14 (CORRECTIONS-vs-v3.md): v3 omits #A(I) here (same omission as correction 4); with T(I) <= 2|I|+2+#A(I)
 % the constant 2.1 delta becomes 4.1 delta (noted under #14).
-\item \emph{$\rhodet$, smooth change:} for $|v-v'|\le\delta v$,
-  $|\rhodet(v)-\rhodet(v')|\le\min\big(2(\delta(1+\kappa)v+1)/(\kappa v),\ 3\Psi(2v,X_0)/(\kappa v)\big)$. Put $u:=\log v/\Lambda$
+% Logged correction 93 (CORRECTIONS-vs-v3.md): for y in J the level points x/n and y/n differ by up to 2 delta x/n, not
+% delta x/n; the smooth-change bounds for rho_det and for the resolvable R'_j are restated at displacement 2 delta.
+\item \emph{$\rhodet$, smooth change:} for $y\in J$ and $x/n\ge X_0$ put $v:=x/n$ and $v':=\max(y/n,X_0)$, so that $|v-v'|\le2\delta v$
+  (if $y/n<X_0$, then $T'(x/n)-T'(y/n)=\jz+\rhodet(X_0)-\rhodet(x/n)$, as $R'$ and $\sigma_{\Abs}$ vanish near $X_0$, and $\jz$ is
+  the previous item); then
+  $|\rhodet(v)-\rhodet(v')|\le\min\big(2(2\delta(1+\kappa)v+1)/(\kappa v),\ 3\Psi(2v,X_0)/(\kappa v)\big)$. Indeed the windows
+  $[v,(1+\kappa)v]$ and $[v',(1+\kappa)v']$ overlap (as $2\delta<\kappa$) and differ by two intervals of length $\le2\delta(1+\kappa)v$,
+  which enter the difference of the counts with opposite signs; so the counts differ by at most
+  $2\delta(1+\kappa)v+1$, and the normalisations $\kappa v$, $\kappa v'$ change the quotient by at most $2.01\delta(1+1/(\kappa v))$,
+  which is smaller; and $\rhodet(v)+\rhodet(v')\le\Psi(2v,X_0)/(\kappa v)+\Psi(2v,X_0)/(\kappa v')\le3\Psi(2v,X_0)/(\kappa v)$, as
+  $(1+\kappa)v'\le2v$. Put $u:=\log v/\Lambda$
   and $U_0:=\Lambda$. Use the first bound for $u<U_0$ and the second beyond; for $u\ge U_0$, Rankin's bound (exponent
   $1-1/(2\Lambda)$) gives $\Psi(2v,X_0)\le10v\Lambda^{1.65}e^{-u/2}$. With the weights of Corollary~\ref{cor:saias}
-  ($\sum_{v<X_0^{U_0}}\log(2v)\le1.5(U_0\Lambda)^2$) and $1/\kappa\le X_0^{5/12}$, the weighted sum is at most
-  \[
-    C_S\Big[1.5\Lambda^4(2\delta+2/X_0)/\kappa+\sum_{u\ge\Lambda}\log(2v)\cdot30\Lambda^{1.65}e^{-u/2}/\kappa\Big]
-    \le C_S\big[5\Lambda^4X_0^{-1/12}+90\Lambda^{4.7}e^{-\Lambda/12}\big]\le e^{-10^6},
-  \]
-  using $\delta\le X_0^{-1/2}$. Both terms decrease with $\Lambda$, so this holds for every $\Lambda\ge10^8$.
-\item \emph{Resolvable $R_j'$, smooth change:} at most $\delta\gamma_j\kappa_j/(1-\theta)\le\kappa_j/((1-\theta)\gamma_j\log^4x)$, which
-  is summable over $j$.
+  ($\sum_{v<X_0^{U_0}}\log(2v)\le1.5(U_0\Lambda)^2$) and $1/\kappa\le X_0^{5/12}$, $\log x$ times this part of $\rhosh(x)-\rhosh(y)$
+  is at most
+  \begin{multline*}
+    C_S\Big[1.5\Lambda^4(4.0001\,\delta+2/X_0)/\kappa+\sum_{u\ge\Lambda}\log(2v)\cdot30\Lambda^{1.65}e^{-u/2}/\kappa\Big]\\
+    \le C_S\big[7\Lambda^4X_0^{-1/12}+90\Lambda^{4.7}e^{-\Lambda/12}\big]\le e^{-10^6},
+  \end{multline*}
+  using $\delta\le X_0^{-1/2}$. Both terms decrease with $\Lambda$, so this holds for every $\Lambda\ge10^8$; at $\Lambda=10^8$ (with
+  $C_S\le77$) the logarithm of the bound is $\le-8.33\cdot10^6$.
+\item \emph{Resolvable $R_j'$, smooth change:} by \eqref{eq:Rk} and \eqref{eq:ampl},
+  $|R_j''(w)|\le\alpha_j\gamma_j^2w^{\theta-2}(1+O(1/\gamma_j))$, so at a level with $|v-v'|\le2\delta v$,
+  $|R_j'(v)-R_j'(v')|\le1.01\,\delta\gamma_j\kappa_j(v/x_j)^{\theta-1}$. Summed with the weights $\mu^2(n)/n$ over $n\le x/x_j$, this is at
+  most $1.01F_\theta\,\delta\gamma_j\kappa_j\le2\delta\gamma_j\kappa_j/(1-\theta)\le2\kappa_j/((1-\theta)\gamma_j\log^4x)$, as $F_\theta\le1.33$
+  and $\delta\gamma_j^2\le\log^{-4}x$ for resolvable $\gamma_j\le\gamma_*$. This is summable over $j$.
 \item \emph{$\sigma_{\Abs}$:} $|\sigma_{\Abs}|\le2L_v^{-4}$, and it vanishes unless $\log\log v>2\log\Lambda+5.97$. So the
   weighted sum is at most $4C_S\sum_v\log(2v)L_v^{-4}/\log x\le C_Se^{-80}/\log x$.
 \end{itemize}
@@ -324,8 +338,10 @@ $1/\delta\le x^{0.02}$, $\delta\le\log^{-4}x$, $\log(1/\delta)\le0.6\sqrt{\log x
   Theorem~\ref{thm:lp}(ii) (as $\log K\le98+5.9\log\Lambda$); and $\le3\delta/\log x$ from the variation of $\pi_0$ over $J$.
 \item Step~2: $\le129\log^{-5}x$ from $\bar\nu$ (\S\ref{sec:noise-perscale}); $\le55e^{-0.99\Lambda}$ from $\NT$
   (Lemma~\ref{lem:tau-near}); and $\le x^{-0.9}$ from the boundary term.
+% Logged correction 93: the rho_det and R'_j items are at displacement 2 delta; the bounds X_0^{-0.08} and log^{-2} x still hold.
 \item Step~3: $\le160\log^{-1.5}x$ from the threshold changes; $\le\log^{-3}x$ from the jump at $X_0$; $\le X_0^{-0.08}$ from
-  $\rhodet$; $\le\log^{-2}x$ from the resolvable $R_j'$; and $\le4C_S\sum_{L_v>391\Lambda^2}\log(2v)L_v^{-4}\le1.5\cdot10^{-3}\Lambda^{-4}$
+  $\rhodet$ (the bound of Step~3, at displacement $2\delta$, is $\le C_S[7\Lambda^4X_0^{-1/12}+90\Lambda^{4.7}e^{-\Lambda/12}]\le X_0^{-0.08}$);
+  $\le\log^{-2}x$ from the resolvable $R_j'$ (namely $\le4\sum_j\kappa_j\log^{-3}x$, as $1-\theta\ge\frac12$); and $\le4C_S\sum_{L_v>391\Lambda^2}\log(2v)L_v^{-4}\le1.5\cdot10^{-3}\Lambda^{-4}$
   from $\sigma_{\Abs}$.
 \item Step~4: $\le e^{-c_{\mathrm{LP}}\sqrt{\log x}/6}+40\log^{-1.5}x$ from the average, and $\le2\cdot10^4\Lambda^2X_0^{-2}$ from the
   pointwise bounds (with $\kappa_0\le\frac14$, $F_\theta\le1.33$ and $C'\le(171\Lambda)^2$).
