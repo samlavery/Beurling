@@ -165,7 +165,7 @@ theorem for the realised system, and a counting theorem for clusters of composit
 
 The main theorem is not formally verified. A Lean 4 formalization by [Aristotle](https://aristotle.harmonic.fun) (Harmonic),
 in [`lean/`](lean/), proves Corollary 2.2 (the answer to Question Q is negative) from one explicit hypothesis,
-`Theorem21InputsP`, with no `sorry`. The full build was re-run for this repository (2026-10-26).
+`Theorem21InputsR`, with no `sorry`. The full build was re-run for this repository (2026-10-26).
 
 - **Proved:**
   - most of Sections 3 and 4: the construction's definitions and bookkeeping, the decomposition (14), the designed zeros,
@@ -176,7 +176,6 @@ in [`lean/`](lean/), proves Corollary 2.2 (the answer to Question Q is negative)
   - Section 5 beyond Lemma 5.1;
   - the probabilistic part of Section 6 and the cluster event;
   - Section 7 and Appendix A's Theorem R;
-  - Lemma 4.8(ii);
   - the construction recursion itself.
 
 The details, and the list of what remains, are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
@@ -188,7 +187,7 @@ The details, and the list of what remains, are in [`LEAN-FORMALIZATION.md`](LEAN
 | `paper/` | the paper (LaTeX). `main.tex` inputs the files in `paper/sections/`. |
 | `certificates/` | the computer-assisted parts and numerical cross-checks (Python 3), described in Appendix B of the paper |
 | `review/` | the AI referee reports written while the proof was developed (two component referees and one end-to-end referee; they refer to working notes that are not included here), the AI consistency check of the paper (`paper-check.md`, `subchecks/`), and the re-check after the fixes (`paper-recheck.md`, `recheck/`) |
-| `lean/` | the Lean 4 project from Aristotle (Lean/Mathlib v4.28.0): Corollary 2.2 proved from the hypothesis `Theorem21InputsP`, the certificates of Appendix B, and Aristotle's notes |
+| `lean/` | the Lean 4 project from Aristotle (Lean/Mathlib v4.28.0): Corollary 2.2 proved from the hypothesis `Theorem21InputsR`, the certificates of Appendix B, and Aristotle's notes |
 | `LEAN-FORMALIZATION.md` | status of the Lean formalization: what is proved, and what the remaining hypothesis contains |
 | `CORRECTIONS-vs-v3.md` | every deviation of the paper from the refereed draft ("v3"), with justification |
 | `PAPER-SPEC.md`, `paper/LABELS.md`, `review/PAPER-CHECK-BRIEF.md`, `review/RECHECK-BRIEF.md` | process documents: the instructions given to the AI agents that wrote and checked the paper |

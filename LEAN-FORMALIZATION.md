@@ -1,7 +1,7 @@
 # Lean formalization: status and what remains
 
 **Summary.** The main theorem is **not** formally verified. The Lean 4 project in [`lean/`](lean/) proves Corollary 2.2
-(the answer to Question Q is negative) from one explicit hypothesis, `Theorem21InputsP`. That hypothesis still contains
+(the answer to Question Q is negative) from one explicit hypothesis, `Theorem21InputsR`. That hypothesis still contains
 most of the paper's analytic and probabilistic content: about 90 of the roughly 128 pages of proof in Sections 2–7 and
 Appendix A. Everything outside it is proved in Lean with no `sorry`.
 
@@ -32,12 +32,12 @@ lake build
 ## The top-level statement
 
 ```lean
-theorem Construction.corollary_2_2_of_P (h : Theorem21InputsP) : ¬ QuestionQ
+theorem Construction.corollary_2_2_of_P (h : Theorem21InputsR) : ¬ QuestionQ
 ```
 
-`QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`). `Theorem21InputsP` (`Beurling/Construction/JitterRegular.lean`) is
-Aristotle's `Theorem21InputsO` (`Beurling/Construction/LandingDerive.lean`) without the condition `JitterWidthRegular`,
-which is now proved (see below). It says the following. For every θ ∈ [1/4, 1/2 − 10⁻⁴] and every even X₀ ≥ e^{10⁸} beyond some threshold, there is:
+`QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`). `Theorem21InputsR` (`Beurling/Zeros48/Inputs.lean`) is
+Aristotle's `Theorem21InputsO` (`Beurling/Construction/LandingDerive.lean`) without two of its conditions, both now
+proved here (see below): `JitterWidthRegular` (`Theorem21InputsP` drops it) and `Theorem410RestM` (Lemma 4.8(ii)). It says the following. For every θ ∈ [1/4, 1/2 − 10⁻⁴] and every even X₀ ≥ e^{10⁸} beyond some threshold, there is:
 - a slot model M(ω) on the jitter space;
 - a countable family of failure events satisfying the per-scale budget of Table 1;
 
@@ -69,6 +69,21 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
   - The proof needs a Lipschitz bound for γ(s), proved as `BSCert.Capl.gam_lip`: γ(t) − γ(s) ≤ 8(t − s) for
     s ≤ t ≤ s + 10⁻³.
   - That bound gives H(y) ≤ e^{48Δ}H(x), with Δ = log y − log x ≤ x^{−7/8}.
+- **Added in this repository: Lemma 4.8(ii)** (`Beurling/Zeros48/`, 1878 lines). `theorem410RestM_of_inputs` derives
+  `Theorem410RestM` from the other conditions on the same path. It splits the elements into rigid, absorbed and residual
+  ones, proves the short-interval count of the residual elements from the lag bound and T′_cont ≤ 1.01, and checks the
+  final numerical inequality. It departs from the paper's wording in a few sound ways, listed in the module docstrings.
+  For example, all of T′_cont is put in the Fourier part, and the coincidence null event 𝒩₌ is not needed, because the
+  elements are exponent vectors.
+- **Added in this repository: Appendix A and §6.5–6.7, standalone** (`Beurling/RankFull/`, 2692 lines, standard axioms
+  only).
+  - Proved outright: Lemma A.2 (volume), Lemma A.3, the run-structure sum of Theorem R (H_K(0) = K^K/K!,
+    corrections #48 and #55), Lemma A.6 (S3) summed over all contents, the identity of Theorem A.10, Corollary A.13 and
+    Proposition 6.19. Proposition 6.11 and Theorem 6.23(a) are proved over an abstract probability space.
+  - They rest on named hypotheses: the probabilistic content of the Pivot-Integration Lemma A.5 (`SkeletonBound`,
+    `CoverSkeletonBound`), the reduction to skeletons (`SkeletonReduction`), Lemma 6.21(ii) (`TypeUnionBound`), the
+    criterion (80) and Lemma A.6 (S3)(d).
+  - They are not yet connected to `ClusterUpTo`.
 - **Appendix B.** Nearly all the certificates: bs-cert (region Z2 and the auxiliary checks), finite-n, x0-band, the
   constants, the bounds on φ, and rankin_R. Dickman's function is constructed and its facts (R1)–(R4) are proved.
 
@@ -79,14 +94,13 @@ hypothesis. They are 75 of the 211 modules, about 10.7k of 44k lines. Examples:
 - Lemma A.8;
 - the bs-cert, Lemma 5.3 and margin certificates.
 
-## What remains (the content of `Theorem21InputsP`)
+## What remains (the content of `Theorem21InputsR`)
 
 | Hypothesis | Paper content behind it |
 |---|---|
 | `QueueWindowData` (excess bound on every queue window) | Section 5 except Lemma 5.1: Theorem 5.6's analytic reduction, the kernel theorems, the local PNT, the bridge, R1′. Also Theorem 6.6(i), Corollaries 6.3 and 6.12, Lemma 3.9, and Section 7 |
 | `TableBudget` | the per-event failure bounds of Table 1, i.e. Freedman applied with the construction's filtration |
 | `ClusterUpTo` | Proposition 6.11 with Sections 6.5–6.7: Theorem 6.18, Proposition 6.19, Theorem 6.23(a), Propositions 6.28–6.29, and Appendix A (Volume Lemma, A.5, A.6, the identity of A.10, Theorem R) |
-| `Theorem410RestM` (`Lemma48PiecesCount`) | Lemma 4.8(ii): the decomposition of D̂_{<a_k} and the bounds on its pieces |
 | the existence of the slot model `M` | the construction recursion itself (Lemmas 3.2 and 3.5, Section 2.4, the choice of ϑ_s), and Lemma 3.3 (positivity of the target), which uses the Heath-Brown short-interval prime number theorem |
 | `ArrivalsLinked`, `SlotFacts` | pathwise slot facts (the base case of Lemma 3.6, the window count of placed slot starts). These hold for the model once it is constructed; `SlotFacts` holds off the null event 𝒩₌, which can be added to the event family |
 
@@ -98,6 +112,6 @@ Notes:
 
 ## Status
 
-- **The main theorem is not formally verified.** It is proved in Lean only from `Theorem21InputsP`.
+- **The main theorem is not formally verified.** It is proved in Lean only from `Theorem21InputsR`.
 - The parts of the paper behind that hypothesis have so far been checked only by AI agents (see `review/`). Independent
   human review is pending.
