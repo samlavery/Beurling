@@ -44,9 +44,16 @@ noncomputable def heightScale (θ κ₀ x : ℝ) : ℝ := κ₀ * x ^ (1 - θ) /
 noncomputable def amplitudeOf (θ κ₀ γ x : ℝ) : ℝ := κ₀ * x ^ (1 - θ) / Real.log x ^ 3 / γ
 
 open Classical in
-/-- **The choice rule for `γ_k`**: a good height in `[Γ, 2Γ]` when one exists, `Γ` otherwise. -/
+/-- **The choice rule for `γ_k`**: the least good height in `[Γ, 2Γ]` when one exists, `Γ`
+otherwise (§3.2, `γ_k := min S_k`). The least good height is attained whenever `f` is continuous
+(the good set is then closed and bounded), which holds for `f = D̂_{<a_k}`; the arbitrary good
+height `h.choose` is only a fallback that keeps the rule total. Taking the minimum makes `γ_k` a
+measurable function of the data, as the paper requires. -/
 noncomputable def chooseHeight (X₀ : ℕ) (κ : ℝ) (f : ℂ → ℂ) (Γ : ℝ) : ℝ :=
-  if h : ∃ γ, GoodHeight X₀ κ f Γ γ then h.choose else Γ
+  if h : ∃ γ, GoodHeight X₀ κ f Γ γ then
+    (if GoodHeight X₀ κ f Γ (sInf {γ | GoodHeight X₀ κ f Γ γ}) then
+      sInf {γ | GoodHeight X₀ κ f Γ γ} else h.choose)
+  else Γ
 
 /-- The chosen height satisfies the choice rule of Lemma 4.8. -/
 theorem chooseHeight_rule (X₀ : ℕ) (κ : ℝ) (f : ℂ → ℂ) (Γ : ℝ) :
@@ -54,13 +61,16 @@ theorem chooseHeight_rule (X₀ : ℕ) (κ : ℝ) (f : ℂ → ℂ) (Γ : ℝ) :
   intro h
   unfold chooseHeight
   rw [dif_pos h]
-  exact h.choose_spec
+  split_ifs with h'
+  · exact h'
+  · exact h.choose_spec
 
 /-- The chosen height lies in `[Γ, 2Γ]` (for `Γ ≥ 0`). -/
 theorem chooseHeight_mem (X₀ : ℕ) (κ : ℝ) (f : ℂ → ℂ) {Γ : ℝ} (hΓ : 0 ≤ Γ) :
     chooseHeight X₀ κ f Γ ∈ Icc Γ (2 * Γ) := by
   unfold chooseHeight
-  split_ifs with h
+  split_ifs with h h'
+  · exact h'.1
   · exact h.choose_spec.1
   · exact ⟨le_rfl, by linarith⟩
 

@@ -128,10 +128,8 @@ lemma designedGamma_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) 
     unfold designedGamma
     rw [Nat.strongRecOn'_beta]
   rw [hrec]
-  unfold stepGamma DesignedZero.designGamma DesignedZero.chooseHeight
-  split_ifs with h
-  · exact h.choose_spec.1
-  · exact ⟨le_rfl, by linarith [hΓ k]⟩
+  unfold stepGamma DesignedZero.designGamma
+  exact DesignedZero.chooseHeight_mem _ _ _ (hΓ k)
 
 /-- The designed amplitudes satisfy `1 ≤ α_k ≤ 2` (as `α_k γ_k = 2 Γ_k` and `γ_k ∈ [Γ_k, 2Γ_k]`),
 when `Γ_k > 0`. -/

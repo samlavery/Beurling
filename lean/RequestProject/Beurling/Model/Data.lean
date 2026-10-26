@@ -159,10 +159,8 @@ lemma designedGammaN_mem (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A
     designedGammaN N θ X₀ κ A u κ₀ xp a k ∈
       Icc (heightScale θ κ₀ (xp k)) (2 * heightScale θ κ₀ (xp k)) := by
   rw [designedGammaN_rec]
-  unfold stepGammaN designGamma chooseHeight
-  split_ifs with h
-  · exact h.choose_spec.1
-  · exact ⟨le_rfl, by linarith [hΓ k]⟩
+  unfold stepGammaN designGamma
+  exact chooseHeight_mem _ _ _ (hΓ k)
 
 /-! ### The target of the data -/
 

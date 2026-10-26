@@ -122,6 +122,20 @@ Notes:
 - **Packaging.** The hypotheses only fix the interfaces between parts of the proof. For example, `ShortWindowData`
   quantifies its constants existentially, so `QueueWindowData` amounts to assuming the excess bound itself.
 
+## Defects found in the Aristotle formalization
+
+- **Height rule (fixed 2026-10-26).** `chooseHeight` took an arbitrary good height (`Classical.choose`). The paper takes
+  γ_k := min S_k (§3.2, correction #76), which is needed for γ_k to be a measurable function of the data. It now takes
+  the least good height whenever it is attained, which is always the case for the construction, since D̂_{<a_k} is
+  continuous and the good set is closed. The arbitrary choice remains only as a total fallback.
+- **Absorbed set (open).** The paper's absorbed set (5) is a set of generalized integers, 𝒜 ⊂ 𝒩, with real values. The
+  Lean development models it as a `Set ℕ` of integer values (`Absorbed.countA`, `absorbedSetOf`, `BModel.absSet`).
+  - For the constructed system, an element whose latest prime is jittered has an integer value with probability 0. So
+    the Lean absorbed set is almost surely empty, and the Lean target lacks the absorbed jumps of (6).
+  - The implications proved so far remain valid. But the remaining hypotheses (queue window data via Lemma 3.9 and
+    Corollary 6.12) are not statements the paper proves for this model.
+  - The fix is to make the absorbed set a set of element values; it is in progress.
+
 ## Status
 
 - **The main theorem is not formally verified.** It is proved in Lean only from `Theorem21InputsR`.
