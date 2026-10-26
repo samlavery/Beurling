@@ -84,6 +84,18 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     `CoverSkeletonBound`), the reduction to skeletons (`SkeletonReduction`), Lemma 6.21(ii) (`TypeUnionBound`), the
     criterion (80) and Lemma A.6 (S3)(d).
   - They are not yet connected to `ClusterUpTo`.
+- **Added in this repository: the construction of §3** (`Beurling/Model/`, 3947 lines). `constructedModel θ X₀ ω` builds
+  the slot model from the jitters as the limit of a causal iteration.
+  - Lemma 3.5 is formalized as `causal`: agreement up to z − 1 propagates to agreement up to z.
+  - Proved for this model: Lemma 3.3 (positivity, slope ≥ 0.08/log), the target formula (6), the arrival link and the
+    slot facts.
+  - `BModel.corollary_2_2_of_Q` derives Corollary 2.2 from `Theorem21InputsQ`. That hypothesis has the model fixed,
+    and its only remaining conditions are the queue window data, Lemma 4.8(ii) and the cluster event. Two named
+    hypotheses remain:
+    - `ShortIntervalPNT`: a consequence of (84), Heath-Brown's theorem, stated about ℕ.
+    - `TiesNull`: the paper's claim in §3.4 that the coincidence event 𝒩₌ is null for the constructed model. The
+      event 𝒩₌ is added to the event family; `tableBudget_add_null` shows this preserves the budget.
+  - The slot offset is fixed at ϑ_s = 1/2.
 - **Appendix B.** Nearly all the certificates: bs-cert (region Z2 and the auxiliary checks), finite-n, x0-band, the
   constants, the bounds on φ, and rankin_R. Dickman's function is constructed and its facts (R1)–(R4) are proved.
 
