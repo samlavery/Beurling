@@ -9,3 +9,6 @@ rev = "v4.28.0"
 [[lean_lib]]
 name = "RequestProject"
 globs = ["RequestProject.+"]
+# The interval checks in BSCert/Consts/MarginCert.lean recurse deeply in the interpreter during
+# native_decide; the default 8 MB thread stack is not enough on macOS.
+moreLeanArgs = ["--tstack=262144"]

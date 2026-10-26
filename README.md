@@ -163,23 +163,23 @@ theorem for the realised system, and a counting theorem for clusters of composit
 
 ## Lean formalization
 
-An automated Lean 4 formalization by [Aristotle](https://aristotle.harmonic.fun) (Harmonic) did not verify the main theorem. It
-reduced the theorem to a single unproved lemma and proved everything around that lemma. The Lean project is in [`lean/`](lean/);
-the status and blockers are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
+The main theorem is not formally verified. A Lean 4 formalization by [Aristotle](https://aristotle.harmonic.fun) (Harmonic),
+in [`lean/`](lean/), proves Corollary 2.2 (the answer to Question Q is negative) from one explicit hypothesis,
+`Theorem21InputsO`, with no `sorry`. The full build was re-run for this repository (2026-10-26).
 
 - **Proved:**
-  - a Rouché-type zero criterion, `exists_zero_of_near_model`. It is proved from the maximum modulus principle, since
-    Mathlib has no Rouché theorem, and it is the last step of Theorem 4.9.
-  - the derivation of the main theorem (Corollary 2.2) from that criterion and one remaining input.
-- **Blocker, the only `sorry`: `exists_system_near_model`.** This is the existence of the system together with, for every
-  ε > 0, a disc near Re s = 1 on which a holomorphic model with a zero at the centre is close to ζ_P. It is the whole of the
-  paper before the Rouché step:
-  - the construction (Section 3);
-  - the lag bound (Sections 5–7, Appendices A and B);
-  - Lemmas 4.2–4.8.
+  - most of Sections 3 and 4: the construction's definitions and bookkeeping, the decomposition (14), the designed zeros,
+    Theorem 4.10 and Rouché's theorem;
+  - Lemma 5.1, the deterministic part of the queue bound, Lemma 6.26;
+  - nearly all the certificates of Appendix B.
+- **Still assumed:** most of the analytic and probabilistic core, about 90 of the roughly 128 pages of proof. This covers:
+  - Section 5 beyond Lemma 5.1;
+  - the probabilistic part of Section 6 and the cluster event;
+  - Section 7 and Appendix A's Theorem R;
+  - Lemma 4.8(ii);
+  - the construction recursion itself.
 
-  Formalizing it would also need the Huxley–Heath-Brown short-interval prime number theorem and the Montgomery–Vaughan
-  mean value theorem, neither of which is in Mathlib.
+The details, and the list of what remains, are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
 
 ## Repository layout
 
@@ -188,8 +188,8 @@ the status and blockers are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
 | `paper/` | the paper (LaTeX). `main.tex` inputs the files in `paper/sections/`. |
 | `certificates/` | the computer-assisted parts and numerical cross-checks (Python 3), described in Appendix B of the paper |
 | `review/` | the AI referee reports written while the proof was developed (two component referees and one end-to-end referee; they refer to working notes that are not included here), the AI consistency check of the paper (`paper-check.md`, `subchecks/`), and the re-check after the fixes (`paper-recheck.md`, `recheck/`) |
-| `lean/` | the Lean 4 project from Aristotle (Lean/Mathlib v4.28.0): definitions, continuation of ζ_P, the zero criterion, the main theorem conditional on one `sorry`, and Aristotle's report |
-| `LEAN-FORMALIZATION.md` | status of the Lean formalization: what is proved, and the one unproved lemma |
+| `lean/` | the Lean 4 project from Aristotle (Lean/Mathlib v4.28.0): Corollary 2.2 proved from the hypothesis `Theorem21InputsO`, the certificates of Appendix B, and Aristotle's notes |
+| `LEAN-FORMALIZATION.md` | status of the Lean formalization: what is proved, and what the remaining hypothesis contains |
 | `CORRECTIONS-vs-v3.md` | every deviation of the paper from the refereed draft ("v3"), with justification |
 | `PAPER-SPEC.md`, `paper/LABELS.md`, `review/PAPER-CHECK-BRIEF.md`, `review/RECHECK-BRIEF.md` | process documents: the instructions given to the AI agents that wrote and checked the paper |
 
