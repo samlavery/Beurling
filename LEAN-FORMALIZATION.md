@@ -1,7 +1,7 @@
 # Lean formalization: status and what remains
 
 **Summary.** The main theorem is **not** formally verified. The Lean 4 project in [`lean/`](lean/) proves Corollary 2.2
-(the answer to Question Q is negative) from one explicit hypothesis, `Theorem21InputsO`. That hypothesis still contains
+(the answer to Question Q is negative) from one explicit hypothesis, `Theorem21InputsP`. That hypothesis still contains
 most of the paper's analytic and probabilistic content: about 90 of the roughly 128 pages of proof in Sections 2–7 and
 Appendix A. Everything outside it is proved in Lean with no `sorry`.
 
@@ -25,18 +25,19 @@ lake build
 - The full build was re-run for this repository on 2026-10-26 and completed successfully (8237 jobs).
 - `lakefile.toml` passes `--tstack=262144` to Lean. Without it, the `native_decide` checks in
   `BSCert/Consts/MarginCert.lean` hit Lean's interpreter recursion limit with the default 8 MB thread stack on macOS.
-- `#print axioms Construction.corollary_2_2_of_O` gives `propext`, `Classical.choice`, `Quot.sound`, `Lean.ofReduceBool`
+- `#print axioms Construction.corollary_2_2_of_P` gives `propext`, `Classical.choice`, `Quot.sound`, `Lean.ofReduceBool`
   and `Lean.trustCompiler`. The last two come from the 77 uses of `native_decide` in the certificates.
 - A search of the sources finds no `sorry`, `admit`, `axiom`, `implemented_by` or `extern`.
 
 ## The top-level statement
 
 ```lean
-theorem Construction.corollary_2_2_of_O (h : Theorem21InputsO) : ¬ QuestionQ
+theorem Construction.corollary_2_2_of_P (h : Theorem21InputsP) : ¬ QuestionQ
 ```
 
-`QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`). `Theorem21InputsO` (`Beurling/Construction/LandingDerive.lean`)
-says the following. For every θ ∈ [1/4, 1/2 − 10⁻⁴] and every even X₀ ≥ e^{10⁸} beyond some threshold, there is:
+`QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`). `Theorem21InputsP` (`Beurling/Construction/JitterRegular.lean`) is
+Aristotle's `Theorem21InputsO` (`Beurling/Construction/LandingDerive.lean`) without the condition `JitterWidthRegular`,
+which is now proved (see below). It says the following. For every θ ∈ [1/4, 1/2 − 10⁻⁴] and every even X₀ ≥ e^{10⁸} beyond some threshold, there is:
 - a slot model M(ω) on the jitter space;
 - a countable family of failure events satisfying the per-scale budget of Table 1;
 
@@ -62,6 +63,12 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
   - The first-failure argument and the summation of Lemma 6.10.
   - Lemma 6.26 and Lemma 6.27(a).
   - Most of Theorem 6.23(b),(c).
+- **Added in this repository** (`Beurling/Construction/JitterRegular.lean`, 2026-10-26): `jitterWidthRegular`, the slow
+  variation of the jitter width (Theorem 6.23(c)). It says H(y) ≤ H(x) + 1/4 whenever x ≥ X₀ and y − H(y)/2 ≤ x ≤ y.
+  - It was a hypothesis of `Theorem21InputsO`.
+  - The proof needs a Lipschitz bound for γ(s), proved as `BSCert.Capl.gam_lip`: γ(t) − γ(s) ≤ 8(t − s) for
+    s ≤ t ≤ s + 10⁻³.
+  - That bound gives H(y) ≤ e^{48Δ}H(x), with Δ = log y − log x ≤ x^{−7/8}.
 - **Appendix B.** Nearly all the certificates: bs-cert (region Z2 and the auxiliary checks), finite-n, x0-band, the
   constants, the bounds on φ, and rankin_R. Dickman's function is constructed and its facts (R1)–(R4) are proved.
 
@@ -72,7 +79,7 @@ hypothesis. They are 75 of the 211 modules, about 10.7k of 44k lines. Examples:
 - Lemma A.8;
 - the bs-cert, Lemma 5.3 and margin certificates.
 
-## What remains (the content of `Theorem21InputsO`)
+## What remains (the content of `Theorem21InputsP`)
 
 | Hypothesis | Paper content behind it |
 |---|---|
@@ -82,7 +89,6 @@ hypothesis. They are 75 of the 211 modules, about 10.7k of 44k lines. Examples:
 | `Theorem410RestM` (`Lemma48PiecesCount`) | Lemma 4.8(ii): the decomposition of D̂_{<a_k} and the bounds on its pieces |
 | the existence of the slot model `M` | the construction recursion itself (Lemmas 3.2 and 3.5, Section 2.4, the choice of ϑ_s), and Lemma 3.3 (positivity of the target), which uses the Heath-Brown short-interval prime number theorem |
 | `ArrivalsLinked`, `SlotFacts` | pathwise slot facts (the base case of Lemma 3.6, the window count of placed slot starts). These hold for the model once it is constructed; `SlotFacts` holds off the null event 𝒩₌, which can be added to the event family |
-| `JitterWidthRegular` | the slow variation of H (Theorem 6.23(c)), a deterministic fact; work on it is in progress |
 
 Notes:
 - **External input.** The Heath-Brown short-interval prime number theorem (used through (84) in Lemma 3.3 and Section 7)
@@ -92,6 +98,6 @@ Notes:
 
 ## Status
 
-- **The main theorem is not formally verified.** It is proved in Lean only from `Theorem21InputsO`.
+- **The main theorem is not formally verified.** It is proved in Lean only from `Theorem21InputsP`.
 - The parts of the paper behind that hypothesis have so far been checked only by AI agents (see `review/`). Independent
   human review is pending.
