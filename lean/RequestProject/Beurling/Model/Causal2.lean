@@ -395,6 +395,24 @@ theorem limModel_absSet_congr {n : ℕ} (hUU : ∀ j ≤ n, U j = U' j) {x : ℝ
   have h2 := rpow_half_le (x := s) (z := s) (by linarith) (by linarith)
   linarith
 
+include h h' in
+/-- **The target below `s_{n+1}` reads only the jitters of index `≤ n`.** -/
+theorem limModel_T_congr {n : ℕ} (hUU : ∀ j ≤ n, U j = U' j) {x : ℝ}
+    (hx : x ≤ h.limModel.slot (n + 1)) : h.limModel.T x = h'.limModel.T x := by
+  have hX := h.hX
+  have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
+  set s := h.limModel.slot (n + 1) with hsdef
+  have hsX : (X₀ : ℝ) ≤ s := GreedyRun.slot_ge ⟨h.limModel, capH X₀, U, h.limModel_low⟩ (n + 1)
+  have hH := log_le_capH hX0 hX hsX
+  have hls : 0 ≤ Real.log s := Real.log_nonneg (by linarith [X₀_ge_two_pow hX])
+  set m := ⌊s + capH X₀ s / 2 - X₀ + 1⌋₊ with hmdef
+  have hm0 : 0 ≤ s + capH X₀ s / 2 - X₀ + 1 := by linarith
+  have hm1 : hor X₀ m ≤ s + capH X₀ s / 2 := by
+    unfold hor; have := Nat.floor_le hm0; linarith
+  have hm2 : s + capH X₀ s / 2 < hor X₀ m + 1 := by
+    unfold hor; have := Nat.lt_floor_add_one (s + capH X₀ s / 2 - X₀ + 1); linarith
+  exact (limModel_agree_jitters h h' hUU m hm1).2.1 x (by linarith)
+
 end Stage
 
 end BModel

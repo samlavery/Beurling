@@ -167,6 +167,16 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     proved from the independence of the jitters, and there are nested adapted good events.
   - The coincidence event 𝒩₌ is null (`tiesNull`). Each tie pattern is a single point for the latest jitter, given the
     past.
+- **Added in this repository: the link from the construction to the Appendix A window model** (`Beurling/Model/`, round
+  4, about 1750 lines).
+  - `constructionLaw2` is the jitter law with the paper's slot constant θ = 1 + 1/Λ of (F1), proved from the sharp slot
+    density.
+  - Every model hypothesis of the one-run skeleton bound is proved for the construction
+    (`skeletonBound_construction`).
+  - The realised grid-window counts are bounded by the window model, by unique factorisation
+    (`winCount_le_windowElems2`). So `ClusterUpTo` holds on the good event once the cluster events and a target-size
+    event `tBound` are in the event family (`clusterUpTo_of_windows2`).
+  - Residual inputs: Lemma A.6 (S3)(d) (`S3dHyp`), the multi-run skeleton bound, and the conditions `SlotHyp` on H.
 - **Appendix B.** Nearly all the certificates: bs-cert (region Z2 and the auxiliary checks), finite-n, x0-band, the
   constants, the bounds on φ, and rankin_R. Dickman's function is constructed and its facts (R1)–(R4) are proved.
 
