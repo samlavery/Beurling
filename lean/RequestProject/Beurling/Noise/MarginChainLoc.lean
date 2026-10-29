@@ -6,6 +6,7 @@ public import RequestProject.Beurling.Noise.KRWidthReal
 public import RequestProject.Beurling.Noise.MarginChainHead
 public import RequestProject.Beurling.Noise.MarginBddLoc
 public import RequestProject.Beurling.Noise.TcLocal
+public import RequestProject.Beurling.Noise.RML13Kap
 
 /-!
 # The chain Bridge → Theorem 5.37 → Proposition 5.38 up to a height `T`
@@ -236,9 +237,11 @@ structure ChainInputsLoc (P : BeurlingSystem) (H : ℝ → ℝ) (tw : ℕ → �
   hsw : ∀ t, T0 ≤ t → t ≤ T → ∀ hh, |hh| ≤ 1.01 * H t →
     |∑ w ∈ Margin.Rec.Fset P p t, (Margin.Rec.kap P tw (t + hh) w - Margin.Rec.kap P tw t w) *
         (ρ ((t + hh) / KR.Vl P w) / KR.Vl P w)| + |NTpt (t + hh) - NTpt t| ≤ 2 * ηV t
-  /-- **Step 4** (`Margin.Var.step4` proves it from Lemma 5.21) -/
+  /-- **Step 4**, in the paper's form: the Step 2 errors enter only through the cofactors that
+  pass the filter, `κ_w(t) = 1` (04g Step 3); `Margin.Var.step4` with Lemma 5.21 -/
   hS4 : ∀ t, T0 ≤ t → t ≤ T →
-    oV t + 2 * ηV t + ∑ w ∈ Margin.Rec.Fset P p t, e t w / KR.Vl P w ≤ p.ES / Real.log t
+    oV t + 2 * ηV t + ∑ w ∈ Margin.Rec.Fset P p t,
+      Margin.Rec.kap P tw t w * (e t w / KR.Vl P w) ≤ p.ES / Real.log t
   /-- the base case below `T₀` -/
   hbase : ∀ t, t < T0 → Margin.Rec.vSup H m t ≤ Margin.Rec.PhiC P p t 1
   /-- **Step 5**: the transfer of `A₀(0.045)` to `𝒩` -/
@@ -452,7 +455,7 @@ theorem hv_of (I : ChainInputsLoc P H tw X0m X0 Z η1 η2 ε1 ε θ lam0 Tc j0 x
     have := I.hbase t ht
     rwa [hvs] at this
   rw [hvs]
-  have hvc := Margin.Rec.variation_le_chain_loc P I.p tw I.chain I.hpε I.hT0 I.hT0wf I.hT0T
+  have hvc := Margin.Rec.variation_le_chain_loc_kap P I.p tw I.chain I.hpε I.hT0 I.hT0wf I.hT0T
     I.hρ0 I.hT0' I.hgeom hS2 I.he0 I.hoscV I.hsw I.hS4 hbase t htT
   have hh := I.hhead t ht htT
   have htl := I.htail t ht htT

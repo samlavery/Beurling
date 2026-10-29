@@ -1,6 +1,7 @@
 module
 
 public import RequestProject.Beurling.Noise.MarginChainLoc
+public import RequestProject.Beurling.Noise.RML14Kap
 public import RequestProject.Beurling.Noise.MarginRealTop
 public import RequestProject.Beurling.Noise.MarginInt
 public import RequestProject.Beurling.Noise.KRTrueX0
@@ -345,10 +346,11 @@ structure RealMarginLoc (hc : Cond θ X₀) (ω : JitterΩ) (b : ℝ) where
           Margin.Rec.kap (PR θ X₀ ω) (twR θ X₀ ω) t w) *
         (rhoT θ X₀ ω ((t + hh) / KR.Vl (PR θ X₀ ω) w) / KR.Vl (PR θ X₀ ω) w)| +
       |NTpt θ X₀ ω (t + hh) - NTpt θ X₀ ω t| ≤ 2 * ηV t
-  /-- **Step 4** (`Margin.Var.step4` proves it from Lemma 5.21) -/
+  /-- **Step 4**, filtered by `κ_w(t)` as in the paper (04g Step 3) -/
   hS4 : ∀ t, T0 ≤ t → t ≤ b →
-    oV t + 2 * ηV t + ∑ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t, e t w / KR.Vl (PR θ X₀ ω) w ≤
-      p.ES / Real.log t
+    oV t + 2 * ηV t + ∑ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t,
+      Margin.Rec.kap (PR θ X₀ ω) (twR θ X₀ ω) t w * (e t w / KR.Vl (PR θ X₀ ω) w) ≤
+        p.ES / Real.log t
   /-- the base case below `T₀` -/
   hbase : ∀ t, t < T0 → Margin.Rec.vSup (Queue6.Hc X₀) (marginM θ X₀ ω) t ≤
     Margin.Rec.PhiC (PR θ X₀ ω) p t 1

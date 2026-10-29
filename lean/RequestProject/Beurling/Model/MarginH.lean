@@ -7,6 +7,7 @@ public import RequestProject.Beurling.Noise.RML11Sum
 public import RequestProject.Beurling.Noise.RML11Small
 public import RequestProject.Beurling.Model.G1BSec5
 public import RequestProject.Beurling.Model.R27
+public import RequestProject.Beurling.Noise.RML14H
 
 /-!
 # `RestMargin` from §5's `RML10` field theorems and the residual inputs `RestMarginH`
@@ -28,12 +29,14 @@ structure RestMarginH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (nb : �
   /-- the size parameter `E_S ≥ 0` of the recursion (`RML7.canonP`, `j = jzX X₀`; §5) -/
   ES : ℝ
   hES0 : 0 ≤ ES
-  /-- **Step 4 of Proposition 5.38** (§5; input `h4` of `RML12M.hS4_12`): at `T₀ ≤ t ≤ b`,
+  /-- **Step 4 of Proposition 5.38** (§5; input `h4` of `RML14.hS4_12_kap`, filtered by
+  `κ_w(t)`): at `T₀ ≤ t ≤ b`,
   `log t (o_V + 2η_V + ∑_w e/w) ≤ E_S`, with `e = e12` at the local bound `m* = MfH` -/
   h4 : ∀ t, ((RML7.canonP X₀ epsH ES (jzX X₀)).cinf + (RML7.canonP X₀ epsH ES (jzX X₀)).Kc) ≤ t →
     t ≤ b → Real.log t * ((oVc θ X₀ ω) t + 2 * (ηVc θ X₀ ω (RML7.canonP X₀ epsH ES (jzX X₀))) t +
       ∑ w ∈ Margin.Rec.Fset (PR θ X₀ ω) (RML7.canonP X₀ epsH ES (jzX X₀)) t,
-        RML12M.e12 X₀ (PR θ X₀ ω) (MfH θ X₀ ω) t w / KR.Vl (PR θ X₀ ω) w) ≤ ES
+        Margin.Rec.kap (PR θ X₀ ω) (twR θ X₀ ω) t w *
+          (RML12M.e12 X₀ (PR θ X₀ ω) (MfH θ X₀ ω) t w / KR.Vl (PR θ X₀ ω) w)) ≤ ES
   /-- **The sizes of Step 5** (§5, inputs of `RML11.hsmall_11`): `a₅ ≥ 6.5 E_S + V_{X₀}` on
   `[X₁, b]` and `a₅ ≤ 0.0097` (with `j_{X₀} ≤ e^{-59}`, `hjA_c`) -/
   a5 : ℝ
@@ -153,7 +156,7 @@ noncomputable def restMargin_of (hc : Cond θ X₀) (hev : Even X₀) {ω : Jitt
       ω (MfH_nonneg hc hev ω) R.ES (jzX X₀) b (fun z _ => hmH hc hev ω z)
     hS2e := RML12M.hS2e_12 hc.hX ω (MfH_nonneg hc hev ω) (MfH_mono hc hev ω) R.ES (jzX X₀) b
     he0 := RML12M.he0_12 hc.hX ω (MfH_nonneg hc hev ω) (MfH_mono hc hev ω) R.ES (jzX X₀) b
-    hS4 := RML12M.hS4_12 hc.hX ω R.ES (jzX X₀) b R.h4
+    hS4 := RML14.hS4_12_kap hc.hX ω R.ES (jzX X₀) b R.h4
     hsmall := RML11.hsmall_11 hc.hX ω (Queue6.nbQ X₀) R.ES (jzX X₀) b (Real.exp (-59)) R.a5
       (1 / 10 ^ 20) (Real.exp (-41) + 2 / 10 ^ 22) hT (opR hc hev hbs hN.2.1 hX1) (Xm_le_X0 hc)
       (hjA_c hc hev hb hG hbt hN hbs hX1 hH) (by

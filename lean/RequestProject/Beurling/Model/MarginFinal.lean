@@ -8,6 +8,7 @@ public import RequestProject.Beurling.Model.G1BSec5
 public import RequestProject.Beurling.Model.WinAtR
 public import RequestProject.Beurling.Model.MarginH
 public import RequestProject.Beurling.BaseRange.HRmR
+public import RequestProject.Beurling.Noise.RML13H
 
 /-!
 # The top level: Corollary 2.2 from eq. (84) and the open inputs
@@ -28,11 +29,24 @@ open Finset Real MeasureTheory Set BeurlingSystem Construction BModel KR KR.TNP 
 
 namespace BModel
 
+/-- **The open inputs** at `(ω, b)`: Step 4 of Proposition 5.38 at `E_S = 0.0014`
+(`RML13.h4K_H`): the bounds `so`, `sη` of `log t · o_V(t)` and `log t · η_V(t)` on `[T₀, b]`
+with `so + 2 sη ≤ 0.0013` (§5). -/
+structure RestMarginR (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
+  so : ℝ
+  sη : ℝ
+  ho : ∀ t, ((RML7.canonP X₀ epsH RML13.ESH (jzX X₀)).cinf +
+    (RML7.canonP X₀ epsH RML13.ESH (jzX X₀)).Kc) ≤ t → t ≤ b →
+      Real.log t * oVc θ X₀ ω t ≤ so
+  hη : ∀ t, ((RML7.canonP X₀ epsH RML13.ESH (jzX X₀)).cinf +
+    (RML7.canonP X₀ epsH RML13.ESH (jzX X₀)).Kc) ≤ t → t ≤ b →
+      Real.log t * ηVc θ X₀ ω (RML7.canonP X₀ epsH RML13.ESH (jzX X₀)) t ≤ sη
+  hsize : so + 2 * sη ≤ 0.0013
+
 variable (θ X₀) in
-/-- **The open inputs** at `(ω, b)`: `RestMarginH` (Proposition 5.38, Steps 4–5: `E_S`,
-Step 4, `6.5 E_S + V_{X₀}`) at `ν̄ = nbQ`. -/
+/-- **The open inputs** at `(ω, b)` (`RestMarginR`). -/
 def OthersInputsH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) : Prop :=
-  Nonempty (RestMarginH θ X₀ ω b (Queue6.nbQ X₀))
+  Nonempty (RestMarginR θ X₀ ω b)
 
 /-- **Theorem 2.1, hypothesis**: for `X₀` beyond some threshold, a.s. on `Good(< b)` for every
 admissible window `[a, b)`, the open inputs `OthersInputsH`. -/
@@ -75,7 +89,7 @@ theorem theorem21InputsZ_hux (h84 : BaseRange.Huxley84) (h : Theorem21InputsH) :
     have hQC : ω ∈ QC (okQ θ X₀) (tq θ X₀) b.toNat := hG.1
     have hE1 : ∀ n, tE1 X₀ n < b.toNat → ω ∈ E1ev θ X₀ n := fun n hn =>
       mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn
-    obtain ⟨Rm⟩ := hω hG
+    obtain ⟨Rr⟩ := hω hG
     have hbs := hbs_Zc hc hev hb hQC hE1 hN
     have hb0 : (0 : ℤ) ≤ b := by
       have : (0 : ℝ) ≤ b := le_trans hX0 hb
@@ -101,7 +115,13 @@ theorem theorem21InputsZ_hux (h84 : BaseRange.Huxley84) (h : Theorem21InputsH) :
     have hO : OthersInputs θ X₀ ω b :=
       ⟨hXH X₀ h2h θ ω b, ⟨⟩, Rs,
         ⟨restMargin_of hc hev hb hG hbt hN hbs hlog1 (hXH X₀ h2h θ ω b).hHux
-          (hRmA _ hG hN b hb hbt hbs hlog1) Rm⟩⟩
+          (hRmA _ hG hN b hb hbt hbs hlog1)
+          { ES := RML13.ESH
+            hES0 := RML13.hES0_H
+            h4 := RML13.h4K_H hc hev hb hN hbs hlog1 Rr.so Rr.sη Rr.ho Rr.hη Rr.hsize
+            a5 := RML13.a5H
+            hEV := RML13.hEV_H hc hev hb hN hbs hlog1 (hXH X₀ h2h θ ω b).hHux
+            ha5 := RML13.ha5_H }⟩⟩
     exact realMarginLoc_of_others hc hev hG hN hbt hb hbs hlog1 (hEp _ hG hN)
       (fun hH => hin_R hc hev hbs hN.2.1 hlog1 hb hH)
       (fun hH => BaseRange.hjb_Rc hc hev hN.2.1 hlog1 hb hbs (by norm_num [epsH])

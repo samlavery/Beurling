@@ -169,20 +169,21 @@ theorem h4_13 (ω : JitterΩ) {Z η1 η2 εT θT : ℝ} {ε1 : ℝ → ℝ} {Mf 
     (hM0 : ∀ z, 0 ≤ Mf z) (hMm : Monotone Mf) {b : ℝ}
     (hMB : ∀ z, z ≤ b → Mf z ≤ 3.1 * Real.log (max z X₀) + 4.2)
     (htnp : KR.TNP.Hyp (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) Z η1 η2 ε1 εT θT)
-    (ES jP so sη : ℝ) (hZ : Xm X₀ ≤ Z) (hbZ : 2 * b / Xm X₀ ≤ Z)
-    (ho : ∀ t, ((RML7.canonP X₀ epsH ES jP).cinf + (RML7.canonP X₀ epsH ES jP).Kc) ≤ t →
+    (ES jP so sη : ℝ) (hZ : Xm X₀ ≤ Z) (hbZ : 2 * b / Xm X₀ ≤ Z) {T' : ℝ}
+    (hT' : (RML7.canonP X₀ epsH ES jP).cinf + (RML7.canonP X₀ epsH ES jP).Kc ≤ T')
+    (ho : ∀ t, T' ≤ t →
       t ≤ b → Real.log t * oVc θ X₀ ω t ≤ so)
-    (hη : ∀ t, ((RML7.canonP X₀ epsH ES jP).cinf + (RML7.canonP X₀ epsH ES jP).Kc) ≤ t →
+    (hη : ∀ t, T' ≤ t →
       t ≤ b → Real.log t * ηVc θ X₀ ω (RML7.canonP X₀ epsH ES jP) t ≤ sη)
     (hES : so + 2 * sη + 60000 / Real.log X₀ ^ 4 ≤ ES) :
-    ∀ t, ((RML7.canonP X₀ epsH ES jP).cinf + (RML7.canonP X₀ epsH ES jP).Kc) ≤ t → t ≤ b →
+    ∀ t, T' ≤ t → t ≤ b →
       Real.log t * (oVc θ X₀ ω t + 2 * ηVc θ X₀ ω (RML7.canonP X₀ epsH ES jP) t +
         ∑ w ∈ Margin.Rec.Fset (PR θ X₀ ω) (RML7.canonP X₀ epsH ES jP) t,
           Margin.Rec.kap (PR θ X₀ ω) (twR θ X₀ ω) t w *
             (RML12M.e12 X₀ (PR θ X₀ ω) Mf t w / KR.Vl (PR θ X₀ ω) w)) ≤ ES := by
   intro t ht htb
   have h1 := RML10.T0_gt_one hc.hX ES jP
-  have ht1 : 1 < t := by linarith
+  have ht1 : 1 < t := by linarith [hT']
   have hX0 := X0_pos hc
   obtain ⟨hXm1, -⟩ := Xm_bounds hc
   have hXm : 0 < Xm X₀ := by linarith

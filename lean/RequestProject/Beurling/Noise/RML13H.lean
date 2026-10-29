@@ -132,7 +132,7 @@ theorem h4K_H {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) (hN : ω ∈ N
     norm_num at this ⊢
     linarith
   exact h4_13 hc ω (MfH_nonneg hc hev ω) (MfH_mono hc hev ω) (MfH_le hc hb hbs) hT ESH (jzX X₀)
-    so sη hZ.1 hbZ ho hη (by unfold ESH; linarith)
+    so sη hZ.1 hbZ le_rfl ho hη (by unfold ESH; linarith)
 
 /-- **The field `hEV` of `RestMarginH`** at `E_S = ESH`, `a₅ = a5H`: on `[X₀^{1.01}, b]`,
 `6.5 E_S + V_{X₀}(t) ≤ 6.5 E_S + 10⁻⁶` (`VX_le`; `j₀ ≤ 1.0001/Λ` from (huxley)). -/

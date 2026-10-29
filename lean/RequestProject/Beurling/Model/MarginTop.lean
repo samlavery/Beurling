@@ -122,11 +122,12 @@ structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (nb : ℕ
   he0 : ∀ t, ((RML7.canonP X₀ epsH ES jP).cinf +
     (RML7.canonP X₀ epsH ES jP).Kc) ≤ t → t ≤ b → ∀ w ∈ Margin.Rec.Fset (PR θ X₀ ω)
       (RML7.canonP X₀ epsH ES jP) t, 0 ≤ e t w
-  /-- **Step 4** (`Margin.Var.step4` proves it from Lemma 5.21) -/
+  /-- **Step 4**, filtered by `κ_w(t)` as in the paper (04g Step 3) -/
   hS4 : ∀ t, ((RML7.canonP X₀ epsH ES jP).cinf + (RML7.canonP X₀ epsH ES jP).Kc) ≤ t → t ≤ b →
     (oVc θ X₀ ω) t + 2 * (ηVc θ X₀ ω (RML7.canonP X₀ epsH ES jP)) t + ∑ w ∈ Margin.Rec.Fset
-      (PR θ X₀ ω) (RML7.canonP X₀ epsH ES jP) t, e t w / KR.Vl (PR θ X₀ ω) w ≤
-      (RML7.canonP X₀ epsH ES jP).ES / Real.log t
+      (PR θ X₀ ω) (RML7.canonP X₀ epsH ES jP) t,
+      Margin.Rec.kap (PR θ X₀ ω) (twR θ X₀ ω) t w * (e t w / KR.Vl (PR θ X₀ ω) w) ≤
+        (RML7.canonP X₀ epsH ES jP).ES / Real.log t
   /-- the sizes of the error terms (`o(1)`, §5.1; Step 5 of Proposition 5.35) -/
   hsmall : ∀ t, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ b →
     oTot (Queue6.Hc X₀ t) t ((fun _ => EBRc) t) ((fun x => jXdef (PR θ X₀ ω) (Queue6.Hc X₀)
