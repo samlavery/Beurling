@@ -190,6 +190,13 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     - the Step 1–2 recursion of Proposition 5.38;
     - the wiring of Theorem 5.37's three inputs;
     - Lemma 7.3(b), (c) and (d)(iii).
+
+  Round 4 (146 files, 38.7k lines in all):
+  - The chain Bridge → Theorem 5.37 → Proposition 5.38 → Corollary 5.40 is assembled (`KR.Chain.ChainInputs`).
+  - (1 + K_pt)∘R_sh = id is proved, so R_sh is a two-sided inverse.
+  - Lemma 5.20 is proved in four of its five forms (`KR.TNP`). Its remaining input is Corollary 6.3(ii) for the
+    realised system.
+  - The Step 1–5 recursion of Proposition 5.38 is proved from the paper's Step 2 bullets.
 - **Added in this repository: measurability and the jitter law of the construction** (`Beurling/Model/`, round 3, about
   2700 lines).
   - The construction is measurable in ω, stage by stage. This includes the heights γ_k, through the least-good-height

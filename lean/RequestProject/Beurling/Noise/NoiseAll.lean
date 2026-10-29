@@ -10,6 +10,12 @@ public import RequestProject.Beurling.Noise.LemSMain
 public import RequestProject.Beurling.Noise.ThreshMass
 public import RequestProject.Beurling.Noise.Noise56
 public import RequestProject.Beurling.Noise.A1Sharp
+public import RequestProject.Beurling.Noise.MarginChain
+public import RequestProject.Beurling.Noise.KptInv
+public import RequestProject.Beurling.Noise.MarginRecStep
+public import RequestProject.Beurling.Noise.MarginRecSuper
+public import RequestProject.Beurling.Noise.TauNearProofNum
+public import RequestProject.Beurling.Noise.TauNearProofMain
 public import RequestProject.Beurling.Noise.BridgeXBTau
 public import RequestProject.Beurling.Noise.BridgeNear
 public import RequestProject.Beurling.Noise.KptLemma73
