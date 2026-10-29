@@ -1547,14 +1547,18 @@ than $1$.
   reads (H$_{\mathrm{BS}}$) only on $[1,2y(u)]\subset[1,u^{1/100}]$, through Lemma~\ref{lem:cm}(iii),(iv), far below the horizon,
   Remark~\ref{rem:horizon}). Its compensator form uses $u=L/\log2y\ge10^8$ wherever $\Abs\ne\emptyset$, the raised
   range included.
-\item (Current-height form.) On $\Good(<u)$ the $\Abs$-part of $T'$ is $\sigma_{\Abs}$, since $\bar\rho_{\Abs}=\rho_{\Abs}$.
-  So the $\Abs$-part of the oscillation term $o_u$ of Section~\ref{sec:noise} satisfies
+% Logged correction 109 (CORRECTIONS-vs-v3.md): (c) bounded o_A(u) on Good(<u), but o_u reads windows up to 2u+2.04H(u).
+\item (Windowed form.) On $\Good(<t)$, at heights $\le t+1.01H(t)$, the $\Abs$-part of $T'$ is $\sigma_{\Abs}$, since
+  $\bar\rho_{\Abs}=\rho_{\Abs}$ there. So on $\Good(<t)$ the $\Abs$-part of the oscillation of $\Tc$ over any window
+  contained in $(-\infty,t+1.01H(t)]$ is $\le2\sup|\sigma_{\Abs}|\le4L^{-4}$, with $L$ the logarithm of the left end of the
+  window (or $\le8L^{-4}$ if $\rho_{\Abs}$ and $K_{\Abs}\tilde\rho$ are taken separately). In particular the $\Abs$-part of the
+  oscillation term $o_u$ of Section~\ref{sec:noise} satisfies
   \[
-  o_{\Abs}(u)\le2\sup|\sigma_{\Abs}|\le4L^{-4}
+  o_{\Abs}(u)\le4(\log(u/2))^{-4}\le4.01L_u^{-4}\qquad\text{on }\Good(<t)\text{ for every }t\ge2u+1.1H(2u),
   \]
-  (or $\le2\sup\rho_{\Abs}+2\sup|K_{\Abs}\tilde\rho|\le8L^{-4}$ if the two parts are taken separately). This uses only (a)
-  and (b), that is, Lemma~\ref{lem:lemmaP}, which reads $\qEcl$ at heights below $u$. So it involves no queue bound and no event
-  $\qLand$ at heights $\ge u$. Then $\sup_v\log v\cdot o_{\Abs}(v)\le8\min L^{-3}\le e^{-120}$ wherever $\Abs\ne\emptyset$,
+  since the windows of $o_u$ lie in $(-\infty,2u+2.04H(u)]\subset(-\infty,t+1.01H(t)]$. This uses only (a) and (b), that is,
+  Lemma~\ref{lem:lemmaP}, which reads $\qEcl$ at heights below $t$. So it involves no queue bound and no event $\qLand$ at
+  heights $\ge t$. Then $\sup_v\log v\cdot o_{\Abs}(v)\le8\min L^{-3}\le e^{-120}$ wherever $\Abs\ne\emptyset$,
   since there $L\ge\Lambda^2e^{s_H}$.
 \end{enumerate}
 Part (c) is the form used where $o_u$ enters R1$'$ at the current height (see \eqref{eq:osc} and Proposition~\ref{prop:pointwise}).
@@ -1680,7 +1684,7 @@ Theorem~\ref{thm:caplw}(b), (c) & none (definitions of the parameters) & the par
   Lemma~\ref{lem:landing}, Theorem~\ref{thm:queue}, Corollary~\ref{cor:increment}, Lemma~\ref{lem:lemmaP}\\
 Lemma~\ref{lem:lemmaP} & Proposition~\ref{prop:ecl} (heights $<u$), Lemma~\ref{lem:cm}, Theorem~\ref{thm:caplw}(b) & Lemma~\ref{lem:rhoA}, \eqref{eq:target},
   Lemma~\ref{lem:ZA}, Section~\ref{sec:noise} ($\sigma_{\Abs}$)\\
-Lemma~\ref{lem:rhoA} & Lemma~\ref{lem:lemmaP} only (heights $<u$) & (c): \eqref{eq:osc}, Proposition~\ref{prop:pointwise} (current height)\\
+Lemma~\ref{lem:rhoA} & Lemma~\ref{lem:lemmaP} only (heights $<t$; windows below $t+1.01H(t)$) & (c): \eqref{eq:osc}, Proposition~\ref{prop:pointwise} (current height)\\
 Proposition~\ref{prop:S1S2} & Lemma~\ref{lem:lemmaP}, Corollary~\ref{cor:increment} & Theorem~\ref{thm:queue}, Lemma~\ref{lem:noise}\\
 Lemma~\ref{lem:raisedy} & Theorem~\ref{thm:caplw}, Lemma~\ref{lem:lemmaP}, Lemma~\ref{lem:rhoA} & Lemma~\ref{lem:S}, Proposition~\ref{prop:pointwise},
   Lemma~\ref{lem:ZA}\\

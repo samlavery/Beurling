@@ -155,8 +155,10 @@ last term is at most $1.0001\sum_{v'\ge X_0/2}\omega_t(v')\sup_{[v',2v')}\delta$
   term contributes at most $E_\delta$ to $\log t\cdot S(t)$.
   Since $H(v)/v$ is decreasing, $H(vw)\le w^{\eps_H}H(v)$ and $\log H(X_0)\le8(\log\Lambda)^2+10^{-6}\Lambda$
   (Theorem~\ref{thm:caplw}(c)), we get $E_\delta\le28.4\,\eps_H\cdot10\Lambda^2H(X_0)/X_0\le e^{-0.9\Lambda}$; so $E_S\le10^{-28}$ still holds.
+% Logged correction 109 (CORRECTIONS-vs-v3.md): o_v in E_S is taken over the windows read by the recursion, below t + 1.01H(t).
 \item With $\log t\cdot o_t\le\sup_v\log v\cdot o_v$ and $\log t\cdot2\eta(t)\le2\sup_y\log y\cdot\eta(y)$, this gives
-  $\log t\cdot S(t)\le E_S$.
+  $\log t\cdot S(t)\le E_S$. Here $o_v$ is taken over the windows $[t'-1.01H(t'),t'+1.01H(t')]$ at the points $t'\le t$ read by
+  the recursion; these lie in $(-\infty,t+1.01H(t)]$, so \eqref{eq:osc} holds for them on $\Good(<t)$.
 \end{itemize}
 
 \emph{Step 5: solving the recursion.} Iterating Step~3, a chain with product $M$ has weight at most $\Hord(M)M^{\eps'-2}$, and

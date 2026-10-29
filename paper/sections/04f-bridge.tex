@@ -6,7 +6,9 @@
 \begin{proposition}[the bridge: operator versus sharp]\label{prop:br}
 % v3: Proposition 3.14
 Let $o_u$ be the supremum of $\osc(\Tc)$ over windows of length $2.04H(u)$ meeting $[u,2u)$: the $H$-window oscillation of
-the jump-free source. Only the kernels $C_n$ with $n\ge2$ use it, so it is read at heights $\le x/2+1.1H(x)$. For $x\ge2\Xm$
+the jump-free source. Only the kernels $C_n$ with $n\ge2$ use it, so it is read at heights $\le x/2+1.1H(x)$; accordingly, at $x$,
+$o_u$ is taken over the windows meeting $[u,2u)\cap(-\infty,x/2+1.1H(x)]$, which lie in $(-\infty,x/2+3.2H(x)]\subset(-\infty,x]$.
+For $x\ge2\Xm$
 (in particular at every point of $W_x$ for $x\ge2X_0$, since $x-H(x)/2\ge2X_0-H(2X_0)/2>2\Xm$; Theorem~\ref{thm:g2} and
 Proposition~\ref{prop:pointwise}(b) use it there) split
 % Logged correction 90 (CORRECTIONS-vs-v3.md): stated for x >= 2X_0 but applied at the points of W_x; the proof needs only
@@ -54,11 +56,15 @@ the oscillation is read.
 \item Near $u=X_0$, $\Tc$ is continuous: it is $0$ below $X_0$ and $1-\rhodet-\jz$ above, which vanishes at $X_0$.
 \item $o_{\mathrm{det}}\le(2.04H(u)+2)X_0^{5/12}/u$, from the linear window of length $\kappa u$ in \eqref{eq:rhodet} and the
   unit spacing of the rigid set.
-\item On $\Good(<u)$, the $\Abs$-part of $\Tc$ is $\sigma_{\Abs}=K_{\Abs}\rhot-\rho_{\Abs}$ (as $\bar\rho_{\Abs}=\rho_{\Abs}$,
-  Remark~\ref{rem:stopped}). So $o_{\Abs}\le2\sup|\sigma_{\Abs}|\le4L_u^{-4}$, by Lemma~\ref{lem:rhoA}(c) (from parts (a), (b)
-  and Lemma~\ref{lem:lemmaP}). Lemma~\ref{lem:lemmaP} holds on $\Good(<t)$ at heights up to $t+1.01H(t)$, using only
-  $E_{\mathrm{cl}}$ at lower heights and Chebyshev below $2y$. So reading $o_{\Abs}$ at the current height $t$ costs no event
-  later than $t$. Moreover $o_{\Abs}$ vanishes unless
+% Logged correction 109 (CORRECTIONS-vs-v3.md): o_A is bounded over windows below t + 1.01H(t) on Good(<t), not o_u on Good(<u).
+\item On $\Good(<t)$, at heights $\le t+1.01H(t)$, the $\Abs$-part of $\Tc$ is $\sigma_{\Abs}=K_{\Abs}\rhot-\rho_{\Abs}$ (as
+  $\bar\rho_{\Abs}=\rho_{\Abs}$ there, Remark~\ref{rem:stopped}). So the $\Abs$-part of its oscillation over any window contained in
+  $(-\infty,t+1.01H(t)]$ is $\le2\sup|\sigma_{\Abs}|\le4L^{-4}$, with $L$ taken at the left end of the window, by
+  Lemma~\ref{lem:rhoA}(c) (from parts (a), (b) and Lemma~\ref{lem:lemmaP}). Lemma~\ref{lem:lemmaP} holds on $\Good(<t)$ at
+  heights up to $t+1.01H(t)$, using only $E_{\mathrm{cl}}$ at lower heights and Chebyshev below $2y$. So reading $o_{\Abs}$ over
+  windows below $t+1.01H(t)$ costs no event later than $t$. This covers every use: at $x$, Proposition~\ref{prop:br} and
+  Lemma~\ref{lem:predictable} read $o_u$ only over windows meeting heights $\le x/2+2.1H(x)$, which lie in
+  $(-\infty,x/2+4.2H(x)]\subset(-\infty,x]$, on $\Good(<x)$; and R1$'$ reads it at windows within $1.01H(t)$ of the current height $t$. Moreover $o_{\Abs}$ vanishes unless
   $\log\log u>2\log\Lambda+5.97$ ($=42.8$ at $\Lambda=10^8$), since $\Abs$ is empty below that height.
 \item $o_R\le\sum_{k:\,x_k\le u}\gamma_k\kappa_kH(u)u^{-1}(x_k/u)^{1-\theta}\le H(u)u^{-\theta}$, since
   $\gamma_k\kappa_k\le x_k^{1-\theta}$ and $u\ge x_1\ge\exp(X_0^2)$.
@@ -81,7 +87,7 @@ and, on $\Good(<x)$,
   +\sup_x\frac{6\log x}{H(x)}\le10^{-13},
 \end{multline*}
 where $\bar F_r(v):=o_v+6/H(v)+\bar\nu(v)+54\eta(v)$ bounds $|F_r|$ on $[v,2v)$, and $F_r^+:=2\bar F_r$ bounds $|(1-B)F_c|$.
-Every sum is over dyadic scales $\ge X_0/2$; there is no dependence on $x$, and no event at the current scale is used.
+Every sum is over dyadic scales $\ge X_0/2$; the bound $10^{-13}$ does not depend on $x$, and no event at the current scale is used.
 \end{lemma}
 
 \begin{proof}
@@ -89,7 +95,9 @@ Every sum is over dyadic scales $\ge X_0/2$; there is no dependence on $x$, and 
 $\rhot_c:=\rhot-(1+B\Kpt)^{-1}BJ$. So $M=B\Rres J+B\Tc+\vartheta/H-BF_c+B\Rres F_c-B\Rres G$. Insert $F_c=\Tc+F_r$ and
 $\Rres\Tc+\Rres J=\Rres T'$. In particular, the current-scale terms $-B(\nu+\NT)(x)$ of $BF_c$ cancel exactly against those of
 $B\Rres F_c$ (its $n=1$ term). Every term on the right of \eqref{eq:predictable} involves $\nu$, $\NT$ and $\rhot$ only at scales
-$\le x/2+2H$.
+$\le x/2+2H$. Accordingly, at $x$, $\bar F_r(u)$, the suprema $\sup_{[v,3v]}F_r^+$ and the oscillations $o_u$ below are taken over
+the heights actually read, which are $\le x/2+2.1H(x)$, and over the windows of length $\le2.04H$ meeting them; these lie in
+$(-\infty,x/2+4.2H(x)]\subset(-\infty,x]$, so on $\Good(<x)$ the bounds of \eqref{eq:osc} hold for them.
 
 \emph{The bounds.}
 \begin{itemize}
