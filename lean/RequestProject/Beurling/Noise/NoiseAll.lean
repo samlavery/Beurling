@@ -10,6 +10,9 @@ public import RequestProject.Beurling.Noise.LemSMain
 public import RequestProject.Beurling.Noise.ThreshMass
 public import RequestProject.Beurling.Noise.Noise56
 public import RequestProject.Beurling.Noise.A1Sharp
+public import RequestProject.Beurling.Noise.RML9G1
+public import RequestProject.Beurling.Noise.RML9Bnd
+public import RequestProject.Beurling.Noise.RML9HJ
 public import RequestProject.Beurling.Noise.RML8GField
 public import RequestProject.Beurling.Noise.RML8EBnd
 public import RequestProject.Beurling.Noise.RML8EEps
