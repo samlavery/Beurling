@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#101)
+## Addendum: defects found after the re-check (corrections #31–#102)
 
 After the first public version, a reader reported fifty defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, two end-to-end checks (R14, R15) and an audit of the certificate code (R30), turned up twenty-one more. The full list, with each repair, is entries #31–#101 of `CORRECTIONS-vs-v3.md`:
+re-checking the repairs, two end-to-end checks (R14, R15) and an audit of the certificate code (R30), turned up twenty-two more (the last from the Lean formalization). The full list, with each repair, is entries #31–#102 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -139,9 +139,10 @@ re-checking the repairs, two end-to-end checks (R14, R15) and an audit of the ce
 | 99 | Lemma margin(b), decision-order mismatch | \|P − √(u/w′)\| ≤ H/4 fails below P; now H/4 + H²/(8P), prime count derived (≤ 1.51H + 2) | reader |
 | 100 | Lemma cm proof | blocks [A, 2A) with ψ(2A) − ψ(A), which counts (A, 2A]; blocks now (A, 2A] | reader |
 | 101 | Thm bs Step 7(iii) β_a; App. B bs-cert | printed β_a lacks the code's v + c_u ≤ 0 condition (literal formula fails 44,861 u-cells); code and run descriptions corrected; certificate re-run, unchanged | bs-cert audit R30 |
+| 102 | Lemma 5.7 proof, Assembly | ε₁ := 4300λ + 8.8α′ (u ≥ 27) and 14400λ + α′ (u < 27) understate (a)–(f) (≈ 4802λ; 8.1α′); now 4900λ + 8.8α′ and 14400λ + 8.1α′, still ≤ 0.72ε | Lean formalization |
 
 **Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72 in twenty-two passes
-(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, #79–#82 by R20, #83–#85 by R21, #86 and #87 by R22, #88 and #89 by R23, #90 by R24, #91 by R25, #92 by R26, #93 by R27, #95 and #96 by R28, #97–#100 by R29, #101 came from the bs-cert code audit R30, and #94 was checked by R31; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, #79–#82 by R20, #83–#85 by R21, #86 and #87 by R22, #88 and #89 by R23, #90 by R24, #91 by R25, #92 by R26, #93 by R27, #95 and #96 by R28, #97–#100 by R29, #101 came from the bs-cert code audit R30, #102 from the Lean formalization (kernel-checked), and #94 was checked by R31; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -159,7 +160,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the one hundred and one corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the one hundred and two corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and

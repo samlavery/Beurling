@@ -485,16 +485,17 @@ $e^{-r_0d}(p+p'+p'')(d)$ is decreasing in $d$, and $(p+p'+p'')(1.74)\le4.98$, so
   \end{itemize}
 \end{enumerate}
 
+% Logged correction 102 (CORRECTIONS-vs-v3.md): eps_1 was 4300 lambda (u >= 27) and 14400 lambda + alpha' (u < 27); (a)-(f) sum to ~4802 lambda and need 8.1 alpha'.
 \emph{Assembly.} Write $c(u)=\ell\Phi_{\mathrm{ben}}+c_0(u)$, and recall $\ell(s_a)_+$ and $\ell|s_a|$ from the bounds on $s_a$.
 \begin{itemize}
 \item \emph{$u\ge27$.} By the positivity argument below, $c_0(u)\ge K'u^2\log(1+u)>0$, so both parts of $c$ are
   non-negative; and $c\ge c_0\ge22.7\sqrt\ell$ when $u\ge u_0-2$, so that $2.54\alpha'\sqrt\ell\le0.12\alpha'c$. Adding (a)--(f),
   \begin{gather*}
     \ell(\rho_1+\cdots+T)\le\eps_1c+\eps_2\,\ell(s_a)_++2.2\cdot\mathbf 1[u\ge u_0-2]+1/\ell,\\
-    \eps_1:=4300\lambda+8.8\alpha',\quad\eps_2:=4.7\alpha'+0.035\,\ell^{-1/8}.
+    \eps_1:=4900\lambda+8.8\alpha',\quad\eps_2:=4.7\alpha'+0.035\,\ell^{-1/8}.
   \end{gather*}
 \item \emph{$2\le u<27$.} Here $a'=0$, $\rho_3=0$ and $c\ge0.944\,\ell\Phi_{\mathrm{ben}}$, by the $\Phi$-dominance bound below. So
-  (a)--(f) give $\ell(\rho_1+\cdots+T)\le\eps_1c+2.5\cdot10^{15}/\ell$ with $\eps_1:=14400\lambda+\alpha'$.
+  (a)--(f) give $\ell(\rho_1+\cdots+T)\le\eps_1c+2.5\cdot10^{15}/\ell$ with $\eps_1:=14400\lambda+8.1\alpha'$.
 \end{itemize}
 In both cases $\eps_1\le0.72\,\eps$ and $\eps_2\le\eps$. If $s_a\ge0$, the claim follows at once. If $s_a<0$, it needs in
 addition $\eps\,\ell|s_a|\le(\eps-\eps_1)c$, which holds because $\ell|s_a|\le0.54\sqrt\ell\le0.024c$ for $u\ge u_0-2$,

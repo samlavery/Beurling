@@ -106,9 +106,11 @@ Samuel Lavery (sam.lavery@gmail.com)
 >
 > An independent audit of the code of the Beurling–Saias certificate (R30) found it sound. It found that the majorant β_a as
 > printed in the paper lacked a condition that the code has (so the printed formula, re-implemented, fails on many cells) (#101).
+> The Lean formalization of §5 found that the assembly of Lemma 5.7 understated ε₁ (4300λ for about 4802λ, and α′ for 8.1α′);
+> the corrected values still satisfy the bound the proof uses (#102).
 >
 > Repairing these and re-checking the repairs, and three further independent AI checks (R6–R8 in `review/recheck/`),
-> turned up twenty-one more (the last from an audit of the certificate code, R30). The most serious were:
+> turned up twenty-two more (the last two from an audit of the certificate code, R30, and from the Lean formalization). The most serious were:
 > - a gap in the label sum of the Pivot-Integration Lemma (Appendix A): the carried Euler factors cancel only after
 >   integration, not pointwise as the argument needed. Its first repair (#48) covered one configuration type only. The
 >   repair now in the paper (#55) covers the summed form the paper uses; see above;
@@ -122,10 +124,10 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   (#74); R14 found that grid windows near 2z stick out of the range that Theorem R assumes (#75). The check of #76
 >   found that the existence of the slot offset ϑ_s was unproved, and that a tie made a slot empty (#77).
 >
-> These are entries #31–#101 of `CORRECTIONS-vs-v3.md`. All are repaired.
+> These are entries #31–#102 of `CORRECTIONS-vs-v3.md`. All are repaired.
 > - **The repairs of #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72** were checked by a fresh AI checker in
 >   twenty-two passes (`review/recheck/R4.md`). #65 and #66 were checked by the R11 checker (`review/recheck/R11-absorption.md` §§12–13);
->   #68, #69 and #70 by independent checks R12 and R13; #73–#77 by independent checks R16, R17 and R18; #78 by R19; #79–#82 by R20; #83–#85 by R21; #86 and #87 by R22; #88 and #89 by R23; #90 by R24; #91 by R25; #92 by R26; #93 by R27; #95 and #96 by R28; #97–#100 by R29; #94 by R31; #101 came from the certificate audit R30.
+>   #68, #69 and #70 by independent checks R12 and R13; #73–#77 by independent checks R16, R17 and R18; #78 by R19; #79–#82 by R20; #83–#85 by R21; #86 and #87 by R22; #88 and #89 by R23; #90 by R24; #91 by R25; #92 by R26; #93 by R27; #95 and #96 by R28; #97–#100 by R29; #94 by R31; #101 came from the certificate audit R30; #102 came from the Lean formalization, whose kernel-checked assembly is its check.
 > - **The certificate fixes of #54** were checked by the R8 checker (`review/recheck/R8-cert-repro.md` §9).
 > - **The repair of #60** was checked by the R10 checker (`review/recheck/R10-lp-transfer.md`, re-check of #60).
 >   The passes ended with nothing blocking or fixable.
@@ -138,7 +140,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   `review/recheck/R11-absorption.md`. End-to-end checks of Appendix A and of the base-range section are in
 >   `review/recheck/R14-appA-e2e.md` and `review/recheck/R15-sec6-e2e.md`.
 >
-> None of the one hundred and one logged corrections changes a conclusion of the paper. But these
+> None of the one hundred and two logged corrections changes a conclusion of the paper. But these
 > findings show that the AI checks are no substitute for expert review.
 
 ## The result
