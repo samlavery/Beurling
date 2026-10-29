@@ -92,6 +92,59 @@ theorem frEvent_fail {Xt Ind2 : ℕ → Ω → ℝ} {M1 l L : ℝ} (hM : 0 < M1)
         rw [← ENNReal.ofReal_add (by positivity) (by positivity)]
         congr 1; ring
 
+/-- **The event `Fr(I)`, all partial sums**: (a) if `ℓ_jit(I) ≤ K`, every partial centred sum is
+`< √(2 v_ℓ λ) + (4/3) M₁ λ`; (b) every partial count of `{X⁽²⁾_q ≥ 1}` is `≤ λ`. -/
+def FrAll (ℱ : Filtration ℕ m0) (μ : Measure Ω) (Xt Ind2 : ℕ → Ω → ℝ) (ℓI : Ω → ℕ)
+    (M1 l : ℝ) (K : ℕ) : Set Ω :=
+  {ω | (ℓI ω ≤ K → ∀ n, ∑ k ∈ range n, (Xt k ω - (μ[Xt k | ℱ k]) ω) <
+      Real.sqrt (2 * (2 * M1 * (ℓI ω + 3)) * l) + 4 / 3 * M1 * l) ∧
+    ∀ n, ∑ k ∈ range n, Ind2 k ω ≤ l}
+
+/-- **Theorem 6.6(i) for one window**, all partial sums. -/
+theorem frAll_fail {Xt Ind2 : ℕ → Ω → ℝ} {M1 l L : ℝ} (hM : 0 < M1) (hl : 30 ≤ l)
+    (hL : 0 < L) (hX0 : ∀ k ω, 0 ≤ Xt k ω) (hXb : ∀ k ω, Xt k ω ≤ 2 * M1)
+    (hXm : ∀ k, StronglyMeasurable[ℱ (k + 1)] (Xt k))
+    (hI0 : ∀ k ω, 0 ≤ Ind2 k ω) (hI1 : ∀ k ω, Ind2 k ω ≤ 1)
+    (hIm : ∀ k, StronglyMeasurable[ℱ (k + 1)] (Ind2 k)) (ℓI : Ω → ℕ) (K : ℕ) (G : Set Ω)
+    (hR1 : ∀ᵐ ω ∂μ, ω ∈ G →
+      ∀ n, ∑ k ∈ range n, (μ[Xt k | ℱ k]) ω ≤ ℓI ω * (1 - 0.15 / L) + 3)
+    (hcomp2 : ∀ᵐ ω ∂μ, ω ∈ G → ∀ n, ∑ k ∈ range n, (μ[Ind2 k | ℱ k]) ω ≤ 1) :
+    μ ((FrAll ℱ μ Xt Ind2 ℓI M1 l K)ᶜ ∩ G) ≤ ENNReal.ofReal ((K + 2) * Real.exp (-l)) := by
+  have hl0 : 0 < l := by linarith
+  have hb : 0 < 2 * M1 := by linarith
+  set v : ℕ → ℝ := fun j => 2 * M1 * (j + 3)
+  have hv : ∀ j, 0 < v j := fun j => by simp only [v]; positivity
+  have hA := freedman_peel_all (μ := μ) (ℱ := ℱ) hb hX0 hXb hXm hl0 K ℓI v hv G (fun j _ => by
+    filter_upwards [hR1] with ω h hωG hℓ n
+    refine (h hωG n).trans ?_
+    rw [hℓ]
+    have e : v j / (2 * M1) = j + 3 := by simp only [v]; field_simp
+    rw [e]
+    have : (0 : ℝ) ≤ j * (0.15 / L) := by positivity
+    nlinarith)
+  have hB := count_good_all (μ := μ) (ℱ := ℱ) hI0 hI1 hIm one_pos hl0 G hcomp2
+  have hsub : (FrAll ℱ μ Xt Ind2 ℓI M1 l K)ᶜ ∩ G ⊆
+      ({ω | ℓI ω ≤ K ∧ ∃ n, Real.sqrt (2 * v (ℓI ω) * l) + 2 * (2 * M1) * l / 3 ≤
+        ∑ k ∈ range n, (Xt k ω - (μ[Xt k | ℱ k]) ω)} ∩ G) ∪
+      ({ω | ∃ n, 1 + (Real.sqrt (2 * 1 * l) + 2 * l / 3) ≤ ∑ k ∈ range n, Ind2 k ω} ∩ G) := by
+    rintro ω ⟨hω, hG⟩
+    simp only [FrAll, Set.mem_compl_iff, Set.mem_setOf_eq, not_and_or, Classical.not_imp,
+      not_forall, not_lt, not_le] at hω
+    rcases hω with ⟨hK, n, hS⟩ | ⟨n, hS⟩
+    · left
+      refine ⟨⟨hK, n, ?_⟩, hG⟩
+      have e : 2 * (2 * M1) * l / 3 = 4 / 3 * M1 * l := by ring
+      simp only [v]
+      rw [e]; exact hS
+    · right
+      exact ⟨⟨n, le_of_lt (lt_trans (count_slack hl) hS)⟩, hG⟩
+  calc μ ((FrAll ℱ μ Xt Ind2 ℓI M1 l K)ᶜ ∩ G)
+      ≤ ENNReal.ofReal ((K + 1) * Real.exp (-l)) + ENNReal.ofReal (Real.exp (-l)) :=
+        (measure_mono hsub).trans ((measure_union_le _ _).trans (add_le_add hA hB))
+    _ = ENNReal.ofReal ((K + 2) * Real.exp (-l)) := by
+        rw [← ENNReal.ofReal_add (by positivity) (by positivity)]
+        congr 1; ring
+
 end Queue6
 
 end

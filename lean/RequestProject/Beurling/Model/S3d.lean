@@ -4,16 +4,18 @@ public import RequestProject.Beurling.Model.S3dMertens
 public import RequestProject.Beurling.Model.RFLink
 public import RequestProject.Beurling.RankFull.RankinRows
 public import RequestProject.Beurling.Construction.HBSDerive
+public import RequestProject.Beurling.Mertens
 
 /-!
 # Lemma A.6 (S3)(d) for the construction (the sure top bound, (F3′))
 
 For the realised system `P(ω)` of the construction, on the event that (HBS) holds at every
 height (`SparsityInputs`, from `Construction.sparsityInputs_of_cluster`), the Euler product
-`Eu_rat · ∏_{decided n < u} (1 - 1/q_n)⁻¹` is at most `e^γ log V exp(2.21/Λ)`, where `V` bounds
+`Eu_rat · ∏_{decided n < u} (1 - 1/q_n)⁻¹` is at most `1.8 log V exp(2.21/Λ)`, where `V` bounds
 the values of the decided primes. The three groups of the proof of (F3′) (§5):
 
-* the rational primes `p ≤ y₀ = X₀/2`: Rosser–Schoenfeld (3.29) (`RS329`, named hypothesis);
+* the rational primes `p ≤ y₀ = X₀/2`: the Mertens product estimate `ZinfR_one_le`
+  (`∏_{p<X}(1 - 1/p)⁻¹ ≤ 1.8 log X`), in place of Rosser–Schoenfeld (3.29) and `e^γ`;
 * the realised primes in `(y₀, V]` (the rational primes in `(y₀, X₀)` and the decided jittered
   primes, which are `≥ 7X₀/8 > y₀`): Lemma 5.1(iv) for `P(ω)` (`sum_wE_le`);
 * (the third group of the paper, the primes decided before `s` with value above `s - H(s)`, is
@@ -115,36 +117,52 @@ theorem realised_sum_le (h : RealisedOK M (capH X₀) U) (hU : ∀ j, U j ∈ Se
 
 end Realised
 
-/-- **The rational primes `p ≤ y₀`** (Rosser–Schoenfeld (3.29)):
-`∑_{p < X₀, p ≤ y₀} w(p) ≤ γ + log log y₀ + 1/(2 log² y₀)` for `286 ≤ y₀`. -/
-theorem rat_low_le (hRS : RS329) (X₀ : ℕ) {y₀ : ℝ} (hy : 286 ≤ y₀) :
+/-- **The rational primes `p ≤ y₀`** (Mertens product estimate, `ZinfR_one_le`):
+`∑_{p < X₀, p ≤ y₀} w(p) ≤ log 1.8 + log log y₀ + 1/(y₀ log y₀)` for `log y₀ ≥ 10⁴`. -/
+theorem rat_low_le (X₀ : ℕ) {y₀ : ℝ} (hy0 : 0 < y₀) (hy : 10 ^ 4 ≤ Real.log y₀) :
     ∑ p ∈ X₀.primesBelow.filter (fun p : ℕ => ¬ y₀ < (p : ℝ)), wE p ≤
-      eulerMascheroniConstant + Real.log (Real.log y₀) + 1 / (2 * Real.log y₀ ^ 2) := by
-  have hy0 : 0 < y₀ := by linarith
-  have hL : 0 < Real.log y₀ := Real.log_pos (by linarith)
+      Real.log 1.8 + Real.log (Real.log y₀) + 1 / (y₀ * Real.log y₀) := by
+  have hL : 10 ^ 4 ≤ Real.log y₀ := hy
+  set X₁ : ℕ := ⌊y₀⌋₊ + 1 with hX₁
+  have hX₁y : y₀ ≤ X₁ := by rw [hX₁]; push_cast; exact (Nat.lt_floor_add_one y₀).le
+  have hX₁y' : (X₁ : ℝ) ≤ y₀ + 1 := by rw [hX₁]; push_cast; linarith [Nat.floor_le hy0.le]
+  have hlX : 10 ^ 4 ≤ Real.log X₁ := hL.trans (Real.log_le_log hy0 hX₁y)
   have hsub : ∑ p ∈ X₀.primesBelow.filter (fun p : ℕ => ¬ y₀ < (p : ℝ)), wE p ≤
-      ∑ p ∈ Nat.primesBelow (⌊y₀⌋₊ + 1), wE p := by
+      ∑ p ∈ X₁.primesBelow, wE p := by
     apply sum_le_sum_of_subset_of_nonneg
     · intro p hp
       rw [mem_filter, Nat.mem_primesBelow, not_lt] at hp
-      rw [Nat.mem_primesBelow]
+      rw [Nat.mem_primesBelow, hX₁]
       exact ⟨Nat.lt_succ_of_le (Nat.le_floor hp.2), hp.1.2⟩
     · intro p hp _
       exact wE_nonneg (by exact_mod_cast (Nat.mem_primesBelow.mp hp).2.one_lt)
   refine hsub.trans ?_
-  have hR := hRS y₀ hy
-  have e : ∏ p ∈ Nat.primesBelow (⌊y₀⌋₊ + 1), (1 - (p : ℝ)⁻¹)⁻¹ =
-      Real.exp (∑ p ∈ Nat.primesBelow (⌊y₀⌋₊ + 1), wE p) := by
+  have hR := Mertens.ZinfR_one_le hlX
+  have e : BaseFactor.ZinfR X₁ 1 = Real.exp (∑ p ∈ X₁.primesBelow, wE p) := by
+    unfold BaseFactor.ZinfR
     rw [Real.exp_sum]
     refine prod_congr rfl fun p hp => ?_
-    rw [exp_wE (by exact_mod_cast (Nat.mem_primesBelow.mp hp).2.one_lt)]
+    rw [exp_wE (by exact_mod_cast (Nat.mem_primesBelow.mp hp).2.one_lt), Real.rpow_neg_one]
   rw [e] at hR
-  have hpos : 0 < Real.exp eulerMascheroniConstant * Real.log y₀ *
-      (1 + 1 / (2 * Real.log y₀ ^ 2)) := by positivity
-  have h2 := (Real.le_log_iff_exp_le hpos).mpr hR
-  rw [Real.log_mul (by positivity) (by positivity), Real.log_mul (by positivity) hL.ne',
-    Real.log_exp] at h2
-  have h3 := Real.log_le_sub_one_of_pos (show 0 < 1 + 1 / (2 * Real.log y₀ ^ 2) by positivity)
+  have hLX0 : 0 < Real.log X₁ := by linarith
+  have h2 := (Real.le_log_iff_exp_le (by positivity)).mpr hR
+  rw [Real.log_mul (by norm_num) hLX0.ne'] at h2
+  -- `log log X₁ ≤ log log y₀ + 1/(y₀ log y₀)`
+  have hLy0 : 0 < Real.log y₀ := by linarith
+  have h3 : Real.log X₁ ≤ Real.log y₀ + 1 / y₀ := by
+    have h := Real.log_le_sub_one_of_pos (show 0 < (X₁ : ℝ) / y₀ by positivity)
+    rw [Real.log_div (by positivity) hy0.ne'] at h
+    have : (X₁ : ℝ) / y₀ - 1 ≤ 1 / y₀ := by
+      rw [div_sub_one hy0.ne', div_le_div_iff_of_pos_right hy0]; linarith
+    linarith
+  have h4 : Real.log (Real.log X₁) ≤ Real.log (Real.log y₀) + 1 / (y₀ * Real.log y₀) := by
+    have h := Real.log_le_sub_one_of_pos (show 0 < Real.log X₁ / Real.log y₀ by positivity)
+    rw [Real.log_div hLX0.ne' hLy0.ne'] at h
+    have : Real.log X₁ / Real.log y₀ - 1 ≤ 1 / (y₀ * Real.log y₀) := by
+      rw [div_sub_one hLy0.ne', show 1 / (y₀ * Real.log y₀) = (1 / y₀) / Real.log y₀ by
+        field_simp]
+      exact div_le_div_of_nonneg_right (by linarith) hLy0.le
+    linarith
   linarith
 
 /-- The numerical step: `1/(2L₀²) + 2.20/L₀ + 11.6/(y₀L₀) ≤ 2.21/Λ` for `y₀ = X₀/2`,
@@ -186,14 +204,14 @@ variable {X₀ : ℕ} {M : SlotModel X₀} {U : ℕ → ℝ}
 /-- **The deterministic sure top bound** ((F3′), second case; Lemma A.6 (S3)(d)): for a slot
 model with `RealisedOK`, the local Mertens bound for its realised system, and decided primes
 `k ∈ κ` with values `≤ V`,
-`tailSum · ∏_{k ∈ κ} (1 - 1/p_k)⁻¹ ≤ e^γ log V · exp(2.21/Λ)`. -/
+`tailSum · ∏_{k ∈ κ} (1 - 1/p_k)⁻¹ ≤ 1.8 log V · exp(2.21/Λ)`. -/
 theorem euler_top_le (h : RealisedOK M (capH X₀) U) (hU : ∀ j, U j ∈ Set.Icc (0 : ℝ) 1)
     (hX : 10 ^ 8 ≤ Real.log X₀) (hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊)
-    (hM : MertensUpper (realisedSystem M (capH X₀) U)) (hRS : RS329) {V : ℝ}
+    (hM : MertensUpper (realisedSystem M (capH X₀) U)) {V : ℝ}
     (hV : (X₀ : ℝ) ≤ V) (κ : Finset ℕ) (hκ : ∀ k ∈ κ, placedAt M k)
     (hκV : ∀ k ∈ κ, primeValueOf M (capH X₀) U k ≤ V) (Dmax : ℕ) :
     RankFull.Config.tailSum Dmax X₀ * Real.exp (∑ k ∈ κ, wE (primeValueOf M (capH X₀) U k)) ≤
-      Real.exp eulerMascheroniConstant * Real.log V * Real.exp (2.21 / Real.log X₀) := by
+      1.8 * Real.log V * Real.exp (2.21 / Real.log X₀) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := QueueMono.one_lt_of_logX hX0 hX
   have hXb : 10 ^ 8 ≤ (X₀ : ℝ) := by
@@ -205,7 +223,18 @@ theorem euler_top_le (h : RealisedOK M (capH X₀) U) (hU : ∀ j, U j ∈ Set.I
   have hy3 : 286 ≤ y₀ := by rw [hy₀]; linarith
   have hyV : y₀ ≤ V := by rw [hy₀]; linarith
   have hy78 : y₀ < 7 / 8 * X₀ := by rw [hy₀]; linarith
-  have hlow := rat_low_le hRS X₀ hy3
+  have hLy4 : 10 ^ 4 ≤ Real.log y₀ := by
+    rw [hy₀, Real.log_div (by linarith) (by norm_num)]
+    have := Real.log_two_lt_d9; linarith
+  have hlow := rat_low_le X₀ (by linarith) hLy4
+  have hyL : 1 / (y₀ * Real.log y₀) ≤ 1 / (2 * Real.log y₀ ^ 2) := by
+    have hl0 : 0 < Real.log y₀ := by linarith
+    have hly : 2 * Real.log y₀ ≤ y₀ := by
+      have h := Real.log_le_sub_one_of_pos (show 0 < y₀ / 2 by linarith)
+      rw [Real.log_div (by linarith) (by norm_num)] at h
+      have := Real.log_two_lt_d9; linarith
+    apply one_div_le_one_div_of_le (by positivity)
+    rw [sq, ← mul_assoc]; exact mul_le_mul_of_nonneg_right hly hl0.le
   have hreal := realised_sum_le h hU hX hTlow hy78 hV κ hκ hκV
   have hhigh := sum_wE_le hM (by linarith : (3 : ℝ) ≤ y₀) hyV
   have hsplit := sum_filter_add_sum_filter_not X₀.primesBelow (fun p : ℕ => y₀ < (p : ℝ))
@@ -218,7 +247,7 @@ theorem euler_top_le (h : RealisedOK M (capH X₀) U) (hU : ∀ j, U j ∈ Set.I
   have hnum := top_numeric hX0 hX
   rw [← hy₀] at hnum
   have hE : ∑ p ∈ X₀.primesBelow, wE p + ∑ k ∈ κ, wE (primeValueOf M (capH X₀) U k) ≤
-      eulerMascheroniConstant + Real.log (Real.log V) + 2.21 / Real.log X₀ := by
+      Real.log 1.8 + Real.log (Real.log V) + 2.21 / Real.log X₀ := by
     linarith
   calc RankFull.Config.tailSum Dmax X₀ *
         Real.exp (∑ k ∈ κ, wE (primeValueOf M (capH X₀) U k))
@@ -227,10 +256,10 @@ theorem euler_top_le (h : RealisedOK M (capH X₀) U) (hU : ∀ j, U j ∈ Set.I
         mul_le_mul_of_nonneg_right hT (Real.exp_pos _).le
     _ = Real.exp (∑ p ∈ X₀.primesBelow, wE p + ∑ k ∈ κ, wE (primeValueOf M (capH X₀) U k)) :=
         (Real.exp_add _ _).symm
-    _ ≤ Real.exp (eulerMascheroniConstant + Real.log (Real.log V) + 2.21 / Real.log X₀) :=
+    _ ≤ Real.exp (Real.log 1.8 + Real.log (Real.log V) + 2.21 / Real.log X₀) :=
         Real.exp_le_exp.mpr hE
-    _ = Real.exp eulerMascheroniConstant * Real.log V * Real.exp (2.21 / Real.log X₀) := by
-        rw [Real.exp_add, Real.exp_add, Real.exp_log hLV]
+    _ = 1.8 * Real.log V * Real.exp (2.21 / Real.log X₀) := by
+        rw [Real.exp_add, Real.exp_add, Real.exp_log hLV, Real.exp_log (by norm_num)]
 
 end Top
 
@@ -305,13 +334,13 @@ variable (hc : Cond θ X₀) (hev : Even X₀)
 open Classical in
 /-- **Lemma A.6 (S3)(d) for the construction** (the sure top bound, (F3′)): on `SparsEv`, for
 every slot index `u ≤ s_max`,
-`tailSum · ∏_{decided n < u} (1 - 1/q_n)⁻¹ ≤ e^γ log V(s_max) · exp(2.21/Λ)`. -/
-theorem s3d_sure (hRS : RS329) {ω : JitterΩ} (hω : ω ∈ SparsEv θ X₀) (N Dmax smax : ℕ)
+`tailSum · ∏_{decided n < u} (1 - 1/q_n)⁻¹ ≤ 1.8 log V(s_max) · exp(2.21/Λ)`. -/
+theorem s3d_sure {ω : JitterΩ} (hω : ω ∈ SparsEv θ X₀) (N Dmax smax : ℕ)
     {u : ℕ} (hu : u ≤ smax) :
     tailSum Dmax X₀ *
       ∏ n ∈ Finset.univ.filter (fun n : Fin N => ω ∈ (constructionLaw2 hc hev).A n ∧
         (n : ℕ) < u), (1 - ((constructionLaw2 hc hev).q n ω)⁻¹)⁻¹ ≤
-      Real.exp eulerMascheroniConstant * Real.log (vTop X₀ smax) *
+      1.8 * Real.log (vTop X₀ smax) *
         Real.exp (2.21 / Real.log X₀) := by
   set Fl := Finset.univ.filter (fun n : Fin N => ω ∈ (constructionLaw2 hc hev).A n ∧
     (n : ℕ) < u) with hFl
@@ -339,7 +368,7 @@ theorem s3d_sure (hRS : RS329) {ω : JitterΩ} (hω : ω ∈ SparsEv θ X₀) (N
     unfold vTop; have : (0 : ℝ) ≤ smax := Nat.cast_nonneg _
     have : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
     linarith
-  have hmain := euler_top_le hok hU hc.hX hTlow hω hRS hV κ hκP hκV Dmax
+  have hmain := euler_top_le hok hU hc.hX hTlow hω hV κ hκP hκV Dmax
   have e : ∏ n ∈ Fl, (1 - ((constructionLaw2 hc hev).q n ω)⁻¹)⁻¹ =
       Real.exp (∑ k ∈ κ, wE (primeValueOf M (capH X₀) (Ucl ω) k)) := by
     rw [hκ, sum_map, Real.exp_sum]
@@ -415,25 +444,25 @@ lemma s3dEv_anti {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {θE : ℝ�
 variable {θ : ℝ} {X₀ : ℕ} (hc : Cond θ X₀) (hev : Even X₀)
 
 /-- On `SparsEv`, the (S3)(d) event holds at every stage, with
-`A ≥ e^γ log V(s_max) exp(2.21/Λ)`. -/
-lemma mem_s3dEv (hRS : RS329) {ω : JitterΩ} (hω : ω ∈ SparsEv θ X₀) (N Dmax smax : ℕ) {A : ℝ}
-    (hA : Real.exp eulerMascheroniConstant * Real.log (vTop X₀ smax) *
+`A ≥ 1.8 log V(s_max) exp(2.21/Λ)`. -/
+lemma mem_s3dEv {ω : JitterΩ} (hω : ω ∈ SparsEv θ X₀) (N Dmax smax : ℕ) {A : ℝ}
+    (hA : 1.8 * Real.log (vTop X₀ smax) *
       Real.exp (2.21 / Real.log X₀) ≤ A) (u : ℕ) :
     ω ∈ s3dEv (constructionLaw2 hc hev) N Dmax X₀ smax A u :=
-  fun _ _ hu' => (s3d_sure hc hev hRS hω N Dmax smax hu').trans hA
+  fun _ _ hu' => (s3d_sure hc hev hω N Dmax smax hu').trans hA
 
 open Classical in
 /-- **The skeleton bound for the construction, with (S3)(d) proved** (Lemma A.5 + Theorem A.10,
 `skeletonBound_jitter`): as `skeletonBound_construction`, with the named hypothesis `S3dHyp`
-replaced by Rosser–Schoenfeld (3.29) (`RS329`), `Good ⊆ SparsEv` (Lemma 5.1(iv) for `P(ω)`)
-and `A ≥ e^γ log V(s_max) exp(2.21/Λ)`. The nested good events are
+replaced by `Good ⊆ SparsEv` (Lemma 5.1(iv) for `P(ω)`)
+and `A ≥ 1.8 log V(s_max) exp(2.21/Λ)`. The nested good events are
 `goodLt u ∩ s3dEv u`. -/
 theorem skeletonBound_construction_S3 {N : ℕ} {Good : Set JitterΩ} (hGood : MeasurableSet Good)
     (smax : ℕ) (hGoodG : Good ⊆ goodLt θ X₀ smax) (hGoodS : Good ⊆ SparsEv θ X₀) {r₀ : ℕ}
     (hr0 : 1 ≤ r₀) {Jw : Set ℝ} (hJw : MeasurableSet Jw) {a δ : ℝ}
     (hJ : Jw ⊆ Set.Ico a (a + δ)) (hδ : 0 ≤ δ) {V : ℝ} (hJV : Jw ⊆ Set.Iic V)
-    (hsm : ⌊24 * V / 7⌋₊ ≤ smax) (D Dmax : ℕ) {A Eu : ℝ} (hEuA : Eu ≤ A) (hRS : RS329)
-    (hAtop : Real.exp eulerMascheroniConstant * Real.log (vTop X₀ smax) *
+    (hsm : ⌊24 * V / 7⌋₊ ≤ smax) (D Dmax : ℕ) {A Eu : ℝ} (hEuA : Eu ≤ A)
+    (hAtop : 1.8 * Real.log (vTop X₀ smax) *
       Real.exp (2.21 / Real.log X₀) ≤ A)
     (hmulti : MultiRunSkeletonBound jitterMeasure Good r₀ (1 + 1 / Real.log X₀) δ A Eu
       (fun j => tauSlot (capH X₀) X₀ j)
@@ -465,7 +494,7 @@ theorem skeletonBound_construction_S3 {N : ℕ} {Good : Set JitterΩ} (hGood : M
   have hGa : ∀ u u', u ≤ u' → G u' ⊆ G u := fun u u' h =>
     Set.inter_subset_inter (good_anti h) (s3dEv_anti J N Dmax X₀ smax A h)
   have hGoodG' : Good ⊆ G smax := fun ω hω =>
-    ⟨hGoodG hω, mem_s3dEv hc hev hRS (hGoodS hω) N Dmax smax hAtop smax⟩
+    ⟨hGoodG hω, mem_s3dEv hc hev (hGoodS hω) N Dmax smax hAtop smax⟩
   have hS3 : ∀ ω, ∀ u ≤ smax, ω ∈ G u → tailSum Dmax X₀ *
       ∏ n ∈ univ.filter (fun n : Fin N => ω ∈ J.A n ∧ (n : ℕ) < u), (1 - (J.q n ω)⁻¹)⁻¹ ≤ A :=
     fun ω u hu hω => hω.2 u le_rfl hu

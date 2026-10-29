@@ -15,8 +15,8 @@ local Mertens bound (Lemma 5.1(iv)) holds at every height,
 This is the second group of the proof of (F3′) (§5, "the realised primes in `(y₀, s - H(s)]`"),
 with `1/y₀` replaced by the dyadic bound for the second-order terms.
 
-The rational primes enter through Rosser–Schoenfeld [RS62, Thm. 8, (3.29)], which is not
-formalised here and is isolated as the named hypothesis `RS329`.
+The rational primes enter through the Mertens product estimate `Mertens.ZinfR_one_le`
+(`∏_{p<X} (1 - 1/p)⁻¹ ≤ 1.8 log X` for `log X ≥ 10⁴`), not through Rosser–Schoenfeld.
 -/
 
 @[expose] public section
@@ -57,13 +57,6 @@ lemma wE_le {v : ℝ} (hv : 2 ≤ v) : wE v ≤ v⁻¹ + 2 * v⁻¹ ^ 2 := by
     rw [inv_le_iff_one_le_mul₀ hpos]
     nlinarith
   linarith
-
-/-- **Rosser–Schoenfeld [RS62, Theorem 8, (3.29)]** (named hypothesis; not formalised):
-`∏_{p ≤ x} (1 - 1/p)⁻¹ < e^γ log x (1 + 1/(2 log² x))` for `x ≥ 286`. Used in (F3′) and in
-Lemma A.6 (S3)(d) for the rational primes `p ≤ y₀`. -/
-def RS329 : Prop :=
-  ∀ x : ℝ, 286 ≤ x → ∏ p ∈ Nat.primesBelow (⌊x⌋₊ + 1), (1 - (p : ℝ)⁻¹)⁻¹ ≤
-    Real.exp eulerMascheroniConstant * Real.log x * (1 + 1 / (2 * Real.log x ^ 2))
 
 /-- The local Mertens bound (Lemma 5.1(iv)), upper half, at every height. -/
 def MertensUpper (P : BeurlingSystem) : Prop :=

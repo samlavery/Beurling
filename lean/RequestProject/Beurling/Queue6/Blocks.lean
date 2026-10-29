@@ -21,7 +21,8 @@ bound and the window data are then proved together by strong induction over the 
 * `Queue6.WindowFacts` : the facts above for one window, with `ℓ_jit(W)` given;
 * `Queue6.SlotInputs` : the frozen parameters `M₁, L, Λ` at slot `j` (with `L² ≤ M₁`,
   `B(x) ≤ B_j`), the continuous-slot counts `ℓ_jit((i, j])` (steps of `0` or `1` as `i`
-  decreases, `0` at `i = j`), and `WindowFacts` for every window ending at `j`;
+  decreases, `0` at `i = j`), and `WindowFacts` for every window ending at `j` with
+  `ℓ_jit ≤ K₀` (the windows of `𝒲_x`);
 * `Queue6.slotData_of_inputs` : `SlotInputs` at `j` gives the window data of Theorem 6.6(ii) at
   `j`: all windows short, or a last full block `(k', j]` with `ℓ_jit = K₀ := ⌊48 M₁ L³/c'²⌋`
   followed by short windows (the choice of `k'` in the Lindley step);
@@ -55,7 +56,7 @@ def SlotInputs (A : ℕ → ℤ) (Bj : ℝ) (j : ℕ) : Prop :=
   ∃ (M1 L Λ : ℝ) (ℓW : ℕ → ℕ), 10 ^ 8 ≤ L ∧ 10 ^ 8 ≤ Λ ∧ L ^ 2 ≤ M1 ∧
     queueBound75 M1 L Λ 0.15 3 ≤ Bj ∧ ℓW j = 0 ∧
     (∀ i < j, ℓW (i + 1) ≤ ℓW i ∧ ℓW i ≤ ℓW (i + 1) + 1) ∧
-    ∀ i ≤ j, WindowFacts A j i M1 L Λ (ℓW i)
+    ∀ i ≤ j, ℓW i ≤ blockK M1 L → WindowFacts A j i M1 L Λ (ℓW i)
 
 /-- The window data of Theorem 6.6(ii) at slot `j` (the body of `SlotModel.QueueWindowData`). -/
 def SlotData (A : ℕ → ℤ) (Bj : ℝ) (j : ℕ) : Prop :=
@@ -116,7 +117,8 @@ theorem slotData_of_inputs {A : ℕ → ℤ} {Bj : ℝ} {j : ℕ} (h : SlotInput
   by_cases hsmall : ℓW 0 < K
   · left
     intro i hi
-    exact short_of_facts hL hM hB ((hanti 0 i (Nat.zero_le _) hi).trans hsmall.le) (hfacts i hi)
+    have hℓ := (hanti 0 i (Nat.zero_le _) hi).trans hsmall.le
+    exact short_of_facts hL hM hB hℓ (hfacts i hi hℓ)
   · right
     push_neg at hsmall
     -- the set of `i ≤ j` with `ℓW i ≥ K` contains `0`; take its largest element `k'`
@@ -140,8 +142,9 @@ theorem slotData_of_inputs {A : ℕ → ℤ} {Bj : ℝ} {j : ℕ} (h : SlotInput
         by_contra hc; push_neg at hc
         have := hkmax (k + 1) (by omega) hc; omega
       omega
-    refine ⟨k, hkj, full_of_facts hL hΛ hM hkeq (hfacts k hkj.le), fun i' h1 h2 =>
-      short_of_facts hL hM hB ((hanti k i' h1 h2).trans hkeq.le) (hfacts i' h2)⟩
+    refine ⟨k, hkj, full_of_facts hL hΛ hM hkeq (hfacts k hkj.le hkeq.le), fun i' h1 h2 =>
+      short_of_facts hL hM hB ((hanti k i' h1 h2).trans hkeq.le)
+        (hfacts i' h2 ((hanti k i' h1 h2).trans hkeq.le))⟩
 
 /-- The queue bound at slot `j` from the window data at `j` and the bounds at earlier slots. -/
 lemma queue_le_of_slotData {A : ℕ → ℤ} {B : ℕ → ℝ} (hB : Monotone B) {j : ℕ}

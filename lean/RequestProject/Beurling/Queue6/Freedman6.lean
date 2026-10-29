@@ -253,6 +253,97 @@ theorem count_good {X : ℕ → Ω → ℝ} (hX0 : ∀ k ω, 0 ≤ X k ω) (hX1 
   simp only [mul_one]
   linarith
 
+section AllTimes
+
+variable {Y : ℕ → Ω → ℝ} {b : ℝ}
+
+/-- `freedman_good` for all times: if a.s. on `G` every partial compensator is at most `v/b`, the
+event "some partial centred sum is at least `√(2vλ) + 2bλ/3`" meets `G` with probability at most
+`e^{-λ}`. -/
+theorem freedman_good_all (hb : 0 < b) (hY0 : ∀ k ω, 0 ≤ Y k ω) (hYb : ∀ k ω, Y k ω ≤ b)
+    (hmeas : ∀ k, StronglyMeasurable[ℱ (k + 1)] (Y k)) {v l : ℝ} (hv : 0 < v) (hl : 0 < l)
+    (G : Set Ω) (hG : ∀ᵐ ω ∂μ, ω ∈ G → ∀ n, ∑ k ∈ range n, (μ[Y k | ℱ k]) ω ≤ v / b) :
+    μ ({ω | ∃ n, Real.sqrt (2 * v * l) + 2 * b * l / 3 ≤
+        ∑ k ∈ range n, (Y k ω - (μ[Y k | ℱ k]) ω)} ∩ G) ≤ ENNReal.ofReal (Real.exp (-l)) := by
+  set a := Real.sqrt (2 * v * l) + 2 * b * l / 3 with ha_def
+  have ha : 0 < a := by positivity
+  set ξ : ℕ → Ω → ℝ := fun k ω => Y k ω - clipB ℱ μ b Y k ω
+  set E1 := {ω | ∃ n, a ≤ S ξ n ω ∧ V ℱ μ ξ n ω ≤ v}
+  have hc := ae_all_iff.mpr fun k => clipB_ae_eq (μ := μ) hY0 hYb hmeas k
+  have hvar := ae_all_iff.mpr fun k => condVar_le (μ := μ) hb.le hY0 hYb hmeas k
+  have hsub : ({ω | ∃ n, a ≤ ∑ k ∈ range n, (Y k ω - (μ[Y k | ℱ k]) ω)} ∩ G : Set Ω) ≤ᵐ[μ]
+      (E1 : Set Ω) := by
+    filter_upwards [hc, hvar, hG] with ω hcω hvω hGω
+    rintro ⟨⟨n, hS⟩, hωG⟩
+    change ω ∈ E1
+    have hsum := hGω hωG n
+    refine ⟨n, ?_, ?_⟩
+    · have : ∑ k ∈ range n, (Y k ω - (μ[Y k | ℱ k]) ω) = S ξ n ω := by
+        simp only [S, ξ]; exact sum_congr rfl fun k _ => by rw [hcω k]
+      rw [← this]; exact hS
+    · unfold V
+      calc ∑ k ∈ range n, (μ[fun ω => ξ k ω ^ 2 | ℱ k]) ω
+          ≤ ∑ k ∈ range n, b * (μ[Y k | ℱ k]) ω :=
+            sum_le_sum fun k _ => by rw [← hcω k]; exact hvω k
+        _ = b * ∑ k ∈ range n, (μ[Y k | ℱ k]) ω := by rw [mul_sum]
+        _ ≤ b * (v / b) := mul_le_mul_of_nonneg_left hsum hb.le
+        _ = v := by field_simp
+  have hF := freedman_iUnion (μ := μ) (ℱ := ℱ) (martDiff_bounded (μ := μ) hb.le hY0 hYb hmeas)
+    hb.le ha hv
+  have hF' : μ.real E1 ≤ Real.exp (-l) :=
+    hF.trans (Real.exp_le_exp.mpr (neg_le_neg (lam_le_b hv hl hb.le)))
+  calc μ ({ω | ∃ n, a ≤ ∑ k ∈ range n, (Y k ω - (μ[Y k | ℱ k]) ω)} ∩ G) ≤ μ E1 :=
+        measure_mono_ae hsub
+    _ = ENNReal.ofReal (μ.real E1) := (ofReal_measureReal (measure_ne_top _ _)).symm
+    _ ≤ ENNReal.ofReal (Real.exp (-l)) := ENNReal.ofReal_le_ofReal hF'
+
+/-- Peeling over `ℓ_jit(I)`, all times. -/
+theorem freedman_peel_all (hb : 0 < b) (hY0 : ∀ k ω, 0 ≤ Y k ω) (hYb : ∀ k ω, Y k ω ≤ b)
+    (hmeas : ∀ k, StronglyMeasurable[ℱ (k + 1)] (Y k)) {l : ℝ} (hl : 0 < l) (K : ℕ)
+    (ℓ : Ω → ℕ) (v : ℕ → ℝ) (hv : ∀ j, 0 < v j) (G : Set Ω)
+    (hG : ∀ j ≤ K, ∀ᵐ ω ∂μ, ω ∈ G → ℓ ω = j →
+      ∀ n, ∑ k ∈ range n, (μ[Y k | ℱ k]) ω ≤ v j / b) :
+    μ ({ω | ℓ ω ≤ K ∧ ∃ n, Real.sqrt (2 * v (ℓ ω) * l) + 2 * b * l / 3 ≤
+        ∑ k ∈ range n, (Y k ω - (μ[Y k | ℱ k]) ω)} ∩ G) ≤
+      ENNReal.ofReal ((K + 1) * Real.exp (-l)) := by
+  have hsub : {ω | ℓ ω ≤ K ∧ ∃ n, Real.sqrt (2 * v (ℓ ω) * l) + 2 * b * l / 3 ≤
+        ∑ k ∈ range n, (Y k ω - (μ[Y k | ℱ k]) ω)} ∩ G ⊆
+      ⋃ j ∈ range (K + 1), ({ω | ∃ n, Real.sqrt (2 * v j * l) + 2 * b * l / 3 ≤
+        ∑ k ∈ range n, (Y k ω - (μ[Y k | ℱ k]) ω)} ∩ (G ∩ {ω | ℓ ω = j})) := by
+    rintro ω ⟨⟨hK, hS⟩, hG'⟩
+    exact Set.mem_biUnion (mem_range.mpr (Nat.lt_succ_of_le hK)) ⟨hS, hG', rfl⟩
+  refine (measure_mono hsub).trans ((measure_biUnion_finset_le _ _).trans ?_)
+  calc ∑ j ∈ range (K + 1), μ ({ω | ∃ n, Real.sqrt (2 * v j * l) + 2 * b * l / 3 ≤
+        ∑ k ∈ range n, (Y k ω - (μ[Y k | ℱ k]) ω)} ∩ (G ∩ {ω | ℓ ω = j}))
+      ≤ ∑ _j ∈ range (K + 1), ENNReal.ofReal (Real.exp (-l)) := by
+        refine sum_le_sum fun j hj => freedman_good_all hb hY0 hYb hmeas (hv j) hl _ ?_
+        have hj' : j ≤ K := Nat.lt_succ_iff.mp (mem_range.mp hj)
+        filter_upwards [hG j hj'] with ω h hω
+        exact h hω.1 hω.2
+    _ = ENNReal.ofReal ((K + 1) * Real.exp (-l)) := by
+        rw [sum_const, card_range, nsmul_eq_mul, ENNReal.ofReal_mul (by positivity)]
+        norm_cast
+
+end AllTimes
+
+/-- Part (b) of `Fr(I)`, all times. -/
+theorem count_good_all {X : ℕ → Ω → ℝ} (hX0 : ∀ k ω, 0 ≤ X k ω) (hX1 : ∀ k ω, X k ω ≤ 1)
+    (hmeas : ∀ k, StronglyMeasurable[ℱ (k + 1)] (X k)) {μbar l : ℝ} (hμ : 0 < μbar)
+    (hl : 0 < l) (G : Set Ω)
+    (hG : ∀ᵐ ω ∂μ, ω ∈ G → ∀ n, ∑ k ∈ range n, (μ[X k | ℱ k]) ω ≤ μbar) :
+    μ ({ω | ∃ n, μbar + (Real.sqrt (2 * μbar * l) + 2 * l / 3) ≤ ∑ k ∈ range n, X k ω} ∩ G) ≤
+      ENNReal.ofReal (Real.exp (-l)) := by
+  have h := freedman_good_all (μ := μ) (ℱ := ℱ) (b := 1) one_pos hX0 hX1 hmeas hμ hl G
+    (by simpa using hG)
+  refine le_trans (measure_mono_ae ?_) h
+  filter_upwards [hG] with ω hω
+  rintro ⟨⟨n, hS⟩, hωG⟩
+  refine ⟨⟨n, ?_⟩, hωG⟩
+  have := hω hωG n
+  rw [sum_sub_distrib]
+  simp only [mul_one]
+  linarith
+
 end Queue6
 
 end

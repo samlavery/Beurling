@@ -181,8 +181,11 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     - `SlotHyp (capH X₀) X₀` is proved outright (`slotHyp_capH`, including that H(v)/v is antitone).
     - (S3)(d) is proved (`s3d_sure`, `skeletonBound_construction_S3`) on the event where Lemma 5.1(iv) holds for the
       realised system. That event follows from the Part I conclusions and the cluster event (`sparsEv_of_cluster`).
-    - The one new named input is `RS329`: the Rosser–Schoenfeld bound (3.29) for ∏_{p≤x}(1 − 1/p)^{−1}, which the
-      paper cites.
+    - Round 6 removed the Rosser–Schoenfeld input. Lean uses the Mertens product bound ∏_{p<X}(1 − 1/p)^{−1} ≤ 1.8 log X
+      (`Mertens.ZinfR_one_le`) in place of the paper's citation of [RS62, (3.29)].
+      - Since e^γ < 1.8, A_top ≤ A_R·e^{2.2/Λ} still holds, so no paper constant changes.
+      - Round 6 also proved T₀ monotone for the construction (`T0_mono_designed`). So Theorem 5.24 holds for the constructed
+        system with only (84) as a standing hypothesis (`theorem_5_24_data`).
 - **Added in this repository: the local prime number theorem, §5.7** (`Beurling/LocalPNT/`, 45 files, 13.4k lines).
   - Theorem 5.24, parts (i)–(iii), with the paper's constants (`LPHyp.theorem_5_24`), and on Good(<z) up to the horizon
     from the lag bound (`theorem_5_24_of_lag`).
@@ -191,6 +194,22 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
   - (LP-a) and (LP-c).
   - The only remaining input on this route is the monotonicity of T₀, i.e. Lemma 3.3.
   - The formalization found the slip logged as correction #104.
+- **Added in this repository: Theorem 6.6, Table 1 and the event family** (`Beurling/Queue6/`, 19 files, 5.6k lines).
+  `Queue6.corollary_2_2_of_T : ShortIntervalPNT → Theorem21InputsT → ¬ QuestionQ`.
+  - Proved for the construction:
+    - Lemma 3.9 with the sandwich, Corollary 6.12, and the adaptedness of the window counts;
+    - Theorem 6.6(i), via Freedman on Good(<b), and Theorem 6.6(ii), giving the queue window data and `ClusterUpTo`
+      on the good event;
+    - Lemma 6.1;
+    - Proposition 6.11 at every z ≥ X₀;
+    - the full event family, with the queue constraints folded in, and `TableBudget`.
+  - `Theorem21InputsT` (structure `QueueInputs`) contains only named statements from other parts of the paper:
+    - the landing compensator bound (F1)–(F2);
+    - the §5 events E3/E3′ and their budget (Lemma 5.22);
+    - Corollary 5.40 (R1′, and Comp⁽²⁾ ≤ s₂|I| ≤ 1);
+    - Lemma 3.4 on the good event (T(x) ≤ 3x);
+    - Appendix A's `MultiRunSkeletonBound`, `CoverSkeletonBound` and (S3)(d);
+    - Proposition 6.11 at the lowest height z = X₀/2.
 - **Appendix B.** Nearly all the certificates: bs-cert (region Z2 and the auxiliary checks), finite-n, x0-band, the
   constants, the bounds on φ, and rankin_R. Dickman's function is constructed and its facts (R1)–(R4) are proved.
 
