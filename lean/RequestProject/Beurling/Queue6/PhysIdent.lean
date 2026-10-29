@@ -138,7 +138,7 @@ variable {M : SlotModel X₀} {U : ℕ → ℝ}
 
 /-- **A composite with a jittered prime has value `≥ 7X₀/4`** (if all jittered primes are
 `≥ 7X₀/8 ≥ 2`): it is `q^a` with `a ≥ 2`, or `q` times a nontrivial cofactor (`≥ 2`). -/
-lemma val_ge_of_jit (hok : RealisedOK M (capH X₀) U)
+lemma val_ge_of_jit
     (hjit : ∀ k : {k // placedAt M k}, 7 / 8 * (X₀ : ℝ) ≤ realisedVal M (capH X₀) U (Sum.inr k))
     (hX2 : 2 ≤ 7 / 8 * (X₀ : ℝ)) {e : RealisedIdx M →₀ ℕ} (h2 : 2 ≤ e.sum fun _ n => n)
     (hr : ¬ RatOnly e) : 7 / 4 * (X₀ : ℝ) ≤ idxVal M (capH X₀) U e := by
@@ -223,7 +223,7 @@ lemma cjit_low
     ext e
     simp only [mem_empty_iff_false, iff_false]
     rintro ⟨⟨h2, -, hlt⟩, hr, -⟩
-    have := val_ge_of_jit F.win.ok hjit hX2 h2 hr
+    have := val_ge_of_jit hjit hX2 h2 hr
     linarith
   rw [this, Set.ncard_empty]; simp
 

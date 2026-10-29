@@ -171,7 +171,7 @@ set_option maxHeartbeats 3200000 in
 lies in `(P, P + s + 3/4]` with `z - H(z) ≤ P ≤ z + H(z)/2`, then `|σ(A) - ∫_A m| ≤ ε_z`. -/
 theorem set_margin {ω : JitterΩ} {t : ℕ} (hG : ω ∈ G0 θ X₀ (e3Family θ X₀) t)
     (hN : ω ∈ NiceEv θ X₀) (hE : E3Good θ X₀ ω t) {z s P : ℝ} {A : Set ℝ}
-    (hs0 : 0 ≤ s) (hs : s ≤ 1.01 * Hc X₀ z) (ht : max z X₀ + 2 * Hc X₀ z ≤ t)
+    (hs : s ≤ 1.01 * Hc X₀ z) (ht : max z X₀ + 2 * Hc X₀ z ≤ t)
     (hP1 : z - Hc X₀ z ≤ P) (hP2 : P ≤ z + Hc X₀ z / 2) (hAm : MeasurableSet A)
     (hAo : (A ∩ Ici (X₀ : ℝ)).OrdConnected)
     (hAb : ∀ x ∈ A, (X₀ : ℝ) ≤ x → P < x ∧ x ≤ P + s + 3 / 4) :
@@ -448,7 +448,7 @@ theorem hS2Epm_R : ∀ᵐ ω ∂jitterMeasure, ∀ t : ℕ, ω ∈ G0 θ X₀ (e
   · have hb := Aplus_bounds hc hs0 hs
     rw [sigmaS_eq hc hN (fun x hx hxX => hnear _ le_rfl x hxX (by
       have := (hb x hx hxX).2; linarith))]
-    refine set_margin hc hev hG hN hE hs0 hs ht (P := z + Hc X₀ z / 2 - 1 / 8) (by linarith)
+    refine set_margin hc hev hG hN hE hs ht (P := z + Hc X₀ z / 2 - 1 / 8) (by linarith)
       (by linarith) ((measurableSet_lt measurable_const hfm).inter
         (measurableSet_le hfm measurable_const)) ?_ hb
     refine ⟨fun x hx y hy w hw => ⟨⟨?_, ?_⟩, hx.2.trans hw.1⟩⟩
@@ -457,7 +457,7 @@ theorem hS2Epm_R : ∀ᵐ ω ∂jitterMeasure, ∀ t : ℕ, ω ∈ G0 θ X₀ (e
   · have hb := Aminus_bounds hc hs0 hs
     rw [sigmaS_eq hc hN (fun x hx hxX => hnear (z - Hc X₀ z / 2 - 5 / 8) (by linarith) x hxX (by
       have := (hb x hx hxX).2; linarith))]
-    refine set_margin hc hev hG hN hE hs0 hs ht (P := z - Hc X₀ z / 2 - 5 / 8) (by linarith)
+    refine set_margin hc hev hG hN hE hs ht (P := z - Hc X₀ z / 2 - 5 / 8) (by linarith)
       (by linarith) ((measurableSet_lt measurable_const hfp).inter
         (measurableSet_le hfp measurable_const)) ?_ hb
     refine ⟨fun x hx y hy w hw => ⟨⟨?_, ?_⟩, hx.2.trans hw.1⟩⟩

@@ -333,8 +333,8 @@ theorem e3win_one {m : ℕ} {a b : ℤ} (hW : AdmW X₀ m a b) :
   obtain ⟨hX3, N1, hN1⟩ := hcomp hcl
   -- the good set of Lemma 5.22 and the event `E3_W`
   have hGE : ω ∈ GoodE1 θ X₀ b.toNat :=
-    ⟨QC_anti (okQ θ X₀) (tq θ X₀) hbt.le hG.1, fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n)
-      (lt_trans hn hbt)⟩
+    ⟨QC_anti (okQ θ X₀) (tq θ X₀) hbt.le hG.1, fun n hn =>
+      mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) (lt_trans hn hbt)⟩
   have hE3 : ω ∈ E3ev θ X₀ m a b :=
     mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inr (Sum.inr (Sum.inr (Sum.inr (m, a, b))))) hbt
   have hE3' := hE3 hW
