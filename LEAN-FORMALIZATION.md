@@ -375,6 +375,14 @@ Notes:
   unprovable near b (found by the Queue6 agent). The consumers read F_r only at heights ≤ 0.6x, consistent with
   correction #109. Nu522 now asks only for X₀⁻ ≤ r with r + 2H(r) ≤ b; below X₀⁻ the Model proves ν = 0 (`nu_low`).
 
+- **Unsatisfiable Step 4 inputs (found 2026-10-29).** Two Lean inputs of Prop 5.38 could not hold.
+  - `RestMarginH.h4` summed e/w over all cofactors. The κ filter of the paper's S(t) (04g, Step 3) had been dropped in
+    `step3_term`, so the sum grows with b. Restated in κ form (d3fc08b).
+  - `RestMarginR.ho` bounded the oscillation `oVc` of T′ = T_c + j₀·1[X₀,∞), which includes the jump at X₀, so
+    log X₀·oVc(X₀) ≥ 0.98. The structure is provably empty (`BModel.RML15.restMarginR_isEmpty`). In the paper o_t is
+    the oscillation of T_c alone (04a l.83), and the jump enters as a separate base term (04g Step 3; V_{X₀} in Step 5).
+    Being fixed by moving the jump into the chain as a source term.
+
 ## Status
 
 - **The main theorem is not formally verified.** It is proved in Lean only from `Theorem21InputsS`.
