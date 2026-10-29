@@ -172,13 +172,13 @@ The main theorem is not formally verified. A Lean 4 formalization in [`lean/`](l
 [Aristotle](https://aristotle.harmonic.fun) (Harmonic) and continued here, proves Corollary 2.2 (the answer to Question Q is
 negative) from two explicit hypotheses, with no `sorry`:
 - the short-interval prime number theorem (84) of Heath-Brown;
-- `Theorem21InputsV`.
+- `Theorem21InputsW`.
 
-`Theorem21InputsV` fixes the construction, which is now built from the jitters in Lean, together with its event family and
+`Theorem21InputsW` fixes the construction, which is now built from the jitters in Lean, together with its event family and
 probability budget. It asks only for three statements of the paper about that construction:
-- Lemma 5.22 (the §5.6 noise events);
+- two variance bounds in the proof of Lemma 5.22 (the §5.6 noise events);
 - Corollary 5.40 (the drift R1′);
-- the Cover Bound, Proposition 6.19.
+- the Cover Bound, Proposition 6.19 (now proved in Lean, not yet connected).
 
 - **Proved and used by the top-level theorem:**
   - Sections 3 and 4, including the construction itself as a causal fixed point, Lemma 3.3 and Lemma 4.8(ii);
@@ -189,7 +189,7 @@ probability budget. It asks only for three statements of the paper about that co
   - nearly all the certificates of Appendix B.
 - **Proved but not yet used by the top-level theorem:** most of §5.1–5.7 (Lemma 5.3, Theorem 5.6, Corollary 5.9,
   Theorems 5.14 and 5.15, the local PNT Theorem 5.24) and most of §7 (Lemma 7.1, Lemma 7.3 from named inputs).
-- **Not yet proved:** the bridge and margin of §5.8–5.9 (which give Corollary 5.40), Lemma 5.22, and the Cover Bound.
+- **Not yet proved:** the bridge and margin of §5.8–5.9 (which give Corollary 5.40) and the two variance bounds of Lemma 5.22.
 
 The formalization found four defects in the paper (corrections #102 and #104, constants in Lemma 5.7 and Theorem 5.24; #103, certificate
 coverage of two constants; #105, the definition of X_Hux), prompted a check that tightened the quantifier of Lemma 3.4 (#106), and found two

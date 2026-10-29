@@ -32,19 +32,19 @@ lake build
 ## The top-level statement
 
 ```lean
-theorem Queue6.corollary_2_2_of_V (hHB : ShortIntervalPNT) (h : Theorem21InputsV) : ¬ QuestionQ
+theorem Queue6.corollary_2_2_of_W (hHB : ShortIntervalPNT) (h : Theorem21InputsW) : ¬ QuestionQ
 ```
 
 - `QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`).
 - `ShortIntervalPNT` (`Beurling/Model/Slope.lean`) is a consequence of the Heath-Brown short-interval prime number
   theorem (84), stated about ℕ. `BaseRange.shortIntervalPNT_of_huxley84` derives it from the full two-sided (84).
-- `Theorem21InputsV` (`Beurling/Queue6/TopV.lean`) is about the construction built in Lean from the jitters. The
-  event family, the Table 1 budget and the queue bound are all constructed and proved. What remains are three statements
-  of the paper, for that construction:
-  - Lemma 5.22: the E3/E3′ events of §5.6 and their per-scale budget;
+- `Theorem21InputsW` (`Beurling/Queue6/TopW.lean`) is about the construction built in Lean from the jitters. The
+  event family (including the E3/E3′ events), the Table 1 budget and the queue bound are all constructed and proved.
+  What remains are three statements of the paper, for that construction:
+  - the two variance bounds in the proof of Lemma 5.22 (Comp(W) ≤ 50 log(2u)|W|, and (s2));
   - Corollary 5.40: the drift R1′ and Comp⁽²⁾ ≤ s₂|I|, in the form Theorem 6.6 uses;
   - the Cover Bound, Proposition 6.19 (`CoverV`).
-- Earlier top levels (`corollary_2_2_of_O` … `_U`) are kept. Each one implies the previous.
+- Earlier top levels (`corollary_2_2_of_O` … `_V`) are kept. Each one implies the previous.
 
 ## What is proved
 
@@ -128,6 +128,10 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     - The bound obtained is the paper's. The Lean kernel checks the proof, so what needs review is that the Lean
       statement of `SkeletonBound` is the paper's.
     - Still open: `CoverSkeletonBound` (Proposition 6.19).
+  - **Round 8** (3047 lines): `CoverSkeletonBound` is proved for every cover skeleton in the window model, by the same
+    route (`coverSkeletonBound_all`, `hcov_window`).
+    - No Appendix A statement remains assumed.
+    - The model inputs are those of `skeletonBound_all`, plus two more: the windows lie in [z, ∞), and the caps for τ.
 - **Added in this repository: the construction of §3** (`Beurling/Model/`, 3947 lines). `constructedModel θ X₀ ω` builds
   the slot model from the jitters as the limit of a causal iteration.
   - Lemma 3.5 is formalized as `causal`: agreement up to z − 1 propagates to agreement up to z.
@@ -230,6 +234,14 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     - the §5 events E3/E3′ and their budget (Lemma 5.22);
     - Corollary 5.40 (R1′ and Comp⁽²⁾);
     - the Cover Bound (`CoverV`, Proposition 6.19).
+
+    Queue round 4 constructed the E3/E3′ events of Lemma 5.22 for the construction and proved their budget
+    (`e3Family`, `e3_budget`). The new top level is `Queue6.corollary_2_2_of_W` (`Queue6/TopW.lean`), whose remaining
+    inputs are:
+    - the two variance bounds in the proof of Lemma 5.22: Comp(W) ≤ 50 log(2u)|W| (`E3CompBound`), and (s2)
+      (`E3S2Bound`);
+    - Corollary 5.40;
+    - the Cover Bound. This is now proved in `RankFull/CoverCount.lean`, but not yet wired in.
 
     Construction round 7 then proved:
     - The landing compensator bound, i.e. the `land` field (`BModel.land_compensator`). The paper's μ̄ is correct: below
