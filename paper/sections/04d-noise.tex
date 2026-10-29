@@ -77,7 +77,11 @@
     is $\ge5.53$ at $L_u=10^{15}$.
   \end{itemize}
   Summing, $\Comp^{(2)}(I)/|I|\le1.01\cdot1.443L_u\,e^{-\sigma}\bigl(\frac12+\sum_{a\ge3}(\Xm)^{-(a-2)/2}/a\bigr)\le0.73L_u\,e^{-\sigma}$.
-\item Together, for every window $I\subset[u,2u]$,
+% Logged correction 107 (CORRECTIONS-vs-v3.md): (s2) is stated on Good(<u); its derivation reads N and (H_BS) at heights < 4u/(X_0^-)^2.
+\item Together, on $\Good(<u)$, for every window $I\subset[u,2u]$ (the bounds above read $\NN$, and $(H_{\mathrm{BS}})$ through
+  Lemma~\ref{lem:smooth-v}, only at heights $<4u/(\Xm)^2$ (the blocks $(Y,2Y]$ with $Y<2u/(\Xm)^2$; Lemma~\ref{lem:smooth-v} reads $\NN$ only on
+  $[1,2Y]$, \S\ref{sec:noise-primes}), far below the horizon $\check u$ of $\Good(<u)$; every use of
+  \eqref{eq:s2} is on an event $\Good(<t)$ with $t\ge u$, which is contained in $\Good(<u)$),
   \begin{equation}\label{eq:s2}
     \frac{\Comp^{(2)}(I)}{|I|}\le s_2(u):=9L_u\exp\Big(-\max\big(\log\Xm,\tfrac12\sqrt{L_u\log L_u}\big)\Big).
   \end{equation}
