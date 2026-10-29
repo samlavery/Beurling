@@ -226,6 +226,14 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     - Proposition 6.11 at z = X₀/2 (`Queue6.cluster0_of`), by the paper's low-height argument: capacity 0, then
       Theorem R.
     - T(x) ≤ 3x on the good event (`tbound_of_lemma626`), from Lemma 6.26 on Good(<t).
+
+    Construction round 8 proved (HBS) and Lemma 6.26 on Good(<t) from strictly earlier events, as in Remark horizon
+    (`hbs_local`, `lemma626_G0`, `tbound_G0`), and assembled the top level
+    `BModel.corollary_2_2_of_U : ShortIntervalPNT → Theorem21InputsU → ¬ QuestionQ` (`Model/TopU.lean`). The remaining
+    inputs of `Theorem21InputsU` are:
+    - §5: the E3/E3′ events and their budget (Lemma 5.22), R1′ and Comp⁽²⁾ (Corollary 5.40);
+    - Appendix A: (S3)(d) as stated on `goodLt`, `MultiRunSkeletonBound` (now proved, still to be plugged in) and
+      `CoverSkeletonBound`.
 - **Added in this repository: §7, the base range** (`Beurling/BaseRange/`, 10 files, 3k lines).
   - (84) in both directions, and its equivalence with η_H(q) ≤ (log q)^{−3}; it implies `ShortIntervalPNT`.
   - Lemma 7.1.
