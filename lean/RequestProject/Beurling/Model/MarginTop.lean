@@ -2,8 +2,10 @@ module
 
 public import RequestProject.Beurling.Model.MarginMine
 public import RequestProject.Beurling.Model.S2Final
-public import RequestProject.Beurling.Model.Wire
-public import RequestProject.Beurling.BaseRange.Lemma73R
+public import RequestProject.Beurling.Model.Wire3
+public import RequestProject.Beurling.Noise.RML6G1
+public import RequestProject.Beurling.BaseRange.Lemma73Low
+public import RequestProject.Beurling.BaseRange.MarginHc
 
 /-!
 # The final assembly: Theorem 2.1 / Corollary 2.2 from (84) and the open inputs
@@ -48,24 +50,31 @@ structure RestBase (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
 /-- **Proposition 5.18 step (iii), Proposition 5.26, Lemma 5.27, Lemma 5.20** inputs of
 `RealMarginLoc`, at the Model choices `Z = Zc b`, `ε = 4·10⁻⁶`, `λ₀ = 1.001`, `j₀ = jzX X₀`. -/
 structure RestBridge (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
-  EBR : ℝ → ℝ
-  jX : ℝ → ℝ
-  EBR_nonneg : ∀ x, 0 ≤ EBR x
-  jX_nonneg : ∀ x, 0 ≤ jX x
-  /-- **Proposition 5.26, Lemma 5.27, Lemma 5.20** at the starts of the windows of the centres
-  `X₁ ≤ x ≤ b` -/
-  bridge : ∀ x y, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b → InW (Queue6.Hc X₀ x) x y →
-    BridgeR (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ ((epsH) / 10) (lamH)
-      (TcR θ X₀ ω (jzX X₀)) (jzX X₀) y (EBR x) (jX x)
+  /-- `j_{X₀}(x) ≥ 0` (eq. (jX0); §5, Proposition 5.33) -/
+  jXnn : ∀ x, 0 ≤ jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH
+    (jzX X₀) (NKc X₀) x
+  /-- **eq. (osc), first display**, for the clamped `T_c` at the starts of the windows -/
+  hosc : ∀ x y, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b → InW (Queue6.Hc X₀ x) x y →
+    ∑ u ∈ KR.TNP.dyScales X₀ y (NKc X₀ y).1, Real.log (2 * u) *
+      KR.Chain.oscR (Queue6.Hc X₀) (KR.TcLoc.clampT (Xm X₀ * Zc X₀ b) (TcR θ X₀ ω (jzX X₀))) u
+        ≤ Real.exp (-83)
+  /-- the eq. (jX0) family is bounded on `W_x` (§5, Proposition 5.33) -/
+  hbdd : ∀ x, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b →
+    BddAbove (Set.range fun y : {y : ℝ // InW (Queue6.Hc X₀ x) x y} =>
+      jXat (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀)
+        (NKc X₀ y.1).1 (NKc X₀ y.1).2 y.1)
 
 /-- **Proposition 5.35, Lemma 5.34 and the margin identity** inputs of `RealMarginLoc`. -/
 structure RestRes (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
-  /-- **Proposition 5.35**, residual inputs, at `X₀ ≤ y ≤ b + H(b)` -/
-  g1 : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b →
-    G1At (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀ (BaseRange.mu0R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
-      (KR.Sharp.mu1R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀) (KR.Sharp.rhoEdge (PR θ X₀ ω)
-        (twR θ X₀ ω) (Xm X₀) X₀)
-      (fun t => TcR θ X₀ ω (jzX X₀) t + (jzX X₀) * ind X₀ t) y
+  /-- **the `σ_𝒜` response** on range (A) (Proposition 5.35(A), third bullet; Model) -/
+  g1A : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b →
+    KR.RML6.SigmaAResp (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀
+      (fun t => TcR θ X₀ ω (jzX X₀) t + jzX X₀ * ind X₀ t) y
+  /-- **Proposition 5.35(B)**'s inputs on range (B) (`KR.RML6.G1BInputs`; owners in its
+  docstring: Model, Queue6, §5) -/
+  g1B : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
+    KR.RML6.G1BInputs (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀
+      (fun t => TcR θ X₀ ω (jzX X₀) t + jzX X₀ * ind X₀ t) y
   /-- `NT` (locally integrable) -/
   NT : KR.Ops.LocInt
   ϑ : ℝ → ℝ
@@ -109,11 +118,9 @@ structure RestRes (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
   hTLBd : KR.Ops.LBd (fun t => TcR θ X₀ ω (jzX X₀) t + (jzX X₀) * ind X₀ t)
 
 /-- **Proposition 5.38, steps 1–6** inputs of `RealMarginLoc`. -/
-structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (EBR : ℝ → ℝ) (jX : ℝ → ℝ)
-  (ρL : KR.Ops.LocInt) (TcL : KR.Ops.LocInt) (NT : KR.Ops.LocInt) (vtH : KR.Ops.LocInt)
-    (a : ℝ → ℝ) (bb : ℝ → ℝ) where
-  -- **Proposition 5.38(a)**
-  Bt : ℝ → ℝ
+structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (ρL : KR.Ops.LocInt)
+  (TcL : KR.Ops.LocInt) (NT : KR.Ops.LocInt) (vtH : KR.Ops.LocInt) (a : ℝ → ℝ) (bb : ℝ → ℝ)
+    (hO₀ : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀)) where
   η : ℝ → ℝ
   sη : ℝ
   /-- window integrability of `m` -/
@@ -122,9 +129,7 @@ structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (EBR : �
   /-- **Steps 1–5**: the parameters of the recursion and its super-solution -/
   p : Margin.Rec.CP
   T0 : ℝ
-  err : ℝ → ℝ
   e : ℝ → ℕ → ℝ
-  ηV : ℝ → ℝ
   chain : Margin.Rec.ChainHyp (PR θ X₀ ω) p (Queue6.Hc X₀)
   hpXm : p.Xm = Xm X₀
   hpε : p.ε ≤ 0.01
@@ -137,18 +142,7 @@ structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (EBR : �
   /-- `H`-regularity at a cofactor (`HStep`) -/
   hgeom : ∀ t, T0 ≤ t → t ≤ b → ∀ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t,
     Margin.Rec.HStep (Queue6.Hc X₀) p.ε t (t / KR.Vl (PR θ X₀ ω) w) (KR.Vl (PR θ X₀ ω) w)
-  s2ε : ℝ → ℝ
   s2mst : ℝ → ℝ
-  /-- **Step 1 / Lemma 5.22 on `A₊`** (Queue6): `σ(A₊) = ∫_{A₊} m + E₊`, `|E₊| ≤ (epsH)` -/
-  hS2Ep : ∀ z, S2Rng θ X₀ ω p T0 b z → ∀ s, 0 ≤ s → s ≤ 1.01 * Queue6.Hc X₀ z →
-    |Margin.Exact.sigmaS ((Queue6.s2Q θ X₀ ω) z s) ((Queue6.s2sl θ X₀ ω) z s) (Margin.Exact.Aplus
-      (Queue6.Hc X₀) z s) -
-      ∫ r in Margin.Exact.Aplus (Queue6.Hc X₀) z s, marginM θ X₀ ω r| ≤ s2ε z
-  /-- **Step 1 / Lemma 5.22 on `A₋`** (Queue6): `σ(A₋) = ∫_{A₋} m + E₋`, `|E₋| ≤ (epsH)` -/
-  hS2Em : ∀ z, S2Rng θ X₀ ω p T0 b z → ∀ s, 0 ≤ s → s ≤ 1.01 * Queue6.Hc X₀ z →
-    |Margin.Exact.sigmaS ((Queue6.s2Q θ X₀ ω) z s) ((Queue6.s2sl θ X₀ ω) z s) (Margin.Exact.Aminus
-      (Queue6.Hc X₀) z s) -
-      ∫ r in Margin.Exact.Aminus (Queue6.Hc X₀) z s, marginM θ X₀ ω r| ≤ s2ε z
   /-- **Step 2, strip comparison on `A₊`** (§5): `|∫_{A₊} m - ∫_{I₊} m| ≤ 1.05 δ_z H(z) m*`,
   `I₊ = (z + H/2, z + H/2 + s]` -/
   hS2sp : ∀ z, S2Rng θ X₀ ω p T0 b z → ∀ s, 0 ≤ s → s ≤ 1.01 * Queue6.Hc X₀ z →
@@ -167,24 +161,19 @@ structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (EBR : �
   hS2mi : ∀ z, S2Rng θ X₀ ω p T0 b z → ∀ s, 0 ≤ s → s ≤ 1.01 * Queue6.Hc X₀ z →
     IntervalIntegrable (marginM θ X₀ ω) volume (z - Queue6.Hc X₀ z / 2)
       (z + Queue6.Hc X₀ z / 2 + s)
-  /-- **Step 2**, the error: `2ε/H(z) + (3.3 + 2.1 m*) δ_z ≤ err(z)` -/
-  hS2err : ∀ z, S2Rng θ X₀ ω p T0 b z →
-    2 * s2ε z / Queue6.Hc X₀ z + (3.3 + 2.1 * s2mst z) * (Queue6.s2δ X₀) z ≤ err z
-  /-- **Step 3**, the recursion weights: `err(z') ≤ e(t, w)` on the strip of `(t, w)` -/
+  /-- **Step 3**, the recursion weights: `(fun z => 2.2 * s2E3 X₀ (uS X₀ (m1z X₀ z)) + 2.2 * s2E3
+  X₀ (uS X₀ (m1z X₀ z + 1)) + 210 / Real.log (uS X₀ (m1z X₀ z)) ^ 6 +
+    (6.6 + 4.2 * s2mst z) / Queue6.Hc X₀ z)(z') ≤ e(t, w)` on the strip of `(t, w)` -/
   hS2e : ∀ t, T0 ≤ t → t ≤ b → ∀ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t, ∀ z',
     t / KR.Vl (PR θ X₀ ω) w - 0.52 * Queue6.Hc X₀ (t / KR.Vl (PR θ X₀ ω) w) ≤ z' →
-      z' ≤ t / KR.Vl (PR θ X₀ ω) w → err z' ≤ e t w
+      z' ≤ t / KR.Vl (PR θ X₀ ω) w → (fun z => 2.2 * s2E3 X₀ (uS X₀ (m1z X₀ z)) + 2.2 * s2E3 X₀
+        (uS X₀ (m1z X₀ z + 1)) + 210 / Real.log (uS X₀ (m1z X₀ z)) ^ 6 +
+          (6.6 + 4.2 * s2mst z) / Queue6.Hc X₀ z) z' ≤ e t w
   he0 : ∀ t, T0 ≤ t → t ≤ b → ∀ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t, 0 ≤ e t w
-  /-- filter switching and `ΔNT_pt ≤ 2η` -/
-  hsw : ∀ t, T0 ≤ t → t ≤ b → ∀ hh, |hh| ≤ 1.01 * Queue6.Hc X₀ t →
-    |∑ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t,
-        (Margin.Rec.kap (PR θ X₀ ω) (twR θ X₀ ω) (t + hh) w -
-          Margin.Rec.kap (PR θ X₀ ω) (twR θ X₀ ω) t w) *
-        (rhoT θ X₀ ω ((t + hh) / KR.Vl (PR θ X₀ ω) w) / KR.Vl (PR θ X₀ ω) w)| +
-      |NTpt θ X₀ ω (t + hh) - NTpt θ X₀ ω t| ≤ 2 * ηV t
   /-- **Step 4** (`Margin.Var.step4` proves it from Lemma 5.21) -/
   hS4 : ∀ t, T0 ≤ t → t ≤ b →
-    (oVc θ X₀ ω) t + 2 * ηV t + ∑ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t, e t w / KR.Vl (PR θ X₀ ω) w ≤
+    (oVc θ X₀ ω) t + 2 * (ηVc θ X₀ ω p) t + ∑ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t, e t w / KR.Vl
+      (PR θ X₀ ω) w ≤
       p.ES / Real.log t
   /-- the base case below `T₀` -/
   hbase : ∀ t, t < T0 → Margin.Rec.vSup (Queue6.Hc X₀) (marginM θ X₀ ω) t ≤
@@ -199,44 +188,22 @@ structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (EBR : �
         (fun M => ¬ Margin.Rec.Vv (PR θ X₀ ω) M ≤ √t),
       Margin.Rec.Aw (PR θ X₀ ω) p M * (p.ES / Real.log (t / Margin.Rec.Vv (PR θ X₀ ω) M)) ≤
         0.06 * p.ES / Real.log t
-  /-- Step 6(a): `M = Bm + B NT_pt + ϑ/H` with `|B NT_pt + ϑ/H| ≤ 54η + 6/H` -/
-  hdec : ∀ hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀), ∀ t,
-    (X₀ : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ b →
-    rhoT θ X₀ ω t + (nuRes hO (twR θ X₀ ω) ρL TcL (JL (jzX X₀) X₀) vtH NT : ℝ → ℝ) t +
-      (NT : ℝ → ℝ) t = Margin.Bavg (Queue6.Hc X₀ t) (marginM θ X₀ ω) t + Bt t
-  hBt : ∀ t, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ b → |Bt t| ≤ 54 * η t + 6 / Queue6.Hc X₀ t
+  hBt : ∀ t, (X₀ : ℝ) ^
+    (1.01 : ℝ) ≤ t → t ≤ b → |(Btc θ X₀ ω hO₀ ρL TcL vtH NT) t| ≤ 54 * η t + 6 / Queue6.Hc X₀ t
   hsη : ∀ t, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ b → Real.log t * η t ≤ sη
   /-- the sizes of the error terms (`o(1)`, §5.1; Step 5 of Proposition 5.35) -/
   hsmall : ∀ t, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ b →
-    oTot (Queue6.Hc X₀ t) t (EBR t) (jX t) +
-      (a t + bb t + 6 * Real.log t / Queue6.Hc X₀ t) + EBR t + jX t +
+    oTot (Queue6.Hc X₀ t) t ((fun _ => EBRc) t) ((fun x => jXdef (PR θ X₀ ω) (Queue6.Hc X₀)
+      (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀) (NKc X₀) x) t) +
+      (a t + bb t + 6 * Real.log t / Queue6.Hc X₀ t) + (fun _ => EBRc) t + (fun x => jXdef
+        (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀) (NKc X₀) x) t +
       54 * sη + 6 * Real.log t / Queue6.Hc X₀ t + 6.5 * p.ES + VX (PR θ X₀ ω) p t ≤ 0.01
   /-- **Proposition 5.33**: `j_{X₀} ≤ 0.4209` -/
   hjb : ∀ t, 2 * (X₀ : ℝ) ≤ t → t ≤ (X₀ : ℝ) ^ (1.01 : ℝ) → t ≤ b → (jbc θ X₀ ω) t ≤ 0.4209
-  /-- **Proposition 5.38(c)** (Step 6(c)): the source bounds on `[X₀, 2X₀)` -/
-  hc : ∀ t, (X₀ : ℝ) ≤ t → t < 2 * X₀ → t ≤ b →
-    (∃ Tp, marginM θ X₀ ω t = Tp ∧ (0.99 - 1 / 10 ^ 9) / Real.log t ≤ Tp) ∨
-    (∃ Tp rt, marginM θ X₀ ω t = Tp - rt / 2 ∧ (0.99 - 1 / 10 ^ 9) / Real.log t ≤ Tp ∧
-      rt ≤ 0.5001 / Real.log X₀ ∧ Real.log t ≤ Real.log X₀ + 0.7)
 
 /-! ### The open Model inputs -/
 
 variable {θ : ℝ} {X₀ : ℕ}
-
-/-- **`TNP.Hyp` for the realised system** at the Model choices (`Queue6.tnpHyp_R`, with
-`PaperWidth` from `paperWidth_Hc`, `capHSlope`, `capHDiff`). -/
-theorem tnpR (hc : Cond θ X₀) (hev : Even X₀) {ω : JitterΩ} {b : ℝ}
-    (hbs : (PR θ X₀ ω).HBS (Xm X₀) (Zc X₀ b) (1 / 1000) (1 / 1000) (hbsEps X₀))
-    (hSG : ω ∈ Queue6.SG (θ := θ) (X₀ := X₀)) (hX1 : 10 ^ 8 + 1 ≤ Real.log X₀) :
-    KR.TNP.Hyp (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) (Zc X₀ b) (1 / 1000)
-      (1 / 1000) (hbsEps X₀) epsH (epsH / 10) := by
-  have hX : 10 ^ 8 ≤ Real.log X₀ := by linarith
-  have hw : KR.PaperWidth (Queue6.Hc X₀) (Xm X₀) epsH (epsH / 10) :=
-    KR.WidthReal.paperWidth_Hc hX (by unfold epsH; norm_num) (by unfold epsH; norm_num)
-      (CapHSlopeProof.capHSlope hX) (CapHDiffProof.capHDiff hX)
-  have h := Queue6.tnpHyp_R hc hev hSG hX1 hbs hw
-  rw [← twR_eq hc ω] at h
-  exact h
 
 /-- **`RealMarginLoc` from the Model fields and the four groups of the other agents**, on
 `Good(< t) ∩ NiceEv` with `X₀ ≤ b ≤ t`. -/
@@ -245,13 +212,20 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
     (hb : (X₀ : ℝ) ≤ b)
     (hbs : (PR θ X₀ ω).HBS (Xm X₀) (Zc X₀ b) (1 / 1000) (1 / 1000) (hbsEps X₀))
     (hX1 : 10 ^ 8 + 1 ≤ Real.log X₀)
+    (hEpm : ∀ z s : ℝ, 0 ≤ s → s ≤ 1.01 * Queue6.Hc X₀ z → max z X₀ + 2 * Queue6.Hc X₀ z ≤ t →
+      |Margin.Exact.sigmaS (Queue6.s2Q θ X₀ ω z s) (Queue6.s2sl θ X₀ ω z s)
+          (Margin.Exact.Aplus (Queue6.Hc X₀) z s) -
+          ∫ r in Margin.Exact.Aplus (Queue6.Hc X₀) z s, marginM θ X₀ ω r| ≤ Queue6.s2ε X₀ z ∧
+      |Margin.Exact.sigmaS (Queue6.s2Q θ X₀ ω z s) (Queue6.s2sl θ X₀ ω z s)
+          (Margin.Exact.Aminus (Queue6.Hc X₀) z s) -
+          ∫ r in Margin.Exact.Aminus (Queue6.Hc X₀) z s, marginM θ X₀ ω r| ≤ Queue6.s2ε X₀ z)
     (hin : BaseRange.Lemma73Inputs X₀ (b + Queue6.Hc X₀ b)
       (BaseRange.mu0R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
       (KR.Sharp.mu1R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
       (KR.Sharp.rhoEdge (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀))
     (Bs : RestBase θ X₀ ω b) (Br : RestBridge θ X₀ ω b)
     (Rs : RestRes θ X₀ ω b)
-    (Mg : RestMargin θ X₀ ω b Br.EBR Br.jX Rs.ρL Rs.TcL Rs.NT Rs.vtH Rs.a Rs.bb) :
+    (Mg : RestMargin θ X₀ ω b Rs.ρL Rs.TcL Rs.NT Rs.vtH Rs.a Rs.bb (opR hc hev hbs hN.2.1 hX1)) :
     RealMarginLoc hc ω b where
   Z := Zc X₀ b
   η1 := 1 / 1000
@@ -282,14 +256,17 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
   hμ1 := BaseRange.mu1R_zero _ _ _ _
   hxmax := le_rfl
   hZ := (Zc_facts hc hb).2.2.2
-  EBR := Br.EBR
-  jX := Br.jX
-  EBR_nonneg := Br.EBR_nonneg
-  jX_nonneg := Br.jX_nonneg
+  EBR := fun _ => EBRc
+  jX := fun x => jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH
+    (jzX X₀) (NKc X₀) x
+  EBR_nonneg := fun _ => (Real.exp_pos _).le
+  jX_nonneg := Br.jXnn
   x0s := Queue6.x0sHyp_G0 (e3Family θ X₀) hc hev hG hN hbt hbs (Zc_facts hc hb).1 le_rfl
     (by linarith [hc.hθ.2])
-  bridge := Br.bridge
-  g1 := Rs.g1
+  bridge := fun x y hx hxb hW => bridge_c hc hev hb hbs hN.2.1 hX1 hx hxb hW
+    (Br.hosc x y hx hxb hW) (Br.hbdd x hx hxb)
+  g1 := fun y hy hyb => KR.RML6.g1_of (by norm_num at hX1 ⊢; linarith) (Xm_pos' hc)
+    (Xm_le_X0 hc) hy (Rs.g1A y hy hyb) (Rs.g1B y hy hyb)
   ρL := Rs.ρL
   hρL := Rs.hρL
   TcL := Rs.TcL
@@ -304,16 +281,18 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
   hK := Rs.hK
   hG := Rs.hG
   hϑ := Rs.hϑ
-  Bt := Mg.Bt
+  Bt := Btc θ X₀ ω (opR hc hev hbs hN.2.1 hX1) Rs.ρL Rs.TcL Rs.vtH Rs.NT
   η := Mg.η
   sη := Mg.sη
   intm := Mg.intm
   p := Mg.p
   T0 := Mg.T0
-  err := Mg.err
+  err := fun z => 2.2 * s2E3 X₀ (uS X₀ (m1z X₀ z)) + 2.2 * s2E3 X₀ (uS X₀
+    (m1z X₀ z + 1)) + 210 / Real.log (uS X₀ (m1z X₀ z)) ^ 6 +
+      (6.6 + 4.2 * Mg.s2mst z) / Queue6.Hc X₀ z
   e := Mg.e
   oV := oVc θ X₀ ω
-  ηV := Mg.ηV
+  ηV := ηVc θ X₀ ω Mg.p
   chain := Mg.chain
   hpXm := Mg.hpXm
   hpε := Mg.hpε
@@ -327,53 +306,54 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
   s2Q := Queue6.s2Q θ X₀ ω
   s2sl := Queue6.s2sl θ X₀ ω
   s2δ := Queue6.s2δ X₀
-  s2ε := Mg.s2ε
+  s2ε := Queue6.s2ε X₀
   s2mst := Mg.s2mst
   hS2rep := fun z _ s hs0 _ => ⟨Queue6.hS2rep_R hc ω z s z (by linarith), Queue6.hS2rep_R hc ω z s
     (z + s) le_rfl⟩
   hS2w := fun z _ s hs0 hs => Queue6.hS2w_R hc ω hs0 hs
   hS2cp := fun z _ s hs0 hs => (Queue6.hS2c_R hc hev hs0 hs).1
   hS2cm := fun z _ s hs0 hs => (Queue6.hS2c_R hc hev hs0 hs).2
-  hS2Ep := Mg.hS2Ep
-  hS2Em := Mg.hS2Em
+  hS2Ep := fun z hz s hs0 hs => (hS2E_field hc ω hb hbt (KR.Chain.p_ge_two_of
+    (tnpR hc hev hbs hN.2.1 hX1) (Xm_le_Zc' hc b)) hEpm Mg.p Mg.T0 z hz s hs0 hs).1
+  hS2Em := fun z hz s hs0 hs => (hS2E_field hc ω hb hbt (KR.Chain.p_ge_two_of
+    (tnpR hc hev hbs hN.2.1 hX1) (Xm_le_Zc' hc b)) hEpm Mg.p Mg.T0 z hz s hs0 hs).2
   hS2sp := Mg.hS2sp
   hS2sm := Mg.hS2sm
   hS2δ := fun z _ => div_nonneg (by norm_num) (by unfold Queue6.Hc; exact capH_nonneg _ _)
   hS2H := Mg.hS2H
   hS2mi := Mg.hS2mi
-  hS2err := Mg.hS2err
+  hS2err := fun z _ => Queue6.hS2err_R hc z (Mg.s2mst z)
   hS2e := Mg.hS2e
   he0 := Mg.he0
   hoscV := fun t _ htb hh hhh => hoscV_c hc hev ω (tnpR hc hev hbs hN.2.1 hX1) (by linarith)
     (Zc_facts hc hb).2.2.2 htb hhh
-  hsw := Mg.hsw
+  hsw := fun t _ htb hh hhh => hsw_c hc hev ω Mg.p htb hhh
   hS4 := Mg.hS4
   hbase := Mg.hbase
   hpε' := Mg.hpε'
   htail := Mg.htail
-  hdec := Mg.hdec
+  hdec := fun hO t _ _ => hdec_c ω (opR hc hev hbs hN.2.1 hX1) Rs.ρL Rs.TcL Rs.vtH Rs.NT hO t
   hBt := Mg.hBt
   hsη := Mg.hsη
   hsmall := Mg.hsmall
   jb := jbc θ X₀ ω
   hsum := by intro t _ _ _; unfold jbc; exact BModel.RML6.hsum_canon _ _ _
   hjb := Mg.hjb
-  hc := Mg.hc
+  hc := BaseRange.margin_hc hc hev Bs.hHux ω b
   hz := fun t ht => BModel.RML6.marginM_eq_zero_low hc ω ht
 
-/-- **Lemma 7.3's inputs** (`BaseRange.lemma73Inputs_R`) where the (H_BS) horizon reaches `X₀`
-(`4X₀ + 2 ≤ b`). -/
+/-- **Lemma 7.3's inputs** (`BaseRange.lemma73Inputs_R'`, with (H_BS) on `[1, Zc b]`,
+`X₀⁻ ≤ Zc b`). -/
 theorem hin_R (hc : Cond θ X₀) (hev : Even X₀) {ω : JitterΩ} {b : ℝ}
     (hbs : (PR θ X₀ ω).HBS (Xm X₀) (Zc X₀ b) (1 / 1000) (1 / 1000) (hbsEps X₀))
     (hSG : ω ∈ Queue6.SG (θ := θ) (X₀ := X₀)) (hX1 : 10 ^ 8 + 1 ≤ Real.log X₀)
-    (hb : (X₀ : ℝ) ≤ b) (hbig : 4 * (X₀ : ℝ) + 2 ≤ b) (hH : BaseRange.HuxleyFrom X₀) :
+    (hb : (X₀ : ℝ) ≤ b) (hH : BaseRange.HuxleyFrom X₀) :
     BaseRange.Lemma73Inputs X₀ (b + Queue6.Hc X₀ b)
       (BaseRange.mu0R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
       (KR.Sharp.mu1R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
       (KR.Sharp.rhoEdge (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀) := by
   have hX : 10 ^ 8 ≤ Real.log X₀ := by linarith
   have hXm0 : 0 < Xm X₀ := by linarith [Queue6.Xm_pos hc]
-  have hXZ : (X₀ : ℝ) ≤ Zc X₀ b := by unfold Zc; rw [if_pos hbig]; linarith
   have hZ2 := (Zc_facts hc hb).2.2.2
   have hH0 : 0 ≤ Queue6.Hc X₀ b := by unfold Queue6.Hc; exact capH_nonneg _ _
   have hZ' : (b + Queue6.Hc X₀ b) / Xm X₀ ≤ Zc X₀ b := by
@@ -381,9 +361,9 @@ theorem hin_R (hc : Cond θ X₀) (hev : Even X₀) {ω : JitterΩ} {b : ℝ}
     rw [mul_div_assoc]
     have : 0 ≤ (b + Queue6.Hc X₀ b) / Xm X₀ := div_nonneg (by linarith) hXm0.le
     linarith
-  have h := BaseRange.lemma73Inputs_R hc hev hSG hX1 hbs (by norm_num)
+  have h := BaseRange.lemma73Inputs_R' hc hev hSG hX1 hbs (by norm_num)
     (by norm_num) (CapHSlopeProof.capHSlope hX) (CapHDiffProof.capHDiff hX)
-    hH hXZ hZ' (fun v h1 h2 => hbs.err v h1 h2)
+    hH (Xm_le_Zc' hc b) hZ' (fun v h1 h2 => hbs.err v h1 h2)
   rw [← twR_eq hc ω] at h
   exact h
 
@@ -392,7 +372,8 @@ variable (θ X₀) in
 `(ω, b)`. -/
 def OthersInputs (ω : JitterΩ) (b : ℝ) : Prop :=
   ∃ (Bs : RestBase θ X₀ ω b) (Br : RestBridge θ X₀ ω b) (Rs : RestRes θ X₀ ω b),
-    Nonempty (RestMargin θ X₀ ω b Br.EBR Br.jX Rs.ρL Rs.TcL Rs.NT Rs.vtH Rs.a Rs.bb)
+    ∀ hO₀ : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀),
+      Nonempty (RestMargin θ X₀ ω b Rs.ρL Rs.TcL Rs.NT Rs.vtH Rs.a Rs.bb hO₀)
 
 /-- `RealMarginLoc` from the Model fields and `OthersInputs`. -/
 theorem realMarginLoc_of_others (hc : Cond θ X₀) (hev : Even X₀) {ω : JitterΩ} {b : ℝ}
@@ -400,22 +381,21 @@ theorem realMarginLoc_of_others (hc : Cond θ X₀) (hev : Even X₀) {ω : Jitt
     (hb : (X₀ : ℝ) ≤ b)
     (hbs : (PR θ X₀ ω).HBS (Xm X₀) (Zc X₀ b) (1 / 1000) (1 / 1000) (hbsEps X₀))
     (hX1 : 10 ^ 8 + 1 ≤ Real.log X₀)
+    (hEpm : ∀ z s : ℝ, 0 ≤ s → s ≤ 1.01 * Queue6.Hc X₀ z → max z X₀ + 2 * Queue6.Hc X₀ z ≤ t →
+      |Margin.Exact.sigmaS (Queue6.s2Q θ X₀ ω z s) (Queue6.s2sl θ X₀ ω z s)
+          (Margin.Exact.Aplus (Queue6.Hc X₀) z s) -
+          ∫ r in Margin.Exact.Aplus (Queue6.Hc X₀) z s, marginM θ X₀ ω r| ≤ Queue6.s2ε X₀ z ∧
+      |Margin.Exact.sigmaS (Queue6.s2Q θ X₀ ω z s) (Queue6.s2sl θ X₀ ω z s)
+          (Margin.Exact.Aminus (Queue6.Hc X₀) z s) -
+          ∫ r in Margin.Exact.Aminus (Queue6.Hc X₀) z s, marginM θ X₀ ω r| ≤ Queue6.s2ε X₀ z)
     (hin : BaseRange.HuxleyFrom X₀ → BaseRange.Lemma73Inputs X₀ (b + Queue6.Hc X₀ b)
       (BaseRange.mu0R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
       (KR.Sharp.mu1R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
       (KR.Sharp.rhoEdge (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀))
     (hO : OthersInputs θ X₀ ω b) : Nonempty (RealMarginLoc hc ω b) := by
-  obtain ⟨Bs, Br, Rs, ⟨Mg⟩⟩ := hO
-  exact ⟨realMarginLoc_of hc hev hG hN hbt hb hbs hX1 (hin Bs.hHux) Bs Br Rs Mg⟩
-
-variable (θ X₀) in
-/-- **Lemma 7.3's inputs at the windows with `b < 4X₀ + 2`** (BaseRange): there the
-(H_BS) horizon `Zc b = X₀⁻` of `Good(< b)` does not reach `X₀`, which `lemma73Inputs_R` needs. -/
-def Lemma73Low (ω : JitterΩ) (b : ℝ) : Prop :=
-  b < 4 * (X₀ : ℝ) + 2 → BaseRange.HuxleyFrom X₀ → BaseRange.Lemma73Inputs X₀ (b + Queue6.Hc X₀ b)
-    (BaseRange.mu0R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
-    (KR.Sharp.mu1R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
-    (KR.Sharp.rhoEdge (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
+  obtain ⟨Bs, Br, Rs, hM⟩ := hO
+  obtain ⟨Mg⟩ := hM (opR hc hev hbs hN.2.1 hX1)
+  exact ⟨realMarginLoc_of hc hev hG hN hbt hb hbs hX1 hEpm (hin Bs.hHux) Bs Br Rs Mg⟩
 
 /-! ### The top level -/
 
@@ -430,7 +410,7 @@ def Theorem21InputsFinal : Prop :=
     Real.exp (10 ^ 8 + 1) ≤ X₀ → XHux ≤ X₀ →
       ∀ m a b, Adm X₀ m a b → ∀ᵐ ω ∂jitterMeasure,
         ω ∈ G0 θ X₀ (e3Family θ X₀) (tE2 b) →
-          Lemma73Low θ X₀ ω b ∧ OthersInputs θ X₀ ω b
+          OthersInputs θ X₀ ω b
 
 /-- `Theorem21InputsFinal` implies `Theorem21InputsZ`, given (84): eq. (s2) is `s2Core`, and
 `R1Ident` is `r1Ident_of_marginOn` with Proposition 5.38 on `[X₀, b]` from `RealMarginLoc`
@@ -459,21 +439,19 @@ theorem theorem21InputsZ_final (hHB : ShortIntervalPNT) (h : Theorem21InputsFina
     have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
     have hX1 := QueueMono.one_lt_of_logX hX0 hc.hX
     have hb : (X₀ : ℝ) ≤ b := (X₀_le_uS (X₀ := X₀) (by linarith) m).trans hadm.1
-    filter_upwards [hRest m a b hadm, hnice] with ω hω hN hG
+    filter_upwards [hRest m a b hadm, hnice, Queue6.hS2Epm_R hc hev] with ω hω hN hEp hG
     have hQC : ω ∈ QC (okQ θ X₀) (tq θ X₀) b.toNat := hG.1
     have hE1 : ∀ n, tE1 X₀ n < b.toNat → ω ∈ E1ev θ X₀ n := fun n hn =>
       mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn
-    obtain ⟨hlow, hO⟩ := hω hG
+    have hO := hω hG
     have hbs := hbs_Zc hc hev hb hQC hE1 hN
     have hb0 : (0 : ℤ) ≤ b := by
       have : (0 : ℝ) ≤ b := le_trans hX0 hb
       exact_mod_cast this
     have hbt : (b : ℝ) ≤ ((tE2 b : ℕ) : ℝ) := by
       unfold tE2; rw [show ((b.toNat : ℕ) : ℝ) = (b : ℝ) by exact_mod_cast Int.toNat_of_nonneg hb0]
-    refine realMarginLoc_of_others hc hev hG hN hbt hb hbs hlog1 (fun hH => ?_) hO
-    rcases le_or_gt (4 * (X₀ : ℝ) + 2) b with hbig | hsmall
-    · exact hin_R hc hev hbs hN.2.1 hlog1 hb hbig hH
-    · exact hlow hsmall hH
+    exact realMarginLoc_of_others hc hev hG hN hbt hb hbs hlog1 (hEp _ hG hN)
+      (fun hH => hin_R hc hev hbs hN.2.1 hlog1 hb hH) hO
   have hcore := s2Core hc hev
   exact ⟨{ compE3 := e3CompBound hc hev
            s2E3 := e3S2Bound_of hc hev hcore

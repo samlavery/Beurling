@@ -45,28 +45,24 @@ namespace KR.Chain
 variable {P : BeurlingSystem} {H : ℝ → ℝ} {tw : ℕ → ℝ} {X0m Z η1 η2 : ℝ} {ε1 : ℝ → ℝ}
   {ε θ : ℝ}
 
-/-- **The field `l520`**: Lemma 5.20 at a start `y ≥ X₀` below the (HBS) horizon `Z`. -/
+/-- **The field `l520`**: Lemma 5.20 at a start `y ≥ X₀`. (HBS) is read only up to `3√(2v)`
+for the scales `v ≤ y`: the horizon conditions are `X₀⁻ ≤ Z` (so `2500 ≤ Z`) and
+`18 y ≤ Z²`. -/
 theorem l520_of_le (h : Hyp P H tw X0m Z η1 η2 ε1 ε θ)
     (hH : H (X0m / 2) ≤ 2 * (X0m / 2) ^ (1 / 8 : ℝ)) {X0 y lam0 : ℝ}
-    (hX0e : X0m = X0 - H X0 / 2) (hX0m : X0m ≤ X0) (hy : X0 ≤ y) (hyZ : y ≤ Z) {N K : ℕ}
+    (hX0e : X0m = X0 - H X0 / 2) (hX0m : X0m ≤ X0) (hXmZ : X0m ≤ Z)
+    (h18 : 18 * y ≤ Z ^ 2) {N K : ℕ}
     (hK : √(2 * y) ≤ Pk X0m K) (hlam0 : 0 ≤ lam0) (hlam : lam0 ≤ 2) :
     L520At P H tw X0m X0 lam0 y N K := by
-  obtain ⟨-, hlX, -, h4, -⟩ := sizes h hX0e hX0m
-  have hX0big : (2500 : ℝ) ≤ X0 := by
-    have h1 : (2500 : ℝ) ≤ Real.exp 8 := by
-      have := Real.add_one_le_exp (8 : ℝ)
-      have e : Real.exp 8 = Real.exp 1 ^ 8 := by rw [← Real.exp_nat_mul]; norm_num
-      have h2 := Real.exp_one_gt_d9
-      have h3 : (2.7182818283 : ℝ) ^ 8 ≤ Real.exp 1 ^ 8 := pow_le_pow_left₀ (by norm_num) h2.le 8
-      have h4 : (2500 : ℝ) ≤ 2.7182818283 ^ 8 := by norm_num
-      linarith
-    have h2 : Real.exp 8 ≤ X0 := by
-      rw [← Real.exp_log (by linarith : (0 : ℝ) < X0)]
-      exact Real.exp_le_exp.mpr (by linarith)
-    linarith
-  have hZ0 : 2500 ≤ Z := by linarith
-  have h18 : 18 * y ≤ Z ^ 2 := by nlinarith
+  have hXm7 : (10 : ℝ) ^ 7 ≤ X0m := h.hbs.X0m_ge
+  have hZ0 : 2500 ≤ Z := by norm_num at hXm7; linarith
   exact l520At_of_loc h hH hX0e hX0m hZ0 h18 hK hlam0 hlam
+
+/-- `18 y ≤ Z²` from `X₀⁻ ≤ Z` and the cofactor horizon `18 y/X₀⁻ ≤ Z`. -/
+lemma sq18_of_cofactor {X0m Z y : ℝ} (hXm : 0 < X0m) (hXmZ : X0m ≤ Z)
+    (hyZ : 18 * y / X0m ≤ Z) : 18 * y ≤ Z ^ 2 := by
+  rw [div_le_iff₀ hXm] at hyZ
+  nlinarith
 
 /-- Every prime value is `≥ 2`, from (HBS) on `[1, Z]` with `X₀⁻ ≤ Z`. -/
 lemma p_ge_two_of (h : Hyp P H tw X0m Z η1 η2 ε1 ε θ) (hZ : X0m ≤ Z) (j : ℕ) : 2 ≤ P.p j := by
@@ -145,7 +141,7 @@ noncomputable def bridgeR_mk (h : Hyp P H tw X0m Z η1 η2 ε1 ε θ)
     (hH : H (X0m / 2) ≤ 2 * (X0m / 2) ^ (1 / 8 : ℝ)) {X0 θH lam0 j0 y EBR j : ℝ}
     {Tc : ℝ → ℝ} (hX0e : X0m = X0 - H X0 / 2) (hX0m : X0m ≤ X0)
     (hX96 : (10 : ℝ) ^ 96 ≤ X0)
-    (hy : X0 ≤ y) (hyZ : y ≤ Z) (hlam0 : 0 ≤ lam0) (hlam : lam0 ≤ 2)
+    (hy : X0 ≤ y) (hXmZ : X0m ≤ Z) (h18 : 18 * y ≤ Z ^ 2) (hlam0 : 0 ≤ lam0) (hlam : lam0 ≤ 2)
     (hTb : ∀ t, |Tc t| ≤ 2) (hTlow : ∀ t, t ≤ X0 → Tc t = 0)
     (N K : ℕ) (hN2 : 2 < N) (hN : y < X0 * 2 ^ N / 4) (hK : √(2 * y) ≤ Pk X0m K)
     (hosc : ∑ u ∈ dyScales X0 y N, Real.log (2 * u) * oscR H Tc u ≤ Real.exp (-83))
@@ -161,26 +157,24 @@ noncomputable def bridgeR_mk (h : Hyp P H tw X0m Z η1 η2 ε1 ε θ)
   etaX0Sum := KR.X0S.sX0_sum_le hX96 dyScales_dyadic
   osc := oscBound_oscR P hTb y _
     (fun u hu => dyScales_pos (sizes h hX0e hX0m).2.2.2.2 hu) (fun t => (h.width.reg.pos t).le)
-  termOsc := termOsc_oscR P h.width hX0e (p_ge_two_of h (by linarith)) hTb hTlow y
+  termOsc := termOsc_oscR P h.width hX0e (p_ge_two_of h hXmZ) hTb hTlow y
   sizeE := by
     have hlX := (sizes h hX0e hX0m).2.1
     have hX0p := (sizes h hX0e hX0m).2.2.2.2
-    have hZ0 : 2500 ≤ Z := by
-      have h4 := (sizes h hX0e hX0m).2.2.2.1
-      have : (2500 : ℝ) ≤ X0 := le_trans (by norm_num) hX96
-      linarith
-    have h18 : 18 * y ≤ Z ^ 2 := by nlinarith
+    have hXm7 : (10 : ℝ) ^ 7 ≤ X0m := h.hbs.X0m_ge
+    have hZ0 : 2500 ≤ Z := by norm_num at hXm7; linarith
     exact (sizeE_le h hH hlX hX0e hX0m hZ0 h18 hK hosc).trans hEBR
   sizeJ := hj
-  l520 := l520_of_le h hH hX0e hX0m hy hyZ hK hlam0 hlam
+  l520 := l520_of_le h hH hX0e hX0m hXmZ h18 hK hlam0 hlam
 
 /-- **The bridge record for the realised system** `PR θ X₀ ω`, `H = Hc X₀`, `tw = twR θ X₀ ω`,
 `T_c = TcR θ X₀ ω j₀`, with `E_BR = e^{-76}` and `j = j_{X₀}(x)`. -/
 noncomputable def bridgeR_real {θ' : ℝ} {X₀ : ℕ} {ω : JitterΩ} {Z η1 η2 ε : ℝ} {ε1 : ℝ → ℝ}
     (h : Hyp (PR θ' X₀ ω) (Queue6.Hc X₀) (twR θ' X₀ ω) (Xm X₀) Z η1 η2 ε1 ε (ε / 10))
     (hX : 10 ^ 8 ≤ Real.log X₀) {lam0 j0 x y : ℝ} (NK : ℝ → ℕ × ℕ)
-    (hy : (X₀ : ℝ) ≤ y) (hyZ : y ≤ Z) (hlam0 : 0 ≤ lam0) (hlam : lam0 ≤ 2)
-    (hTb : ∀ t, |TcR θ' X₀ ω j0 t| ≤ 2) (hTlow : ∀ t : ℝ, t ≤ (X₀ : ℝ) → TcR θ' X₀ ω j0 t = 0)
+    (hy : (X₀ : ℝ) ≤ y) (hXmZ : Xm X₀ ≤ Z) (h18 : 18 * y ≤ Z ^ 2) (hlam0 : 0 ≤ lam0)
+    (hlam : lam0 ≤ 2) (hTb : ∀ t, |TcR θ' X₀ ω j0 t| ≤ 2)
+    (hTlow : ∀ t : ℝ, t ≤ (X₀ : ℝ) → TcR θ' X₀ ω j0 t = 0)
     (hNK : 2 < (NK y).1 ∧ y < X₀ * 2 ^ (NK y).1 / 4 ∧ √(2 * y) ≤ Pk (Xm X₀) (NK y).2)
     (hosc : ∑ u ∈ dyScales X₀ y (NK y).1, Real.log (2 * u) *
       oscR (Queue6.Hc X₀) (TcR θ' X₀ ω j0) u ≤ Real.exp (-83))
@@ -198,7 +192,7 @@ noncomputable def bridgeR_real {θ' : ℝ} {X₀ : ℕ} {ω : JitterΩ} {Z η1 �
       have := h.width.reg.pos (X₀ : ℝ)
       linarith)
     (ten96_le hX)
-    hy hyZ hlam0 hlam hTb hTlow
+    hy hXmZ h18 hlam0 hlam hTb hTlow
     (NK y).1 (NK y).2 hNK.1 hNK.2.1 hNK.2.2 hosc le_rfl (le_jXdef hW hbdd)
 
 end BModel
