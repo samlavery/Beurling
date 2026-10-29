@@ -300,12 +300,13 @@ they stay in $\sigma\ge1-8/\Lambda$, where (LP-b) and (LP-c) apply. For $|t|\ge1
   \item $|\hat E(z)|\le e^\gamma C_8\Lambda+10^{-10^7}|z|$, by (LP-b), since $\kappa\le X_0^{-1/3}$ and $\log C_8<440$;
   \item $|\hat D^\sharp(z)|\le2.1|z|X_0^{-0.48}+1$, by Step~1, since $\sigma-\theta'\ge0.48$.
   \end{itemize}
+% Logged correction 104 (CORRECTIONS-vs-v3.md): the max step used a,b >= 2.975, but log(k|t|+19.2) can be 2.958; constant 440.86 -> 440.88.
   So $|\zeta^\sharp|\le2(1+3X_0^{-0.48})\max(k|t|+19.2,\ e^\gamma C_8\Lambda)$ there, for every $|t|\ge1/16$. Now
-  $\log(4|t|+19.2)\le L_t+1.857$ and $\log(e^\gamma C_8\Lambda)<440.578+\log\Lambda$; since $\max(a,b)\le a+b-2.975$ when
-  $a,b\ge2.975$, the ratio $M_k:=\max_{|z-z_0|\le r}|\zeta^\sharp(z)|/|\zeta^\sharp(z_0)|$ satisfies (the constant is
-  $440.855+\log(1+3X_0^{-0.48})\le440.86$)
+  $\log(4|t|+19.2)\le L_t+1.857$ and $\log(e^\gamma C_8\Lambda)<440.578+\log\Lambda$; since $\max(a,b)\le a+b-2.958$ when
+  $a,b\ge2.958$ (and $\log(k|t|+19.2)\ge\log19.2625\ge2.958$), the ratio $M_k:=\max_{|z-z_0|\le r}|\zeta^\sharp(z)|/|\zeta^\sharp(z_0)|$ satisfies (the constant is
+  $440.874+\log(1+3X_0^{-0.48})\le440.88$)
   \begin{equation}\label{eq:lp-growth}
-    \log M_k\le L_t+440.86+\log\Lambda+\log(1/\eta).
+    \log M_k\le L_t+440.88+\log\Lambda+\log(1/\eta).
   \end{equation}
 \item \emph{The inequality.} Suppose $\zeta^\sharp(\beta+it)=0$ with $1-\beta\le\eta/\kappa_L$ for a parameter $\kappa_L>0$, and
   $\eta\ge\eta_y$. Apply Step~5 at $z_0=1+\eta+it$ with this zero, and at $z_0=1+\eta+ikt$ ($k=2,3,4$) with no zero term.
@@ -334,7 +335,7 @@ they stay in $\sigma\ge1-8/\Lambda$, where (LP-b) and (LP-c) apply. For $|t|\ge1
   \end{equation}
   Indeed, otherwise the inequality holds with this $\eta$. Here $\log(1/\eta)=\log\Lambda+\log Y+1.0857$, and
   $\log Y-\log X\le(\log X+0.7)/X\le0.0144$ (as $X\ge479.96$), so the right side of \eqref{eq:lp-growth} is at most
-  $X-0.054+\log Y\le X+\log X-0.039\le Y$.
+  $X-0.034+\log Y\le X+\log X-0.019\le Y$.
   Multiply the inequality by $\eta$, and use $\eta\Lambda=0.33769/Y\le7.1\cdot10^{-4}$: the right side becomes at most
   $(2\cdot93/6.8)\cdot0.33769+10^{-6}\le9.2369<9.2449\le N_0$, a contradiction.
 \item \emph{Two consequences.} Write $\delta_{\mathrm{zf}}(t):=\delta_t$.

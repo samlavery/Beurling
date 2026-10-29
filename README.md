@@ -108,10 +108,11 @@ Samuel Lavery (sam.lavery@gmail.com)
 > printed in the paper lacked a condition that the code has (so the printed formula, re-implemented, fails on many cells) (#101).
 > The Lean formalization of §5 found that the assembly of Lemma 5.7 understated ε₁ (4300λ for about 4802λ, and α′ for 8.1α′);
 > the corrected values still satisfy the bound the proof uses (#102). It also found that the constants certificate checked
-> A₀ ≤ 2.07 and A₁ ≤ 9.42 where Corollary 5.17 uses the sharper 2.06734 and 9.409; the certificate now checks those (#103).
+> A₀ ≤ 2.07 and A₁ ≤ 9.42 where Corollary 5.17 uses the sharper 2.06734 and 9.409; the certificate now checks those (#103); and that a step in the local PNT's zero-free region used
+> log(k|t| + 19.2) ≥ 2.975 where only 2.958 holds, so a constant moves from 440.86 to 440.88, inside the existing slack (#104).
 >
 > Repairing these and re-checking the repairs, and three further independent AI checks (R6–R8 in `review/recheck/`),
-> turned up twenty-three more (the last three from an audit of the certificate code, R30, and from the Lean formalization). The most serious were:
+> turned up twenty-four more (the last four from an audit of the certificate code, R30, and from the Lean formalization). The most serious were:
 > - a gap in the label sum of the Pivot-Integration Lemma (Appendix A): the carried Euler factors cancel only after
 >   integration, not pointwise as the argument needed. Its first repair (#48) covered one configuration type only. The
 >   repair now in the paper (#55) covers the summed form the paper uses; see above;
@@ -125,10 +126,10 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   (#74); R14 found that grid windows near 2z stick out of the range that Theorem R assumes (#75). The check of #76
 >   found that the existence of the slot offset ϑ_s was unproved, and that a tie made a slot empty (#77).
 >
-> These are entries #31–#103 of `CORRECTIONS-vs-v3.md`. All are repaired.
+> These are entries #31–#104 of `CORRECTIONS-vs-v3.md`. All are repaired.
 > - **The repairs of #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72** were checked by a fresh AI checker in
 >   twenty-two passes (`review/recheck/R4.md`). #65 and #66 were checked by the R11 checker (`review/recheck/R11-absorption.md` §§12–13);
->   #68, #69 and #70 by independent checks R12 and R13; #73–#77 by independent checks R16, R17 and R18; #78 by R19; #79–#82 by R20; #83–#85 by R21; #86 and #87 by R22; #88 and #89 by R23; #90 by R24; #91 by R25; #92 by R26; #93 by R27; #95 and #96 by R28; #97–#100 by R29; #94 by R31; #101 came from the certificate audit R30; #102 and #103 came from the Lean formalization, whose kernel-checked results are their check (#103 also by re-running consts.py).
+>   #68, #69 and #70 by independent checks R12 and R13; #73–#77 by independent checks R16, R17 and R18; #78 by R19; #79–#82 by R20; #83–#85 by R21; #86 and #87 by R22; #88 and #89 by R23; #90 by R24; #91 by R25; #92 by R26; #93 by R27; #95 and #96 by R28; #97–#100 by R29; #94 by R31; #101 came from the certificate audit R30; #102–#104 came from the Lean formalization, whose kernel-checked results are their check (#103 also by re-running consts.py).
 > - **The certificate fixes of #54** were checked by the R8 checker (`review/recheck/R8-cert-repro.md` §9).
 > - **The repair of #60** was checked by the R10 checker (`review/recheck/R10-lp-transfer.md`, re-check of #60).
 >   The passes ended with nothing blocking or fixable.
@@ -141,7 +142,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   `review/recheck/R11-absorption.md`. End-to-end checks of Appendix A and of the base-range section are in
 >   `review/recheck/R14-appA-e2e.md` and `review/recheck/R15-sec6-e2e.md`.
 >
-> None of the one hundred and three logged corrections changes a conclusion of the paper. But these
+> None of the one hundred and four logged corrections changes a conclusion of the paper. But these
 > findings show that the AI checks are no substitute for expert review.
 
 ## The result
@@ -183,14 +184,15 @@ negative) from two explicit hypotheses, with no `sorry`:
   - Lemma 5.1 and Lemma 6.26;
   - nearly all the certificates of Appendix B.
 - **Proved but not yet used by the top-level theorem:**
-  - most of §5.1–5.5: Lemma 5.3, Theorem 5.6, Corollary 5.9, Theorem 5.14;
+  - most of §5.1–5.7: Lemma 5.3, Theorem 5.6, Corollary 5.9, Theorems 5.14 and 5.15, the local PNT Theorem 5.24;
   - the skeleton of Theorem 6.6;
   - Appendix A up to the Pivot-Integration Lemma for one run;
   - Prop 6.11 and Theorem 6.23(a), from the skeleton bounds.
-- **Not yet proved:** the rest of §5 (from Theorem 5.15 on), the local PNT of §5.7, §7, the multi-run Pivot-Integration
+- **Not yet proved:** the bridge and margin of §5.8–5.9, §7, the multi-run Pivot-Integration
   Lemma, and the assembly of the queue window data and the Table 1 budget.
 
-The formalization found two defects in the paper (corrections #102, a constant in Lemma 5.7, and #103, certificate coverage of two constants) and two in the Aristotle model
+The formalization found three defects in the paper (corrections #102 and #104, constants in Lemma 5.7 and Theorem 5.24, and #103, certificate
+coverage of two constants) and two in the Aristotle model
 (the height rule and the absorbed set), all fixed. The details, and the list of what
 remains, are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
 

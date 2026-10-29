@@ -177,6 +177,14 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     (`winCount_le_windowElems2`). So `ClusterUpTo` holds on the good event once the cluster events and a target-size
     event `tBound` are in the event family (`clusterUpTo_of_windows2`).
   - Residual inputs: Lemma A.6 (S3)(d) (`S3dHyp`), the multi-run skeleton bound, and the conditions `SlotHyp` on H.
+- **Added in this repository: the local prime number theorem, §5.7** (`Beurling/LocalPNT/`, 45 files, 13.4k lines).
+  - Theorem 5.24, parts (i)–(iii), with the paper's constants (`LPHyp.theorem_5_24`), and on Good(<z) up to the horizon
+    from the lag bound (`theorem_5_24_of_lag`).
+  - Lemma 4.3.
+  - The zero-free region out to T_y + 1 (correction #92).
+  - (LP-a) and (LP-c).
+  - The only remaining input on this route is the monotonicity of T₀, i.e. Lemma 3.3.
+  - The formalization found the slip logged as correction #104.
 - **Appendix B.** Nearly all the certificates: bs-cert (region Z2 and the auxiliary checks), finite-n, x0-band, the
   constants, the bounds on φ, and rankin_R. Dickman's function is constructed and its facts (R1)–(R4) are proved.
 
