@@ -170,6 +170,21 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     Corollary 6.3.
 
   None of these results involves the absorbed set.
+
+  Round 3 (133 files, 34.9k lines in all):
+  - Corollary 5.17(b) in full, with a bounded transfer of A₀ and A₁ to 𝒩.
+  - Proposition 5.18 (transfer bound and ∞-norm bound).
+  - The bridge, §5.8: Proposition 5.26, Lemma 5.27, Lemma 5.32, Lemma 5.34 and Proposition 5.35 (ranges (A) and (B)).
+  - The assembly of Theorem 5.37 and Proposition 5.38 (§5.9).
+  - **Corollary 5.40, packaged as exactly the R1′ and Comp⁽²⁾ inputs of the top level** (`Margin.r1Field_of`,
+    `comp2Field_of`). Their remaining inputs are the identification of the construction's window compensators
+    (`R1Ident`, `Comp2Ident`).
+  - The operator K_pt and the edge expansion of Lemma 7.3.
+  - Named inputs still open in this chain:
+    - Lemma 5.20 (τ-near energy), which is common to Propositions 5.18 and 5.26 and Lemma 5.27;
+    - the Step 1–2 recursion of Proposition 5.38;
+    - the wiring of Theorem 5.37's three inputs;
+    - Lemma 7.3(b), (c) and (d)(iii).
 - **Added in this repository: measurability and the jitter law of the construction** (`Beurling/Model/`, round 3, about
   2700 lines).
   - The construction is measurable in ω, stage by stage. This includes the heights γ_k, through the least-good-height
