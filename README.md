@@ -178,7 +178,6 @@ in [`lean/`](lean/), proves Corollary 2.2 (the answer to Question Q is negative)
   - Section 5 beyond Lemma 5.1;
   - the probabilistic part of Section 6 and the cluster event;
   - Section 7 and Appendix A's Theorem R;
-  - the construction recursion itself.
 
 The details, and the list of what remains, are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
 

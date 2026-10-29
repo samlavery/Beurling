@@ -1,7 +1,7 @@
 # Lean formalization: status and what remains
 
 **Summary.** The main theorem is **not** formally verified. The Lean 4 project in [`lean/`](lean/) proves Corollary 2.2
-(the answer to Question Q is negative) from one explicit hypothesis, `Theorem21InputsR`. That hypothesis still contains
+(the answer to Question Q is negative) from one explicit hypothesis, `Theorem21InputsS`. That hypothesis still contains
 most of the paper's analytic and probabilistic content: about 90 of the roughly 128 pages of proof in Sections 2–7 and
 Appendix A. Everything outside it is proved in Lean with no `sorry`.
 
@@ -32,18 +32,19 @@ lake build
 ## The top-level statement
 
 ```lean
-theorem Construction.corollary_2_2_of_P (h : Theorem21InputsR) : ¬ QuestionQ
+theorem BModel.corollary_2_2_of_S_HB (hHB : ShortIntervalPNT) (h : Theorem21InputsS) : ¬ QuestionQ
 ```
 
-`QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`). `Theorem21InputsR` (`Beurling/Zeros48/Inputs.lean`) is
-Aristotle's `Theorem21InputsO` (`Beurling/Construction/LandingDerive.lean`) without two of its conditions, both now
-proved here (see below): `JitterWidthRegular` (`Theorem21InputsP` drops it) and `Theorem410RestM` (Lemma 4.8(ii)). It says the following. For every θ ∈ [1/4, 1/2 − 10⁻⁴] and every even X₀ ≥ e^{10⁸} beyond some threshold, there is:
-- a slot model M(ω) on the jitter space;
-- a countable family of failure events satisfying the per-scale budget of Table 1;
-
-such that on the good event the hypotheses listed below hold. The realised system P(ω), the absorbed set, the designed
-heights and amplitudes, the parameters and the construction scales are all *defined* in Lean from M and the jitters, not
-assumed.
+- `QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`).
+- `ShortIntervalPNT` (`Beurling/Model/Slope.lean`) is a consequence of the Heath-Brown short-interval prime number
+  theorem (84), stated about ℕ: for q beyond a threshold, every interval in [q, 2q] of length at least (2q)^{7/12}
+  contains at least (1 − (log q)^{−3})·length/log 2q primes.
+- `Theorem21InputsS` (`Beurling/Model/TopS.lean`) fixes the slot model to the construction `constructedModel` built from
+  the jitters. For every θ ∈ [1/4, 1/2 − 10⁻⁴] and every even X₀ ≥ e^{10⁸} beyond some threshold, it asks for a
+  countable family of failure events E with the per-scale budget of Table 1 (`TableBudget`). On the good event it asks
+  for exactly two things: the queue window data and the cluster event.
+- Everything else Aristotle's `Theorem21InputsO` assumed is now proved for the construction: the slot model, the arrival
+  link, the slot facts, the target formula, the slow variation of H, Lemma 4.8(ii) and the null coincidence event 𝒩₌.
 
 ## What is proved
 
@@ -122,8 +123,8 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     and its only remaining conditions are the queue window data, Lemma 4.8(ii) and the cluster event. Two named
     hypotheses remain:
     - `ShortIntervalPNT`: a consequence of (84), Heath-Brown's theorem, stated about ℕ.
-    - `TiesNull`: the paper's claim in §3.4 that the coincidence event 𝒩₌ is null for the constructed model. The
-      event 𝒩₌ is added to the event family; `tableBudget_add_null` shows this preserves the budget.
+    - `TiesNull`: the paper's claim in §3.4 that the coincidence event 𝒩₌ is null for the constructed model. It is
+      now proved (`BModel.tiesNull`, round 3); see the next item.
   - The slot offset is fixed at ϑ_s = 1/2.
 - **Added in this repository: the queue skeleton of Theorem 6.6, standalone** (`Beurling/Queue6/`, ~700 lines,
   standard axioms only). Proved:
@@ -145,6 +146,15 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
 
   The only residual is `Lemma57Residual`: four remainder bounds (a), (b), (d), (e) in the proof of Lemma 5.7, as the paper
   states them. These results do not involve the absorbed set.
+- **Added in this repository: measurability and the jitter law of the construction** (`Beurling/Model/`, round 3, about
+  2700 lines).
+  - The construction is measurable in ω, stage by stage. This includes the heights γ_k, through the least-good-height
+    rule.
+  - Its slot data are adapted to the jitter filtration.
+  - It is an instance of the abstract process `RankFull.JitterLaw` (`constructionLaw`): the box-uniform landing law is
+    proved from the independence of the jitters, and there are nested adapted good events.
+  - The coincidence event 𝒩₌ is null (`tiesNull`). Each tie pattern is a single point for the latest jitter, given the
+    past.
 - **Appendix B.** Nearly all the certificates: bs-cert (region Z2 and the auxiliary checks), finite-n, x0-band, the
   constants, the bounds on φ, and rankin_R. Dickman's function is constructed and its facts (R1)–(R4) are proved.
 
@@ -155,7 +165,7 @@ hypothesis. They are 75 of the 211 modules, about 10.7k of 44k lines. Examples:
 - Lemma A.8;
 - the bs-cert, Lemma 5.3 and margin certificates.
 
-## What remains (the content of `Theorem21InputsR`)
+## What remains (the content of `Theorem21InputsS`)
 
 | Hypothesis | Paper content behind it |
 |---|---|
@@ -189,6 +199,6 @@ Notes:
 
 ## Status
 
-- **The main theorem is not formally verified.** It is proved in Lean only from `Theorem21InputsR`.
+- **The main theorem is not formally verified.** It is proved in Lean only from `Theorem21InputsS`.
 - The parts of the paper behind that hypothesis have so far been checked only by AI agents (see `review/`). Independent
   human review is pending.

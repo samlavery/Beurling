@@ -213,6 +213,14 @@ include h
 def UnitJumps (X₀ : ℕ) (D : PrimeData) : Prop :=
   ∀ n : ℕ, (X₀ : ℝ) < n → n ∈ Nat.smoothNumbers X₀ → (n : ℝ) ∉ absSet X₀ D
 
+/-- A unit jump at `s`: `s` is not both a rigid integer `> X₀` and an element of `A`. -/
+def UnitJumpAt (X₀ : ℕ) (D : PrimeData) (s : ℝ) : Prop :=
+  ∀ n : ℕ, (n : ℝ) = s → (X₀ : ℝ) < n → n ∈ Nat.smoothNumbers X₀ → (n : ℝ) ∉ absSet X₀ D
+
+omit h in
+lemma UnitJumps.at {D : PrimeData} (h : UnitJumps X₀ D) (s : ℝ) : UnitJumpAt X₀ D s :=
+  fun n _ hn hs => h n hn hs
+
 lemma limModel_split {x : ℝ} (hx : (X₀ : ℝ) ≤ x) :
     h.limModel.T x = X₀ + jumpD X₀ (DM h.limModel U) x + contD θ X₀ (DM h.limModel U) x := by
   rw [h.limModel_T_eq x, targetD_split θ _ hx]
@@ -303,7 +311,7 @@ variable {θ : ℝ} {U : ℕ → ℝ} {M : SlotModel X₀} (W : WinFacts θ M U)
 include W
 
 /-- **A slot receiving a prime is a continuous slot**: `X₀ + J(s-) + C(s) = j + ϑ_s`. -/
-theorem placed_level (hunit : UnitJumps X₀ (DM M U)) {m : ℕ}
+theorem placed_level {m : ℕ} (hunit : UnitJumpAt X₀ (DM M U) (M.slot (m + 1)))
     (hm : placedAt M m) (hs : (X₀ : ℝ) < M.slot (m + 1)) :
     (X₀ : ℝ) + jumpL X₀ (DM M U) (M.slot (m + 1)) + contD θ X₀ (DM M U) (M.slot (m + 1)) =
       M.level (m + 1) := by
@@ -344,7 +352,7 @@ theorem placed_level (hunit : UnitJumps X₀ (DM M U)) {m : ℕ}
       by_cases h1 : ∃ n : ℕ, (n : ℝ) = M.slot (m + 1) ∧ n ∈ Nat.smoothNumbers X₀
       · obtain ⟨n, hn, hsm⟩ := h1
         have hnX : (X₀ : ℝ) < n := by rw [hn]; exact hs
-        have hnA := hunit n hnX hsm
+        have hnA := hunit n hn hnX hsm
         rw [hn] at hnA
         rw [if_pos ⟨n, hn, hsm⟩, if_neg hnA]; norm_num
       · rw [if_neg h1]; split_ifs <;> norm_num
@@ -369,14 +377,15 @@ theorem placed_level (hunit : UnitJumps X₀ (DM M U)) {m : ℕ}
     linarith
 
 /-- **Between two placed slot starts the continuous part gains one unit.** -/
-theorem placed_gap (hunit : UnitJumps X₀ (DM M U)) {m m' : ℕ} (hmm : m < m')
+theorem placed_gap {m m' : ℕ} (hu : UnitJumpAt X₀ (DM M U) (M.slot (m + 1)))
+    (hu' : UnitJumpAt X₀ (DM M U) (M.slot (m' + 1))) (hmm : m < m')
     (hm : placedAt M m) (hm' : placedAt M m') (hs : (X₀ : ℝ) < M.slot (m + 1)) :
     1 ≤ contD θ X₀ (DM M U) (M.slot (m' + 1)) - contD θ X₀ (DM M U) (M.slot (m + 1)) := by
   have h16 := W.big
   have hss : M.slot (m + 1) ≤ M.slot (m' + 1) := M.slot_mono (by omega)
   have hs' : (X₀ : ℝ) < M.slot (m' + 1) := lt_of_lt_of_le hs hss
-  have hL := placed_level W hunit hm hs
-  have hL' := placed_level W hunit hm' hs'
+  have hL := placed_level W hu hm hs
+  have hL' := placed_level W hu' hm' hs'
   have hmm' : (m : ℝ) + 1 ≤ m' := by exact_mod_cast hmm
   unfold SlotModel.level at hL hL'
   push_cast at hL hL'
@@ -407,12 +416,15 @@ theorem placed_gap (hunit : UnitJumps X₀ (DM M U)) {m m' : ℕ} (hmm : m < m')
   push_cast at hmz''
   linarith
 
-/-- **Placed slot starts in a window** (`PlacedWindowCount`, §3.4). -/
-theorem window_count (hunit : UnitJumps X₀ (DM M U)) (hslot1 : (X₀ : ℝ) < M.slot 1) :
-    PlacedWindowCount M := by
+/-- **Placed slot starts with unit jumps in a window**: a window `(a, b]` holds at most
+`1.01 (b - a) + 1` starts of placed slots of `S₀` (each with a unit jump at its start). -/
+theorem window_count_on (S₀ : Set ℕ)
+    (hS₀ : ∀ m ∈ S₀, placedAt M m ∧ UnitJumpAt X₀ (DM M U) (M.slot (m + 1)))
+    (hslot1 : (X₀ : ℝ) < M.slot 1) {a b : ℝ} (hab : a ≤ b) :
+    ({m | m ∈ S₀ ∧ a < M.slot (m + 1) ∧ M.slot (m + 1) ≤ b}.ncard : ℝ) ≤
+      1.01 * (b - a) + 1 := by
   classical
-  intro a b hab
-  set S := {m | placedAt M m ∧ a < M.slot (m + 1) ∧ M.slot (m + 1) ≤ b}
+  set S := {m | m ∈ S₀ ∧ a < M.slot (m + 1) ∧ M.slot (m + 1) ≤ b}
   have hge : ∀ m, (X₀ : ℝ) < M.slot (m + 1) := fun m =>
     lt_of_lt_of_le hslot1 (M.slot_mono (by omega))
   rcases S.eq_empty_or_nonempty with hS | ⟨m₀, hm₀⟩
@@ -429,12 +441,14 @@ theorem window_count (hunit : UnitJumps X₀ (DM M U)) (hslot1 : (X₀ : ℝ) < 
     by_contra hne
     have h3 : (g m : ℝ) = g m' := by rw [hg]
     rcases lt_or_gt_of_ne hne with hlt | hlt
-    · have := placed_gap W hunit hlt hm.1 hm'.1 (hge m)
+    · have := placed_gap W (hS₀ m hm.1).2 (hS₀ m' hm'.1).2 hlt (hS₀ m hm.1).1
+        (hS₀ m' hm'.1).1 (hge m)
       have h1 := Nat.floor_le (hpos m hm)
       have h2 := Nat.lt_floor_add_one (C (M.slot (m' + 1)) - C (max a (X₀ : ℝ)))
       simp only [g] at h3
       linarith
-    · have := placed_gap W hunit hlt hm'.1 hm.1 (hge m')
+    · have := placed_gap W (hS₀ m' hm'.1).2 (hS₀ m hm.1).2 hlt (hS₀ m' hm'.1).1
+        (hS₀ m hm.1).1 (hge m')
       have h1 := Nat.floor_le (hpos m' hm')
       have h2 := Nat.lt_floor_add_one (C (M.slot (m + 1)) - C (max a (X₀ : ℝ)))
       simp only [g] at h3
@@ -456,6 +470,13 @@ theorem window_count (hunit : UnitJumps X₀ (DM M U)) (hslot1 : (X₀ : ℝ) < 
     push_cast; linarith [Nat.floor_le hL0]
   have hc : (S.ncard : ℝ) ≤ ((⌊1.01 * (b - a)⌋₊ + 1 : ℕ) : ℝ) := by exact_mod_cast hcard
   linarith
+
+/-- **Placed slot starts in a window** (`PlacedWindowCount`, §3.4). -/
+theorem window_count (hunit : UnitJumps X₀ (DM M U)) (hslot1 : (X₀ : ℝ) < M.slot 1) :
+    PlacedWindowCount M := by
+  intro a b hab
+  have h := window_count_on W {m | placedAt M m} (fun m hm => ⟨hm, hunit.at _⟩) hslot1 hab
+  simpa using h
 
 end Window
 
