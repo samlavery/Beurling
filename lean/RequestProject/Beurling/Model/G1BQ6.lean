@@ -4,6 +4,7 @@ public import RequestProject.Beurling.Model.G1BRes
 public import RequestProject.Beurling.Queue6.NuBlock
 public import RequestProject.Beurling.Queue6.NuModel
 public import RequestProject.Beurling.Queue6.Hthr
+public import RequestProject.Beurling.Queue6.HthrB
 public import RequestProject.Beurling.Queue6.G1BQueue6
 
 /-!
@@ -13,15 +14,13 @@ public import RequestProject.Beurling.Queue6.G1BQueue6
 `δ = deltaB`, `thrS = threshSum tJ y (2δ)`) at a range-(B) start `y ≤ b + H(b)` from:
 
 * `tnpR` (`htnp`); `Queue6.g1B_hcount_R` (`Eloc`, `hcount`); `Queue6.hH_R` with `Hy = H(y)`,
-  `K_loc = 0`; `Queue6.hthr_R` (Lemma 5.23 at `2δ`);
+  `K_loc = 0`; `Queue6.hthr_Zc` (Lemma 5.23 at `2δ`);
 * the pointwise noise bound `|ν_Model(z)| ≤ ν̄(z)` for `z + 2H(z) ≤ b` (`Queue6.nu522_point`,
   as the hypothesis `hpt`) with `ν̄(z) ≤ ν̄_i` (`Queue6.nuB_le_nbQ`) and
   `log y · ν̄_i ≤ 10⁻²⁷` (`Queue6.log_nbQ_le`): the window `J` lies in two blocks, and
   `z + 2H(z) ≤ b` on `J` (`horJ`: `δy ≥ y^{3/4}/2`).
 
-The remaining hypothesis of `hthr_R` is **`HthrHor`**: at the start `y`, the good event up to a
-time `t₀ ≥ y` and Lemma 5.1(iv) (`MertensUpTo`) up to a height `Z' ≥ y` (for
-`y ∈ (b, b + H(b)]` these are beyond `Good(< b)`; the horizon is under a paper check).
+Lemma 5.23 at `2δ` is `Queue6.hthr_Zc` on `Good(< t)`, `b ≤ t`, with (H_BS) on `[1, Zc b]`.
 -/
 
 @[expose] public section
@@ -31,15 +30,6 @@ open Set Real MeasureTheory Construction CaplLink Queue6 KR KR.TNP Finset
 namespace BModel
 
 variable {θ : ℝ} {X₀ : ℕ}
-
-variable (θ X₀) in
-/-- **The residual of `Queue6.hthr_R`** (Lemma 5.23 at `2δ`, via `threshHyp_R`): at every
-range-(B) start `y ≤ b + H(b)`, the good event `G0` up to a time `t₀ ≥ y` and
-`MertensUpTo P Z'` (Lemma 5.1(iv)) up to a height `Z' ≥ y`. -/
-def HthrHor (ω : JitterΩ) (b : ℝ) : Prop :=
-  ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
-    (∃ t₀ : ℕ, y ≤ t₀ ∧ ω ∈ G0 θ X₀ (e3Family θ X₀) t₀) ∧
-      ∃ Z' : ℝ, y ≤ Z' ∧ Queue6.MertensUpTo (PR θ X₀ ω) Z'
 
 variable (hc : Cond θ X₀)
 include hc
@@ -111,16 +101,15 @@ include hev
 set_option maxHeartbeats 2000000 in
 /-- **The Queue6 group of `KR.RML9.g1BInputs_of`** at a range-(B) start `y`, on
 `Good(< t) ∩ NiceEv` with `b ≤ t`, from the pointwise noise bound `hpt` (`Queue6.nu522_point`
-at time `b`) and the residual `HthrHor`. -/
-noncomputable def g1ResQueue6_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b)
-    (hN : ω ∈ NiceEv θ X₀)
+at time `b`). -/
+noncomputable def g1ResQueue6_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ}
+    (hG : ω ∈ G0 θ X₀ (e3Family θ X₀) t) (hbt : b ≤ t) (hN : ω ∈ NiceEv θ X₀)
     (hbs : (PR θ X₀ ω).HBS (Xm X₀) (Zc X₀ b) (1 / 1000) (1 / 1000) (hbsEps X₀))
     (hX1 : 10 ^ 8 + 1 ≤ Real.log X₀)
     (hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀))
     (hpt : ∀ r : ℝ, (X₀ : ℝ) ≤ r → r + 2 * Queue6.Hc X₀ r ≤ b →
       |(nuRes hO (twR θ X₀ ω) (ρLd θ X₀ ω) (TcLd θ X₀ ω) (JL (jzX X₀) X₀) 0 (NTd θ X₀ ω) :
         ℝ → ℝ) r + 0 / Queue6.Hc X₀ r| ≤ nuB X₀ r)
-    (hhor : HthrHor θ X₀ ω b)
     {y : ℝ} (hy : (X₀ : ℝ) ≤ y) (hyb : y ≤ b + Queue6.Hc X₀ b)
     (hyL : (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y) :
     KR.RML9.G1ResQueue6 (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀ y (Zc X₀ b) (1 / 1000) (1 / 1000)
@@ -178,13 +167,7 @@ noncomputable def g1ResQueue6_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤
     hϑ := fun _ _ => by simp
     Hy := Queue6.Hc X₀ y
     Kloc := 0
-    hthr :=
-      have h := hhor y hy hyb hyL
-      have hG' := (Classical.choose_spec h.1).2
-      have hyt := (Classical.choose_spec h.1).1
-      have hM := (Classical.choose_spec h.2).2
-      have hyZ' := (Classical.choose_spec h.2).1
-      hthr_R hc hev (e3Family θ X₀) hG' hN hbs hM hy hyL (sqrt_le_Zc hc hb hyb) hyZ' hyt
+    hthr := hthr_Zc hc hev (e3Family θ X₀) hG hN hb hbt hbs hy hyb hyL
     hH1 := hHR.1
     hH := hHR.2.1
     hK0 := hHR.2.2.1

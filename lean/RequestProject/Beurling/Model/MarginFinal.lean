@@ -25,15 +25,13 @@ open Finset Real MeasureTheory Set BeurlingSystem Construction BModel KR KR.TNP 
 namespace BModel
 
 /-- **The open inputs of `RestRes`** at `(ω, b)` once Queue6's lemmas are in: §5's group of
-Proposition 5.35(B) (`G1ResSec5`) and the residual `HthrHor` of Lemma 5.23 at `2δ`. -/
+Proposition 5.35(B) (`G1ResSec5`). -/
 structure RestResH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
   /-- **Proposition 5.35(B)**, §5's inputs on range (B) (`KR.RML9.G1ResSec5`) -/
   g1S : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
     ∀ hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀),
     KR.RML9.G1ResSec5 (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀ y (deltaB θ X₀ ω y) (ρLd θ X₀ ω)
       (nuLd θ X₀ ω) (NTd θ X₀ ω) 0 (TcLd θ X₀ ω) (JL (jzX X₀) X₀) (TcR θ X₀ ω (jzX X₀)) hO
-  /-- the horizon of `Queue6.hthr_R` (Lemma 5.23 at `2δ`; under a paper check) -/
-  hhor : HthrHor θ X₀ ω b
 
 variable (θ X₀) in
 /-- **The open inputs** at `(ω, b)`: `RestResH` and `RestMargin` at `ν̄ = nbQ` (Model choices
@@ -91,8 +89,8 @@ theorem theorem21InputsZ_hux (h84 : BaseRange.Huxley84) (h : Theorem21InputsH) :
       unfold tE2; rw [show ((b.toNat : ℕ) : ℝ) = (b : ℝ) by exact_mod_cast Int.toNat_of_nonneg hb0]
     have hOp := opR hc hev hbs hN.2.1 hlog1
     let Rs : RestRes θ X₀ ω b :=
-      { g1Q := fun y hy hyb hyL => g1ResQueue6_c hc hev hb hN hbs hlog1 hOp
-          (fun r hr hrb => hpt _ hG hN hOp r hr (hrb.trans hbt)) Rh.hhor hy hyb hyL
+      { g1Q := fun y hy hyb hyL => g1ResQueue6_c hc hev hb hG hbt hN hbs hlog1 hOp
+          (fun r hr hrb => hpt _ hG hN hOp r hr (hrb.trans hbt)) hy hyb hyL
         g1S := Rh.g1S
         nb := Queue6.nbQ X₀
         hnu := hnu b hG }
