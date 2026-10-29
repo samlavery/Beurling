@@ -55,7 +55,8 @@ structure ThreshHyp (t : ℕ → ℝ) (Hf : ℝ → ℝ) (x δ Kloc X0m Z η1 η
   loglog : 0 ≤ Real.log (Real.log x)
   t_ge : ∀ j, 1 ≤ t j
   jit : ∀ j, |t j - P.p j| ≤ Hf (t j) / 2
-  H_small : ∀ z, 1 ≤ z → Hf z ≤ z / 100
+  /-- `|t(p) - p| ≤ t(p)/200` (from `jit` and `H(z) ≤ z/100` at the decision times) -/
+  jit_small : ∀ j, |t j - P.p j| ≤ t j / 200
   H_mono : MonotoneOn Hf (Set.Ici 1)
   H_two : ∀ z, 1 ≤ z → Hf (2 * z) ≤ 1.000003 * Hf z
   Hx_ge : 1 ≤ Hf x
@@ -85,8 +86,8 @@ lemma δ_pos (h : P.ThreshHyp t Hf x δ Kloc X0m Z η1 η2 ε1) : 0 < δ := by
 /-- `t(p) ≤ (200/199) p` and `p ≤ (201/200) t(p)`. -/
 lemma t_le (h : P.ThreshHyp t Hf x δ Kloc X0m Z η1 η2 ε1) (j : ℕ) :
     t j ≤ 200 / 199 * P.p j ∧ P.p j ≤ 201 / 200 * t j := by
-  have h1 := h.jit j
-  have h2 := h.H_small (t j) (h.t_ge j)
+  have h1 := h.jit_small j
+  have h0 := h.t_ge j
   rw [abs_le] at h1
   constructor <;> linarith [h1.1, h1.2]
 
@@ -174,8 +175,8 @@ lemma caseII (h : P.ThreshHyp t Hf x δ Kloc X0m Z η1 η2 ε1) {j : ℕ}
     have hti := (Finset.mem_filter.mp hm).2.2.2.1 i hi
     obtain ⟨hti1, -⟩ := h.t_le i
     have hpi : 0.99 * p ≤ P.p i := by
-      have := h.jit i
-      have hHi := h.H_small (t i) (h.t_ge i)
+      have := h.jit_small i
+      have hti0 := h.t_ge i
       rw [abs_le] at this
       linarith [this.1, hti, ht2]
     have hval : p * P.p i ≤ P.val m := by

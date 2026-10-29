@@ -4,6 +4,11 @@ public import RequestProject.Beurling.Model.MarginMine
 public import RequestProject.Beurling.Model.S2Final
 public import RequestProject.Beurling.Model.Wire3
 public import RequestProject.Beurling.Model.SigmaResp
+public import RequestProject.Beurling.Model.OscBound
+public import RequestProject.Beurling.Model.BtNT
+public import RequestProject.Beurling.Model.G1BWire
+public import RequestProject.Beurling.Model.G1BJumpProof
+public import RequestProject.Beurling.Model.G1BRprime
 public import RequestProject.Beurling.Noise.RML6G1
 public import RequestProject.Beurling.BaseRange.Lemma73Low
 public import RequestProject.Beurling.BaseRange.MarginHc
@@ -54,12 +59,6 @@ structure RestBridge (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
   /-- `j_{X₀}(x) ≥ 0` (eq. (jX0); §5, Proposition 5.33) -/
   jXnn : ∀ x, 0 ≤ jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH
     (jzX X₀) (NKc X₀) x
-  /-- **eq. (osc), first display**, for the clamped `T_c` at the starts of the windows -/
-  hosc : ∀ x y, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b → InW (Queue6.Hc X₀ x) x y →
-    ∑ u ∈ KR.TNP.dyScales X₀ y (NKc X₀ y).1, Real.log (2 * u) *
-      KR.Chain.oscR (Queue6.Hc X₀) (KR.TcLoc.clampT (KR.TcLoc.oscHt (Queue6.Hc X₀) y)
-        (TcR θ X₀ ω (jzX X₀))) u
-        ≤ Real.exp (-83)
   /-- the eq. (jX0) family is bounded on `W_x` (§5, Proposition 5.33) -/
   hbdd : ∀ x, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b →
     BddAbove (Set.range fun y : {y : ℝ // InW (Queue6.Hc X₀ x) x y} =>
@@ -68,11 +67,13 @@ structure RestBridge (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
 
 /-- **Proposition 5.35, Lemma 5.34 and the margin identity** inputs of `RealMarginLoc`. -/
 structure RestRes (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
-  /-- **Proposition 5.35(B)**'s inputs on range (B) (`KR.RML6.G1BInputs`; owners in its
-  docstring: Model, Queue6, §5) -/
+  /-- **Proposition 5.35(B)**'s non-Model inputs on range (B) (`KR.RML6.G1BRest`: Queue6's
+  Step 1 count and Lemma 5.23 at `2δ`, §5's Step 2), at the Model's `δ = deltaB`, `ρ̃ = rhoT` and
+  threshold mass `threshSum tJ y (2δ)` -/
   g1B : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
-    KR.RML6.G1BInputs (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀
-      (fun t => TcR θ X₀ ω (jzX X₀) t + jzX X₀ * ind X₀ t) y
+    KR.RML6.G1BRest (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀
+      (fun t => TcR θ X₀ ω (jzX X₀) t + jzX X₀ * ind X₀ t) y (deltaB θ X₀ ω y) (rhoT θ X₀ ω)
+      ((PR θ X₀ ω).threshSum (Queue6.tJ θ X₀ ω) y (2 * deltaB θ X₀ ω y))
   /-- `NT` (locally integrable) -/
   NT : KR.Ops.LocInt
   ϑ : ℝ → ℝ
@@ -116,14 +117,7 @@ structure RestRes (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
   hTLBd : KR.Ops.LBd (fun t => TcR θ X₀ ω (jzX X₀) t + (jzX X₀) * ind X₀ t)
 
 /-- **Proposition 5.38, steps 1–6** inputs of `RealMarginLoc`. -/
-structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (ρL : KR.Ops.LocInt)
-  (TcL : KR.Ops.LocInt) (NT : KR.Ops.LocInt) (vtH : KR.Ops.LocInt) (a : ℝ → ℝ) (bb : ℝ → ℝ)
-    (hO₀ : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀)) where
-  η : ℝ → ℝ
-  sη : ℝ
-  /-- window integrability of `m` -/
-  intm : ∀ t, IntervalIntegrable (marginM θ X₀ ω) volume
-    (t - Queue6.Hc X₀ t / 2) (t + Queue6.Hc X₀ t / 2)
+structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (a : ℝ → ℝ) (bb : ℝ → ℝ) where
   /-- **Steps 1–5**: the parameters of the recursion and its super-solution -/
   p : Margin.Rec.CP
   T0 : ℝ
@@ -186,16 +180,13 @@ structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (ρL : KR
         (fun M => ¬ Margin.Rec.Vv (PR θ X₀ ω) M ≤ √t),
       Margin.Rec.Aw (PR θ X₀ ω) p M * (p.ES / Real.log (t / Margin.Rec.Vv (PR θ X₀ ω) M)) ≤
         0.06 * p.ES / Real.log t
-  hBt : ∀ t, (X₀ : ℝ) ^
-    (1.01 : ℝ) ≤ t → t ≤ b → |(Btc θ X₀ ω hO₀ ρL TcL vtH NT) t| ≤ 54 * η t + 6 / Queue6.Hc X₀ t
-  hsη : ∀ t, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ b → Real.log t * η t ≤ sη
   /-- the sizes of the error terms (`o(1)`, §5.1; Step 5 of Proposition 5.35) -/
   hsmall : ∀ t, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ b →
     oTot (Queue6.Hc X₀ t) t ((fun _ => EBRc) t) ((fun x => jXdef (PR θ X₀ ω) (Queue6.Hc X₀)
       (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀) (NKc X₀) x) t) +
       (a t + bb t + 6 * Real.log t / Queue6.Hc X₀ t) + (fun _ => EBRc) t + (fun x => jXdef
         (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀) (NKc X₀) x) t +
-      54 * sη + 6 * Real.log t / Queue6.Hc X₀ t + 6.5 * p.ES + VX (PR θ X₀ ω) p t ≤ 0.01
+      54 * (sηB X₀) + 6 * Real.log t / Queue6.Hc X₀ t + 6.5 * p.ES + VX (PR θ X₀ ω) p t ≤ 0.01
   /-- **Proposition 5.33**: `j_{X₀} ≤ 0.4209` -/
   hjb : ∀ t, 2 * (X₀ : ℝ) ≤ t → t ≤ (X₀ : ℝ) ^ (1.01 : ℝ) → t ≤ b → (jbc θ X₀ ω) t ≤ 0.4209
 
@@ -223,7 +214,7 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
       (KR.Sharp.rhoEdge (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀))
     (Bs : RestBase θ X₀ ω b) (Br : RestBridge θ X₀ ω b)
     (Rs : RestRes θ X₀ ω b)
-    (Mg : RestMargin θ X₀ ω b Rs.ρL Rs.TcL Rs.NT Rs.vtH Rs.a Rs.bb (opR hc hev hbs hN.2.1 hX1)) :
+    (Mg : RestMargin θ X₀ ω b Rs.a Rs.bb) :
     RealMarginLoc hc ω b where
   Z := Zc X₀ b
   η1 := 1 / 1000
@@ -262,10 +253,15 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
   x0s := Queue6.x0sHyp_G0 (e3Family θ X₀) hc hev hG hN hbt hbs (Zc_facts hc hb).1 le_rfl
     (by linarith [hc.hθ.2])
   bridge := fun x y hx hxb hW => bridge_c hc hev hb hbs hN.2.1 hX1 hx hxb hW
-    (Br.hosc x y hx hxb hW) (Br.hbdd x hx hxb)
+    (hosc_c hc hev hb hbt hG.1 (fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn) hN
+      (tnpR hc hev hbs hN.2.1 hX1) hx hxb hW) (Br.hbdd x hx hxb)
   g1 := fun y hy hyb => KR.RML6.g1_of (by norm_num at hX1 ⊢; linarith) (Xm_pos' hc)
     (Xm_le_X0 hc) hy (sigmaAResp_R hc hev hb hbt hG.1 (fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG
-      (Sum.inl n) hn) hN hbs hX1 hy hyb) (Rs.g1B y hy hyb)
+      (Sum.inl n) hn) hN hbs hX1 hy hyb) (fun hyL => g1B_mk hc hev hb hbt hG.1
+        (fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn) hN
+          (tnpR hc hev hbs hN.2.1 hX1) hy hyb hyL (jumpCount_c hc hev hb hbt hG.1
+            (fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn) hN hy hyb hyL)
+              (rprimeChange_c hc ω hb (tnpR hc hev hbs hN.2.1 hX1) hy hyb) (Rs.g1B y hy hyb hyL))
   ρL := Rs.ρL
   hρL := Rs.hρL
   TcL := Rs.TcL
@@ -281,9 +277,9 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
   hG := Rs.hG
   hϑ := Rs.hϑ
   Bt := Btc θ X₀ ω (opR hc hev hbs hN.2.1 hX1) Rs.ρL Rs.TcL Rs.vtH Rs.NT
-  η := Mg.η
-  sη := Mg.sη
-  intm := Mg.intm
+  η := ηB θ X₀ ω
+  sη := sηB X₀
+  intm := intm_c hc hev ω
   p := Mg.p
   T0 := Mg.T0
   err := fun z => 2.2 * s2E3 X₀ (uS X₀ (m1z X₀ z)) + 2.2 * s2E3 X₀ (uS X₀
@@ -332,8 +328,9 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
   hpε' := Mg.hpε'
   htail := Mg.htail
   hdec := fun hO t _ _ => hdec_c ω (opR hc hev hbs hN.2.1 hX1) Rs.ρL Rs.TcL Rs.vtH Rs.NT hO t
-  hBt := Mg.hBt
-  hsη := Mg.hsη
+  hBt := hBt_c hc hev ω
+    (opR hc hev hbs hN.2.1 hX1) Rs.ρL Rs.TcL Rs.vtH Rs.NT Rs.hρL Rs.hTcL Rs.hvt Rs.hϑ
+  hsη := hsη_c hc hev ω hb (tnpR hc hev hbs hN.2.1 hX1)
   hsmall := Mg.hsmall
   jb := jbc θ X₀ ω
   hsum := by intro t _ _ _; unfold jbc; exact BModel.RML6.hsum_canon _ _ _
@@ -372,7 +369,7 @@ variable (θ X₀) in
 def OthersInputs (ω : JitterΩ) (b : ℝ) : Prop :=
   ∃ (Bs : RestBase θ X₀ ω b) (Br : RestBridge θ X₀ ω b) (Rs : RestRes θ X₀ ω b),
     ∀ hO₀ : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀),
-      Nonempty (RestMargin θ X₀ ω b Rs.ρL Rs.TcL Rs.NT Rs.vtH Rs.a Rs.bb hO₀)
+      Nonempty (RestMargin θ X₀ ω b Rs.a Rs.bb)
 
 /-- `RealMarginLoc` from the Model fields and `OthersInputs`. -/
 theorem realMarginLoc_of_others (hc : Cond θ X₀) (hev : Even X₀) {ω : JitterΩ} {b : ℝ}
