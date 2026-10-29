@@ -87,7 +87,7 @@ structure HjAt (P : BeurlingSystem) (X0m Z : ℝ) (X0 : ℕ) (N K : ℕ) (y : �
   hZ : 2 * y / X0m ≤ Z
   hZ2 : 18 * y ≤ Z ^ 2
   hT : LocalPNT.Theorem524Concl P X0 (2 * (y / X0) ^ (0.55 : ℝ))
-  hSR : ShortRecip P y
+  hSR : ShortRecipLow P X0 y
   hK : ∀ v ∈ TNP.dyScales (X0 : ℝ) y N, √(2 * v) ≤ TNP.Pk X0m K
 
 set_option maxHeartbeats 1000000 in

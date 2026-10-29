@@ -34,7 +34,7 @@ theorem xbB_huge {Z η1 η2 : ℝ} {ε1 : ℝ → ℝ} (h : P.HBS X0m Z η1 η2 
     (htv : ∀ r, r.Prime → P.labelVal r ≤ 2 * tw r) (hlam : 1 + 2 * θ ≤ lam0)
     (hlam1 : lam0 ≤ 1.001) (hy : X0m ≤ y) (hJ : 600 * Real.log X0 ^ 4 ≤ Real.log (y / X0))
     (hZ : 2 * y / X0m ≤ Z) (hT : LocalPNT.Theorem524Concl P X0 (2 * (y / X0) ^ (0.55 : ℝ)))
-    (hSR : ShortRecip P y) :
+    (hSR : ShortRecipLow P X0 y) :
     xbB P H tw X0m y X0 θ lam0 ≤
       (200000 * (H X0 / X0) + Real.exp (-61)) * Real.log X0 / Real.log (y / X0) := by
   set δ := H X0 / X0 with hδdef

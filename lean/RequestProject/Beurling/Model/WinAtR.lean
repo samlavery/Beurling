@@ -117,7 +117,7 @@ noncomputable def winAt_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t
     (hbs : (PR θ X₀ ω).HBS (Xm X₀) (Zc X₀ b) (1 / 1000) (1 / 1000) (hbsEps X₀))
     (hX1 : 10 ^ 8 + 1 ≤ Real.log X₀) {s : ℝ} (hs : (X₀ : ℝ) ^ (1.01 : ℝ) ≤ s) (hsb : s ≤ b)
     (hh1 : (X₀ : ℝ) ≤ 2 * (s / X₀) ^ (0.55 : ℝ)) (hh2 : 2 * (s / X₀) ^ (0.55 : ℝ) ≤ s / 2)
-    (hSR : KR.RML9.ShortRecip (PR θ X₀ ω) s) :
+    (hSR : KR.RML9.ShortRecipLow (PR θ X₀ ω) X₀ s) :
     KR.RML10.WinAt (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀ (TcR θ X₀ ω (jzX X₀)) s :=
   have hX : 10 ^ 8 ≤ Real.log X₀ := by linarith
   have hT := tnpR hc hev hbs hN.2.1 hX1

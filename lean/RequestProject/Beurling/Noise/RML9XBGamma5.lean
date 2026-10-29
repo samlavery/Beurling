@@ -46,7 +46,7 @@ theorem gamma_le {Z η1 η2 : ℝ} {ε1 : ℝ → ℝ} (h : P.HBS X0m Z η1 η2 
     (hP : PaperWidth H X0m ε θ) (hX0e : X0m = X0 - H X0 / 2) (hδ : H X0 / X0 ≤ 1 / 1000)
     (hp2 : ∀ j, 2 ≤ P.p j) (hXl : 100000000 ≤ Real.log X0m) (ht : ∀ r, r.Prime → 0 < tw r)
     (htv : ∀ r, r.Prime → P.labelVal r ≤ 2 * tw r) (hlam : 1 + 2 * θ ≤ lam0)
-    (hlam1 : lam0 ≤ 1.001) (hy : X0m ≤ y) (hZ : 2 * y / X0m ≤ Z) (hSR : ShortRecip P y) :
+    (hlam1 : lam0 ≤ 1.001) (hy : X0m ≤ y) (hZ : 2 * y / X0m ≤ Z) (hSR : ShortRecipLow P X0 y) :
     ∑ w ∈ (Dset P X0m y).filter (fun w => ¬ Vl P w ≤ Real.exp 100), ∑ d ∈ Dset P X0m y,
         Gpair P H tw X0m y X0 θ lam0 d w ≤ Real.exp (-62) * Real.log X0 / Real.log y := by
   have hXm0 := hP.X0m_pos

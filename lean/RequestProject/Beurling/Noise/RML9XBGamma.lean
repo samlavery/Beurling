@@ -47,7 +47,7 @@ set_option maxHeartbeats 1000000 in
 lemma near_part_le {ε θ X0 lam0 : ℝ} (hP : PaperWidth H X0m ε θ) (hX0e : X0m = X0 - H X0 / 2)
     (hδ : H X0 / X0 ≤ 1 / 1000) (hp2 : ∀ j, 2 ≤ P.p j) (ht : ∀ p, p.Prime → 0 < tw p)
     (hlam : 1 + 2 * θ ≤ lam0) (hlam4 : lam0 ≤ 4) (hy : X0m ≤ y) (hXm1 : 1 ≤ X0m)
-    (hSR : ShortRecip P y) {d : ℕ} (hd : d ∈ Dset P X0m y) :
+    (hSR : ShortRecipLow P X0 y) {d : ℕ} (hd : d ∈ Dset P X0m y) :
     ∑ w ∈ (Dset P X0m y).filter (fun w => ¬ Vl P w ≤ Real.exp 100),
       (if X0Near P.labelVal y H X0m d (d * w)
         then 1 / 2 * TVD P H tw X0m y d / Vl P d / Vl P w else 0) ≤
@@ -132,10 +132,15 @@ lemma near_part_le {ε θ X0 lam0 : ℝ} (hP : PaperWidth H X0m ε θ) (hX0e : X
     set T := ((Dset P X0m y).filter (fun w => ¬ Vl P w ≤ Real.exp 100)).filter
       (fun w => X0Near P.labelVal y H X0m d (d * w)) with hT
     have hM1 : 1 ≤ M := by rw [hM, le_div_iff₀ hXm0]; nlinarith
-    have hMY : M ≤ y / 2 := by
+    have hMY : M ≤ y / X0 := by
       have := posn_le_half hp2 hy0 hd2 (P := P)
-      rw [hM, div_le_iff₀ hXm0]; nlinarith
-    have hSRT := sum_labels_le_SR hSR hM1 hMY hρ0 hρ1 T
+      have hHX0 : 0 ≤ H X0 := (hP.reg.pos X0).le
+      have hX0p : 0 < X0 := by rw [hX0e] at hXm0; linarith
+      have hX2 : X0 ≤ 2 * X0m := by
+        have : H X0 ≤ X0 / 1000 := by rw [div_le_iff₀ hX0p] at hδ; linarith
+        rw [hX0e]; linarith
+      rw [hM, div_le_div_iff₀ hXm0 hX0p]; nlinarith
+    have hSRT := sum_labels_le_SRL hSR hM1 hMY hρ0 hρ1 T
       (fun w hw => by
         have := (mem_Dset.mp (Finset.mem_filter.mp (Finset.mem_filter.mp hw).1).1).2; omega)
       (fun w hw => by

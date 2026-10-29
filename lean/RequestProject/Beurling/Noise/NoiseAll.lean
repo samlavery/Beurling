@@ -10,6 +10,12 @@ public import RequestProject.Beurling.Noise.LemSMain
 public import RequestProject.Beurling.Noise.ThreshMass
 public import RequestProject.Beurling.Noise.Noise56
 public import RequestProject.Beurling.Noise.A1Sharp
+public import RequestProject.Beurling.Noise.RML12HJR
+public import RequestProject.Beurling.Noise.RML12SRL
+public import RequestProject.Beurling.Noise.RML12M
+public import RequestProject.Beurling.Noise.RML12SzRank
+public import RequestProject.Beurling.Noise.RML12SzBsc
+public import RequestProject.Beurling.Noise.RML12Sz
 public import RequestProject.Beurling.Noise.RML11Sum
 public import RequestProject.Beurling.Noise.RML11S4
 public import RequestProject.Beurling.Noise.RML11Small

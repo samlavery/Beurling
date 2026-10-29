@@ -36,6 +36,14 @@ def ShortRecip (P : BeurlingSystem) (Y : ℝ) : Prop :=
     ∑ e ∈ (P.elems (M * (1 + a))).filter (fun e => M * (1 - a) ≤ P.val e), 1 / P.val e ≤
       28 * a + 7 * M ^ (-(3 / 4 : ℝ))
 
+/-- **Lemma 5.29 at the values read by Proposition 5.31** (`M ≤ Y/X₀`): the statement of
+`ShortRecip P Y` restricted to `M ≤ Y/X₀`. It is `Queue6.ShortRecipLow P X₀ Y` (same body; the
+Queue6 agent proves it at time `b` for `Y ≤ 1.1b`, `Queue6.shortRecipLow_b`). -/
+def ShortRecipLow (P : BeurlingSystem) (X0 Y : ℝ) : Prop :=
+  ∀ M a : ℝ, 1 ≤ M → M ≤ Y / X0 → 0 < a → a ≤ 0.01 →
+    ∑ e ∈ (P.elems (M * (1 + a))).filter (fun e => M * (1 - a) ≤ P.val e), 1 / P.val e ≤
+      28 * a + 7 * M ^ (-(3 / 4 : ℝ))
+
 /-- The labels `2 ≤ e` with `V(e) ≤ 2y/X₀⁻`. -/
 noncomputable def Dset (P : BeurlingSystem) (X0m y : ℝ) : Finset ℕ :=
   ((P.elems (2 * y / X0m)).image iota).filter (2 ≤ ·)
@@ -68,6 +76,30 @@ lemma SD_nonneg (a M : ℝ) : 0 ≤ SD P tw X0m y a M := by
 `M[1-a,1+a]`, `∑_{w ∈ T} 1/V(w) ≤ 28a + 7M^{-3/4}`. -/
 lemma sum_labels_le_SR {Y : ℝ} (hSR : ShortRecip P Y) {M a : ℝ} (hM1 : 1 ≤ M)
     (hMY : M ≤ Y / 2) (ha0 : 0 < a) (ha : a ≤ 0.01) (T : Finset ℕ) (hT0 : ∀ w ∈ T, w ≠ 0)
+    (hTw : ∀ w ∈ T, M * (1 - a) ≤ LemmaM.valN P.labelVal w ∧
+      LemmaM.valN P.labelVal w ≤ M * (1 + a)) :
+    ∑ w ∈ T, 1 / LemmaM.valN P.labelVal w ≤ 28 * a + 7 * M ^ (-(3 / 4 : ℝ)) := by
+  classical
+  set E := (P.elems (M * (1 + a))).filter (fun e => M * (1 - a) ≤ P.val e)
+  have hsub : T ⊆ E.image iota := by
+    intro w hw
+    obtain ⟨e, he, rfl⟩ := Finset.mem_image.mp (KR.mem_image_iota P (hT0 w hw) (hTw w hw).2)
+    refine Finset.mem_image.mpr ⟨e, Finset.mem_filter.mpr ⟨he, ?_⟩, rfl⟩
+    have := (hTw (iota e) hw).1
+    rwa [P.valN_iota] at this
+  calc ∑ w ∈ T, 1 / LemmaM.valN P.labelVal w
+      ≤ ∑ w ∈ E.image iota, 1 / LemmaM.valN P.labelVal w :=
+        Finset.sum_le_sum_of_subset_of_nonneg hsub fun w _ _ =>
+          (one_div_pos.mpr (KR.valN_labelVal_pos P w)).le
+    _ = ∑ e ∈ E, 1 / P.val e := by
+        rw [Finset.sum_image (fun a _ b _ h => iota_injective h)]
+        refine Finset.sum_congr rfl fun e _ => ?_
+        rw [P.valN_iota]
+    _ ≤ 28 * a + 7 * M ^ (-(3 / 4 : ℝ)) := hSR M a hM1 hMY ha0 ha
+
+/-- **Label form of `ShortRecipLow`**. -/
+lemma sum_labels_le_SRL {X0 Y : ℝ} (hSR : ShortRecipLow P X0 Y) {M a : ℝ} (hM1 : 1 ≤ M)
+    (hMY : M ≤ Y / X0) (ha0 : 0 < a) (ha : a ≤ 0.01) (T : Finset ℕ) (hT0 : ∀ w ∈ T, w ≠ 0)
     (hTw : ∀ w ∈ T, M * (1 - a) ≤ LemmaM.valN P.labelVal w ∧
       LemmaM.valN P.labelVal w ≤ M * (1 + a)) :
     ∑ w ∈ T, 1 / LemmaM.valN P.labelVal w ≤ 28 * a + 7 * M ^ (-(3 / 4 : ℝ)) := by

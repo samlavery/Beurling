@@ -75,7 +75,7 @@ structure WinAt (P : BeurlingSystem) (tw : ℕ → ℝ) (X0m : ℝ) (X₀ : ℕ)
   /-- Theorem 5.24 at `2(s/X₀)^{0.55}` (Model / LocalPNT) -/
   hT : LocalPNT.Theorem524Concl P X₀ (2 * (s / X₀) ^ (0.55 : ℝ))
   /-- Lemma 5.29 on `Good(< s)` (Queue6) -/
-  hSR : KR.RML9.ShortRecip P s
+  hSR : KR.RML9.ShortRecipLow P X₀ s
 
 /-- **The right side of Proposition 5.26 is at most `0.9 e^{-76}`** (as `sizeE_le`). -/
 theorem sizeE_le9 {P : BeurlingSystem} {H : ℝ → ℝ} {tw : ℕ → ℝ} {X0m Z η1 η2 : ℝ}

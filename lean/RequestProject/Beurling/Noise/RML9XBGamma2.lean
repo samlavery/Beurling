@@ -27,7 +27,7 @@ set_option maxHeartbeats 1000000 in
 lemma win_part_le {ε θ X0 lam0 : ℝ} (hP : PaperWidth H X0m ε θ) (hX0e : X0m = X0 - H X0 / 2)
     (hδ : H X0 / X0 ≤ 1 / 1000) (hp2 : ∀ j, 2 ≤ P.p j) (hlam : 1 + 2 * θ ≤ lam0)
     (hlam1 : lam0 ≤ 1.001) (hy : X0m ≤ y) (hXm1 : 1 ≤ X0m)
-    (hSR : ShortRecip P y) {d : ℕ} (hd : d ∈ Dset P X0m y) :
+    (hSR : ShortRecipLow P X0 y) {d : ℕ} (hd : d ∈ Dset P X0m y) :
     ∑ w ∈ (Dset P X0m y).filter (fun w => ¬ Vl P w ≤ Real.exp 100),
       (if Win P H y X0 (d * w)
         then lam0 ^ 2 / 4 * Vl P w ^ (ε - 2) * Rd P tw X0m y ε d else 0) ≤
@@ -79,12 +79,13 @@ lemma win_part_le {ε θ X0 lam0 : ℝ} (hP : PaperWidth H X0m ε θ) (hX0e : X0
     have hr34 : r ^ (-(3 / 4 : ℝ)) ≤ 1 := Real.rpow_le_one_of_one_le_of_nonpos hr1 (by norm_num)
     set T := ((Dset P X0m y).filter (fun w => ¬ Vl P w ≤ Real.exp 100)).filter
       (fun w => Win P H y X0 (d * w)) with hT
-    have hrY : r ≤ y / 2 := by
+    have hrY : r ≤ y / X0 := by
       have := posn_le_half hp2 hy0 hd2 (P := P)
-      have : r ≤ u := by
-        rw [hr]; exact div_le_self (by linarith) (by linarith)
-      linarith
-    have hSRT := sum_labels_le_SR hSR hr1 hrY ha0 (by linarith) T
+      have hX0p : 0 < X0 := by
+        have := (hP.reg.pos X0).le; rw [hX0e] at hXm0; linarith
+      rw [hr]
+      exact div_le_div_of_nonneg_right (by linarith) hX0p.le
+    have hSRT := sum_labels_le_SRL hSR hr1 hrY ha0 (by linarith) T
       (fun w hw => by
         have := (mem_Dset.mp (Finset.mem_filter.mp (Finset.mem_filter.mp hw).1).1).2; omega)
       (fun w hw => by

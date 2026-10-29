@@ -34,7 +34,7 @@ structure RestResH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
   `hSR` of `KR.RML10.WinAt`; the rest of `WinAt` is `winAt_c`) -/
   hSR : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
     ∀ s, y / 4 ≤ s → s ≤ KR.RML9.Ytop X₀ y (deltaB θ X₀ ω y) →
-      KR.RML9.ShortRecip (PR θ X₀ ω) s
+      KR.RML9.ShortRecipLow (PR θ X₀ ω) X₀ s
 
 variable (θ X₀) in
 /-- **The open inputs** at `(ω, b)`: `RestResH` (Proposition 5.35(B)) and `RestMarginH`
