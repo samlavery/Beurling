@@ -341,12 +341,12 @@ section Prop611V
 
 variable (hc : Cond θ X₀) (hev : Even X₀)
 
-/-- **The Cover Bound input at the height `z_n`** (Lemmas 6.17–6.19, `CoverSkeletonBound`) with
-`A = A_top(z_n)` (named hypothesis of Proposition 6.11). -/
-def CoverV (G : Set JitterΩ) (n : ℕ) : Prop :=
+/-- **The Cover Bound at the height `z_n` on a good event `Good`** (Lemmas 6.17–6.19,
+`CoverSkeletonBound`) with `A = A_top(z_n)`. -/
+def CoverOn (Good : Set JitterΩ) (n : ℕ) : Prop :=
   ∀ j, ∀ k ∈ gridW X₀ n, ∀ r < r0At (zH X₀ n), ∀ C ∈ CSet r j, ∀ lab ex s4,
     ExOK C ex → ∃ l : List ℕ, l.sum = C.card ∧ l.count 0 ≤ r - C.card ∧
-      CoverSkeletonBound jitterMeasure (G ∩ goodLt θ X₀ (smaxZ (zH X₀ n))) r
+      CoverSkeletonBound jitterMeasure Good r
         (1 + 1 / Real.log X₀) (2 * gridDelta (zH X₀ n)) (AtopV X₀ (zH X₀ n))
         (EuZ X₀ (zH X₀ n)) (zH X₀ n) (fun i => tauSlot (capH X₀) X₀ i) (exExcess ex)
         (r - C.card) l (fun ω => cfgSkelCount (DpZ X₀ (zH X₀ n)) (r0At (zH X₀ n)) 0 0
@@ -357,11 +357,25 @@ def CoverV (G : Set JitterΩ) (n : ℕ) : Prop :=
             (qOf (constructionLaw2 hc hev) ω) X₀ (DpZ X₀ (zH X₀ n)) (DmaxZ (zH X₀ n))
             (gwin (zH X₀ n) k)) r C lab ex s4)
 
+/-- **The Cover Bound input at the height `z_n`** on `G ∩ G_{<s_max}` (named hypothesis of
+Proposition 6.11 in round 3; now proved, `ClusterX.coverOn_goodV`). -/
+def CoverV (G : Set JitterΩ) (n : ℕ) : Prop :=
+  CoverOn hc hev (G ∩ goodLt θ X₀ (smaxZ (zH X₀ n))) n
+
+/-- `CoverV` on `G` gives the Cover Bound on `goodV G n`. -/
+lemma coverOn_of_V (G : Set JitterΩ) (n : ℕ) (h : CoverV hc hev G n) :
+    CoverOn hc hev (goodV hc hev G n) n := by
+  intro j k hk r hr C hC lab ex s4 hex
+  obtain ⟨l, h1, h2, h3⟩ := h j k hk r hr C hC lab ex s4 hex
+  refine ⟨l, h1, h2, ?_⟩
+  unfold CoverSkeletonBound at h3 ⊢
+  exact (lintegral_goodV_le hc hev G n _).trans h3
+
 /-- **Proposition 6.11 at the dyadic height `z_n ≥ X₀`** on `Good(< t(E1(z_n)))`, from the
 window model (`prop_6_11_window`) with the skeleton bound `hboundV` ((S3)(d) and the multi-run
-skeleton bound proved). The only input is the Cover Bound `CoverV`. -/
+skeleton bound proved). The only input is the Cover Bound `CoverOn` on `goodV`. -/
 theorem eclV_fail (D : Sec5Family) {n : ℕ} (hn : 1 ≤ n)
-    (hcov : CoverV hc hev (G0 θ X₀ D (tE1 X₀ n)) n) :
+    (hcov : CoverOn hc hev (goodV hc hev (G0 θ X₀ D (tE1 X₀ n)) n) n) :
     jitterMeasure ((EclW hc hev n)ᶜ ∩ G0 θ X₀ D (tE1 X₀ n)) ≤
       ENNReal.ofReal (Real.log (zH X₀ n) ^ (-2 : ℝ)) := by
   classical
@@ -432,8 +446,7 @@ theorem eclV_fail (D : Sec5Family) {n : ℕ} (hn : 1 ≤ n)
       obtain ⟨l, h1, h2, h3⟩ := hcov j k hk r hr C hC lab ex s4 hex
       refine ⟨l, h1, h2, ?_⟩
       rw [← two_gridDelta (hc := hc) hz, hzz]
-      unfold CoverSkeletonBound at h3 ⊢
-      exact (lintegral_goodV_le hc hev G n _).trans h3)
+      exact h3)
   have hcompl : (EclW hc hev n)ᶜ = {ω | ∃ k ∈ gridW X₀ n, (r0At z : ℝ) + Covers.phi
       (Real.exp (BSCert.Capl.logc sHroot (Real.log X₀) (capS X₀ z)))
       (Real.exp (BSCert.Capl.logc sHroot (Real.log X₀) (capS X₀ z) / 2)) (r0At z) + 1 <
@@ -580,7 +593,7 @@ theorem e1V (D : Sec5Family) (hcov : ∀ n, 1 ≤ n → CoverV hc hev (G0 θ X�
   rw [e]
   rcases Nat.eq_zero_or_pos n with h0 | hn
   · subst h0; exact eclV_fail_zero hc hev D
-  · exact eclV_fail hc hev D hn (hcov n hn)
+  · exact eclV_fail hc hev D hn (coverOn_of_V hc hev _ n (hcov n hn))
 
 end Prop611V
 

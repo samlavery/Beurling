@@ -32,19 +32,18 @@ lake build
 ## The top-level statement
 
 ```lean
-theorem Queue6.corollary_2_2_of_W (hHB : ShortIntervalPNT) (h : Theorem21InputsW) : ¬ QuestionQ
+theorem Queue6.corollary_2_2_of_X (hHB : ShortIntervalPNT) (h : Theorem21InputsX) : ¬ QuestionQ
 ```
 
 - `QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`).
 - `ShortIntervalPNT` (`Beurling/Model/Slope.lean`) is a consequence of the Heath-Brown short-interval prime number
   theorem (84), stated about ℕ. `BaseRange.shortIntervalPNT_of_huxley84` derives it from the full two-sided (84).
-- `Theorem21InputsW` (`Beurling/Queue6/TopW.lean`) is about the construction built in Lean from the jitters. The
-  event family (including the E3/E3′ events), the Table 1 budget and the queue bound are all constructed and proved.
-  What remains are three statements of the paper, for that construction:
+- `Theorem21InputsX` (`Beurling/Queue6/TopX.lean`) is about the construction built in Lean from the jitters. The
+  event family (including the E3/E3′ events), the Table 1 budget, the queue bound and all of Appendix A, including the
+  Cover Bound, are constructed and proved. What remains are two statements of the paper, for that construction:
   - the two variance bounds in the proof of Lemma 5.22 (Comp(W) ≤ 50 log(2u)|W|, and (s2));
-  - Corollary 5.40: the drift R1′ and Comp⁽²⁾ ≤ s₂|I|, in the form Theorem 6.6 uses;
-  - the Cover Bound, Proposition 6.19 (`CoverV`).
-- Earlier top levels (`corollary_2_2_of_O` … `_V`) are kept. Each one implies the previous.
+  - Corollary 5.40: the drift R1′ and Comp⁽²⁾ ≤ s₂|I|, in the form Theorem 6.6 uses.
+- Earlier top levels (`corollary_2_2_of_O` … `_W`) are kept. Each one implies the previous.
 
 ## What is proved
 
