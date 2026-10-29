@@ -32,19 +32,23 @@ lake build
 ## The top-level statement
 
 ```lean
-theorem BModel.corollary_2_2_of_M (hHB : ShortIntervalPNT) (h : Theorem21InputsM) : ¬ QuestionQ
+theorem BModel.corollary_2_2_of_P (hHB : ShortIntervalPNT) (h : Theorem21InputsP) : ¬ QuestionQ
 ```
 
 - `QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`).
 - `ShortIntervalPNT` (`Beurling/Model/Slope.lean`) is a consequence of the Heath-Brown short-interval prime number
   theorem (84), stated about ℕ. `BaseRange.shortIntervalPNT_of_huxley84` derives it from the full two-sided (84).
-- `Theorem21InputsM` (`Beurling/Model/TopM.lean`) is about the construction built in Lean from the jitters. Everything
-  else is proved: the event family, the Table 1 budget, the queue bound, all of Appendix A, Lemma 5.22's events,
-  variance bound and (s2) first branch, and the §5.3 margin objects with the bookkeeping identity and the compensator
-  identification. What remains are two statements of the paper, for that construction:
-  - `S2SecondBranch`: the second branch of (s2) (σ > log X₀⁻), which rests on Lemma 5.3 (smooth-v);
-  - `PointwiseMargin (marginM θ X₀ ω) X₀`: Proposition 5.38 for the construction's margin density m = T′ − K^pt ρ̃ − NT_pt.
-- Earlier top levels (`corollary_2_2_of_O` … `Queue6.corollary_2_2_of_Z`) are kept. Each one implies the previous.
+- `Theorem21InputsP` (`Beurling/Model/S2Final.lean`; not the older `Construction.Theorem21InputsP`) is about the
+  construction built in Lean from the jitters. Everything else is proved:
+  - the event family, the Table 1 budget and the queue bound;
+  - all of Appendix A;
+  - Lemma 5.22 (its events, the variance bound and both branches of (s2));
+  - the §5.3 margin objects, with the bookkeeping identity and the compensator identification.
+
+  What remains is one statement of the paper, for that construction: `PointwiseMargin (marginM θ X₀ ω) X₀`, i.e.
+  Proposition 5.38 for the construction's margin density m = T′ − K^pt ρ̃ − NT_pt, almost surely on Good(<t(E2)).
+- Earlier top levels (`Construction.corollary_2_2_of_O` … `BModel.corollary_2_2_of_M`) are kept. Each one implies the
+  previous.
 
 ## What is proved
 

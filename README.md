@@ -172,12 +172,12 @@ The main theorem is not formally verified. A Lean 4 formalization in [`lean/`](l
 [Aristotle](https://aristotle.harmonic.fun) (Harmonic) and continued here, proves Corollary 2.2 (the answer to Question Q is
 negative) from two explicit hypotheses, with no `sorry`:
 - the short-interval prime number theorem (84) of Heath-Brown;
-- `Theorem21InputsM`.
+- `Theorem21InputsP`.
 
-`Theorem21InputsM` fixes the construction, which is now built from the jitters in Lean, together with its event family and
-probability budget. It asks only for two statements of the paper about that construction:
-- the second branch of (s2) (from Lemma 5.3);
-- Proposition 5.38 for the construction's margin density.
+`Theorem21InputsP` fixes the construction, which is now built from the jitters in Lean, together with its event family and
+probability budget. It asks for one statement of the paper about that construction: Proposition 5.38 (the pointwise
+margin) for the construction's margin density. The §5 chain that proves Proposition 5.38 is assembled in Lean, from named
+inputs that are still being closed.
 
 - **Proved and used by the top-level theorem:**
   - Sections 3 and 4, including the construction itself as a causal fixed point, Lemma 3.3 and Lemma 4.8(ii);
@@ -188,8 +188,8 @@ probability budget. It asks only for two statements of the paper about that cons
   - nearly all the certificates of Appendix B.
 - **Proved but not yet used by the top-level theorem:** most of §5.1–5.7 (Lemma 5.3, Theorem 5.6, Corollary 5.9,
   Theorems 5.14 and 5.15, the local PNT Theorem 5.24) and most of §7 (Lemma 7.1, Lemma 7.3 from named inputs).
-- **Not yet proved:** Proposition 5.38 for the construction (the §5 chain is assembled, with named inputs) and the
-  second branch of (s2).
+- **Not yet proved:** Proposition 5.38 for the construction (the §5 chain is assembled, with named inputs, including
+  Steps 1–3 of Lemma 7.3(b) and Lemma 7.3(d)(iii)).
 
 The formalization found four defects in the paper (corrections #102 and #104, constants in Lemma 5.7 and Theorem 5.24; #103, certificate
 coverage of two constants; #105, the definition of X_Hux), prompted a check that tightened the quantifier of Lemma 3.4 (#106), found that (s2) needed an event qualifier (#107), and found two

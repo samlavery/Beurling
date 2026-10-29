@@ -21,8 +21,8 @@ The **second bound** (04d-noise.tex, "Second bound, for `σ > log X₀⁻`"), wh
 Dickman-quality smooth-element bound (Lemma smooth-v, 04a-setup.tex, under (H_BS)), is the named
 hypothesis `S2SecondBranch`.
 
-* `S2Core` : (s2) for every window `[a, b)` with `b ≤ 2v`, `v ≥ X₀`, for the truncated counts
-  `min(X⁽²⁾_q, C)`, on the queue constraints and the cluster events of time `< b`;
+* `S2Core` : (s2) for every window `[a, b)` with `v/4 ≤ a < b ≤ 2v`, `v ≥ X₀`, for the truncated
+  counts `min(X⁽²⁾_q, C)`, on the queue constraints and the cluster events of time `< b`;
 * `s2Core_of` : `S2Core` from `S2SecondBranch`;
 * `e3S2Bound_of` : the field `E3S2Bound` (windows of `𝒲'_u`, `X̃⁽²⁾ = min(X⁽²⁾, b₂)`);
 * `e2S2Bound_of` : the field `E2S2Bound` (windows of `𝓘_u`, `1[X⁽²⁾ ≥ 1] ≤ min(X⁽²⁾, 1)`).
@@ -704,11 +704,12 @@ end Harm2
 
 variable (θ X₀) in
 /-- **Eq. (s2) for every window** (Lemma 5.22, "Together, for every window `I`"): for a
-truncation level `C ≥ 0`, a window `[a, b)` with `0 < b ≤ 2v`, `v ≥ X₀`, a.s. on the queue
+truncation level `C ≥ 0`, a window `[a, b)` with `v/4 ≤ a < b ≤ 2v`, `v ≥ X₀`, a.s. on the queue
 constraints and the cluster events of time `< b`, the partial compensators of
 `min(X⁽²⁾_q(W), C)` are at most `s₂(v) |W|`. -/
 def S2Core : Prop :=
-  ∀ (C : ℝ), 0 ≤ C → ∀ (a b : ℤ) (v : ℝ), (X₀ : ℝ) ≤ v → 0 < b → a < b → (b : ℝ) ≤ 2 * v →
+  ∀ (C : ℝ), 0 ≤ C → ∀ (a b : ℤ) (v : ℝ), (X₀ : ℝ) ≤ v → 0 < b → a < b → v / 4 ≤ (a : ℝ) →
+    (b : ℝ) ≤ 2 * v →
     ∀ᵐ ω ∂jitterMeasure, ω ∈ QC (okQ θ X₀) (tq θ X₀) b.toNat →
       (∀ n, tE1 X₀ n < b.toNat → ω ∈ E1ev θ X₀ n) → ∀ n,
         ∑ k ∈ Finset.range n, (jitterMeasure[fun ω => min (X2count (CM θ X₀ ω) (Ucl ω) a b k) C |
@@ -720,7 +721,8 @@ variable (θ X₀) in
 Dickman-quality bound of Lemma smooth-v, 04a-setup.tex, under (H_BS)): `S2Core` at the heights
 `v` with `log X₀⁻ < σ(v)`. -/
 def S2SecondBranch : Prop :=
-  ∀ (C : ℝ), 0 ≤ C → ∀ (a b : ℤ) (v : ℝ), (X₀ : ℝ) ≤ v → 0 < b → a < b → (b : ℝ) ≤ 2 * v →
+  ∀ (C : ℝ), 0 ≤ C → ∀ (a b : ℤ) (v : ℝ), (X₀ : ℝ) ≤ v → 0 < b → a < b → v / 4 ≤ (a : ℝ) →
+    (b : ℝ) ≤ 2 * v →
     Real.log (Xm X₀) < Real.sqrt (Real.log v * Real.log (Real.log v)) / 2 →
     ∀ᵐ ω ∂jitterMeasure, ω ∈ QC (okQ θ X₀) (tq θ X₀) b.toNat →
       (∀ n, tE1 X₀ n < b.toNat → ω ∈ E1ev θ X₀ n) → ∀ n,
@@ -911,10 +913,10 @@ include hc hev
 /-- **Eq. (s2) for every window**, from its second bound (`S2SecondBranch`); the first bound is
 proved (`s2_first`). -/
 theorem s2Core_of (hS : S2SecondBranch θ X₀) : S2Core θ X₀ := by
-  intro C hC a b v hv hb0 hab hb2
+  intro C hC a b v hv hb0 hab hva hb2
   by_cases hσ : Real.sqrt (Real.log v * Real.log (Real.log v)) / 2 ≤ Real.log (Xm X₀)
   · exact s2_first hc hev hC hv hb0 hab hb2 hσ
-  · exact hS C hC a b v hv hb0 hab hb2 (lt_of_not_ge hσ)
+  · exact hS C hC a b v hv hb0 hab hva hb2 (lt_of_not_ge hσ)
 
 /-- **The field `E3S2Bound`** (eq. (s2) for the windows of `𝒲'_u`, `X̃⁽²⁾ = min(X⁽²⁾, b₂)`). -/
 theorem e3S2Bound_of (h : S2Core θ X₀) : E3S2Bound θ X₀ := by
@@ -928,7 +930,10 @@ theorem e3S2Bound_of (h : S2Core θ X₀) : E3S2Bound θ X₀ := by
       have : (a : ℝ) < b := by exact_mod_cast hab
       linarith
     exact_mod_cast this
-  filter_upwards [h _ hb2C a b (uS X₀ m) huX hb0 hab hb2] with ω hω hG n
+  have hva : uS X₀ m / 4 ≤ (a : ℝ) := by
+    have h0 : 0 ≤ uS X₀ m := (Nat.cast_nonneg X₀).trans huX
+    linarith
+  filter_upwards [h _ hb2C a b (uS X₀ m) huX hb0 hab hva hb2] with ω hω hG n
   have hba : ((b - a : ℤ) : ℝ) = (b : ℝ) - a := by push_cast; ring
   rw [hba]
   exact hω hG.1 hG.2 n
@@ -937,7 +942,7 @@ theorem e3S2Bound_of (h : S2Core θ X₀) : E3S2Bound θ X₀ := by
 `1[X⁽²⁾ ≥ 1] ≤ min(X⁽²⁾, 1)`, at the scale `v = 2u`). -/
 theorem e2S2Bound_of (h : S2Core θ X₀) : E2S2Bound θ X₀ := by
   intro m a b hadm
-  obtain ⟨hub, hb3, hab, -⟩ := hadm
+  obtain ⟨hub, hb3, hab, hWl⟩ := hadm
   obtain ⟨huX, -, -, -⟩ := uS_facts hc m
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hc.hX
@@ -988,7 +993,12 @@ theorem e2S2Bound_of (h : S2Core θ X₀) : E2S2Bound θ X₀ := by
       split_ifs with h1
       · exact le_min h1 le_rfl
       · exact le_min h0 zero_le_one
-  filter_upwards [h 1 zero_le_one a b (2 * uS X₀ m) (by linarith) hb0 hab hb4,
+  have hva : 2 * uS X₀ m / 4 ≤ (a : ℝ) := by
+    have hWq := Queue6.Wlen_le_quarter hX0 hc.hX huX
+    have : ((b - a : ℤ) : ℝ) = (b : ℝ) - a := by push_cast; ring
+    rw [this] at hWl
+    linarith
+  filter_upwards [h 1 zero_le_one a b (2 * uS X₀ m) (by linarith) hb0 hab hva hb4,
     ae_all_iff.mpr hmono] with ω hω hm hG n
   have hQC : ω ∈ QC (okQ θ X₀) (tq θ X₀) b.toNat := hG.1
   have hE1 : ∀ n, tE1 X₀ n < b.toNat → ω ∈ E1ev θ X₀ n := fun n hn =>
