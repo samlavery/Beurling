@@ -32,23 +32,19 @@ lake build
 ## The top-level statement
 
 ```lean
-theorem Queue6.corollary_2_2_of_Z (hHB : ShortIntervalPNT) (h : Theorem21InputsZ) : ¬ QuestionQ
+theorem BModel.corollary_2_2_of_M (hHB : ShortIntervalPNT) (h : Theorem21InputsM) : ¬ QuestionQ
 ```
 
 - `QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`).
 - `ShortIntervalPNT` (`Beurling/Model/Slope.lean`) is a consequence of the Heath-Brown short-interval prime number
   theorem (84), stated about ℕ. `BaseRange.shortIntervalPNT_of_huxley84` derives it from the full two-sided (84).
-- `Theorem21InputsZ` (`Beurling/Queue6/TopZ.lean`) is about the construction built in Lean from the jitters. The
-  event family (including the E3/E3′ events), the Table 1 budget, the queue bound and all of Appendix A, including the
-  Cover Bound, are constructed and proved. What remains are two statements of the paper, for that construction:
-  - the two variance bounds in the proof of Lemma 5.22 (Comp(W) ≤ 50 log(2u)|W|, and (s2));
-  - eq. (s2) on the windows of 𝓘ᵤ (`E2S2Bound`). From it, Lean derives Comp⁽²⁾ ≤ s₂|I| ≤ 1, and proves the numeric
-    step s₂|I| ≤ 1 from log M₁ ≤ √L;
-  - the identification statement behind Corollary 5.40 (`Margin.R1Ident`), from which Lean derives R1′ in the form
-    Theorem 6.6 uses. `R1Ident` says the margin density m = T′ − K^pt ρ̃ − NT_pt
-    satisfies Proposition 5.38 and the §5.3 bookkeeping identity, for the construction. The construction-side ρ̃,
-    T′_cont and NT_pt are not yet defined in Lean.
-- Earlier top levels (`corollary_2_2_of_O` … `_Y`) are kept. Each one implies the previous.
+- `Theorem21InputsM` (`Beurling/Model/TopM.lean`) is about the construction built in Lean from the jitters. Everything
+  else is proved: the event family, the Table 1 budget, the queue bound, all of Appendix A, Lemma 5.22's events,
+  variance bound and (s2) first branch, and the §5.3 margin objects with the bookkeeping identity and the compensator
+  identification. What remains are two statements of the paper, for that construction:
+  - `S2SecondBranch`: the second branch of (s2) (σ > log X₀⁻), which rests on Lemma 5.3 (smooth-v);
+  - `PointwiseMargin (marginM θ X₀ ω) X₀`: Proposition 5.38 for the construction's margin density m = T′ − K^pt ρ̃ − NT_pt.
+- Earlier top levels (`corollary_2_2_of_O` … `Queue6.corollary_2_2_of_Z`) are kept. Each one implies the previous.
 
 ## What is proved
 
