@@ -26,7 +26,7 @@ namespace BModel
 variable (θ X₀) in
 /-- **The open inputs** at `(ω, b)`: `RestRes` and `RestMargin` (Model choices substituted). -/
 def OthersInputsH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) : Prop :=
-  ∃ Rs : RestRes θ X₀ ω b, Nonempty (RestMargin θ X₀ ω b Rs.S Rs.FrB)
+  ∃ Rs : RestRes θ X₀ ω b, Nonempty (RestMargin θ X₀ ω b Rs.nb)
 
 /-- **Theorem 2.1, hypothesis**: for `X₀` beyond some threshold, a.s. on `Good(< b)` for every
 admissible window `[a, b)`, the open inputs `OthersInputsH`. -/
