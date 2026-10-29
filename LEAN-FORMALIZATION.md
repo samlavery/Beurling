@@ -114,6 +114,16 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
 
   The per-window facts (Lemma 3.9, Corollary 6.12, R1′) and the adaptedness of the window counts are parameters, to be
   instantiated once the absorbed set is corrected (see the defects below).
+- **Added in this repository: §5.1–5.5, standalone** (`Beurling/Noise/`, 52 files, 13.4k lines). For any system
+  satisfying (HBS) on [1, Z]:
+  - Lemma 5.3 (smooth-v), with no residual hypotheses.
+  - Theorem 5.6 (Beurling–Saias) and Lemma 5.8: the analytic reduction, regions Z1 and Z2 (the latter through the
+    bs-cert certificate), and the large-ℓ decomposition of Lemma 5.7.
+  - Corollary 5.9, from Lemma M.
+  - Theorem 5.14 (the KR bound) with nominal filters and frozen widths.
+
+  The only residual is `Lemma57Residual`: four remainder bounds (a), (b), (d), (e) in the proof of Lemma 5.7, as the paper
+  states them. These results do not involve the absorbed set.
 - **Appendix B.** Nearly all the certificates: bs-cert (region Z2 and the auxiliary checks), finite-n, x0-band, the
   constants, the bounds on φ, and rankin_R. Dickman's function is constructed and its facts (R1)–(R4) are proved.
 
