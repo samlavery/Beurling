@@ -74,17 +74,36 @@ lemma LMb_Fcex {ω : JitterΩ} (hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X�
     (hv : LMb vtH) : LMb (RML7.Fcex hO ρL TcL NT vtH j0) :=
   (LMb_Fcx hO j0 hρ hT hN hv).sub ((LMb_Fcx hO j0 hρ hT hN hv).Bo hO)
 
+open Classical in
 variable (X₀) in
-/-- The number of dyadic blocks of `X₀⁻` below `x + H(x)/2`. -/
+/-- The number of dyadic blocks of `X₀⁻` below `x + H(x)/2`: the least `n` with
+`(x + H(x)/2)/X₀⁻ < 2ⁿ`. -/
 noncomputable def Jc (x : ℝ) : ℕ :=
-  Classical.choose (pow_unbounded_of_one_lt ((x + Queue6.Hc X₀ x / 2) / Xm X₀)
+  Nat.find (pow_unbounded_of_one_lt ((x + Queue6.Hc X₀ x / 2) / Xm X₀)
     (one_lt_two : (1 : ℝ) < 2))
 
 lemma Jc_spec (hX : 0 < Xm X₀) (x : ℝ) : x + Queue6.Hc X₀ x / 2 ≤ Xm X₀ * 2 ^ Jc X₀ x := by
-  have h := Classical.choose_spec (pow_unbounded_of_one_lt ((x + Queue6.Hc X₀ x / 2) / Xm X₀)
+  classical
+  have h := Nat.find_spec (pow_unbounded_of_one_lt ((x + Queue6.Hc X₀ x / 2) / Xm X₀)
     (one_lt_two : (1 : ℝ) < 2))
   rw [div_lt_iff₀ hX] at h
   unfold Jc; linarith
+
+/-- **`Jc` is least**: `X₀⁻ 2^{Jc x} ≤ max(X₀⁻, 2(x + H(x)/2))`. -/
+lemma Jc_le (hX : 0 < Xm X₀) (x : ℝ) :
+    Xm X₀ * 2 ^ Jc X₀ x ≤ max (Xm X₀) (2 * (x + Queue6.Hc X₀ x / 2)) := by
+  classical
+  rcases h0 : Jc X₀ x with _ | n
+  · simp
+  · have hmin := Nat.find_min (pow_unbounded_of_one_lt ((x + Queue6.Hc X₀ x / 2) / Xm X₀)
+      (one_lt_two : (1 : ℝ) < 2)) (m := n) (by
+        have : Jc X₀ x = Nat.find (pow_unbounded_of_one_lt ((x + Queue6.Hc X₀ x / 2) / Xm X₀)
+          (one_lt_two : (1 : ℝ) < 2)) := rfl
+        omega)
+    push_neg at hmin
+    rw [le_div_iff₀ hX] at hmin
+    rw [pow_succ]
+    exact le_max_of_le_right (by nlinarith)
 
 set_option maxHeartbeats 1000000 in
 /-- **The block bound of the second bullet** (`lem:predictable`): on the block

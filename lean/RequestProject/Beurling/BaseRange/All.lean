@@ -9,6 +9,7 @@ public import RequestProject.Beurling.BaseRange.Lemma73LowTop
 public import RequestProject.Beurling.BaseRange.MarginHc
 public import RequestProject.Beurling.BaseRange.HjbR
 public import RequestProject.Beurling.BaseRange.RestBaseR
+public import RequestProject.Beurling.BaseRange.HRmR
 
 /-!
 # Section 7 (the base range): all modules
@@ -48,5 +49,7 @@ public import RequestProject.Beurling.BaseRange.RestBaseR
 * `HjbR` : Proposition 5.31(i) / 5.33, `j_{X₀} ≤ 0.4209` for the realised system (`hjb_R`,
   `hjb_Rc`);
 * `RestBaseR` : the field `hHux` of `RestBase` from `Huxley84` (`restBase_of`,
-  `huxley_threshold`).
+  `huxley_threshold`);
+* `HRmNT`, `HRmIdent`, `HRmR` : the field `hRm` of `RestMarginH` (Proposition 5.38, Step 6(b),
+  "Sum") on `[2X₀, X₀^{1.01}]` (`hRm_R`, `hRm_ae`).
 -/

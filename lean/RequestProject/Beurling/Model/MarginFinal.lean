@@ -7,6 +7,7 @@ public import RequestProject.Beurling.Model.G1BQ6
 public import RequestProject.Beurling.Model.G1BSec5
 public import RequestProject.Beurling.Model.WinAtR
 public import RequestProject.Beurling.Model.MarginH
+public import RequestProject.Beurling.BaseRange.HRmR
 
 /-!
 # The top level: Corollary 2.2 from eq. (84) and the open inputs
@@ -27,20 +28,11 @@ open Finset Real MeasureTheory Set BeurlingSystem Construction BModel KR KR.TNP 
 
 namespace BModel
 
-/-- **The open inputs of Proposition 5.35(B)** at `(ω, b)` (the remaining inputs of
-`RML10.sec5_of` at the Model's bounds, `g1Sec5_c`), at every range-(B) start `y ≤ b + H(b)`. -/
-structure RestResH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
-  /-- Queue6: Lemma 5.29 (`ShortRecip`) at the window heights `s ∈ [y/4, Ytop]` (the input
-  `hSR` of `KR.RML10.WinAt`; the rest of `WinAt` is `winAt_c`) -/
-  hSR : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
-    ∀ s, y / 4 ≤ s → s ≤ KR.RML9.Ytop X₀ y (deltaB θ X₀ ω y) →
-      KR.RML9.ShortRecipLow (PR θ X₀ ω) X₀ s
-
 variable (θ X₀) in
-/-- **The open inputs** at `(ω, b)`: `RestResH` (Proposition 5.35(B)) and `RestMarginH`
-(Proposition 5.38, Steps 4–6) at `ν̄ = nbQ`. -/
+/-- **The open inputs** at `(ω, b)`: `RestMarginH` (Proposition 5.38, Steps 4–5: `E_S`,
+Step 4, `6.5 E_S + V_{X₀}`) at `ν̄ = nbQ`. -/
 def OthersInputsH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) : Prop :=
-  Nonempty (RestResH θ X₀ ω b) ∧ Nonempty (RestMarginH θ X₀ ω b (Queue6.nbQ X₀))
+  Nonempty (RestMarginH θ X₀ ω b (Queue6.nbQ X₀))
 
 /-- **Theorem 2.1, hypothesis**: for `X₀` beyond some threshold, a.s. on `Good(< b)` for every
 admissible window `[a, b)`, the open inputs `OthersInputsH`. -/
@@ -79,11 +71,11 @@ theorem theorem21InputsZ_hux (h84 : BaseRange.Huxley84) (h : Theorem21InputsH) :
     have hX1 := QueueMono.one_lt_of_logX hX0 hc.hX
     have hb : (X₀ : ℝ) ≤ b := (X₀_le_uS (X₀ := X₀) (by linarith) m).trans hadm.1
     filter_upwards [hRest m a b hadm, hnice, Queue6.hS2Epm_R hc hev, Queue6.nu522_tE2 hc hev,
-      Queue6.nu522_point hc hev] with ω hω hN hEp hnu hpt hG
+      Queue6.nu522_point hc hev, BaseRange.hRm_ae hc hev] with ω hω hN hEp hnu hpt hRmA hG
     have hQC : ω ∈ QC (okQ θ X₀) (tq θ X₀) b.toNat := hG.1
     have hE1 : ∀ n, tE1 X₀ n < b.toNat → ω ∈ E1ev θ X₀ n := fun n hn =>
       mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn
-    obtain ⟨⟨Rh⟩, ⟨Rm⟩⟩ := hω hG
+    obtain ⟨Rm⟩ := hω hG
     have hbs := hbs_Zc hc hev hb hQC hE1 hN
     have hb0 : (0 : ℤ) ≤ b := by
       have : (0 : ℝ) ≤ b := le_trans hX0 hb
@@ -98,15 +90,18 @@ theorem theorem21InputsZ_hux (h84 : BaseRange.Huxley84) (h : Theorem21InputsH) :
           hy hyb hyL (fun s hs1 hs2 =>
             have r := win_range hc hev ω hy hyb hyL hs1 hs2
             winAt_c hc hev hb hG hbt hN hbs hlog1 r.1 r.2.1 r.2.2.1 r.2.2.2
-              (Rh.hSR y hy hyb hyL s hs1 hs2))
-          (fun z hz => Rm.hSbX z (J_range hc hev ω hb hy hyb hyL hz).1
-            (J_range hc hev ω hb hy hyb hyL hz).2) (fun z hz => Rm.hGX z
+              (srl_c hc hev hG hN hbt (r.1.trans r.2.1) (by
+                have := r.2.1; have := (Nat.cast_nonneg (α := ℝ) X₀).trans hb; linarith)))
+          (fun z hz => RML12.hSbX_c hc hev hb (tnpR hc hev hbs hN.2.1 hlog1) (JcBound_c hc b) z
+            (J_range hc hev ω hb hy hyb hyL hz).1 (J_range hc hev ω hb hy hyb hyL hz).2)
+          (fun z hz => RML12.hGX_c hc hev hb (tnpR hc hev hbs hN.2.1 hlog1) (JcBound_c hc b) z
             (J_range hc hev ω hb hy hyb hyL hz).1 (J_range hc hev ω hb hy hyb hyL hz).2)
         nb := Queue6.nbQ X₀
         hnu := hnu b hG }
     have hO : OthersInputs θ X₀ ω b :=
       ⟨hXH X₀ h2h θ ω b, ⟨⟩, Rs,
-        ⟨restMargin_of hc hev hb hG hbt hN hbs hlog1 (Queue6.nbQ_nonneg hc) Rm⟩⟩
+        ⟨restMargin_of hc hev hb hG hbt hN hbs hlog1 (hXH X₀ h2h θ ω b).hHux
+          (hRmA _ hG hN b hb hbt hbs hlog1) Rm⟩⟩
     exact realMarginLoc_of_others hc hev hG hN hbt hb hbs hlog1 (hEp _ hG hN)
       (fun hH => hin_R hc hev hbs hN.2.1 hlog1 hb hH)
       (fun hH => BaseRange.hjb_Rc hc hev hN.2.1 hlog1 hb hbs (by norm_num [epsH])
