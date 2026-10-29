@@ -114,6 +114,11 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     - The remaining named inputs are `SkeletonBound` and `CoverSkeletonBound`, i.e. Lemma A.5 + Theorem A.10 applied to
       the model. Also needed: measurability of the counts, the model hypotheses linking it to the construction, and the
       parameter bounds.
+  - **Round 6** (1354 lines): `SkeletonBound` for one run (C = B′, run structure [k]), over any `JitterLaw`, from
+    Lemma A.5, the Volume Lemma with per-pivot caps and Lemma A.6 (S3)(c) for one run (`skeletonBound_oneRun`).
+    - Still open: the multi-run case (`MultiRunSkeletonBound`, T ≥ 2) and `CoverSkeletonBound`.
+    - The construction's `JitterLaw` instance has slot constant θ = 2, but Proposition 6.11 needs the paper's
+      θ = 1 + 1/Λ from (F1). The slot count must be sharpened.
 - **Added in this repository: the construction of §3** (`Beurling/Model/`, 3947 lines). `constructedModel θ X₀ ω` builds
   the slot model from the jitters as the limit of a causal iteration.
   - Lemma 3.5 is formalized as `causal`: agreement up to z − 1 propagates to agreement up to z.
