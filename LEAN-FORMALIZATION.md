@@ -363,6 +363,13 @@ Notes:
   - Two further fields were found unsatisfiable as stated and corrected: `hhead` (its constant ignored the positive
     𝒩-tail) and the global `hTb`/`X0S.Hyp.count` (stated at all heights; now restricted to the horizon).
 
+- **Lossy G-term constant (fixed 2026-10-29).** The first Lean proof of the Lemma 5.36 G-term bound (`gScaleBound_Kpt`)
+  had constant 70 where correction #110 states 35.8. Its `scale_sum_le` covered each scale window [0.89u, 2.21u] by up
+  to three dyadic Lemma-S blocks and paid each one about twice, so neighbouring blocks were counted several times. No
+  paper step was wrong. The replacement (`RML8GSum.scale_sum_tight`, `RML8GMain.reindex7`,
+  `RML8GField.hG_field_paper`) assigns each block its own kernel mass and reindexes once (factor 7.0001). It proves the
+  bound with 35.8·C_N·C_S′, as #110 states.
+
 ## Status
 
 - **The main theorem is not formally verified.** It is proved in Lean only from `Theorem21InputsS`.
