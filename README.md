@@ -172,11 +172,11 @@ The main theorem is not formally verified. A Lean 4 formalization in [`lean/`](l
 [Aristotle](https://aristotle.harmonic.fun) (Harmonic) and continued here, proves Corollary 2.2 (the answer to Question Q is
 negative) from two explicit hypotheses, with no `sorry`:
 - the short-interval prime number theorem (84) of Heath-Brown;
-- `Theorem21InputsY`.
+- `Theorem21InputsZ`.
 
-`Theorem21InputsY` fixes the construction, which is now built from the jitters in Lean, together with its event family and
+`Theorem21InputsZ` fixes the construction, which is now built from the jitters in Lean, together with its event family and
 probability budget. It asks only for two statements of the paper about that construction:
-- two variance bounds in the proof of Lemma 5.22 (the §5.6 noise events);
+- two variance bounds in the proof of Lemma 5.22 (the §5.6 noise events) and (s2) on the queue windows;
 - the §5.3 identifications behind Corollary 5.40 (the drift R1′), which is itself proved in Lean from them;
 
 - **Proved and used by the top-level theorem:**

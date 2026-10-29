@@ -32,21 +32,23 @@ lake build
 ## The top-level statement
 
 ```lean
-theorem Queue6.corollary_2_2_of_Y (hHB : ShortIntervalPNT) (h : Theorem21InputsY) : ¬ QuestionQ
+theorem Queue6.corollary_2_2_of_Z (hHB : ShortIntervalPNT) (h : Theorem21InputsZ) : ¬ QuestionQ
 ```
 
 - `QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`).
 - `ShortIntervalPNT` (`Beurling/Model/Slope.lean`) is a consequence of the Heath-Brown short-interval prime number
   theorem (84), stated about ℕ. `BaseRange.shortIntervalPNT_of_huxley84` derives it from the full two-sided (84).
-- `Theorem21InputsY` (`Beurling/Queue6/TopY.lean`) is about the construction built in Lean from the jitters. The
+- `Theorem21InputsZ` (`Beurling/Queue6/TopZ.lean`) is about the construction built in Lean from the jitters. The
   event family (including the E3/E3′ events), the Table 1 budget, the queue bound and all of Appendix A, including the
   Cover Bound, are constructed and proved. What remains are two statements of the paper, for that construction:
   - the two variance bounds in the proof of Lemma 5.22 (Comp(W) ≤ 50 log(2u)|W|, and (s2));
-  - the identification statements behind Corollary 5.40 (`Margin.R1Ident`, `Margin.Comp2Ident`), from which Lean
-    derives R1′ and Comp⁽²⁾ ≤ 1 in the form Theorem 6.6 uses. `R1Ident` says the margin density m = T′ − K^pt ρ̃ − NT_pt
+  - eq. (s2) on the windows of 𝓘ᵤ (`E2S2Bound`). From it, Lean derives Comp⁽²⁾ ≤ s₂|I| ≤ 1, and proves the numeric
+    step s₂|I| ≤ 1 from log M₁ ≤ √L;
+  - the identification statement behind Corollary 5.40 (`Margin.R1Ident`), from which Lean derives R1′ in the form
+    Theorem 6.6 uses. `R1Ident` says the margin density m = T′ − K^pt ρ̃ − NT_pt
     satisfies Proposition 5.38 and the §5.3 bookkeeping identity, for the construction. The construction-side ρ̃,
     T′_cont and NT_pt are not yet defined in Lean.
-- Earlier top levels (`corollary_2_2_of_O` … `_X`) are kept. Each one implies the previous.
+- Earlier top levels (`corollary_2_2_of_O` … `_Y`) are kept. Each one implies the previous.
 
 ## What is proved
 
