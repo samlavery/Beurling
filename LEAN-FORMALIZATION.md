@@ -84,6 +84,14 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     `CoverSkeletonBound`), the reduction to skeletons (`SkeletonReduction`), Lemma 6.21(ii) (`TypeUnionBound`), the
     criterion (80) and Lemma A.6 (S3)(d).
   - They are not yet connected to `ClusterUpTo`.
+  - **Round 2** (1565 lines):
+    - e^γ < 1.79, which gives the numeric part of Lemma A.6 (S3)(d).
+    - Lemma 6.21(ii): the skeleton sum, and `TypeUnionBound` from the per-skeleton bound.
+    - Lemma 6.22(a),(b) for (s4).
+    - Theorem 6.23(a) in the Step 2 range s ≤ s_H + 1 (`theorem_6_23a_step2_full`), linked to the capacity
+      certificates.
+    - Still open: Steps 3–4, which need Lemma 6.22(d),(e); the claim s_R ≤ |R|; and the Pivot-Integration Lemma
+      itself.
 - **Added in this repository: the construction of §3** (`Beurling/Model/`, 3947 lines). `constructedModel θ X₀ ω` builds
   the slot model from the jitters as the limit of a causal iteration.
   - Lemma 3.5 is formalized as `causal`: agreement up to z − 1 propagates to agreement up to z.
