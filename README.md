@@ -165,21 +165,33 @@ theorem for the realised system, and a counting theorem for clusters of composit
 
 ## Lean formalization
 
-The main theorem is not formally verified. A Lean 4 formalization by [Aristotle](https://aristotle.harmonic.fun) (Harmonic),
-in [`lean/`](lean/), proves Corollary 2.2 (the answer to Question Q is negative) from one explicit hypothesis,
-`Theorem21InputsR`, with no `sorry`. The full build was re-run for this repository (2026-10-26).
+The main theorem is not formally verified. A Lean 4 formalization in [`lean/`](lean/), started by
+[Aristotle](https://aristotle.harmonic.fun) (Harmonic) and continued here, proves Corollary 2.2 (the answer to Question Q is
+negative) from two explicit hypotheses, with no `sorry`:
+- the short-interval prime number theorem (84) of Heath-Brown;
+- `Theorem21InputsS`.
 
-- **Proved:**
-  - most of Sections 3 and 4: the construction's definitions and bookkeeping, the decomposition (14), the designed zeros,
-    Theorem 4.10 and Rouché's theorem;
-  - Lemma 5.1, the deterministic part of the queue bound, Lemma 6.26;
+`Theorem21InputsS` fixes the construction, which is now built from the jitters in Lean. It asks only for three things:
+- the probability budget of Table 1;
+- the queue window data;
+- the cluster event on the good event.
+
+- **Proved and used by the top-level theorem:**
+  - most of Sections 3 and 4, including the construction itself as a causal fixed point, Lemma 3.3 and Lemma 4.8(ii);
+  - the measurability of the construction, its jitter law, and the nullity of the coincidence event 𝒩₌;
+  - Lemma 5.1 and Lemma 6.26;
   - nearly all the certificates of Appendix B.
-- **Still assumed:** most of the analytic and probabilistic core, about 90 of the roughly 128 pages of proof. This covers:
-  - Section 5 beyond Lemma 5.1;
-  - the probabilistic part of Section 6 and the cluster event;
-  - Section 7 and Appendix A's Theorem R;
+- **Proved but not yet used by the top-level theorem:**
+  - most of §5.1–5.5: Lemma 5.3, Theorem 5.6, Corollary 5.9, Theorem 5.14;
+  - the skeleton of Theorem 6.6;
+  - Appendix A up to the Pivot-Integration Lemma for one run;
+  - Prop 6.11 and Theorem 6.23(a), from the skeleton bounds.
+- **Not yet proved:** the rest of §5 (from Theorem 5.15 on), the local PNT of §5.7, §7, the multi-run Pivot-Integration
+  Lemma, and the assembly of the queue window data and the Table 1 budget.
 
-The details, and the list of what remains, are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
+The formalization found one defect in the paper (correction #102, a constant in Lemma 5.7) and two in the Aristotle model
+(the height rule and the absorbed set), all fixed. The details, and the list of what
+remains, are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
 
 ## Repository layout
 
@@ -188,7 +200,7 @@ The details, and the list of what remains, are in [`LEAN-FORMALIZATION.md`](LEAN
 | `paper/` | the paper (LaTeX). `main.tex` inputs the files in `paper/sections/`. |
 | `certificates/` | the computer-assisted parts and numerical cross-checks (Python 3), described in Appendix B of the paper |
 | `review/` | the AI referee reports written while the proof was developed (two component referees and one end-to-end referee; they refer to working notes that are not included here), the AI consistency check of the paper (`paper-check.md`, `subchecks/`), and the re-check after the fixes (`paper-recheck.md`, `recheck/`) |
-| `lean/` | the Lean 4 project from Aristotle (Lean/Mathlib v4.28.0): Corollary 2.2 proved from the hypothesis `Theorem21InputsR`, the certificates of Appendix B, and Aristotle's notes |
+| `lean/` | the Lean 4 project from Aristotle (Lean/Mathlib v4.28.0): Corollary 2.2 proved from (84) and the hypothesis `Theorem21InputsS`, the certificates of Appendix B, and Aristotle's notes |
 | `LEAN-FORMALIZATION.md` | status of the Lean formalization: what is proved, and what the remaining hypothesis contains |
 | `CORRECTIONS-vs-v3.md` | every deviation of the paper from the refereed draft ("v3"), with justification |
 | `PAPER-SPEC.md`, `paper/LABELS.md`, `review/PAPER-CHECK-BRIEF.md`, `review/RECHECK-BRIEF.md` | process documents: the instructions given to the AI agents that wrote and checked the paper |
