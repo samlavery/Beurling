@@ -93,7 +93,8 @@ noncomputable def bridge_c (hc : Cond θ X₀) (hev : Even X₀) {ω : JitterΩ}
   have hyZ : 2 * y / Xm X₀ ≤ Zc X₀ b := by
     refine le_trans ?_ hZ.2.2.2
     rw [div_le_div_iff_of_pos_right hXm0]; linarith
-  have h18 : 18 * y ≤ Zc X₀ b ^ 2 := le_trans (by linarith) hZ.2.2.1
+  have h18 : 18 * y ≤ Zc X₀ b ^ 2 := KR.Chain.sq18_of_cofactor hXm0 hZ.1
+    (le_trans (div_le_div_of_nonneg_right (by linarith) hXm0.le) (Zc_18 hc hb))
   bridgeR_real_loc hT hX (NKc X₀) hy hZ.1 hyZ h18 (by norm_num [lamH]) (by norm_num [lamH])
     (fun t ht => TcR_abs_le hc hev ω hT ht) (fun t ht => TcR_low hc ω ht) (NKc_spec hc y) hosc
     hW hbdd

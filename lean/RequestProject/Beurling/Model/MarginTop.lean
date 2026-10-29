@@ -13,6 +13,7 @@ public import RequestProject.Beurling.Model.JXbdd
 public import RequestProject.Beurling.Model.RestG
 public import RequestProject.Beurling.Model.MarginTail
 public import RequestProject.Beurling.Model.FrBound
+public import RequestProject.Beurling.Model.G1BRes
 public import RequestProject.Beurling.Noise.RML6Var2Tail
 public import RequestProject.Beurling.Noise.RML6G1
 public import RequestProject.Beurling.BaseRange.Lemma73Low
@@ -66,13 +67,20 @@ structure RestBridge (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
 
 /-- **Proposition 5.35, Lemma 5.34 and the margin identity** inputs of `RealMarginLoc`. -/
 structure RestRes (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
-  /-- **Proposition 5.35(B)**'s non-Model inputs on range (B) (`KR.RML6.G1BRest`: Queue6's
-  Step 1 count and Lemma 5.23 at `2δ`, §5's Step 2), at the Model's `δ = deltaB`, `ρ̃ = rhoT` and
-  threshold mass `threshSum tJ y (2δ)` -/
-  g1B : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
-    KR.RML6.G1BRest (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀
-      (fun t => TcR θ X₀ ω (jzX X₀) t + jzX X₀ * ind X₀ t) y (deltaB θ X₀ ω y) (rhoT θ X₀ ω)
-      ((PR θ X₀ ω).threshSum (Queue6.tJ θ X₀ ω) y (2 * deltaB θ X₀ ω y))
+  /-- **Proposition 5.35(B)**, Queue6's inputs on range (B) (`KR.RML9.G1ResQueue6`: Lemma 5.20's
+  hypotheses, Step 1's count, `ν̄` on `J`, `|ϑ| ≤ 6`, Lemma 5.23 at `2δ`), at the Model's
+  `δ = deltaB`, `ρ̃ = ρLd`, `ν = nuLd`, `ϑ = 0`, threshold mass `threshSum tJ y (2δ)` -/
+  g1Q : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
+    KR.RML9.G1ResQueue6 (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀ y (Zc X₀ b) (1 / 1000) (1 / 1000)
+      (hbsEps X₀) epsH (epsH / 10) (deltaB θ X₀ ω y)
+      ((PR θ X₀ ω).threshSum (Queue6.tJ θ X₀ ω) y (2 * deltaB θ X₀ ω y)) (ρLd θ X₀ ω)
+      (nuLd θ X₀ ω) (fun _ => 0)
+  /-- **Proposition 5.35(B)**, §5's inputs on range (B) (`KR.RML9.G1ResSec5`: Lemma 5.34 on `J`
+  with its size, Proposition 5.26 and Lemma 5.27 at the window heights, Proposition 5.31(iii)) -/
+  g1S : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
+    ∀ hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀),
+    KR.RML9.G1ResSec5 (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀ y (deltaB θ X₀ ω y) (ρLd θ X₀ ω)
+      (nuLd θ X₀ ω) (NTd θ X₀ ω) 0 (TcLd θ X₀ ω) (JL (jzX X₀) X₀) (TcR θ X₀ ω (jzX X₀)) hO
   /-- **Lemma 5.22** for the paper's `ν = ν_Model + ϑ/H` on the dyadic blocks (Queue6;
   `Nu522`): the block bounds `ν̄_i` -/
   nb : ℕ → ℝ
@@ -210,11 +218,11 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
         (tnpR hc hev hbs hN.2.1 hX1) x hx hxb)
   g1 := fun y hy hyb => KR.RML6.g1_of (by norm_num at hX1 ⊢; linarith) (Xm_pos' hc)
     (Xm_le_X0 hc) hy (sigmaAResp_R hc hev hb hbt hG.1 (fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG
-      (Sum.inl n) hn) hN hbs hX1 hy hyb) (fun hyL => g1B_mk hc hev hb hbt hG.1
-        (fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn) hN
-          (tnpR hc hev hbs hN.2.1 hX1) hy hyb hyL (jumpCount_c hc hev hb hbt hG.1
-            (fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn) hN hy hyb hyL)
-              (rprimeChange_c hc ω hb (tnpR hc hev hbs hN.2.1 hX1) hy hyb) (Rs.g1B y hy hyb hyL))
+      (Sum.inl n) hn) hN hbs hX1 hy hyb) (fun hyL => KR.RML9.g1BInputs_of
+        (opR hc hev hbs hN.2.1 hX1) (y_pos_c hc hy) hyL (g1ResModel_c hc hev hb hbt hG.1
+          (fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn) hN hbs hX1
+            (opR hc hev hbs hN.2.1 hX1) hy hyb hyL) (Rs.g1Q y hy hyb hyL) ⟨Bs.hHux⟩
+              (Rs.g1S y hy hyb hyL (opR hc hev hbs hN.2.1 hX1)))
   ρL := ρLd θ X₀ ω
   hρL := ρLd_coe hc hev ω
   TcL := TcLd θ X₀ ω
