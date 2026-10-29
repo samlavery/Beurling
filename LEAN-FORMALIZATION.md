@@ -118,7 +118,16 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     Lemma A.5, the Volume Lemma with per-pivot caps and Lemma A.6 (S3)(c) for one run (`skeletonBound_oneRun`).
     - Still open: the multi-run case (`MultiRunSkeletonBound`, T ≥ 2) and `CoverSkeletonBound`.
     - The construction's `JitterLaw` instance has slot constant θ = 2, but Proposition 6.11 needs the paper's
-      θ = 1 + 1/Λ from (F1). The slot count must be sharpened.
+      θ = 1 + 1/Λ from (F1). The slot count must be sharpened. Done in construction round 4 (`constructionLaw2`).
+  - **Round 7** (3669 lines): `MultiRunSkeletonBound` is proved, so `SkeletonBound` (Lemma A.5 + Theorem A.10 with
+    C = B′) holds for every run structure (`skeletonBound_all`, `multiRunSkeletonBound`, `hbound_window`).
+    - **This proof does not follow the paper's proof of Theorem A.10, so a reviewer should check it.** The caps
+      1(q_j ≥ τ_j) are replaced pathwise by weights ∏(q_j/τ_j)^{s_j−1}. Factorisation (FAC) becomes a translation of
+      the log-coordinates, which preserves Lebesgue measure. One global change of variables u = Ex replaces the
+      stagewise Schur complements, Proj_t and (B1).
+    - The bound obtained is the paper's. The Lean kernel checks the proof, so what needs review is that the Lean
+      statement of `SkeletonBound` is the paper's.
+    - Still open: `CoverSkeletonBound` (Proposition 6.19).
 - **Added in this repository: the construction of §3** (`Beurling/Model/`, 3947 lines). `constructedModel θ X₀ ω` builds
   the slot model from the jitters as the limit of a causal iteration.
   - Lemma 3.5 is formalized as `causal`: agreement up to z − 1 propagates to agreement up to z.
