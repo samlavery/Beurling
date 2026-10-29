@@ -7,6 +7,7 @@ public import RequestProject.Beurling.BaseRange.Mu0b
 public import RequestProject.Beurling.BaseRange.Lemma73R
 public import RequestProject.Beurling.BaseRange.Lemma73LowTop
 public import RequestProject.Beurling.BaseRange.MarginHc
+public import RequestProject.Beurling.BaseRange.HjbR
 
 /-!
 # Section 7 (the base range): all modules
@@ -42,5 +43,7 @@ public import RequestProject.Beurling.BaseRange.MarginHc
 * `Lemma73Low`, `Lemma73LowTop` : the same with the horizon `X₀⁻ ≤ Z` (`lemma73Inputs_R'`) and
   `BModel.Lemma73Low` (`lemma73Low_of`);
 * `MarginHc` : Proposition 5.38(c) on `[X₀, 2X₀)`, the field `hc` of `RealMarginLoc`
-  (`margin_hc`), and `jzX_le`.
+  (`margin_hc`), and `jzX_le`;
+* `HjbR` : Proposition 5.31(i) / 5.33, `j_{X₀} ≤ 0.4209` for the realised system (`hjb_R`,
+  `hjb_Rc`).
 -/
