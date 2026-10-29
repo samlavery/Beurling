@@ -210,6 +210,13 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     - Lemma 3.4 on the good event (T(x) ≤ 3x);
     - Appendix A's `MultiRunSkeletonBound`, `CoverSkeletonBound` and (S3)(d);
     - Proposition 6.11 at the lowest height z = X₀/2.
+
+    Construction round 7 then proved:
+    - The landing compensator bound, i.e. the `land` field (`BModel.land_compensator`). The paper's μ̄ is correct: below
+      x₁ the slot density is at most 1 exactly, and above it the growth of H absorbs the excess.
+    - Proposition 6.11 at z = X₀/2 (`Queue6.cluster0_of`), by the paper's low-height argument: capacity 0, then
+      Theorem R.
+    - T(x) ≤ 3x on the good event (`tbound_of_lemma626`), from Lemma 6.26 on Good(<t).
 - **Appendix B.** Nearly all the certificates: bs-cert (region Z2 and the auxiliary checks), finite-n, x0-band, the
   constants, the bounds on φ, and rankin_R. Dickman's function is constructed and its facts (R1)–(R4) are proved.
 
