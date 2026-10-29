@@ -26,7 +26,7 @@ which no row of `C` joins, from the chain bound `finG_le_cover` ("The chain recu
 `≥ k + 1`; `configCount` counts them.
 
 * `RankFull.exists_config` (Step 0 / Lemma 6.21(i), deterministic): if `rank S < r₀`,
-  `|S| ≥ r₀ + φ(r₀)`, `0 ∉ S`, all degrees `≤ D`, `e (r₀(D+1))^{2j+1} < c`, and every heavy
+  `|S| ≥ r₀ + φ(r₀)`, `0 ∉ S`, all degrees `≤ D`, `e (r₀(D+1))^{2j+1} ≤ c`, and every heavy
   subspace `V` of dimension `< r₀` has at most `Q` elements of degree `≤ k` in `S ∩ V`, then
   `configCount ≥ 1`.
 * `RankFull.theorem_6_23a` : from `TypeUnionBound` (Lemma 6.21(ii) summed over the ranks
@@ -107,12 +107,12 @@ lemma P_mono {S T : Finset (Fin m → ℕ)} (h : S ⊆ T) : Covers.P S ⊆ Cover
 
 /-- **Step 0 of the proof of Theorem 6.23(a)** (Lemma 6.14 + Lemma 6.21(i)): a window with
 `rank S < r₀` and `|S| ≥ r₀ + φ(r₀)` contains a configuration with `|R| ≥ 1 + j` rows outside a
-minimum cover, all of degree `≥ k + 1`, provided `e (r₀(D+1))^{2j+1} < c` and every
+minimum cover, all of degree `≥ k + 1`, provided `e (r₀(D+1))^{2j+1} ≤ c` and every
 element-spanned `V` of dimension `< r₀` has at most `Q` elements of `S ∩ V` of degree `≤ k`. -/
 theorem exists_config {S : Finset (Fin m → ℕ)} (h0 : 0 ∉ S) {D j k : ℕ}
     (hD : ∀ v ∈ S, deg v ≤ D) {c Q : ℝ} (hQ : 0 ≤ Q) {r₀ : ℕ}
     (hrank : rank S < r₀) (hcard : (r₀ : ℝ) + phi c Q r₀ ≤ S.card)
-    (hc : Real.exp 1 * ((r₀ : ℝ) * (D + 1)) ^ (2 * j + 1) < c)
+    (hc : Real.exp 1 * ((r₀ : ℝ) * (D + 1)) ^ (2 * j + 1) ≤ c)
     (hlow : ∀ V : Submodule ℚ (Fin m → ℚ), ElemSpanned S V → Module.finrank ℚ V < r₀ →
       (((inter S V).filter (fun y => deg y ≤ k)).card : ℝ) ≤ Q) :
     1 ≤ configCount r₀ j k S := by
@@ -124,8 +124,10 @@ theorem exists_config {S : Finset (Fin m → ℕ)} (h0 : 0 ∉ S) {D j k : ℕ}
     refine lt_of_le_of_lt ?_ hrank
     exact Submodule.finrank_mono (Submodule.span_mono (Set.image_mono (by exact_mod_cast hTS)))
   have hc' : Real.exp 1 * ((Module.finrank ℚ V : ℝ) * (D + 1)) ^ (2 * j + 1) < c := by
-    refine lt_of_le_of_lt ?_ hc
-    gcongr
+    refine lt_of_lt_of_le ?_ hc
+    apply mul_lt_mul_of_pos_left _ (Real.exp_pos 1)
+    apply pow_lt_pow_left₀ _ (by positivity) (by omega)
+    apply mul_lt_mul_of_pos_right (by exact_mod_cast hdim) (by positivity)
   obtain ⟨-, C, B, hC, hCcard, hB, hCB, hj, hk⟩ := hmain hc' (hlow V hVes hdim)
   have hSV : inter S V ⊆ S := Finset.filter_subset _ _
   -- `C` is a minimum cover of `B`
@@ -167,7 +169,7 @@ theorem theorem_6_23a {Ω ι : Type*} [MeasurableSpace Ω] (P : Measure Ω) {Goo
     (hGood : MeasurableSet Good) (W : Finset ι) (S : ι → Ω → Finset (Fin m → ℕ))
     (h0 : ∀ J ω, 0 ∉ S J ω) {D j k r₀ : ℕ} (hD : ∀ J ω, ∀ v ∈ S J ω, deg v ≤ D)
     {c Q L w : ℝ} (hQ : 0 ≤ Q) (hL : 60 ≤ L) (hr₀L : (r₀ : ℝ) ≤ L) (hw0 : 0 < w)
-    (hc : Real.exp 1 * ((r₀ : ℝ) * (D + 1)) ^ (2 * j + 1) < c)
+    (hc : Real.exp 1 * ((r₀ : ℝ) * (D + 1)) ^ (2 * j + 1) ≤ c)
     (hlow : ∀ J ω, ∀ V : Submodule ℚ (Fin m → ℚ), ElemSpanned (S J ω) V →
       Module.finrank ℚ V < r₀ → (((inter (S J ω) V).filter (fun y => deg y ≤ k)).card : ℝ) ≤ Q)
     (hmeas : ∀ J ∈ W, Measurable fun ω => (configCount r₀ j k (S J ω) : ℝ≥0∞))

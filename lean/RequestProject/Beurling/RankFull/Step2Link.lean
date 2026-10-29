@@ -510,13 +510,13 @@ theorem theorem_6_23a_step2 {Ω ι : Type*} [MeasurableSpace Ω] (P : Measure Ω
   · obtain ⟨h80, -, -⟩ := hmain hDk
     have hk1 : 1 ≤ k2 X a + 1 := by omega
     exact theorem_6_23a P hGood W S h0 hD (Q := Real.exp (X / 2)) (Real.exp_pos _).le hL60 hr0L
-      (wHigh_pos hk1 hXm0) hc hlow hmeas (htu hDk) h80
+      (wHigh_pos hk1 hXm0) hc.le hlow hmeas (htu hDk) h80
   · have hempty : {ω | ∃ J ∈ W, Covers.rank (S J ω) < r₀ ∧
         (r₀ : ℝ) + Covers.phi (Real.exp X) (Real.exp (X / 2)) r₀ ≤ (S J ω).card} ∩ Good = ∅ := by
       ext ω
       simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
       rintro ⟨⟨J, _, hr, hcard⟩, _⟩
-      have h1 := exists_config (h0 J ω) (hD J ω) (Real.exp_pos _).le hr hcard hc (hlow J ω)
+      have h1 := exists_config (h0 J ω) (hD J ω) (Real.exp_pos _).le hr hcard hc.le (hlow J ω)
       unfold configCount at h1
       obtain ⟨⟨C, B⟩, hCB⟩ := Finset.card_pos.mp h1
       obtain ⟨_, hBS, -, -, -, -, hRc, hdeg⟩ := Finset.mem_filter.mp hCB

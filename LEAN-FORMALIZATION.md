@@ -90,8 +90,14 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     - Lemma 6.22(a),(b) for (s4).
     - Theorem 6.23(a) in the Step 2 range s ≤ s_H + 1 (`theorem_6_23a_step2_full`), linked to the capacity
       certificates.
-    - Still open: Steps 3–4, which need Lemma 6.22(d),(e); the claim s_R ≤ |R|; and the Pivot-Integration Lemma
-      itself.
+  - **Round 3** (2266 lines):
+    - Lemma 6.22(d) and (e).
+    - Theorem 6.23(a) for every s ≥ −log Λ (`theorem_6_23a_all`), from the skeleton inputs.
+    - The join list of Proposition 6.19, with s_R ≤ |R|, proved from the staging.
+    - The Pivot-Integration Lemma A.5 for one run, over an abstract filtration with box-uniform conditional laws
+      (`iterated_pivots`, `pil_volume`).
+    - Still open: the multi-run recursion of Lemma A.5, with the stagewise change of variables of Theorem A.10.
+      These discharge `SkeletonBound` and `CoverSkeletonBound`. Also open: the pathwise skeleton reduction.
 - **Added in this repository: the construction of §3** (`Beurling/Model/`, 3947 lines). `constructedModel θ X₀ ω` builds
   the slot model from the jitters as the limit of a causal iteration.
   - Lemma 3.5 is formalized as `causal`: agreement up to z − 1 propagates to agreement up to z.
