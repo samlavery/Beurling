@@ -98,6 +98,13 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
       (`iterated_pivots`, `pil_volume`).
     - Still open: the multi-run recursion of Lemma A.5, with the stagewise change of variables of Theorem A.10.
       These discharge `SkeletonBound` and `CoverSkeletonBound`. Also open: the pathwise skeleton reduction.
+  - **Round 4** (250 lines):
+    - The probabilistic skeleton of the multi-run recursion of Lemma A.5: `label_replace`, step (i), in the corrected
+      order of #48/#55, and `pil_chain`.
+    - The stage change of variables of Theorem A.10(i) with real exponents, and |det E| = ∏|det S_t| via Schur
+      complements.
+    - Still open: a pathwise model of the realised configurations (window sets, skeletons, the integrands), which
+      instantiates `pil_chain` and proves the skeleton reductions.
 - **Added in this repository: the construction of §3** (`Beurling/Model/`, 3947 lines). `constructedModel θ X₀ ω` builds
   the slot model from the jitters as the limit of a causal iteration.
   - Lemma 3.5 is formalized as `causal`: agreement up to z − 1 propagates to agreement up to z.
