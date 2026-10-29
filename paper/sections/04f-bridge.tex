@@ -83,10 +83,12 @@ With \eqref{eq:decomp},
 \end{equation}
 and, on $\Good(<x)$,
 \begin{multline*}
-  \log x\cdot|M-B\Rres T'|(x)\le\eps_N:=5.1C_N\sum_u\log(2u)\bar F_r(u)+15.3C_NC_S'\sum_v(\log3v)^2F_r^+(v)\\
+  \log x\cdot|M-B\Rres T'|(x)\le\eps_N:=5.1C_N\sum_u\log(2u)\bar F_r(u)+35.8C_NC_S'\sum_v(\log3v)^2\bar F_r(v)\\
   +\sup_x\frac{6\log x}{H(x)}\le10^{-13},
 \end{multline*}
-where $\bar F_r(v):=o_v+6/H(v)+\bar\nu(v)+54\eta(v)$ bounds $|F_r|$ on $[v,2v)$, and $F_r^+:=2\bar F_r$ bounds $|(1-B)F_c|$.
+% Logged correction 110 (CORRECTIONS-vs-v3.md): sup_[v,3v] F_r^+ was replaced by F_r^+(v); B reads the neighbouring blocks. Regrouped.
+where $\bar F_r(v):=o_v+6/H(v)+\bar\nu(v)+54\sup_{[v,2v)}\eta$ bounds $|F_r|$ on $[v,2v)$, and
+$\sup_{[v,2v)}|(1-B)F_c|\le o_v+2\max_{v'\in\{v/2,v,2v\}}\bar F_r(v')$, as $W_p\subset[v/2,4v)$ for $p\in[v,2v)$.
 Every sum is over dyadic scales $\ge X_0/2$; the bound $10^{-13}$ does not depend on $x$, and no event at the current scale is used.
 \end{lemma}
 
@@ -95,7 +97,7 @@ Every sum is over dyadic scales $\ge X_0/2$; the bound $10^{-13}$ does not depen
 $\rhot_c:=\rhot-(1+B\Kpt)^{-1}BJ$. So $M=B\Rres J+B\Tc+\vartheta/H-BF_c+B\Rres F_c-B\Rres G$. Insert $F_c=\Tc+F_r$ and
 $\Rres\Tc+\Rres J=\Rres T'$. In particular, the current-scale terms $-B(\nu+\NT)(x)$ of $BF_c$ cancel exactly against those of
 $B\Rres F_c$ (its $n=1$ term). Every term on the right of \eqref{eq:predictable} involves $\nu$, $\NT$ and $\rhot$ only at scales
-$\le x/2+2H$. Accordingly, at $x$, $\bar F_r(u)$, the suprema $\sup_{[v,3v]}F_r^+$ and the oscillations $o_u$ below are taken over
+$\le x/2+2H$. Accordingly, at $x$, $\bar F_r(u)$, the suprema $\sup_{[v,2v)}|(1-B)F_c|$ and the oscillations $o_u$ below are taken over
 the heights actually read, which are $\le x/2+2.1H(x)$, and over the windows of length $\le2.04H$ meeting them; these lie in
 $(-\infty,x/2+4.2H(x)]\subset(-\infty,x]$, so on $\Good(<x)$ the bounds of \eqref{eq:osc} hold for them.
 
@@ -103,14 +105,23 @@ $(-\infty,x/2+4.2H(x)]\subset(-\infty,x]$, so on $\Good(<x)$ the bounds of \eqre
 \begin{itemize}
 \item $\log x\cdot|(B\Kpt B\Rres F_r)(x)|\le5.1C_N\sum_{u\le x/2+2H}\log(2u)\bar F_r(u)$. The kernels of $\Kpt B\Rres=1-\Rres$
   are the $C_n$ with $n\ge2$, so Proposition~\ref{prop:true-kernels} applies ($5.1C_N$ bounds both kinds of blocks).
-\item $\log x\cdot|(B\Rres G)(x)|\le15.3C_NC_S'\sum_v(\log3v)^2F_r^+(v)$, since
-  $|G(y)|\le3\sum_v\omega_y(v)\sup_{[v,3v]}F_r^+$ (Lemma~\ref{lem:S}(iii)).
+\item We have
+  \[
+    \log x\cdot|(B\Rres G)(x)|\le5.1C_NC_S'\sum_v(\log3v)^2\sup_{[v,2v)}|(1-B)F_c|\le35.8C_NC_S'\sum_v(\log3v)^2\bar F_r(v),
+  \]
+  since $|G(y)|\le\sum_v\omega_y(v)\sup_{[v,2v)}|(1-B)F_c|$ (definition of $\omega_y$; Lemma~\ref{lem:S}(iii) for the sum over
+  the outer scales). The second step uses the bound above on $\sup_{[v,2v)}|(1-B)F_c|$, the shift
+  $(\log3v)^2\le(1+10^{-7})(\log3(v/2))^2$, and $5.1\cdot7.0001\le35.8$; blocks below $X_0/2$ contribute $0$.
 \item $|\vartheta/H|\le6/H(x)$, and $\sup\rhot\le1.01$ surely (\S\ref{sec:noise-perscale}), so $|\NT|\le2.02\eta\le54\eta$ by
   \eqref{eq:NT}.
 \end{itemize}
 By \eqref{eq:sw-sums} (note that $\sum_u\log(2u)\bar\nu(u)$ and $\sum_v(\log 3v)^2\bar\nu(v)$ are dominated by the sums
 there), Lemma~\ref{lem:tau-near} ($E_\eta^0$ and $E_\eta^{(2)}$) and \eqref{eq:osc}, $\eps_N\le10^{-13}$. The largest part is
-$30.6C_NC_S'e^{-41}$, from the oscillation of $\sigma_{\Abs}$.
+$35.8C_NC_S'e^{-41}\le8.9\cdot10^{-14}$, from the oscillation of $\sigma_{\Abs}$; the $\bar\nu$ part is $\le35.8C_NC_S'\cdot10^{-22}\le6\cdot10^{-18}$ and every
+other part is $\le10^{-20}$. (Each $C_n^x$ is supported within $1.02H(x/n)$ of $x/n$, so mass grouped at $x/n\in[u,2u)$ may
+land in a neighbouring block; replacing $\bar F_r(u)$ by the maximum over the neighbouring blocks costs at most a factor $3$
+in the first bullet, on a term $\le10^{-26}$, and taking the suprema of Lemma~\ref{lem:S} over $[Y-1.02H,2Y+1.02H]$ costs a
+factor $1+o(1)$ in the second, covered by $C_S'=10\ge9.82$.)
 \end{proof}
 
 \paragraph{Design facts used} (\S\ref{sec:construction}).
