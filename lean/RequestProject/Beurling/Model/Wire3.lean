@@ -53,7 +53,8 @@ noncomputable def bridge_c (hc : Cond θ X₀) (hev : Even X₀) {ω : JitterΩ}
     (hSG : ω ∈ Queue6.SG (θ := θ) (X₀ := X₀)) (hX1 : 10 ^ 8 + 1 ≤ Real.log X₀)
     {x y : ℝ} (hx : (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x) (hxb : x ≤ b) (hW : InW (Queue6.Hc X₀ x) x y)
     (hosc : ∑ u ∈ dyScales X₀ y (NKc X₀ y).1, Real.log (2 * u) *
-      oscR (Queue6.Hc X₀) (clampT (Xm X₀ * Zc X₀ b) (TcR θ X₀ ω (jzX X₀))) u ≤ Real.exp (-83))
+      oscR (Queue6.Hc X₀) (clampT (oscHt (Queue6.Hc X₀) y) (TcR θ X₀ ω (jzX X₀))) u ≤
+        Real.exp (-83))
     (hbdd : BddAbove (Set.range fun y : {y : ℝ // InW (Queue6.Hc X₀ x) x y} =>
       jXat (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀)
         (NKc X₀ y.1).1 (NKc X₀ y.1).2 y.1)) :

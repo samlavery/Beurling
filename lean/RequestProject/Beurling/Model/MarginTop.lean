@@ -3,6 +3,7 @@ module
 public import RequestProject.Beurling.Model.MarginMine
 public import RequestProject.Beurling.Model.S2Final
 public import RequestProject.Beurling.Model.Wire3
+public import RequestProject.Beurling.Model.SigmaResp
 public import RequestProject.Beurling.Noise.RML6G1
 public import RequestProject.Beurling.BaseRange.Lemma73Low
 public import RequestProject.Beurling.BaseRange.MarginHc
@@ -56,7 +57,8 @@ structure RestBridge (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
   /-- **eq. (osc), first display**, for the clamped `T_c` at the starts of the windows -/
   hosc : ∀ x y, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b → InW (Queue6.Hc X₀ x) x y →
     ∑ u ∈ KR.TNP.dyScales X₀ y (NKc X₀ y).1, Real.log (2 * u) *
-      KR.Chain.oscR (Queue6.Hc X₀) (KR.TcLoc.clampT (Xm X₀ * Zc X₀ b) (TcR θ X₀ ω (jzX X₀))) u
+      KR.Chain.oscR (Queue6.Hc X₀) (KR.TcLoc.clampT (KR.TcLoc.oscHt (Queue6.Hc X₀) y)
+        (TcR θ X₀ ω (jzX X₀))) u
         ≤ Real.exp (-83)
   /-- the eq. (jX0) family is bounded on `W_x` (§5, Proposition 5.33) -/
   hbdd : ∀ x, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b →
@@ -66,10 +68,6 @@ structure RestBridge (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
 
 /-- **Proposition 5.35, Lemma 5.34 and the margin identity** inputs of `RealMarginLoc`. -/
 structure RestRes (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
-  /-- **the `σ_𝒜` response** on range (A) (Proposition 5.35(A), third bullet; Model) -/
-  g1A : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b →
-    KR.RML6.SigmaAResp (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀
-      (fun t => TcR θ X₀ ω (jzX X₀) t + jzX X₀ * ind X₀ t) y
   /-- **Proposition 5.35(B)**'s inputs on range (B) (`KR.RML6.G1BInputs`; owners in its
   docstring: Model, Queue6, §5) -/
   g1B : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
@@ -266,7 +264,8 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
   bridge := fun x y hx hxb hW => bridge_c hc hev hb hbs hN.2.1 hX1 hx hxb hW
     (Br.hosc x y hx hxb hW) (Br.hbdd x hx hxb)
   g1 := fun y hy hyb => KR.RML6.g1_of (by norm_num at hX1 ⊢; linarith) (Xm_pos' hc)
-    (Xm_le_X0 hc) hy (Rs.g1A y hy hyb) (Rs.g1B y hy hyb)
+    (Xm_le_X0 hc) hy (sigmaAResp_R hc hev hb hbt hG.1 (fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG
+      (Sum.inl n) hn) hN hbs hX1 hy hyb) (Rs.g1B y hy hyb)
   ρL := Rs.ρL
   hρL := Rs.hρL
   TcL := Rs.TcL
@@ -396,6 +395,15 @@ theorem realMarginLoc_of_others (hc : Cond θ X₀) (hev : Even X₀) {ω : Jitt
   obtain ⟨Bs, Br, Rs, hM⟩ := hO
   obtain ⟨Mg⟩ := hM (opR hc hev hbs hN.2.1 hX1)
   exact ⟨realMarginLoc_of hc hev hG hN hbt hb hbs hX1 hEpm (hin Bs.hHux) Bs Br Rs Mg⟩
+
+variable (θ X₀) in
+/-- **Lemma 7.3's inputs at the windows with `b < 4X₀ + 2`** (kept for `BaseRange.lemma73Low_of`;
+the top level now uses `hin_R` for every `b`). -/
+def Lemma73Low (ω : JitterΩ) (b : ℝ) : Prop :=
+  b < 4 * (X₀ : ℝ) + 2 → BaseRange.HuxleyFrom X₀ → BaseRange.Lemma73Inputs X₀ (b + Queue6.Hc X₀ b)
+    (BaseRange.mu0R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
+    (KR.Sharp.mu1R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
+    (KR.Sharp.rhoEdge (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
 
 /-! ### The top level -/
 
