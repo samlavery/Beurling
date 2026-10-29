@@ -7,7 +7,7 @@ public import RequestProject.Beurling.Positivity
 # Positivity of the target (Lemma 3.3) and the slope of its continuous part
 
 For `x ≥ X₀` the target (6) splits as `T(x) = X₀ + J(x) + C(x)` (`target_eq_split`), with the
-jump part `J(x) = Ψ(x, X₀) - Ψ(X₀, X₀) + #(A ∩ [0, x])` and the continuous part
+jump part `J(x) = Ψ(x, X₀) - Ψ(X₀, X₀) + #(A ∩ [1, x])` and the continuous part
 `C(x) = ∫_{X₀}^x T'_cont`, `T'_cont = 1 - ρ_det - ρ̄_A + R'`. Here, for an arbitrary absorbed set
 `A`, the parameters of Section 2.2 and heights in the designed range `[Γ_k, 2Γ_k]`:
 
@@ -40,7 +40,7 @@ noncomputable def contPart (X₀ : ℕ) (κ : ℝ) (rhoA R : ℝ → ℝ) (x : �
   (x - X₀) - (∫ u in (X₀ : ℝ)..x, Target.rhoDet X₀ κ u) - (∫ u in (X₀ : ℝ)..x, rhoA u) +
     (R x - R X₀)
 
-/-- The jump part `J(x) = Ψ(x, X₀) - Ψ(X₀, X₀) + #(A ∩ [0, x])` of the target (6). -/
+/-- The jump part `J(x) = Ψ(x, X₀) - Ψ(X₀, X₀) + #(A ∩ [1, x])` of the target (6). -/
 noncomputable def jumpPart (X₀ : ℕ) (cntA : ℝ → ℝ) (x : ℝ) : ℝ :=
   ((Rankin.smoothCount X₀ x : ℝ) - Rankin.smoothCount X₀ X₀) + cntA x
 
@@ -229,9 +229,9 @@ lemma intervalIntegrable_rhoDet (X₀ : ℕ) {κ x : ℝ} (hκ : 0 < κ) (hX0 : 
 
 section Absorbed
 
-variable {b : ℝ} (A : Set ℕ)
+variable {b : ℝ} (A : Set ℝ)
 
-lemma measurable_absorbedBump (b : ℝ) (u : ℕ → ℝ) (a : ℕ) :
+lemma measurable_absorbedBump (b : ℝ) (u : ℝ → ℝ) (a : ℝ) :
     Measurable (Absorbed.absorbedBump b A u a) := by
   unfold Absorbed.absorbedBump
   split_ifs
@@ -239,27 +239,29 @@ lemma measurable_absorbedBump (b : ℝ) (u : ℕ → ℝ) (a : ℕ) :
   · exact measurable_const
 
 /-- On `[0, x]` only the `a ≤ x + x^b` contribute to `ρ_A` (as `u_a + u_a^b = a`). -/
-lemma absorbedDensity_eq_sum (hb : 0 < b) {x v : ℝ} (hv0 : 0 ≤ v) (hvx : v ≤ x) :
+lemma absorbedDensity_eq_sum (hA : Absorbed.LocFin A) (hb : 0 < b) {x v : ℝ} (hv0 : 0 ≤ v)
+    (hvx : v ≤ x) :
     Absorbed.absorbedDensity b A (fun n => Construction.solveU b n) v =
-      ∑ a ∈ Finset.range (⌊x + x ^ b⌋₊ + 1),
+      ∑ a ∈ Absorbed.below hA (x + x ^ b),
         Absorbed.absorbedBump b A (fun n => Construction.solveU b n) a v := by
   unfold Absorbed.absorbedDensity
   apply tsum_eq_sum
   intro a ha
   unfold Absorbed.absorbedBump
-  split_ifs with hA
+  split_ifs with hA'
   · apply Set.indicator_of_notMem
     intro hmem
     apply ha
-    obtain ⟨h0, heq⟩ := Construction.solveU_spec hb a
+    rw [Absorbed.mem_below]
+    refine ⟨hA', ?_⟩
+    have ha0 : 0 ≤ a := le_trans hv0 hmem.2
+    obtain ⟨h0, heq⟩ := Construction.solveU_spec hb ha0
     have h1 : Construction.solveU b a ^ b ≤ v ^ b := Real.rpow_le_rpow h0 hmem.1 hb.le
     have h2 : v ^ b ≤ x ^ b := Real.rpow_le_rpow hv0 hvx hb.le
-    have h3 : (a : ℝ) ≤ x + x ^ b := by linarith [hmem.1]
-    rw [Finset.mem_range, Nat.lt_add_one_iff]
-    exact Nat.le_floor h3
+    linarith [hmem.1]
   · rfl
 
-lemma absorbedDensity_nonneg {v : ℝ} (hv : 0 ≤ v) (u : ℕ → ℝ) :
+lemma absorbedDensity_nonneg {v : ℝ} (hv : 0 ≤ v) (u : ℝ → ℝ) :
     0 ≤ Absorbed.absorbedDensity b A u v := by
   unfold Absorbed.absorbedDensity
   refine tsum_nonneg fun a => ?_
@@ -269,19 +271,20 @@ lemma absorbedDensity_nonneg {v : ℝ} (hv : 0 ≤ v) (u : ℕ → ℝ) :
   · exact le_rfl
 
 /-- `0 ≤ ρ̄_A(v) ≤ 0.1/log v` for `v ≥ 1`. -/
-lemma absorbedDensityCap_mem {v : ℝ} (hv : 1 ≤ v) (u : ℕ → ℝ) :
+lemma absorbedDensityCap_mem {v : ℝ} (hv : 1 ≤ v) (u : ℝ → ℝ) :
     0 ≤ Absorbed.absorbedDensityCap b A u v ∧
       Absorbed.absorbedDensityCap b A u v ≤ 0.1 / Real.log v := by
   unfold Absorbed.absorbedDensityCap
   exact ⟨le_min (absorbedDensity_nonneg A (by linarith) u)
     (div_nonneg (by norm_num) (Real.log_nonneg hv)), min_le_right _ _⟩
 
-/-- `ρ̄_A` is interval integrable on `[X, x]`, `X > 1`, for every `A`. -/
-lemma intervalIntegrable_absorbedDensityCap (hb : 0 < b) {X x : ℝ} (hX : 1 < X) (hXx : X ≤ x) :
+/-- `ρ̄_A` is interval integrable on `[X, x]`, `X > 1`, for every locally finite `A`. -/
+lemma intervalIntegrable_absorbedDensityCap (hA : Absorbed.LocFin A) (hb : 0 < b) {X x : ℝ}
+    (hX : 1 < X) (hXx : X ≤ x) :
     IntervalIntegrable (Absorbed.absorbedDensityCap b A (fun n => Construction.solveU b n))
       volume X x := by
   rw [intervalIntegrable_iff_integrableOn_Ioc_of_le hXx]
-  set g : ℝ → ℝ := fun v => min (∑ a ∈ Finset.range (⌊x + x ^ b⌋₊ + 1),
+  set g : ℝ → ℝ := fun v => min (∑ a ∈ Absorbed.below hA (x + x ^ b),
     Absorbed.absorbedBump b A (fun n => Construction.solveU b n) a v) (0.1 / Real.log v) with hg
   have hgm : Measurable g :=
     (Finset.measurable_sum _ fun a _ => measurable_absorbedBump A b _ a).min
@@ -290,7 +293,7 @@ lemma intervalIntegrable_absorbedDensityCap (hb : 0 < b) {X x : ℝ} (hX : 1 < X
       (Ioc X x) := by
     intro v hv
     simp only [hg, Absorbed.absorbedDensityCap]
-    rw [absorbedDensity_eq_sum A hb (by linarith [hv.1]) hv.2]
+    rw [absorbedDensity_eq_sum A hA hb (by linarith [hv.1]) hv.2]
   refine IntegrableOn.congr_fun ?_ heq.symm measurableSet_Ioc
   refine ⟨hgm.aestronglyMeasurable, HasFiniteIntegral.restrict_of_bounded (C := 0.1 / Real.log X)
     measure_Ioc_lt_top ?_⟩
@@ -587,8 +590,8 @@ lemma contPart_sub {X₀ : ℕ} {κ : ℝ} {rhoA R : ℝ → ℝ} {x x' : ℝ}
 
 /-- **Upper slope bound**: `C(x') - C(x) ≤ 1.01 (x' - x)` (`ρ_det, ρ̄_A ≥ 0`, `|R'| ≤ 0.01`). -/
 theorem contPart_upper {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
-    (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) (A : Set ℕ)
-    {x x' : ℝ} (hx : (X₀ : ℝ) ≤ x) (hxx : x ≤ x') :
+    (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) (A : Set ℝ)
+    (hA : Absorbed.LocFin A) {x x' : ℝ} (hx : (X₀ : ℝ) ≤ x) (hxx : x ≤ x') :
     contPart X₀ (Construction.kappaParam X₀)
         (Absorbed.absorbedDensityCap (θ / 2) A (fun n => Construction.solveU (θ / 2) n))
         (Oscillation.osc θ (Construction.amplitudes θ Construction.kappa0Param
@@ -602,7 +605,7 @@ theorem contPart_upper {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 1
   have hb : 0 < θ / 2 := by linarith [hθ.1]
   obtain ⟨hκ0, -⟩ := kappa_facts hX
   rw [contPart_sub (fun y hy => intervalIntegrable_rhoDet X₀ hκ0 hX1n hy)
-    (fun y hy => intervalIntegrable_absorbedDensityCap A hb hX1 hy) hx hxx]
+    (fun y hy => intervalIntegrable_absorbedDensityCap A hA hb hX1 hy) hx hxx]
   have h1 : 0 ≤ ∫ u in x..x', Target.rhoDet X₀ (Construction.kappaParam X₀) u :=
     intervalIntegral.integral_nonneg hxx fun u hu => rhoDet_nonneg X₀ hκ0 (by linarith [hu.1])
   have h2 : 0 ≤ ∫ u in x..x',
@@ -634,7 +637,7 @@ lemma continuousOn_primitive_Ici {f : ℝ → ℝ} {X : ℝ}
 
 /-- **`C` is continuous on `[X₀, ∞)`.** -/
 theorem contPart_continuousOn {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
-    (hX : 10 ^ 8 ≤ Real.log X₀) (γ : ℕ → ℝ) (A : Set ℕ) :
+    (hX : 10 ^ 8 ≤ Real.log X₀) (γ : ℕ → ℝ) (A : Set ℝ) (hA : Absorbed.LocFin A) :
     ContinuousOn (contPart X₀ (Construction.kappaParam X₀)
         (Absorbed.absorbedDensityCap (θ / 2) A (fun n => Construction.solveU (θ / 2) n))
         (Oscillation.osc θ (Construction.amplitudes θ Construction.kappa0Param
@@ -650,7 +653,7 @@ theorem contPart_continuousOn {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 
   refine (((continuousOn_id.sub continuousOn_const).sub
     (continuousOn_primitive_Ici fun y hy => intervalIntegrable_rhoDet X₀ hκ0 hX1n hy)).sub
     (continuousOn_primitive_Ici fun y hy =>
-      intervalIntegrable_absorbedDensityCap A hb hX1 hy)).add (hR.sub continuousOn_const)
+      intervalIntegrable_absorbedDensityCap A hA hb hX1 hy)).add (hR.sub continuousOn_const)
 
 /-- The comparison function `c(u) = 1/log(max(u, X))`, continuous for `X > 1`. -/
 lemma continuous_invLogMax {X : ℝ} (hX : 1 < X) :
@@ -664,8 +667,9 @@ lemma continuous_invLogMax {X : ℝ} (hX : 1 < X) :
 
 /-- **Lower slope bound (Lemma 3.3)**: `C(x') - C(x) ≥ 0.08 (x' - x)/log x'`, from (84). -/
 theorem contPart_lower {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
-    (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) (A : Set ℕ)
-    (hHB : ShortIntervalPNTFrom X₀) {x x' : ℝ} (hx : (X₀ : ℝ) ≤ x) (hxx : x ≤ x') :
+    (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) (A : Set ℝ)
+    (hA : Absorbed.LocFin A) (hHB : ShortIntervalPNTFrom X₀) {x x' : ℝ} (hx : (X₀ : ℝ) ≤ x)
+    (hxx : x ≤ x') :
     0.08 * (x' - x) / Real.log x' ≤
       contPart X₀ (Construction.kappaParam X₀)
         (Absorbed.absorbedDensityCap (θ / 2) A (fun n => Construction.solveU (θ / 2) n))
@@ -690,7 +694,7 @@ theorem contPart_lower {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 1
   have hd : ∀ y, (X₀ : ℝ) ≤ y → IntervalIntegrable (Target.rhoDet X₀ κ) volume (X₀ : ℝ) y :=
     fun y hy => intervalIntegrable_rhoDet X₀ hκ0 hX1n hy
   have ha : ∀ y, (X₀ : ℝ) ≤ y → IntervalIntegrable ρA volume (X₀ : ℝ) y :=
-    fun y hy => intervalIntegrable_absorbedDensityCap A hb hX1 hy
+    fun y hy => intervalIntegrable_absorbedDensityCap A hA hb hX1 hy
   rw [contPart_sub hd ha hx hxx]
   have hx'X : (X₀ : ℝ) ≤ x' := hx.trans hxx
   -- integrability on `[x, x']`

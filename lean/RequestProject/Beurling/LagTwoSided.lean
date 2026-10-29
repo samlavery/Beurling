@@ -27,9 +27,10 @@ open Real MeasureTheory DesignedZero Target Oscillation Absorbed CaplLink QueueB
 two-sided lag (12) (Corollary 3.8), with largest queue `Qmax x` and correction `κ₊(x)`,
 `0 ≤ κ₊(x) ≤ log x`, and the queue bound `0 ≤ Qmax x ≤ B(x)` of Theorem 6.6(ii). -/
 def PartIInputsLag (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
-  ∃ (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (α γ xp : ℕ → ℝ) (Qmax κp : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
+  ∃ (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) (Qmax κp : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
     (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) ∧
+    LocFin A ∧
     (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
     (∀ x ≥ (X₀ : ℝ), 0 ≤ Qmax x ∧ Qmax x ≤ queueB X₀ x) ∧
     (∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x) ∧
@@ -43,8 +44,8 @@ def PartIInputsLag (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 `PartIInputsQueue75`, i.e. `|N_P(x) - T(x)| ≤ B(x) + 3H(x) + 3` for `x ≥ X₀`. -/
 theorem PartIInputsLag.toQueue75 {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
     (hX : 10 ^ 8 ≤ Real.log X₀) (h : PartIInputsLag θ X₀ P) : PartIInputsQueue75 θ X₀ P := by
-  obtain ⟨κ, A, u, α, γ, xp, Qmax, κp, hκ, hκ1, hsp, hα, hxp, hAu, hρ, hQ, hκp, hlag⟩ := h
-  refine ⟨κ, A, u, α, γ, xp, hκ, hκ1, hsp, hα, hxp, hAu, hρ, fun x hx => ?_⟩
+  obtain ⟨κ, A, u, α, γ, xp, Qmax, κp, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hQ, hκp, hlag⟩ := h
+  refine ⟨κ, A, u, α, γ, xp, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, fun x hx => ?_⟩
   have hX0 : (0 : ℝ) < X₀ := by
     rcases (Nat.cast_nonneg X₀ : (0 : ℝ) ≤ X₀).lt_or_eq with h | h
     · exact h

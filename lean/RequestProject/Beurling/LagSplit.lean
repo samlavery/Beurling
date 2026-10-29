@@ -113,9 +113,10 @@ only for `x ≥ X₀ + 2H(x)`, where the paper states (12). On the initial range
 `X₀ ≤ x < X₀ + 2H(x)` only the bound of the proof of Proposition 4.1 is assumed:
 `|N_P(x) - T(x)| ≤ B(X₀) + (H(X₀)/2)(1 + κ₊(X₀)/log X₀) + 5`. -/
 def PartIInputsSlotsSplit (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
-  ∃ (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (α γ xp : ℕ → ℝ) (Qmax κp : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
+  ∃ (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) (Qmax κp : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
     (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) ∧
+    LocFin A ∧
     (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
     (∀ x ≥ (X₀ : ℝ), 0 ≤ Qmax x ∧ Qmax x ≤ queueB X₀ x) ∧
     (∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x) ∧
@@ -131,14 +132,14 @@ def PartIInputsSlotsSplit (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 theorem PartIInputsSlotsSplit.toTarget {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
     (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000) (hX : 10 ^ 8 ≤ Real.log X₀)
     (h : PartIInputsSlotsSplit θ X₀ P) : PartIInputsTarget θ X₀ P := by
-  obtain ⟨κ, A, u, α, γ, xp, Qmax, κp, hκ, hκ1, hsp, hα, hxp, hAu, hρ, hQ, hκp, hslot,
+  obtain ⟨κ, A, u, α, γ, xp, Qmax, κp, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hQ, hκp, hslot,
     hinit⟩ := h
   have hX1 : (1 : ℝ) ≤ X₀ := by
     by_contra hc; push_neg at hc
     have : Real.log X₀ ≤ 0 := Real.log_nonpos (Nat.cast_nonneg _) hc.le
     linarith
   have hW : AbsorbedWindowHyp (θ / 2) X₀ A u :=
-    ⟨by linarith, by linarith, hX1, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2⟩
+    ⟨by linarith, by linarith, hX1, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
   refine ⟨κ, countA A, absorbedDensityCap (θ / 2) A u, α, γ, xp, hκ, hκ1, hsp, hα, hxp,
     fun x hx => absorbed_target_error_cap hW (by linarith) hρ hx, fun x hx => ?_⟩
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _

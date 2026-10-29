@@ -189,7 +189,7 @@ noncomputable def absorbYAt (X₀ x : ℝ) : ℝ := capH X₀ x * absorbL0 X₀ 
 
 /-- The threshold `y(n) := y(x)` frozen at the dyadic scale `x` of `n` (scales `X₀ 2^k`; heights
 below `X₀` use the scale `X₀`). -/
-noncomputable def absorbY (X₀ : ℝ) (n : ℕ) : ℝ := absorbYAt X₀ (dyadicScale X₀ (max X₀ n))
+noncomputable def absorbY (X₀ : ℝ) (n : ℝ) : ℝ := absorbYAt X₀ (dyadicScale X₀ (max X₀ n))
 
 /-- **`y < X₀⁻` at low heights** (the step of §6.8 using Theorem 6.23(b)): for `log X₀ ≥ 10⁸`
 and `X₀ ≤ x` with `log x ≤ (log X₀)²` (so `s = log log x - 2 log Λ ≤ 0 < s_H`),
@@ -262,30 +262,25 @@ theorem absorbYAt_lt {X₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log
 prime `r` with `X₀⁻ = X₀ - H(X₀)/2 ≤ r < y(a)` (the definition (5) of `A`, together with the
 centred placement of jittered primes, §6.8). Then `#(A ∩ [1, x]) = 0` for `log x ≤ (log X₀)²`. -/
 theorem countA_eq_zero_of_low {X₀ : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀)
-    {A : Set ℕ} (hA : ∀ a ∈ A, ∃ r : ℝ, X₀ - capH X₀ X₀ / 2 ≤ r ∧ r < absorbY X₀ a) :
+    {A : Set ℝ} (hA : ∀ a ∈ A, ∃ r : ℝ, X₀ - capH X₀ X₀ / 2 ≤ r ∧ r < absorbY X₀ a) :
     ∀ x ≥ (1 : ℝ), Real.log x ≤ Real.log X₀ ^ 2 → Absorbed.countA A x = 0 := by
   intro x hx1 hlow
   have hX1 := one_lt_of_logX hX0 hX
   have hX0p : 0 < X₀ := by linarith
   unfold Absorbed.countA
-  apply Finset.sum_eq_zero
-  intro k hk
-  rw [if_neg]
-  intro hkA
+  suffices hE : A ∩ Set.Icc 1 x = ∅ by rw [hE]; simp
+  refine Set.eq_empty_of_forall_notMem fun k ⟨hkA, hk⟩ => ?_
   obtain ⟨r, hr1, hr2⟩ := hA k hkA
-  set m := max X₀ (k : ℝ) with hm
+  set m := max X₀ k with hm
   have hXm : X₀ ≤ m := le_max_left _ _
   set z := dyadicScale X₀ m with hz
   have hz1 : X₀ ≤ z := le_dyadicScale hX0p hXm
   have hz2 : z ≤ m := dyadicScale_le hX0p (by linarith)
   have hlogm : Real.log m ≤ Real.log X₀ ^ 2 := by
-    rcases le_total (k : ℝ) X₀ with h | h
+    rcases le_total k X₀ with h | h
     · rw [hm, max_eq_left h]; nlinarith
     · rw [hm, max_eq_right h]
-      have hkx : (k : ℝ) ≤ x := by
-        have := (Finset.mem_Icc.mp hk).2
-        exact (Nat.cast_le.mpr this).trans (Nat.floor_le (by linarith))
-      exact (Real.log_le_log (by linarith) hkx).trans hlow
+      exact (Real.log_le_log (by linarith) hk.2).trans hlow
   have hlogz : Real.log z ≤ Real.log X₀ ^ 2 :=
     (Real.log_le_log (by linarith) hz2).trans hlogm
   have := absorbYAt_lt hX0 hX hz1 hlogz
@@ -304,7 +299,7 @@ assumed. In its place: every `a ∈ A` has a prime `r` (its latest prime, which 
 of jittered primes (§6.8). -/
 def Theorem410InputsAbs (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (X₀ : ℕ) (κ κ₀ η : ℝ) (xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
-    (A : Set ℕ) (u : ℕ → ℝ),
+    (A : Set ℝ) (u : ℝ → ℝ),
     10 ^ 8 ≤ Real.log X₀ ∧ 1 / 4 ≤ θ ∧ θ ≤ 1 / 2 ∧
     Real.exp (-Real.log X₀) ≤ κ ∧ κ ≤ 1 ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧

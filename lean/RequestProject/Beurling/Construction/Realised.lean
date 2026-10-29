@@ -214,10 +214,10 @@ lemma PrimeOrigin.latestPrime_eq {P : BeurlingSystem} {X₀ : ℕ} {M : SlotMode
     {U : ℕ → ℝ} (O : PrimeOrigin P M H U) (e : ℕ →₀ ℕ) :
     O.latestPrime e = P.p (latestIdxOf O.src e) := rfl
 
-/-- **The absorbed set (5)** of a system `P` with prime origins `src`: the `n` with
-`log n ≥ L* = 10⁷` that are the value of an element `e` whose latest prime is jittered (in `jit`)
-and below `y(n)`. -/
-def absorbedSetOf (P : BeurlingSystem) (src : ℕ → Option ℕ) (X₀ : ℕ) (jit : Set ℝ) : Set ℕ :=
+/-- **The absorbed set (5)** of a system `P` with prime origins `src`: the real values `n` with
+`log n ≥ L* = 10⁷` of the elements `e` of the semigroup (with any cofactor) whose latest prime is
+jittered (in `jit`) and below `y(n)`. -/
+def absorbedSetOf (P : BeurlingSystem) (src : ℕ → Option ℕ) (X₀ : ℕ) (jit : Set ℝ) : Set ℝ :=
   {n | 10 ^ 7 ≤ Real.log n ∧ ∃ e : ℕ →₀ ℕ, P.val e = n ∧ P.p (latestIdxOf src e) ∈ jit ∧
     P.p (latestIdxOf src e) < absorbY X₀ n}
 
@@ -225,7 +225,7 @@ open Classical in
 /-- **The latest-prime map** of the absorbed set: the latest prime of a chosen element witnessing
 `n ∈ A`. -/
 noncomputable def latestOf (P : BeurlingSystem) (src : ℕ → Option ℕ) (X₀ : ℕ) (jit : Set ℝ)
-    (n : ℕ) : ℝ :=
+    (n : ℝ) : ℝ :=
   if h : ∃ e : ℕ →₀ ℕ, P.val e = n ∧ P.p (latestIdxOf src e) ∈ jit ∧
       P.p (latestIdxOf src e) < absorbY X₀ n then P.p (latestIdxOf src h.choose) else 0
 
@@ -255,11 +255,19 @@ section Realised
 variable {X₀ : ℕ} (M : SlotModel X₀) (H : ℝ → ℝ) (U : ℕ → ℝ)
 
 /-- **The realised absorbed set `A`** (5), for the realised system and its prime origins. -/
-noncomputable def realisedA : Set ℕ :=
+noncomputable def realisedA : Set ℝ :=
   absorbedSetOf (realisedSystem M H U) (realisedSrc M H U) X₀ (jitteredPrimesOf M H U)
 
+/-- **The realised absorbed set is locally finite**: its members are values of elements, and there
+are finitely many elements of value below any bound. -/
+lemma realisedA_locFin : LocFin (realisedA M H U) := fun x =>
+  (((realisedSystem M H U).finite_val_le x).image (realisedSystem M H U).val).subset
+    fun n hn => by
+      obtain ⟨-, e, hev, -⟩ := hn.1
+      exact ⟨e, by rw [Set.mem_setOf_eq, hev]; exact hn.2, hev⟩
+
 /-- **The realised latest-prime map.** -/
-noncomputable def realisedLatest : ℕ → ℝ :=
+noncomputable def realisedLatest : ℝ → ℝ :=
   latestOf (realisedSystem M H U) (realisedSrc M H U) X₀ (jitteredPrimesOf M H U)
 
 variable {M H U}
@@ -274,18 +282,23 @@ end Realised
 /-! ### `u_a` -/
 
 open Classical in
-/-- The solution `u ≥ 0` of `u + u^b = n` (`0` if there is none). -/
-noncomputable def solveU (b : ℝ) (n : ℕ) : ℝ :=
+/-- The solution `u ≥ 0` of `u + u^b = n` (`0` if there is none), for a real value `n`. -/
+noncomputable def solveU (b : ℝ) (n : ℝ) : ℝ :=
   if h : ∃ u : ℝ, 0 ≤ u ∧ u + u ^ b = n then h.choose else 0
 
-lemma solveU_spec {b : ℝ} (hb : 0 < b) (n : ℕ) :
+lemma solveU_nonneg (b n : ℝ) : 0 ≤ solveU b n := by
+  unfold solveU
+  split_ifs with h
+  · exact h.choose_spec.1
+  · exact le_rfl
+
+lemma solveU_spec {b : ℝ} (hb : 0 < b) {n : ℝ} (hn : 0 ≤ n) :
     0 ≤ solveU b n ∧ solveU b n + solveU b n ^ b = n := by
   have hex : ∃ u : ℝ, 0 ≤ u ∧ u + u ^ b = n := by
-    have hn : (0 : ℝ) ≤ n := Nat.cast_nonneg n
-    have hc : ContinuousOn (fun u : ℝ => u + u ^ b) (Icc 0 (n : ℝ)) :=
+    have hc : ContinuousOn (fun u : ℝ => u + u ^ b) (Icc 0 n) :=
       (continuousOn_id.add (continuousOn_id.rpow_const fun _ _ => Or.inr hb.le))
     have hivt := intermediate_value_Icc hn hc
-    have hmem : (n : ℝ) ∈ Icc ((fun u : ℝ => u + u ^ b) 0) ((fun u : ℝ => u + u ^ b) n) := by
+    have hmem : n ∈ Icc ((fun u : ℝ => u + u ^ b) 0) ((fun u : ℝ => u + u ^ b) n) := by
       simp only [Real.zero_rpow hb.ne', add_zero]
       exact ⟨hn, by linarith [Real.rpow_nonneg hn b]⟩
     obtain ⟨u, hu, hu'⟩ := hivt hmem
@@ -294,9 +307,9 @@ lemma solveU_spec {b : ℝ} (hb : 0 < b) (n : ℕ) :
   rw [dif_pos hex]
   exact hex.choose_spec
 
-lemma le_solveU {b : ℝ} (hb0 : 0 < b) (hb1 : b ≤ 1) {X : ℝ} (hX : 1 ≤ X) {n : ℕ}
+lemma le_solveU {b : ℝ} (hb0 : 0 < b) (hb1 : b ≤ 1) {X : ℝ} (hX : 1 ≤ X) {n : ℝ}
     (hn : 2 * X < n) : X ≤ solveU b n := by
-  obtain ⟨h0, heq⟩ := solveU_spec hb0 n
+  obtain ⟨h0, heq⟩ := solveU_spec hb0 (show 0 ≤ n by linarith)
   by_contra hlt
   push_neg at hlt
   have h1 : solveU b n ^ b ≤ X ^ b := Real.rpow_le_rpow h0 hlt.le hb0.le
@@ -371,21 +384,18 @@ theorem realisedOK_of {X₀ : ℕ} (M : SlotModel X₀) {U : ℕ → ℝ} (hU : 
 
 /-! ### Elements of `A` are large, and `u_a` -/
 
-/-- `n ∈ A` gives `#(A ∩ [1, n]) ≥ 1`. -/
-lemma one_le_countA {A : Set ℕ} {n : ℕ} (hn : n ∈ A) : 1 ≤ Absorbed.countA A n := by
-  classical
+/-- `n ∈ A`, `n ≥ 1` gives `#(A ∩ [1, n]) ≥ 1` (for `A` locally finite). -/
+lemma one_le_countA {A : Set ℝ} (hA : LocFin A) {n : ℝ} (hn : n ∈ A) (hn1 : 1 ≤ n) :
+    1 ≤ Absorbed.countA A n := by
   unfold Absorbed.countA
-  rw [Nat.floor_natCast]
-  have hmem : n ∈ Finset.Icc 0 n := Finset.mem_Icc.mpr ⟨Nat.zero_le _, le_rfl⟩
-  have := Finset.single_le_sum (f := fun k => if k ∈ A then (1 : ℝ) else 0)
-    (fun k _ => by beta_reduce; split_ifs <;> norm_num) hmem
-  simpa [hn] using this
+  have := (Set.ncard_pos (hA.finite_Icc 1 n)).mpr ⟨n, hn, hn1, le_rfl⟩
+  exact_mod_cast this
 
 /-- **Elements of the realised absorbed set are large**: `log n > (log X₀)²` for `n ∈ A`, and so
 `n > 2X₀`. -/
 theorem realisedA_large {X₀ : ℕ} {M : SlotModel X₀} {U : ℕ → ℝ} (h : RealisedOK M (capH X₀) U)
     (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1) (hX : 10 ^ 8 ≤ Real.log X₀)
-    (hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊) {n : ℕ} (hn : n ∈ realisedA M (capH X₀) U) :
+    (hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊) {n : ℝ} (hn : n ∈ realisedA M (capH X₀) U) :
     Real.log X₀ ^ 2 < Real.log n ∧ 2 * (X₀ : ℝ) < n := by
   let R : GreedyRun X₀ := ⟨M, capH X₀, U, hTlow⟩
   have C : AbsorbedCoupling (realisedSystem M (capH X₀) U) R.M R.H R.U
@@ -395,15 +405,14 @@ theorem realisedA_large {X₀ : ℕ} {M : SlotModel X₀} {U : ℕ → ℝ} (h :
     ⟨_, C.latest_ge rfl hU hX ha, (C.rule ha).2.2⟩
   have hlogn : 10 ^ 7 ≤ Real.log n := hn.1
   have hn1 : (1 : ℝ) ≤ n := by
-    by_contra hlt
-    push_neg at hlt
-    have : Real.log n ≤ 0 := Real.log_nonpos (Nat.cast_nonneg _) hlt.le
-    linarith
+    obtain ⟨e, hev, -⟩ := hn.2
+    rw [← hev]
+    exact (realisedSystem M (capH X₀) U).one_le_val e
   have hbig : Real.log X₀ ^ 2 < Real.log n := by
     by_contra hle
     push_neg at hle
     have h0 := countA_eq_zero_of_low (Nat.cast_nonneg _) hX hA n hn1 hle
-    have h1 := one_le_countA hn
+    have h1 := one_le_countA C.locFin hn hn1
     linarith
   refine ⟨hbig, ?_⟩
   have hX1 : (1 : ℝ) < X₀ := one_lt_of_logX (Nat.cast_nonneg _) hX
@@ -424,13 +433,13 @@ theorem realisedU_spec {X₀ : ℕ} {M : SlotModel X₀} {U : ℕ → ℝ} (h : 
   intro n hn
   have hX1 : (1 : ℝ) < X₀ := one_lt_of_logX (Nat.cast_nonneg _) hX
   exact ⟨le_solveU (by linarith) (by linarith) hX1.le (realisedA_large h hU hX hTlow hn).2,
-    (solveU_spec (by linarith) n).2⟩
+    (solveU_spec (by linarith) (by linarith [(realisedA_large h hU hX hTlow hn).2])).2⟩
 
 /-! ### The top-level hypothesis with the coupling constructed -/
 
 /-- `PartIRestSp` for the constructed `u_a`, without the condition `X₀ ≤ u_a`,
 `u_a + u_a^{θ/2} = a` (proved, `realisedU_spec`). -/
-def PartIRestJ (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℕ) (u a : ℕ → ℝ)
+def PartIRestJ (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (M : SlotModel X₀) : Prop :=
   (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (θ / 2) A u)
       (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)

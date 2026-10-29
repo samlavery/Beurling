@@ -73,59 +73,56 @@ lemma abs_alphaD_le (hX : 10 ^ 8 ≤ Real.log X₀) (D : PrimeData) (k : ℕ) :
   rw [abs_of_nonneg (by linarith [h.1])]; exact h.2
 
 lemma contD_lower (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
-    (hHB : ShortIntervalPNTFrom X₀) (D : PrimeData) {x x' : ℝ} (hx : (X₀ : ℝ) ≤ x)
-    (hxx : x ≤ x') : 0.08 * (x' - x) / Real.log x' ≤ contD θ X₀ D x' - contD θ X₀ D x :=
-  contPart_lower hθ hX (gammaD_range hX D) (absSet X₀ D) hHB hx hxx
+    (hHB : ShortIntervalPNTFrom X₀) (D : PrimeData) (hD : LocFinD D) {x x' : ℝ}
+    (hx : (X₀ : ℝ) ≤ x) (hxx : x ≤ x') :
+    0.08 * (x' - x) / Real.log x' ≤ contD θ X₀ D x' - contD θ X₀ D x :=
+  contPart_lower hθ hX (gammaD_range hX D) (absSet X₀ D) (absSet_locFin hD) hHB hx hxx
 
 lemma contD_upper (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
-    (D : PrimeData) {x x' : ℝ} (hx : (X₀ : ℝ) ≤ x) (hxx : x ≤ x') :
+    (D : PrimeData) (hD : LocFinD D) {x x' : ℝ} (hx : (X₀ : ℝ) ≤ x) (hxx : x ≤ x') :
     contD θ X₀ D x' - contD θ X₀ D x ≤ 1.01 * (x' - x) :=
-  contPart_upper hθ hX (gammaD_range hX D) (absSet X₀ D) hx hxx
+  contPart_upper hθ hX (gammaD_range hX D) (absSet X₀ D) (absSet_locFin hD) hx hxx
 
 lemma contD_continuousOn (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
-    (hX : 10 ^ 8 ≤ Real.log X₀) (D : PrimeData) : ContinuousOn (contD θ X₀ D) (Ici (X₀ : ℝ)) :=
-  contPart_continuousOn hθ hX (gammaD θ X₀ D) (absSet X₀ D)
+    (hX : 10 ^ 8 ≤ Real.log X₀) (D : PrimeData) (hD : LocFinD D) :
+    ContinuousOn (contD θ X₀ D) (Ici (X₀ : ℝ)) :=
+  contPart_continuousOn hθ hX (gammaD θ X₀ D) (absSet X₀ D) (absSet_locFin hD)
 
 lemma contD_at (θ : ℝ) (D : PrimeData) : contD θ X₀ D X₀ = 0 := by
   unfold contD contPart; simp
 
 /-! ### The jump part -/
 
-lemma countA_mono (A : Set ℕ) {x y : ℝ} (hxy : x ≤ y) : countA A x ≤ countA A y := by
-  classical
-  unfold countA
-  apply Finset.sum_le_sum_of_subset_of_nonneg
-  · intro k hk
-    simp only [Finset.mem_Icc] at hk ⊢
-    exact ⟨hk.1, hk.2.trans (Nat.floor_mono hxy)⟩
-  · intro k _ _; split_ifs <;> norm_num
-
-lemma countA_nonneg (A : Set ℕ) (x : ℝ) : 0 ≤ countA A x := by
-  classical
-  unfold countA
-  exact Finset.sum_nonneg fun k _ => by split_ifs <;> norm_num
-
-lemma jumpD_mono (D : PrimeData) {x y : ℝ} (hxy : x ≤ y) : jumpD X₀ D x ≤ jumpD X₀ D y := by
+lemma jumpD_mono (D : PrimeData) (hD : LocFinD D) {x y : ℝ} (hxy : x ≤ y) :
+    jumpD X₀ D x ≤ jumpD X₀ D y := by
   unfold jumpD jumpPart
   have h1 : (Rankin.smoothCount X₀ x : ℝ) ≤ Rankin.smoothCount X₀ y := by
     exact_mod_cast smoothCount_mono X₀ hxy
-  have h2 := countA_mono (absSet X₀ D) hxy
+  have h2 := countA_mono (absSet_locFin (X₀ := X₀) hD) hxy
   linarith
 
-lemma jumpD_nonneg (D : PrimeData) {x : ℝ} (hx : (X₀ : ℝ) ≤ x) : 0 ≤ jumpD X₀ D x := by
-  have h := jumpD_mono (X₀ := X₀) D hx
+lemma jumpD_nonneg (D : PrimeData) (hD : LocFinD D) {x : ℝ} (hx : (X₀ : ℝ) ≤ x) :
+    0 ≤ jumpD X₀ D x := by
+  have h := jumpD_mono (X₀ := X₀) D hD hx
   have h0 : 0 ≤ jumpD X₀ D X₀ := by
     unfold jumpD jumpPart; simp only [sub_self, zero_add]; exact countA_nonneg _ _
   linarith
 
-/-- The jump part is constant on `[x, ⌊x⌋ + 1)`. -/
-lemma jumpD_eq_of_floor (D : PrimeData) {x y : ℝ} (hx : 0 ≤ x) (hxy : x ≤ y)
-    (hy : y < ⌊x⌋₊ + 1) : jumpD X₀ D y = jumpD X₀ D x := by
-  have hfl : ⌊y⌋₊ = ⌊x⌋₊ := by
+/-- **The jump part is right-continuous**: it is constant on `[x, x + δ)` for some `δ > 0` (the
+rigid integers and the locally finite `A` have no point in `(x, x + δ)`). -/
+lemma jumpD_rconst (D : PrimeData) (hD : LocFinD D) {x : ℝ} (hx : 0 ≤ x) :
+    ∃ δ > 0, ∀ y, x ≤ y → y < x + δ → jumpD X₀ D y = jumpD X₀ D x := by
+  obtain ⟨δ, hδ, hc⟩ := countA_rconst (absSet_locFin (X₀ := X₀) hD) x
+  have hfl : 0 < (⌊x⌋₊ : ℝ) + 1 - x := by linarith [Nat.lt_floor_add_one x]
+  refine ⟨min δ ((⌊x⌋₊ : ℝ) + 1 - x), lt_min hδ hfl, fun y hxy hy => ?_⟩
+  have hy1 : y < x + δ := lt_of_lt_of_le hy (by linarith [min_le_left δ ((⌊x⌋₊ : ℝ) + 1 - x)])
+  have hy2 : y < ⌊x⌋₊ + 1 := lt_of_lt_of_le hy
+    (by linarith [min_le_right δ ((⌊x⌋₊ : ℝ) + 1 - x)])
+  have hfy : ⌊y⌋₊ = ⌊x⌋₊ := by
     rw [Nat.floor_eq_iff (hx.trans hxy)]
-    exact ⟨(Nat.floor_le hx).trans hxy, hy⟩
-  unfold jumpD jumpPart countA Rankin.smoothCount
-  rw [hfl]
+    exact ⟨(Nat.floor_le hx).trans hxy, hy2⟩
+  unfold jumpD jumpPart Rankin.smoothCount
+  rw [hfy, hc y hxy hy1]
 
 /-! ### Validity -/
 
@@ -165,16 +162,16 @@ theorem targetD_ge_linear (hθ : θ ≤ 1 / 2) (hX : 10 ^ 8 ≤ Real.log X₀) (
 
 /-- **Lemma 3.3: the target of any data is a valid slot-model target.** -/
 theorem tvalid_targetD (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
-    (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) (D : PrimeData) :
-    TValid X₀ (targetD θ X₀ D) := by
+    (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) (D : PrimeData)
+    (hD : LocFinD D) : TValid X₀ (targetD θ X₀ D) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hX
   -- `T ≥ X₀` on `[X₀, ∞)`
   have hge : ∀ x, (X₀ : ℝ) ≤ x → (X₀ : ℝ) ≤ targetD θ X₀ D x := by
     intro x hx
     rw [targetD_split θ D hx]
-    have h1 := jumpD_nonneg D hx
-    have h2 := contD_lower hθ hX hHB D le_rfl hx
+    have h1 := jumpD_nonneg D hD hx
+    have h2 := contD_lower hθ hX hHB D hD le_rfl hx
     rw [contD_at] at h2
     have hl : 0 ≤ Real.log x := Real.log_nonneg (by linarith)
     have : 0 ≤ 0.08 * (x - X₀) / Real.log x := div_nonneg (by linarith) hl
@@ -192,8 +189,8 @@ theorem tvalid_targetD (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
         exact_mod_cast this
       linarith [hge y hy]
     · rw [targetD_split θ D hx, targetD_split θ D hy]
-      have h1 := jumpD_mono (X₀ := X₀) D hxy
-      have h2 := contD_lower hθ hX hHB D hx hxy
+      have h1 := jumpD_mono (X₀ := X₀) D hD hxy
+      have h2 := contD_lower hθ hX hHB D hD hx hxy
       have hl : 0 ≤ Real.log y := Real.log_nonneg (by linarith)
       have : 0 ≤ 0.08 * (y - x) / Real.log y := div_nonneg (by linarith) hl
       linarith
@@ -206,11 +203,12 @@ theorem tvalid_targetD (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
     · have hc : ContinuousWithinAt (fun y => (X₀ : ℝ) + jumpD X₀ D x + contD θ X₀ D y)
           (Ici x) x :=
         continuousWithinAt_const.add
-          (((contD_continuousOn hθ hX D) x hx).mono (Ici_subset_Ici.mpr hx))
+          (((contD_continuousOn hθ hX D hD) x hx).mono (Ici_subset_Ici.mpr hx))
+      obtain ⟨δ, hδ, hJ⟩ := jumpD_rconst (X₀ := X₀) D hD (show 0 ≤ x by linarith)
       apply hc.congr_of_eventuallyEq
       · filter_upwards [self_mem_nhdsWithin, inter_mem_nhdsWithin (Ici x)
-          (Iio_mem_nhds (Nat.lt_floor_add_one x))] with y hy hy'
-        rw [targetD_split θ D (hx.trans hy), jumpD_eq_of_floor D (by linarith) hy hy'.2]
+          (Iio_mem_nhds (show x < x + δ by linarith))] with y hy hy'
+        rw [targetD_split θ D (hx.trans hy), hJ y hy hy'.2]
       · rw [targetD_split θ D hx]
   · -- unbounded
     refine ⟨max (X₀ : ℝ) (10 / 7 * (y + X₀ + 1)), ?_⟩
@@ -222,15 +220,15 @@ theorem tvalid_targetD (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
 /-- **`ValidHyp` from (84)**. -/
 theorem validHyp_of_HB (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) : ValidHyp θ X₀ :=
-  tvalid_targetD hθ hX hHB
+  fun D hD => tvalid_targetD hθ hX hHB D hD
 
 /-- **`SlopeHyp` from (84)**: `T(x') - T(x) ≥ C(x') - C(x) ≥ 0.08 (x' - x)/log x'`. -/
 theorem slopeHyp_of_HB (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) : SlopeHyp θ X₀ := by
-  intro D x x' hx hxx
+  intro D hD x x' hx hxx
   rw [targetD_split θ D hx, targetD_split θ D (hx.trans hxx)]
-  have h1 := jumpD_mono (X₀ := X₀) D hxx
-  have h2 := contD_lower hθ hX hHB D hx hxx
+  have h1 := jumpD_mono (X₀ := X₀) D hD hxx
+  have h2 := contD_lower hθ hX hHB D hD hx hxx
   linarith
 
 /-- (84) from a threshold `x₁ ≤ X₀` gives it from `X₀`. -/

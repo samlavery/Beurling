@@ -117,7 +117,7 @@ short-interval count**: as `Theorem410InputsZB48`, with `Lemma48Pieces` replaced
 `Lemma48PiecesCount`. -/
 def Theorem410InputsCount (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (X₀ : ℕ) (κ T κ₀ η : ℝ) (α γ xp a Γ : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
-    (A : Set ℕ) (u : ℕ → ℝ) (ς : ℝ → ℝ),
+    (A : Set ℝ) (u : ℝ → ℝ) (ς : ℝ → ℝ),
     10 ^ 4 ≤ Real.log X₀ ∧ 0 < κ ∧ κ ≤ 1 ∧ Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * T ∧
     (∀ k, DesignParams θ (Real.log X₀) κ₀ (α k) (γ k) (xp k)) ∧
     (∀ k, T + 1 / 2 ≤ γ k) ∧

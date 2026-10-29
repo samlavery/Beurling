@@ -30,12 +30,12 @@ open Complex Metric Set Filter Topology MeasureTheory Remark12 Oscillation Absor
 namespace Decomp
 
 /-- `D̂_{<a_k}` for the lag `D = N_P - T`. -/
-noncomputable def earlyOf (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ)
-    (u : ℕ → ℝ) (α γ xp a : ℕ → ℝ) (k : ℕ) : ℂ → ℂ :=
+noncomputable def earlyOf (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
+    (u : ℝ → ℝ) (α γ xp a : ℕ → ℝ) (k : ℕ) : ℂ → ℂ :=
   earlyNoise (lagOf P θ X₀ κ A u α γ xp) (a k)
 
 /-- The lag is bounded by `max K (N(X₀) + X₀) x^η` on `(1, ∞)`. -/
-lemma lag_abs_le (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℕ} {u : ℕ → ℝ}
+lemma lag_abs_le (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℝ} {u : ℝ → ℝ}
     {α γ xp : ℕ → ℝ} {η K : ℝ} (hη : 0 ≤ η)
     (hD : ∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ K * x ^ η) {x : ℝ} (hx1 : 1 < x) :
     |lagOf P θ X₀ κ A u α γ xp x| ≤ max K (P.N X₀ + X₀) * x ^ η := by
@@ -62,15 +62,15 @@ lemma lag_abs_le (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Se
 
 /-- The lag is integrable on `(1, a]`. -/
 lemma lag_integrableOn_Ioc (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.smoothNumbers)
-    {κ θ : ℝ} (hκ : 0 < κ) (hθ0 : 0 < θ) (hθ2 : θ < 2) {A : Set ℕ} {u : ℕ → ℝ}
-    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a)
+    {κ θ : ℝ} (hκ : 0 < κ) (hθ0 : 0 < θ) (hθ2 : θ < 2) {A : Set ℝ} {u : ℝ → ℝ}
+    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) (hAfin : LocFin A)
     (hcap : ∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ 0.1 / Real.log v)
     {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : ℝ} (hα : ∀ k, |α k| ≤ C) (hxp : (X₀ : ℝ) ≤ xp 0)
     {η K : ℝ} (hη : 0 ≤ η) (hη2 : η < 2)
     (hD : ∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ K * x ^ η) (a : ℝ) :
     IntegrableOn (lagOf P θ X₀ κ A u α γ xp) (Ioc 1 a) := by
   set D := lagOf P θ X₀ κ A u α γ xp with hDdef
-  have hg := lag_integrableOn P hXs hκ hθ0 hθ2.le hAu hcap hsp hα hxp hη hD
+  have hg := lag_integrableOn P hXs hκ hθ0 hθ2.le hAu hAfin hcap hsp hα hxp hη hD
     (s := 2) (by simpa using hθ2) (by simpa using hη2) (by norm_num)
   have hgI : IntegrableOn (fun x : ℝ => (D x : ℂ) * (x : ℂ) ^ (-(2 : ℂ) - 1)) (Icc 1 a) :=
     (integrableOn_Icc_iff_integrableOn_Ioc).mpr (hg.mono_set Ioc_subset_Ioi_self)
@@ -92,7 +92,7 @@ entireness is derived). In their place: `X₀` is `X₀`-smooth, the windows of 
 the cap of (6) is inactive, the lag bound `|D(x)| ≤ K x^η` holds on `[X₀, ∞)`, and `α, γ` are the
 designed amplitudes and heights. -/
 def Theorem410InputsDec (θ : ℝ) (P : BeurlingSystem) : Prop :=
-  ∃ (X₀ : ℕ) (κ κ₀ η K : ℝ) (xp a : ℕ → ℝ) (A : Set ℕ) (u : ℕ → ℝ) (α γ : ℕ → ℝ),
+  ∃ (X₀ : ℕ) (κ κ₀ η K : ℝ) (xp a : ℕ → ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ : ℕ → ℝ),
     10 ^ 8 ≤ Real.log X₀ ∧ X₀ ∈ X₀.smoothNumbers ∧ 1 / 4 ≤ θ ∧ θ ≤ 1 / 2 ∧
     Real.exp (-Real.log X₀) ≤ κ ∧ κ ≤ 1 ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧
@@ -189,7 +189,7 @@ theorem Theorem410InputsDec.toAbs {θ : ℝ} {P : BeurlingSystem} (h : Theorem41
     fun k => ?_, hpieces, hspk, hη0, hη, ha, hD, hA, hAy, hbound, fun k s hs => ?_⟩
   · -- `D̂_{<a_k}` is entire
     refine differentiable_earlyNoise_of_integrableOn (M := max K (P.N X₀ + X₀) * a k ^ η)
-      (hak k) (lag_integrableOn_Ioc P hXs hκ0 hθ0 (by linarith) hAu hcap hsp hαb hxpX hη0 hη2
+      (hak k) (lag_integrableOn_Ioc P hXs hκ0 hθ0 (by linarith) hAu hA.fin hcap hsp hαb hxpX hη0 hη2
         hDK (a k)) (fun x hx => ?_)
     refine (lag_abs_le P hη0 hDK hx.1).trans (mul_le_mul_of_nonneg_left
       (Real.rpow_le_rpow (by linarith [hx.1]) hx.2 hη0) ?_)
@@ -214,7 +214,7 @@ theorem Theorem410InputsDec.toAbs {θ : ℝ} {P : BeurlingSystem} (h : Theorem41
       have := hΓ k
       have := (abs_le.mp (him.trans (hd.trans hr))).1
       linarith
-    have key := decomposition_14 P hXs hκ0 hθ0 (by linarith) hAu hcap hsp hαb hxpX hη0 hDK
+    have key := decomposition_14 P hXs hκ0 hθ0 (by linarith) hAu hA.fin hcap hsp hαb hxpX hη0 hDK
       (s := s) (by linarith) (by linarith) hs1 (hak k)
     simp only [hγeq, hαeq]
     exact key

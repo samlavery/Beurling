@@ -75,27 +75,37 @@ lemma hor_ge (n : ℕ) : (X₀ : ℝ) - 1 ≤ hor X₀ n := by
 lemma hor_ge13 (n : ℕ) : 13 ≤ hor X₀ n := by
   have := h.X₀_big; have := hor_ge (X₀ := X₀) n; linarith
 
-lemma phi_T (D : PrimeData) : (Phi θ X₀ D).T = targetD θ X₀ D := Phi_T (h.hV D)
+lemma phi_T (D : PrimeData) (hD : LocFinD D) : (Phi θ X₀ D).T = targetD θ X₀ D :=
+  Phi_T (h.hV D hD)
 
-lemma phi_low (D : PrimeData) : ∀ x : ℝ, x < X₀ → (Phi θ X₀ D).T x = ⌊x⌋₊ := fun x hx => by
-  rw [h.phi_T]; exact targetD_low θ D hx
+lemma phi_low (D : PrimeData) (hD : LocFinD D) :
+    ∀ x : ℝ, x < X₀ → (Phi θ X₀ D).T x = ⌊x⌋₊ := fun x hx => by
+  rw [h.phi_T D hD]; exact targetD_low θ D hx
 
-lemma phi_linear (D : PrimeData) :
+lemma phi_linear (D : PrimeData) (hD : LocFinD D) :
     ∀ x, (X₀ : ℝ) ≤ x → 7 / 10 * x - X₀ - 1 ≤ (Phi θ X₀ D).T x := fun x hx => by
-  rw [h.phi_T]; exact targetD_ge_linear (by linarith [h.hθ.2]) h.hX D hx
+  rw [h.phi_T D hD]; exact targetD_ge_linear (by linarith [h.hθ.2]) h.hX D hx
 
-lemma iterM_low (n : ℕ) : ∀ x : ℝ, x < X₀ → (iterM θ X₀ U n).T x = ⌊x⌋₊ := h.phi_low _
+/-- The data of the iterates are locally finite. -/
+lemma locFinD_iterD (n : ℕ) : LocFinD (iterD θ X₀ U n) := by
+  cases n with
+  | zero => intro c; simp [iterD, D0]
+  | succ n => exact locFinD_DM h.hX h.hU _
+
+lemma iterM_low (n : ℕ) : ∀ x : ℝ, x < X₀ → (iterM θ X₀ U n).T x = ⌊x⌋₊ :=
+  h.phi_low _ (h.locFinD_iterD n)
 
 /-- The base case: any two iterates agree up to `X₀ - 1`. -/
-lemma agree_base (D D' : PrimeData) : MAgree (Phi θ X₀ D) (Phi θ X₀ D') (hor X₀ 0) := by
+lemma agree_base (D D' : PrimeData) (hD : LocFinD D) (hD' : LocFinD D') :
+    MAgree (Phi θ X₀ D) (Phi θ X₀ D') (hor X₀ 0) := by
   have h16 := h.X₀_big
   have he : hor X₀ 0 = (X₀ : ℝ) - 1 := by simp [hor]
   refine ⟨by rw [Phi_ϑ, Phi_ϑ], fun x hx => ?_, fun i hi => ?_⟩
   · rw [he] at hx
-    rw [h.phi_low D x (by linarith), h.phi_low D' x (by linarith)]
+    rw [h.phi_low D hD x (by linarith), h.phi_low D' hD' x (by linarith)]
   · exfalso
     have hs : (X₀ : ℝ) ≤ (Phi θ X₀ D).slot i :=
-      GreedyRun.slot_ge ⟨Phi θ X₀ D, capH X₀, U, h.phi_low D⟩ i
+      GreedyRun.slot_ge ⟨Phi θ X₀ D, capH X₀, U, h.phi_low D hD⟩ i
     rw [he] at hi
     have : 0 ≤ Real.log ((X₀ : ℝ) - 1) := Real.log_nonneg (by linarith)
     linarith
@@ -103,7 +113,7 @@ lemma agree_base (D D' : PrimeData) : MAgree (Phi θ X₀ D) (Phi θ X₀ D') (h
 /-- **Consecutive iterates agree up to the horizon** `X₀ - 1 + n`. -/
 theorem iter_agree (n : ℕ) : MAgree (iterM θ X₀ U n) (iterM θ X₀ U (n + 1)) (hor X₀ n) := by
   induction n with
-  | zero => exact h.agree_base _ _
+  | zero => exact h.agree_base _ _ (h.locFinD_iterD 0) (h.locFinD_iterD 1)
   | succ n ih =>
     rw [iterM_succ (n + 1), iterM_succ n]
     have hz : (X₀ : ℝ) ≤ hor X₀ (n + 1) := by unfold hor; push_cast; linarith
@@ -171,7 +181,7 @@ lemma limT_eq {n : ℕ} {x : ℝ} (hx : x ≤ hor X₀ n) : limT θ X₀ U x = (
   · rw [min_eq_right hle]; exact hx
 
 lemma slot_iter_le (n i : ℕ) : (iterM θ X₀ U n).slot i ≤ slotB X₀ i :=
-  slot_le_linear h.hX (h.phi_linear _) i
+  slot_le_linear h.hX (h.phi_linear _ (h.locFinD_iterD n)) i
 
 /-- The horizon of `nA i` covers `slotB i`. -/
 lemma slotB_le_nA (i : ℕ) :
@@ -208,7 +218,7 @@ lemma limT_valid : TValid X₀ (limT θ X₀ U) := by
     have hm : (X₀ : ℝ) ≤ x := le_max_left _ _
     refine ⟨x, ?_⟩
     rw [limT]
-    have := h.phi_linear (iterD θ X₀ U (nT X₀ x)) x hm
+    have := h.phi_linear (iterD θ X₀ U (nT X₀ x)) (h.locFinD_iterD _) x hm
     have h2 := le_max_right (X₀ : ℝ) (10 / 7 * (y + X₀ + 1))
     unfold iterM
     linarith
@@ -264,7 +274,7 @@ theorem limModel_T_eq (x : ℝ) : h.limModel.T x = targetD θ X₀ (DM h.limMode
   have hag := h.limModel_step_agree (nT X₀ x)
   have hxn : x ≤ hor X₀ (nT X₀ x + 1) := by
     unfold hor at hx ⊢; push_cast; linarith
-  rw [← hag.2.1 x hxn, h.phi_T]
+  rw [← hag.2.1 x hxn, h.phi_T _ (locFinD_DM h.hX h.hU _)]
 
 lemma limModel_ϑ : h.limModel.ϑ = 1 / 2 := rfl
 
@@ -292,7 +302,7 @@ theorem limModel_arr (k : ℕ) :
         hor X₀ (nA X₀ i + 1) - 13 * Real.log (hor X₀ (nA X₀ i + 1)) :=
       sub_log_mono (h.hor_ge13 _) (by unfold hor; push_cast; linarith)
     linarith
-  rw [hag.2.2 i hsl, Phi_arr (h.hV _)]
+  rw [hag.2.2 i hsl, Phi_arr (h.hV _ (locFinD_DM h.hX h.hU _))]
   unfold arrOf
   rw [if_neg (Nat.succ_ne_zero k), ← h.limModel_slot, ← h.limModel_slot]
 

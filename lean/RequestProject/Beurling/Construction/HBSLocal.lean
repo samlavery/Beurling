@@ -18,8 +18,8 @@ namespace Construction
 
 /-- **Lemma 6.26 for the construction, local version**: as `lemma626_construction`, at one height
 `v ≥ X₀`, with (HBS) assumed only up to `2y(2v)` and `N(w) = ⌊w⌋` below `X₀⁻`. -/
-theorem lemma626_local {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℕ}
-    {latest : ℕ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {θ X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
+theorem lemma626_local {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℝ}
+    {latest : ℝ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {θ X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
     (hX : 10 ^ 8 ≤ Real.log X₀) (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2)
     (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc (0 : ℝ) 1)
     (hX0m : 100 ≤ Real.log X0m) (hX0mX : (X₀ : ℝ) / 2 + 1 ≤ X0m)

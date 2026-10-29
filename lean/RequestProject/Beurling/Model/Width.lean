@@ -175,7 +175,7 @@ theorem absorbYAt_le_sqrt (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) {x 
 
 /-- **`y(n) ≤ x^{1/2}`** for `n ≤ x`, `x ≥ X₀`. -/
 theorem absorbY_le_sqrt (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) {x : ℝ} (hx : X₀ ≤ x)
-    {n : ℕ} (hn : (n : ℝ) ≤ x) : absorbY X₀ n ≤ x ^ (1 / 2 : ℝ) :=
+    {n : ℝ} (hn : n ≤ x) : absorbY X₀ n ≤ x ^ (1 / 2 : ℝ) :=
   (absorbY_le_absorbYAt hX0 hX hn hx).trans (absorbYAt_le_sqrt hX0 hX hx)
 
 /-- **`H` dominates `log`**: `200 log x + 200 ≤ H(x)` for `x ≥ X₀`. -/

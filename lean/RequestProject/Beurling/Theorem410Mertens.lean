@@ -49,7 +49,7 @@ namespace DesignedZero
 `Theorem410InputsBase`, but the two Mertens estimates are replaced by `log X₀ ≥ 10⁴`. -/
 def Theorem410InputsMertens (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (X₀ : ℕ) (T κ₀ η : ℝ) (α γ xp a : ℕ → ℝ) (ZB : ℂ → ℂ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
-    (A : Set ℕ) (u : ℕ → ℝ) (ς : ℝ → ℝ),
+    (A : Set ℝ) (u : ℝ → ℝ) (ς : ℝ → ℝ),
     10 ^ 4 ≤ Real.log X₀ ∧
     (∀ z : ℂ, 1 / 2 ≤ z.re → z.re ≤ 2 → T ≤ |z.im| → DifferentiableAt ℂ ZB z) ∧
     (∀ z : ℂ, 1 / 2 ≤ z.re → z.re ≤ 2 → T ≤ |z.im| →

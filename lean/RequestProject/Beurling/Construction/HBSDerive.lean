@@ -244,9 +244,10 @@ theorem sparsityInputs_of_cluster {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 
           rw [← hvn]; exact_mod_cast hlt
         have hloc := lemma626_local C hX hθ.1 (by linarith [hθ.2]) rfl hω hX0mlog hX0m2 hfl hcl hu
           hHBSu
-        exact absorbedDensity_le_of_localCount hb (by linarith) hAu hu hloc
+        exact absorbedDensity_le_of_localCount hb (by linarith) hAu C.locFin hu hloc
       have hW : AbsorbedWindowHyp (θ / 2) X₀ A (fun n => solveU (θ / 2) n) :=
-        ⟨hb, by linarith [hθ.2], hX1.le, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2⟩
+        ⟨hb, by linarith [hθ.2], hX1.le, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2,
+          C.locFin⟩
       have hEA := absorbed_target_error_cap_loc hW (by linarith) hhigh hdens
       have hsp := switchOn_spacing (X₀ : ℝ)
       have hα : ∀ k, |designedAlpha P θ X₀ (kappaParam X₀) A (fun n => solveU (θ / 2) n)

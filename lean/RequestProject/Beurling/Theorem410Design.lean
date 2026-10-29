@@ -201,7 +201,7 @@ conditions on the design are `θ ∈ [1/4, 1/2]`, `1/X₀ ≤ κ₀ ≤ 1/4`, `x
 `log log x⁺_k ≥ 2 log X₀`, `Γ_k ≥ T + 1/2`, `κ Γ_k ≥ e^{X₀²/3}`. -/
 def Theorem410InputsDesign (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (X₀ : ℕ) (κ T κ₀ η : ℝ) (xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
-    (A : Set ℕ) (u : ℕ → ℝ) (ς : ℝ → ℝ),
+    (A : Set ℝ) (u : ℝ → ℝ) (ς : ℝ → ℝ),
     10 ^ 4 ≤ Real.log X₀ ∧ 1 / 4 ≤ θ ∧ θ ≤ 1 / 2 ∧ 0 < κ ∧ κ ≤ 1 ∧
     Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * T ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧

@@ -5,7 +5,8 @@ public import RequestProject.Beurling.AbsorbedPart
 /-!
 # The absorbed part of the target error (Lemma 3.4)
 
-For the absorbed set `A ⊆ ℕ`, each `a ∈ A` is smoothed over the window `[u_a, a]`, where
+For the absorbed set `A ⊆ ℝ` (a locally finite set of values of elements), each `a ∈ A` is
+smoothed over the window `[u_a, a]`, where
 `u_a + h(u_a) = a` and `h(u) = u^b`, with density `1/h`:
 
   `ρ_A(v) = ∑_{a ∈ A} 1[u_a ≤ v ≤ a] / h(v)`   (`absorbedDensity`),
@@ -33,29 +34,30 @@ namespace Absorbed
 open scoped Classical
 
 /-- The contribution `1[u_a ≤ v ≤ a] / h(v)` (`h(v) = v^b`) of `a` to `ρ_A(v)` (zero off `A`). -/
-noncomputable def absorbedBump (b : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (a : ℕ) (v : ℝ) : ℝ :=
+noncomputable def absorbedBump (b : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (a : ℝ) (v : ℝ) : ℝ :=
   if a ∈ A then (Icc (u a) (a : ℝ)).indicator (fun w => w ^ (-b)) v else 0
 
 /-- The smoothed absorbed density `ρ_A(v) = ∑_{a ∈ A} 1[u_a ≤ v ≤ a] / v^b`. -/
-noncomputable def absorbedDensity (b : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (v : ℝ) : ℝ :=
-  ∑' a : ℕ, absorbedBump b A u a v
+noncomputable def absorbedDensity (b : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (v : ℝ) : ℝ :=
+  ∑' a : ℝ, absorbedBump b A u a v
 
 /-- The capped absorbed density `ρ̄_A(v) = min(ρ_A(v), 0.1/log v)` used in the target (6). -/
-noncomputable def absorbedDensityCap (b : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (v : ℝ) : ℝ :=
+noncomputable def absorbedDensityCap (b : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (v : ℝ) : ℝ :=
   min (absorbedDensity b A u v) (0.1 / Real.log v)
 
 /-- The standing hypotheses for Lemma 3.4: `0 < b ≤ 1`, `X₀ ≥ 1`, and every `a ∈ A` has
-`u_a + u_a^b = a` with `u_a ≥ X₀` (`A` is empty near `X₀`). -/
-structure AbsorbedWindowHyp (b X₀ : ℝ) (A : Set ℕ) (u : ℕ → ℝ) : Prop where
+`u_a + u_a^b = a` with `u_a ≥ X₀` (`A` is empty near `X₀`), and `A` is locally finite. -/
+structure AbsorbedWindowHyp (b X₀ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) : Prop where
   b_pos : 0 < b
   b_le : b ≤ 1
   X₀_ge : 1 ≤ X₀
   u_ge : ∀ a ∈ A, X₀ ≤ u a
   u_eq : ∀ a ∈ A, u a + u a ^ b = a
+  fin : LocFin A
 
-variable {b X₀ : ℝ} {A : Set ℕ} {u : ℕ → ℝ}
+variable {b X₀ : ℝ} {A : Set ℝ} {u : ℝ → ℝ}
 
-lemma absorbedBump_nonneg (hX : 0 < X₀) {a : ℕ} {v : ℝ} (hv : X₀ ≤ v) :
+lemma absorbedBump_nonneg (hX : 0 < X₀) {a : ℝ} {v : ℝ} (hv : X₀ ≤ v) :
     0 ≤ absorbedBump b A u a v := by
   unfold absorbedBump
   split_ifs
@@ -74,13 +76,13 @@ lemma integral_indicator_Icc {g : ℝ → ℝ} {X x U a : ℝ} (h1 : X ≤ U) (h
       ⟨fun h => ⟨lt_of_le_of_ne h.1 (Ne.symm hv), h.2⟩, fun h => ⟨h.1.le, h.2⟩⟩
     simp only [Set.indicator_apply, this]
 
-lemma u_lt (h : AbsorbedWindowHyp b X₀ A u) {a : ℕ} (ha : a ∈ A) : u a < a := by
+lemma u_lt (h : AbsorbedWindowHyp b X₀ A u) {a : ℝ} (ha : a ∈ A) : u a < a := by
   have hU : 0 < u a := by linarith [h.u_ge a ha, h.X₀_ge]
   have := Real.rpow_pos_of_pos hU b
   linarith [h.u_eq a ha]
 
 /-- `M_a = ∫_{u_a}^a v^{-b} dv ∈ [(u_a/a)^b, 1]`. -/
-lemma mass_bounds (h : AbsorbedWindowHyp b X₀ A u) {a : ℕ} (ha : a ∈ A) :
+lemma mass_bounds (h : AbsorbedWindowHyp b X₀ A u) {a : ℝ} (ha : a ∈ A) :
     (u a) ^ b * (a : ℝ) ^ (-b) ≤ ∫ v in u a..(a : ℝ), v ^ (-b) ∧
       ∫ v in u a..(a : ℝ), v ^ (-b) ≤ 1 := by
   have hU : 0 < u a := by linarith [h.u_ge a ha, h.X₀_ge]
@@ -101,17 +103,18 @@ lemma mass_bounds (h : AbsorbedWindowHyp b X₀ A u) {a : ℕ} (ha : a ∈ A) :
     simp only [intervalIntegral.integral_const, smul_eq_mul, hdiff] at this
     rwa [← Real.rpow_add hU, add_neg_cancel, Real.rpow_zero] at this
 
-/-- The density is a finite sum on `[X₀, x]`. -/
+/-- The density is a finite sum on `[X₀, x]`, over the elements `a ≤ 2x` of `A`. -/
 lemma absorbedDensity_eq_sum (h : AbsorbedWindowHyp b X₀ A u) {x v : ℝ} (hv : X₀ ≤ v)
     (hvx : v ≤ x) :
-    absorbedDensity b A u v = ∑ a ∈ range (⌊2 * x⌋₊ + 1), absorbedBump b A u a v := by
+    absorbedDensity b A u v = ∑ a ∈ below h.fin (2 * x), absorbedBump b A u a v := by
   unfold absorbedDensity
   apply tsum_eq_sum
   intro a ha
-  have ha' : 2 * x < a := Nat.lt_of_floor_lt (by simpa [Nat.lt_succ_iff] using ha)
+  rw [mem_below] at ha
   unfold absorbedBump
   split_ifs with hA
-  · apply Set.indicator_of_notMem
+  · have ha' : 2 * x < a := by by_contra hc; exact ha ⟨hA, not_lt.mp hc⟩
+    apply Set.indicator_of_notMem
     rintro ⟨h1, h2⟩
     have hU : 0 ≤ u a := by linarith [h.u_ge a hA, h.X₀_ge]
     have hx1 : 1 ≤ x := by linarith [h.X₀_ge]
@@ -121,7 +124,7 @@ lemma absorbedDensity_eq_sum (h : AbsorbedWindowHyp b X₀ A u) {x v : ℝ} (hv 
     linarith [h.u_eq a hA]
   · rfl
 
-lemma intervalIntegrable_absorbedBump (h : AbsorbedWindowHyp b X₀ A u) (a : ℕ) {x : ℝ}
+lemma intervalIntegrable_absorbedBump (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {x : ℝ}
     (hx : X₀ ≤ x) : IntervalIntegrable (absorbedBump b A u a) volume X₀ x := by
   by_cases hA : a ∈ A
   · have hc : IntervalIntegrable (fun w : ℝ => w ^ (-b)) volume X₀ x := by
@@ -138,7 +141,7 @@ lemma intervalIntegrable_absorbedBump (h : AbsorbedWindowHyp b X₀ A u) (a : �
     rw [he]; exact intervalIntegrable_const
 
 /-- The elements `a ≤ x`: `1 - M_a ≤ b log(a/u_a) = b ∫ 1[u_a ≤ v ≤ a] v^{b-1} / h(v) dv`. -/
-lemma bump_upper (h : AbsorbedWindowHyp b X₀ A u) (a : ℕ) {x : ℝ} (hx : X₀ ≤ x) :
+lemma bump_upper (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {x : ℝ} (hx : X₀ ≤ x) :
     (if a ∈ A ∧ (a : ℝ) ≤ x then (1 : ℝ) else 0) - ∫ v in X₀..x, absorbedBump b A u a v ≤
       b * ∫ v in X₀..x, absorbedBump b A u a v * v ^ (b - 1) := by
   have hX0 : 0 < X₀ := by linarith [h.X₀_ge]
@@ -182,7 +185,7 @@ lemma bump_upper (h : AbsorbedWindowHyp b X₀ A u) (a : ℕ) {x : ℝ} (hx : X�
     nlinarith
 
 /-- The elements in flight: their contribution is supported in `(x - x^b, x]`. -/
-lemma bump_lower (h : AbsorbedWindowHyp b X₀ A u) (a : ℕ) {x : ℝ} (hx : X₀ ≤ x) :
+lemma bump_lower (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {x : ℝ} (hx : X₀ ≤ x) :
     -∫ v in X₀..x, (Ioi (x - x ^ b)).indicator (absorbedBump b A u a) v ≤
       (if a ∈ A ∧ (a : ℝ) ≤ x then (1 : ℝ) else 0) - ∫ v in X₀..x, absorbedBump b A u a v := by
   have hX0 : 0 < X₀ := by linarith [h.X₀_ge]
@@ -220,26 +223,19 @@ lemma bump_lower (h : AbsorbedWindowHyp b X₀ A u) (a : ℕ) {x : ℝ} (hx : X�
   · have he : absorbedBump b A u a = fun _ => 0 := by ext v; simp [absorbedBump, hA]
     simp [he, hA]
 
+lemma one_le_of_mem (h : AbsorbedWindowHyp b X₀ A u) {a : ℝ} (ha : a ∈ A) : 1 ≤ a := by
+  linarith [u_lt h ha, h.u_ge a ha, h.X₀_ge]
+
 lemma countA_eq_sum (h : AbsorbedWindowHyp b X₀ A u) {x : ℝ} (hx : X₀ ≤ x) :
-    countA A x = ∑ a ∈ range (⌊2 * x⌋₊ + 1), (if a ∈ A ∧ (a : ℝ) ≤ x then (1 : ℝ) else 0) := by
+    countA A x = ∑ a ∈ below h.fin (2 * x), (if a ∈ A ∧ (a : ℝ) ≤ x then (1 : ℝ) else 0) := by
   have hx0 : 0 ≤ x := by linarith [h.X₀_ge]
-  unfold countA
-  have hsub : Finset.Icc 0 ⌊x⌋₊ ⊆ range (⌊2 * x⌋₊ + 1) := by
-    intro k hk
-    simp only [Finset.mem_Icc, Finset.mem_range] at hk ⊢
-    have := Nat.floor_le_floor (R := ℝ) (by linarith : x ≤ 2 * x)
-    omega
-  rw [← Finset.sum_subset hsub]
-  · apply Finset.sum_congr rfl
-    intro k hk
-    simp only [Finset.mem_Icc] at hk
-    have hk' : (k : ℝ) ≤ x := (Nat.le_floor_iff hx0).mp hk.2
-    by_cases hkA : k ∈ A <;> simp [hkA, hk']
-  · intro k _ hk
-    simp only [Finset.mem_Icc, not_and, not_le] at hk
-    have : ¬ (k : ℝ) ≤ x := by
-      rw [← Nat.le_floor_iff hx0]; have := hk (Nat.zero_le _); omega
-    simp [this]
+  rw [countA_eq_cnt (fun a ha => one_le_of_mem h ha) (below h.fin (2 * x))
+    (fun a ha => ((mem_below h.fin).1 ha).1)
+    (fun a ha hax => (mem_below h.fin).2 ⟨ha, by linarith⟩)]
+  unfold cnt
+  refine Finset.sum_congr rfl fun a ha => ?_
+  have := ((mem_below h.fin).1 ha).1
+  simp [this]
 
 /-- `∫_{X₀}^x 1_{(x - h, ∞)} g ≤ c h` when `g ≤ c` on `[X₀, x]` and `h ≥ 0`. -/
 lemma integral_window_le {g : ℝ → ℝ} {x c h : ℝ} (hx : X₀ ≤ x) (hh : 0 ≤ h) (hc : 0 ≤ c)
@@ -273,7 +269,7 @@ theorem absorbed_target_error (h : AbsorbedWindowHyp b X₀ A u) {ε : ℝ}
     |countA A x - ∫ v in X₀..x, absorbedDensity b A u v| ≤ ε * x ^ b := by
   have hX0 : 0 < X₀ := by linarith [h.X₀_ge]
   have hx0 : 0 < x := by linarith
-  set S := range (⌊2 * x⌋₊ + 1)
+  set S := below h.fin (2 * x)
   have hε : 0 ≤ ε := by
     refine le_trans ?_ (hρ X₀ le_rfl)
     rw [absorbedDensity_eq_sum h le_rfl hx]

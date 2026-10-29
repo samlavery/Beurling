@@ -27,9 +27,10 @@ with `cntA = #(A ∩ [1, x])` and `rhoA = ρ̄_A` for an absorbed set `A` with w
 `u_a + u_a^{θ/2} = a`, `u_a ≥ X₀`, whose smoothed density satisfies `ρ_A(v) ≤ (log v)^{-4}`
 (Lemma 6.27(a)). -/
 def PartIInputsConcrete (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
-  ∃ (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (α γ xp : ℕ → ℝ) (B H M₁ : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
+  ∃ (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) (B H M₁ : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
     (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) ∧
+    LocFin A ∧
     (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
     (∀ x ≥ (X₀ : ℝ), B x ≤ 34 * M₁ x * Real.log x ^ 2) ∧
     (∀ x ≥ (X₀ : ℝ), M₁ x ^ 2 ≤ H x) ∧
@@ -43,14 +44,14 @@ def PartIInputsConcrete (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 theorem PartIInputsConcrete.toQueue {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
     (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2) (hX : 3 ≤ Real.log X₀)
     (h : PartIInputsConcrete θ X₀ P) : PartIInputsQueue θ X₀ P := by
-  obtain ⟨κ, A, u, α, γ, xp, B, H, M₁, hκ, hκ1, hsp, hα, hxp, hAu, hρ, hB, hM, hstd, hraise,
-    hD⟩ := h
+  obtain ⟨κ, A, u, α, γ, xp, B, H, M₁, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hB, hM, hstd,
+    hraise, hD⟩ := h
   have hX1 : (1 : ℝ) ≤ X₀ := by
     by_contra hc; push_neg at hc
     have : Real.log X₀ ≤ 0 := Real.log_nonpos (Nat.cast_nonneg _) hc.le
     linarith
   have hW : AbsorbedWindowHyp (θ / 2) X₀ A u :=
-    ⟨by linarith, by linarith, hX1, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2⟩
+    ⟨by linarith, by linarith, hX1, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
   exact ⟨κ, countA A, absorbedDensityCap (θ / 2) A u, α, γ, xp, B, H, M₁, hκ, hκ1, hsp, hα, hxp,
     fun x hx => absorbed_target_error_cap hW hX hρ hx, hB, hM, hstd, hraise, hD⟩
 

@@ -23,8 +23,8 @@ open Complex MeasureTheory Set Filter Topology Remark12 DesignedZero
 namespace Decomp
 
 /-- A series of functions whose norms have summable integrals is integrable. -/
-lemma integrable_tsum_of_lintegral {α : Type*} [MeasurableSpace α] {μ : Measure α}
-    (f : ℕ → α → ℂ) (hf : ∀ i, AEStronglyMeasurable (f i) μ)
+lemma integrable_tsum_of_lintegral {α ι : Type*} [MeasurableSpace α] {μ : Measure α}
+    [Countable ι] (f : ι → α → ℂ) (hf : ∀ i, AEStronglyMeasurable (f i) μ)
     (h : ∑' i, ∫⁻ x, ‖f i x‖ₑ ∂μ ≠ ⊤) : Integrable (fun x => ∑' i, f i x) μ := by
   have hint : ∫⁻ x, ∑' i, ‖f i x‖ₑ ∂μ ≠ ⊤ := by
     rwa [lintegral_tsum fun i => (hf i).enorm]
@@ -40,10 +40,10 @@ lemma integrable_tsum_of_lintegral {α : Type*} [MeasurableSpace α] {μ : Measu
     exact (NNReal.summable_coe.mpr h2).congr fun i => by simp
   refine ⟨?_, ?_⟩
   · refine aestronglyMeasurable_of_tendsto_ae atTop
-      (f := fun n x => ∑ i ∈ Finset.range n, f i x)
+      (f := fun n x => ∑ i ∈ n, f i x)
       (fun n => Finset.aestronglyMeasurable_fun_sum _ fun i _ => hf i) ?_
     filter_upwards [hsum] with x hx
-    exact hx.hasSum.tendsto_sum_nat
+    exact hx.hasSum
   · unfold HasFiniteIntegral
     calc ∫⁻ x, ‖∑' i, f i x‖ₑ ∂μ ≤ ∫⁻ x, ∑' i, ‖f i x‖ₑ ∂μ :=
           lintegral_mono fun x => enorm_tsum_le_tsum_enorm

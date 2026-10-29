@@ -98,7 +98,7 @@ end Hyp
 /-! ### The top-level hypothesis without the landing data -/
 
 /-- `PartIRestJ` without the landing data: the target formula and the queue window data. -/
-def PartIRestO (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℕ) (u a : ℕ → ℝ)
+def PartIRestO (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (M : SlotModel X₀) : Prop :=
   (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (θ / 2) A u)
       (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)

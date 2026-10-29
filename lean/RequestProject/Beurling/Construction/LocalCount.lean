@@ -25,17 +25,20 @@ namespace Absorbed
 open scoped Classical
 
 /-- `#(A ∩ [v, w])`. -/
-noncomputable def localCountA (A : Set ℕ) (v w : ℝ) : ℕ :=
-  ((Finset.Icc ⌈v⌉₊ ⌊w⌋₊).filter (· ∈ A)).card
+noncomputable def localCountA (A : Set ℝ) (v w : ℝ) : ℕ :=
+  (A ∩ Set.Icc v w).ncard
 
 /-- **The density is bounded by the local count**: if `#(A ∩ [v, v + v^b]) ≤ v^b ε`, then
 `ρ_A(v) ≤ ε`. -/
-theorem absorbedDensity_le_of_localCount {b X₀ : ℝ} {A : Set ℕ} {u : ℕ → ℝ} (hb : 0 < b)
-    (hX : 0 < X₀) (hAu : ∀ a ∈ A, X₀ ≤ u a ∧ u a + u a ^ b = a) {v ε : ℝ} (hv : X₀ ≤ v)
+theorem absorbedDensity_le_of_localCount {b X₀ : ℝ} {A : Set ℝ} {u : ℝ → ℝ} (hb : 0 < b)
+    (hX : 0 < X₀) (hAu : ∀ a ∈ A, X₀ ≤ u a ∧ u a + u a ^ b = a) (hAfin : LocFin A) {v ε : ℝ}
+    (hv : X₀ ≤ v)
     (hloc : (localCountA A v (v + v ^ b) : ℝ) ≤ v ^ b * ε) :
     absorbedDensity b A u v ≤ ε := by
   have hv0 : 0 < v := by linarith
-  set S := (Finset.Icc ⌈v⌉₊ ⌊v + v ^ b⌋₊).filter (· ∈ A) with hS
+  set S := (hAfin.finite_Icc v (v + v ^ b)).toFinset with hS
+  have hcard : (S.card : ℝ) = localCountA A v (v + v ^ b) := by
+    rw [hS, ← Set.ncard_eq_toFinset_card _ (hAfin.finite_Icc v (v + v ^ b))]; rfl
   have hsupp : ∀ a ∉ S, absorbedBump b A u a v = 0 := by
     intro a ha
     unfold absorbedBump
@@ -43,8 +46,8 @@ theorem absorbedDensity_le_of_localCount {b X₀ : ℝ} {A : Set ℕ} {u : ℕ �
     · apply Set.indicator_of_notMem
       rintro ⟨h1, h2⟩
       apply ha
-      rw [hS, Finset.mem_filter, Finset.mem_Icc]
-      refine ⟨⟨Nat.ceil_le.mpr h2, Nat.le_floor ?_⟩, hA⟩
+      rw [hS, Set.Finite.mem_toFinset]
+      refine ⟨hA, h2, ?_⟩
       have hU : 0 ≤ u a := by linarith [(hAu a hA).1]
       have e1 : u a ^ b ≤ v ^ b := Real.rpow_le_rpow hU h1 hb.le
       linarith [(hAu a hA).2]
@@ -63,18 +66,18 @@ theorem absorbedDensity_le_of_localCount {b X₀ : ℝ} {A : Set ℕ} {u : ℕ �
   calc ∑ a ∈ S, absorbedBump b A u a v ≤ ∑ _a ∈ S, v ^ (-b) := Finset.sum_le_sum hle
     _ = (S.card : ℝ) * v ^ (-b) := by rw [Finset.sum_const, nsmul_eq_mul]
     _ ≤ (v ^ b * ε) * v ^ (-b) :=
-        mul_le_mul_of_nonneg_right hloc (Real.rpow_pos_of_pos hv0 _).le
+        mul_le_mul_of_nonneg_right (hcard ▸ hloc) (Real.rpow_pos_of_pos hv0 _).le
     _ = ε := by
         rw [Real.rpow_neg hv0.le]
         field_simp [(Real.rpow_pos_of_pos hv0 b).ne']
 
 /-- **Lemma 6.27(a) from Lemma 6.26**: if `#(A ∩ [v, v + v^b]) ≤ v^b (log v)^{-4}` for every
 `v ≥ X₀`, then `ρ_A(v) ≤ (log v)^{-4}` for every `v ≥ X₀`. -/
-theorem rhoA_le_of_lemma626 {b X₀ : ℝ} {A : Set ℕ} {u : ℕ → ℝ} (hb : 0 < b) (hX : 0 < X₀)
-    (hAu : ∀ a ∈ A, X₀ ≤ u a ∧ u a + u a ^ b = a)
+theorem rhoA_le_of_lemma626 {b X₀ : ℝ} {A : Set ℝ} {u : ℝ → ℝ} (hb : 0 < b) (hX : 0 < X₀)
+    (hAu : ∀ a ∈ A, X₀ ≤ u a ∧ u a + u a ^ b = a) (hAfin : LocFin A)
     (h626 : ∀ v ≥ X₀, (localCountA A v (v + v ^ b) : ℝ) ≤ v ^ b * Real.log v ^ (-4 : ℤ)) :
     ∀ v ≥ X₀, absorbedDensity b A u v ≤ Real.log v ^ (-4 : ℤ) := fun v hv =>
-  absorbedDensity_le_of_localCount hb hX hAu hv (h626 v hv)
+  absorbedDensity_le_of_localCount hb hX hAu hAfin hv (h626 v hv)
 
 end Absorbed
 

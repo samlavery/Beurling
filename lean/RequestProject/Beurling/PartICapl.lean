@@ -117,9 +117,10 @@ open CaplLink
 width: as `PartIInputsConcrete`, with `M₁ = M̄₁` and `H = max(H_std, M̄₁²)` of Theorem 6.23. The
 conditions of Theorem 6.23(c) on `H` are no longer assumed (they are `capH_conditions`). -/
 def PartIInputsCapl (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
-  ∃ (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (α γ xp : ℕ → ℝ) (B : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
+  ∃ (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) (B : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
     (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) ∧
+    LocFin A ∧
     (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
     (∀ x ≥ (X₀ : ℝ), B x ≤ 34 * capM1 X₀ x * Real.log x ^ 2) ∧
     (∀ x ≥ (X₀ : ℝ),
@@ -129,8 +130,8 @@ def PartIInputsCapl (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- Theorem 6.23(c) (`capH_conditions`) turns `PartIInputsCapl` into `PartIInputsConcrete`. -/
 theorem PartIInputsCapl.toConcrete {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
     (hX : 10 ^ 8 ≤ Real.log X₀) (h : PartIInputsCapl θ X₀ P) : PartIInputsConcrete θ X₀ P := by
-  obtain ⟨κ, A, u, α, γ, xp, B, hκ, hκ1, hsp, hα, hxp, hAu, hρ, hB, hD⟩ := h
-  exact ⟨κ, A, u, α, γ, xp, B, capH X₀, capM1 X₀, hκ, hκ1, hsp, hα, hxp, hAu, hρ, hB,
+  obtain ⟨κ, A, u, α, γ, xp, B, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hB, hD⟩ := h
+  exact ⟨κ, A, u, α, γ, xp, B, capH X₀, capM1 X₀, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hB,
     fun x hx => (capH_conditions (Nat.cast_nonneg _) hX hx).1,
     fun x hx => (capH_conditions (Nat.cast_nonneg _) hX hx).2.1,
     fun x hx => (capH_conditions (Nat.cast_nonneg _) hX hx).2.2, hD⟩

@@ -146,10 +146,11 @@ open SlotModel
 assumed: on `[X₀, X₀ + 2H(x))` only the landing data of Corollary 3.8 (with slack `5/2`, and
 `W` evaluated at `X₀`) are assumed, as on the late range. -/
 def PartIInputsSlotModelInit (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
-  ∃ (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (α γ xp : ℕ → ℝ) (κp : ℝ → ℝ) (M : SlotModel X₀),
+  ∃ (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) (κp : ℝ → ℝ) (M : SlotModel X₀),
     0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
     (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) ∧
+    LocFin A ∧
     (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
     (∀ x, M.T x = target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A u) (osc θ α γ xp) x) ∧
     M.QueueWindowData ∧
@@ -164,9 +165,9 @@ def PartIInputsSlotModelInit (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop
 theorem PartIInputsSlotModelInit.toSlotModel {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
     (hX : 10 ^ 8 ≤ Real.log X₀) (h : PartIInputsSlotModelInit θ X₀ P) :
     PartIInputsSlotModel θ X₀ P := by
-  obtain ⟨κ, A, u, α, γ, xp, κp, M, hκ, hκ1, hsp, hα, hxp, hAu, hρ, hT, hq, hκp, hland,
+  obtain ⟨κ, A, u, α, γ, xp, κp, M, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hT, hq, hκp, hland,
     hinit⟩ := h
-  refine ⟨κ, A, u, α, γ, xp, κp, M, hκ, hκ1, hsp, hα, hxp, hAu, hρ, hT, hq, hκp, hland,
+  refine ⟨κ, A, u, α, γ, xp, κp, M, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hT, hq, hκp, hland,
     fun x hx hearly => ?_⟩
   have := (hinit x hx hearly).abs_le M hX hq hx hearly
   rw [hT x] at this

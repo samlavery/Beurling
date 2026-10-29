@@ -67,7 +67,7 @@ lemma unitJumps_of_tieFree (h : TieFree M U) : UnitJumps X₀ (DM M U) := by
   classical
   intro n _ hsm hA
   obtain ⟨e, hv, hrat⟩ := exists_rat_elem M U hsm
-  obtain ⟨-, e', he', hval, k, hk, -, -⟩ := hA
+  obtain ⟨-, e', he', -, hval, k, hk, -, -⟩ := hA
   obtain ⟨f, rfl⟩ := exists_mapE (U := U) he'
   rw [eval_mapE] at hval
   have hkp : placedAt M k := he' k hk

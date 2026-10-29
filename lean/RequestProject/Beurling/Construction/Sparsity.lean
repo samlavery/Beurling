@@ -43,7 +43,7 @@ namespace Construction
 (for the greedy run `R`), `A ⊆` the absorbed set (5) for the latest-prime map `latest`, and every
 `n ∈ A` is the value of an element whose latest prime (in the decision order) is `latest n`. -/
 structure AbsorbedCoupling (P : BeurlingSystem) {X₀ : ℕ} (M : SlotModel X₀) (H : ℝ → ℝ)
-    (U : ℕ → ℝ) (A : Set ℕ) (latest : ℕ → ℝ) where
+    (U : ℕ → ℝ) (A : Set ℝ) (latest : ℝ → ℝ) where
   /-- the origin of every realised prime -/
   origin : PrimeOrigin P M H U
   rule : A ⊆ absorbedRule (10 ^ 7) (jitteredPrimesOf M H U) latest (absorbY X₀)
@@ -51,10 +51,10 @@ structure AbsorbedCoupling (P : BeurlingSystem) {X₀ : ℕ} (M : SlotModel X₀
 
 section
 
-variable {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℕ} {latest : ℕ → ℝ}
+variable {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℝ} {latest : ℝ → ℝ}
 
 /-- `y(n) ≤ y(x)` for `n ≤ x`, `X₀ ≤ x`. -/
-lemma absorbY_le_absorbYAt {X₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) {n : ℕ}
+lemma absorbY_le_absorbYAt {X₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) {n : ℝ}
     (hnx : (n : ℝ) ≤ x) (hx : X₀ ≤ x) : absorbY X₀ n ≤ absorbYAt X₀ x := by
   have hX1 := one_lt_of_logX hX0 hX
   unfold absorbY
@@ -66,9 +66,17 @@ lemma absorbY_le_absorbYAt {X₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Re
 variable (C : AbsorbedCoupling P R.M R.H R.U A latest)
 
 include C in
+/-- **`A` is locally finite**: its members are values of elements of the semigroup, and there are
+finitely many elements of value below any bound. -/
+lemma AbsorbedCoupling.locFin : Absorbed.LocFin A := fun x =>
+  ((P.finite_val_le x).image P.val).subset fun n hn => by
+    obtain ⟨e, hev, -⟩ := C.rep n hn.1
+    exact ⟨e, by rw [Set.mem_setOf_eq, hev]; exact hn.2, hev⟩
+
+include C in
 /-- The latest prime of `n ∈ A` is `≥ X₀⁻ = X₀ - H(X₀)/2`. -/
 lemma AbsorbedCoupling.latest_ge (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc (0 : ℝ) 1)
-    (hX : 10 ^ 8 ≤ Real.log X₀) {n : ℕ} (hn : n ∈ A) :
+    (hX : 10 ^ 8 ≤ Real.log X₀) {n : ℝ} (hn : n ∈ A) :
     (X₀ : ℝ) - capH X₀ X₀ / 2 ≤ latest n := by
   have h := GreedyRun.jittered_ge_of_floor R hU (by rw [hRH]; exact capH_nonneg X₀)
     (fun s hs => by rw [hRH]; exact JitterFloor.capH_floor (Nat.cast_nonneg _) hX hs)
@@ -78,7 +86,7 @@ lemma AbsorbedCoupling.latest_ge (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ 
 include C in
 /-- `2y(x) > X₀` if `A` has an element `≤ x` (`X₀ ≤ x`). -/
 lemma AbsorbedCoupling.two_y_gt (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc (0 : ℝ) 1)
-    (hX : 10 ^ 8 ≤ Real.log X₀) {n : ℕ} (hn : n ∈ A) {x : ℝ} (hnx : (n : ℝ) ≤ x)
+    (hX : 10 ^ 8 ≤ Real.log X₀) {n : ℝ} (hn : n ∈ A) {x : ℝ} (hnx : (n : ℝ) ≤ x)
     (hx : (X₀ : ℝ) ≤ x) : (X₀ : ℝ) < 2 * absorbYAt X₀ x := by
   have h1 := C.latest_ge hRH hU hX hn
   have h2 := (C.rule hn).2.2
@@ -91,7 +99,7 @@ include C in
 /-- **Step (i) for `A`**: every `n ∈ A` with `n ≤ x` (`X₀ ≤ x`) is the value of a
 `2y(x)`-smooth element. -/
 lemma AbsorbedCoupling.smooth (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc (0 : ℝ) 1)
-    (hX : 10 ^ 8 ≤ Real.log X₀) {n : ℕ} (hn : n ∈ A) {x : ℝ} (hnx : (n : ℝ) ≤ x)
+    (hX : 10 ^ 8 ≤ Real.log X₀) {n : ℝ} (hn : n ∈ A) {x : ℝ} (hnx : (n : ℝ) ≤ x)
     (hx : (X₀ : ℝ) ≤ x) : ∃ e ∈ P.smoothElems (2 * absorbYAt X₀ x), P.val e = n := by
   obtain ⟨e, hev, hlat⟩ := C.rep n hn
   refine ⟨e, ?_, hev⟩
@@ -128,25 +136,18 @@ lemma log_pow_le_rpow {v θ : ℝ} (hv0 : 0 < v) (hv : 10 ^ 8 ≤ Real.log v) (h
   linarith
 
 /-- No element of `A` in `[v, w]`: the local count vanishes. -/
-lemma localCountA_eq_zero {A : Set ℕ} {v w : ℝ} (hw : 0 ≤ w)
+lemma localCountA_eq_zero {A : Set ℝ} {v w : ℝ} (_hw : 0 ≤ w)
     (h : ∀ n ∈ A, ¬ (v ≤ n ∧ (n : ℝ) ≤ w)) : Absorbed.localCountA A v w = 0 := by
-  classical
   unfold Absorbed.localCountA
-  rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
-  intro n hn hnA
-  rw [Finset.mem_Icc] at hn
-  exact h n hnA ⟨Nat.ceil_le.mp hn.1, (Nat.cast_le.mpr hn.2).trans (Nat.floor_le hw)⟩
+  suffices hE : A ∩ Set.Icc v w = ∅ by rw [hE]; simp
+  exact Set.eq_empty_of_forall_notMem fun n ⟨hnA, hn⟩ => h n hnA hn
 
 /-- No element of `A` up to `x`: the count vanishes. -/
-lemma countA_eq_zero {A : Set ℕ} {x : ℝ} (hx : 0 ≤ x) (h : ∀ n ∈ A, ¬ (n : ℝ) ≤ x) :
+lemma countA_eq_zero {A : Set ℝ} {x : ℝ} (_hx : 0 ≤ x) (h : ∀ n ∈ A, ¬ (n : ℝ) ≤ x) :
     Absorbed.countA A x = 0 := by
-  classical
   unfold Absorbed.countA
-  apply Finset.sum_eq_zero
-  intro n hn
-  rw [if_neg]
-  intro hnA
-  exact h n hnA ((Nat.cast_le.mpr (Finset.mem_Icc.mp hn).2).trans (Nat.floor_le hx))
+  suffices hE : A ∩ Set.Icc 1 x = ∅ by rw [hE]; simp
+  exact Set.eq_empty_of_forall_notMem fun n ⟨hnA, hn⟩ => h n hnA hn.2
 
 /-- **Lemma 6.26 for the construction.** Let `log X₀ ≥ 10⁸`, `θ ∈ [1/4, 1/2]`, `R` a greedy run
 with jitter width `H = max(H_std, M̄₁²)` and jitters in `[0, 1]`, coupled with `A` and the
@@ -154,8 +155,8 @@ latest-prime map (`AbsorbedCoupling`). Suppose the realised system satisfies (HB
 (with `log X₀⁻ ≥ 100`, `X₀⁻ ≥ X₀/2 + 1`) and the cluster event holds at every `v ≥ X₀` (grid windows
 at dyadic heights `≤ 4v/(log v)^{11}` hold at most `M̄₁(v)` elements). Then for every `v ≥ X₀`,
 `#(A ∩ [v, v + v^{θ/2}]) ≤ v^{θ/2} (log v)^{-4}`. -/
-theorem lemma626_construction {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℕ}
-    {latest : ℕ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {θ X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
+theorem lemma626_construction {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℝ}
+    {latest : ℝ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {θ X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
     (hX : 10 ^ 8 ≤ Real.log X₀) (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2)
     (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc (0 : ℝ) 1)
     (hHBS : ∀ z, P.HBS X0m z η1 η2 ε1) (hX0m : 100 ≤ Real.log X0m)
@@ -226,8 +227,8 @@ theorem lemma626_construction {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X
 /-- **The Rankin bound for `A` for the construction** (proof of Lemma 4.4), under the hypotheses of
 `lemma626_construction` other than the cluster event: for `x ≥ 1` with `log x > (log X₀)²`,
 `#(A ∩ [1, x]) ≤ x e^{-ς_*(log x)}`. -/
-theorem rankinA_construction {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℕ}
-    {latest : ℕ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
+theorem rankinA_construction {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℝ}
+    {latest : ℝ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
     (hX : 10 ^ 8 ≤ Real.log X₀) (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc (0 : ℝ) 1)
     (hHBS : ∀ z, P.HBS X0m z η1 η2 ε1) (hX0m : 100 ≤ Real.log X0m) :
     ∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →

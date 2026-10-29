@@ -175,7 +175,12 @@ theorem realisedA_eq (h : RealisedOK M (capH X₀) U) (hnc : NoCoincidence M U) 
           exact hnc k hk p.1 p.2.1 p.2.2 hkv.symm
         · exact ⟨k, rfl⟩
       set f := Finsupp.equivMapDomain h.equiv e
-      refine ⟨hlog, mapE M f, live_mapE M U f, ?_, k, ?_, fun k' hk' => ?_, ?_⟩
+      refine ⟨hlog, mapE M f, live_mapE M U f, fun i hi => ?_, ?_, k, ?_, fun k' hk' => ?_, ?_⟩
+      · cases i with
+        | inl p => show (1 : ℝ) < (p.1 : ℝ); exact_mod_cast p.2.1.one_lt
+        | inr k' =>
+          have hl := live_mapE M U f k' (Finsupp.mem_support_iff.mp hi)
+          exact h.one_lt (Sum.inr ⟨k', hl⟩)
       · rw [eval_mapE, ← val_eq_idxVal h]; exact hval
       · rw [mapE_apply_inr, dif_pos hk]
         show e (h.equiv.symm _) ≠ 0
@@ -198,10 +203,10 @@ theorem realisedA_eq (h : RealisedOK M (capH X₀) U) (hnc : NoCoincidence M U) 
         rw [Finset.not_nonempty_iff_eq_empty, Finsupp.support_eq_empty] at hne; exact hne
       rw [he0] at hval
       simp only [BeurlingSystem.val, Finsupp.prod_zero_index] at hval
-      have : (n : ℝ) = 1 := hval.symm
+      have : n = 1 := hval.symm
       rw [this, Real.log_one] at hlog
       norm_num at hlog
-  · rintro ⟨hlog, e', he', hval, k, hk, hmax, hy⟩
+  · rintro ⟨hlog, e', he', -, hval, k, hk, hmax, hy⟩
     obtain ⟨f, rfl⟩ := exists_mapE (U := U) he'
     have hkp : placedAt M k := he' k hk
     set e := Finsupp.equivMapDomain h.equiv.symm f

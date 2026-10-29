@@ -413,7 +413,7 @@ end Infinite
 
 /-- The paper's target grows linearly, with the designed oscillation. -/
 theorem T_ge_of_formula {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
-    (hX : 10 ^ 8 ≤ Real.log X₀) {P : BeurlingSystem} {A : Set ℕ} {u a : ℕ → ℝ}
+    (hX : 10 ^ 8 ≤ Real.log X₀) {P : BeurlingSystem} {A : Set ℝ} {u : ℝ → ℝ} {a : ℕ → ℝ}
     {M : SlotModel X₀}
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (θ / 2) A u)
       (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
@@ -442,7 +442,7 @@ theorem T_ge_of_formula {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 
 
 /-- The target of `PartIRestJ` grows linearly, with the designed oscillation. -/
 theorem partIRestJ_T_ge {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
-    (hX : 10 ^ 8 ≤ Real.log X₀) {P : BeurlingSystem} {A : Set ℕ} {u a : ℕ → ℝ}
+    (hX : 10 ^ 8 ≤ Real.log X₀) {P : BeurlingSystem} {A : Set ℝ} {u : ℝ → ℝ} {a : ℕ → ℝ}
     {M : SlotModel X₀} (hI : PartIRestJ θ X₀ P A u a M) {x : ℝ} (hx : (X₀ : ℝ) ≤ x) :
     7 / 10 * x - X₀ - 1 ≤ M.T x :=
   T_ge_of_formula hθ hX hI.1 hx

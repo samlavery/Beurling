@@ -188,7 +188,7 @@ lemma countA_X₀ : countA (absSet X₀ (DM h.limModel U)) X₀ = 0 := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 h.hX
   refine countA_eq_zero_of_low hX0 h.hX (fun a ha => ?_) X₀ hX1.le ?_
-  · obtain ⟨-, e, he, -, k, hk, -, hvk⟩ := ha
+  · obtain ⟨-, e, he, -, -, k, hk, -, hvk⟩ := ha
     exact ⟨_, realisedVal_inr_ge h.hU h.hX h.limModel_low ⟨k, he k hk⟩, hvk⟩
   · have := h.hX
     nlinarith
@@ -211,7 +211,8 @@ lemma limModel_T_jump {n : ℕ} (hn : n ∈ X₀.smoothNumbers) (hXn : (X₀ : �
     (X₀ : ℝ) + 3 / 4 ≤ h.limModel.T n := by
   classical
   set D := DM h.limModel U
-  have hc := (contD_continuousOn h.hθ h.hX D) (n : ℝ) (le_of_lt hXn)
+  have hLD : LocFinD D := locFinD_DM h.hX h.hU _
+  have hc := (contD_continuousOn h.hθ h.hX D hLD) (n : ℝ) (le_of_lt hXn)
   obtain ⟨δ, hδ, hball⟩ := Metric.continuousWithinAt_iff.mp hc (1 / 4) (by norm_num)
   set y := max (X₀ : ℝ) (n - δ / 2) with hy
   have hyX : (X₀ : ℝ) ≤ y := le_max_left _ _
@@ -236,7 +237,7 @@ lemma limModel_T_jump {n : ℕ} (hn : n ∈ X₀.smoothNumbers) (hXn : (X₀ : �
     have := Finset.card_lt_card hsub
     unfold Rankin.smoothCount
     exact_mod_cast this
-  have hA := countA_mono (absSet X₀ D) hyn.le
+  have hA := countA_mono (absSet_locFin (X₀ := X₀) hLD) hyn.le
   have hTy := h.limModel_T_ge hyX
   rw [h.limModel_T_eq, targetD_split θ D hyX] at hTy
   rw [h.limModel_T_eq, targetD_split θ D hXn.le]

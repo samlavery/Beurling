@@ -138,7 +138,7 @@ but `Z_B` is the concrete `ZBcont X₀ κ` (the continuation of the paper's `Z_B
 assumptions of Lemma 4.2 on `Z_B` are replaced by `0 < κ ≤ 1` and `κ T ≥ e^{X₀²/3}`. -/
 def Theorem410InputsZB (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (X₀ : ℕ) (κ T κ₀ η : ℝ) (α γ xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
-    (A : Set ℕ) (u : ℕ → ℝ) (ς : ℝ → ℝ),
+    (A : Set ℝ) (u : ℝ → ℝ) (ς : ℝ → ℝ),
     10 ^ 4 ≤ Real.log X₀ ∧ 0 < κ ∧ κ ≤ 1 ∧ Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * T ∧
     (∀ k, DesignParams θ (Real.log X₀) κ₀ (α k) (γ k) (xp k)) ∧
     (∀ k, T + 1 / 2 ≤ γ k) ∧

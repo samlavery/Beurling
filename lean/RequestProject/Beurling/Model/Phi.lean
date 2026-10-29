@@ -122,12 +122,14 @@ of the decided primes, with jitter width `H = capH X₀` and jitters `U`. -/
 noncomputable def DM (M : SlotModel X₀) (U : ℕ → ℝ) : PrimeData :=
   ⟨placedAt M, primeValueOf M (capH X₀) U⟩
 
-/-- The two analytic inputs of Lemma 3.3: the target of any data is a valid slot-model target. -/
-def ValidHyp (θ : ℝ) (X₀ : ℕ) : Prop := ∀ D : PrimeData, TValid X₀ (targetD θ X₀ D)
+/-- The two analytic inputs of Lemma 3.3: the target of any locally finite data is a valid
+slot-model target. (The data of every slot model are locally finite, `locFinD_DM`.) -/
+def ValidHyp (θ : ℝ) (X₀ : ℕ) : Prop :=
+  ∀ D : PrimeData, LocFinD D → TValid X₀ (targetD θ X₀ D)
 
 /-- The slope bound of Lemma 3.3: `T(x') - T(x) ≥ 0.08 (x' - x)/log x'` on `[X₀, ∞)`. -/
 def SlopeHyp (θ : ℝ) (X₀ : ℕ) : Prop :=
-  ∀ (D : PrimeData) (x x' : ℝ), (X₀ : ℝ) ≤ x → x ≤ x' →
+  ∀ (D : PrimeData), LocFinD D → ∀ (x x' : ℝ), (X₀ : ℝ) ≤ x → x ≤ x' →
     0.08 * (x' - x) / Real.log x' ≤ targetD θ X₀ D x' - targetD θ X₀ D x
 
 /-! ### Agreement of slot models -/
@@ -294,6 +296,26 @@ lemma pos2_DM (hX : 10 ^ 8 ≤ Real.log X₀) {U : ℕ → ℝ} (hU : ∀ j, U j
   have : (2 : ℝ) ^ (40 : ℕ) ≥ 3 := by norm_num
   linarith
 
+/-- **The data of any slot model are locally finite** (jitters in `[0, 1]`): the slots below a
+bound are finitely many, and from `X₀` on a prime lands within `H(s)/2 ≤ s/8` of its slot. -/
+lemma locFinD_DM (hX : 10 ^ 8 ≤ Real.log X₀) {U : ℕ → ℝ} (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1)
+    (M : SlotModel X₀) : LocFinD (DM M U) := by
+  intro c
+  have hX1 : (1 : ℝ) < X₀ := one_lt_of_logX (Nat.cast_nonneg _) hX
+  refine (finite_slot_le M (by exact_mod_cast hX1.le) (max (X₀ : ℝ) (8 * c / 7))).subset ?_
+  rintro k ⟨-, hk⟩
+  simp only [Set.mem_setOf_eq]
+  by_cases hs : (X₀ : ℝ) ≤ M.slot (k + 1)
+  · have h1 := (landing_mem_box (s := M.slot (k + 1)) (capH_nonneg X₀ (M.slot (k + 1)))
+      (hU (k + 1))).1
+    have h4 := four_capH_le (Nat.cast_nonneg _) hX hs
+    have hv : 7 / 8 * M.slot (k + 1) ≤ c := by
+      have : (DM M U).v k = primeValueOf M (capH X₀) U k := rfl
+      unfold primeValueOf at this
+      linarith
+    exact le_max_of_le_right (by linarith)
+  · exact le_max_of_le_left (not_le.mp hs).le
+
 /-! ### Numerical facts for the causality step -/
 
 /-- `1 + 13 log z ≤ z/100` for `log z ≥ 10⁸`. -/
@@ -385,7 +407,7 @@ end Heights
 /-- **Consecutive slots of the new target are at most `13 log z` apart** (from the slope
 `T' ≥ 0.08/log` of Lemma 3.3). -/
 lemma slot_succ_le {θ : ℝ} (hX : 10 ^ 8 ≤ Real.log X₀) (hS : SlopeHyp θ X₀) {D : PrimeData}
-    (hv : TValid X₀ (targetD θ X₀ D)) {i : ℕ} {z : ℝ} (hz : (X₀ : ℝ) ≤ z)
+    (hD : LocFinD D) (hv : TValid X₀ (targetD θ X₀ D)) {i : ℕ} {z : ℝ} (hz : (X₀ : ℝ) ≤ z)
     (hi : (Phi θ X₀ D).slot i ≤ z - 13 * Real.log z) : (Phi θ X₀ D).slot (i + 1) ≤ z := by
   set M := Phi θ X₀ D
   have hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊ := fun x hx => by
@@ -394,7 +416,7 @@ lemma slot_succ_le {θ : ℝ} (hX : 10 ^ 8 ≤ Real.log X₀) (hS : SlopeHyp θ 
   obtain ⟨hlz, -, -⟩ := logs_of_ge (Nat.cast_nonneg _) hX hz
   have hlz0 : 0 < Real.log z := by linarith
   have hsz : M.slot i ≤ z := by linarith
-  have hslope := hS D (M.slot i) z hs hsz
+  have hslope := hS D hD (M.slot i) z hs hsz
   have h1 : 0.08 * (13 * Real.log z) / Real.log z ≤ 0.08 * (z - M.slot i) / Real.log z :=
     div_le_div_of_nonneg_right (by linarith) hlz0.le
   have h2 : 0.08 * (13 * Real.log z) / Real.log z = 1.04 := by field_simp; norm_num
@@ -450,8 +472,10 @@ theorem causal {θ : ℝ} (hθ0 : 0 < θ) (hθ2 : θ ≤ 2) (hX : 10 ^ 8 ≤ Rea
       linarith
     · obtain ⟨hXa, -, -, -⟩ := constructionScale_spec hX0 hX j
       exact gap_gamma hX hXa (scale_add_two_capH_le hX0 hX j) hj
-  have hv := hV D
-  have hv' := hV D'
+  have hLD := locFinD_DM hX hU M
+  have hLD' := locFinD_DM hX hU M'
+  have hv := hV D hLD
+  have hv' := hV D' hLD'
   refine ⟨by rw [Phi_ϑ, Phi_ϑ], fun x hx => by rw [Phi_T hv, Phi_T hv']; exact hTeq x hx,
     fun i hi => ?_⟩
   -- the arrivals agree on the slots starting below `z - 13 log z`
@@ -460,7 +484,7 @@ theorem causal {θ : ℝ} (hθ0 : 0 < θ) (hθ2 : θ ≤ 2) (hX : 10 ^ 8 ≤ Rea
   have hϑ : (Phi θ X₀ D).ϑ = (Phi θ X₀ D').ϑ := by rw [Phi_ϑ, Phi_ϑ]
   have hlz : 0 ≤ Real.log z := Real.log_nonneg (by linarith)
   have hsi : (Phi θ X₀ D).slot i ≤ z := by linarith
-  have hsi1 := slot_succ_le hX hS hv hz hi
+  have hsi1 := slot_succ_le hX hS hLD hv hz hi
   have he0 := slot_congr hϑ hTz hsi
   have he1 := slot_congr hϑ hTz hsi1
   rw [Phi_arr hv, Phi_arr hv']

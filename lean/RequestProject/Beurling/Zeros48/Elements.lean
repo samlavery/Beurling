@@ -6,14 +6,15 @@ public import RequestProject.Beurling.Construction.JitterRegular
 # The elements of the realised system: rigid, absorbed and residual (proof of Lemma 4.8(ii))
 
 In the proof of Lemma 4.8(ii) (§4, "Decomposition"), the elements of the system are split into
-the rigid elements (`X₀`-smooth integers, `𝒟` with `1`), the absorbed set `A` and the residual
+the rigid elements (`X₀`-smooth integers, `𝒟` with `1`), the absorbed set `A` (a set of real
+values; one element of each value is the absorbed element) and the residual
 elements `ℬ = ℕ_P \ (𝒟 ∪ A)`, counted with multiplicity. Here:
 
 * `rigidElem h n`: the rigid element of value `n`, for `n` `X₀`-smooth (built from the rational
   primes of the realised system);
 * `absElem h n`: for `n ∈ A`, an element of value `n` containing a jittered prime;
 * `residual h`: the remaining elements;
-* `N_eq_psi_add_countA_add` : `N(x) = Ψ(x) + #(A ∩ [0, x]) + #{e ∈ ℬ : val e ≤ x}`.
+* `N_eq_psi_add_countA_add` : `N(x) = Ψ(x) + #(A ∩ [1, x]) + #{e ∈ ℬ : val e ≤ x}`.
 -/
 
 @[expose] public section
@@ -68,7 +69,7 @@ lemma not_nonRigid_rigidElem (h : RealisedOK M H U) {n : ℕ} (hn : n ∈ X₀.s
 
 /-- **Every absorbed `n` is the value of a non-rigid element**: the witness of `n ∈ A` has a latest
 prime whose value is a jittered prime; replacing that prime by the jittered one keeps the value. -/
-lemma exists_nonRigid_of_mem_realisedA (h : RealisedOK M H U) {n : ℕ}
+lemma exists_nonRigid_of_mem_realisedA (h : RealisedOK M H U) {n : ℝ}
     (hn : n ∈ realisedA M H U) :
     ∃ e, (realisedSystem M H U).val e = n ∧ NonRigid h e := by
   classical
@@ -81,7 +82,7 @@ lemma exists_nonRigid_of_mem_realisedA (h : RealisedOK M H U) {n : ℕ}
     rintro rfl
     have : P.val 0 = 1 := by simp [BeurlingSystem.val]
     rw [this] at hval
-    have hn1 : (n : ℝ) = 1 := hval.symm
+    have hn1 : n = 1 := hval.symm
     rw [hn1, Real.log_one] at hlog
     norm_num at hlog
   have hj : j ∈ e.support := by
@@ -108,10 +109,10 @@ lemma exists_nonRigid_of_mem_realisedA (h : RealisedOK M H U) {n : ℕ}
 
 open Classical in
 /-- For `n ∈ A`: a non-rigid element of value `n` (junk `0` otherwise). -/
-noncomputable def absElem (h : RealisedOK M H U) (n : ℕ) : ℕ →₀ ℕ :=
+noncomputable def absElem (h : RealisedOK M H U) (n : ℝ) : ℕ →₀ ℕ :=
   if hex : ∃ e, (realisedSystem M H U).val e = n ∧ NonRigid h e then hex.choose else 0
 
-lemma absElem_spec (h : RealisedOK M H U) {n : ℕ} (hn : n ∈ realisedA M H U) :
+lemma absElem_spec (h : RealisedOK M H U) {n : ℝ} (hn : n ∈ realisedA M H U) :
     (realisedSystem M H U).val (absElem h n) = n ∧ NonRigid h (absElem h n) := by
   have hex := exists_nonRigid_of_mem_realisedA h hn
   simp only [absElem, dif_pos hex]
@@ -128,7 +129,7 @@ noncomputable def residualLe (h : RealisedOK M H U) (x : ℝ) : Finset (ℕ →�
   ((realisedSystem M H U).elems x).filter (· ∈ residual h)
 
 open Classical in
-/-- **The element count splits**: `N(x) = Ψ(x) + #(A ∩ [0, x]) + #{e ∈ ℬ : val e ≤ x}`. -/
+/-- **The element count splits**: `N(x) = Ψ(x) + #(A ∩ [1, x]) + #{e ∈ ℬ : val e ≤ x}`. -/
 theorem N_eq_psi_add_countA_add (h : RealisedOK M H U) {x : ℝ} (hx : 0 ≤ x) :
     (realisedSystem M H U).N x =
       (smoothCount X₀ x : ℝ) + countA (realisedA M H U) x + ((residualLe h x).card : ℝ) := by
@@ -136,20 +137,19 @@ theorem N_eq_psi_add_countA_add (h : RealisedOK M H U) {x : ℝ} (hx : 0 ≤ x) 
   set P := realisedSystem M H U
   set A := realisedA M H U
   set S := Nat.smoothNumbersUpTo ⌊x⌋₊ X₀
-  set AS := (Finset.Icc 0 ⌊x⌋₊).filter (· ∈ A)
+  have hfin := (realisedA_locFin M H U).finite_Icc 1 x
+  set AS := hfin.toFinset
   have hcA : countA A x = (AS.card : ℝ) := by
     unfold countA
-    rw [Finset.card_filter, Nat.cast_sum]
-    refine Finset.sum_congr rfl fun k _ => ?_
-    split_ifs <;> simp
+    rw [Set.ncard_eq_toFinset_card _ hfin]
   have hmemS : ∀ n ∈ S, n ∈ X₀.smoothNumbers ∧ (n : ℝ) ≤ x := by
     intro n hn
     rw [Nat.mem_smoothNumbersUpTo] at hn
     exact ⟨hn.2, (Nat.cast_le.mpr hn.1).trans (Nat.floor_le hx)⟩
   have hmemA : ∀ n ∈ AS, n ∈ A ∧ (n : ℝ) ≤ x := by
     intro n hn
-    simp only [AS, Finset.mem_filter, Finset.mem_Icc] at hn
-    exact ⟨hn.2, (Nat.cast_le.mpr hn.1.2).trans (Nat.floor_le hx)⟩
+    simp only [AS, Set.Finite.mem_toFinset] at hn
+    exact ⟨hn.1, hn.2.2⟩
   have hdecomp : P.elems x = (S.image (rigidElem h) ∪ AS.image (absElem h)) ∪ residualLe h x := by
     ext e
     simp only [Finset.mem_union, Finset.mem_image, residualLe, Finset.mem_filter,
@@ -165,9 +165,11 @@ theorem N_eq_psi_add_countA_add (h : RealisedOK M H U) {x : ℝ} (hx : 0 ≤ x) 
       by_cases h2 : ∃ n ∈ A, e = absElem h n
       · obtain ⟨n, hn, rfl⟩ := h2
         refine Or.inl (Or.inr ⟨n, ?_, rfl⟩)
+        have hn1 : 1 ≤ n := by
+          rw [← (absElem_spec h hn).1]; exact P.one_le_val _
         rw [(absElem_spec h hn).1] at he
-        simp only [AS, Finset.mem_filter, Finset.mem_Icc]
-        exact ⟨⟨Nat.zero_le _, Nat.le_floor he⟩, hn⟩
+        simp only [AS, Set.Finite.mem_toFinset]
+        exact ⟨hn, hn1, he⟩
       push_neg at h1 h2
       exact Or.inr ⟨he, h1, h2⟩
     · rintro ((⟨n, hn, rfl⟩ | ⟨n, hn, rfl⟩) | ⟨he, -⟩)
@@ -185,7 +187,7 @@ theorem N_eq_psi_add_countA_add (h : RealisedOK M H U) {x : ℝ} (hx : 0 ≤ x) 
     intro n hn m hm hnm
     have := congrArg P.val hnm
     rw [(absElem_spec h (hmemA n hn).1).1, (absElem_spec h (hmemA m hm).1).1] at this
-    exact_mod_cast this
+    exact this
   have hd1 : Disjoint (S.image (rigidElem h)) (AS.image (absElem h)) := by
     rw [Finset.disjoint_left]
     rintro e he he'

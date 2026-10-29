@@ -92,7 +92,7 @@ inputs of the proof of Lemma 4.8(ii) for `D̂_{<a_k}` (`Dlt k`), at the heights 
 (`Absorbed.absorbedBound_le_of_growth`). -/
 def Theorem410InputsZB48 (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (X₀ : ℕ) (κ T κ₀ η : ℝ) (α γ xp a Γ : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
-    (A : Set ℕ) (u : ℕ → ℝ) (ς : ℝ → ℝ),
+    (A : Set ℝ) (u : ℝ → ℝ) (ς : ℝ → ℝ),
     10 ^ 4 ≤ Real.log X₀ ∧ 0 < κ ∧ κ ≤ 1 ∧ Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * T ∧
     (∀ k, DesignParams θ (Real.log X₀) κ₀ (α k) (γ k) (xp k)) ∧
     (∀ k, T + 1 / 2 ≤ γ k) ∧

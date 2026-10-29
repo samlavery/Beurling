@@ -35,17 +35,17 @@ open Complex MeasureTheory Set Filter Topology Remark12 Oscillation Absorbed Tar
 namespace Decomp
 
 /-- The target (6) with the concrete absorbed count and capped density. -/
-noncomputable def targetOf (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (α γ xp : ℕ → ℝ) :
+noncomputable def targetOf (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) :
     ℝ → ℝ :=
   target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A u) (osc θ α γ xp)
 
 /-- The lag `D = N_P - T`. -/
-noncomputable def lagOf (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ)
+noncomputable def lagOf (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ)
     (α γ xp : ℕ → ℝ) (x : ℝ) : ℝ :=
   P.N x - targetOf θ X₀ κ A u α γ xp x
 
 /-- The target splits as base part + absorbed part + oscillation. -/
-lemma targetOf_eq {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℕ} {u : ℕ → ℝ} {α γ xp : ℕ → ℝ}
+lemma targetOf_eq {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℝ} {u : ℝ → ℝ} {α γ xp : ℕ → ℝ}
     (hsp : Spacing xp) (hX1 : 1 ≤ X₀) (hxp : (X₀ : ℝ) ≤ xp 0) {x : ℝ} (hx : 0 < x) :
     targetOf θ X₀ κ A u α γ xp x = baseErr X₀ κ x + x +
       absE X₀ (countA A) (absorbedDensityCap (θ / 2) A u) x + osc θ α γ xp x := by
@@ -61,8 +61,8 @@ lemma targetOf_eq {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℕ} {u : ℕ → 
 
 /-- The transform integrand of the lag is integrable on `(1, ∞)`. -/
 lemma lag_integrableOn (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.smoothNumbers)
-    {κ θ : ℝ} (hκ : 0 < κ) (hθ0 : 0 < θ) (hθ2 : θ ≤ 2) {A : Set ℕ} {u : ℕ → ℝ}
-    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a)
+    {κ θ : ℝ} (hκ : 0 < κ) (hθ0 : 0 < θ) (hθ2 : θ ≤ 2) {A : Set ℝ} {u : ℝ → ℝ}
+    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) (hAfin : LocFin A)
     (hcap : ∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ 0.1 / Real.log v)
     {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : ℝ} (hα : ∀ k, |α k| ≤ C) (hxp : (X₀ : ℝ) ≤ xp 0)
     {η K : ℝ} (hη : 0 ≤ η)
@@ -76,7 +76,7 @@ lemma lag_integrableOn (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.sm
   set D := lagOf P θ X₀ κ A u α γ xp with hDdef
   set E := absE (X₀ : ℝ) (countA A) (absorbedDensityCap (θ / 2) A u) with hEdef
   have hW : AbsorbedWindowHyp (θ / 2) X₀ A u :=
-    ⟨by linarith, by linarith, hX1', fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2⟩
+    ⟨by linarith, by linarith, hX1', fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
   obtain ⟨hiB, -⟩ := mellin_baseErr hXs hκ hs0 hs1
   obtain ⟨hiA, -⟩ := mellin_absE hW hcap (s := s) (by linarith)
   obtain ⟨hiR, -⟩ := mellin_osc (θ := θ) (γ := γ) hsp hα hsθ
@@ -141,8 +141,8 @@ lemma lag_integrableOn (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.sm
 
 /-- **The decomposition (14).** -/
 theorem decomposition_14 (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.smoothNumbers)
-    {κ θ : ℝ} (hκ : 0 < κ) (hθ0 : 0 < θ) (hθ2 : θ ≤ 2) {A : Set ℕ} {u : ℕ → ℝ}
-    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a)
+    {κ θ : ℝ} (hκ : 0 < κ) (hθ0 : 0 < θ) (hθ2 : θ ≤ 2) {A : Set ℝ} {u : ℝ → ℝ}
+    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) (hAfin : LocFin A)
     (hcap : ∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ 0.1 / Real.log v)
     {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : ℝ} (hα : ∀ k, |α k| ≤ C) (hxp : (X₀ : ℝ) ≤ xp 0)
     {η K : ℝ} (hη : 0 ≤ η)
@@ -157,7 +157,7 @@ theorem decomposition_14 (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.
   set D := lagOf P θ X₀ κ A u α γ xp with hDdef
   set E := absE (X₀ : ℝ) (countA A) (absorbedDensityCap (θ / 2) A u) with hEdef
   have hW : AbsorbedWindowHyp (θ / 2) X₀ A u :=
-    ⟨by linarith, by linarith, hX1', fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2⟩
+    ⟨by linarith, by linarith, hX1', fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
   obtain ⟨hiB, heB⟩ := mellin_baseErr hXs hκ hs0 hs1
   obtain ⟨hiA, heA⟩ := mellin_absE hW hcap (s := s) (by linarith)
   obtain ⟨hiR, heR⟩ := mellin_osc (θ := θ) (γ := γ) hsp hα hsθ
@@ -168,7 +168,7 @@ theorem decomposition_14 (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.
     simp only [hDdef, hEdef, lagOf]
     rw [targetOf_eq hsp hX1 hxp hx]
     ring
-  have hiD := lag_integrableOn P hXs hκ hθ0 hθ2 hAu hcap hsp hα hxp hη hD hsθ hsη hs1
+  have hiD := lag_integrableOn P hXs hκ hθ0 hθ2 hAu hAfin hcap hsp hα hxp hη hD hsθ hsη hs1
   have heD := mellin_split (s := s) ha hiD
   -- assemble
   have hint_eq : tailMellin (fun x => P.N x - 1 * x) s =

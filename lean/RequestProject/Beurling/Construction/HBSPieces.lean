@@ -17,7 +17,7 @@ namespace Absorbed
 
 open scoped Classical
 
-variable {b X₀ : ℝ} {A : Set ℕ} {u : ℕ → ℝ}
+variable {b X₀ : ℝ} {A : Set ℝ} {u : ℝ → ℝ}
 
 theorem absorbed_target_error_loc (h : AbsorbedWindowHyp b X₀ A u) {ε : ℝ}
     {x : ℝ} (hx : X₀ ≤ x)
@@ -25,7 +25,7 @@ theorem absorbed_target_error_loc (h : AbsorbedWindowHyp b X₀ A u) {ε : ℝ}
     |countA A x - ∫ v in X₀..x, absorbedDensity b A u v| ≤ ε * x ^ b := by
   have hX0 : 0 < X₀ := by linarith [h.X₀_ge]
   have hx0 : 0 < x := by linarith
-  set S := range (⌊2 * x⌋₊ + 1)
+  set S := below h.fin (2 * x)
   have hε : 0 ≤ ε := by
     refine le_trans ?_ (hρ X₀ le_rfl hx)
     rw [absorbedDensity_eq_sum h le_rfl hx]

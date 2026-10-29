@@ -96,12 +96,12 @@ end GreedyRun
 
 /-- **The absorbed set (5)**: `n` with `log n ≥ L*` whose latest prime `latest n` is jittered and
 below `y(n)`. -/
-def absorbedRule (Lstar : ℝ) (jit : Set ℝ) (latest : ℕ → ℝ) (y : ℕ → ℝ) : Set ℕ :=
+def absorbedRule (Lstar : ℝ) (jit : Set ℝ) (latest : ℝ → ℝ) (y : ℝ → ℝ) : Set ℝ :=
   {n | Lstar ≤ Real.log n ∧ latest n ∈ jit ∧ latest n < y n}
 
 /-- **The placement fact for `A`**: if every jittered prime is `≥ c`, every `n ∈ A` has a prime `r`
 with `c ≤ r < y(n)`. -/
-theorem absorbedRule_placement {Lstar c : ℝ} {jit : Set ℝ} {latest y : ℕ → ℝ}
+theorem absorbedRule_placement {Lstar c : ℝ} {jit : Set ℝ} {latest y : ℝ → ℝ}
     (hjit : ∀ r ∈ jit, c ≤ r) :
     ∀ n ∈ absorbedRule Lstar jit latest y, ∃ r : ℝ, c ≤ r ∧ r < y n :=
   fun n hn => ⟨latest n, hjit _ hn.2.1, hn.2.2⟩

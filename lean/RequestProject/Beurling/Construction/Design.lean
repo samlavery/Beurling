@@ -40,7 +40,7 @@ lemma osc_congr_lt {θ : ℝ} {α γ α' γ' xp : ℕ → ℝ} (hsp : Spacing xp
     rw [oscTerm_eq_zero_of_le hx this, oscTerm_eq_zero_of_le hx this]
 
 /-- On `(0, x⁺_k]` the lag only reads `α_j, γ_j` for `j < k`. -/
-lemma lagOf_congr_lt (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℕ} {u : ℕ → ℝ}
+lemma lagOf_congr_lt (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℝ} {u : ℝ → ℝ}
     {α γ α' γ' xp : ℕ → ℝ} (hsp : Spacing xp) (hX1 : 1 ≤ X₀) (hxp : (X₀ : ℝ) ≤ xp 0) {k : ℕ}
     (hα : ∀ j < k, α j = α' j) (hγ : ∀ j < k, γ j = γ' j) {x : ℝ} (hx : 0 < x)
     (hxk : x ≤ xp k) : lagOf P θ X₀ κ A u α γ xp x = lagOf P θ X₀ κ A u α' γ' xp x := by
@@ -61,7 +61,7 @@ lemma earlyNoise_congr {D D' : ℝ → ℝ} {a : ℝ} (ha : 0 < a)
 
 /-- **Locality of `D̂_{<a_k}`**: if `0 < a_k ≤ x⁺_k`, then `D̂_{<a_k}` only reads `α_j, γ_j` for
 `j < k`. -/
-lemma earlyOf_congr (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℕ} {u : ℕ → ℝ}
+lemma earlyOf_congr (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℝ} {u : ℝ → ℝ}
     {α γ α' γ' xp a : ℕ → ℝ} (hsp : Spacing xp) (hX1 : 1 ≤ X₀) (hxp : (X₀ : ℝ) ≤ xp 0) {k : ℕ}
     (ha0 : 0 < a k) (hak : a k ≤ xp k)
     (hα : ∀ j < k, α j = α' j) (hγ : ∀ j < k, γ j = γ' j) :
@@ -78,27 +78,27 @@ noncomputable def amplitudes (θ κ₀ : ℝ) (xp g : ℕ → ℝ) : ℕ → ℝ
 
 /-- One step of the rule of Lemma 4.8: the height chosen at `k` when the heights so far are `g`
 (and the amplitudes are determined by them). -/
-noncomputable def stepGamma (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ)
-    (u : ℕ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) (g : ℕ → ℝ) (k : ℕ) : ℝ :=
+noncomputable def stepGamma (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
+    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) (g : ℕ → ℝ) (k : ℕ) : ℝ :=
   DesignedZero.designGamma X₀ κ θ κ₀ (earlyOf P θ X₀ κ A u (amplitudes θ κ₀ xp g) g xp a) xp k
 
 /-- **The designed heights** `γ_k`, by recursion on `k`: `γ_k` is the height chosen by the rule of
 Lemma 4.8 from `D̂_{<a_k}` computed with `γ_0, …, γ_{k-1}`. -/
-noncomputable def designedGamma (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ)
-    (u : ℕ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) : ℕ → ℝ :=
+noncomputable def designedGamma (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
+    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) : ℕ → ℝ :=
   fun k => Nat.strongRecOn' (P := fun _ => ℝ) k
     (fun k IH => stepGamma P θ X₀ κ A u κ₀ xp a (fun j => if h : j < k then IH j h else 0) k)
 
 /-- The designed amplitudes `α_k`. -/
-noncomputable def designedAlpha (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ)
-    (u : ℕ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) : ℕ → ℝ :=
+noncomputable def designedAlpha (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
+    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) : ℕ → ℝ :=
   amplitudes θ κ₀ xp (designedGamma P θ X₀ κ A u κ₀ xp a)
 
 /-- **The fixed-point condition holds for the designed heights**: `γ_k` is the height chosen by
 the rule of Lemma 4.8 from `D̂_{<a_k}` of the lag of the target built with all the designed
 `γ_j, α_j`. -/
-theorem designedGamma_fixed (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℕ}
-    {u : ℕ → ℝ} {κ₀ : ℝ} {xp a : ℕ → ℝ} (hsp : Spacing xp) (hX1 : 1 ≤ X₀)
+theorem designedGamma_fixed (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℝ}
+    {u : ℝ → ℝ} {κ₀ : ℝ} {xp a : ℕ → ℝ} (hsp : Spacing xp) (hX1 : 1 ≤ X₀)
     (hxp : (X₀ : ℝ) ≤ xp 0) (ha : ∀ k, 0 < a k ∧ a k ≤ xp k) (k : ℕ) :
     designedGamma P θ X₀ κ A u κ₀ xp a k =
       DesignedZero.designGamma X₀ κ θ κ₀
@@ -118,8 +118,8 @@ theorem designedGamma_fixed (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : �
     (fun j hj => by simp only [amplitudes, dif_pos hj]) hagree]
 
 /-- The designed heights lie in `[Γ_k, 2Γ_k]`. -/
-lemma designedGamma_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ)
-    (u : ℕ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) (hΓ : ∀ k, 0 ≤ DesignedZero.heightScale θ κ₀ (xp k))
+lemma designedGamma_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
+    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) (hΓ : ∀ k, 0 ≤ DesignedZero.heightScale θ κ₀ (xp k))
     (k : ℕ) :
     designedGamma P θ X₀ κ A u κ₀ xp a k ∈
       Icc (DesignedZero.heightScale θ κ₀ (xp k)) (2 * DesignedZero.heightScale θ κ₀ (xp k)) := by
@@ -133,8 +133,8 @@ lemma designedGamma_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) 
 
 /-- The designed amplitudes satisfy `1 ≤ α_k ≤ 2` (as `α_k γ_k = 2 Γ_k` and `γ_k ∈ [Γ_k, 2Γ_k]`),
 when `Γ_k > 0`. -/
-lemma designedAlpha_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ)
-    (u : ℕ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) (hΓ : ∀ k, 0 < DesignedZero.heightScale θ κ₀ (xp k))
+lemma designedAlpha_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
+    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) (hΓ : ∀ k, 0 < DesignedZero.heightScale θ κ₀ (xp k))
     (k : ℕ) : designedAlpha P θ X₀ κ A u κ₀ xp a k ∈ Icc (1 : ℝ) 2 := by
   have hm := designedGamma_mem P θ X₀ κ A u κ₀ xp a (fun k => (hΓ k).le) k
   set γ := designedGamma P θ X₀ κ A u κ₀ xp a k

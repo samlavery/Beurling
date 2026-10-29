@@ -249,10 +249,11 @@ paper's `T`:
 On `[X₀, X₀ + 2H(x))` the paper's bound from the proof of Proposition 4.1 is assumed, as in
 `PartIInputsSlotsSplit`. -/
 def PartIInputsSlotModel (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
-  ∃ (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (α γ xp : ℕ → ℝ) (κp : ℝ → ℝ) (M : SlotModel X₀),
+  ∃ (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) (κp : ℝ → ℝ) (M : SlotModel X₀),
     0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
     (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) ∧
+    LocFin A ∧
     (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
     (∀ x, M.T x = target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A u) (osc θ α γ xp) x) ∧
     M.QueueWindowData ∧
@@ -268,9 +269,9 @@ def PartIInputsSlotModel (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 theorem PartIInputsSlotModel.toSplit {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
     (hX : 10 ^ 8 ≤ Real.log X₀) (h : PartIInputsSlotModel θ X₀ P) :
     PartIInputsSlotsSplit θ X₀ P := by
-  obtain ⟨κ, A, u, α, γ, xp, κp, M, hκ, hκ1, hsp, hα, hxp, hAu, hρ, hT, hq, hκp, hland,
+  obtain ⟨κ, A, u, α, γ, xp, κp, M, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hT, hq, hκp, hland,
     hinit⟩ := h
-  refine ⟨κ, A, u, α, γ, xp, queueB X₀, κp, hκ, hκ1, hsp, hα, hxp, hAu, hρ,
+  refine ⟨κ, A, u, α, γ, xp, queueB X₀, κp, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ,
     fun x hx => ⟨queueB_nonneg (Nat.cast_nonneg _) hX hx, le_rfl⟩, hκp, fun x hx hlate => ?_,
     hinit⟩
   have := (hland x hx hlate).toSlotData M hX hq hx

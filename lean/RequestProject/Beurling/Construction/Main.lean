@@ -38,11 +38,12 @@ namespace Construction
 
 /-- **The inputs of Part I for given data** `κ, A, u, α, γ, x⁺` and slot model `M`: as
 `PartIInputsSlotModelInit`, with these data fixed. -/
-def PartIWith (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ)
+def PartIWith (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ)
     (α γ xp : ℕ → ℝ) (M : SlotModel X₀) : Prop :=
   0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
     (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) ∧
+    LocFin A ∧
     (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
     (∀ x, M.T x = target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A u) (osc θ α γ xp) x) ∧
     M.QueueWindowData ∧
@@ -53,19 +54,19 @@ def PartIWith (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (κ : ℝ) (A : Set �
     (∀ x ≥ (X₀ : ℝ), x < (X₀ : ℝ) + 2 * capH X₀ x →
       M.LandingInit (P.N x) (capH X₀ X₀ / 2 * (1 + κp X₀ / Real.log X₀)) x)
 
-theorem PartIWith.toInit {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ} {A : Set ℕ}
-    {u : ℕ → ℝ} {α γ xp : ℕ → ℝ} {M : SlotModel X₀} (h : PartIWith θ X₀ P κ A u α γ xp M) :
+theorem PartIWith.toInit {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ} {A : Set ℝ}
+    {u : ℝ → ℝ} {α γ xp : ℕ → ℝ} {M : SlotModel X₀} (h : PartIWith θ X₀ P κ A u α γ xp M) :
     PartIInputsSlotModelInit θ X₀ P := by
-  obtain ⟨hκ, hκ1, hsp, hα, hxp, hAu, hρ, hT, hq, κp, hκp, hland, hinit⟩ := h
-  exact ⟨κ, A, u, α, γ, xp, κp, M, hκ, hκ1, hsp, hα, hxp, hAu, hρ, hT, hq, hκp, hland, hinit⟩
+  obtain ⟨hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hT, hq, κp, hκp, hland, hinit⟩ := h
+  exact ⟨κ, A, u, α, γ, xp, κp, M, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hT, hq, hκp, hland, hinit⟩
 
 /-- **The lag bound (13) for the given data** (Proposition 4.1): `|N - T| ≤ x^η` on `[X₀, ∞)`. -/
-theorem PartIWith.lag {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ} {A : Set ℕ}
-    {u : ℕ → ℝ} {α γ xp : ℕ → ℝ} {M : SlotModel X₀} (hθ1 : 1 / 4 ≤ θ)
+theorem PartIWith.lag {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ} {A : Set ℝ}
+    {u : ℝ → ℝ} {α γ xp : ℕ → ℝ} {M : SlotModel X₀} (hθ1 : 1 / 4 ≤ θ)
     (hθ2 : θ ≤ 1 / 2 - 1 / 10000) (hX : 10 ^ 8 ≤ Real.log X₀)
     (h : PartIWith θ X₀ P κ A u α γ xp M) :
     ∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ x ^ lagExponent θ := by
-  obtain ⟨hκ, hκ1, hsp, hα, hxp, hAu, hρ, hT, hq, κp, hκp, hland, hinit⟩ := h
+  obtain ⟨hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hT, hq, κp, hκp, hland, hinit⟩ := h
   intro x hx
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have e : lagOf P θ X₀ κ A u α γ xp x = P.N x - M.T x := by
@@ -118,8 +119,8 @@ absorbed set (5); `κ ≥ X₀⁻¹`; `κ₀ ∈ [X₀⁻¹, 1/4]`; `log x⁺_0 
 the designed ones (Lemma 4.8, Theorem 4.10); the pieces of `D̂_{<a_k}` (Lemma 4.8(ii)); the
 construction scales `a_k ≤ x⁺_k ≤ 1.001 a_k`; the weight hypotheses on `A`; and the Rankin bound
 for `A` (Lemma 6.26) above `log x = (log X₀)²`. -/
-def Theorem410InputsCoupled (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (κ : ℝ) (A : Set ℕ)
-    (u : ℕ → ℝ) (α γ xp : ℕ → ℝ) (jit : Set ℝ) (latest : ℕ → ℝ) : Prop :=
+def Theorem410InputsCoupled (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (κ : ℝ) (A : Set ℝ)
+    (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) (jit : Set ℝ) (latest : ℝ → ℝ) : Prop :=
   ∃ (κ₀ : ℝ) (a : ℕ → ℝ),
     A ⊆ absorbedRule (10 ^ 7) jit latest (absorbY X₀) ∧
     Real.exp (-Real.log X₀) ≤ κ ∧
@@ -136,15 +137,15 @@ def Theorem410InputsCoupled (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (κ : �
 /-- **Coupled inputs give the inputs of Theorem 4.10 with the decomposition derived**: the lag
 bound, the cap, `X₀`-smoothness, `u_a ≥ X₀` and the placement fact are derived. -/
 theorem Theorem410InputsCoupled.toDec {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ}
-    {A : Set ℕ} {u : ℕ → ℝ} {α γ xp : ℕ → ℝ} {M : SlotModel X₀} {jit : Set ℝ}
-    {latest : ℕ → ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
+    {A : Set ℝ} {u : ℝ → ℝ} {α γ xp : ℕ → ℝ} {M : SlotModel X₀} {jit : Set ℝ}
+    {latest : ℝ → ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
     (hX : 10 ^ 8 ≤ Real.log X₀) (hev : Even X₀)
     (hjit : ∀ r ∈ jit, (X₀ : ℝ) - capH X₀ X₀ / 2 ≤ r)
     (hI : PartIWith θ X₀ P κ A u α γ xp M)
     (h : Theorem410InputsCoupled θ X₀ P κ A u α γ xp jit latest) :
     Theorem410InputsDec θ P := by
   have hlag := hI.lag hθ1 hθ2 hX
-  obtain ⟨-, hκ1, hsp, -, -, hAu, hρ, -⟩ := hI
+  obtain ⟨-, hκ1, hsp, -, -, hAu, hAfin, hρ, -⟩ := hI
   obtain ⟨κ₀, a, hArule, hκ, hκ₀1, hκ₀2, hxp0, hγ, hα, hpieces, ha, hA, hbound⟩ := h
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hX
@@ -193,8 +194,8 @@ def Theorem21InputsCon : Prop :=
       FailureAdapted jitterFiltration E time ∧
       ∑' i, jitterMeasure (E i)ᶜ ≤ ENNReal.ofReal (1.5 / Real.log X₀) ∧
       ∀ ω ∈ goodAll E, (∀ j, ω j ∈ Icc (0 : ℝ) 1) →
-        ∃ (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (α γ xp : ℕ → ℝ) (M : SlotModel X₀)
-          (latest : ℕ → ℝ),
+        ∃ (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) (M : SlotModel X₀)
+          (latest : ℝ → ℝ),
           PartIWith θ X₀ (P ω) κ A u α γ xp M ∧
           Theorem410InputsCoupled θ X₀ (P ω) κ A u α γ xp (jitteredPrimesOf M (capH X₀) ω)
             latest
@@ -225,7 +226,7 @@ theorem theorem21InputsDec_of_con (h : Theorem21InputsCon) : Theorem21InputsDec 
     -- the placement of the jittered primes
     have hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊ := by
       intro x hx
-      rw [hI.2.2.2.2.2.2.2.1 x]
+      rw [hI.2.2.2.2.2.2.2.2.1 x]
       simp only [target, if_pos hx]
     exact GreedyRun.jittered_ge ⟨M, capH X₀, ω, hTlow⟩ hSω (capH_nonneg X₀) hmono
 

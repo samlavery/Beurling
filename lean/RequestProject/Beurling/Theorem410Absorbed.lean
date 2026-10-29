@@ -86,7 +86,7 @@ but:
   height `τ` with `|τ - γ_k| ≤ 1` (with `δ = δ_k`). -/
 def Theorem410InputsAbsorbed (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (Λ κ₀ η : ℝ) (α γ xp a : ℕ → ℝ) (ZB : ℂ → ℂ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
-    (A : Set ℕ) (u : ℕ → ℝ) (ς : ℝ → ℝ),
+    (A : Set ℝ) (u : ℝ → ℝ) (ς : ℝ → ℝ),
     (∀ k, Lemma46HypPre θ Λ κ₀ (α k) (γ k) (xp k) ZB) ∧
     (∀ k, 0.6 ≤ ‖ZB (1 + γ k * I)‖) ∧
     (∀ k, 1 ≤ α k ∧ α k ≤ 2) ∧
@@ -106,7 +106,7 @@ def Theorem410InputsAbsorbed (θ : ℝ) (F : ℂ → ℂ) : Prop :=
 
 /-- **Lemma 4.4(a) on the discs.** On `|s - (1 + iγ_k)| ≤ δ_k`, `|Ê_A(s)| ≤ 1/16`. -/
 theorem norm_absorbedHat_le_disc {θ Λ κ₀ α γ x : ℝ} {ZB : ℂ → ℂ}
-    (hH : Lemma46Hyp θ Λ κ₀ α γ x ZB) (hα : α ≤ 2) {A : Set ℕ} {u : ℕ → ℝ} {ς : ℝ → ℝ}
+    (hH : Lemma46Hyp θ Λ κ₀ α γ x ZB) (hα : α ≤ 2) {A : Set ℝ} {u : ℝ → ℝ} {ς : ℝ → ℝ}
     (hA : AbsorbedHyp (θ / 2) A u) (hς : Monotone ς)
     (hN : ∀ y ≥ 1, countA A y ≤ y * Real.exp (-ς (Real.log y)))
     (hB : ∀ τ : ℝ, |τ - γ| ≤ 1 → absorbedBound ς (designRadius x) (|τ| ^ (1 / (1 - θ / 2))) ≤

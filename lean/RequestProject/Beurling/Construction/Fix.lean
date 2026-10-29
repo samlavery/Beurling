@@ -34,9 +34,9 @@ namespace Construction
 
 /-- The remaining inputs of Part I, for the absorbed set `A` (with `u_a`), the construction
 scales `a_k` and the slot model `M`; `κ`, `x⁺`, `γ`, `α` are the fixed / designed ones. -/
-def PartIRest (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℕ) (u a : ℕ → ℝ)
+def PartIRest (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (M : SlotModel X₀) : Prop :=
-  (∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + u n ^ (θ / 2) = n) ∧
+  (∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + u n ^ (θ / 2) = n) ∧ LocFin A ∧
     (∀ v ≥ (X₀ : ℝ),
       (localCountA A v (v + v ^ (θ / 2)) : ℝ) ≤ v ^ (θ / 2) * Real.log v ^ (-4 : ℤ)) ∧
     (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (θ / 2) A u)
@@ -55,8 +55,8 @@ def PartIRest (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℕ) (u a : 
 jittered primes `jit` and the latest-prime map `latest`); the pieces of `D̂_{<a_k}`
 (Lemma 4.8(ii)); the construction scales `a_k ≤ x⁺_k ≤ 1.001 a_k`; and the Rankin bound for `A`
 (Lemma 6.26) above `log x = (log X₀)²`. -/
-def Theorem410Rest (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℕ) (u a : ℕ → ℝ)
-    (jit : Set ℝ) (latest : ℕ → ℝ) : Prop :=
+def Theorem410Rest (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
+    (jit : Set ℝ) (latest : ℝ → ℝ) : Prop :=
   A ⊆ absorbedRule (10 ^ 7) jit latest (absorbY X₀) ∧
     (∀ k, Lemma48PiecesCount X₀ (heightScale θ kappa0Param (switchOn X₀ k))
       (earlyOf P θ X₀ (kappaParam X₀) A u
@@ -79,7 +79,7 @@ def Theorem21InputsFix : Prop :=
       FailureAdapted jitterFiltration E time ∧
       ∑' i, jitterMeasure (E i)ᶜ ≤ ENNReal.ofReal (1.5 / Real.log X₀) ∧
       ∀ ω ∈ goodAll E, (∀ j, ω j ∈ Icc (0 : ℝ) 1) →
-        ∃ (A : Set ℕ) (u a : ℕ → ℝ) (M : SlotModel X₀) (latest : ℕ → ℝ),
+        ∃ (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ) (M : SlotModel X₀) (latest : ℝ → ℝ),
           PartIRest θ X₀ (P ω) A u a M ∧
           Theorem410Rest θ X₀ (P ω) A u a (jitteredPrimesOf M (capH X₀) ω) latest
 
@@ -119,7 +119,7 @@ def Theorem21InputsFixP : Prop :=
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (E : ι → Set JitterΩ),
       ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ jitterMeasure (goodAll E) ∧
       ∀ ω ∈ goodAll E, (∀ j, ω j ∈ Icc (0 : ℝ) 1) →
-        ∃ (A : Set ℕ) (u a : ℕ → ℝ) (M : SlotModel X₀) (latest : ℕ → ℝ),
+        ∃ (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ) (M : SlotModel X₀) (latest : ℝ → ℝ),
           PartIRest θ X₀ (P ω) A u a M ∧
           Theorem410Rest θ X₀ (P ω) A u a (jitteredPrimesOf M (capH X₀) ω) latest
 
@@ -160,7 +160,7 @@ theorem theorem21InputsDec_of_fixP (h : Theorem21InputsFixP) : Theorem21InputsDe
     exact hprob
   · rintro ω ⟨hG, hSω⟩
     obtain ⟨A, u, a, M, latest, hI, hC⟩ := hP ω hG hSω
-    obtain ⟨hAu, h626, hT, hq, κp, hκp, hland, hinit⟩ := hI
+    obtain ⟨hAu, hAfin, h626, hT, hq, κp, hκp, hland, hinit⟩ := hI
     obtain ⟨hArule, hpieces, ha, hbound⟩ := hC
     set κ := kappaParam (X₀ : ℝ) with hκdef
     set xp := switchOn (X₀ : ℝ) with hxpdef
@@ -169,16 +169,17 @@ theorem theorem21InputsDec_of_fixP (h : Theorem21InputsFixP) : Theorem21InputsDe
     have hsp : Spacing xp := switchOn_spacing _
     have hxp0 : (X₀ : ℝ) ≤ xp 0 := switchOn_zero_ge _
     have hb : 0 < θ / 2 := by linarith [hθ.1]
-    have hρ := rhoA_le_of_lemma626 hb (by linarith) hAu h626
+    have hρ := rhoA_le_of_lemma626 hb (by linarith) hAu hAfin h626
     have hPI : PartIWith θ X₀ (P ω) κ A u α γ xp M := by
       refine ⟨kappaParam_pos (by linarith), kappaParam_le_one hX1.le, hsp, fun k => ?_,
-        hxp0, hAu, hρ, hT, hq, κp, hκp, hland, hinit⟩
+        hxp0, hAu, hAfin, hρ, hT, hq, κp, hκp, hland, hinit⟩
       have hm := designedAlpha_mem (P ω) θ X₀ κ A u kappa0Param xp a
         (heightScale_switchOn_pos θ hX1.le) k
       rw [abs_of_nonneg (by linarith [hm.1])]
       exact hm.2
     have hAbs : AbsorbedHyp (θ / 2) A u := by
-      refine ⟨hb, by linarith [hθ.2], fun n hn => ⟨hb, by linarith [hθ.2], ?_, ?_, (hAu n hn).2⟩⟩
+      refine ⟨hb, by linarith [hθ.2],
+        fun n hn => ⟨hb, by linarith [hθ.2], ?_, ?_, (hAu n hn).2⟩, hAfin⟩
       · have hu := (hAu n hn).1
         have hr : 0 ≤ u n ^ (θ / 2) := Real.rpow_nonneg (by linarith) _
         have := (hAu n hn).2

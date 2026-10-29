@@ -144,9 +144,10 @@ noncomputable def queueB (X₀ x : ℝ) : ℝ :=
 explicit `B(x)` of (75)**: the only remaining queue input is the lag bound
 `|N_P(x) - T(x)| ≤ B(x) + 3H(x) + 3` (Theorem 6.6 with Corollary 3.8). -/
 def PartIInputsQueue75 (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
-  ∃ (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (α γ xp : ℕ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
+  ∃ (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
     (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) ∧
+    LocFin A ∧
     (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
     (∀ x ≥ (X₀ : ℝ),
       |P.N x - target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A u) (osc θ α γ xp) x| ≤
@@ -156,8 +157,8 @@ def PartIInputsQueue75 (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 `PartIInputsCapl`. -/
 theorem PartIInputsQueue75.toCapl {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
     (hX : 10 ^ 8 ≤ Real.log X₀) (h : PartIInputsQueue75 θ X₀ P) : PartIInputsCapl θ X₀ P := by
-  obtain ⟨κ, A, u, α, γ, xp, hκ, hκ1, hsp, hα, hxp, hAu, hρ, hD⟩ := h
-  exact ⟨κ, A, u, α, γ, xp, queueB X₀, hκ, hκ1, hsp, hα, hxp, hAu, hρ,
+  obtain ⟨κ, A, u, α, γ, xp, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hD⟩ := h
+  exact ⟨κ, A, u, α, γ, xp, queueB X₀, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ,
     fun x hx => queueBound75_cap_le (Nat.cast_nonneg _) hX hx, hD⟩
 
 /-- Refined inputs for one system: `PartIInputsQueue75` and the inputs of Theorem 4.10. -/

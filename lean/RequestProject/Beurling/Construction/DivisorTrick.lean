@@ -87,18 +87,20 @@ open scoped Classical in
 /-- **Steps (ii)–(iii) of Lemma 6.26**: if every `n ∈ A ∩ [u, u + h]` is the value of a `z`-smooth
 element (step (i)), and each window `[u/d, (u + h)/d]` with `d` smooth in `(h, z h]` holds at most
 `C` elements of `N` (step (iv)), then `#(A ∩ [u, u + h]) ≤ C Ψ_N(z h, z)`. -/
-theorem localCount_le_divisor {A : Set ℕ} {u h z C : ℝ} (hh : 1 ≤ h) (hu : h < u) (hC : 0 ≤ C)
+theorem localCount_le_divisor {A : Set ℝ} {u h z C : ℝ} (hh : 1 ≤ h) (hu : h < u) (hC : 0 ≤ C)
     (hS : ∀ n ∈ A, u ≤ n → (n : ℝ) ≤ u + h → ∃ e ∈ P.smoothElems z, P.val e = n)
     (hW : ∀ d ∈ P.smoothElems z, h < P.val d → P.val d ≤ z * h →
       ({m : ℕ →₀ ℕ | u ≤ P.val d * P.val m ∧ P.val d * P.val m ≤ u + h}.ncard : ℝ) ≤ C) :
     (Absorbed.localCountA A u (u + h) : ℝ) ≤ C * P.smoothCountN (z * h) z := by
-  set S := (Finset.Icc ⌈u⌉₊ ⌊u + h⌋₊).filter (· ∈ A) with hSdef
+  have hAfin : (A ∩ Set.Icc u (u + h)).Finite := by
+    refine ((P.finite_smooth_le (u + h) z).image P.val).subset fun n hn => ?_
+    obtain ⟨e, he, hev⟩ := hS n hn.1 hn.2.1 hn.2.2
+    exact ⟨e, ⟨he, by rw [hev]; exact hn.2.2⟩, hev⟩
+  set S := hAfin.toFinset with hSdef
   have hmemS : ∀ n ∈ S, n ∈ A ∧ u ≤ n ∧ (n : ℝ) ≤ u + h := by
     intro n hn
-    rw [hSdef, Finset.mem_filter, Finset.mem_Icc] at hn
-    refine ⟨hn.2, Nat.ceil_le.mp hn.1.1, ?_⟩
-    have h0 : 0 ≤ u + h := by linarith
-    exact (Nat.cast_le.mpr hn.1.2).trans (Nat.floor_le h0)
+    rw [hSdef, Set.Finite.mem_toFinset] at hn
+    exact ⟨hn.1, hn.2.1, hn.2.2⟩
   -- the element of each `n ∈ S` and its divisor
   have hrep : ∀ n ∈ S, ∃ e ∈ P.smoothElems z, P.val e = n := fun n hn =>
     hS n (hmemS n hn).1 (hmemS n hn).2.1 (hmemS n hn).2.2
@@ -125,7 +127,7 @@ theorem localCount_le_divisor {A : Set ℕ} {u h z C : ℝ} (hh : 1 ≤ h) (hu :
     have hfinW := P.finite_window δ u h
     refine le_trans ?_ (hW δ hδ.1 hδ.2.1 hδ.2.2)
     have key := Set.ncard_le_ncard_of_injOn
-      (s := ((S.filter (fun n => d n = δ) : Finset ℕ) : Set ℕ)) (fun n => e n - d n) ?_ ?_ hfinW
+      (s := ((S.filter (fun n => d n = δ) : Finset ℝ) : Set ℝ)) (fun n => e n - d n) ?_ ?_ hfinW
     · rw [Set.ncard_coe_finset] at key
       exact_mod_cast key
     · intro n hn
@@ -154,14 +156,14 @@ theorem localCount_le_divisor {A : Set ℕ} {u h z C : ℝ} (hh : 1 ≤ h) (hu :
     norm_cast
     exact Set.ncard_le_ncard (fun d hd => ⟨hd.1, hd.2.2⟩) (P.finite_smooth_le (z * h) z)
   unfold Absorbed.localCountA
-  rw [← hSdef]
+  rw [Set.ncard_eq_toFinset_card _ hAfin, ← hSdef]
   calc (S.card : ℝ) ≤ DF.card * C := hcard
     _ ≤ P.smoothCountN (z * h) z * C := mul_le_mul_of_nonneg_right hDcard hC
     _ = C * P.smoothCountN (z * h) z := by ring
 
 /-- **Lemma 6.26, steps (i)–(v)**: with Rankin's bound for the realised system,
 `#(A ∩ [u, u + h]) ≤ C (z h)^σ ∏_{p_j < z} (1 - p_j^{-σ})^{-1}` for every `σ > 0`. -/
-theorem localCount_le_rankin {A : Set ℕ} {u h z C σ : ℝ} (hh : 1 ≤ h) (hu : h < u) (hz : 0 ≤ z)
+theorem localCount_le_rankin {A : Set ℝ} {u h z C σ : ℝ} (hh : 1 ≤ h) (hu : h < u) (hz : 0 ≤ z)
     (hC : 0 ≤ C) (hσ : 0 < σ)
     (hS : ∀ n ∈ A, u ≤ n → (n : ℝ) ≤ u + h → ∃ e ∈ P.smoothElems z, P.val e = n)
     (hW : ∀ d ∈ P.smoothElems z, h < P.val d → P.val d ≤ z * h →
@@ -178,7 +180,7 @@ theorem localCount_le_rankin {A : Set ℕ} {u h z C σ : ℝ} (hh : 1 ≤ h) (hu
 * (81) `0.9 u₀ log u₀ ≥ log(2y) + log C_d + 4 log L`.
 
 Then `#(A ∩ [u, u + h]) ≤ h L^{-4}` (step (vi)). -/
-theorem lemma626_of_steps {A : Set ℕ} {u h y Cd u0 L : ℝ} (hh : 1 ≤ h) (hu : h < u)
+theorem lemma626_of_steps {A : Set ℝ} {u h y Cd u0 L : ℝ} (hh : 1 ≤ h) (hu : h < u)
     (hy : 0 < y) (hCd : 0 < Cd) (hL : 0 < L)
     (hS : ∀ n ∈ A, u ≤ n → (n : ℝ) ≤ u + h → ∃ e ∈ P.smoothElems (2 * y), P.val e = n)
     (hW : ∀ d ∈ P.smoothElems (2 * y), h < P.val d → P.val d ≤ 2 * y * h →

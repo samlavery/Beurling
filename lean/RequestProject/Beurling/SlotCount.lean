@@ -114,9 +114,10 @@ theorem SlotData.two_sided {N T Qmax W x : ℝ} (h : SlotData N T Qmax W x) :
 /-- The inputs of Theorem 2.1(i) as in `PartIInputsLag`, with the two-sided lag (12) replaced by
 the slot-level data of the proof of Corollary 3.8 (`SlotData`) at every height `x ≥ X₀`. -/
 def PartIInputsSlots (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
-  ∃ (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (α γ xp : ℕ → ℝ) (Qmax κp : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
+  ∃ (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) (Qmax κp : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
     (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) ∧
+    LocFin A ∧
     (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
     (∀ x ≥ (X₀ : ℝ), 0 ≤ Qmax x ∧ Qmax x ≤ queueB X₀ x) ∧
     (∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x) ∧
@@ -127,8 +128,9 @@ def PartIInputsSlots (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- The slot-level data give the two-sided lag (12), hence `PartIInputsLag`. -/
 theorem PartIInputsSlots.toLag {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
     (h : PartIInputsSlots θ X₀ P) : PartIInputsLag θ X₀ P := by
-  obtain ⟨κ, A, u, α, γ, xp, Qmax, κp, hκ, hκ1, hsp, hα, hxp, hAu, hρ, hQ, hκp, hslot⟩ := h
-  refine ⟨κ, A, u, α, γ, xp, Qmax, κp, hκ, hκ1, hsp, hα, hxp, hAu, hρ, hQ, hκp, fun x hx => ?_⟩
+  obtain ⟨κ, A, u, α, γ, xp, Qmax, κp, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hQ, hκp, hslot⟩ := h
+  refine ⟨κ, A, u, α, γ, xp, Qmax, κp, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hQ, hκp,
+    fun x hx => ?_⟩
   have := (hslot x hx).two_sided
   constructor
   · have h1 := this.1

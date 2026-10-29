@@ -36,7 +36,7 @@ open MeasureTheory ProbabilityTheory Set Complex Metric Remark12 Oscillation Abs
 namespace Construction
 
 /-- `PartIRest` without Lemma 6.26. -/
-def PartIRestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℕ) (u a : ℕ → ℝ)
+def PartIRestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (M : SlotModel X₀) : Prop :=
   (∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + u n ^ (θ / 2) = n) ∧
     (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (θ / 2) A u)
@@ -53,7 +53,8 @@ def PartIRestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℕ) (u a 
 
 /-- `Theorem410Rest` without the absorbed-set rule (now part of the coupling) and without the
 Rankin bound for `A`: the pieces of `D̂_{<a_k}` and the construction scales. -/
-def Theorem410RestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℕ) (u a : ℕ → ℝ) : Prop :=
+def Theorem410RestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ)
+    (a : ℕ → ℝ) : Prop :=
   (∀ k, Lemma48PiecesCount X₀ (heightScale θ kappa0Param (switchOn X₀ k))
       (earlyOf P θ X₀ (kappaParam X₀) A u
         (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
@@ -79,7 +80,7 @@ def Theorem21InputsSp : Prop :=
       FailureAdapted jitterFiltration E time ∧
       (∃ scale : ι → ℕ, TableBudget jitterMeasure X₀ E time scale) ∧
       ∀ ω ∈ goodAll E, (∀ j, ω j ∈ Icc (0 : ℝ) 1) →
-        ∃ (A : Set ℕ) (u a : ℕ → ℝ) (M : SlotModel X₀) (latest : ℕ → ℝ),
+        ∃ (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ) (M : SlotModel X₀) (latest : ℝ → ℝ),
           PartIRestSp θ X₀ (P ω) A u a M ∧ Theorem410RestSp θ X₀ (P ω) A u a ∧
           Nonempty (AbsorbedCoupling (P ω) M (capH X₀) ω A latest) ∧
           SparsityInputs X₀ (P ω)
@@ -110,7 +111,7 @@ theorem theorem21InputsFixP_of_sp (h : Theorem21InputsSp) : Theorem21InputsFixP 
   have C' : AbsorbedCoupling (P ω) R.M R.H R.U A latest := C
   have h626 := lemma626_construction C' hlog hθ.1 (by linarith [hθ.2]) rfl hω hHBS hX0m hX0mX hcl
   have hrank := rankinA_construction C' hlog rfl hω hHBS hX0m
-  exact ⟨A, u, a, M, latest, ⟨hAu, h626, hT, hq, κp, hκp, hland, hinit⟩,
+  exact ⟨A, u, a, M, latest, ⟨hAu, C'.locFin, h626, hT, hq, κp, hκp, hland, hinit⟩,
     ⟨C.rule, hpieces, ha, hrank⟩⟩
 
 /-- Theorem 2.1 from `Theorem21InputsSp`. -/

@@ -98,7 +98,7 @@ by the inputs of Lemma 4.2: `Λ = log X₀`, the Mertens estimates
 `e^{-X₀²/4}` of `Z_∞` on `1/2 ≤ σ ≤ 2`, `|t| ≥ T`, with `γ_k ≥ T + 1/2`. -/
 def Theorem410InputsBase (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (X₀ : ℕ) (T κ₀ η : ℝ) (α γ xp a : ℕ → ℝ) (ZB : ℂ → ℂ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
-    (A : Set ℕ) (u : ℕ → ℝ) (ς : ℝ → ℝ),
+    (A : Set ℝ) (u : ℝ → ℝ) (ς : ℝ → ℝ),
     2 ≤ X₀ ∧ ZinfR X₀ 1 ≤ 1.8 * Real.log X₀ ∧ logSum X₀ 1 ≤ 1.01 * Real.log X₀ ∧
     (∀ z : ℂ, 1 / 2 ≤ z.re → z.re ≤ 2 → T ≤ |z.im| → DifferentiableAt ℂ ZB z) ∧
     (∀ z : ℂ, 1 / 2 ≤ z.re → z.re ≤ 2 → T ≤ |z.im| →

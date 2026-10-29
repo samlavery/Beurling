@@ -47,7 +47,7 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
   classical
   set P := realisedSystem M (capH X₀) U with hP
   set A := realisedA M (capH X₀) U with hA
-  set u : ℕ → ℝ := fun n => solveU (θ / 2) n with hu
+  set u : ℝ → ℝ := fun n => solveU (θ / 2) n with hu
   set κ := kappaParam (X₀ : ℝ) with hκdef
   set xp := switchOn (X₀ : ℝ) with hxpdef
   set αd := designedAlpha P θ X₀ κ A u kappa0Param xp (constructionScale X₀) with hαd
@@ -126,13 +126,15 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
     sum_oscLip_switchOn_le (by linarith) (by linarith) hX10 hαb hγb k
   have hL0 : 0 ≤ L := Finset.sum_nonneg fun j _ => oscLip_nonneg (hxp0 j)
   -- the hypotheses on `ρ̄_A` and `R` on `[X₀, a_k]`
-  set ρAF := rhoAF (θ / 2) A u ak with hρAF
+  have hAfin : LocFin A := realisedA_locFin M (capH X₀) U
+  set ρAF := rhoAF (θ / 2) A hAfin u ak with hρAF
   have hc : ContHyp X₀ ak rhoA R ρAF (oscPart θ αd γd xp k) (oscDeriv θ αd γd xp k) L := by
-    refine ⟨fun v hv => ?_, measurable_rhoAF _ _ _ _, fun v hv => ?_, fun v hv => ?_,
+    refine ⟨fun v hv => ?_, measurable_rhoAF _ _ _ _ _, fun v hv => ?_, fun v hv => ?_,
       fun x hx => ?_, measurable_oscDeriv _ _ _ _ _, fun x hx => ?_,
       fun u' hu' v hv huv => ?_, fun u' hu' v hv huv => ?_⟩
-    · exact absorbedDensityCap_eq_rhoAF (by linarith) (by linarith)
-        (fun n _ => solveU_spec (by linarith) n) (by linarith [hv.1]) hv.2
+    · exact absorbedDensityCap_eq_rhoAF (by linarith) (by linarith) hAfin
+        (fun n hn => solveU_spec (by linarith) (by linarith [hAlarge n hn])) (by linarith [hv.1])
+        hv.2
     · exact absorbedDensityCap_nonneg (by linarith [hv.1])
     · refine (absorbedDensityCap_le v).trans ?_
       have : (10 : ℝ) ^ 8 ≤ Real.log v :=
@@ -192,7 +194,7 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
     with hgF
   set c : ℝ := 3 / κ + 3 with hcdef
   have hgFm : Measurable gF :=
-    ((measurable_const.sub (measurable_rhoDetF _ _ _)).sub (measurable_rhoAF _ _ _ _)).add
+    ((measurable_const.sub (measurable_rhoDetF _ _ _)).sub (measurable_rhoAF _ _ _ _ _)).add
       (measurable_oscDeriv _ _ _ _ _)
   have hgFb : ∀ t ∈ Icc (X₀ : ℝ) ak, |gF t| ≤ c := by
     intro t ht

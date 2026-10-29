@@ -78,41 +78,45 @@ jittered prime, of value `< y`. -/
 def LatestBelow (D : PrimeData) (e : PIdx X₀ →₀ ℕ) (y : ℝ) : Prop :=
   ∃ k, e (Sum.inr k) ≠ 0 ∧ (∀ k', e (Sum.inr k') ≠ 0 → k' ≤ k) ∧ D.v k < y
 
-/-- **The absorbed set (5)** of the data: the `n` with `log n ≥ L* = 10⁷` that are the value of an
-element whose latest prime is jittered and below `y(n)`. -/
-def absSet (X₀ : ℕ) (D : PrimeData) : Set ℕ :=
+/-- **The absorbed set (5)** of the data: the real values `n` with `log n ≥ L* = 10⁷` of the live
+elements `e` (with any cofactor) whose latest prime is jittered and below `y(n)`. The elements are
+required to have prime values `> 1`: this holds for the elements of every Beurling system (and so
+for the realised data, `realisedA_eq`), and it keeps `absSet` locally finite for arbitrary locally
+finite data (`absSet_locFin`). -/
+def absSet (X₀ : ℕ) (D : PrimeData) : Set ℝ :=
   {n | 10 ^ 7 ≤ Real.log n ∧
-    ∃ e : PIdx X₀ →₀ ℕ, Live D e ∧ eval D e = n ∧ LatestBelow D e (absorbY X₀ n)}
+    ∃ e : PIdx X₀ →₀ ℕ, Live D e ∧ (∀ i ∈ e.support, 1 < pval D i) ∧ eval D e = n ∧
+      LatestBelow D e (absorbY X₀ n)}
 
 /-! ### The heights for an arbitrary counting function -/
 
 /-- The lag `N - T`, for a counting function `N`. -/
-noncomputable def lagN (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ)
+noncomputable def lagN (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ)
     (α γ xp : ℕ → ℝ) (x : ℝ) : ℝ :=
   N x - targetOf θ X₀ κ A u α γ xp x
 
 /-- `D̂_{<a_k}` for the lag `N - T`. -/
-noncomputable def earlyN (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ)
+noncomputable def earlyN (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ)
     (α γ xp a : ℕ → ℝ) (k : ℕ) : ℂ → ℂ :=
   earlyNoise (lagN N θ X₀ κ A u α γ xp) (a k)
 
 /-- One step of the rule of Lemma 4.8, for a counting function `N`. -/
-noncomputable def stepGammaN (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ)
+noncomputable def stepGammaN (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ)
     (κ₀ : ℝ) (xp a : ℕ → ℝ) (g : ℕ → ℝ) (k : ℕ) : ℝ :=
   designGamma X₀ κ θ κ₀ (earlyN N θ X₀ κ A u (amplitudes θ κ₀ xp g) g xp a) xp k
 
 /-- **The designed heights for a counting function `N`** (Lemma 4.8), by recursion on `k`. -/
-noncomputable def designedGammaN (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ)
-    (u : ℕ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) : ℕ → ℝ :=
+noncomputable def designedGammaN (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
+    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) : ℕ → ℝ :=
   fun k => Nat.strongRecOn' (P := fun _ => ℝ) k
     (fun k IH => stepGammaN N θ X₀ κ A u κ₀ xp a (fun j => if h : j < k then IH j h else 0) k)
 
 /-- For `N = P.N` the heights are the designed heights of `P`. -/
-theorem designedGamma_eq_N (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ)
-    (u : ℕ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) :
+theorem designedGamma_eq_N (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
+    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) :
     designedGamma P θ X₀ κ A u κ₀ xp a = designedGammaN P.N θ X₀ κ A u κ₀ xp a := rfl
 
-lemma designedGammaN_rec (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ)
+lemma designedGammaN_rec (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ)
     (κ₀ : ℝ) (xp a : ℕ → ℝ) (k : ℕ) :
     designedGammaN N θ X₀ κ A u κ₀ xp a k = stepGammaN N θ X₀ κ A u κ₀ xp a
       (fun j => if j < k then designedGammaN N θ X₀ κ A u κ₀ xp a j else 0) k := by
@@ -122,7 +126,7 @@ lemma designedGammaN_rec (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A
   rfl
 
 /-- On `(0, x⁺_k]` the lag only reads `α_j, γ_j` for `j < k`. -/
-lemma lagN_congr_lt (N : ℝ → ℝ) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℕ} {u : ℕ → ℝ}
+lemma lagN_congr_lt (N : ℝ → ℝ) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℝ} {u : ℝ → ℝ}
     {α γ α' γ' xp : ℕ → ℝ} (hsp : Spacing xp) (hX1 : 1 ≤ X₀) (hxp : (X₀ : ℝ) ≤ xp 0) {k : ℕ}
     (hα : ∀ j < k, α j = α' j) (hγ : ∀ j < k, γ j = γ' j) {x : ℝ} (hx : 0 < x)
     (hxk : x ≤ xp k) : lagN N θ X₀ κ A u α γ xp x = lagN N θ X₀ κ A u α' γ' xp x := by
@@ -132,8 +136,8 @@ lemma lagN_congr_lt (N : ℝ → ℝ) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Se
   rw [osc_congr_lt hsp hα hγ hx hxk, osc_congr_lt hsp hα hγ hX0 hXk]
 
 /-- **The fixed-point condition for the heights** `designedGammaN`. -/
-theorem designedGammaN_fixed (N : ℝ → ℝ) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℕ}
-    {u : ℕ → ℝ} {κ₀ : ℝ} {xp a : ℕ → ℝ} (hsp : Spacing xp) (hX1 : 1 ≤ X₀)
+theorem designedGammaN_fixed (N : ℝ → ℝ) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℝ}
+    {u : ℝ → ℝ} {κ₀ : ℝ} {xp a : ℕ → ℝ} (hsp : Spacing xp) (hX1 : 1 ≤ X₀)
     (hxp : (X₀ : ℝ) ≤ xp 0) (ha : ∀ k, 0 < a k ∧ a k ≤ xp k) (k : ℕ) :
     designedGammaN N θ X₀ κ A u κ₀ xp a k =
       designGamma X₀ κ θ κ₀
@@ -154,7 +158,7 @@ theorem designedGammaN_fixed (N : ℝ → ℝ) {θ : ℝ} {X₀ : ℕ} {κ : ℝ
   rw [heq]
 
 /-- The heights `designedGammaN` lie in `[Γ_k, 2Γ_k]`. -/
-lemma designedGammaN_mem (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ) (u : ℕ → ℝ)
+lemma designedGammaN_mem (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ)
     (κ₀ : ℝ) (xp a : ℕ → ℝ) (hΓ : ∀ k, 0 ≤ heightScale θ κ₀ (xp k)) (k : ℕ) :
     designedGammaN N θ X₀ κ A u κ₀ xp a k ∈
       Icc (heightScale θ κ₀ (xp k)) (2 * heightScale θ κ₀ (xp k)) := by
@@ -165,7 +169,7 @@ lemma designedGammaN_mem (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A
 /-! ### The target of the data -/
 
 /-- `u_a`: the solution of `u + u^{θ/2} = a`. -/
-noncomputable def uA (θ : ℝ) : ℕ → ℝ := fun n => solveU (θ / 2) n
+noncomputable def uA (θ : ℝ) : ℝ → ℝ := fun n => solveU (θ / 2) n
 
 /-- The heights `γ_k` of the data (Lemma 4.8, with `κ, κ₀, x⁺, a_k` of Section 2.2). -/
 noncomputable def gammaD (θ : ℝ) (X₀ : ℕ) (D : PrimeData) : ℕ → ℝ :=
@@ -295,9 +299,9 @@ theorem compCount_eq_of_agree {D D' : PrimeData} {Y : ℝ} (h : DAgree D D' Y) (
   unfold compCount; rw [compSet_eq_of_agree h hD hD' hb]
 
 lemma absSet_mem_of_agree {D D' : PrimeData} {Y : ℝ} (h : DAgree D D' Y)
-    {n : ℕ} (hn : n ∈ absSet X₀ D) (hy : absorbY X₀ n ≤ Y) : n ∈ absSet X₀ D' := by
+    {n : ℝ} (hn : n ∈ absSet X₀ D) (hy : absorbY X₀ n ≤ Y) : n ∈ absSet X₀ D' := by
   obtain ⟨K, h1, h2, -⟩ := h
-  obtain ⟨hlog, e, he, hval, k, hk, hmax, hvk⟩ := hn
+  obtain ⟨hlog, e, he, hg, hval, k, hk, hmax, hvk⟩ := hn
   have hkK : k < K := by
     by_contra hK
     push_neg at hK
@@ -305,14 +309,91 @@ lemma absSet_mem_of_agree {D D' : PrimeData} {Y : ℝ} (h : DAgree D D' Y)
     linarith
   have hK : ∀ k', e (Sum.inr k') ≠ 0 → k' < K := fun k' hk' => lt_of_le_of_lt (hmax k' hk') hkK
   obtain ⟨he', hval'⟩ := transport h1 hK he
-  refine ⟨hlog, e, he', hval'.trans hval, k, hk, hmax, ?_⟩
+  have hg' : ∀ i ∈ e.support, 1 < pval D' i := by
+    intro i hi
+    have := hg i hi
+    cases i with
+    | inl p => exact this
+    | inr k' =>
+      simp only [pval] at this ⊢
+      rw [← (h1 k' (hK k' (Finsupp.mem_support_iff.mp hi))).2]; exact this
+  refine ⟨hlog, e, he', hg', hval'.trans hval, k, hk, hmax, ?_⟩
   rw [← (h1 k hkK).2]; exact hvk
 
 /-- **The absorbed set only reads the primes below `y(n)`**: under `DAgree D D' Y`, membership of
 `n` with `y(n) ≤ Y` agrees. -/
-theorem absSet_iff_of_agree {D D' : PrimeData} {Y : ℝ} (h : DAgree D D' Y) {n : ℕ}
+theorem absSet_iff_of_agree {D D' : PrimeData} {Y : ℝ} (h : DAgree D D' Y) {n : ℝ}
     (hy : absorbY X₀ n ≤ Y) : n ∈ absSet X₀ D ↔ n ∈ absSet X₀ D' :=
   ⟨fun hn => absSet_mem_of_agree h hn hy, fun hn => absSet_mem_of_agree h.symm hn hy⟩
+
+/-! ### Local finiteness of the absorbed set -/
+
+/-- The prime data are **locally finite**: finitely many live primes of value below any bound. -/
+def LocFinD (D : PrimeData) : Prop := ∀ c : ℝ, {k | D.live k ∧ D.v k ≤ c}.Finite
+
+lemma pow_le_eval_of_gt {D : PrimeData} {e : PIdx X₀ →₀ ℕ}
+    (hg : ∀ i ∈ e.support, 1 < pval D i) {i : PIdx X₀} (hi : i ∈ e.support) :
+    pval D i ^ e i ≤ eval D e := by
+  classical
+  unfold eval Finsupp.prod
+  rw [← Finset.mul_prod_erase _ _ hi]
+  have h1 : 1 ≤ ∏ x ∈ e.support.erase i, pval D x ^ e x :=
+    one_le_prod_of _ _ fun j hj => one_le_pow₀ (hg j (Finset.mem_of_mem_erase hj)).le
+  have h0 : 0 ≤ pval D i ^ e i := pow_nonneg (by linarith [hg i hi]) _
+  nlinarith
+
+/-- For locally finite data, the live elements with prime values `> 1` and value `≤ x` are
+finitely many. -/
+lemma finite_elems_gt {D : PrimeData} (hD : LocFinD D) (x : ℝ) :
+    {e : PIdx X₀ →₀ ℕ | Live D e ∧ (∀ i ∈ e.support, 1 < pval D i) ∧ eval D e ≤ x}.Finite := by
+  classical
+  set I : Set (PIdx X₀) := {i | 1 < pval D i ∧ ∀ k, i = Sum.inr k → D.live k ∧ D.v k ≤ x}
+  have hI : I.Finite := by
+    have hrat : (Set.range (Sum.inl : {p : ℕ // p.Prime ∧ p < X₀} → PIdx X₀)).Finite := by
+      haveI : Finite {p : ℕ // p.Prime ∧ p < X₀} :=
+        Finite.of_injective (fun p => (⟨p.1, p.2.2⟩ : Fin X₀))
+          (fun p q h => Subtype.ext (by simpa using congrArg Fin.val h))
+      exact Set.finite_range _
+    refine (hrat.union ((hD x).image Sum.inr)).subset fun i hi => ?_
+    cases i with
+    | inl p => exact Or.inl ⟨p, rfl⟩
+    | inr k => exact Or.inr ⟨k, hi.2 k rfl, rfl⟩
+  set F := hI.toFinset
+  have hN : ∀ i ∈ F, ∃ N : ℕ, x < pval D i ^ N := fun i hi =>
+    pow_unbounded_of_one_lt x ((hI.mem_toFinset).mp hi).1
+  choose! Nf hNf using hN
+  set N := F.sup Nf + 1
+  refine (Finset.finite_toSet (F.finsupp fun _ => Finset.range N)).subset ?_
+  rintro e ⟨he, hg, hx⟩
+  simp only [Finset.mem_coe, Finset.mem_finsupp_iff, Finset.mem_range]
+  have hsupp : ∀ i ∈ e.support, i ∈ F := by
+    intro i hi
+    rw [hI.mem_toFinset]
+    refine ⟨hg i hi, fun k hk => ?_⟩
+    subst hk
+    refine ⟨he k (Finsupp.mem_support_iff.mp hi), ?_⟩
+    have h1 := pow_le_eval_of_gt hg hi
+    have h2 : pval D (Sum.inr k) ≤ pval D (Sum.inr k) ^ e (Sum.inr k) :=
+      le_self_pow₀ (hg _ hi).le (Finsupp.mem_support_iff.mp hi)
+    simp only [pval] at h1 h2
+    linarith
+  refine ⟨hsupp, fun i hiF => ?_⟩
+  by_cases hi : i ∈ e.support
+  swap
+  · rw [Finsupp.notMem_support_iff.mp hi]; omega
+  have h1 := pow_le_eval_of_gt hg hi
+  have h3 := hNf i hiF
+  by_contra hc
+  push_neg at hc
+  have h4 : pval D i ^ Nf i ≤ pval D i ^ e i :=
+    pow_le_pow_right₀ (hg i hi).le ((Finset.le_sup hiF).trans (by omega))
+  linarith
+
+/-- **The absorbed set of locally finite data is locally finite.** -/
+theorem absSet_locFin {D : PrimeData} (hD : LocFinD D) : LocFin (absSet X₀ D) := fun x =>
+  ((finite_elems_gt (X₀ := X₀) hD x).image (eval D)).subset fun n hn => by
+    obtain ⟨-, e, he, hg, hval, -⟩ := hn.1
+    exact ⟨e, ⟨he, hg, by rw [hval]; exact hn.2⟩, hval⟩
 
 /-- The prime values are `≥ 2` on the live primes. -/
 def Pos2 (D : PrimeData) : Prop := ∀ k, D.live k → 2 ≤ D.v k

@@ -521,7 +521,7 @@ theorem smoothCountN_le_realised (P : BeurlingSystem) {z Y : ℝ} (hz : 8 ≤ z)
 * (81) `0.9 u₀ log u₀ ≥ log(2y) + log C_d + 4 log L`.
 
 Then `#(A ∩ [u, u + h]) ≤ h L^{-4}`. -/
-theorem lemma626_of_steps_v (P : BeurlingSystem) {A : Set ℕ} {u h y Cd u0 L : ℝ} (hh : 1 ≤ h)
+theorem lemma626_of_steps_v (P : BeurlingSystem) {A : Set ℝ} {u h y Cd u0 L : ℝ} (hh : 1 ≤ h)
     (hu : h < u) (hy : 4 ≤ y) (hCd : 0 < Cd) (hL : 0 < L)
     (hS : ∀ n ∈ A, u ≤ n → (n : ℝ) ≤ u + h → ∃ e ∈ P.smoothElems (2 * y), P.val e = n)
     (hW : ∀ d ∈ P.smoothElems (2 * y), h < P.val d → P.val d ≤ 2 * y * h →

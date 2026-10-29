@@ -127,8 +127,9 @@ theorem theorem21InputsFixP_of_K (h : Theorem21InputsK) : Theorem21InputsFixP :=
   have hrank := rankinA_construction C' hlog rfl hω hHBS hX0m
   exact ⟨realisedA (M ω) (capH X₀) ω, fun n => solveU (θ / 2) n, a, M ω,
     realisedLatest (M ω) (capH X₀) ω,
-    ⟨realisedU_spec hok hω hlog hTlow (by linarith [hθ.1]) (by linarith [hθ.2]), h626, hT, hq,
-      κp, hκp, hland, hinit⟩, ⟨C'.rule, hpieces, ha, hrank⟩⟩
+    ⟨realisedU_spec hok hω hlog hTlow (by linarith [hθ.1]) (by linarith [hθ.2]), C'.locFin,
+      h626,
+      hT, hq, κp, hκp, hland, hinit⟩, ⟨C'.rule, hpieces, ha, hrank⟩⟩
 
 /-- Theorem 2.1 from `Theorem21InputsK`. -/
 theorem theorem21_of_K (h : Theorem21InputsK) : Theorem21 :=

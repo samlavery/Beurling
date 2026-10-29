@@ -38,32 +38,18 @@ namespace BeurlingSystem
 
 /-- `#(A ∩ [1, x]) ≤ Ψ_N(x, z)` when every `n ∈ A`, `n ≤ x`, is the value of a `z`-smooth
 element (step (iii) of Lemma 6.26 with `Y = x`). -/
-theorem countA_le_smoothCountN (P : BeurlingSystem) {A : Set ℕ} {z x : ℝ} (hx : 0 ≤ x)
+theorem countA_le_smoothCountN (P : BeurlingSystem) {A : Set ℝ} {z x : ℝ} (_hx : 0 ≤ x)
     (hA : ∀ n ∈ A, (n : ℝ) ≤ x → ∃ e ∈ P.smoothElems z, P.val e = n) :
     Absorbed.countA A x ≤ P.smoothCountN x z := by
-  classical
-  set S := (Finset.Icc 0 ⌊x⌋₊).filter (· ∈ A)
-  have hcount : Absorbed.countA A x = (S.card : ℝ) := by
-    unfold Absorbed.countA
-    rw [Finset.sum_boole]
-  rw [hcount]
-  have hSx : ∀ n ∈ S, n ∈ A ∧ (n : ℝ) ≤ x := by
-    intro n hn
-    have hn' := Finset.mem_filter.mp hn
-    exact ⟨hn'.2, (Nat.cast_le.mpr (Finset.mem_Icc.mp hn'.1).2).trans (Nat.floor_le hx)⟩
-  choose! f hf using fun n (hn : n ∈ S) => hA n (hSx n hn).1 (hSx n hn).2
-  unfold smoothCountN
-  have key := Set.ncard_le_ncard_of_injOn (s := (S : Set ℕ)) f
-    (fun n hn => by
-      refine ⟨(hf n hn).1, ?_⟩
-      rw [(hf n hn).2]
-      exact (hSx n hn).2)
-    (fun n hn m hm hnm => by
-      have := congrArg P.val hnm
-      rw [(hf n hn).2, (hf m hm).2] at this
-      exact_mod_cast this)
+  choose! f hf using fun n (hn : n ∈ A ∧ n ≤ x) => hA n hn.1 hn.2
+  unfold Absorbed.countA smoothCountN
+  have key := Set.ncard_le_ncard_of_injOn (s := A ∩ Set.Icc 1 x)
+    (t := {e | e ∈ P.smoothElems z ∧ P.val e ≤ x}) f
+    (fun n hn => ⟨(hf n ⟨hn.1, hn.2.2⟩).1, by rw [(hf n ⟨hn.1, hn.2.2⟩).2]; exact hn.2.2⟩)
+    (fun n hn m hm h => by
+      have := congrArg P.val h
+      rwa [(hf n ⟨hn.1, hn.2.2⟩).2, (hf m ⟨hm.1, hm.2.2⟩).2] at this)
     (P.finite_smooth_le x z)
-  rw [Set.ncard_coe_finset] at key
   exact_mod_cast key
 
 namespace HBS
@@ -470,7 +456,7 @@ theorem smoothCountN_le (h : P.HBS X0m z' η1 η2 ε1) (hX : 100 ≤ Real.log X0
 `η = log u_*/log(2y)`, if `(∗)` holds (`u_* ≥ 2·10⁸`, `log log 2y ≤ 1.79 u_*`, `η ≤ 0.31`),
 `1 ≤ u₀ ≤ u_*` and (81) `0.9 u₀ log u₀ ≥ log(2y) + log C_d + 4 log L`, then
 `#(A ∩ [u, u + h]) ≤ h L^{-4}`. Step (v) is proved (`smoothCountN_le`). -/
-theorem lemma626 (h : P.HBS X0m z' η1 η2 ε1) (hX : 100 ≤ Real.log X0m) {A : Set ℕ}
+theorem lemma626 (h : P.HBS X0m z' η1 η2 ε1) (hX : 100 ≤ Real.log X0m) {A : Set ℝ}
     {u hh y Cd u0 L : ℝ} (h1 : 1 ≤ hh) (hu : hh < u) (hy : 4 ≤ y) (hyz : 2 * y ≤ z')
     (hCd : 0 < Cd) (hL : 0 < L)
     (hS : ∀ n ∈ A, u ≤ n → (n : ℝ) ≤ u + hh → ∃ e ∈ P.smoothElems (2 * y), P.val e = n)
@@ -495,7 +481,7 @@ theorem lemma626 (h : P.HBS X0m z' η1 η2 ε1) (hX : 100 ≤ Real.log X0m) {A :
 
 Then `#(A ∩ [1, x]) ≤ x e^{-ς_*(log x)}`. -/
 theorem countA_le_sigmaStar (h : P.HBS X0m z' η1 η2 ε1) (hX : 100 ≤ Real.log X0m)
-    {A : Set ℕ} {y x Λ : ℝ} (hy : 4 ≤ y) (hyz : 2 * y ≤ z') (hx : 1 ≤ x)
+    {A : Set ℝ} {y x Λ : ℝ} (hy : 4 ≤ y) (hyz : 2 * y ≤ z') (hx : 1 ≤ x)
     (hA : ∀ n ∈ A, (n : ℝ) ≤ x → ∃ e ∈ P.smoothElems (2 * y), P.val e = n)
     (hu : 2 * 10 ^ 8 ≤ Real.log x / Real.log (2 * y))
     (hll : Real.log (Real.log (2 * y)) ≤ 1.79 * (Real.log x / Real.log (2 * y)))

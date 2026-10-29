@@ -25,17 +25,18 @@ open Set Real Target Oscillation Absorbed Construction DesignedZero Decomp Absor
 
 namespace BModel
 
-/-- `A` and `A'` agree on `[0, Z]`. -/
-def AAgree (A A' : Set ℕ) (Z : ℝ) : Prop := ∀ n : ℕ, (n : ℝ) ≤ Z → (n ∈ A ↔ n ∈ A')
+/-- `A` and `A'` agree on `(-∞, Z]`. -/
+def AAgree (A A' : Set ℝ) (Z : ℝ) : Prop := ∀ n : ℝ, n ≤ Z → (n ∈ A ↔ n ∈ A')
 
-lemma countA_congr {A A' : Set ℕ} {Z x : ℝ} (hA : AAgree A A' Z) (hx0 : 0 ≤ x) (hxZ : x ≤ Z) :
+lemma countA_congr {A A' : Set ℝ} {Z x : ℝ} (hA : AAgree A A' Z) (hxZ : x ≤ Z) :
     countA A x = countA A' x := by
-  classical
   unfold countA
-  refine Finset.sum_congr rfl fun k hk => ?_
-  have hk' : (k : ℝ) ≤ Z :=
-    ((Nat.cast_le.mpr (Finset.mem_Icc.mp hk).2).trans (Nat.floor_le hx0)).trans hxZ
-  simp only [hA k hk']
+  congr 2
+  ext k
+  simp only [Set.mem_inter_iff, Set.mem_Icc]
+  constructor
+  · rintro ⟨hk, h1, h2⟩; exact ⟨(hA k (h2.trans hxZ)).mp hk, h1, h2⟩
+  · rintro ⟨hk, h1, h2⟩; exact ⟨(hA k (h2.trans hxZ)).mpr hk, h1, h2⟩
 
 /-- `t ↦ t + t^b` is monotone on `[0, ∞)`. -/
 lemma add_rpow_le_add_rpow {b s t : ℝ} (hb : 0 < b) (hs : 0 ≤ s) (hst : s ≤ t) :
@@ -43,8 +44,8 @@ lemma add_rpow_le_add_rpow {b s t : ℝ} (hb : 0 < b) (hs : 0 ≤ s) (hst : s �
   have := Real.rpow_le_rpow hs hst hb.le
   linarith
 
-lemma absorbedBump_congr {θ : ℝ} (hθ : 0 < θ) {A A' : Set ℕ} {Z v : ℝ} (hA : AAgree A A' Z)
-    (hvZ : v + v ^ (θ / 2) ≤ Z) (a : ℕ) :
+lemma absorbedBump_congr {θ : ℝ} (hθ : 0 < θ) {A A' : Set ℝ} {Z v : ℝ} (hA : AAgree A A' Z)
+    (hvZ : v + v ^ (θ / 2) ≤ Z) (a : ℝ) :
     absorbedBump (θ / 2) A (uA θ) a v = absorbedBump (θ / 2) A' (uA θ) a v := by
   classical
   unfold absorbedBump
@@ -52,14 +53,18 @@ lemma absorbedBump_congr {θ : ℝ} (hθ : 0 < θ) {A A' : Set ℕ} {Z v : ℝ} 
   · simp only [hA a haZ]
   · push_neg at haZ
     have hb : 0 < θ / 2 := by linarith
-    obtain ⟨hu0, hua⟩ := solveU_spec hb a
     have hnot : v ∉ Icc (uA θ a) (a : ℝ) := by
-      rintro ⟨h1, -⟩
+      rintro ⟨h1, h2⟩
+      have hu0' : 0 ≤ uA θ a := solveU_nonneg _ _
+      have hv0 : 0 ≤ v := hu0'.trans h1
+      have := Real.rpow_nonneg hv0 (θ / 2)
+      obtain ⟨hu0, hua⟩ := solveU_spec hb (show 0 ≤ a by linarith)
       have := add_rpow_le_add_rpow hb hu0 h1
+      have : uA θ a + uA θ a ^ (θ / 2) = a := hua
       linarith
     simp only [Set.indicator_of_notMem hnot, ite_self]
 
-lemma absorbedDensityCap_congr {θ : ℝ} (hθ : 0 < θ) {A A' : Set ℕ} {Z v : ℝ}
+lemma absorbedDensityCap_congr {θ : ℝ} (hθ : 0 < θ) {A A' : Set ℝ} {Z v : ℝ}
     (hA : AAgree A A' Z) (hvZ : v + v ^ (θ / 2) ≤ Z) :
     absorbedDensityCap (θ / 2) A (uA θ) v = absorbedDensityCap (θ / 2) A' (uA θ) v := by
   unfold absorbedDensityCap absorbedDensity
@@ -79,7 +84,7 @@ lemma osc_congr_of {θ : ℝ} {α γ α' γ' xp : ℕ → ℝ} {z : ℝ}
 
 /-- **Locality of the target**: at heights `x ≤ z` the target only reads `A` on `[0, Z]`
 (`z + z^{θ/2} ≤ Z`) and the oscillation parameters with `x⁺_j < z`. -/
-theorem target_congr {X₀ : ℕ} (hX1 : 1 ≤ X₀) {κ θ : ℝ} (hθ : 0 < θ) {A A' : Set ℕ}
+theorem target_congr {X₀ : ℕ} (hX1 : 1 ≤ X₀) {κ θ : ℝ} (hθ : 0 < θ) {A A' : Set ℝ}
     {α γ α' γ' xp : ℕ → ℝ} {z Z : ℝ} (hZ : z + z ^ (θ / 2) ≤ Z) (hA : AAgree A A' Z)
     (hosc : ∀ j, xp j < z → α j = α' j ∧ γ j = γ' j) {x : ℝ} (hx : x ≤ z) :
     target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A (uA θ)) (osc θ α γ xp) x =
@@ -102,11 +107,11 @@ theorem target_congr {X₀ : ℕ} (hX1 : 1 ≤ X₀) {κ θ : ℝ} (hθ : 0 < θ
       have hv0 : 0 ≤ v := by linarith [hv.1]
       exact absorbedDensityCap_congr hθ hA
         ((add_rpow_le_add_rpow hb hv0 (hv.2.trans hx)).trans hZ)
-    rw [countA_congr hA hx0 hxZ, hint, osc_congr_of hosc (by linarith) hx,
+    rw [countA_congr hA hxZ, hint, osc_congr_of hosc (by linarith) hx,
       osc_congr_of hosc hX0 (hlt.trans hx)]
 
 /-- `targetOf` is `target` with the solved `u_a`. -/
-lemma targetOf_eq (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ) (α γ xp : ℕ → ℝ) :
+lemma targetOf_eq (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ) (α γ xp : ℕ → ℝ) :
     targetOf θ X₀ κ A (uA θ) α γ xp =
       target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A (uA θ)) (osc θ α γ xp) := rfl
 
@@ -114,7 +119,7 @@ lemma targetOf_eq (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℕ) (α γ xp : �
 if `N` agrees below `Y` and `A` agrees on `[0, Z]` with `Y + Y^{θ/2} ≤ Z`, then every `γ_j`
 with `a_j < Y` agrees. -/
 theorem designedGammaN_congr {N N' : ℝ → ℝ} {θ : ℝ} (hθ : 0 < θ) {X₀ : ℕ} {κ : ℝ}
-    {A A' : Set ℕ} {κ₀ : ℝ} {xp a : ℕ → ℝ} (hsp : Spacing xp) (hX1 : 1 ≤ X₀)
+    {A A' : Set ℝ} {κ₀ : ℝ} {xp a : ℕ → ℝ} (hsp : Spacing xp) (hX1 : 1 ≤ X₀)
     (hxp : (X₀ : ℝ) ≤ xp 0) (ha : ∀ k, 0 < a k ∧ a k ≤ xp k) {Y Z : ℝ}
     (hZ : Y + Y ^ (θ / 2) ≤ Z) (hN : ∀ x, x < Y → N x = N' x) (hA : AAgree A A' Z) :
     ∀ j, a j < Y → designedGammaN N θ X₀ κ A (uA θ) κ₀ xp a j =
@@ -151,7 +156,7 @@ data agree at every height `x ≤ z`, provided `y(n) ≤ Y` for every `n ≤ Z`,
 theorem targetD_congr {θ : ℝ} (hθ : 0 < θ) {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀)
     {D D' : PrimeData} (hD : Pos D) (hD' : Pos D') {Y z Z : ℝ} (h : DAgree D D' Y)
     (hY0 : 0 ≤ Y) (hYz : Y ≤ z) (hZ : z + z ^ (θ / 2) ≤ Z)
-    (hYA : ∀ n : ℕ, (n : ℝ) ≤ Z → absorbY X₀ n ≤ Y)
+    (hYA : ∀ n : ℝ, n ≤ Z → absorbY X₀ n ≤ Y)
     (hYγ : ∀ j, switchOn X₀ j < z → constructionScale X₀ j < Y) {x : ℝ} (hx : x ≤ z) :
     targetD θ X₀ D x = targetD θ X₀ D' x := by
   have hb : 0 < θ / 2 := by linarith

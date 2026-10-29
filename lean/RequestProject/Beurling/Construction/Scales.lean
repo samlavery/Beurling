@@ -124,7 +124,7 @@ theorem lt_add_two_capH_of_constructionScale_lt {X₀ : ℝ} (hX0' : 0 ≤ X₀)
   exact absurd (le_csSup (scaleSet_bddAbove X₀ k) ⟨hXa, h⟩) (not_le.mpr hlt)
 
 /-- `Theorem410RestSp` with the scales fixed to `a_k`, without the (proved) scale condition. -/
-def Theorem410RestM (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℕ) (u : ℕ → ℝ) : Prop :=
+def Theorem410RestM (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) : Prop :=
   ∀ k, Lemma48PiecesCount X₀ (DesignedZero.heightScale θ kappa0Param (switchOn X₀ k))
       (earlyOf P θ X₀ (kappaParam X₀) A u
         (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀)

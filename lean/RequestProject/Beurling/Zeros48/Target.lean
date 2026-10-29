@@ -6,7 +6,7 @@ public import RequestProject.Beurling.Zeros48.Elements
 # The target below `a_k`: jumps and continuous part (proof of Lemma 4.8(ii))
 
 The target (6) is `T = Ψ + #A + T_cont`, where `Ψ(x)` counts the `X₀`-smooth integers `≤ x`,
-`#A` counts `A ∩ [0, x]` and `T_cont(x) = (x - X₀) - ∫_{X₀}^x ρ_det - ∫_{X₀}^x ρ̄_A + R(x) - R(X₀)`
+`#A` counts `A ∩ [1, x]` and `T_cont(x) = (x - X₀) - ∫_{X₀}^x ρ_det - ∫_{X₀}^x ρ̄_A + R(x) - R(X₀)`
 for `x ≥ X₀` (`0` below `X₀`) (`target_eq_jump_add_cont`). With `N = Ψ + #A + #ℬ`
 (`N_eq_psi_add_countA_add`) the lag is `D = #ℬ - T_cont` (`lag_eq_residual_sub_cont`).
 
@@ -45,34 +45,22 @@ lemma smoothCount_eq_floor {X₀ : ℕ} (hXs : X₀ ∈ X₀.smoothNumbers) {x :
   rw [smoothNumbersUpTo_eq_Icc hXs hx]
   simp
 
-lemma countA_eq_zero_of_lt {A : Set ℕ} {c x : ℝ} (hc : 0 ≤ c) (hA : ∀ n ∈ A, c < n)
-    (hx : x < c) :
+lemma countA_eq_zero_of_lt {A : Set ℝ} {c x : ℝ} (hA : ∀ n ∈ A, c < n) (hx : x < c) :
     countA A x = 0 := by
   unfold countA
-  refine Finset.sum_eq_zero fun k hk => ?_
-  rw [if_neg]
-  intro hkA
-  have h1 := hA k hkA
-  have h2 : (k : ℝ) ≤ x := by
-    rcases le_or_gt 0 x with h0 | h0
-    · exact (Nat.cast_le.mpr (Finset.mem_Icc.mp hk).2).trans (Nat.floor_le h0)
-    · rw [Nat.floor_of_nonpos h0.le] at hk
-      have : k = 0 := by simpa using hk
-      subst this
-      push_cast at h1
-      linarith
-  linarith
+  suffices hE : A ∩ Set.Icc 1 x = ∅ by rw [hE]; simp
+  exact Set.eq_empty_of_forall_notMem fun k ⟨hkA, hk⟩ => by linarith [hA k hkA, hk.2]
 
 /-- **The target splits into its jumps and its continuous part**: `T = Ψ + #A + T_cont` on
 `ℝ`, if `X₀` is `X₀`-smooth and `A` lies above `X₀`. -/
-theorem target_eq_jump_add_cont {X₀ : ℕ} (hXs : X₀ ∈ X₀.smoothNumbers) {κ : ℝ} {A : Set ℕ}
+theorem target_eq_jump_add_cont {X₀ : ℕ} (hXs : X₀ ∈ X₀.smoothNumbers) {κ : ℝ} {A : Set ℝ}
     (hA : ∀ n ∈ A, (X₀ : ℝ) < n) (rhoA R : ℝ → ℝ) (x : ℝ) :
     target X₀ κ (countA A) rhoA R x =
       smoothCount X₀ x + countA A x + contPart X₀ κ rhoA R x := by
   unfold target contPart
   split_ifs with h
   · have hfl : ⌊x⌋₊ ≤ X₀ := (Nat.floor_le_floor h.le).trans (by simp)
-    rw [smoothCount_eq_floor hXs hfl, countA_eq_zero_of_lt (Nat.cast_nonneg _) hA h]
+    rw [smoothCount_eq_floor hXs hfl, countA_eq_zero_of_lt hA h]
     ring
   · have hX : smoothCount X₀ (X₀ : ℝ) = X₀ := by
       rw [smoothCount_eq_floor hXs (by simp)]; simp
@@ -109,7 +97,7 @@ theorem residual_val_ge {X₀ : ℕ} {M : SlotModel X₀} {U : ℕ → ℝ} (h :
   have h1 := realised_floor_eq h hU hX hTlow hv1 hlt
   have h2 := N_eq_psi_add_countA_add h (x := v) (by linarith)
   have hfl : ⌊v⌋₊ ≤ X₀ := (Nat.floor_le_floor hvX.le).trans (by simp)
-  rw [smoothCount_eq_floor hXs hfl, countA_eq_zero_of_lt (Nat.cast_nonneg _) hA hvX, h1] at h2
+  rw [smoothCount_eq_floor hXs hfl, countA_eq_zero_of_lt hA hvX, h1] at h2
   have hmem : e ∈ residualLe h v := by
     simp only [residualLe, Finset.mem_filter, BeurlingSystem.mem_elems]
     exact ⟨le_rfl, he⟩
@@ -184,11 +172,13 @@ lemma rhoDet_le (X₀ : ℕ) {κ u : ℝ} (hκ : 0 < κ) (hκ1 : κ ≤ 1) (hu :
   have := mul_le_mul_of_nonneg_right (hcard.trans h3) hκ.le
   linarith
 
-/-- `ρ̄_A` with the sum over `A` truncated to `n ≤ 2a`, valid on `[1, a]`. -/
-noncomputable def rhoAF (b : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (a v : ℝ) : ℝ :=
-  min (∑ n ∈ Finset.range (⌊2 * a⌋₊ + 1), absorbedBump b A u n v) (0.1 / Real.log v)
+/-- `ρ̄_A` with the sum over `A` truncated to `n ≤ 2a`, valid on `[1, a]` (for `A` locally
+finite). -/
+noncomputable def rhoAF (b : ℝ) (A : Set ℝ) (hA : LocFin A) (u : ℝ → ℝ) (a v : ℝ) : ℝ :=
+  min (∑ n ∈ below hA (2 * a), absorbedBump b A u n v) (0.1 / Real.log v)
 
-lemma measurable_rhoAF (b : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (a : ℝ) : Measurable (rhoAF b A u a) := by
+lemma measurable_rhoAF (b : ℝ) (A : Set ℝ) (hA : LocFin A) (u : ℝ → ℝ) (a : ℝ) :
+    Measurable (rhoAF b A hA u a) := by
   unfold rhoAF
   refine Measurable.min (Finset.measurable_sum _ fun n _ => ?_)
     (measurable_const.div Real.measurable_log)
@@ -197,37 +187,34 @@ lemma measurable_rhoAF (b : ℝ) (A : Set ℕ) (u : ℕ → ℝ) (a : ℝ) : Mea
   · exact (measurable_id.pow_const _).indicator measurableSet_Icc
   · exact measurable_const
 
-lemma absorbedDensityCap_eq_rhoAF {b : ℝ} (hb : 0 < b) (hb1 : b ≤ 1) {A : Set ℕ} {u : ℕ → ℝ}
-    (hu : ∀ n ∈ A, 0 ≤ u n ∧ u n + u n ^ b = n) {a v : ℝ} (hv : 1 ≤ v) (hva : v ≤ a) :
-    absorbedDensityCap b A u v = rhoAF b A u a v := by
+lemma absorbedDensityCap_eq_rhoAF {b : ℝ} (hb : 0 < b) (hb1 : b ≤ 1) {A : Set ℝ} (hA : LocFin A)
+    {u : ℝ → ℝ} (hu : ∀ n ∈ A, 0 ≤ u n ∧ u n + u n ^ b = n) {a v : ℝ} (hv : 1 ≤ v)
+    (hva : v ≤ a) :
+    absorbedDensityCap b A u v = rhoAF b A hA u a v := by
   unfold absorbedDensityCap rhoAF absorbedDensity
   congr 1
   apply tsum_eq_sum
   intro n hn
-  rw [Finset.mem_range, not_lt] at hn
+  rw [mem_below] at hn
   unfold absorbedBump
-  split_ifs with hA
+  split_ifs with hA'
   · rw [Set.indicator_of_notMem]
     rintro ⟨h1, h2⟩
-    obtain ⟨hu0, hue⟩ := hu n hA
+    obtain ⟨hu0, hue⟩ := hu n hA'
     have h3 : u n ^ b ≤ v ^ b := Real.rpow_le_rpow hu0 h1 hb.le
     have h4 : v ^ b ≤ v := by
       calc v ^ b ≤ v ^ (1 : ℝ) := Real.rpow_le_rpow_of_exponent_le hv hb1
         _ = v := Real.rpow_one v
-    have h5 : (n : ℝ) ≤ 2 * a := by linarith
-    have h6 : (⌊2 * a⌋₊ + 1 : ℕ) ≤ (n : ℝ) := by exact_mod_cast hn
-    have h7 : 2 * a < ⌊2 * a⌋₊ + 1 := Nat.lt_floor_add_one _
-    push_cast at h6
-    linarith
+    exact hn ⟨hA', by linarith⟩
   · rfl
 
-lemma absorbedDensityCap_nonneg {b : ℝ} {A : Set ℕ} {u : ℕ → ℝ} {v : ℝ} (hv : 1 < v) :
+lemma absorbedDensityCap_nonneg {b : ℝ} {A : Set ℝ} {u : ℝ → ℝ} {v : ℝ} (hv : 1 < v) :
     0 ≤ absorbedDensityCap b A u v := by
   unfold absorbedDensityCap absorbedDensity
   refine le_min (tsum_nonneg fun n => absorbedBump_nonneg (X₀ := v) (by linarith) le_rfl) ?_
   exact div_nonneg (by norm_num) (Real.log_nonneg hv.le)
 
-lemma absorbedDensityCap_le {b : ℝ} {A : Set ℕ} {u : ℕ → ℝ} (v : ℝ) :
+lemma absorbedDensityCap_le {b : ℝ} {A : Set ℝ} {u : ℝ → ℝ} (v : ℝ) :
     absorbedDensityCap b A u v ≤ 0.1 / Real.log v := min_le_right _ _
 
 end Zeros48

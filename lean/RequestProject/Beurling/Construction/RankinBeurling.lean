@@ -12,7 +12,7 @@ supported on the primes `p_j < z`, and `Ψ_N(Y, z)` is the number of them with v
 
   `Ψ_N(Y, z) ≤ Y^σ ∏_{p_j < z} (1 - p_j^{-σ})^{-1}`     (`smoothCountN_le_rankin`).
 
-Consequently, if every element `n ≥ 1` of a set `A ⊆ ℕ` is the value of a `z`-smooth element of
+Consequently, if every element `n ≥ 1` of a set `A ⊆ ℝ` is the value of a `z`-smooth element of
 `N` (step (i) of Lemma 6.26: every prime of `n ∈ A` is `< 2y`), then
 `#(A ∩ [1, x]) ≤ x^σ ∏_{p_j < z} (1 - p_j^{-σ})^{-1}` (`countA_le_rankin`). What remains of the
 Rankin bound of Lemma 6.26 is the numerical estimate of the product for the realised primes.
@@ -198,32 +198,20 @@ lemma finite_smooth_le (Y z : ℝ) : {e | e ∈ P.smoothElems z ∧ P.val e ≤ 
 /-- **Rankin's bound for a set of smooth elements** (Lemma 6.26, steps (iii) and (v)): if every
 `n ∈ A` is `≥ 1` and is the value of a `z`-smooth element of `N`, then
 `#(A ∩ [1, x]) ≤ x^σ ∏_{p_j < z} (1 - p_j^{-σ})^{-1}`. -/
-theorem countA_le_rankin {A : Set ℕ} {z : ℝ}
+theorem countA_le_rankin {A : Set ℝ} {z : ℝ}
     (hA : ∀ n ∈ A, 1 ≤ n ∧ ∃ e ∈ P.smoothElems z, P.val e = n) {σ : ℝ} (hσ : 0 < σ) {x : ℝ}
     (hx : 0 ≤ x) : Absorbed.countA A x ≤ x ^ σ * P.rankinProd z σ := by
   classical
   refine le_trans ?_ (P.smoothCountN_le_rankin hσ hx z)
-  set S := (Finset.Icc 0 ⌊x⌋₊).filter (· ∈ A)
-  have hcount : Absorbed.countA A x = (S.card : ℝ) := by
-    unfold Absorbed.countA
-    rw [Finset.sum_boole]
-  rw [hcount]
   choose! f hf using fun n (hn : n ∈ A) => (hA n hn).2
-  unfold smoothCountN
-  have key := Set.ncard_le_ncard_of_injOn (s := (S : Set ℕ)) f
-    (fun n hn => by
-      have hn' := Finset.mem_filter.mp (Finset.mem_coe.mp hn)
-      refine ⟨(hf n hn'.2).1, ?_⟩
-      rw [(hf n hn'.2).2]
-      exact (Nat.cast_le.mpr (Finset.mem_Icc.mp hn'.1).2).trans (Nat.floor_le hx))
+  unfold Absorbed.countA smoothCountN
+  have key := Set.ncard_le_ncard_of_injOn (s := A ∩ Set.Icc 1 x)
+    (t := {e | e ∈ P.smoothElems z ∧ P.val e ≤ x}) f
+    (fun n hn => ⟨(hf n hn.1).1, by rw [(hf n hn.1).2]; exact hn.2.2⟩)
     (fun n hn m hm h => by
-      have hn' := Finset.mem_filter.mp (Finset.mem_coe.mp hn)
-      have hm' := Finset.mem_filter.mp (Finset.mem_coe.mp hm)
       have := congrArg P.val h
-      rw [(hf n hn'.2).2, (hf m hm'.2).2] at this
-      exact_mod_cast this)
+      rwa [(hf n hn.1).2, (hf m hm.1).2] at this)
     (P.finite_smooth_le x z)
-  rw [Set.ncard_coe_finset] at key
   exact_mod_cast key
 
 end BeurlingSystem
