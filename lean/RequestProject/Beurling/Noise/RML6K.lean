@@ -69,7 +69,7 @@ lemma abs_int_mul_gK_le (hP : PaperWidth H X0m ε θ) (hval2 : ∀ p, p.Prime �
 theorem kernel_sum_le (hP : PaperWidth H X0m ε θ) (hval2 : ∀ p, p.Prime → 2 ≤ P.labelVal p)
     {y : ℝ} {Sc : Finset ℝ} (hcov : ∀ n ∈ levels P X0m y, ∃ u ∈ Sc, n ∈ NW P y u)
     {F : ℝ → ℝ} (hFm : Measurable F) {Fb : ℝ → ℝ} (hFb0 : ∀ u ∈ Sc, 0 ≤ Fb u)
-    (hF : ∀ u ∈ Sc, ∀ n ∈ NW P y u, ∀ t,
+    (hF : ∀ u ∈ Sc, ∀ n ∈ NW P y u, 2 ≤ n → ∀ t,
       |t - posn P.labelVal y n| ≤ 1.02 * H (posn P.labelVal y n) → |F t| ≤ Fb u) :
     |∑ n ∈ levels P X0m y, (∫ t, F t * gK P.labelVal y H (phiT tw X0m) n t) / Vl P n| ≤
       ∑ u ∈ Sc, Fb u * Wop P H tw X0m y u := by
@@ -83,7 +83,7 @@ theorem kernel_sum_le (hP : PaperWidth H X0m ε θ) (hval2 : ∀ p, p.Prime → 
     intro n hn
     have hn2 : 2 ≤ n := (Finset.mem_filter.mp hn).2
     obtain ⟨u0, hu0, hn0⟩ := hcov n hn
-    have h1 := abs_int_mul_gK_le (tw := tw) hP hval2 hn2 hFm (hF u0 hu0 n hn0)
+    have h1 := abs_int_mul_gK_le (tw := tw) hP hval2 hn2 hFm (hF u0 hu0 n hn0 hn2)
     rw [abs_div, abs_of_pos (hV n)]
     calc |∫ t, F t * gK P.labelVal y H (phiT tw X0m) n t| / Vl P n ≤ Fb u0 * T n := by
           simp only [T]; rw [mul_div_assoc']
@@ -123,7 +123,7 @@ theorem hK_of_scales (hO : Ops.OpHyp P H X0m) (hP : PaperWidth H X0m ε θ)
     (hFm : Measurable (F : ℝ → ℝ)) {x CN S : ℝ} (hx : 1 < x - H x / 2) (hCN : 0 ≤ CN)
     (hstart : ∀ y, x - H x / 2 ≤ y → y ≤ x + H x / 2 → ∃ Sc : Finset ℝ, ∃ Fb : ℝ → ℝ,
       (∀ n ∈ levels P X0m y, ∃ u ∈ Sc, n ∈ NW P y u) ∧ (∀ u ∈ Sc, 0 ≤ Fb u) ∧
-      (∀ u ∈ Sc, ∀ n ∈ NW P y u, ∀ t,
+      (∀ u ∈ Sc, ∀ n ∈ NW P y u, 2 ≤ n → ∀ t,
         |t - posn P.labelVal y n| ≤ 1.02 * H (posn P.labelVal y n) → |(F : ℝ → ℝ) t| ≤ Fb u) ∧
       (∀ u ∈ Sc, Wop P H tw X0m y u ≤ 5.1 * CN * Real.log (2 * u) / Real.log y) ∧
       (∀ u ∈ Sc, 0 ≤ Real.log (2 * u)) ∧ ∑ u ∈ Sc, Real.log (2 * u) * Fb u ≤ S) :
