@@ -192,7 +192,8 @@ probability budget. It asks only for three statements of the paper about that co
 - **Not yet proved:** the bridge and margin of §5.8–5.9 (which give Corollary 5.40), Lemma 5.22, and the Cover Bound.
 
 The formalization found four defects in the paper (corrections #102 and #104, constants in Lemma 5.7 and Theorem 5.24; #103, certificate
-coverage of two constants; #105, the definition of X_Hux) and two in the Aristotle model
+coverage of two constants; #105, the definition of X_Hux), prompted a check that tightened the quantifier of Lemma 3.4 (#106), and found two
+defects in the Aristotle model
 (the height rule and the absorbed set), all fixed. The details, and the list of what
 remains, are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
 
