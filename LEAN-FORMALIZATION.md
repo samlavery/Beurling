@@ -149,8 +149,15 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
   - Corollary 5.9, from Lemma M.
   - Theorem 5.14 (the KR bound) with nominal filters and frozen widths.
 
-  The only residual is `Lemma57Residual`: four remainder bounds (a), (b), (d), (e) in the proof of Lemma 5.7, as the paper
-  states them. These results do not involve the absorbed set.
+  Round 2 (89 files, 24.5k lines in all):
+  - The remainder bounds of Lemma 5.7 are proved. So Theorem 5.6, Lemma 5.8 and Corollary 5.9 now need only (HBS)
+    (`theorem_5_6_hbs_full`, `lemma_5_8_full`, `cor_5_9_full`).
+  - Proved outright: Theorem 5.15 (random widths), Lemma 5.12 and Lemma 5.21.
+  - Proved from named inputs: Corollary 5.17, Proposition 5.18, Lemma 5.23, and the deterministic assembly of Lemma 5.22.
+    The inputs are the transfer of A₀, A₁ to 𝒩, step (ii) of Proposition 5.18, Lemma 5.20, and the local counts of
+    Corollary 6.3.
+
+  None of these results involves the absorbed set.
 - **Added in this repository: measurability and the jitter law of the construction** (`Beurling/Model/`, round 3, about
   2700 lines).
   - The construction is measurable in ω, stage by stage. This includes the heights γ_k, through the least-good-height

@@ -24,11 +24,10 @@ Each `Rem*` is exactly one remainder bound of the proof of Lemma 5.7 (04c-saias.
 * `RemF` — (f), lines 478-485: `T ≤ 0.035 ℓ^{-1/8} s_a` if `Ū - u ≤ (Ū - u₀)/2`, and
   `ℓT ≤ 1/ℓ` otherwise.
 
-`Lemma57RemC` is the assembled bound (lines 488-498) with the λ-coefficient for `u ≥ 27`
-corrected from the paper's `4300` to `4900`: adding (a)–(f) as stated gives
-`(540 + 1 + 4000 + 1 + 0.21 + 260 + 0.001)λ = 4802.2λ` (the A-part of (b) alone is `4000λ`), so
-the paper's `ε₁ = 4300λ + 8.8α'` does not follow from its own remainder bounds. The conclusion
-of Lemma 5.7 only uses `ε₁ ≤ 0.72 ε = 14400λ + …`, which `4900λ` satisfies.
+`Lemma57RemC` is the assembled bound (lines 488-498) with the coefficients of the paper after
+correction #102, `4900λ + 8.8α'` for `u ≥ 27` and `14400λ + 8.1α'` for `u < 27`: adding (a)–(f)
+as stated gives `(540 + 1 + 4000 + 1 + 0.21 + 260 + 0.001)λ = 4802.2λ` (the A-part of (b) alone
+is `4000λ`). It is the same statement as `Lemma57Rem` (`BSL57Defs.lean`).
 -/
 
 @[expose] public section
@@ -83,8 +82,8 @@ def RemF : Prop :=
     (Uf τ ℓ - u ≤ (Uf τ ℓ - u0 ℓ) / 2 → Tterm τ ℓ u ≤ 0.035 * ℓ ^ (-(1 / 8 : ℝ)) * sA ℓ u) ∧
     (¬ (Uf τ ℓ - u ≤ (Uf τ ℓ - u0 ℓ) / 2) → ℓ * Tterm τ ℓ u ≤ 1 / ℓ)
 
-/-- The assembled remainder bound (lines 488-498) with the corrected coefficient `4900λ`
-for `u ≥ 27` (see the module docstring). -/
+/-- The assembled remainder bound (lines 488-498, after correction #102; see the module
+docstring). -/
 def Lemma57RemC : Prop :=
   ∀ τ ℓ u : ℝ, LargeRange τ ℓ u →
     (27 ≤ u → Rsum τ ℓ u ≤ (4900 * lamL τ ℓ + 8.8 * alphaL τ ℓ) * cfun τ ℓ u +

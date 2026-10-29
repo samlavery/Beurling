@@ -183,8 +183,10 @@ The companion script \texttt{x0band.py} is an earlier floating-point exploration
 \emph{What it certifies.} Constants that the text quotes, in ball arithmetic, without another certificate. Here
 $A(s):=1/(2-\zeta(s))-1=\sum_{m\ge2}\Hord(m)m^{-s}$ for $\NN=\N$.
 \begin{itemize}
+% Logged correction 103 (CORRECTIONS-vs-v3.md): k2/k3 now certify the sharp A_0 <= 2.06734, A_1 <= 9.409 used in Cor kr-weights.
 \item The ordered factorisations of Section~\ref{sec:kr}: the root $\rho_0\in(1.7286,1.7287)$ of $\zeta(\rho_0)=2$;
-$A_0(0.03)=A(1.97)=2.06733\le2.07$; $A_1(0.03)=-\zeta'(1.97)/(2-\zeta(1.97))^2=9.40888\le9.42$; $\zeta(1.8)=1.88223$, so
+$A_0(0.03)=A(1.97)=2.06733\le2.06734$; $A_1(0.03)=-\zeta'(1.97)/(2-\zeta(1.97))^2=9.40888\le9.409$ (the sharp values are
+the ones Corollary~\ref{cor:kr-weights} uses; elsewhere $2.07$ and $9.42$ suffice); $\zeta(1.8)=1.88223$, so
 $\zeta(1.8)+X_0^{-0.7}\le1.883$; and $1/(2-1.883)\le8.6$.
 \item Proposition~\ref{prop:xb-ranges}: $A(1.8-3\cdot10^{-6})=7.49142\le7.4915$; $\frac14\cdot7.4915\cdot2^{0.2}\le2.152$;
 $4/\sqrt6\le1.64$; the tail $(\frac12+1.64\sqrt n)/n+2.152n^{-0.2}=0.13742\le0.14$ at $n=10^6$; $A(1.77)=13.0822\le13.1$;
@@ -221,9 +223,10 @@ python3 -I -B certificates/constants/phi_bounds.py
 \begin{verbatim}
 k1  rho_0 (root of zeta(s) = 2): zeta(1.7286) - 2, zeta(1.7287) - 2 =
     [8.5893e-5 +/- 2.83e-10], [-9.5920e-5 +/- 1.69e-10]: True
-k2  A_0(0.03) = A(1.97) (paper: 2.0673, used <= 2.07) = [2.0673297 +/- 3.79e-8]: True
-k3  A_1(0.03) = -zeta'(1.97)/(2-zeta(1.97))^2 (paper: 9.409, used <= 9.42) =
-    [9.4088776 +/- 2.57e-8]: True
+k2  A_0(0.03) = A(1.97) (paper: 2.0673, used <= 2.07 and, in Cor. kr-weights, <= 2.06734) =
+    [2.0673297 +/- 3.79e-8]: True
+k3  A_1(0.03) = -zeta'(1.97)/(2-zeta(1.97))^2 (paper: 9.409, used <= 9.42 and, in Cor.
+    kr-weights, <= 9.409) = [9.4088776 +/- 2.57e-8]: True
 k4  zeta(1.8) (paper: zeta(1.8) + X_0^-0.7 <= 1.883) = [1.8822296 +/- 1.82e-8]: True
 k5  1/(2 - 1.883) (paper: sum H_ord(m) m^-1.8 <= 8.6) = [8.5470085 +/- 4.71e-8]: True
 x1  A(1.8 - 3e-6) (paper: <= 7.4915) = [7.49142324 +/- 3.98e-9]: True

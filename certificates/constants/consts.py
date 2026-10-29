@@ -35,8 +35,10 @@ line("k1", "rho_0 (root of zeta(s) = 2): zeta(1.7286) - 2, zeta(1.7287) - 2",
 s = 2 - arb("0.03")
 A0 = A(s)
 A1 = -dzeta(s) / (2 - zeta(s)) ** 2          # sum H_ord(m) m^{-s} log m = -(d/ds) 1/(2 - zeta(s))
-line("k2", "A_0(0.03) = A(1.97) (paper: 2.0673, used <= 2.07)", A0.str(8), A0 <= arb("2.07"))
-line("k3", "A_1(0.03) = -zeta'(1.97)/(2-zeta(1.97))^2 (paper: 9.409, used <= 9.42)", A1.str(8), A1 <= arb("9.42"))
+line("k2", "A_0(0.03) = A(1.97) (paper: 2.0673, used <= 2.07 and, in Cor. kr-weights, <= 2.06734)", A0.str(8),
+     A0 <= arb("2.06734"))
+line("k3", "A_1(0.03) = -zeta'(1.97)/(2-zeta(1.97))^2 (paper: 9.409, used <= 9.42 and, in Cor. kr-weights, <= 9.409)",
+     A1.str(8), A1 <= arb("9.409"))
 z18 = zeta(arb("1.8"))                       # X_0^{-0.7} <= e^{-7*10^7} < 10^{-30}
 line("k4", "zeta(1.8) (paper: zeta(1.8) + X_0^-0.7 <= 1.883)", z18.str(8), z18 + arb("1e-30") <= arb("1.883"))
 line("k5", "1/(2 - 1.883) (paper: sum H_ord(m) m^-1.8 <= 8.6)", (1 / (2 - arb("1.883"))).str(8),

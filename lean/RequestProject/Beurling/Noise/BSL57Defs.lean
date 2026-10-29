@@ -57,16 +57,15 @@ noncomputable def alphaL (τ ℓ : ℝ) : ℝ := aprime ℓ (Uf τ ℓ)
 /-- **Lemma 5.7, the remainders (a)–(f) added** (04c-saias.tex, lines 434-498, "Assembly"):
 for `u ≥ 27`,
 `ℓ(ρ₁ + ⋯ + T) ≤ ε₁ c + ε₂ ℓ(s_a)₊ + 2.2·1[u ≥ u₀ - 2] + 1/ℓ`,
-`ε₁ = 4300λ + 8.8α'`, `ε₂ = 4.7α' + 0.035 ℓ^{-1/8}`; for `2 ≤ u < 27`,
+`ε₁ = 4900λ + 8.8α'`, `ε₂ = 4.7α' + 0.035 ℓ^{-1/8}`; for `2 ≤ u < 27`,
 `ℓ(ρ₁ + ⋯ + T) ≤ ε₁ c + 2.5·10¹⁵/ℓ` with `ε₁ = 14400λ + 8.1α'`.
 
-For `u < 27` the paper writes `ε₁ = 14400λ + α'`; but remainder (a) as stated there,
-`ℓρ₁ ≤ (13540λ + 7.6α') ℓΦ_ben`, with `c ≥ 0.944 ℓΦ_ben` only gives `14400λ + 8.1α'`
-(the sharper coefficient needs `a' = 0` inside the proof of (a)). Either constant satisfies
+These are the constants of the paper after correction #102 (earlier versions had `4300λ` and
+`14400λ + α'`, which do not follow from the remainder bounds (a)–(f) as stated). Both satisfy
 `ε₁ ≤ 0.72 ε`, which is all that the conclusion of Lemma 5.7 uses. -/
 def Lemma57Rem : Prop :=
   ∀ τ ℓ u : ℝ, LargeRange τ ℓ u →
-    (27 ≤ u → Rsum τ ℓ u ≤ (4300 * lamL τ ℓ + 8.8 * alphaL τ ℓ) * cfun τ ℓ u +
+    (27 ≤ u → Rsum τ ℓ u ≤ (4900 * lamL τ ℓ + 8.8 * alphaL τ ℓ) * cfun τ ℓ u +
         (4.7 * alphaL τ ℓ + 0.035 * ℓ ^ (-(1 / 8 : ℝ))) * (ℓ * max (sA ℓ u) 0) +
         2.2 * (if u0 ℓ - 2 ≤ u then 1 else 0) + 1 / ℓ) ∧
     (u < 27 → Rsum τ ℓ u ≤ (14400 * lamL τ ℓ + 8.1 * alphaL τ ℓ) * cfun τ ℓ u +
