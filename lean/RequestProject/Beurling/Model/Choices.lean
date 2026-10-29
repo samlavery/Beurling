@@ -17,8 +17,8 @@ namespace BModel
 /-- The slope exponent `ε = 4·10⁻⁶` of (R_H) (`KR.WidthReal.paperWidth_Hc`). -/
 noncomputable def epsH : ℝ := 4 / 1000000
 
-/-- `λ₀ = 1.001`. -/
-noncomputable def lamH : ℝ := 1.001
+/-- `λ₀ = 1.00003` (Proposition 5.33 needs `λ₀ ≤ 1.00003`). -/
+noncomputable def lamH : ℝ := 1.00003
 
 /-- The jump of the effective source at `X₀`, `j₀ = T'(X₀⁺) = 1 - ρ_det(X₀)` (§5.1,
 "The jump at `X₀`"). -/

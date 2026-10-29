@@ -9,6 +9,7 @@ public import RequestProject.Beurling.Model.BtNT
 public import RequestProject.Beurling.Model.G1BWire
 public import RequestProject.Beurling.Model.G1BJumpProof
 public import RequestProject.Beurling.Model.G1BRprime
+public import RequestProject.Beurling.Model.JXbdd
 public import RequestProject.Beurling.Noise.RML6G1
 public import RequestProject.Beurling.BaseRange.Lemma73Low
 public import RequestProject.Beurling.BaseRange.MarginHc
@@ -25,20 +26,21 @@ The fields of `RealMarginLoc` are split as follows.
   (`NiceEv`), `hX1` (`log X₀ ≥ 10⁸ + 1`, from `X₀ ≥ e^{10⁸+1}`), the horizon `Z = Zc b` with
   `hZ` (`2(b + H(b))/X₀⁻ ≤ Z`) and the Z conditions of the bridge (`Zc_facts`: `2500 ≤ Z`,
   `18(b + H(b)) ≤ Z²`, `X₀⁻ ≤ Z`), `η₁ = η₂ = 10⁻³`, `ε₁ = hbsEps`, `ε = 4·10⁻⁶` (`hε0`, `hε`),
-  `λ₀ = 1.001` (`hlam`, `hlam1`), `j₀ = 1 - ρ_det(X₀)` (`hj0`, from (84) via
+  `λ₀ = 1.00003` (`hlam`, `hlam1`), `j₀ = 1 - ρ_det(X₀)` (`hj0`, from (84) via
   `Model.rhoDet_le`), `xmax = b + H(b)` (`hxmax`), and
   `hDiff` (`CapHDiffProof.capHDiff`, `Model/CapHDiff.lean`: `H` is differentiable off a
   countable set, §5.1 "`H` is piecewise smooth").
-* **Open, Model-owned**: `hSlope` (`CapHSlope X₀ 4·10⁻⁶`: (R_H) for `capH`, integrated form;
-  Theorem 6.23(c) with §5.1 "Regularity of `H`"; deterministic), and `hTm`, `hTb` (`TcBound`:
-  `T_c` is measurable and `|T_c| ≤ 2`; §5.1 "`|T'| ≤ 2`" with the jump at `X₀` removed, and
-  Lemma rhoA(b) for the part `K_𝒜 ρ̃`), a.s.
+* **Proved here** as well: `hSlope`, `hDiff`, `hTm`, `hTb`, `hosc` (eq. (osc)), `hbdd`,
+  `jX_nonneg`, `η`, `sη`, `intm`, `hBt` (Step 6(a), eq. (NT)), and the Model fields of
+  `G1BInputs` (Proposition 5.35(B)).
+* **Taken as arguments**: `hin` (Lemma 7.3's inputs) and `hjbA` (`j_{X₀} ≤ 0.4209`,
+  Proposition 5.33), proved by BaseRange in files importing this one.
 * **Open, owned by the other agents**, grouped by paper section, with the Model choices
-  substituted: `RestBase` (§7: (huxley), Lemma 7.3's inputs), `RestBridge` (Proposition 5.18
-  step (iii), Proposition 5.26, Lemma 5.27, Lemma 5.20), `RestRes` (Proposition 5.35,
-  Lemma 5.34, the margin identity), `RestMargin` (Proposition 5.38, steps 1–6).
+  substituted: `RestBase` (§7: (huxley)), `RestBridge` (now empty), `RestRes` (Proposition
+  5.35, Lemma 5.34, the margin identity), `RestMargin` (Proposition 5.38, steps 1–6).
 
-Main result: `corollary_2_2_final : ShortIntervalPNT → Theorem21InputsFinal → ¬ QuestionQ`.
+The top level (`corollary_2_2_hux : Huxley84 → Theorem21InputsH → ¬ QuestionQ`) is in
+`Model/MarginFinal.lean`.
 -/
 
 @[expose] public section
@@ -54,16 +56,9 @@ structure RestBase (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
   hHux : BaseRange.HuxleyFrom X₀
 
 /-- **Proposition 5.18 step (iii), Proposition 5.26, Lemma 5.27, Lemma 5.20** inputs of
-`RealMarginLoc`, at the Model choices `Z = Zc b`, `ε = 4·10⁻⁶`, `λ₀ = 1.001`, `j₀ = jzX X₀`. -/
+`RealMarginLoc`, at the Model choices `Z = Zc b`, `ε = 4·10⁻⁶`, `λ₀ = 1.00003`, `j₀ = jzX X₀`. -/
 structure RestBridge (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
-  /-- `j_{X₀}(x) ≥ 0` (eq. (jX0); §5, Proposition 5.33) -/
-  jXnn : ∀ x, 0 ≤ jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH
-    (jzX X₀) (NKc X₀) x
-  /-- the eq. (jX0) family is bounded on `W_x` (§5, Proposition 5.33) -/
-  hbdd : ∀ x, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b →
-    BddAbove (Set.range fun y : {y : ℝ // InW (Queue6.Hc X₀ x) x y} =>
-      jXat (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀)
-        (NKc X₀ y.1).1 (NKc X₀ y.1).2 y.1)
+
 
 /-- **Proposition 5.35, Lemma 5.34 and the margin identity** inputs of `RealMarginLoc`. -/
 structure RestRes (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
@@ -187,8 +182,12 @@ structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (a : ℝ 
       (a t + bb t + 6 * Real.log t / Queue6.Hc X₀ t) + (fun _ => EBRc) t + (fun x => jXdef
         (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀) (NKc X₀) x) t +
       54 * (sηB X₀) + 6 * Real.log t / Queue6.Hc X₀ t + 6.5 * p.ES + VX (PR θ X₀ ω) p t ≤ 0.01
-  /-- **Proposition 5.33**: `j_{X₀} ≤ 0.4209` -/
-  hjb : ∀ t, 2 * (X₀ : ℝ) ≤ t → t ≤ (X₀ : ℝ) ^ (1.01 : ℝ) → t ≤ b → (jbc θ X₀ ω) t ≤ 0.4209
+  /-- Step 6(b), "Sum" -/
+  hsum : ∀ t, 2 * (X₀ : ℝ) ≤ t → t ≤ (X₀ : ℝ) ^ (1.01 : ℝ) → t ≤ b →
+    rhoSh (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) t (fun s => TcR θ X₀ ω (jzX X₀) s +
+      (jzX X₀) * ind X₀ s) *
+      Real.log t - (fun x => jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀
+        (epsH / 10) lamH (jzX X₀) (NKc X₀) x) t - 1 / 10 ^ 12 ≤ marginM θ X₀ ω t * Real.log t
 
 /-! ### The open Model inputs -/
 
@@ -212,6 +211,9 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
       (BaseRange.mu0R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
       (KR.Sharp.mu1R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
       (KR.Sharp.rhoEdge (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀))
+    (hjbA : ∀ t, 2 * (X₀ : ℝ) ≤ t → t ≤ (X₀ : ℝ) ^ (1.01 : ℝ) → t ≤ b →
+      jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀)
+        (NKc X₀) t ≤ 0.4209)
     (Bs : RestBase θ X₀ ω b) (Br : RestBridge θ X₀ ω b)
     (Rs : RestRes θ X₀ ω b)
     (Mg : RestMargin θ X₀ ω b Rs.a Rs.bb) :
@@ -249,12 +251,14 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
   jX := fun x => jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH
     (jzX X₀) (NKc X₀) x
   EBR_nonneg := fun _ => (Real.exp_pos _).le
-  jX_nonneg := Br.jXnn
+  jX_nonneg := jXnn_c hc hev (tnpR hc hev hbs hN.2.1 hX1) (by norm_num [lamH]) (jzX_nonneg hc)
+    (NKc X₀)
   x0s := Queue6.x0sHyp_G0 (e3Family θ X₀) hc hev hG hN hbt hbs (Zc_facts hc hb).1 le_rfl
     (by linarith [hc.hθ.2])
   bridge := fun x y hx hxb hW => bridge_c hc hev hb hbs hN.2.1 hX1 hx hxb hW
     (hosc_c hc hev hb hbt hG.1 (fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn) hN
-      (tnpR hc hev hbs hN.2.1 hX1) hx hxb hW) (Br.hbdd x hx hxb)
+      (tnpR hc hev hbs hN.2.1 hX1) hx hxb hW) (hbdd_c hc hev hb
+        (tnpR hc hev hbs hN.2.1 hX1) x hx hxb)
   g1 := fun y hy hyb => KR.RML6.g1_of (by norm_num at hX1 ⊢; linarith) (Xm_pos' hc)
     (Xm_le_X0 hc) hy (sigmaAResp_R hc hev hb hbt hG.1 (fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG
       (Sum.inl n) hn) hN hbs hX1 hy hyb) (fun hyL => g1B_mk hc hev hb hbt hG.1
@@ -332,9 +336,10 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
     (opR hc hev hbs hN.2.1 hX1) Rs.ρL Rs.TcL Rs.vtH Rs.NT Rs.hρL Rs.hTcL Rs.hvt Rs.hϑ
   hsη := hsη_c hc hev ω hb (tnpR hc hev hbs hN.2.1 hX1)
   hsmall := Mg.hsmall
-  jb := jbc θ X₀ ω
-  hsum := by intro t _ _ _; unfold jbc; exact BModel.RML6.hsum_canon _ _ _
-  hjb := Mg.hjb
+  jb := fun x => jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH
+    (jzX X₀) (NKc X₀) x
+  hsum := Mg.hsum
+  hjb := hjbA
   hc := BaseRange.margin_hc hc hev Bs.hHux ω b
   hz := fun t ht => BModel.RML6.marginM_eq_zero_low hc ω ht
 
@@ -368,8 +373,7 @@ variable (θ X₀) in
 `(ω, b)`. -/
 def OthersInputs (ω : JitterΩ) (b : ℝ) : Prop :=
   ∃ (Bs : RestBase θ X₀ ω b) (Br : RestBridge θ X₀ ω b) (Rs : RestRes θ X₀ ω b),
-    ∀ hO₀ : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀),
-      Nonempty (RestMargin θ X₀ ω b Rs.a Rs.bb)
+    Nonempty (RestMargin θ X₀ ω b Rs.a Rs.bb)
 
 /-- `RealMarginLoc` from the Model fields and `OthersInputs`. -/
 theorem realMarginLoc_of_others (hc : Cond θ X₀) (hev : Even X₀) {ω : JitterΩ} {b : ℝ}
@@ -388,10 +392,13 @@ theorem realMarginLoc_of_others (hc : Cond θ X₀) (hev : Even X₀) {ω : Jitt
       (BaseRange.mu0R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
       (KR.Sharp.mu1R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
       (KR.Sharp.rhoEdge (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀))
+    (hjbA : BaseRange.HuxleyFrom X₀ → ∀ t, 2 * (X₀ : ℝ) ≤ t → t ≤ (X₀ : ℝ) ^ (1.01 : ℝ) → t ≤ b →
+      jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀)
+        (NKc X₀) t ≤ 0.4209)
     (hO : OthersInputs θ X₀ ω b) : Nonempty (RealMarginLoc hc ω b) := by
-  obtain ⟨Bs, Br, Rs, hM⟩ := hO
-  obtain ⟨Mg⟩ := hM (opR hc hev hbs hN.2.1 hX1)
-  exact ⟨realMarginLoc_of hc hev hG hN hbt hb hbs hX1 hEpm (hin Bs.hHux) Bs Br Rs Mg⟩
+  obtain ⟨Bs, Br, Rs, ⟨Mg⟩⟩ := hO
+  exact ⟨realMarginLoc_of hc hev hG hN hbt hb hbs hX1 hEpm (hin Bs.hHux) (hjbA Bs.hHux) Bs Br Rs
+    Mg⟩
 
 variable (θ X₀) in
 /-- **Lemma 7.3's inputs at the windows with `b < 4X₀ + 2`** (kept for `BaseRange.lemma73Low_of`;
@@ -401,71 +408,5 @@ def Lemma73Low (ω : JitterΩ) (b : ℝ) : Prop :=
     (BaseRange.mu0R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
     (KR.Sharp.mu1R (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
     (KR.Sharp.rhoEdge (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀)
-
-/-! ### The top level -/
-
-/-- **Theorem 2.1, hypothesis, final form.** For `X₀ ≥ e^{10⁸+1}` (and `≥ X_Hux`):
-
-* **owned by the other agents**, a.s. on `Good(< b)` for every admissible window `[a, b)`: the
-  four groups `RestBase` (§7), `RestBridge` (Proposition 5.18(iii), 5.26, Lemmas 5.27, 5.20),
-  `RestRes` (Proposition 5.35, Lemma 5.34), `RestMargin` (Proposition 5.38, steps 1–6), at the
-  Model choices. -/
-def Theorem21InputsFinal : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
-    Real.exp (10 ^ 8 + 1) ≤ X₀ → XHux ≤ X₀ →
-      ∀ m a b, Adm X₀ m a b → ∀ᵐ ω ∂jitterMeasure,
-        ω ∈ G0 θ X₀ (e3Family θ X₀) (tE2 b) →
-          OthersInputs θ X₀ ω b
-
-/-- `Theorem21InputsFinal` implies `Theorem21InputsZ`, given (84): eq. (s2) is `s2Core`, and
-`R1Ident` is `r1Ident_of_marginOn` with Proposition 5.38 on `[X₀, b]` from `RealMarginLoc`
-(`hPM_of_loc`), assembled by `realMarginLoc_of`. -/
-theorem theorem21InputsZ_final (hHB : ShortIntervalPNT) (h : Theorem21InputsFinal) :
-    Theorem21InputsZ := by
-  intro θ hθ
-  obtain ⟨x₁, hx₁⟩ := hHB
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨max (max XHux x₁) (Real.exp (10 ^ 8 + 1)), fun X₀ hev h1 h2 => ?_⟩
-  have h2a : XHux ≤ X₀ := (le_max_left _ _).trans ((le_max_left _ _).trans h2)
-  have h2b : x₁ ≤ X₀ := (le_max_right _ _).trans ((le_max_left _ _).trans h2)
-  have h2c : Real.exp (10 ^ 8 + 1) ≤ X₀ := (le_max_right _ _).trans h2
-  have hRest := hX X₀ hev h2c h2a
-  have hlog1 : 10 ^ 8 + 1 ≤ Real.log X₀ := by
-    have := Real.log_le_log (Real.exp_pos _) h2c
-    rwa [Real.log_exp] at this
-  have hlog : 10 ^ 8 ≤ Real.log X₀ := by linarith
-  have hc : Cond θ X₀ := ⟨hθ, hlog, hx₁.mono h2b⟩
-  have hnice : ∀ᵐ ω ∂jitterMeasure, ω ∈ NiceEv θ X₀ := by
-    have := niceEv_compl_null hc hev
-    rw [ae_iff]; simpa using this
-  have hR : ∀ (m : ℕ) (a b : ℤ), Adm X₀ m a b → ∀ᵐ ω ∂jitterMeasure,
-      ω ∈ G0 θ X₀ (e3Family θ X₀) (tE2 b) → Nonempty (RealMarginLoc hc ω (b : ℝ)) := by
-    intro m a b hadm
-    have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
-    have hX1 := QueueMono.one_lt_of_logX hX0 hc.hX
-    have hb : (X₀ : ℝ) ≤ b := (X₀_le_uS (X₀ := X₀) (by linarith) m).trans hadm.1
-    filter_upwards [hRest m a b hadm, hnice, Queue6.hS2Epm_R hc hev] with ω hω hN hEp hG
-    have hQC : ω ∈ QC (okQ θ X₀) (tq θ X₀) b.toNat := hG.1
-    have hE1 : ∀ n, tE1 X₀ n < b.toNat → ω ∈ E1ev θ X₀ n := fun n hn =>
-      mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn
-    have hO := hω hG
-    have hbs := hbs_Zc hc hev hb hQC hE1 hN
-    have hb0 : (0 : ℤ) ≤ b := by
-      have : (0 : ℝ) ≤ b := le_trans hX0 hb
-      exact_mod_cast this
-    have hbt : (b : ℝ) ≤ ((tE2 b : ℕ) : ℝ) := by
-      unfold tE2; rw [show ((b.toNat : ℕ) : ℝ) = (b : ℝ) by exact_mod_cast Int.toNat_of_nonneg hb0]
-    exact realMarginLoc_of_others hc hev hG hN hbt hb hbs hlog1 (hEp _ hG hN)
-      (fun hH => hin_R hc hev hbs hN.2.1 hlog1 hb hH) hO
-  have hcore := s2Core hc hev
-  exact ⟨{ compE3 := e3CompBound hc hev
-           s2E3 := e3S2Bound_of hc hev hcore
-           r1Ident := r1Ident_of_marginOn hc hev (e3Family θ X₀) (hPM_of_loc hc hev _ hR)
-           s2E2 := e2S2Bound_of hc hev hcore }⟩
-
-/-- **Corollary 2.2** from (84) and `Theorem21InputsFinal`. -/
-theorem corollary_2_2_final (hHB : ShortIntervalPNT) (h : Theorem21InputsFinal) :
-    ¬ QuestionQ :=
-  corollary_2_2_of_Z hHB (theorem21InputsZ_final hHB h)
 
 end BModel

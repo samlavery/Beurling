@@ -142,6 +142,27 @@ theorem Zc_facts {b : ℝ} (hb : (X₀ : ℝ) ≤ b) :
     · rw [div_le_iff₀ hXm0]
       nlinarith
 
+/-- **The horizon condition of Lemma 5.20 in the form `18 y/X₀⁻ ≤ Z`** for `y ≤ b + H(b)`. -/
+theorem Zc_18 {b : ℝ} (hb : (X₀ : ℝ) ≤ b) : 18 * (b + Queue6.Hc X₀ b) / Xm X₀ ≤ Zc X₀ b := by
+  have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
+  have hXb := X₀_ge_two_pow hc.hX
+  have h16 : (2 : ℝ) ^ (16 : ℕ) = 65536 := by norm_num
+  have hXmh := Xm_half hc
+  have hXmX : Xm X₀ ≤ X₀ := by
+    have := capH_ge_one hX0 hc.hX (le_refl (X₀ : ℝ)); unfold Xm; linarith
+  have hXm0 : 0 < Xm X₀ := by linarith
+  have hH : Queue6.Hc X₀ b ≤ b / 4 := by
+    unfold Queue6.Hc
+    rw [max_eq_left hb]
+    have := four_capH_le hX0 hc.hX hb
+    linarith
+  rw [div_le_iff₀ hXm0]
+  unfold Zc
+  split_ifs with hbig
+  · nlinarith
+  · push_neg at hbig
+    nlinarith
+
 variable (hev : Even X₀)
 include hev
 
