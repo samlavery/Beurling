@@ -3,6 +3,7 @@ module
 public import RequestProject.Beurling.Model.RestG
 public import RequestProject.Beurling.Noise.RML6BridgeLoc
 public import RequestProject.Beurling.Model.MarginTail
+public import RequestProject.Beurling.Model.MarginSteps
 
 /-!
 # The bounds of `F_r` in Lemma 5.34 from Lemma 5.22 (the fields `S`, `FbK`, `hFr`, `FrB`,
@@ -34,12 +35,15 @@ def InBlk (X₀ : ℕ) (i : ℕ) (r : ℝ) : Prop :=
   r < 2 * (Xm X₀ * 2 ^ i) ∧ (i = 0 ∨ Xm X₀ * 2 ^ i ≤ r)
 
 variable (θ X₀) in
-/-- **Lemma 5.22 for the paper's `ν`** (Queue6): there is `ϑ` with `|ϑ| ≤ 6` (eq. (Ttilde))
-such that the paper's noise `ν = ν_Model + ϑ/H` (Proposition 5.11; `ν_Model = nuRes` at the
-Model data with `ϑ = 0`) is bounded by `ν̄_i` on the block `i`, at heights `≤ b`. -/
+/-- **Lemma 5.22 for the paper's `ν`** (Queue6, from `Queue6.nu522_point` at time `b`): there is
+`ϑ` with `|ϑ| ≤ 6` (eq. (Ttilde)) such that the paper's noise `ν = ν_Model + ϑ/H`
+(Proposition 5.11; `ν_Model = nuRes` at the Model data with `ϑ = 0`) is bounded by `ν̄_i` on the
+block `i`, at the heights `X₀⁻ ≤ r` with `r + 2H(r) ≤ b` (Lemma 5.22 at `r` reads the events up
+to `r + 1.6H(r)`, on `Good(< b)`). Below `X₀⁻`, `ν_Model = 0` (`nu_low`). -/
 def Nu522 (ω : JitterΩ) (b : ℝ) (nb : ℕ → ℝ) : Prop :=
   (∀ i, 0 ≤ nb i) ∧ ∃ ϑ : ℝ → ℝ, (∀ z, |ϑ z| ≤ 6) ∧
-    ∀ hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀), ∀ i r, r ≤ b → InBlk X₀ i r →
+    ∀ hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀), ∀ i r, Xm X₀ ≤ r →
+      r + 2 * Queue6.Hc X₀ r ≤ b → InBlk X₀ i r →
       |(nuRes hO (twR θ X₀ ω) (ρLd θ X₀ ω) (TcLd θ X₀ ω) (JL (jzX X₀) X₀) 0 (NTd θ X₀ ω) :
         ℝ → ℝ) r + ϑ r / Queue6.Hc X₀ r| ≤ nb i
 
@@ -184,15 +188,58 @@ lemma FrBv_nonneg {ω : JitterΩ} {Z η1 η2 εH θH : ℝ} {ε1 : ℝ → ℝ}
   unfold FrBv
   positivity
 
+/-- **`ν_Model = 0` below `X₀⁻`**: there the windows lie below `X₀`, where `T_c`, `J`, `NT_pt`,
+`K_pt ρ̃` vanish, and `ρ̃ = 0`. -/
+lemma nu_low {ω : JitterΩ} (hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀)) {r : ℝ}
+    (hr : r < Xm X₀) :
+    (nuRes hO (twR θ X₀ ω) (ρLd θ X₀ ω) (TcLd θ X₀ ω) (JL (jzX X₀) X₀) 0 (NTd θ X₀ ω) :
+      ℝ → ℝ) r = 0 := by
+  have hX := hc.hX
+  have hXm : 0 < Xm X₀ := by linarith [Queue6.Xm_pos hc]
+  have hXmX := Xm_le_X0 hc
+  have hXmh := Xm_half hc
+  have hHr := hO.pos r
+  have hH : Queue6.Hc X₀ r = capH X₀ X₀ := by
+    unfold Queue6.Hc; rw [max_eq_right (by linarith)]
+  have hXmd : Xm X₀ = X₀ - capH X₀ X₀ / 2 := rfl
+  have hwin : ∀ q : ℝ, q ≤ r + Queue6.Hc X₀ r / 2 → q < (X₀ : ℝ) := fun q hq => by
+    rw [hH] at hq; linarith
+  have hz : ∀ {f : ℝ → ℝ}, (∀ q : ℝ, q < (X₀ : ℝ) → f q = 0) →
+      Margin.Bavg (Queue6.Hc X₀ r) f r = 0 := fun hf =>
+    abs_nonpos_iff.mp (abs_Bavg_le hHr fun q _ hq2 => by rw [hf q (hwin q hq2)]; simp)
+  have h1 : Margin.Bavg (Queue6.Hc X₀ r)
+      ((TcLd θ X₀ ω + JL (jzX X₀) X₀ : KR.Ops.LocInt) : ℝ → ℝ) r = 0 := hz fun q hq => by
+    show (TcLd θ X₀ ω : ℝ → ℝ) q + jzX X₀ * KR.Chain.ind X₀ q = 0
+    rw [TcLd_coe hc hev ω, TcR_low hc ω hq.le]
+    have : KR.Chain.ind X₀ q = 0 := by
+      unfold KR.Chain.ind; exact Set.indicator_of_notMem (by simpa using hq) _
+    rw [this]; ring
+  have h2 : (NTd θ X₀ ω : ℝ → ℝ) r = 0 := by
+    rw [NTd_eq ω hO]
+    show Margin.Bavg (Queue6.Hc X₀ r) (NTptLd θ X₀ ω : ℝ → ℝ) r = 0
+    rw [NTptLd_coe hc hev ω]
+    exact hz fun q hq => NTpt_low hc ω hO.p2 hq
+  have h3 : (ρLd θ X₀ ω : ℝ → ℝ) r = 0 := by rw [ρLd_coe hc hev ω]; exact hρ0_c hc ω r hr
+  have h4 : Margin.Bavg (Queue6.Hc X₀ r)
+      ((KR.Ops.Ko (tw := twR θ X₀ ω) hO (ρLd θ X₀ ω) : KR.Ops.LocInt) : ℝ → ℝ) r = 0 :=
+    hz fun q hq => KR.Ops.Kpt_zero_low hXm hO.p2 _ (by linarith)
+  have e : (nuRes hO (twR θ X₀ ω) (ρLd θ X₀ ω) (TcLd θ X₀ ω) (JL (jzX X₀) X₀) 0 (NTd θ X₀ ω) :
+      ℝ → ℝ) r = Margin.Bavg (Queue6.Hc X₀ r)
+        ((TcLd θ X₀ ω + JL (jzX X₀) X₀ : KR.Ops.LocInt) : ℝ → ℝ) r + 0 -
+        (NTd θ X₀ ω : ℝ → ℝ) r - (ρLd θ X₀ ω : ℝ → ℝ) r - Margin.Bavg (Queue6.Hc X₀ r)
+        ((KR.Ops.Ko (tw := twR θ X₀ ω) hO (ρLd θ X₀ ω) : KR.Ops.LocInt) : ℝ → ℝ) r := rfl
+  rw [e, h1, h2, h3, h4]; ring
+
 set_option maxHeartbeats 4000000 in
-/-- **`|F_r| ≤ F̄_r` on the blocks** at heights `≤ b`, on `Good(< t)`, from `Nu522`. -/
+/-- **`|F_r| ≤ F̄_r` on the blocks** at heights `≤ 0.6b` (the heights read, correction #109),
+on `Good(< t)`, from `Nu522`. -/
 theorem Fr_pt {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt : b ≤ t)
     (hQC : ω ∈ QC (okQ θ X₀) (tq θ X₀) t) (hE1 : ∀ n, tE1 X₀ n < t → ω ∈ E1ev θ X₀ n)
     (hN : ω ∈ NiceEv θ X₀)
     (hT : KR.TNP.Hyp (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) (Zc X₀ b) (1 / 1000)
       (1 / 1000) (hbsEps X₀) epsH (epsH / 10))
     {nb : ℕ → ℝ} (hnu : Nu522 θ X₀ ω b nb)
-    (hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀)) {i : ℕ} {r : ℝ} (hrb : r ≤ b)
+    (hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀)) {i : ℕ} {r : ℝ} (hrb : r ≤ 0.6 * b)
     (hr : InBlk X₀ i r) :
     |((Frx hO (ρLd θ X₀ ω) (TcLd θ X₀ ω) (NTd θ X₀ ω) 0 (jzX X₀) : KR.Ops.LocInt) :
       ℝ → ℝ) r| ≤ FrBv θ X₀ ω nb i := by
@@ -245,7 +292,14 @@ theorem Fr_pt {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt
   -- the noise part
   have hνr : |(nuRes hO (twR θ X₀ ω) (ρLd θ X₀ ω) (TcLd θ X₀ ω) (JL (jzX X₀) X₀) 0
       (NTd θ X₀ ω) : ℝ → ℝ) r| ≤ nb i + 6 / Queue6.Hc X₀ v := by
-    have h1 := hν hO i r hrb hr
+    rcases lt_or_ge r (Xm X₀) with hlow | hhigh
+    · rw [nu_low hc hev hO hlow, abs_zero]
+      have := hnb0 i
+      have : 0 ≤ 6 / Queue6.Hc X₀ v := div_nonneg (by norm_num) (KR.WidthReal.Hc_pos hX _).le
+      linarith
+    have h2H : r + 2 * Queue6.Hc X₀ r ≤ b := by
+      have := hO.small r (by linarith); linarith
+    have h1 := hν hO i r hhigh h2H hr
     have h2 : |ϑ r / Queue6.Hc X₀ r| ≤ 6 / Queue6.Hc X₀ v := by
       rw [abs_div, abs_of_pos hHr]
       calc |ϑ r| / Queue6.Hc X₀ r ≤ 6 / Queue6.Hc X₀ r :=
@@ -427,7 +481,7 @@ theorem hFr_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt
     have hs' := abs_le.mp hs
     have hs1 : 0.79 * u < s := by linarith
     have hs2 : s ≤ 2.21 * u := by linarith
-    have hsb : s ≤ b := by
+    have hsb : s ≤ 0.6 * b := by
       have h := (KR.TcLoc.osc_point_half (y := y) (n := n) hO (KR.WidthReal.Hc_mono hX)
         (by linarith) hn2 (s := s) (by rw [hpp]; exact hs)).2
       have hy3 : y ≤ 1.0125 * x := by linarith [hy2]
@@ -498,12 +552,12 @@ theorem hFrB_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
       (1 / 1000) (hbsEps X₀) epsH (epsH / 10))
     {nb : ℕ → ℝ} (hnu : Nu522 θ X₀ ω b nb) :
     ∀ hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀), ∀ x,
-      (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b → ∀ i r, r ≤ x → r < 2 * (Xm X₀ * 2 ^ i) →
+      (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b → ∀ i r, r ≤ 0.6 * x → r < 2 * (Xm X₀ * 2 ^ i) →
         (i = 0 ∨ Xm X₀ * 2 ^ i ≤ r) →
         |((Frx hO (ρLd θ X₀ ω) (TcLd θ X₀ ω) (NTd θ X₀ ω) 0 (jzX X₀) : KR.Ops.LocInt) :
           ℝ → ℝ) r| ≤ (fun _ i => FrBv θ X₀ ω nb i) x i :=
   fun hO _ _ hxb i _ hr hr1 hr2 =>
-    Fr_pt hc hev hb hbt hQC hE1 hN hT hnu hO (hr.trans hxb) ⟨hr1, hr2⟩
+    Fr_pt hc hev hb hbt hQC hE1 hN hT hnu hO (by linarith) ⟨hr1, hr2⟩
 
 end Fields
 

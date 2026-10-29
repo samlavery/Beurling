@@ -13,8 +13,9 @@ data, with `J = Jc`, `o_j = obG j` (the oscillation of `T_c` on the windows of t
   `bb(x) = 35.8 · C_N · 10 · ∑_{i ≤ J} (log 3v_i)² (obG i + F̄_r(x, i))`.
 
 The block bound of `(1 - B)F_c` is `blockG_le` with `oscG_le`; the remaining input is the block
-bound `|F_r| ≤ F̄_r(x, i)` on `[X₀⁻2ⁱ, X₀⁻2ⁱ⁺¹)` (block `0` taken as `(-∞, 2X₀⁻)`) at heights
-`≤ x` (`hFrB`; 04f-bridge.tex, `lem:predictable`: `F̄_r = o + 6/H + ν̄ + 54 sup η`).
+bound `|F_r| ≤ F̄_r(x, i)` on `[X₀⁻2ⁱ, X₀⁻2ⁱ⁺¹)` (block `0` taken as `(-∞, 2X₀⁻)`) at the heights
+read, `≤ 0.6x` (`hFrB`; correction #109; 04f-bridge.tex, `lem:predictable`:
+`F̄_r = o + 6/H + ν̄ + 54 sup η`).
 -/
 
 @[expose] public section
@@ -39,7 +40,7 @@ theorem hG_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt 
       (hbsEps X₀) θ (b + Queue6.Hc X₀ b))
     (FrB : ℝ → ℕ → ℝ) (hFrB0 : ∀ x i, 0 ≤ FrB x i)
     (hFrB : ∀ hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀), ∀ x,
-      (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b → ∀ i r, r ≤ x → r < 2 * (Xm X₀ * 2 ^ i) →
+      (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b → ∀ i r, r ≤ 0.6 * x → r < 2 * (Xm X₀ * 2 ^ i) →
         (i = 0 ∨ Xm X₀ * 2 ^ i ≤ r) →
         |((Frx hO (ρLd θ X₀ ω) (TcLd θ X₀ ω) (NTd θ X₀ ω) 0 (jzX X₀) : KR.Ops.LocInt) :
           ℝ → ℝ) r| ≤ FrB x i) :

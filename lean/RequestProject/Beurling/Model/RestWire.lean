@@ -90,13 +90,13 @@ set_option maxHeartbeats 1000000 in
 /-- **The block bound of the second bullet** (`lem:predictable`): on the block
 `[X₀⁻2ʲ, X₀⁻2ʲ⁺¹)` below `(x + H(x)/2)/2`, `|(1 - B)F_c| ≤ o_j + 2(F̄_{j-1} + F̄_j + F̄_{j+1})`,
 given the oscillation `o_j` of `T_c` on the windows and `|F_r| ≤ F̄_i` on the blocks (block `0`
-taken as `(-∞, 2X₀⁻)`) at heights `≤ x`. -/
+taken as `(-∞, 2X₀⁻)`) at the heights read, `≤ 0.6x` (correction #109). -/
 theorem blockG_le {ω : JitterΩ} (hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀))
     (ρL TcL NT vtH : KR.Ops.LocInt) (j0 : ℝ) {x : ℝ} (ob Fb : ℕ → ℝ) (hF0 : ∀ i, 0 ≤ Fb i)
     (hosc : ∀ j s r, Xm X₀ * 2 ^ j ≤ s → s < 2 * (Xm X₀ * 2 ^ j) →
       s ≤ (x + Queue6.Hc X₀ x / 2) / 2 → |r - s| ≤ Queue6.Hc X₀ s / 2 →
       |(TcL : ℝ → ℝ) r - (TcL : ℝ → ℝ) s| ≤ ob j)
-    (hFr : ∀ i r, r ≤ x → r < 2 * (Xm X₀ * 2 ^ i) → (i = 0 ∨ Xm X₀ * 2 ^ i ≤ r) →
+    (hFr : ∀ i r, r ≤ 0.6 * x → r < 2 * (Xm X₀ * 2 ^ i) → (i = 0 ∨ Xm X₀ * 2 ^ i ≤ r) →
       |(Frx hO ρL TcL NT vtH j0 : ℝ → ℝ) r| ≤ Fb i)
     (j : ℕ) (s : ℝ) (hs1 : Xm X₀ * 2 ^ j ≤ s) (hs2 : s < 2 * (Xm X₀ * 2 ^ j))
     (hs3 : s ≤ (x + Queue6.Hc X₀ x / 2) / 2) :
@@ -118,7 +118,7 @@ theorem blockG_le {ω : JitterΩ} (hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc 
   have hR : ∀ r, s - Queue6.Hc X₀ s / 2 ≤ r → r ≤ s + Queue6.Hc X₀ s / 2 →
       |(Frx hO ρL TcL NT vtH j0 : ℝ → ℝ) r| ≤ Rb := by
     intro r hr1 hr2
-    have hrx : r ≤ x := by linarith
+    have hrx : r ≤ 0.6 * x := by nlinarith
     have hp1 := hF0 (j + 1)
     have hp0 := hF0 j
     have hpm : 0 ≤ (if j = 0 then 0 else Fb (j - 1)) := by

@@ -370,6 +370,11 @@ Notes:
   `RML8GField.hG_field_paper`) assigns each block its own kernel mass and reindexes once (factor 7.0001). It proves the
   bound with 35.8·C_N·C_S′, as #110 states.
 
+- **Horizon of the ν input (fixed 2026-10-29).** `BModel.Nu522` (Lemma 5.22 as a Model input) first asked for the
+  bound at every height r ≤ b on G0(tE2 b). Lemma 5.22 at height r reads events up to about r + 1.6H(r), so this was
+  unprovable near b (found by the Queue6 agent). The consumers read F_r only at heights ≤ 0.6x, consistent with
+  correction #109. Nu522 now asks only for X₀⁻ ≤ r with r + 2H(r) ≤ b; below X₀⁻ the Model proves ν = 0 (`nu_low`).
+
 ## Status
 
 - **The main theorem is not formally verified.** It is proved in Lean only from `Theorem21InputsS`.
