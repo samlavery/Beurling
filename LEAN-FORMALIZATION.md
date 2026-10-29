@@ -177,6 +177,12 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     (`winCount_le_windowElems2`). So `ClusterUpTo` holds on the good event once the cluster events and a target-size
     event `tBound` are in the event family (`clusterUpTo_of_windows2`).
   - Residual inputs: Lemma A.6 (S3)(d) (`S3dHyp`), the multi-run skeleton bound, and the conditions `SlotHyp` on H.
+  - **Round 5:**
+    - `SlotHyp (capH X₀) X₀` is proved outright (`slotHyp_capH`, including that H(v)/v is antitone).
+    - (S3)(d) is proved (`s3d_sure`, `skeletonBound_construction_S3`) on the event where Lemma 5.1(iv) holds for the
+      realised system. That event follows from the Part I conclusions and the cluster event (`sparsEv_of_cluster`).
+    - The one new named input is `RS329`: the Rosser–Schoenfeld bound (3.29) for ∏_{p≤x}(1 − 1/p)^{−1}, which the
+      paper cites.
 - **Added in this repository: the local prime number theorem, §5.7** (`Beurling/LocalPNT/`, 45 files, 13.4k lines).
   - Theorem 5.24, parts (i)–(iii), with the paper's constants (`LPHyp.theorem_5_24`), and on Good(<z) up to the horizon
     from the lag bound (`theorem_5_24_of_lag`).
