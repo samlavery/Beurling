@@ -69,7 +69,9 @@ noncomputable def sec5_of (hO : OpHyp P (Queue6.Hc X₀) X0m)
     (hGb41 : Gb ≤ Real.exp (-41) + 2 / 10 ^ 22)
     (h6 : ∀ z ∈ Jint y δ, 6 * Real.log y / Queue6.Hc X₀ z ≤ h6') (hh6 : h6' ≤ 5 / 10 ^ 21)
     -- the start-dependent inputs at the window heights
-    (W : ∀ s, y / 4 ≤ s → s ≤ 2 * y → WinAt P tw X0m X₀ Tc s) :
+    (hδlow : 1 / δ ≤ Real.exp (LocalPNT.cLP (Real.log X₀) * √(Real.log y) / 2) *
+      Real.log y ^ 4 + (X₀ : ℝ) ^ (1 / 2 : ℝ))
+    (W : ∀ s, y / 4 ≤ s → s ≤ Ytop X₀ y δ → WinAt P tw X0m X₀ Tc s) :
     G1ResSec5 P tw X0m X₀ y δ ρ ν NT vtH TcL Jl Tc hO :=
   have hsz := sizes G.htnp G.hX0e G.hX0m
   have hΛ : 100000000 ≤ Real.log X₀ := hsz.2.1
@@ -90,6 +92,10 @@ noncomputable def sec5_of (hO : OpHyp P (Queue6.Hc X₀) X0m)
       ⟨le_rfl, by nlinarith [hR.2.2.2.2.1]⟩
     exact (hG0 _ hz).trans (hGbd _ hz)
   have hl4 : Real.log 4 < Real.log y := by linarith [log4_lt]
+  have hYy : ∀ s, s ≤ Ytop X₀ y δ → s ≤ y := fun s hs => by
+    have h1 := Ytop_le hΛ hy0 hy hδ0 hδlow
+    have h2 := KR.WidthReal.Hc_pos (by norm_num; linarith : (10 : ℝ) ^ 8 ≤ Real.log X₀) y
+    linarith
   { CN := CNt X₀
     hCN := hCNb.2
     SK := Sb
@@ -109,12 +115,12 @@ noncomputable def sec5_of (hO : OpHyp P (Queue6.Hc X₀) X0m)
       (fun z hz => J_logs hO (by linarith [G.hX0m]) hR.2.2.2.2.1 hz)
       (fun z _ => hO.pos z) h6
     hHhalf := G.hHw
-    hBRs := fun s hs1 hs2 => brs_of G hy4 hly hs1 hs2 (W s hs1 hs2)
+    hBRs := fun s hs1 hs2 => brs_of G hy4 hly hs1 (hYy s hs2) (W s hs1 hs2)
     Bx := BxY X₀ y
     CNE := 0
     hXBs := fun s hs1 hs2 => by
       rw [zero_div, add_zero]
-      exact xbs_of G hy4 hy' hs1 hs2 (W s hs1 hs2)
+      exact xbs_of G hy4 hy' hs1 (hYy s hs2) (W s hs1 hs2)
     δx := Real.exp (-60) / 800
     τ0 := 1.0001 * Real.log X₀
     hτ0 := by linarith
@@ -145,11 +151,11 @@ noncomputable def g1BInputs_of' (hO : OpHyp P (Queue6.Hc X₀) X0m) (hy0 : 0 < y
     (hG0 : ∀ z ∈ Jint y δ, 0 ≤ Gs z) (hGbd : ∀ z ∈ Jint y δ, Gs z ≤ Gb)
     (hGb41 : Gb ≤ Real.exp (-41) + 2 / 10 ^ 22)
     (h6 : ∀ z ∈ Jint y δ, 6 * Real.log y / Queue6.Hc X₀ z ≤ h6') (hh6 : h6' ≤ 5 / 10 ^ 21)
-    (W : ∀ s, y / 4 ≤ s → s ≤ 2 * y → WinAt P tw X0m X₀ Tc s) :
+    (W : ∀ s, y / 4 ≤ s → s ≤ Ytop X₀ y δ → WinAt P tw X0m X₀ Tc s) :
     KR.RML6.G1BInputs P tw X0m X₀ (TpR X₀ Tc) y :=
   g1BInputs_of hO hy0 hy M Q B
     (sec5_of hO G hy0 hy M.hδ0 M.hδ S Gs hKb hGb Sb Gb h6' hS0 hSb hSb20 hG0 hGbd hGb41 h6
-      hh6 W)
+      hh6 M.hδlow W)
 
 end KR.RML10
 

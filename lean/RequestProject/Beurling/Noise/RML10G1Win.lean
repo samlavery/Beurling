@@ -151,35 +151,35 @@ structure WinGlob (P : BeurlingSystem) (tw : ℕ → ℝ) (X0m : ℝ) (X₀ : �
   /-- `3 θ ≤ 10⁻³` (so `λ₀ = 1 + 3θ ≤ 1.001`; `θ = ε/10`) -/
   hθ3 : 3 * θW ≤ 1 / 1000
   hTm : Measurable Tc
-  hTb : ∀ t, t ≤ 3 * y → |Tc t| ≤ 2
-  /-- the horizons at the window heights `s ≤ 2y` -/
+  hTb : ∀ t, t ≤ 1.2 * y → |Tc t| ≤ 2
+  /-- the horizons at the heights read, `s ≤ y` (`KR.RML9.Ytop_le`) -/
   hZ0 : 2500 ≤ Z
-  hZ4 : 4 * y / X0m ≤ Z
-  hZ36 : 36 * y ≤ Z ^ 2
+  hZ : 2 * y / X0m ≤ Z
+  hZ18 : 18 * y ≤ Z ^ 2
   /-- `capH` at `X₀` (`capH_ge_one`, `capH_le_rpow`) -/
   hH1 : 1 ≤ Queue6.Hc X₀ X₀
   hδ : Queue6.Hc X₀ X₀ / X₀ ≤ 1 / 1000
   hδs : 200000 * (Queue6.Hc X₀ X₀ / X₀) ≤ Real.exp (-61)
 
-/-- The window facts at `s ∈ [y/4, 2y]`. -/
+/-- The window facts at `s ∈ [y/4, y]`. -/
 lemma win_facts (G : WinGlob P tw X0m X₀ y Z η1 η2 ε1 εW θW Tc) (hy4 : 4 * (X₀ : ℝ) ≤ y)
-    {s : ℝ} (hs1 : y / 4 ≤ s) (hs2 : s ≤ 2 * y) :
+    {s : ℝ} (hs1 : y / 4 ≤ s) (hs2 : s ≤ y) :
     X0m ≤ s ∧ (X₀ : ℝ) ≤ s ∧ 2 * s / X0m ≤ Z ∧ 18 * s ≤ Z ^ 2 ∧
       (∀ t, t ≤ 1.2 * s → |Tc t| ≤ 2) ∧ Real.log y - Real.log 4 ≤ Real.log s := by
   have hXm0 := G.htnp.width.X0m_pos
   have hX0p := (sizes G.htnp G.hX0e G.hX0m).2.2.2.2
   have hX0s : (X₀ : ℝ) ≤ s := by linarith
   have hy0 : 0 < y := by linarith
-  refine ⟨G.hX0m.trans hX0s, hX0s, ?_, by linarith [G.hZ36], fun t ht => G.hTb t (by linarith),
+  refine ⟨G.hX0m.trans hX0s, hX0s, ?_, by linarith [G.hZ18], fun t ht => G.hTb t (by linarith),
     ?_⟩
-  · refine le_trans ?_ G.hZ4
+  · refine le_trans ?_ G.hZ
     exact div_le_div_of_nonneg_right (by linarith) hXm0.le
   · have : Real.log (y / 4) ≤ Real.log s := Real.log_le_log (by positivity) hs1
     rwa [Real.log_div hy0.ne' (by norm_num)] at this
 
 /-- The `BridgeAt` data at a window height `s`. -/
 noncomputable def bridgeAt_win (G : WinGlob P tw X0m X₀ y Z η1 η2 ε1 εW θW Tc)
-    (hy4 : 4 * (X₀ : ℝ) ≤ y) {s : ℝ} (hs1 : y / 4 ≤ s) (hs2 : s ≤ 2 * y)
+    (hy4 : 4 * (X₀ : ℝ) ≤ y) {s : ℝ} (hs1 : y / 4 ≤ s) (hs2 : s ≤ y)
     (W : WinAt P tw X0m X₀ Tc s) :
     BridgeAt P (Queue6.Hc X₀) tw X0m X₀ θW (1 + 3 * θW) Tc 0 s
       ((5.1 * CNc X₀ + CSc) * ∑ u ∈ dyScales (X₀ : ℝ) s W.N, Real.log (2 * u) * W.o u +
@@ -208,7 +208,7 @@ noncomputable def bridgeAt_win (G : WinGlob P tw X0m X₀ y Z η1 η2 ε1 εW θ
 
 /-- **Proposition 5.26 at the window heights**: `|BR_c(s)| ≤ e^{-76}/log y`. -/
 theorem brs_of (G : WinGlob P tw X0m X₀ y Z η1 η2 ε1 εW θW Tc) (hy4 : 4 * (X₀ : ℝ) ≤ y)
-    (hly : 100000000 ≤ Real.log y) {s : ℝ} (hs1 : y / 4 ≤ s) (hs2 : s ≤ 2 * y)
+    (hly : 100000000 ≤ Real.log y) {s : ℝ} (hs1 : y / 4 ≤ s) (hs2 : s ≤ y)
     (W : WinAt P tw X0m X₀ Tc s) :
     |KR.BRc P (Queue6.Hc X₀) tw X0m s Tc| ≤ Real.exp (-76) / Real.log y := by
   have hθ0 := G.htnp.width.theta_nonneg
@@ -243,7 +243,7 @@ noncomputable def BxY (X₀ : ℕ) (y : ℝ) : ℝ :=
 `|R_res 1 - ρ^sh 1|(s) ≤ 𝔅_y`. -/
 theorem xbs_of (G : WinGlob P tw X0m X₀ y Z η1 η2 ε1 εW θW Tc) (hy4 : 4 * (X₀ : ℝ) ≤ y)
     (hy : Real.exp (Real.log X₀ / 100) < Real.log y) {s : ℝ} (hs1 : y / 4 ≤ s)
-    (hs2 : s ≤ 2 * y) (W : WinAt P tw X0m X₀ Tc s) :
+    (hs2 : s ≤ y) (W : WinAt P tw X0m X₀ Tc s) :
     |KR.Rres P (Queue6.Hc X₀) tw X0m s (KR.Chain.ind X₀) -
       KR.rhoSh P tw X0m s (KR.Chain.ind X₀)| ≤ BxY X₀ y := by
   have hθ0 := G.htnp.width.theta_nonneg

@@ -1,6 +1,7 @@
 module
 
 public import RequestProject.Beurling.Noise.RML9Bnd
+public import RequestProject.Beurling.Noise.RML9Top
 public import RequestProject.Beurling.Noise.RML8EEps
 public import RequestProject.Beurling.Noise.RML7G1
 public import RequestProject.Beurling.Noise.RML6BridgeNum
@@ -219,13 +220,16 @@ structure G1ResSec5 (P : BeurlingSystem) (tw : ℕ → ℝ) (X0m : ℝ) (X₀ : 
     (5.1 * CN * SK + 35.8 * CN * 10 * SG + h6) / Real.log y
   /-- `H(X₀⁻/2) ≤ 2 (X₀⁻/2)^{1/8}` (`KR.WidthReal.Hc_Xm_half_le` at `X₀⁻ = Xm X₀`) -/
   hHhalf : Queue6.Hc X₀ (X0m / 2) ≤ 2 * (X0m / 2) ^ (1 / 8 : ℝ)
-  /-- Proposition 5.26 at the window heights, with `sizeE_le`: `|BR_c| ≤ e^{-76}/log y` -/
-  hBRs : ∀ s, y / 4 ≤ s → s ≤ 2 * y →
+  /-- Proposition 5.26 at the heights read, `s ∈ [y/4, y(1-δ) + H_c(y)/2]` (the window points
+  of `J`; `Ytop_le_b`: these lie below the event height), with `sizeE_le`:
+  `|BR_c| ≤ e^{-76}/log y` -/
+  hBRs : ∀ s, y / 4 ≤ s → s ≤ Ytop X₀ y δ →
     |KR.BRc P (Queue6.Hc X₀) tw X0m s Tc| ≤ Real.exp (-76) / Real.log y
-  /-- Lemma 5.27 at the window heights: `|R_res 1 - ρ^sh 1| ≤ 𝔅 + 4.3 C_N E_θ/log y` -/
+  /-- Lemma 5.27 at the heights read (as for `hBRs`):
+  `|R_res 1 - ρ^sh 1| ≤ 𝔅 + 4.3 C_N E_θ/log y` -/
   Bx : ℝ
   CNE : ℝ
-  hXBs : ∀ s, y / 4 ≤ s → s ≤ 2 * y →
+  hXBs : ∀ s, y / 4 ≤ s → s ≤ Ytop X₀ y δ →
     |KR.Rres P (Queue6.Hc X₀) tw X0m s (KR.Chain.ind X₀) -
       KR.rhoSh P tw X0m s (KR.Chain.ind X₀)| ≤ Bx + CNE / Real.log y
   /-- Proposition 5.31(iii) at large heights and `4.3 C_N E_θ ≤ e^{-0.99Λ}` -/
@@ -357,9 +361,9 @@ noncomputable def g1BInputs_of (hO : OpHyp P (Queue6.Hc X₀) X0m) (hy0 : 0 < y)
           rw [abs_of_nonneg (by linarith)] at hw4; linarith)
         have hBR : Real.log s * |KR.BRc P (Queue6.Hc X₀) tw X0m s Tc| ≤
             Real.log s * (Real.exp (-76) / Real.log y) :=
-          mul_le_mul_of_nonneg_left (S.hBRs s hw1 hw2) hls.le
+          mul_le_mul_of_nonneg_left (S.hBRs s hw1 (win_le_Ytop hΛ hy0 M.hδ0 hz hs2)) hls.le
         have h := KR.RML7.abs_Rres_sub_rhoSh_loc (tw := tw) (j0 := BModel.jzX X₀) hO M.hPW hw3
-          hls M.hTm hTb' hBR (S.hXBs s hw1 hw2)
+          hls M.hTm hTb' hBR (S.hXBs s hw1 (win_le_Ytop hΛ hy0 M.hδ0 hz hs2))
         have e : Real.log s * (Real.exp (-76) / Real.log y) / Real.log s +
             |BModel.jzX X₀| * (S.Bx + S.CNE / Real.log y) =
             (Real.exp (-76) + Real.log y * BModel.jzX X₀ * (S.Bx + S.CNE / Real.log y)) /
