@@ -3,6 +3,7 @@ module
 public import RequestProject.Beurling.Model.MarginTop
 public import RequestProject.Beurling.BaseRange.RestBaseR
 public import RequestProject.Beurling.BaseRange.HjbR
+public import RequestProject.Beurling.Model.G1BQ6
 
 /-!
 # The top level: Corollary 2.2 from eq. (84) and the open inputs
@@ -23,10 +24,22 @@ open Finset Real MeasureTheory Set BeurlingSystem Construction BModel KR KR.TNP 
 
 namespace BModel
 
+/-- **The open inputs of `RestRes`** at `(ω, b)` once Queue6's lemmas are in: §5's group of
+Proposition 5.35(B) (`G1ResSec5`) and the residual `HthrHor` of Lemma 5.23 at `2δ`. -/
+structure RestResH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
+  /-- **Proposition 5.35(B)**, §5's inputs on range (B) (`KR.RML9.G1ResSec5`) -/
+  g1S : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
+    ∀ hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀),
+    KR.RML9.G1ResSec5 (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀ y (deltaB θ X₀ ω y) (ρLd θ X₀ ω)
+      (nuLd θ X₀ ω) (NTd θ X₀ ω) 0 (TcLd θ X₀ ω) (JL (jzX X₀) X₀) (TcR θ X₀ ω (jzX X₀)) hO
+  /-- the horizon of `Queue6.hthr_R` (Lemma 5.23 at `2δ`; under a paper check) -/
+  hhor : HthrHor θ X₀ ω b
+
 variable (θ X₀) in
-/-- **The open inputs** at `(ω, b)`: `RestRes` and `RestMargin` (Model choices substituted). -/
+/-- **The open inputs** at `(ω, b)`: `RestResH` and `RestMargin` at `ν̄ = nbQ` (Model choices
+substituted). -/
 def OthersInputsH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) : Prop :=
-  ∃ Rs : RestRes θ X₀ ω b, Nonempty (RestMargin θ X₀ ω b Rs.nb)
+  Nonempty (RestResH θ X₀ ω b) ∧ Nonempty (RestMargin θ X₀ ω b (Queue6.nbQ X₀))
 
 /-- **Theorem 2.1, hypothesis**: for `X₀` beyond some threshold, a.s. on `Good(< b)` for every
 admissible window `[a, b)`, the open inputs `OthersInputsH`. -/
@@ -64,17 +77,25 @@ theorem theorem21InputsZ_hux (h84 : BaseRange.Huxley84) (h : Theorem21InputsH) :
     have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
     have hX1 := QueueMono.one_lt_of_logX hX0 hc.hX
     have hb : (X₀ : ℝ) ≤ b := (X₀_le_uS (X₀ := X₀) (by linarith) m).trans hadm.1
-    filter_upwards [hRest m a b hadm, hnice, Queue6.hS2Epm_R hc hev] with ω hω hN hEp hG
+    filter_upwards [hRest m a b hadm, hnice, Queue6.hS2Epm_R hc hev, Queue6.nu522_tE2 hc hev,
+      Queue6.nu522_point hc hev] with ω hω hN hEp hnu hpt hG
     have hQC : ω ∈ QC (okQ θ X₀) (tq θ X₀) b.toNat := hG.1
     have hE1 : ∀ n, tE1 X₀ n < b.toNat → ω ∈ E1ev θ X₀ n := fun n hn =>
       mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn
-    obtain ⟨Rs, hMg⟩ := hω hG
+    obtain ⟨⟨Rh⟩, hMg⟩ := hω hG
     have hbs := hbs_Zc hc hev hb hQC hE1 hN
     have hb0 : (0 : ℤ) ≤ b := by
       have : (0 : ℝ) ≤ b := le_trans hX0 hb
       exact_mod_cast this
     have hbt : (b : ℝ) ≤ ((tE2 b : ℕ) : ℝ) := by
       unfold tE2; rw [show ((b.toNat : ℕ) : ℝ) = (b : ℝ) by exact_mod_cast Int.toNat_of_nonneg hb0]
+    have hOp := opR hc hev hbs hN.2.1 hlog1
+    let Rs : RestRes θ X₀ ω b :=
+      { g1Q := fun y hy hyb hyL => g1ResQueue6_c hc hev hb hN hbs hlog1 hOp
+          (fun r hr hrb => hpt _ hG hN hOp r hr (hrb.trans hbt)) Rh.hhor hy hyb hyL
+        g1S := Rh.g1S
+        nb := Queue6.nbQ X₀
+        hnu := hnu b hG }
     have hO : OthersInputs θ X₀ ω b := ⟨hXH X₀ h2h θ ω b, ⟨⟩, Rs, hMg⟩
     exact realMarginLoc_of_others hc hev hG hN hbt hb hbs hlog1 (hEp _ hG hN)
       (fun hH => hin_R hc hev hbs hN.2.1 hlog1 hb hH)
