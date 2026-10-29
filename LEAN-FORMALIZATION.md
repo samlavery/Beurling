@@ -96,6 +96,16 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     - `TiesNull`: the paper's claim in §3.4 that the coincidence event 𝒩₌ is null for the constructed model. The
       event 𝒩₌ is added to the event family; `tableBudget_add_null` shows this preserves the budget.
   - The slot offset is fixed at ϑ_s = 1/2.
+- **Added in this repository: the queue skeleton of Theorem 6.6, standalone** (`Beurling/Queue6/`, ~700 lines,
+  standard axioms only). Proved:
+  - Freedman's inequality on a good event (`freedman_good`, `freedman_peel`);
+  - the event Fr(I) and its failure bound, Theorem 6.6(i) for one window (`frEvent_fail`);
+  - the queue constraints of Definition 6.8 reconciled with the first-failure budget (`withQC_fail`);
+  - the deterministic part of Theorem 6.6(ii) as an induction over slots (`queue_and_data`), which produces the queue
+    window data from per-window facts.
+
+  The per-window facts (Lemma 3.9, Corollary 6.12, R1′) and the adaptedness of the window counts are parameters, to be
+  instantiated once the absorbed set is corrected (see the defects below).
 - **Appendix B.** Nearly all the certificates: bs-cert (region Z2 and the auxiliary checks), finite-n, x0-band, the
   constants, the bounds on φ, and rankin_R. Dickman's function is constructed and its facts (R1)–(R4) are proved.
 
