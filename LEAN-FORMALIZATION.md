@@ -105,6 +105,14 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
       complements.
     - Still open: a pathwise model of the realised configurations (window sets, skeletons, the integrands), which
       instantiates `pil_chain` and proves the skeleton reductions.
+  - **Round 5** (1085 lines): the realised-configuration model (`RankFull/Config.lean`, `WindowModel.lean`,
+    `ConfigReduction.lean`, `ModelCap.lean`).
+    - Window sets, skeletons from the greedy pivots, and (V1).
+    - Both skeleton reductions, proved pathwise.
+    - Proposition 6.11 and Theorem 6.23(a) for this model (`prop_6_11_window`, `theorem_6_23a_model`).
+    - The remaining named inputs are `SkeletonBound` and `CoverSkeletonBound`, i.e. Lemma A.5 + Theorem A.10 applied to
+      the model. Also needed: measurability of the counts, the model hypotheses linking it to the construction, and the
+      parameter bounds.
 - **Added in this repository: the construction of §3** (`Beurling/Model/`, 3947 lines). `constructedModel θ X₀ ω` builds
   the slot model from the jitters as the limit of a causal iteration.
   - Lemma 3.5 is formalized as `causal`: agreement up to z − 1 propagates to agreement up to z.
