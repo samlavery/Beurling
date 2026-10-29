@@ -5,6 +5,8 @@ public import RequestProject.Beurling.BaseRange.Split
 public import RequestProject.Beurling.BaseRange.Section73
 public import RequestProject.Beurling.BaseRange.Mu0b
 public import RequestProject.Beurling.BaseRange.Lemma73R
+public import RequestProject.Beurling.BaseRange.Lemma73LowTop
+public import RequestProject.Beurling.BaseRange.MarginHc
 
 /-!
 # Section 7 (the base range): all modules
@@ -36,5 +38,9 @@ public import RequestProject.Beurling.BaseRange.Lemma73R
   (d)(iii), the rational resolvent `g`, its bound, the resolvent identity and the telescoping
   with `g` (`lemma73diii_of`, `gEdge_bound`, `kDiffBound_of`);
 * `ZeroBelow`, `Lemma73Final`, `Lemma73R` : `μ₀ = μ₁ = 0` below `X₀` and **Lemma 7.3's inputs**
-  for the realised objects (`lemma73Inputs_complete`, `lemma73Inputs_tnp`, `lemma73Inputs_R`).
+  for the realised objects (`lemma73Inputs_complete`, `lemma73Inputs_tnp`, `lemma73Inputs_R`);
+* `Lemma73Low`, `Lemma73LowTop` : the same with the horizon `X₀⁻ ≤ Z` (`lemma73Inputs_R'`) and
+  `BModel.Lemma73Low` (`lemma73Low_of`);
+* `MarginHc` : Proposition 5.38(c) on `[X₀, 2X₀)`, the field `hc` of `RealMarginLoc`
+  (`margin_hc`), and `jzX_le`.
 -/
