@@ -10,6 +10,9 @@ public import RequestProject.Beurling.Noise.LemSMain
 public import RequestProject.Beurling.Noise.ThreshMass
 public import RequestProject.Beurling.Noise.Noise56
 public import RequestProject.Beurling.Noise.A1Sharp
+public import RequestProject.Beurling.Noise.L520Loc
+public import RequestProject.Beurling.Noise.MarginExact
+public import RequestProject.Beurling.Noise.MarginRealLoc
 public import RequestProject.Beurling.Noise.MarginChain
 public import RequestProject.Beurling.Noise.KptInv
 public import RequestProject.Beurling.Noise.MarginRecStep

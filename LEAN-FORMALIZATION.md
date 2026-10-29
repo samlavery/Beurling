@@ -197,6 +197,22 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
   - Lemma 5.20 is proved in four of its five forms (`KR.TNP`). Its remaining input is Corollary 6.3(ii) for the
     realised system.
   - The Step 1–5 recursion of Proposition 5.38 is proved from the paper's Step 2 bullets.
+
+  Round 5 (163 files, 43.7k lines in all):
+  - **Interface fix.** The top-level input `PointwiseMargin` asked for the margin at every height on Good(<b). That is not
+    provable, since (HBS) holds only up to the horizon. It is replaced by the local form `PointwiseMarginOn m X₀ b`,
+    which is all Corollary 5.40 reads (`r1Ident_of_marginOn`, `corollary_2_2_of_MOn`, `Noise/MarginRealTop.lean`).
+  - The chain is localized: Lemma 5.20 now reads 𝒩 only up to 3√(2v).
+  - Proved: EtaX0Sum, window integrability, Step 2's exact form, and PaperWidth for the realised width (from Theorem
+    6.23(c) in integrated form).
+  - The §5 chain is instantiated at the realised system (`BModel.pointwiseMarginOn_of_loc`). Its remaining inputs form
+    one structure, `RealMarginLoc`, whose fields are paper statements, each cited:
+    - construction facts;
+    - Lemma 7.3's inputs;
+    - the bridge sizes;
+    - the Prop 5.35 residuals;
+    - the §5.3 identities;
+    - the internal steps of Proposition 5.38.
 - **Added in this repository: measurability and the jitter law of the construction** (`Beurling/Model/`, round 3, about
   2700 lines).
   - The construction is measurable in ω, stage by stage. This includes the heights γ_k, through the least-good-height
