@@ -5,6 +5,7 @@ public import RequestProject.Beurling.BaseRange.RestBaseR
 public import RequestProject.Beurling.BaseRange.HjbR
 public import RequestProject.Beurling.Model.G1BQ6
 public import RequestProject.Beurling.Model.G1BSec5
+public import RequestProject.Beurling.Model.WinAtR
 public import RequestProject.Beurling.Model.MarginH
 
 /-!
@@ -29,11 +30,11 @@ namespace BModel
 /-- **The open inputs of Proposition 5.35(B)** at `(ω, b)` (the remaining inputs of
 `RML10.sec5_of` at the Model's bounds, `g1Sec5_c`), at every range-(B) start `y ≤ b + H(b)`. -/
 structure RestResH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
-  /-- §5: Propositions 5.26, 5.18(iii), (osc), 5.20 and Theorem 5.24 at the window heights
-  (`KR.RML10.WinAt`) -/
-  W : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
+  /-- Queue6: Lemma 5.29 (`ShortRecip`) at the window heights `s ∈ [y/4, Ytop]` (the input
+  `hSR` of `KR.RML10.WinAt`; the rest of `WinAt` is `winAt_c`) -/
+  hSR : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
     ∀ s, y / 4 ≤ s → s ≤ KR.RML9.Ytop X₀ y (deltaB θ X₀ ω y) →
-      KR.RML10.WinAt (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀ (TcR θ X₀ ω (jzX X₀)) s
+      KR.RML9.ShortRecip (PR θ X₀ ω) s
   /-- Model (needs §5's Lemma 5.20 block sums of `s_η`): `S ≤ 10⁻²⁰` on `J` (first bullet of
   Lemma 5.34, (sw-sums)) -/
   hSb : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
@@ -102,7 +103,10 @@ theorem theorem21InputsZ_hux (h84 : BaseRange.Huxley84) (h : Theorem21InputsH) :
       { g1Q := fun y hy hyb hyL => g1ResQueue6_c hc hev hb hG hbt hN hbs hlog1 hOp
           (fun r hr hrb => hpt _ hG hN hOp r hr (hrb.trans hbt)) hy hyb hyL
         g1S := fun y hy hyb hyL hO' => g1Sec5_c hc hev hb hG hbt hN hbs hlog1 (hnu b hG) hO'
-          hy hyb hyL (Rh.W y hy hyb hyL) (Rh.hSb y hy hyb hyL) (Rh.hGbd y hy hyb hyL)
+          hy hyb hyL (fun s hs1 hs2 =>
+            have r := win_range hc hev ω hy hyb hyL hs1 hs2
+            winAt_c hc hev hb hG hbt hN hbs hlog1 r.1 r.2.1 r.2.2.1 r.2.2.2
+              (Rh.hSR y hy hyb hyL s hs1 hs2)) (Rh.hSb y hy hyb hyL) (Rh.hGbd y hy hyb hyL)
         nb := Queue6.nbQ X₀
         hnu := hnu b hG }
     have hO : OthersInputs θ X₀ ω b :=
