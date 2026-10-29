@@ -4,6 +4,8 @@ public import RequestProject.Beurling.Model.MarginTop
 public import RequestProject.Beurling.BaseRange.RestBaseR
 public import RequestProject.Beurling.BaseRange.HjbR
 public import RequestProject.Beurling.Model.G1BQ6
+public import RequestProject.Beurling.Model.G1BSec5
+public import RequestProject.Beurling.Model.MarginH
 
 /-!
 # The top level: Corollary 2.2 from eq. (84) and the open inputs
@@ -24,20 +26,28 @@ open Finset Real MeasureTheory Set BeurlingSystem Construction BModel KR KR.TNP 
 
 namespace BModel
 
-/-- **The open inputs of `RestRes`** at `(ω, b)` once Queue6's lemmas are in: §5's group of
-Proposition 5.35(B) (`G1ResSec5`). -/
+/-- **The open inputs of Proposition 5.35(B)** at `(ω, b)` (the remaining inputs of
+`RML10.sec5_of` at the Model's bounds, `g1Sec5_c`), at every range-(B) start `y ≤ b + H(b)`. -/
 structure RestResH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
-  /-- **Proposition 5.35(B)**, §5's inputs on range (B) (`KR.RML9.G1ResSec5`) -/
-  g1S : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
-    ∀ hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀),
-    KR.RML9.G1ResSec5 (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀ y (deltaB θ X₀ ω y) (ρLd θ X₀ ω)
-      (nuLd θ X₀ ω) (NTd θ X₀ ω) 0 (TcLd θ X₀ ω) (JL (jzX X₀) X₀) (TcR θ X₀ ω (jzX X₀)) hO
+  /-- §5: Propositions 5.26, 5.18(iii), (osc), 5.20 and Theorem 5.24 at the window heights
+  (`KR.RML10.WinAt`) -/
+  W : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
+    ∀ s, y / 4 ≤ s → s ≤ KR.RML9.Ytop X₀ y (deltaB θ X₀ ω y) →
+      KR.RML10.WinAt (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀ (TcR θ X₀ ω (jzX X₀)) s
+  /-- Model (needs §5's Lemma 5.20 block sums of `s_η`): `S ≤ 10⁻²⁰` on `J` (first bullet of
+  Lemma 5.34, (sw-sums)) -/
+  hSb : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
+    ∀ z ∈ KR.RML9.Jint y (deltaB θ X₀ ω y), SK θ X₀ ω (Queue6.nbQ X₀) z ≤ 1 / 10 ^ 20
+  /-- Model (idem): `G ≤ e^{-41} + 2·10⁻²²` on `J` (second bullet, (osc), (sw-sums)) -/
+  hGbd : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
+    ∀ z ∈ KR.RML9.Jint y (deltaB θ X₀ ω y),
+      Gsum θ X₀ ω (Queue6.nbQ X₀) z ≤ Real.exp (-41) + 2 / 10 ^ 22
 
 variable (θ X₀) in
-/-- **The open inputs** at `(ω, b)`: `RestResH` and `RestMargin` at `ν̄ = nbQ` (Model choices
-substituted). -/
+/-- **The open inputs** at `(ω, b)`: `RestResH` (Proposition 5.35(B)) and `RestMarginH`
+(Proposition 5.38, Steps 4–6) at `ν̄ = nbQ`. -/
 def OthersInputsH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) : Prop :=
-  Nonempty (RestResH θ X₀ ω b) ∧ Nonempty (RestMargin θ X₀ ω b (Queue6.nbQ X₀))
+  Nonempty (RestResH θ X₀ ω b) ∧ Nonempty (RestMarginH θ X₀ ω b (Queue6.nbQ X₀))
 
 /-- **Theorem 2.1, hypothesis**: for `X₀` beyond some threshold, a.s. on `Good(< b)` for every
 admissible window `[a, b)`, the open inputs `OthersInputsH`. -/
@@ -80,7 +90,7 @@ theorem theorem21InputsZ_hux (h84 : BaseRange.Huxley84) (h : Theorem21InputsH) :
     have hQC : ω ∈ QC (okQ θ X₀) (tq θ X₀) b.toNat := hG.1
     have hE1 : ∀ n, tE1 X₀ n < b.toNat → ω ∈ E1ev θ X₀ n := fun n hn =>
       mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn
-    obtain ⟨⟨Rh⟩, hMg⟩ := hω hG
+    obtain ⟨⟨Rh⟩, ⟨Rm⟩⟩ := hω hG
     have hbs := hbs_Zc hc hev hb hQC hE1 hN
     have hb0 : (0 : ℤ) ≤ b := by
       have : (0 : ℝ) ≤ b := le_trans hX0 hb
@@ -91,10 +101,12 @@ theorem theorem21InputsZ_hux (h84 : BaseRange.Huxley84) (h : Theorem21InputsH) :
     let Rs : RestRes θ X₀ ω b :=
       { g1Q := fun y hy hyb hyL => g1ResQueue6_c hc hev hb hG hbt hN hbs hlog1 hOp
           (fun r hr hrb => hpt _ hG hN hOp r hr (hrb.trans hbt)) hy hyb hyL
-        g1S := Rh.g1S
+        g1S := fun y hy hyb hyL hO' => g1Sec5_c hc hev hb hG hbt hN hbs hlog1 (hnu b hG) hO'
+          hy hyb hyL (Rh.W y hy hyb hyL) (Rh.hSb y hy hyb hyL) (Rh.hGbd y hy hyb hyL)
         nb := Queue6.nbQ X₀
         hnu := hnu b hG }
-    have hO : OthersInputs θ X₀ ω b := ⟨hXH X₀ h2h θ ω b, ⟨⟩, Rs, hMg⟩
+    have hO : OthersInputs θ X₀ ω b :=
+      ⟨hXH X₀ h2h θ ω b, ⟨⟩, Rs, ⟨restMargin_of hc hev hb hN hbs hlog1 Rm⟩⟩
     exact realMarginLoc_of_others hc hev hG hN hbt hb hbs hlog1 (hEp _ hG hN)
       (fun hH => hin_R hc hev hbs hN.2.1 hlog1 hb hH)
       (fun hH => BaseRange.hjb_Rc hc hev hN.2.1 hlog1 hb hbs (by norm_num [epsH])
