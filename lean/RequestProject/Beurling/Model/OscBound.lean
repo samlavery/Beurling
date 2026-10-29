@@ -715,6 +715,140 @@ theorem hosc_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
   have he := exp_neg83_ge
   linarith
 
+set_option maxHeartbeats 4000000 in
+/-- **eq. (osc), first display, for centres `x ≥ 2X₀`** (as `hosc_c`; Step 6(b)).
+(04f-bridge.tex, paragraph "Oscillation of the target"): on
+`Good(< t)` (with (H_BS) on `[1, Zc b]` through `KR.TNP.Hyp`), at every start `y` of the window
+`W_x` of a centre `X₀^{1.01} ≤ x ≤ b`, `∑_u log(2u) o_u ≤ e^{-83}` for the clamped `T_c`
+(clamped at `y/2 + 4.2 H(y)`, correction #109). This is the field `hosc` of `RestBridge`. -/
+theorem hosc_c2 {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt : b ≤ t)
+    (hQC : ω ∈ QC (okQ θ X₀) (tq θ X₀) t) (hE1 : ∀ n, tE1 X₀ n < t → ω ∈ E1ev θ X₀ n)
+    (hN : ω ∈ NiceEv θ X₀)
+    (hT : KR.TNP.Hyp (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) (Zc X₀ b) (1 / 1000)
+      (1 / 1000) (hbsEps X₀) epsH (epsH / 10))
+    {x y : ℝ} (hx : 2 * (X₀ : ℝ) ≤ x) (hxb : x ≤ b) (hW : InW (Queue6.Hc X₀ x) x y) :
+    ∑ u ∈ KR.TNP.dyScales X₀ y (NKc X₀ y).1, Real.log (2 * u) *
+      KR.Chain.oscR (Queue6.Hc X₀) (KR.TcLoc.clampT (KR.TcLoc.oscHt (Queue6.Hc X₀) y)
+        (TcR θ X₀ ω (jzX X₀))) u ≤ Real.exp (-83) := by
+  have hX := hc.hX
+  have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
+  have hX1' := QueueMono.one_lt_of_logX hX0 hX
+  have hXp : (0 : ℝ) < X₀ := by linarith
+  -- the start `y`
+  have hxX : 2 * (X₀ : ℝ) ≤ x := hx
+  have hHx : Queue6.Hc X₀ x ≤ x / 40 := by
+    unfold Queue6.Hc; rw [max_eq_left (by linarith)]
+    exact KR.WidthReal.capH_le_tenth hX (by linarith)
+  have hyX : (X₀ : ℝ) ≤ y := by linarith [hW.1]
+  have hyb : y ≤ b + Queue6.Hc X₀ b := by
+    have := KR.WidthReal.Hc_mono hX hxb
+    have := (KR.WidthReal.Hc_pos hX (X₀ := X₀) b).le
+    linarith [hW.2]
+  set N := (NKc X₀ y).1
+  set f : ℕ → ℝ := fun k => (X₀ : ℝ) * 2 ^ k / 4 with hf
+  set F : ℝ → ℝ := fun u => Real.log (2 * u) * Bsc X₀ u with hF
+  have hf4 : ∀ k : ℕ, (X₀ : ℝ) ≤ 4 * f k := by
+    intro k; simp only [hf]
+    have : (1 : ℝ) ≤ 2 ^ k := one_le_pow₀ (by norm_num)
+    nlinarith
+  have hF0 : ∀ k : ℕ, 0 ≤ F (f k) := by
+    intro k
+    have h4 := hf4 k
+    simp only [hF]
+    have := KR.WidthReal.X0_ge hX (X₀ := X₀)
+    exact mul_nonneg (Real.log_nonneg (by linarith)) (Bsc_nonneg hc (by linarith))
+  -- step 1: `o_u ≤ B(u)`
+  have h1 : ∑ u ∈ KR.TNP.dyScales X₀ y N, Real.log (2 * u) *
+      KR.Chain.oscR (Queue6.Hc X₀) (KR.TcLoc.clampT (KR.TcLoc.oscHt (Queue6.Hc X₀) y)
+        (TcR θ X₀ ω (jzX X₀))) u ≤ ∑ u ∈ KR.TNP.dyScales X₀ y N, F u := by
+    refine Finset.sum_le_sum fun u hu => ?_
+    obtain ⟨k, -, rfl, huy⟩ := KR.TNP.mem_dyScales.mp hu
+    have h4 := hf4 k
+    simp only [hf] at h4
+    exact mul_le_mul_of_nonneg_left
+      (oscR_le_Bsc hc hev hb hbt hQC hE1 hN hT hyX hyb h4 huy)
+      (Real.log_nonneg (by linarith [KR.WidthReal.X0_ge hX (X₀ := X₀)]))
+  -- step 2: the sum over `k < N`
+  have h2 : ∑ u ∈ KR.TNP.dyScales X₀ y N, F u ≤ ∑ k ∈ Finset.range N, F (f k) := by
+    have hinj : Set.InjOn f (Finset.range N) := by
+      intro i _ j _ hij
+      simp only [hf] at hij
+      have h2 : (2 : ℝ) ^ i = 2 ^ j := by
+        have := hij; field_simp at this; linarith
+      exact Nat.pow_right_injective (le_refl 2) (by exact_mod_cast h2)
+    rw [← Finset.sum_image hinj]
+    refine Finset.sum_le_sum_of_subset_of_nonneg (Finset.filter_subset _ _) ?_
+    intro u hu _
+    obtain ⟨k, -, rfl⟩ := Finset.mem_image.mp hu
+    exact hF0 k
+  -- step 3: split and bound
+  set δ := Real.log 2 with hδdef
+  have hδ0 : 0.69 ≤ δ := by have := Real.log_two_gt_d9; linarith
+  have hδ7 : δ ≤ 0.7 := by have := Real.log_two_lt_d9; linarith
+  set Λ' := Real.log ((X₀ : ℝ) / 8) with hΛ'
+  have hΛ'1 : 1000 ≤ Λ' := by
+    rw [hΛ', Real.log_div (by linarith) (by norm_num)]
+    have : Real.log 8 < 3 := by
+      rw [show (8 : ℝ) = 2 ^ 3 by norm_num, Real.log_pow]
+      push_cast; linarith [Real.log_two_lt_d9]
+    linarith
+  have hLs : (3.9 : ℝ) * 10 ^ 18 ≤ Lstar X₀ := by
+    unfold Lstar
+    have h1 : (10 : ℝ) ^ 16 ≤ Real.log X₀ ^ 2 := by nlinarith
+    have h2 := exp_sH_ge
+    nlinarith
+  have hlogs : ∀ k : ℕ, Real.log (f k / 2) = Λ' + k * δ ∧
+      Real.log (2 * f k) = (Λ' + k * δ) + 2 * δ ∧ Real.log (4 * f k) = (Λ' + k * δ) + 3 * δ := by
+    intro k
+    have e1 : f k / 2 = (X₀ : ℝ) / 8 * 2 ^ k := by simp only [hf]; ring
+    have e2 : 2 * f k = (X₀ : ℝ) / 8 * 2 ^ k * 2 ^ 2 := by simp only [hf]; ring
+    have e3 : 4 * f k = (X₀ : ℝ) / 8 * 2 ^ k * 2 ^ 3 := by simp only [hf]; ring
+    have h8 : (0 : ℝ) < X₀ / 8 := by linarith
+    have hl : Real.log ((X₀ : ℝ) / 8 * 2 ^ k) = Λ' + k * δ := by
+      rw [Real.log_mul h8.ne' (by positivity), Real.log_pow]
+    refine ⟨by rw [e1, hl], ?_, ?_⟩
+    · rw [e2, Real.log_mul (by positivity) (by positivity), hl, Real.log_pow]; push_cast; ring
+    · rw [e3, Real.log_mul (by positivity) (by positivity), hl, Real.log_pow]; push_cast; ring
+  have hsplit : ∀ k : ℕ, F (f k) ≤ (((X₀ : ℝ) / 4) * 2 ^ k) ^ (-(1 / 10 : ℝ)) +
+      2 * (if Lstar X₀ < (Λ' + k * δ) + 3 * δ then
+        ((Λ' + k * δ) + 2 * δ) * ((Λ' + k * δ) ^ 4)⁻¹ else 0) := by
+    intro k
+    obtain ⟨e1, e2, e3⟩ := hlogs k
+    have hn := nonA_le hX (hf4 k)
+    have ef : f k = (X₀ : ℝ) / 4 * 2 ^ k := by simp only [hf]; ring
+    simp only [hF]
+    unfold Bsc
+    rw [e3, e1]
+    have e : Real.log (2 * f k) * ((10 * (2.04 * Queue6.Hc X₀ (2 * f k)) + 6) /
+        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 4 : ℝ)) +
+        2 * (if Lstar X₀ < Λ' + k * δ + 3 * δ then ((Λ' + k * δ) ^ 4)⁻¹ else 0)) =
+        Real.log (2 * f k) * ((10 * (2.04 * Queue6.Hc X₀ (2 * f k)) + 6) /
+        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 4 : ℝ))) +
+        2 * (if Lstar X₀ < Λ' + k * δ + 3 * δ then
+          Real.log (2 * f k) * ((Λ' + k * δ) ^ 4)⁻¹ else 0) := by
+      split_ifs <;> ring
+    rw [e]
+    rw [e2] at hn ⊢
+    rw [← ef]
+    linarith
+  have h3 : ∑ k ∈ Finset.range N, F (f k) ≤ 16 * ((X₀ : ℝ) / 4) ^ (-(1 / 10 : ℝ)) +
+      2 * (1.01 / δ * ((Lstar X₀ - 4 * δ) ^ 2)⁻¹) := by
+    refine (Finset.sum_le_sum fun k _ => hsplit k).trans ?_
+    rw [Finset.sum_add_distrib, ← Finset.mul_sum]
+    have g1 := sum_geom_tenth (show (0 : ℝ) < X₀ / 4 by linarith) N
+    have g2 := sum_term_le3 (L := Lstar X₀) (by linarith) hδ7 (by linarith) hΛ'1 N
+    linarith
+  -- numerics
+  have hq := X0_quarter_rpow_le hX
+  have hL4 : (3.8 : ℝ) * 10 ^ 18 ≤ Lstar X₀ - 4 * δ := by linarith
+  have hsq : (1.444 : ℝ) * 10 ^ 37 ≤ (Lstar X₀ - 4 * δ) ^ 2 := by nlinarith
+  have hA : 2 * (1.01 / δ * ((Lstar X₀ - 4 * δ) ^ 2)⁻¹) ≤ 3 / 10 ^ 37 := by
+    rw [← div_eq_mul_inv, div_div, mul_div_assoc', div_le_div_iff₀ (by positivity)
+      (by positivity)]
+    nlinarith
+  have he := exp_neg83_ge
+  linarith
+
 end Sum
 
 end BModel

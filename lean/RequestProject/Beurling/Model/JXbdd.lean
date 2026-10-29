@@ -395,6 +395,118 @@ theorem hbdd_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b)
     mul_le_mul_of_nonneg_left hS (by positivity)
   linarith
 
+
+set_option maxHeartbeats 2000000 in
+/-- **The eq. (jX0) family is bounded on `W_x`, centres `x ≥ 2X₀`** (Proposition 5.33; the
+field `hbdd`), for the
+realised system with (H_BS) on `[1, Zc b]` (through `KR.TNP.Hyp`). -/
+theorem hbdd_c2 {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b)
+    (hT : KR.TNP.Hyp (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) (Zc X₀ b) (1 / 1000)
+      (1 / 1000) (hbsEps X₀) epsH (epsH / 10)) :
+    ∀ x, 2 * (X₀ : ℝ) ≤ x → x ≤ b →
+      BddAbove (Set.range fun y : {y : ℝ // InW (Queue6.Hc X₀ x) x y} =>
+        jXat (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀)
+          (NKc X₀ y.1).1 (NKc X₀ y.1).2 y.1) := by
+  intro x hx _
+  have hX := hc.hX
+  have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
+  have hX1 := QueueMono.one_lt_of_logX hX0 hX
+  have hXp : (0 : ℝ) < X₀ := by linarith
+  have hXge := KR.WidthReal.X0_ge hX (X₀ := X₀)
+  have hXm2 : (2 : ℝ) ≤ Xm X₀ := by
+    have := KR.WidthReal.Xm_ge hX (X₀ := X₀); linarith
+  have hP := hT.width
+  have hp2 := KR.Chain.p_ge_two_of hT (Xm_le_Zc' hc b)
+  have ht := (KR.Chain.dec_R hT).1
+  have hlam : 1 + 2 * (epsH / 10) ≤ lamH := by norm_num [epsH, lamH]
+  have hlam0 : (0 : ℝ) ≤ lamH := by norm_num [lamH]
+  have hH1 : ∀ z, 1 ≤ Queue6.Hc X₀ z := fun z => by
+    unfold Queue6.Hc; exact KR.WidthReal.capH_one_le hX (le_max_right _ _)
+  have hH0 : ∀ z, 0 ≤ Queue6.Hc X₀ z := fun z => le_trans zero_le_one (hH1 z)
+  have hj0 := jzX_nonneg hc
+  -- the window
+  have hx2 : 2 * (X₀ : ℝ) ≤ x := hx
+  have hxX : (X₀ : ℝ) ≤ x := by linarith
+  have hHx : Queue6.Hc X₀ x ≤ x / 40 := by
+    unfold Queue6.Hc; rw [max_eq_left hxX]
+    exact KR.WidthReal.capH_le_tenth hX hxX
+  set Y := x + Queue6.Hc X₀ x / 2 with hYdef
+  have hlogY : 0 ≤ Real.log Y := Real.log_nonneg (by linarith [hH0 x])
+  set HY := Queue6.Hc X₀ Y
+  set M := ⌈Y⌉₊ + 1
+  set XB := xbBound (PR θ X₀ ω) (Xm X₀) lamH HY Y
+  set SB := ∑ v ∈ dyScales (X₀ : ℝ) Y M, Real.log (2 * v) *
+    ∑ k ∈ range (⌈2 * Y⌉₊ + 1), blkT (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀) k v
+  have hC : 0 ≤ CNc (X₀ : ℝ) := by
+    unfold CNc
+    have : 0 ≤ 4.71 / Real.log X₀ := div_nonneg (by norm_num) (by linarith)
+    have : (0 : ℝ) ≤ max (2.01 * BSaias.PhiInf 100000000) 1.4 :=
+      le_trans (by norm_num) (le_max_right _ _)
+    positivity
+  refine ⟨jzX X₀ * (XB * Real.log Y + 4.3 * CNc (X₀ : ℝ) * SB), ?_⟩
+  rintro _ ⟨⟨y, hW⟩, rfl⟩
+  simp only
+  have hyX : (X₀ : ℝ) ≤ y := by linarith [hW.1]
+  have hyY : y ≤ Y := hW.2
+  have hy0 : 0 < y := by linarith
+  have hly : 0 < Real.log y := Real.log_pos (by linarith)
+  have hlyY : Real.log y ≤ Real.log Y := Real.log_le_log hy0 hyY
+  have hXmy : Xm X₀ ≤ y := (Xm_le_X0 hc).trans hyX
+  -- `𝔹`
+  have hB := xbB_le_bound (X0 := (X₀ : ℝ)) hP hp2 ht hlam hXmy hyY hH1
+    (HY := HY) (fun z hz => KR.WidthReal.Hc_mono hX (hz.trans hyY))
+  have hB0 := xbB_nonneg (P := PR θ X₀ ω) (tw := twR θ X₀ ω) (X0m := Xm X₀) (X0 := (X₀ : ℝ))
+    (θ' := epsH / 10) (fun z => lt_of_lt_of_le one_pos (hH1 z)) hlam0 y
+  -- `S`
+  set N := (NKc X₀ y).1
+  set K := (NKc X₀ y).2
+  have hS : ∑ v ∈ dyScales (X₀ : ℝ) y N, Real.log (2 * v) *
+      TNP.sTheta (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀) K v ≤ SB := by
+    have hsub : dyScales (X₀ : ℝ) y N ⊆ dyScales (X₀ : ℝ) Y M := by
+      intro v hv
+      obtain ⟨k, -, rfl, hv⟩ := mem_dyScales.mp hv
+      refine mem_dyScales.mpr ⟨k, ?_, rfl, hv.trans hyY⟩
+      have hk2 : (k : ℝ) < 2 ^ k := by exact_mod_cast Nat.lt_two_pow_self
+      have h4 : (2 : ℝ) ^ k ≤ (X₀ : ℝ) * 2 ^ k / 4 := by
+        have := pow_pos (two_pos (α := ℝ)) k; nlinarith
+      have hc' := Nat.le_ceil Y
+      have : (k : ℝ) < ⌈Y⌉₊ + 1 := by linarith
+      exact_mod_cast this
+    have hlog2 : ∀ v ∈ dyScales (X₀ : ℝ) Y M, 0 ≤ Real.log (2 * v) := fun v hv => by
+      obtain ⟨k, -, rfl, -⟩ := mem_dyScales.mp hv
+      have : (1 : ℝ) ≤ 2 ^ k := one_le_pow₀ (by norm_num)
+      exact Real.log_nonneg (by nlinarith)
+    calc _ ≤ ∑ v ∈ dyScales (X₀ : ℝ) y N, Real.log (2 * v) *
+          ∑ k ∈ range (⌈2 * Y⌉₊ + 1), blkT (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀) k v := by
+          refine Finset.sum_le_sum fun v hv => mul_le_mul_of_nonneg_left ?_ (hlog2 v (hsub hv))
+          obtain ⟨k, -, rfl, hv'⟩ := mem_dyScales.mp hv
+          exact sTheta_le hXm2 hH0 (hv'.trans hyY) K
+      _ ≤ SB := Finset.sum_le_sum_of_subset_of_nonneg hsub fun v hv _ =>
+          mul_nonneg (hlog2 v hv) (Finset.sum_nonneg fun k _ => blkT_nonneg hXm2 hH0 k v)
+  have hS0 : 0 ≤ ∑ v ∈ dyScales (X₀ : ℝ) y N, Real.log (2 * v) *
+      TNP.sTheta (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀) K v := by
+    refine Finset.sum_nonneg fun v hv => mul_nonneg ?_ ?_
+    · obtain ⟨k, -, rfl, -⟩ := mem_dyScales.mp hv
+      have : (1 : ℝ) ≤ 2 ^ k := one_le_pow₀ (by norm_num)
+      exact Real.log_nonneg (by nlinarith)
+    · exact KR.TNP.blk_nonneg hP _ (fun k => by
+        have h1 := KR.TNP.Pk_ge_one hP.X0m_pos hT.hXm k
+        have h2 := Real.log_nonneg h1; linarith) v
+  unfold jXat
+  set S := ∑ v ∈ dyScales (X₀ : ℝ) y N, Real.log (2 * v) *
+      TNP.sTheta (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀) K v
+  set B := xbB (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) y (X₀ : ℝ) (epsH / 10) lamH
+  have e : jzX X₀ * (B + 4.3 * CNc (X₀ : ℝ) * S / Real.log y) * Real.log y =
+      jzX X₀ * (B * Real.log y + 4.3 * CNc (X₀ : ℝ) * S) := by
+    field_simp
+  rw [e]
+  apply mul_le_mul_of_nonneg_left _ hj0
+  have h1 : B * Real.log y ≤ XB * Real.log Y :=
+    mul_le_mul hB hlyY hly.le (hB0.trans hB)
+  have h2 : 4.3 * CNc (X₀ : ℝ) * S ≤ 4.3 * CNc (X₀ : ℝ) * SB :=
+    mul_le_mul_of_nonneg_left hS (by positivity)
+  linarith
+
 end Real
 
 end BModel

@@ -35,14 +35,6 @@ structure RestResH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
   hSR : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
     ∀ s, y / 4 ≤ s → s ≤ KR.RML9.Ytop X₀ y (deltaB θ X₀ ω y) →
       KR.RML9.ShortRecip (PR θ X₀ ω) s
-  /-- Model (needs §5's Lemma 5.20 block sums of `s_η`): `S ≤ 10⁻²⁰` on `J` (first bullet of
-  Lemma 5.34, (sw-sums)) -/
-  hSb : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
-    ∀ z ∈ KR.RML9.Jint y (deltaB θ X₀ ω y), SK θ X₀ ω (Queue6.nbQ X₀) z ≤ 1 / 10 ^ 20
-  /-- Model (idem): `G ≤ e^{-41} + 2·10⁻²²` on `J` (second bullet, (osc), (sw-sums)) -/
-  hGbd : ∀ y, (X₀ : ℝ) ≤ y → y ≤ b + Queue6.Hc X₀ b → (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y →
-    ∀ z ∈ KR.RML9.Jint y (deltaB θ X₀ ω y),
-      Gsum θ X₀ ω (Queue6.nbQ X₀) z ≤ Real.exp (-41) + 2 / 10 ^ 22
 
 variable (θ X₀) in
 /-- **The open inputs** at `(ω, b)`: `RestResH` (Proposition 5.35(B)) and `RestMarginH`
@@ -106,11 +98,15 @@ theorem theorem21InputsZ_hux (h84 : BaseRange.Huxley84) (h : Theorem21InputsH) :
           hy hyb hyL (fun s hs1 hs2 =>
             have r := win_range hc hev ω hy hyb hyL hs1 hs2
             winAt_c hc hev hb hG hbt hN hbs hlog1 r.1 r.2.1 r.2.2.1 r.2.2.2
-              (Rh.hSR y hy hyb hyL s hs1 hs2)) (Rh.hSb y hy hyb hyL) (Rh.hGbd y hy hyb hyL)
+              (Rh.hSR y hy hyb hyL s hs1 hs2))
+          (fun z hz => Rm.hSbX z (J_range hc hev ω hb hy hyb hyL hz).1
+            (J_range hc hev ω hb hy hyb hyL hz).2) (fun z hz => Rm.hGX z
+            (J_range hc hev ω hb hy hyb hyL hz).1 (J_range hc hev ω hb hy hyb hyL hz).2)
         nb := Queue6.nbQ X₀
         hnu := hnu b hG }
     have hO : OthersInputs θ X₀ ω b :=
-      ⟨hXH X₀ h2h θ ω b, ⟨⟩, Rs, ⟨restMargin_of hc hev hb hN hbs hlog1 Rm⟩⟩
+      ⟨hXH X₀ h2h θ ω b, ⟨⟩, Rs,
+        ⟨restMargin_of hc hev hb hG hbt hN hbs hlog1 (Queue6.nbQ_nonneg hc) Rm⟩⟩
     exact realMarginLoc_of_others hc hev hG hN hbt hb hbs hlog1 (hEp _ hG hN)
       (fun hH => hin_R hc hev hbs hN.2.1 hlog1 hb hH)
       (fun hH => BaseRange.hjb_Rc hc hev hN.2.1 hlog1 hb hbs (by norm_num [epsH])

@@ -210,6 +210,23 @@ lemma win_range (ω : JitterΩ) {b y s : ℝ} (hy : (X₀ : ℝ) ≤ y) (hyb : y
       nlinarith
     linarith
 
+/-- The window `J` of a range-(B) start lies in `[X₀^{1.01}, b]`. -/
+lemma J_range (ω : JitterΩ) {b y : ℝ} (hb : (X₀ : ℝ) ≤ b) (hy : (X₀ : ℝ) ≤ y)
+    (hyb : y ≤ b + Queue6.Hc X₀ b) (hyL : (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y) {z : ℝ}
+    (hz : z ∈ KR.RML9.Jint y (deltaB θ X₀ ω y)) : (X₀ : ℝ) ^ (1.01 : ℝ) ≤ z ∧ z ≤ b := by
+  have hX := hc.hX
+  have hR := KR.RML9.g1_range (by norm_num at hX ⊢; linarith) (y_pos_c hc hy) hyL
+    (deltaB_le (θ := θ) ω y)
+  obtain ⟨-, -, -, -, hδ4, -, -⟩ := hR
+  have hδ0 := deltaB_pos hc ω hy
+  have hz1 : y / 2 ≤ z := by nlinarith [hz.1]
+  have h1 := X1_le_half hc hy hyL
+  have hX1t := RML10.X0_le_X1 hX
+  have hzX : (X₀ : ℝ) ≤ z := by linarith
+  have h2 := horJ hc ω hb hy hyb hyL hzX hz.2
+  have := (KR.WidthReal.Hc_pos hX (X₀ := X₀) z).le
+  exact ⟨by linarith, by linarith⟩
+
 end BModel
 
 end

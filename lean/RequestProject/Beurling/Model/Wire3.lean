@@ -99,4 +99,47 @@ noncomputable def bridge_c (hc : Cond θ X₀) (hev : Even X₀) {ω : JitterΩ}
     (fun t ht => TcR_abs_le hc hev ω hT ht) (fun t ht => TcR_low hc ω ht) (NKc_spec hc y) hosc
     hW hbdd
 
+
+/-- `bridge_c` for centres `x ≥ 2X₀` (Step 6(b)). -/
+noncomputable def bridge_c2 (hc : Cond θ X₀) (hev : Even X₀) {ω : JitterΩ} {b : ℝ}
+    (hb : (X₀ : ℝ) ≤ b)
+    (hbs : (PR θ X₀ ω).HBS (Xm X₀) (Zc X₀ b) (1 / 1000) (1 / 1000) (hbsEps X₀))
+    (hSG : ω ∈ Queue6.SG (θ := θ) (X₀ := X₀)) (hX1 : 10 ^ 8 + 1 ≤ Real.log X₀)
+    {x y : ℝ} (hx : 2 * (X₀ : ℝ) ≤ x) (hxb : x ≤ b) (hW : InW (Queue6.Hc X₀ x) x y)
+    (hosc : ∑ u ∈ dyScales X₀ y (NKc X₀ y).1, Real.log (2 * u) *
+      oscR (Queue6.Hc X₀) (clampT (oscHt (Queue6.Hc X₀) y) (TcR θ X₀ ω (jzX X₀))) u ≤
+        Real.exp (-83))
+    (hbdd : BddAbove (Set.range fun y : {y : ℝ // InW (Queue6.Hc X₀ x) x y} =>
+      jXat (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀)
+        (NKc X₀ y.1).1 (NKc X₀ y.1).2 y.1)) :
+    BridgeR (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH
+      (TcR θ X₀ ω (jzX X₀)) (jzX X₀) y EBRc
+      (jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀)
+        (NKc X₀) x) :=
+  have hX : 10 ^ 8 ≤ Real.log X₀ := hc.hX
+  have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
+  have hX1' := QueueMono.one_lt_of_logX hX0 hX
+  have hT := tnpR hc hev hbs hSG hX1
+  have hmono := KR.WidthReal.Hc_mono hX
+  have hHx : Queue6.Hc X₀ x ≤ Queue6.Hc X₀ b := hmono hxb
+  have hHb0 : 0 ≤ Queue6.Hc X₀ b := by unfold Queue6.Hc; exact capH_nonneg _ _
+  have hyb : y ≤ b + Queue6.Hc X₀ b := by have := hW.2; linarith
+  have hZ := Zc_facts hc hb
+  have hXm0 : 0 < Xm X₀ := by linarith [Queue6.Xm_pos hc]
+  -- `y ≥ X₀`
+  have hxX : 2 * (X₀ : ℝ) ≤ x := hx
+  have hy : (X₀ : ℝ) ≤ y := by
+    have hHx4 : Queue6.Hc X₀ x ≤ x / 4 := by
+      unfold Queue6.Hc; rw [max_eq_left (by linarith)]
+      have := four_capH_le hX0 hX (show (X₀ : ℝ) ≤ x by linarith); linarith
+    have := hW.1; linarith
+  have hyZ : 2 * y / Xm X₀ ≤ Zc X₀ b := by
+    refine le_trans ?_ hZ.2.2.2
+    rw [div_le_div_iff_of_pos_right hXm0]; linarith
+  have h18 : 18 * y ≤ Zc X₀ b ^ 2 := KR.Chain.sq18_of_cofactor hXm0 hZ.1
+    (le_trans (div_le_div_of_nonneg_right (by linarith) hXm0.le) (Zc_18 hc hb))
+  bridgeR_real_loc hT hX (NKc X₀) hy hZ.1 hyZ h18 (by norm_num [lamH]) (by norm_num [lamH])
+    (fun t ht => TcR_abs_le hc hev ω hT ht) (fun t ht => TcR_low hc ω ht) (NKc_spec hc y) hosc
+    hW hbdd
+
 end BModel
