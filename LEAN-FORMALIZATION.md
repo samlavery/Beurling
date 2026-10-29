@@ -32,19 +32,19 @@ lake build
 ## The top-level statement
 
 ```lean
-theorem BModel.corollary_2_2_of_S_HB (hHB : ShortIntervalPNT) (h : Theorem21InputsS) : ¬ QuestionQ
+theorem Queue6.corollary_2_2_of_V (hHB : ShortIntervalPNT) (h : Theorem21InputsV) : ¬ QuestionQ
 ```
 
 - `QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`).
 - `ShortIntervalPNT` (`Beurling/Model/Slope.lean`) is a consequence of the Heath-Brown short-interval prime number
-  theorem (84), stated about ℕ: for q beyond a threshold, every interval in [q, 2q] of length at least (2q)^{7/12}
-  contains at least (1 − (log q)^{−3})·length/log 2q primes.
-- `Theorem21InputsS` (`Beurling/Model/TopS.lean`) fixes the slot model to the construction `constructedModel` built from
-  the jitters. For every θ ∈ [1/4, 1/2 − 10⁻⁴] and every even X₀ ≥ e^{10⁸} beyond some threshold, it asks for a
-  countable family of failure events E with the per-scale budget of Table 1 (`TableBudget`). On the good event it asks
-  for exactly two things: the queue window data and the cluster event.
-- Everything else Aristotle's `Theorem21InputsO` assumed is now proved for the construction: the slot model, the arrival
-  link, the slot facts, the target formula, the slow variation of H, Lemma 4.8(ii) and the null coincidence event 𝒩₌.
+  theorem (84), stated about ℕ. `BaseRange.shortIntervalPNT_of_huxley84` derives it from the full two-sided (84).
+- `Theorem21InputsV` (`Beurling/Queue6/TopV.lean`) is about the construction built in Lean from the jitters. The
+  event family, the Table 1 budget and the queue bound are all constructed and proved. What remains are three statements
+  of the paper, for that construction:
+  - Lemma 5.22: the E3/E3′ events of §5.6 and their per-scale budget;
+  - Corollary 5.40: the drift R1′ and Comp⁽²⁾ ≤ s₂|I|, in the form Theorem 6.6 uses;
+  - the Cover Bound, Proposition 6.19 (`CoverV`).
+- Earlier top levels (`corollary_2_2_of_O` … `_U`) are kept. Each one implies the previous.
 
 ## What is proved
 

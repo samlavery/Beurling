@@ -172,25 +172,24 @@ The main theorem is not formally verified. A Lean 4 formalization in [`lean/`](l
 [Aristotle](https://aristotle.harmonic.fun) (Harmonic) and continued here, proves Corollary 2.2 (the answer to Question Q is
 negative) from two explicit hypotheses, with no `sorry`:
 - the short-interval prime number theorem (84) of Heath-Brown;
-- `Theorem21InputsS`.
+- `Theorem21InputsV`.
 
-`Theorem21InputsS` fixes the construction, which is now built from the jitters in Lean. It asks only for three things:
-- the probability budget of Table 1;
-- the queue window data;
-- the cluster event on the good event.
+`Theorem21InputsV` fixes the construction, which is now built from the jitters in Lean, together with its event family and
+probability budget. It asks only for three statements of the paper about that construction:
+- Lemma 5.22 (the §5.6 noise events);
+- Corollary 5.40 (the drift R1′);
+- the Cover Bound, Proposition 6.19.
 
 - **Proved and used by the top-level theorem:**
-  - most of Sections 3 and 4, including the construction itself as a causal fixed point, Lemma 3.3 and Lemma 4.8(ii);
+  - Sections 3 and 4, including the construction itself as a causal fixed point, Lemma 3.3 and Lemma 4.8(ii);
   - the measurability of the construction, its jitter law, and the nullity of the coincidence event 𝒩₌;
-  - Lemma 5.1 and Lemma 6.26;
+  - Lemma 5.1, (HBS) and Lemma 6.26 on the good event;
+  - Section 6: Theorem 6.6, Lemma 6.1, Proposition 6.11, Theorem 6.23, the event family and Table 1;
+  - Appendix A except the Cover Bound;
   - nearly all the certificates of Appendix B.
-- **Proved but not yet used by the top-level theorem:**
-  - most of §5.1–5.7: Lemma 5.3, Theorem 5.6, Corollary 5.9, Theorems 5.14 and 5.15, the local PNT Theorem 5.24;
-  - the skeleton of Theorem 6.6;
-  - Appendix A up to the Pivot-Integration Lemma for one run;
-  - Prop 6.11 and Theorem 6.23(a), from the skeleton bounds.
-- **Not yet proved:** the bridge and margin of §5.8–5.9, §7, the multi-run Pivot-Integration
-  Lemma, and the assembly of the queue window data and the Table 1 budget.
+- **Proved but not yet used by the top-level theorem:** most of §5.1–5.7 (Lemma 5.3, Theorem 5.6, Corollary 5.9,
+  Theorems 5.14 and 5.15, the local PNT Theorem 5.24) and most of §7 (Lemma 7.1, Lemma 7.3 from named inputs).
+- **Not yet proved:** the bridge and margin of §5.8–5.9 (which give Corollary 5.40), Lemma 5.22, and the Cover Bound.
 
 The formalization found four defects in the paper (corrections #102 and #104, constants in Lemma 5.7 and Theorem 5.24; #103, certificate
 coverage of two constants; #105, the definition of X_Hux) and two in the Aristotle model
