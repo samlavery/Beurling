@@ -288,6 +288,11 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
   - Named inputs: Lemma 7.3(b), (c) pointwise and (d)(iii), and the edge expansion. All of these need the realised
     operator K_pt of §5, which is not yet defined in Lean.
   - No errors in §7; the formalization found the definitional slip logged as #105.
+  - **Round 2** (3.2k lines):
+    - Lemma 7.3(c) for the realised μ₁, proved outright (`kptF1Bound`, `kshQF1Second`, `lemma73c_realised`).
+    - The realised μ₀ and the decomposition (86) (`mu0R`, `shdecomp`).
+    - Lemma 7.3(b) from `Lemma73bCore`, i.e. Steps 1–3 of its proof together with the decision-order mismatch.
+    - `lemma73Inputs_full` assembles Lemma 7.3's inputs for the realised system, from `Lemma73bCore` and (d)(iii).
 - **Appendix B.** Nearly all the certificates: bs-cert (region Z2 and the auxiliary checks), finite-n, x0-band, the
   constants, the bounds on φ, and rankin_R. Dickman's function is constructed and its facts (R1)–(R4) are proved.
 
