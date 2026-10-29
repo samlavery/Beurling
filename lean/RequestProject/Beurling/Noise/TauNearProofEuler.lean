@@ -58,7 +58,7 @@ theorem smooth_harm_le (h : P.HBS X0m Z η1 η2 ε1) {z : ℝ} (hz : 2 ≤ z) (h
     Finset.sum_congr rfl fun e _ => by rw [Real.rpow_neg_one, one_div]
   -- the exponent
   have hsum1 := h.sum_inv_p_le hz hzZ'
-  have hsum2 := h.sum_log_div_sq_le (by linarith) hzZ
+  have hsum2 := h.sum_log_div_sq_le_lemS (by linarith) hzZ
   have hl2 : 0.6931 < Real.log 2 := by have := Real.log_two_gt_d9; linarith
   have hterm : ∀ j ∈ J, P.p j ^ (-(1 : ℝ)) + (P.p j ^ (-(1 : ℝ))) ^ 2 /
       (2 * (1 - P.p j ^ (-(1 : ℝ)))) ≤ 1 / P.p j + Real.log (P.p j) / P.p j ^ 2 / 0.6931 := by

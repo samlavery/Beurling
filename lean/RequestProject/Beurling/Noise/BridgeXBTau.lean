@@ -184,6 +184,24 @@ theorem coverF {Sc : Finset ℝ} {s η : ℝ → ℝ} (f : ℕ → ℝ) (hf : �
     simp only [Finset.mem_filter]
     tauto
 
+/-- `coverF` with the scale bounds asked only at the positions `y ≤ x`. -/
+theorem coverF_loc {Sc : Finset ℝ} {s η : ℝ → ℝ} (f : ℕ → ℝ) (hf : ∀ d, 0 ≤ f d) (hx : 0 ≤ x)
+    (hcov : ∀ d ∈ NAll P x X0m, ∃ v ∈ Sc, d ∈ NW P x v) (hSc : ∀ v ∈ Sc, 0 < v)
+    (hs : ∀ v ∈ Sc, 0 ≤ s v ∧ ∀ y, v ≤ y → y < 2 * v → y ≤ x → η y ≤ s v) :
+    ∑ d ∈ NAll P x X0m, f d / Vl P d * η (posn P.labelVal x d) ≤
+      ∑ v ∈ Sc, (∑ d ∈ NW P x v, f d / Vl P d) * s v := by
+  classical
+  have h := coverF (P := P) (X0m := X0m) (x := x) (η := fun y => if y ≤ x then η y else 0) f hf
+    hcov hSc (fun v hv => ⟨(hs v hv).1, fun y h1 h2 => by
+      show (if y ≤ x then η y else 0) ≤ s v
+      by_cases hyx : y ≤ x
+      · rw [if_pos hyx]; exact (hs v hv).2 y h1 h2 hyx
+      · rw [if_neg hyx]; exact (hs v hv).1⟩)
+  refine le_trans (le_of_eq ?_) h
+  refine Finset.sum_congr rfl fun d _ => ?_
+  show _ = _ * (if posn P.labelVal x d ≤ x then η (posn P.labelVal x d) else 0)
+  rw [if_pos (posn_le_self hx d)]
+
 /-- **Lemma 5.27, Step 3**: `𝒯(x) ≤ 4.3 C_N E_θ/log x`, with `C_N = C_S(2.04 + 4.71/log X₀)`,
 `E_θ = ∑_v log(2v) θ_v` (Lemma 5.20 block bounds `ThetaBlk`), the `η_{X₀}` block bounds `s⁰`
 with `∑_v s⁰_v ≤ 1.52` (step (iii) of the proof of Proposition 5.18), and the inputs of
@@ -198,7 +216,7 @@ theorem xbTau_le {X0m Z η1 η2 : ℝ} {ε1 : ℝ → ℝ} (h : P.HBS X0m Z η1 
     (hSc : ∀ u ∈ Sc, 2 * u ≤ X0m ∨ X0 ≤ 2 * u) (hEta : EtaBound P H tw X0m Sc s)
     (hE : lam0 * (max (2.01 * BSaias.PhiInf 100000000) 1.4 * (2.04 + 4.71 / Real.log X0)) *
       ∑ v ∈ Sc, Real.log (2 * v) * s v ≤ 1 / 2)
-    (hX0b : ∀ v ∈ Sc, 0 ≤ s0 v ∧ ∀ y, v ≤ y → y < 2 * v → etaX0 P H X0m y ≤ s0 v)
+    (hX0b : ∀ v ∈ Sc, 0 ≤ s0 v ∧ ∀ y, v ≤ y → y < 2 * v → y ≤ x → etaX0 P H X0m y ≤ s0 v)
     (hs0 : ∑ v ∈ Sc, s0 v ≤ 1.52) (hθ : ThetaBlk P H tw X0m Sc th) :
     xbTau P H tw X0m x X0 ≤
       4.3 * (max (2.01 * BSaias.PhiInf 100000000) 1.4 * (2.04 + 4.71 / Real.log X0)) *
@@ -333,7 +351,8 @@ theorem xbTau_le {X0m Z η1 η2 : ℝ} {ε1 : ℝ → ℝ} (h : P.HBS X0m Z η1 
         · exact h'
       exact TVE_le hP hX0e hp2 hd2 hT
     refine (Finset.sum_le_sum hstep).trans ?_
-    refine ((regroupB1 (X0 := X0) hp2 hX τd hτ0).trans (coverF τd hτ0 hcov hSc0 hX0b)).trans ?_
+    refine ((regroupB1 (X0 := X0) hp2 hX τd hτ0).trans
+      (coverF_loc τd hτ0 (by linarith [h.X0m_pos]) hcov hSc0 hX0b)).trans ?_
     set K := 2.04 * (2 * CN / Real.log x * (Eθ / (Real.log X0m + 1)))
     have hK0 : 0 ≤ K := by positivity
     calc ∑ v ∈ Sc, (∑ d ∈ NW P x v, τd d / Vl P d) * s0 v ≤ ∑ v ∈ Sc, K * s0 v :=
@@ -381,7 +400,7 @@ theorem lemma_5_27 {X0m Z η1 η2 : ℝ} {ε1 : ℝ → ℝ} (h : P.HBS X0m Z η
     (hSc : ∀ u ∈ Sc, 2 * u ≤ X0m ∨ X0 ≤ 2 * u) (hEta : EtaBound P H tw X0m Sc s)
     (hE : lam0 * (max (2.01 * BSaias.PhiInf 100000000) 1.4 * (2.04 + 4.71 / Real.log X0)) *
       ∑ v ∈ Sc, Real.log (2 * v) * s v ≤ 1 / 2)
-    (hX0b : ∀ v ∈ Sc, 0 ≤ s0 v ∧ ∀ y, v ≤ y → y < 2 * v → etaX0 P H X0m y ≤ s0 v)
+    (hX0b : ∀ v ∈ Sc, 0 ≤ s0 v ∧ ∀ y, v ≤ y → y < 2 * v → y ≤ x → etaX0 P H X0m y ≤ s0 v)
     (hs0 : ∑ v ∈ Sc, s0 v ≤ 1.52) (hθ : ThetaBlk P H tw X0m Sc th) :
     |Rres P H tw X0m x ((Ici X0).indicator fun _ => 1) -
         rhoSh P tw X0m x ((Ici X0).indicator fun _ => 1)| ≤

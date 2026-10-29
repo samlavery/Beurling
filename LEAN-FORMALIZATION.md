@@ -32,23 +32,20 @@ lake build
 ## The top-level statement
 
 ```lean
-theorem BModel.corollary_2_2_of_P (hHB : ShortIntervalPNT) (h : Theorem21InputsP) : ¬ QuestionQ
+theorem BModel.corollary_2_2_final (hHB : ShortIntervalPNT) (h : Theorem21InputsFinal) : ¬ QuestionQ
 ```
 
 - `QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`).
 - `ShortIntervalPNT` (`Beurling/Model/Slope.lean`) is a consequence of the Heath-Brown short-interval prime number
   theorem (84), stated about ℕ. `BaseRange.shortIntervalPNT_of_huxley84` derives it from the full two-sided (84).
-- `Theorem21InputsP` (`Beurling/Model/S2Final.lean`; not the older `Construction.Theorem21InputsP`) is about the
-  construction built in Lean from the jitters. Everything else is proved:
-  - the event family, the Table 1 budget and the queue bound;
-  - all of Appendix A;
-  - Lemma 5.22 (its events, the variance bound and both branches of (s2));
-  - the §5.3 margin objects, with the bookkeeping identity and the compensator identification.
-
-  What remains is one statement of the paper, for that construction: `PointwiseMargin (marginM θ X₀ ω) X₀`, i.e.
-  Proposition 5.38 for the construction's margin density m = T′ − K^pt ρ̃ − NT_pt, almost surely on Good(<t(E2)).
-- Earlier top levels (`Construction.corollary_2_2_of_O` … `BModel.corollary_2_2_of_M`) are kept. Each one implies the
-  previous.
+- `Theorem21InputsFinal` (`Beurling/Model/MarginTop.lean`) is about the construction built in Lean from the jitters.
+  Everything outside Proposition 5.38 for the construction's margin density is proved. Proposition 5.38's §5 chain is
+  assembled and instantiated at the realised system; its remaining inputs are the open fields of the structures
+  `RestBase`, `RestBridge`, `RestRes` and `RestMargin` (collected as `OthersInputs`), plus `Lemma73Low`, the low-height
+  case b < 4X₀ + 2 of Lemma 7.3's inputs. Each open field is a statement of the paper, cited in its docstring.
+- Earlier top levels (`Construction.corollary_2_2_of_O`, …, `BModel.corollary_2_2_of_P`) are kept. Each one implies
+  the previous. `BModel.corollary_2_2_of_P` takes Proposition 5.38 at every height. That input is unprovable on the good
+  event, so `corollary_2_2_final` replaces it with the local form.
 
 ## What is proved
 
@@ -354,6 +351,17 @@ Notes:
   - Where a proof had used integrality, it was replaced by an argument for real values: summing Ê_A over the countable set
     𝒜, and showing that the jumps of T are locally constant from local finiteness. No new hypotheses were needed at the
     top level.
+
+- **Vacuous input structure (fixed 2026-10-29).** `BModel.RealMarginLoc`, as committed in aaec2e3, was empty. It required
+  an additive operator `B` with `B g x = Bavg (H x) g x`, which is impossible because Lean's Bochner integral is 0 on
+  non-integrable functions (`Margin.no_additive_Bavg`). So the implication `hPM_of_loc` built on it proved nothing.
+  - The §5 agent found this.
+  - The fix states the Lemma 5.34 operators on locally integrable functions and proves their four fields.
+  - The other fields were then checked for the same failure mode (integrals of non-integrable functions, unbounded
+    suprema, division by zero). A field-by-field satisfiability argument is in the agent's report; it is not a formal
+    proof of non-emptiness.
+  - Two further fields were found unsatisfiable as stated and corrected: `hhead` (its constant ignored the positive
+    𝒩-tail) and the global `hTb`/`X0S.Hyp.count` (stated at all heights; now restricted to the horizon).
 
 ## Status
 

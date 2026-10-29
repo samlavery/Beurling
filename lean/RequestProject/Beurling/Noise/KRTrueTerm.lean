@@ -45,6 +45,17 @@ def EtaX0Sum (P : BeurlingSystem) (H : ℝ → ℝ) (X0m X0 : ℝ) (Sc : Finset 
   (∀ v ∈ Sc, 0 ≤ s v ∧ ∀ y, v ≤ y → y < 2 * v → etaX0 P H X0m y ≤ s v) ∧
     ∑ v ∈ Sc, Real.log (2 * v) * s v ≤ 1.52 * Real.log (2 * X0)
 
+/-- **Step (iii), localized at a start `x`**: the bound `η_{X₀} ≤ s_v` on `[v, 2v)` is asked only
+at the positions `y ≤ x` (the consumers evaluate `η_{X₀}` at the positions `x/n ≤ x`). -/
+def EtaX0SumLoc (P : BeurlingSystem) (H : ℝ → ℝ) (X0m X0 : ℝ) (Sc : Finset ℝ) (s : ℝ → ℝ)
+    (x : ℝ) : Prop :=
+  (∀ v ∈ Sc, 0 ≤ s v ∧ ∀ y, v ≤ y → y < 2 * v → y ≤ x → etaX0 P H X0m y ≤ s v) ∧
+    ∑ v ∈ Sc, Real.log (2 * v) * s v ≤ 1.52 * Real.log (2 * X0)
+
+lemma EtaX0Sum.toLoc {P : BeurlingSystem} {H : ℝ → ℝ} {X0m X0 : ℝ} {Sc : Finset ℝ}
+    {s : ℝ → ℝ} (h : EtaX0Sum P H X0m X0 Sc s) (x : ℝ) : EtaX0SumLoc P H X0m X0 Sc s x :=
+  ⟨fun v hv => ⟨(h.1 v hv).1, fun y h1 h2 _ => (h.1 v hv).2 y h1 h2⟩, h.2⟩
+
 lemma toReal_lintegral_le3 {f g k : ℝ → ℝ} {ι : Type*} (s : Finset ι) {h : ι → ℝ → ℝ}
     (hg : Integrable g) (hgm : Measurable g) (hh : ∀ i ∈ s, Integrable (h i))
     (hhm : ∀ i ∈ s, Measurable (h i)) (hk : Integrable k) (hkm : Measurable k)
@@ -326,6 +337,29 @@ theorem cover_gen {Sc : Finset ℝ} {s η : ℝ → ℝ}
   · intro d v
     simp only [Finset.mem_filter]
     tauto
+
+lemma posn_le_self {x : ℝ} (hx : 0 ≤ x) (d : ℕ) : posn P.labelVal x d ≤ x := by
+  unfold posn
+  exact div_le_self hx (LemmaM.one_le_valN _ (fun r _ => P.one_le_labelVal r))
+
+/-- `cover_gen` with the scale bounds asked only at the positions `y ≤ x`. -/
+theorem cover_gen_loc {Sc : Finset ℝ} {s η : ℝ → ℝ} (hx : 0 ≤ x)
+    (hcov : ∀ d ∈ NAll P x X0m, ∃ v ∈ Sc, d ∈ NW P x v) (hSc : ∀ v ∈ Sc, 0 < v)
+    (hs : ∀ v ∈ Sc, 0 ≤ s v ∧ ∀ y, v ≤ y → y < 2 * v → y ≤ x → η y ≤ s v) :
+    ∑ d ∈ NAll P x X0m, aLev P H tw X0m x d / Vl P d * η (posn P.labelVal x d) ≤
+      ∑ v ∈ Sc, Aw P H tw X0m x v * s v := by
+  classical
+  have h := cover_gen (P := P) (H := H) (tw := tw) (X0m := X0m) (x := x)
+    (η := fun y => if y ≤ x then η y else 0) hcov hSc (fun v hv => ⟨(hs v hv).1,
+      fun y h1 h2 => by
+        show (if y ≤ x then η y else 0) ≤ s v
+        by_cases hyx : y ≤ x
+        · rw [if_pos hyx]; exact (hs v hv).2 y h1 h2 hyx
+        · rw [if_neg hyx]; exact (hs v hv).1⟩)
+  refine le_trans (le_of_eq ?_) h
+  refine Finset.sum_congr rfl fun d _ => ?_
+  show _ = _ * (if posn P.labelVal x d ≤ x then η (posn P.labelVal x d) else 0)
+  rw [if_pos (posn_le_self hx d)]
 
 /-- **Proposition 5.18, the third bound** (terminal levels, step (iii)): with the inputs of
 `prop_5_18` and `EtaX0Sum`, for every scale `u` with `1.52 log(2X₀) ≤ 1.53 log(2u)` (the paper's

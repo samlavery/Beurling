@@ -75,13 +75,13 @@ lemma Hc_pow8_le (y : ℝ) (_hy : 0 < y) : Hc X₀ y ^ 8 ≤ max y (Xm X₀ / 2)
 
 /-- **`KR.X0S.Hyp` for the realised system** (Proposition 5.18, step (iii)): all fields but the
 inputs (HBS), `X₀⁻ ≤ Z`, `0 ≤ θ ≤ 1/2` and the window count are proved. -/
-theorem x0sHyp_R {ω : JitterΩ} {Z η1 η2 θo : ℝ} {ε1 : ℝ → ℝ}
+theorem x0sHyp_R {ω : JitterΩ} {Z η1 η2 θo Y : ℝ} {ε1 : ℝ → ℝ}
     (hbs : (PR θ X₀ ω).HBS (Xm X₀) Z η1 η2 ε1) (hZ : Xm X₀ ≤ Z) (hθ0 : 0 ≤ θo)
     (hθ1 : θo ≤ 1 / 2)
-    (hcount : ∀ y, (X₀ : ℝ) ^ 2 / 2 < y →
+    (hcount : ∀ y, (X₀ : ℝ) ^ 2 / 2 < y → y ≤ Y →
       ((KR.X0S.Win (PR θ X₀ ω) (Hc X₀) (Xm X₀) y).card : ℝ) ≤
         4.21 * Hc X₀ y / X₀ + 2 * Hc X₀ (y / X₀) + 4 + 2 * (y / X₀) ^ (θo / 2)) :
-    KR.X0S.Hyp (PR θ X₀ ω) (Hc X₀) (Xm X₀) X₀ Z η1 η2 ε1 θo where
+    KR.X0S.Hyp (PR θ X₀ ω) (Hc X₀) (Xm X₀) X₀ Z η1 η2 ε1 θo Y where
   hbs := hbs
   hZ := hZ
   hX0pos := by

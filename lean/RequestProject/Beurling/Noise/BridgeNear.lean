@@ -75,7 +75,7 @@ theorem brNearPart {X0m Z η1 η2 : ℝ} {ε1 : ℝ → ℝ} (h : P.HBS X0m Z η
     (hSc : ∀ u ∈ Sc, 2 * u ≤ X0m ∨ X0 ≤ 2 * u) (hEta : EtaBound P H tw X0m Sc s)
     (hE : lam0 * (max (2.01 * BSaias.PhiInf 100000000) 1.4 * (2.04 + 4.71 / Real.log X0)) *
       ∑ v ∈ Sc, Real.log (2 * v) * s v ≤ 1 / 2)
-    (hX0s : EtaX0Sum P H X0m X0 Sc s0) (hθ : ThetaBlk P H tw X0m Sc th)
+    (hX0s : EtaX0SumLoc P H X0m X0 Sc s0 x) (hθ : ThetaBlk P H tw X0m Sc th)
     {Tc : ℝ → ℝ} (hTm : Measurable Tc) (hTb : ∀ t, |Tc t| ≤ 2) {o : ℝ → ℝ}
     (ho : 0 ≤ o X0) (hTo : TermOsc P H tw X0m x Tc (o X0)) :
     BRNearPart P H tw X0m x Tc o X0
@@ -195,7 +195,8 @@ theorem brNearPart {X0m Z η1 η2 : ℝ} {ε1 : ℝ → ℝ} (h : P.HBS X0m Z η
           Finset.sum_le_sum fun n _ => div_le_div_of_nonneg_right
             (SX0_le hP hX0e hp2 n) (KR.valN_labelVal_pos P n).le
       _ ≤ ∑ v ∈ Sc, Aw P H tw X0m x v * s0 v :=
-          (regroupX0T (tw := tw) (X0 := X0) hp2 hX L).trans (cover_gen hcov hSc0 hX0s.1)
+          (regroupX0T (tw := tw) (X0 := X0) hp2 hX L).trans
+            (cover_gen_loc (by linarith) hcov hSc0 hX0s.1)
       _ ≤ ∑ v ∈ Sc, 2 * CN / Real.log x * (Real.log (2 * v) * s0 v) :=
           Finset.sum_le_sum fun v hv => by
             have := mul_le_mul_of_nonneg_right (hA v hv) (hX0s.1 v hv).1
@@ -236,7 +237,7 @@ theorem prop_5_26_hbs {X0m Z η1 η2 : ℝ} {ε1 : ℝ → ℝ} (h : P.HBS X0m Z
     (hSc : ∀ u ∈ Sc, 2 * u ≤ X0m ∨ X0 ≤ 2 * u) (hEta : EtaBound P H tw X0m Sc s)
     (hE : lam0 * (max (2.01 * BSaias.PhiInf 100000000) 1.4 * (2.04 + 4.71 / Real.log X0)) *
       ∑ v ∈ Sc, Real.log (2 * v) * s v ≤ 1 / 2)
-    (hX0s : EtaX0Sum P H X0m X0 Sc s0) (hθ : ThetaBlk P H tw X0m Sc th)
+    (hX0s : EtaX0SumLoc P H X0m X0 Sc s0 x) (hθ : ThetaBlk P H tw X0m Sc th)
     {Tc : ℝ → ℝ} (hTm : Measurable Tc) (hTb : ∀ t, |Tc t| ≤ 2) {o : ℝ → ℝ}
     (hosc : OscBound P H x Tc Sc o) (hX0S : X0 ∈ Sc) (hTo : TermOsc P H tw X0m x Tc (o X0)) :
     Real.log x * |BRc P H tw X0m x Tc| ≤

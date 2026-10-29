@@ -65,7 +65,7 @@ structure BridgeAt (P : BeurlingSystem) (H : ℝ → ℝ) (tw : ℕ → ℝ) (X0
   eta : EtaBound P H tw X0m Sc s
   etaSmall : lam0 * CNc X0 * ∑ v ∈ Sc, Real.log (2 * v) * s v ≤ 1 / 2
   /-- **Proposition 5.18, step (iii)** -/
-  etaX0 : EtaX0Sum P H X0m X0 Sc s0
+  etaX0 : EtaX0SumLoc P H X0m X0 Sc s0 y
   etaX0Sum : ∑ v ∈ Sc, s0 v ≤ 1.52
   /-- **Lemma 5.20**: `E_θ` -/
   theta : ThetaBlk P H tw X0m Sc th

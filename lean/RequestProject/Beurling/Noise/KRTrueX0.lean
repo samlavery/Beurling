@@ -36,7 +36,7 @@ open Finset Real BeurlingSystem
 
 namespace KR.X0S
 
-variable {P : BeurlingSystem} {H : ℝ → ℝ} {X0m X0 Z η1 η2 θo : ℝ} {ε1 : ℝ → ℝ}
+variable {P : BeurlingSystem} {H : ℝ → ℝ} {X0m X0 Z η1 η2 θo Y : ℝ} {ε1 : ℝ → ℝ}
 
 /-- The `w`-window of `η_{X₀}(y)`. -/
 noncomputable def Win (P : BeurlingSystem) (H : ℝ → ℝ) (X0m y : ℝ) : Finset ℕ :=
@@ -45,7 +45,7 @@ noncomputable def Win (P : BeurlingSystem) (H : ℝ → ℝ) (X0m y : ℝ) : Fin
 
 /-- **The standing hypotheses of step (iii).** -/
 structure Hyp (P : BeurlingSystem) (H : ℝ → ℝ) (X0m X0 Z η1 η2 : ℝ) (ε1 : ℝ → ℝ)
-    (θo : ℝ) : Prop where
+    (θo Y : ℝ) : Prop where
   hbs : P.HBS X0m Z η1 η2 ε1
   hZ : X0m ≤ Z
   hX0pos : 0 < X0
@@ -57,9 +57,9 @@ structure Hyp (P : BeurlingSystem) (H : ℝ → ℝ) (X0m X0 Z η1 η2 : ℝ) (�
   hθ0 : 0 ≤ θo
   hθ1 : θo ≤ 1 / 2
   /-- **the window count of step (iii), second bullet** (Corollary 3.8, target (6),
-  Lemma 6.26): for `y > X₀²/2` the window holds at most
-  `4.21 H(y)/X₀ + 2H(y/X₀) + 4 + 2(y/X₀)^{θ/2}` elements -/
-  count : ∀ y, X0 ^ 2 / 2 < y →
+  Lemma 6.26): for `X₀²/2 < y ≤ Y` the window holds at most
+  `4.21 H(y)/X₀ + 2H(y/X₀) + 4 + 2(y/X₀)^{θ/2}` elements (localized to the heights `≤ Y`) -/
+  count : ∀ y, X0 ^ 2 / 2 < y → y ≤ Y →
     ((Win P H X0m y).card : ℝ) ≤ 4.21 * H y / X0 + 2 * H (y / X0) + 4 + 2 * (y / X0) ^ (θo / 2)
 
 /-! ## Numerical facts for `t = X₀^{1/8} ≥ 10¹²` -/
@@ -108,7 +108,7 @@ lemma num_mid2 {t : ℝ} (ht : 10 ^ 12 ≤ t) : 2.04 * t ^ 2 + t / 2 < t ^ 8 := 
 
 namespace Hyp
 
-variable (hy : Hyp P H X0m X0 Z η1 η2 ε1 θo)
+variable (hy : Hyp P H X0m X0 Z η1 η2 ε1 θo Y)
 include hy
 
 /-! ## Sizes -/
@@ -368,7 +368,7 @@ lemma sqrt_sqrt_eq_rpow {y : ℝ} (hy0 : 0 ≤ y) : r8 y ^ 2 = y ^ (1 / 4 : ℝ)
   norm_num
 
 /-- For `y > X₀²/2`: `η_{X₀}(y) ≤ (4 + 8.21 y^{1/4}) · 1.01 X₀/y`. -/
-theorem etaX0_le_high {y : ℝ} (hy2 : X0 ^ 2 / 2 < y) :
+theorem etaX0_le_high {y : ℝ} (hy2 : X0 ^ 2 / 2 < y) (hyY : y ≤ Y) :
     etaX0 P H X0m y ≤ (4 + 8.21 * r8 y ^ 2) * (1.01 * X0 / y) := by
   have hX0p := hy.hX0pos
   have hX1 : 1 ≤ X0 := le_trans (by norm_num) hy.X0_big
@@ -381,7 +381,7 @@ theorem etaX0_le_high {y : ℝ} (hy2 : X0 ^ 2 / 2 < y) :
   have hr1 : 1 ≤ r8 y := one_le_r8 (by linarith)
   have hrr : r8 y ≤ r8 y ^ 2 := by nlinarith
   -- the count
-  have hc := hy.count y hy2
+  have hc := hy.count y hy2 hyY
   have hA : 4.21 * H y / X0 ≤ 4.21 * r8 y ^ 2 := by
     have := hy.H_le_r8 hy1
     rw [div_le_iff₀ hX0p]
@@ -440,12 +440,12 @@ lemma sX0_nonneg {X0 : ℝ} (hX : 0 < X0) (v : ℝ) : 0 ≤ sX0 X0 v := by
 
 namespace Hyp
 
-variable (hy : Hyp P H X0m X0 Z η1 η2 ε1 θo)
+variable (hy : Hyp P H X0m X0 Z η1 η2 ε1 θo Y)
 include hy
 
 /-- The first part of `EtaX0Sum`: `η_{X₀} ≤ s_v` on `[v, 2v)`. -/
 theorem eta_le_sX0 {Sc : Finset ℝ} (hSc : Dyadic X0 Sc) {v : ℝ} (hv : v ∈ Sc) {y : ℝ}
-    (hvy : v ≤ y) (hy2v : y < 2 * v) : etaX0 P H X0m y ≤ sX0 X0 v := by
+    (hvy : v ≤ y) (hy2v : y < 2 * v) (hyY : y ≤ Y) : etaX0 P H X0m y ≤ sX0 X0 v := by
   have hX0p := hy.hX0pos
   have hv0 : 0 < v := by
     obtain ⟨k, rfl⟩ := hSc v hv; positivity
@@ -469,7 +469,7 @@ theorem eta_le_sX0 {Sc : Finset ℝ} (hSc : Dyadic X0 Sc) {v : ℝ} (hv : v ∈ 
       linarith
     · have hv4 : X0 ^ 2 / 4 < v := by linarith
       rw [if_pos hv4]
-      have hb := hy.etaX0_le_high hhigh
+      have hb := hy.etaX0_le_high hhigh hyY
       have h1part : 0 ≤ (if v < 2 * X0 then (1 : ℝ) / 2 else 1.01 * X0 / v) := by
         split_ifs
         · norm_num
@@ -619,17 +619,16 @@ lemma sum_g3 {X0 : ℝ} (hX : 0 < X0) {S : Finset ℝ} (hS : Sep2 S)
 
 namespace Hyp
 
-variable (hy : Hyp P H X0m X0 Z η1 η2 ε1 θo)
+variable (hy : Hyp P H X0m X0 Z η1 η2 ε1 θo Y)
 include hy
 
-/-- **Step (iii) of Proposition 5.18**: `EtaX0Sum` for every family of dyadic scales. -/
-theorem etaX0Sum_of {Sc : Finset ℝ} (hSc : Dyadic X0 Sc) :
-    EtaX0Sum P H X0m X0 Sc (sX0 X0) := by
+/-- The weighted sum of step (iii): `∑_v log(2v) s⁰_v ≤ 1.52 log(2X₀)` on dyadic scales. -/
+theorem sum_sX0_le {Sc : Finset ℝ} (hSc : Dyadic X0 Sc) :
+    ∑ v ∈ Sc, Real.log (2 * v) * sX0 X0 v ≤ 1.52 * Real.log (2 * X0) := by
   classical
   have hX0p := hy.hX0pos
   have hX1 : 1 ≤ X0 := le_trans (by norm_num) hy.X0_big
   have hSep := dyadic_sep hX0p hSc
-  refine ⟨fun v hv => ⟨sX0_nonneg hX0p v, fun y h1 h2 => hy.eta_le_sX0 hSc hv h1 h2⟩, ?_⟩
   set L := Real.log (2 * X0)
   have hL : 100000000 ≤ L := by
     have : Real.log X0 ≤ L := Real.log_le_log hX0p (by linarith)
@@ -739,6 +738,19 @@ theorem etaX0Sum_of {Sc : Finset ℝ} (hSc : Dyadic X0 Sc) :
     nlinarith
   have : L / 2 + 1.01 * (L + 4.84) + 1 ≤ 1.52 * L := by linarith
   linarith
+
+/-- **Step (iii) of Proposition 5.18**: `EtaX0Sum` for every family of dyadic scales. -/
+theorem etaX0Sum_of {Sc : Finset ℝ} (hSc : Dyadic X0 Sc) (hSY : ∀ v ∈ Sc, 2 * v ≤ Y) :
+    EtaX0Sum P H X0m X0 Sc (sX0 X0) :=
+  ⟨fun v hv => ⟨sX0_nonneg hy.hX0pos v, fun y h1 h2 =>
+    hy.eta_le_sX0 hSc hv h1 h2 (by linarith [hSY v hv])⟩, hy.sum_sX0_le hSc⟩
+
+/-- **Step (iii) of Proposition 5.18, localized**: the bounds `η_{X₀} ≤ s⁰_v` are needed only at
+the positions `y ≤ x` of a start `x ≤ Y` (`EtaX0SumLoc`), so every dyadic family works. -/
+theorem etaX0SumLoc_of {Sc : Finset ℝ} (hSc : Dyadic X0 Sc) {x : ℝ} (hxY : x ≤ Y) :
+    EtaX0SumLoc P H X0m X0 Sc (sX0 X0) x :=
+  ⟨fun v hv => ⟨sX0_nonneg hy.hX0pos v, fun y h1 h2 h3 =>
+    hy.eta_le_sX0 hSc hv h1 h2 (h3.trans hxY)⟩, hy.sum_sX0_le hSc⟩
 
 end Hyp
 

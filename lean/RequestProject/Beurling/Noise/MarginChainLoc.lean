@@ -3,6 +3,9 @@ module
 public import RequestProject.Beurling.Noise.MarginChain2
 public import RequestProject.Beurling.Noise.MarginChainLocRec
 public import RequestProject.Beurling.Noise.KRWidthReal
+public import RequestProject.Beurling.Noise.MarginChainHead
+public import RequestProject.Beurling.Noise.MarginBddLoc
+public import RequestProject.Beurling.Noise.TcLocal
 
 /-!
 # The chain Bridge → Theorem 5.37 → Proposition 5.38 up to a height `T`
@@ -22,10 +25,16 @@ Proposition 5.38 on `[X₀, T]`:
 
 The Lemma 5.20 conclusions at a start `y` (`L520At`: `EtaBound` with `λ₀ C_N E_η ≤ ½`,
 `ThetaBlk`, scales `≥ 1/2`) are a field of the bridge data (`BridgeAtL`). They are proved by
-`TauNearProof*` under the horizon `18y ≤ Z` (`l520At_of_18`, with the width bound
-`H(X₀⁻/2) ≤ 2 (X₀⁻/2)^{1/8}` that holds for the realised width, `KR.WidthReal.Hc_Xm_half_le`,
-in place of the standard width, which fails for it, `not_hHstd_Hc`); a proof at the cofactor
-horizon `2y/X₀⁻ ≤ Z` (the paper's reading range) is to be supplied for the field.
+`TauNearProof*` under `18y ≤ Z` (`l520At_of_18`) and by `TauNearLoc*` at the cofactor horizon
+`18y ≤ Z²` (`l520At_of_loc`, `L520Loc.lean`), with the width bound
+`H(X₀⁻/2) ≤ 2 (X₀⁻/2)^{1/8}` that holds for the realised width (`KR.WidthReal.Hc_Xm_half_le`;
+the standard width fails for it, `not_hHstd_Hc`). The step (iii) bounds of the bridge data are
+asked only at the positions `≤ y` (`EtaX0SumLoc`).
+
+Lemma 5.34 enters as the single field `hpred` (eq. (predictable) in the form Theorem 5.37 uses);
+it is proved from the operators of §5.3 on `LocInt` by `KR.Ops.pred_Rres` (an additive
+`B : (ℝ → ℝ) →+ (ℝ → ℝ)` equal to the window average does not exist,
+`Margin.no_additive_Bavg`). The Step 5 head bound is `1 + 2.2181` (`hv_of_chain'`).
 
 Main result: `ChainInputsLoc.prop_5_38_on : MarginOn m X₀ T`, **Proposition 5.38 (a)–(c) on
 `[X₀, T]`**.
@@ -70,11 +79,33 @@ theorem l520At_of_18 (h : Hyp P H tw X0m Z η1 η2 ε1 ε θ)
   exact KR.WidthReal.energy_small_r h hH h1 h2 h3 h4 hlam0 hlam
     (CNt_bounds (sizes h hX0e hX0m).2.1).1 (CNt_bounds (sizes h hX0e hX0m).2.1).2
 
-/-- **The bridge data at a start `y`**, localized: `BridgeAt2` and the conclusions of Lemma 5.20
+/-- **The bridge data at a start `y`**, localized: the fields of `BridgeAt2` with the step (iii)
+bounds asked only at the positions `≤ y` (`EtaX0SumLoc`), and the conclusions of Lemma 5.20
 (`L520At`) at its scales. -/
 structure BridgeAtL (P : BeurlingSystem) (H : ℝ → ℝ) (tw : ℕ → ℝ) (X0m X0 θ lam0 : ℝ)
-    (Tc : ℝ → ℝ) (j0 y EBR j : ℝ) extends BridgeAt2 P H tw X0m X0 θ lam0 Tc j0 y EBR j where
-  /-- **Lemma 5.20** at `y` (`l520At_of_18` proves it under `18 y ≤ Z`) -/
+    (Tc : ℝ → ℝ) (j0 y EBR j : ℝ) where
+  N : ℕ
+  K : ℕ
+  hN2 : 2 < N
+  hN : y < X0 * 2 ^ N / 4
+  hK : √(2 * y) ≤ Pk X0m K
+  s0 : ℝ → ℝ
+  o : ℝ → ℝ
+  /-- **Proposition 5.18, step (iii)**, at the positions `≤ y` -/
+  etaX0 : EtaX0SumLoc P H X0m X0 (dyScales X0 y N) s0 y
+  etaX0Sum : ∑ v ∈ dyScales X0 y N, s0 v ≤ 1.52
+  /-- the oscillation of `T_c` (eq. (osc)) -/
+  osc : OscBound P H y Tc (dyScales X0 y N) o
+  /-- the terminal oscillation (proof of Proposition 5.26, second bullet) -/
+  termOsc : TermOsc P H tw X0m y Tc (o X0)
+  /-- `E_BR` bounds the right side of Proposition 5.26 -/
+  sizeE : (5.1 * CNc X0 + CSc) * ∑ u ∈ dyScales X0 y N, Real.log (2 * u) * o u +
+      8.4 * CNc X0 * ∑ v ∈ dyScales X0 y N, Real.log (2 * v) * sTheta P H X0m K v ≤ EBR
+  /-- eq. (jX0) -/
+  sizeJ : j0 * (xbB P H tw X0m y X0 θ lam0 +
+      4.3 * CNc X0 * (∑ v ∈ dyScales X0 y N, Real.log (2 * v) * sTheta P H X0m K v) /
+        Real.log y) * Real.log y ≤ j
+  /-- **Lemma 5.20** at `y` (`l520At_of_loc` proves it at the cofactor horizon) -/
   l520 : L520At P H tw X0m X0 lam0 y N K
 
 /-- `BridgeAtL` gives `BridgeAt`. -/
@@ -119,9 +150,11 @@ structure ChainInputsLoc (P : BeurlingSystem) (H : ℝ → ℝ) (tw : ℕ → �
   htv : ∀ r, r.Prime → P.labelVal r ≤ 2 * tw r
   hlam : 1 + 3 * θ ≤ lam0
   hlam1 : lam0 ≤ 1.001
-  /-- `T_c` measurable with `|T_c| ≤ 2` (§5.1: `|T'| ≤ 2`) -/
+  /-- `T_c` measurable with `|T_c| ≤ 2` (§5.1: `|T'| ≤ 2`) below the heights read, `2(T + H(T))` -/
   hTm : Measurable Tc
-  hTb : ∀ t, |Tc t| ≤ 2
+  hTb : ∀ t, t ≤ 2 * (T + H T) → |Tc t| ≤ 2
+  /-- the regularity of `H` used by the operators of §5.3 (`KR.Ops.OpHyp`) -/
+  hO : KR.Ops.OpHyp P H X0m
   hj0 : 0 ≤ j0
   /-- (huxley) and Lemma 7.3's inputs (§7) -/
   hHux : BaseRange.HuxleyFrom X0
@@ -145,42 +178,25 @@ structure ChainInputsLoc (P : BeurlingSystem) (H : ℝ → ℝ) (tw : ℕ → �
   g1 : ∀ y, (X0 : ℝ) ≤ y → y ≤ T + H T →
     G1At P tw X0m X0 μ0 μ1 ρedge (fun t => Tc t + j0 * ind X0 t) y
   -- **Lemma 5.34**
-  B : (ℝ → ℝ) →+ (ℝ → ℝ)
-  K : (ℝ → ℝ) →+ (ℝ → ℝ)
-  R : (ℝ → ℝ) →+ (ℝ → ℝ)
-  /-- `R_res` inverts `1 + K_pt B` (§5.3) -/
-  hR : ∀ g, R g + K (B (R g)) = g
-  /-- the push-through form determines `ρ̃` (§5.3) -/
-  hinj : ∀ f f', f + B (K f) = f' + B (K f') → f = f'
   ρ : ℝ → ℝ
   ν : ℝ → ℝ
   NT : ℝ → ℝ
-  ϑ : ℝ → ℝ
-  /-- the margin identity (Proposition 5.11 with (Ttilde)) -/
-  hmargin : ρ + B (K ρ) = B (Tc + fun t => j0 * ind X0 t) + (fun z => ϑ z / H z) - ν - NT
-  /-- `B` is the window average -/
-  hBx : ∀ g x, B g x = Margin.Bavg (H x) g x
-  /-- `R` is the long operator on `T'` -/
-  hRres : R (Tc + fun t => j0 * ind X0 t) =
-    fun y => Rres P H tw X0m y (fun t => Tc t + j0 * ind X0 t)
   a : ℝ → ℝ
   b : ℝ → ℝ
-  /-- Lemma 5.34, first bullet (from Proposition 5.18) -/
-  hK : ∀ x, (X0 : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ T → Real.log x *
-    |B (K (B (R ((B Tc - Tc) + (fun z => ϑ z / H z) - ν - NT)))) x| ≤ a x
-  /-- Lemma 5.34, second bullet (from Lemma 5.21(iii)) -/
-  hG : ∀ x, (X0 : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ T → Real.log x *
-    |B (R (K ((B (Tc + fun t => j0 * ind X0 t) + (fun z => ϑ z / H z) - ν - NT -
-        B (fun t => j0 * ind X0 t)) -
-      B (B (Tc + fun t => j0 * ind X0 t) + (fun z => ϑ z / H z) - ν - NT -
-        B (fun t => j0 * ind X0 t))))) x| ≤ b x
-  /-- `|ϑ| ≤ 6` (eq. (Ttilde)) at the centres `x ≤ T` -/
-  hϑ : ∀ x, (X0 : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ T → |ϑ x| ≤ 6
+  /-- **Lemma 5.34**, in the form Theorem 5.37 uses (eq. (predictable)):
+  `log x · B(R_res T')(x) - (a + b + 6 log x/H) ≤ log x · (ρ̃ + ν + NT)(x)` at the centres
+  `X₀^{1.01} ≤ x ≤ T`. `KR.Ops.pred_Rres` proves it from the operators of §5.3 on `LocInt`
+  (the margin identity, the two bullets and `|ϑ| ≤ 6`). -/
+  hpred : ∀ x, (X0 : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ T →
+    Real.log x * Margin.Bavg (H x) (fun y => Rres P H tw X0m y (fun t => Tc t + j0 * ind X0 t))
+        x - (a x + b x + 6 * Real.log x / H x) ≤ Real.log x * (ρ x + ν x + NT x)
   /-- window integrability of `R_res T'` and `ρ^sh T'` (`KR.Int.intRT_of`, `intRS_of`) -/
-  intRT : ∀ x, IntervalIntegrable (fun y => Rres P H tw X0m y (fun t => Tc t + j0 * ind X0 t))
-    volume (x - H x / 2) (x + H x / 2)
-  intRS : ∀ x, IntervalIntegrable (fun y => rhoSh P tw X0m y (fun t => Tc t + j0 * ind X0 t))
-    volume (x - H x / 2) (x + H x / 2)
+  intRT : ∀ x, (X0 : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ T →
+    IntervalIntegrable (fun y => Rres P H tw X0m y (fun t => Tc t + j0 * ind X0 t))
+      volume (x - H x / 2) (x + H x / 2)
+  intRS : ∀ x, (X0 : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ T →
+    IntervalIntegrable (fun y => rhoSh P tw X0m y (fun t => Tc t + j0 * ind X0 t))
+      volume (x - H x / 2) (x + H x / 2)
   -- **Proposition 5.38(a)**
   Bt : ℝ → ℝ
   η : ℝ → ℝ
@@ -201,7 +217,8 @@ structure ChainInputsLoc (P : BeurlingSystem) (H : ℝ → ℝ) (tw : ℕ → �
   hT0wf : 2 ≤ T0 * (1 - p.θ0)
   hT0T : T0 ≤ T
   hm : m = fun y => (Tc y + j0 * ind X0 y) - KR.Sharp.Kpt P tw p.Xm ρ y - NTpt y
-  hmbdd : ∃ C, ∀ y, |m y| ≤ C
+  /-- `m` is bounded up to `2T` (all windows of centres `≤ T` lie below `2T`) -/
+  hmbdd : ∃ C, ∀ y, y ≤ 2 * T → |m y| ≤ C
   hρ0 : ∀ z, z < p.Xm → ρ z = 0
   hT0' : ∀ t, T0 ≤ t → t ≤ T → 0 ≤ t ∧ 1.01 * H t ≤ t
   /-- `H`-regularity at a cofactor (`HStep`) -/
@@ -228,7 +245,7 @@ structure ChainInputsLoc (P : BeurlingSystem) (H : ℝ → ℝ) (tw : ℕ → �
   hhead : ∀ t, (X0 : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ T →
     ∑ M ∈ ((KR.NAll P t (p.Xm / 2)).filter (fun M => Margin.Rec.cutL P p M ≤
         t / Margin.Rec.Vv P M)).filter (fun M => Margin.Rec.Vv P M ≤ √t),
-      Margin.Rec.Aw P p M ≤ 1 + BSCert.Consts.ordA 1.955
+      Margin.Rec.Aw P p M ≤ 1 + 2.2181
   /-- **Step 5**: Rankin's tail bound (`τ ≤ 0.06`) -/
   htail : ∀ t, (X0 : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ T →
     ∑ M ∈ ((KR.NAll P t (p.Xm / 2)).filter (fun M => Margin.Rec.cutL P p M ≤
@@ -348,10 +365,7 @@ theorem thm_5_37
   have hlam2 : 1 + 2 * θ ≤ lam0 := by linarith [hP.theta_nonneg, I.hlam]
   have hlx0 : 0 ≤ Real.log x := Real.log_nonneg (by linarith)
   -- (predictable)
-  have hpred := hpred_of I.B I.K I.R I.hR I.hinj I.ρ I.ν I.NT I.ϑ Tc
-    (fun t => j0 * ind X0 t) H I.hmargin hlx0 hH0 (fun g => I.hBx g x) (I.hK x hx hxT)
-    (I.hG x hx hxT) (I.hϑ x hx hxT)
-  rw [I.hRres] at hpred
+  have hpred := I.hpred x hx hxT
   -- (bridge)
   have hbr : ∀ y, x - H x / 2 ≤ y → y ≤ x + H x / 2 →
       rhoSh P tw X0m y (ChainInputs.Tp j0 X0 Tc) - (I.EBR x + I.jX x) / Real.log y ≤
@@ -362,13 +376,19 @@ theorem thm_5_37
     have hZ := I.hZy (I.window_le hx hxT hW)
     have D := (I.bridge x y hx hxT hW).toBridgeAt I.tnp I.hX0e hXmle hy
     have hly : 0 < Real.log y := Real.log_pos (by linarith)
-    have hBR := prop_5_26_hbs I.tnp.hbs I.tnp.hXm hP I.hX0e I.hp2 I.ht I.htv hlam2 I.hlam1
-      (hXmle.trans hy) hZ (Real.log_pos hX1) hXmle D.cov D.covL D.sc1 D.sc D.eta
-      D.etaSmall D.etaX0 D.theta I.hTm I.hTb D.osc D.X0mem D.termOsc
+    have hyT := I.window_le hx hxT hW
+    have hTbl : ∀ t, t ≤ 1.2 * y → |Tc t| ≤ 2 := fun t ht => I.hTb t (by
+      have : (0 : ℝ) ≤ y := by linarith [I.X0_gt]
+      have := (I.hO.pos T).le
+      nlinarith)
+    have hBR := KR.TcLoc.prop_5_26_loc I.tnp.hbs I.tnp.hXm hP I.hO I.hX0e I.hp2 I.ht I.htv
+      hlam2 I.hlam1 (hXmle.trans hy) hZ (Real.log_pos hX1) hXmle hy D.cov D.covL D.sc1 D.sc
+      D.eta D.etaSmall D.etaX0 D.theta I.hTm hTbl D.osc D.X0mem D.termOsc
     have hXB := lemma_5_27 I.tnp.hbs I.tnp.hXm hP I.hX0e I.hp2 I.ht I.htv I.hlam I.hlam1
       (hXmle.trans hy) hZ (Real.log_pos hX1) hXmle D.cov D.sc1 D.sc D.eta D.etaSmall
       D.etaX0.1 D.etaX0Sum D.theta
-    exact hbr_of hP.reg hly I.hTm I.hTb I.hj0 hBR hXB D.sizeE D.sizeJ
+    exact KR.TcLoc.hbr_of_loc I.hO hP (hXmle.trans hy) hly I.hTm hTbl I.hj0 hBR hXB D.sizeE
+      D.sizeJ
   -- (g1)
   have hg1pt : ∀ y, x - H x / 2 ≤ y → y ≤ x + H x / 2 →
       0.97 ≤ rhoSh P tw X0m y (ChainInputs.Tp j0 X0 Tc) * Real.log y := by
@@ -381,24 +401,31 @@ theorem thm_5_37
       (by linarith [I.hxmax]) (I.hZy hyT) I.hμ0 I.hμ1 hd hA hB).2 (by
         have hHs : H x ≤ x / 10 := hP.small x (by linarith [I.two_X0_le, hP.X0m_pos])
         linarith)
-  have hg1 := avg_ge hH0 hw3 (by norm_num) (I.intRS x) hg1pt
+  have hg1 := avg_ge hH0 hw3 (by norm_num) (I.intRS x hx hxT) hg1pt
   have hg1' : 0.97 - 0.97 * (1 - Real.log x / Real.log (x + H x / 2)) ≤
       Real.log x * Margin.Bavg (H x) (fun y => rhoSh P tw X0m y (ChainInputs.Tp j0 X0 Tc)) x := by
     linarith
   have hδ : Real.log x / Real.log (x - H x / 2) ≤
       1 + (Real.log x / Real.log (x - H x / 2) - 1) := by linarith
   have h537 := Margin.thm_5_37' hH0 hw3 (by linarith [I.EBR_nonneg x, I.jX_nonneg x])
-    (I.intRT x) (I.intRS x) hpred hbr hg1' hδ
+    (I.intRT x hx hxT) (I.intRS x hx hxT) hpred hbr hg1' hδ
   unfold oTot
   linarith
 
 lemma hvar_of (I : ChainInputsLoc P H tw X0m X0 Z η1 η2 ε1 ε θ lam0 Tc j0 xmax μ0 μ1 ρedge m T)
-    (t y : ℝ) (hy : InW (H t) t y) : |m y - m t| ≤ Margin.Rec.vSup H m t := by
+    (t y : ℝ) (ht : X0m / 2 ≤ t) (htT : t ≤ T) (hy : InW (H t) t y) :
+    |m y - m t| ≤ Margin.Rec.vSup H m t := by
   have hH : 0 ≤ H t := (I.tnp.width.reg.pos t).le
+  have hHs := I.tnp.width.small t ht
+  have hX := I.tnp.width.X0m_pos
   have hyt : y = t + (y - t) := by ring
   rw [hyt]
-  refine Margin.Rec.le_vSup I.hmbdd ?_
-  rw [abs_le]; constructor <;> linarith [hy.1, hy.2]
+  refine Margin.Rec.le_vSup_loc ?_ ?_
+  · obtain ⟨C, hC⟩ := I.hmbdd
+    refine ⟨C, fun y' hy' => hC y' ?_⟩
+    have := (abs_le.mp hy').2
+    linarith
+  · rw [abs_le]; constructor <;> linarith [hy.1, hy.2]
 
 /-- **Steps 1–5** at `X₀^{1.01} ≤ t ≤ T`. -/
 theorem hv_of (I : ChainInputsLoc P H tw X0m X0 Z η1 η2 ε1 ε θ lam0 Tc j0 xmax μ0 μ1 ρedge m T)
@@ -430,7 +457,7 @@ theorem hv_of (I : ChainInputsLoc P H tw X0m X0 Z η1 η2 ε1 ε θ lam0 Tc j0 x
   have hh := I.hhead t ht htT
   have htl := I.htail t ht htT
   unfold VX
-  exact hv_of_chain _ _ (Margin.Rec.Aw P I.p) (Margin.Rec.Vv P) ht1 I.chain.hES
+  exact hv_of_chain' _ _ (Margin.Rec.Aw P I.p) (Margin.Rec.Vv P) ht1 I.chain.hES
     (fun M _ => Margin.Rec.Aw_nonneg (P := P) (p := I.p) M)
     (fun M _ => Margin.Rec.Vv_pos (P := P) M) hvc hh htl
 
@@ -464,7 +491,8 @@ theorem prop_5_38_on
     obtain ⟨hH0, -, hw3⟩ := I.window_bounds ht'
     have h37 := I.thm_5_37 ht' htT
     have := Margin.Var.prop_5_38_a_of hH0 (by linarith) (I.intm t)
-      (fun y hy1 hy2 => I.hvar_of t y ⟨hy1, hy2⟩) (I.hv_of t ht' htT) (I.hdec t ht' htT)
+      (fun y hy1 hy2 => I.hvar_of t y (by linarith [I.X0m_le, I.two_X0_le, I.X0_gt]) htT
+        ⟨hy1, hy2⟩) (I.hv_of t ht' htT) (I.hdec t ht' htT)
       (I.hBt t ht' htT) (I.hsη t ht' htT) (by linarith) (I.hsmall t ht' htT)
     linarith
 

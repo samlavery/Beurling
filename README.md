@@ -172,12 +172,12 @@ The main theorem is not formally verified. A Lean 4 formalization in [`lean/`](l
 [Aristotle](https://aristotle.harmonic.fun) (Harmonic) and continued here, proves Corollary 2.2 (the answer to Question Q is
 negative) from two explicit hypotheses, with no `sorry`:
 - the short-interval prime number theorem (84) of Heath-Brown;
-- `Theorem21InputsP`.
+- `Theorem21InputsFinal`.
 
-`Theorem21InputsP` fixes the construction, which is now built from the jitters in Lean, together with its event family and
-probability budget. It asks for one statement of the paper about that construction: Proposition 5.38 (the pointwise
-margin) for the construction's margin density. The §5 chain that proves Proposition 5.38 is assembled in Lean, from named
-inputs that are still being closed.
+`Theorem21InputsFinal` fixes the construction, which is now built from the jitters in Lean, together with its event
+family and probability budget. What remains are the open inputs of Proposition 5.38 (the pointwise margin) for that
+construction. The §5 chain that proves Proposition 5.38 is assembled and instantiated at the realised system, and each open
+input is a named statement of the paper.
 
 - **Proved and used by the top-level theorem:**
   - Sections 3 and 4, including the construction itself as a causal fixed point, Lemma 3.3 and Lemma 4.8(ii);

@@ -203,7 +203,7 @@ theorem prop_5_26_tnp (h : Hyp P H tw X0m Z η1 η2 ε1 ε θ)
     (by linarith) hX0m (cover_NAll hX0 hX (by linarith) hN) (cover_levels hX0 hX h2 hN)
     (fun u hu => by linarith [hS1 u hu]) (fun u hu => dyScales_kind hX0 h2 hu)
     (etaBound_energy h hS hS1 hSZ hSK).1
-    (energy_small h hH hS hS1 hSZ hSK hlam0 (by linarith) hC0 hC) hX0s
+    (energy_small h hH hS hS1 hSZ hSK hlam0 (by linarith) hC0 hC) (hX0s.toLoc x)
     (thetaBlk_sum h hS hS1 hSZ hSK).1 hTm hTb hosc (X0_mem_dyScales hN2 hx) hTo
 
 /-- **Lemma 5.27**, with Lemma 5.20 discharged on the dyadic scales and `E_θ ≤ 10⁻⁷`; the
@@ -232,7 +232,8 @@ theorem lemma_5_27_tnp (h : Hyp P H tw X0m Z η1 η2 ε1 ε θ)
     (by linarith) hX0m (cover_NAll hX0 hX (by linarith) hN)
     (fun u hu => by linarith [hS1 u hu]) (fun u hu => dyScales_kind hX0 h2 hu)
     (etaBound_energy h hS hS1 hSZ hSK).1
-    (energy_small h hH hS hS1 hSZ hSK hlam0 (by linarith) hC0 hC) hX0b hs0
+    (energy_small h hH hS hS1 hSZ hSK hlam0 (by linarith) hC0 hC)
+    (fun v hv => ⟨(hX0b v hv).1, fun y h1 h2 _ => (hX0b v hv).2 y h1 h2⟩) hs0
     (thetaBlk_sum h hS hS1 hSZ hSK).1
 
 end KR.TNP

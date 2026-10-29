@@ -160,7 +160,7 @@ theorem sum_log_div_sq_loc (h : P.HBS X0m Z η1 η2 ε1) {z : ℝ} (hz : 1 ≤ z
     (hZ : 2500 ≤ Z) : ∑ j ∈ P.primesLe z, Real.log (P.p j) / P.p j ^ 2 ≤ 2.2568 := by
   classical
   rcases le_or_gt (z ^ 2) Z with hz2 | hz2
-  · have := h.sum_log_div_sq_le hz hz2; linarith
+  · have := h.sum_log_div_sq_le_lemS hz hz2; linarith
   set b := √Z
   have hb50 : 50 ≤ b := by
     rw [Real.le_sqrt (by norm_num) (by linarith)]; linarith
@@ -172,7 +172,7 @@ theorem sum_log_div_sq_loc (h : P.HBS X0m Z η1 η2 ε1) {z : ℝ} (hz : 1 ≤ z
   have hhead : ∑ j ∈ (P.primesLe z).filter (fun j => ¬ b < P.p j),
       Real.log (P.p j) / P.p j ^ 2 ≤ 2.2 := by
     refine (Finset.sum_le_sum_of_subset_of_nonneg (t := P.primesLe b) ?_
-      (fun j _ _ => hnn j)).trans (h.sum_log_div_sq_le (by linarith) (by rw [hbsq]))
+      (fun j _ _ => hnn j)).trans (h.sum_log_div_sq_le_lemS (by linarith) (by rw [hbsq]))
     intro j hj
     rw [Finset.mem_filter] at hj
     rw [mem_primesLe]; exact not_lt.mp hj.2

@@ -143,7 +143,7 @@ noncomputable def BridgeAt2.toBridgeAt {X0 lam0 : ℝ} {Tc : ℝ → ℝ} {j0 y 
     (scale_facts h hX0e hX0m h18 D.hK).2.1 (scale_facts h hX0e hX0m h18 D.hK).2.2.1
     (scale_facts h hX0e hX0m h18 D.hK).2.2.2 hlam0 hlam (CNt_bounds (sizes h hX0e hX0m).2.1).1
     (CNt_bounds (sizes h hX0e hX0m).2.1).2
-  etaX0 := D.etaX0
+  etaX0 := D.etaX0.toLoc y
   etaX0Sum := D.etaX0Sum
   theta := (thetaBlk_sum h (scale_facts h hX0e hX0m h18 D.hK).1
     (scale_facts h hX0e hX0m h18 D.hK).2.1 (scale_facts h hX0e hX0m h18 D.hK).2.2.1

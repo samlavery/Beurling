@@ -77,7 +77,7 @@ lemma sum_inv_p_le (h : P.HBS X0m Z η1 η2 ε1) {z : ℝ} (hz : 2 ≤ z) (hzZ :
   linarith
 
 /-- `∑_{p ≤ z} log p/p² ≤ 2.2` (the prime-power part of `S(z²)`, Lemma 5.1(ii), (iii)). -/
-lemma sum_log_div_sq_le (h : P.HBS X0m Z η1 η2 ε1) {z : ℝ} (hz : 1 ≤ z) (hzZ : z ^ 2 ≤ Z) :
+lemma sum_log_div_sq_le_lemS (h : P.HBS X0m Z η1 η2 ε1) {z : ℝ} (hz : 1 ≤ z) (hzZ : z ^ 2 ≤ Z) :
     ∑ j ∈ P.primesLe z, Real.log (P.p j) / P.p j ^ 2 ≤ 2.2 := by
   have hz2 : 1 ≤ z ^ 2 := by nlinarith
   have hl := P.lemma_5_1 h hz2 hzZ
@@ -284,7 +284,7 @@ theorem lemS_rankin (h : P.HBS X0m Z η1 η2 ε1) {t : ℕ → ℝ} {v : ℝ}
   have hs1 := sum_inv_p_le h hz2 hzZ1
   have hs2 : P.Sp z ≤ L + 0.43 := by
     have := (P.lemma_5_1 h (by linarith) hzZ1).2.2.1.2; linarith
-  have hs3 := sum_log_div_sq_le h (by linarith) hzZ
+  have hs3 := sum_log_div_sq_le_lemS h (by linarith) hzZ
   have hlogp : ∀ j ∈ J, 0 ≤ Real.log (P.p j) ∧ Real.log (P.p j) ≤ L := fun j hj =>
     ⟨P.log_p_nonneg j, Real.log_le_log (P.p_pos j) (P.mem_primesLe.mp hj)⟩
   have hx1 : ∀ j ∈ J, x j ≤ 1 / P.p j + 1.65 * δ * (Real.log (P.p j) / P.p j) := by
