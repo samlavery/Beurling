@@ -10,6 +10,9 @@ public import RequestProject.Beurling.Model.G1BWire
 public import RequestProject.Beurling.Model.G1BJumpProof
 public import RequestProject.Beurling.Model.G1BRprime
 public import RequestProject.Beurling.Model.JXbdd
+public import RequestProject.Beurling.Model.RestG
+public import RequestProject.Beurling.Model.MarginTail
+public import RequestProject.Beurling.Noise.RML6Var2Tail
 public import RequestProject.Beurling.Noise.RML6G1
 public import RequestProject.Beurling.BaseRange.Lemma73Low
 public import RequestProject.Beurling.BaseRange.MarginHc
@@ -69,119 +72,77 @@ structure RestRes (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) where
     KR.RML6.G1BRest (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) X₀
       (fun t => TcR θ X₀ ω (jzX X₀) t + jzX X₀ * ind X₀ t) y (deltaB θ X₀ ω y) (rhoT θ X₀ ω)
       ((PR θ X₀ ω).threshSum (Queue6.tJ θ X₀ ω) y (2 * deltaB θ X₀ ω y))
-  /-- `NT` (locally integrable) -/
-  NT : KR.Ops.LocInt
-  ϑ : ℝ → ℝ
-  a : ℝ → ℝ
-  bb : ℝ → ℝ
-  /-- Lemma 5.34, first bullet (from Proposition 5.18; `KR.Ops.hK_of_kernel` reduces it to the
-  kernel part at each start of the window) -/
-  hK : ∀ hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀), ∀ x,
+  /-- **Lemma 5.34, first bullet**: the scale sums `S(x)` and scale bounds of `|F_r|`
+  (`FrScaleBound`; §5/Queue6: `F̄_r = o + 6/H + ν̄ + 54 sup η`), `F_r = (B-1)T_c - ν - NT` -/
+  S : ℝ → ℝ
+  FbK : ℝ → ℝ → ℝ → ℝ
+  hFr : ∀ hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀), ∀ x,
     (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b →
-    Real.log x * |(KR.Ops.Bo hO (KR.Ops.Ko (tw := twR θ X₀ ω) hO (KR.Ops.Bo hO
-      (KR.Ops.Ro (tw := twR θ X₀ ω) hO ((KR.Ops.Bo hO TcL - TcL) + vtH -
-        nuRes hO (twR θ X₀ ω) ρL TcL (JL (jzX X₀) X₀) vtH NT - NT)))) : ℝ → ℝ) x| ≤ a x
-  /-- Lemma 5.34, second bullet (from Lemma 5.21(iii)) -/
-  hG : ∀ hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀), ∀ x,
-    (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b →
-    Real.log x * |(KR.Ops.Bo hO (KR.Ops.Ro (tw := twR θ X₀ ω) hO (KR.Ops.Ko (tw := twR θ X₀ ω) hO
-      ((KR.Ops.Bo hO (TcL + JL (jzX X₀) X₀) + vtH - nuRes hO (twR θ X₀ ω) ρL TcL (JL
-        (jzX X₀) X₀) vtH NT -
-          NT - KR.Ops.Bo hO (JL (jzX X₀) X₀)) -
-        KR.Ops.Bo hO (KR.Ops.Bo hO (TcL + JL (jzX X₀) X₀) + vtH -
-          nuRes hO (twR θ X₀ ω) ρL TcL (JL (jzX X₀) X₀) vtH NT - NT - KR.Ops.Bo hO (JL
-            (jzX X₀) X₀))))) :
-      ℝ → ℝ) x| ≤ bb x
-  /-- `|ϑ| ≤ 6` (eq. (Ttilde)) -/
-  hϑ : ∀ x, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b → |ϑ x| ≤ 6
-  -- **Lemma 5.34**, on the operators of §5.3 (`KR.Ops`: `B = Bo`, `K_pt = Ko`, `R_res = Ro` on
-  -- `LocInt`; `R_res` inverts `1 + K_pt B` and `1 + B K_pt` is injective by `Nop_spec`,
-  -- `inj_spec`; `B` is the window average by definition). `ν` is the residual `nuRes`, so the
-  -- margin identity holds by definition. The fields quantify over the proof `hO` of `OpHyp`
-  -- (any two are equal; `RealMarginLoc.opH` provides one).
-  /-- `ρ̃` is locally integrable -/
-  ρL : KR.Ops.LocInt
-  hρL : (ρL : ℝ → ℝ) = rhoT θ X₀ ω
-  /-- `T_c` is locally integrable -/
-  TcL : KR.Ops.LocInt
-  hTcL : (TcL : ℝ → ℝ) = TcR θ X₀ ω (jzX X₀)
-  /-- `ϑ/H` (locally integrable) -/
-  vtH : KR.Ops.LocInt
-  hvt : ∀ z, (vtH : ℝ → ℝ) z = ϑ z / Queue6.Hc X₀ z
-  /-- `T' = T_c + J` bounded and measurable on half-lines -/
-  hTLBd : KR.Ops.LBd (fun t => TcR θ X₀ ω (jzX X₀) t + (jzX X₀) * ind X₀ t)
+    KR.TNP.FrScaleBound (PR θ X₀ ω) (Queue6.Hc X₀) X₀
+      ((Frx hO (ρLd θ X₀ ω) (TcLd θ X₀ ω) (NTd θ X₀ ω) 0 (jzX X₀) : KR.Ops.LocInt) : ℝ → ℝ)
+      x (S x) (fun y => (NKc X₀ y).1) (FbK x)
+  /-- **Lemma 5.34, second bullet**: the block bounds `|F_r| ≤ F̄_r(x, i)` on
+  `[X₀⁻2ⁱ, X₀⁻2ⁱ⁺¹)` (block `0` is `(-∞, 2X₀⁻)`) at heights `≤ x` (§5/Queue6) -/
+  FrB : ℝ → ℕ → ℝ
+  hFrB0 : ∀ x i, 0 ≤ FrB x i
+  hFrB : ∀ hO : KR.Ops.OpHyp (PR θ X₀ ω) (Queue6.Hc X₀) (Xm X₀), ∀ x,
+    (X₀ : ℝ) ^ (1.01 : ℝ) ≤ x → x ≤ b → ∀ i r, r ≤ x → r < 2 * (Xm X₀ * 2 ^ i) →
+      (i = 0 ∨ Xm X₀ * 2 ^ i ≤ r) →
+      |((Frx hO (ρLd θ X₀ ω) (TcLd θ X₀ ω) (NTd θ X₀ ω) 0 (jzX X₀) : KR.Ops.LocInt) :
+        ℝ → ℝ) r| ≤ FrB x i
+
 
 /-- **Proposition 5.38, steps 1–6** inputs of `RealMarginLoc`. -/
-structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (a : ℝ → ℝ) (bb : ℝ → ℝ) where
-  /-- **Steps 1–5**: the parameters of the recursion and its super-solution -/
-  p : Margin.Rec.CP
-  T0 : ℝ
+structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (S : ℝ → ℝ) (FrB : ℝ → ℕ → ℝ) where
+  /-- the size parameters `E_S ≥ 0` and `j ≥ 0` of the recursion (`RML7.canonP`; §5) -/
+  ES : ℝ
+  jP : ℝ
+  hES0 : 0 ≤ ES
+  hjP0 : 0 ≤ jP
   e : ℝ → ℕ → ℝ
-  chain : Margin.Rec.ChainHyp (PR θ X₀ ω) p (Queue6.Hc X₀)
-  hpXm : p.Xm = Xm X₀
-  hpε : p.ε ≤ 0.01
-  hT0 : p.cinf + p.Kc ≤ T0
-  hT0wf : 2 ≤ T0 * (1 - p.θ0)
-  hT0T : T0 ≤ b
-  /-- `ρ̃ = 0` below `X₀⁻` (the slots are `≥ X₀`, §5.1) -/
-  hρ0 : ∀ z, z < Xm X₀ → rhoT θ X₀ ω z = 0
-  hT0' : ∀ t, T0 ≤ t → t ≤ b → 0 ≤ t ∧ 1.01 * Queue6.Hc X₀ t ≤ t
-  /-- `H`-regularity at a cofactor (`HStep`) -/
-  hgeom : ∀ t, T0 ≤ t → t ≤ b → ∀ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t,
-    Margin.Rec.HStep (Queue6.Hc X₀) p.ε t (t / KR.Vl (PR θ X₀ ω) w) (KR.Vl (PR θ X₀ ω) w)
   s2mst : ℝ → ℝ
   /-- **Step 2, strip comparison on `A₊`** (§5): `|∫_{A₊} m - ∫_{I₊} m| ≤ 1.05 δ_z H(z) m*`,
   `I₊ = (z + H/2, z + H/2 + s]` -/
-  hS2sp : ∀ z, S2Rng θ X₀ ω p T0 b z → ∀ s, 0 ≤ s → s ≤ 1.01 * Queue6.Hc X₀ z →
+  hS2sp : ∀ z, S2Rng θ X₀ ω (RML7.canonP X₀ epsH ES jP) ((RML7.canonP X₀ epsH ES jP).cinf +
+    (RML7.canonP X₀ epsH ES jP).Kc) b z → ∀ s, 0 ≤ s → s ≤ 1.01 * Queue6.Hc X₀ z →
     |(∫ r in Margin.Exact.Aplus (Queue6.Hc X₀) z s, marginM θ X₀ ω r) -
       ∫ r in (z + Queue6.Hc X₀ z / 2)..(z + Queue6.Hc X₀ z / 2 + s), marginM θ X₀ ω r| ≤
       1.05 * (Queue6.s2δ X₀) z * Queue6.Hc X₀ z * s2mst z
   /-- **Step 2, strip comparison on `A₋`** (§5), `I₋ = (z - H/2, z - H/2 + s]` -/
-  hS2sm : ∀ z, S2Rng θ X₀ ω p T0 b z → ∀ s, 0 ≤ s → s ≤ 1.01 * Queue6.Hc X₀ z →
+  hS2sm : ∀ z, S2Rng θ X₀ ω (RML7.canonP X₀ epsH ES jP) ((RML7.canonP X₀ epsH ES jP).cinf +
+    (RML7.canonP X₀ epsH ES jP).Kc) b z → ∀ s, 0 ≤ s → s ≤ 1.01 * Queue6.Hc X₀ z →
     |(∫ r in Margin.Exact.Aminus (Queue6.Hc X₀) z s, marginM θ X₀ ω r) -
       ∫ r in (z - Queue6.Hc X₀ z / 2)..(z - Queue6.Hc X₀ z / 2 + s), marginM θ X₀ ω r| ≤
       1.05 * (Queue6.s2δ X₀) z * Queue6.Hc X₀ z * s2mst z
-  /-- **Step 2**, `H(z) ≤ 1.01 H(x)` on the lower strip (regularity of `H`, §5) -/
-  hS2H : ∀ z, S2Rng θ X₀ ω p T0 b z → ∀ x ∈ Icc (z - Queue6.Hc X₀ z / 2)
-    (z + 0.51 * Queue6.Hc X₀ z), Queue6.Hc X₀ z ≤ 1.01 * Queue6.Hc X₀ x
-  /-- **Step 2**, integrability of `m` on the strips -/
-  hS2mi : ∀ z, S2Rng θ X₀ ω p T0 b z → ∀ s, 0 ≤ s → s ≤ 1.01 * Queue6.Hc X₀ z →
-    IntervalIntegrable (marginM θ X₀ ω) volume (z - Queue6.Hc X₀ z / 2)
-      (z + Queue6.Hc X₀ z / 2 + s)
   /-- **Step 3**, the recursion weights: `(fun z => 2.2 * s2E3 X₀ (uS X₀ (m1z X₀ z)) + 2.2 * s2E3
   X₀ (uS X₀ (m1z X₀ z + 1)) + 210 / Real.log (uS X₀ (m1z X₀ z)) ^ 6 +
     (6.6 + 4.2 * s2mst z) / Queue6.Hc X₀ z)(z') ≤ e(t, w)` on the strip of `(t, w)` -/
-  hS2e : ∀ t, T0 ≤ t → t ≤ b → ∀ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t, ∀ z',
+  hS2e : ∀ t, ((RML7.canonP X₀ epsH ES jP).cinf +
+    (RML7.canonP X₀ epsH ES jP).Kc) ≤ t → t ≤ b → ∀ w ∈ Margin.Rec.Fset (PR θ X₀ ω)
+      (RML7.canonP X₀ epsH ES jP) t, ∀ z',
     t / KR.Vl (PR θ X₀ ω) w - 0.52 * Queue6.Hc X₀ (t / KR.Vl (PR θ X₀ ω) w) ≤ z' →
       z' ≤ t / KR.Vl (PR θ X₀ ω) w → (fun z => 2.2 * s2E3 X₀ (uS X₀ (m1z X₀ z)) + 2.2 * s2E3 X₀
         (uS X₀ (m1z X₀ z + 1)) + 210 / Real.log (uS X₀ (m1z X₀ z)) ^ 6 +
           (6.6 + 4.2 * s2mst z) / Queue6.Hc X₀ z) z' ≤ e t w
-  he0 : ∀ t, T0 ≤ t → t ≤ b → ∀ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t, 0 ≤ e t w
+  he0 : ∀ t, ((RML7.canonP X₀ epsH ES jP).cinf +
+    (RML7.canonP X₀ epsH ES jP).Kc) ≤ t → t ≤ b → ∀ w ∈ Margin.Rec.Fset (PR θ X₀ ω)
+      (RML7.canonP X₀ epsH ES jP) t, 0 ≤ e t w
   /-- **Step 4** (`Margin.Var.step4` proves it from Lemma 5.21) -/
-  hS4 : ∀ t, T0 ≤ t → t ≤ b →
-    (oVc θ X₀ ω) t + 2 * (ηVc θ X₀ ω p) t + ∑ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t, e t w / KR.Vl
-      (PR θ X₀ ω) w ≤
-      p.ES / Real.log t
-  /-- the base case below `T₀` -/
-  hbase : ∀ t, t < T0 → Margin.Rec.vSup (Queue6.Hc X₀) (marginM θ X₀ ω) t ≤
-    Margin.Rec.PhiC (PR θ X₀ ω) p t 1
-  /-- **Step 5**: `ε' ≤ 0.045` (the transfer of `A₀(0.045)` to `𝒩`, with the head bound
-  `1 + 2.2181`, is then `Margin.Rec.hhead_loc`) -/
-  hpε' : p.ε' ≤ 0.045
-  /-- **Step 5**: Rankin's tail bound (`τ ≤ 0.06`) -/
-  htail : ∀ t, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ b →
-    ∑ M ∈ ((KR.NAll (PR θ X₀ ω) t (p.Xm / 2)).filter (fun M =>
-        Margin.Rec.cutL (PR θ X₀ ω) p M ≤ t / Margin.Rec.Vv (PR θ X₀ ω) M)).filter
-        (fun M => ¬ Margin.Rec.Vv (PR θ X₀ ω) M ≤ √t),
-      Margin.Rec.Aw (PR θ X₀ ω) p M * (p.ES / Real.log (t / Margin.Rec.Vv (PR θ X₀ ω) M)) ≤
-        0.06 * p.ES / Real.log t
+  hS4 : ∀ t, ((RML7.canonP X₀ epsH ES jP).cinf + (RML7.canonP X₀ epsH ES jP).Kc) ≤ t → t ≤ b →
+    (oVc θ X₀ ω) t + 2 * (ηVc θ X₀ ω (RML7.canonP X₀ epsH ES jP)) t + ∑ w ∈ Margin.Rec.Fset
+      (PR θ X₀ ω) (RML7.canonP X₀ epsH ES jP) t, e t w / KR.Vl (PR θ X₀ ω) w ≤
+      (RML7.canonP X₀ epsH ES jP).ES / Real.log t
   /-- the sizes of the error terms (`o(1)`, §5.1; Step 5 of Proposition 5.35) -/
   hsmall : ∀ t, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ b →
     oTot (Queue6.Hc X₀ t) t ((fun _ => EBRc) t) ((fun x => jXdef (PR θ X₀ ω) (Queue6.Hc X₀)
       (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀) (NKc X₀) x) t) +
-      (a t + bb t + 6 * Real.log t / Queue6.Hc X₀ t) + (fun _ => EBRc) t + (fun x => jXdef
-        (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀) (NKc X₀) x) t +
-      54 * (sηB X₀) + 6 * Real.log t / Queue6.Hc X₀ t + 6.5 * p.ES + VX (PR θ X₀ ω) p t ≤ 0.01
+      ((fun x => KR.RML6K.aK (CNt X₀) (S x) (Queue6.Hc X₀) x) t +
+        (fun x => 35.8 * CNt X₀ * 10 * ∑ i ∈ Finset.range (Jc X₀ x + 1), Real.log (3 *
+          (Xm X₀ * 2 ^ i)) ^ 2 * (obG X₀ i + FrB x i)) t + 6 * Real.log t / Queue6.Hc X₀ t) +
+            (fun _ => EBRc) t + (fun x => jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀
+              (epsH / 10) lamH (jzX X₀) (NKc X₀) x) t +
+      54 * (sηB X₀) + 6 * Real.log t / Queue6.Hc X₀ t + 6.5 * (RML7.canonP X₀ epsH ES jP).ES + VX
+        (PR θ X₀ ω) (RML7.canonP X₀ epsH ES jP) t ≤ 0.01
   /-- Step 6(b), "Sum" -/
   hsum : ∀ t, 2 * (X₀ : ℝ) ≤ t → t ≤ (X₀ : ℝ) ^ (1.01 : ℝ) → t ≤ b →
     rhoSh (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) t (fun s => TcR θ X₀ ω (jzX X₀) s +
@@ -216,7 +177,7 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
         (NKc X₀) t ≤ 0.4209)
     (Bs : RestBase θ X₀ ω b) (Br : RestBridge θ X₀ ω b)
     (Rs : RestRes θ X₀ ω b)
-    (Mg : RestMargin θ X₀ ω b Rs.a Rs.bb) :
+    (Mg : RestMargin θ X₀ ω b Rs.S Rs.FrB) :
     RealMarginLoc hc ω b where
   Z := Zc X₀ b
   η1 := 1 / 1000
@@ -266,42 +227,49 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
           (tnpR hc hev hbs hN.2.1 hX1) hy hyb hyL (jumpCount_c hc hev hb hbt hG.1
             (fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn) hN hy hyb hyL)
               (rprimeChange_c hc ω hb (tnpR hc hev hbs hN.2.1 hX1) hy hyb) (Rs.g1B y hy hyb hyL))
-  ρL := Rs.ρL
-  hρL := Rs.hρL
-  TcL := Rs.TcL
-  hTcL := Rs.hTcL
-  NT := Rs.NT
-  ϑ := Rs.ϑ
-  vtH := Rs.vtH
-  hvt := Rs.hvt
-  hTLBd := Rs.hTLBd
-  a := Rs.a
-  bb := Rs.bb
-  hK := Rs.hK
-  hG := Rs.hG
-  hϑ := Rs.hϑ
-  Bt := Btc θ X₀ ω (opR hc hev hbs hN.2.1 hX1) Rs.ρL Rs.TcL Rs.vtH Rs.NT
+  ρL := ρLd θ X₀ ω
+  hρL := ρLd_coe hc hev ω
+  TcL := TcLd θ X₀ ω
+  hTcL := TcLd_coe hc hev ω
+  NT := NTd θ X₀ ω
+  ϑ := fun _ => 0
+  vtH := 0
+  hvt := fun z => by simp
+  hTLBd := hTLBd_c hc hev ω
+  a := fun x => KR.RML6K.aK (CNt X₀) (Rs.S x) (Queue6.Hc X₀) x
+  bb := fun x => 35.8 * CNt X₀ * 10 * ∑ i ∈ Finset.range (Jc X₀ x + 1), Real.log (3 *
+    (Xm X₀ * 2 ^ i)) ^ 2 * (obG X₀ i + Rs.FrB x i)
+  hK := hK_c hc hev hb (tnpR hc hev hbs hN.2.1 hX1) (Queue6.x0sHyp_G0
+    (e3Family θ X₀) hc hev hG hN hbt hbs (Zc_facts hc hb).1 le_rfl
+      (by linarith [hc.hθ.2])) Rs.S Rs.FbK Rs.hFr
+  hG := hG_c hc hev hb hbt hG.1 (fun n hn => mem_E0_of_G0 (e3Family θ X₀) hG (Sum.inl n) hn) hN
+    (tnpR hc hev hbs hN.2.1 hX1) (Queue6.x0sHyp_G0 (e3Family θ X₀) hc hev hG hN hbt hbs
+      (Zc_facts hc hb).1 le_rfl (by linarith [hc.hθ.2])) Rs.FrB Rs.hFrB0 Rs.hFrB
+  hϑ := fun _ _ _ => by simp
+  Bt := Btc θ X₀ ω (opR hc hev hbs hN.2.1 hX1) (ρLd θ X₀ ω) (TcLd θ X₀ ω) 0 (NTd θ X₀ ω)
   η := ηB θ X₀ ω
   sη := sηB X₀
   intm := intm_c hc hev ω
-  p := Mg.p
-  T0 := Mg.T0
+  p := RML7.canonP X₀ epsH Mg.ES Mg.jP
+  T0 := (RML7.canonP X₀ epsH Mg.ES Mg.jP).cinf + (RML7.canonP X₀ epsH Mg.ES Mg.jP).Kc
   err := fun z => 2.2 * s2E3 X₀ (uS X₀ (m1z X₀ z)) + 2.2 * s2E3 X₀ (uS X₀
     (m1z X₀ z + 1)) + 210 / Real.log (uS X₀ (m1z X₀ z)) ^ 6 +
       (6.6 + 4.2 * Mg.s2mst z) / Queue6.Hc X₀ z
   e := Mg.e
   oV := oVc θ X₀ ω
-  ηV := ηVc θ X₀ ω Mg.p
-  chain := Mg.chain
-  hpXm := Mg.hpXm
-  hpε := Mg.hpε
-  hT0 := Mg.hT0
-  hT0wf := Mg.hT0wf
-  hT0T := Mg.hT0T
+  ηV := ηVc θ X₀ ω (RML7.canonP X₀ epsH Mg.ES Mg.jP)
+  chain := RML7.canonP_chain hc.hX (tnpR hc hev hbs hN.2.1 hX1).width Mg.hES0 Mg.hjP0
+    (KR.Chain.p_ge_two_of (tnpR hc hev hbs hN.2.1 hX1) (Xm_le_Zc' hc b))
+  hpXm := rfl
+  hpε := RML7.canonP_epsle (by norm_num [epsH])
+  hT0 := le_rfl
+  hT0wf := hT0wf_c hc Mg.ES Mg.jP
+  hT0T := hT0T_c hc Mg.ES Mg.jP hb
   hmbdd := marginM_bdd hc hev ω _
-  hρ0 := Mg.hρ0
-  hT0' := Mg.hT0'
-  hgeom := Mg.hgeom
+  hρ0 := hρ0_c hc ω
+  hT0' := hT0'_c hc Mg.ES Mg.jP
+  hgeom := fun t _ _ w hw => BModel.RML6.hgeom_of hc.hX ω _ rfl (tnpR hc hev hbs hN.2.1 hX1).width
+    (CapHSlopeProof.capHSlope (by linarith)) le_rfl t w hw
   s2Q := Queue6.s2Q θ X₀ ω
   s2sl := Queue6.s2sl θ X₀ ω
   s2δ := Queue6.s2δ X₀
@@ -313,27 +281,35 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
   hS2cp := fun z _ s hs0 hs => (Queue6.hS2c_R hc hev hs0 hs).1
   hS2cm := fun z _ s hs0 hs => (Queue6.hS2c_R hc hev hs0 hs).2
   hS2Ep := fun z hz s hs0 hs => (hS2E_field hc ω hb hbt (KR.Chain.p_ge_two_of
-    (tnpR hc hev hbs hN.2.1 hX1) (Xm_le_Zc' hc b)) hEpm Mg.p Mg.T0 z hz s hs0 hs).1
+    (tnpR hc hev hbs hN.2.1 hX1) (Xm_le_Zc' hc b)) hEpm (RML7.canonP X₀ epsH Mg.ES Mg.jP)
+      ((RML7.canonP X₀ epsH Mg.ES Mg.jP).cinf +
+        (RML7.canonP X₀ epsH Mg.ES Mg.jP).Kc) z hz s hs0 hs).1
   hS2Em := fun z hz s hs0 hs => (hS2E_field hc ω hb hbt (KR.Chain.p_ge_two_of
-    (tnpR hc hev hbs hN.2.1 hX1) (Xm_le_Zc' hc b)) hEpm Mg.p Mg.T0 z hz s hs0 hs).2
+    (tnpR hc hev hbs hN.2.1 hX1) (Xm_le_Zc' hc b)) hEpm (RML7.canonP X₀ epsH Mg.ES Mg.jP)
+      ((RML7.canonP X₀ epsH Mg.ES Mg.jP).cinf +
+        (RML7.canonP X₀ epsH Mg.ES Mg.jP).Kc) z hz s hs0 hs).2
   hS2sp := Mg.hS2sp
   hS2sm := Mg.hS2sm
   hS2δ := fun z _ => div_nonneg (by norm_num) (by unfold Queue6.Hc; exact capH_nonneg _ _)
-  hS2H := Mg.hS2H
-  hS2mi := Mg.hS2mi
+  hS2H := fun z _ x hx => hS2H_c hc z x hx
+  hS2mi := fun z _ s hs0 _ => hS2mi_c hc hev ω z hs0
   hS2err := fun z _ => Queue6.hS2err_R hc z (Mg.s2mst z)
   hS2e := Mg.hS2e
   he0 := Mg.he0
   hoscV := fun t _ htb hh hhh => hoscV_c hc hev ω (tnpR hc hev hbs hN.2.1 hX1) (by linarith)
     (Zc_facts hc hb).2.2.2 htb hhh
-  hsw := fun t _ htb hh hhh => hsw_c hc hev ω Mg.p htb hhh
+  hsw := fun t _ htb hh hhh => hsw_c hc hev ω (RML7.canonP X₀ epsH Mg.ES Mg.jP) htb hhh
   hS4 := Mg.hS4
-  hbase := Mg.hbase
-  hpε' := Mg.hpε'
-  htail := Mg.htail
-  hdec := fun hO t _ _ => hdec_c ω (opR hc hev hbs hN.2.1 hX1) Rs.ρL Rs.TcL Rs.vtH Rs.NT hO t
-  hBt := hBt_c hc hev ω
-    (opR hc hev hbs hN.2.1 hX1) Rs.ρL Rs.TcL Rs.vtH Rs.NT Rs.hρL Rs.hTcL Rs.hvt Rs.hϑ
+  hbase := hbase_c hc ω Mg.hjP0
+  hpε' := RML7.canonP_eps'
+  htail := fun t ht htb => Margin.Rec.htail_loc (PR θ X₀ ω) hbs
+    (tnpR hc hev hbs hN.2.1 hX1).hXm _ rfl (RML7.canonP_eps') (RML7.canonP_Kc_nonneg hc.hX)
+      (RML7.canonP_cinf hc.hX) Mg.hES0 (htpos_c hc ht) (htlog_c hc ht) (htZ_c hc hb ht htb)
+  hdec := fun hO t _ _ => hdec_c ω (opR hc hev hbs hN.2.1 hX1) (ρLd θ X₀ ω) (TcLd θ X₀ ω) 0
+    (NTd θ X₀ ω) hO t
+  hBt := hBt_c hc hev ω (opR hc hev hbs hN.2.1 hX1) (ρLd θ X₀ ω) (TcLd θ X₀ ω) 0 (NTd θ X₀ ω)
+    (ρLd_coe hc hev ω) (TcLd_coe hc hev ω) (ϑ := fun _ => 0) (fun z => by simp)
+      (fun _ _ _ => by simp)
   hsη := hsη_c hc hev ω hb (tnpR hc hev hbs hN.2.1 hX1)
   hsmall := Mg.hsmall
   jb := fun x => jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) X₀ (epsH / 10) lamH
@@ -373,7 +349,7 @@ variable (θ X₀) in
 `(ω, b)`. -/
 def OthersInputs (ω : JitterΩ) (b : ℝ) : Prop :=
   ∃ (Bs : RestBase θ X₀ ω b) (Br : RestBridge θ X₀ ω b) (Rs : RestRes θ X₀ ω b),
-    Nonempty (RestMargin θ X₀ ω b Rs.a Rs.bb)
+    Nonempty (RestMargin θ X₀ ω b Rs.S Rs.FrB)
 
 /-- `RealMarginLoc` from the Model fields and `OthersInputs`. -/
 theorem realMarginLoc_of_others (hc : Cond θ X₀) (hev : Even X₀) {ω : JitterΩ} {b : ℝ}
