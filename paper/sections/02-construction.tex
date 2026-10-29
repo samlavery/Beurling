@@ -158,10 +158,15 @@ $u\ge X_0$.
 
 \begin{lemma}[Target error]\label{lem:T1}
 % v3: (T1), (1.4)
+% Logged correction 106 (CORRECTIONS-vs-v3.md): the event is now localized; every use is on Good(<t) at heights x <= t + 1.01H(t).
 Write $E(x):=T(x)-x-R(x)$. On the event of Lemma~\ref{lem:lemmaP},
 \begin{equation}\label{eq:T1}
   |E(x)|\le C_{X_0}x^{\theta}+2x^{\theta/2}\qquad\text{for all }x\ge X_0,\quad C_{X_0}<\infty.
 \end{equation}
+More precisely, \eqref{eq:T1} holds on $\Good(<t)$ for $X_0\le x\le t+1.01H(t)$, since Lemma~\ref{lem:lemmaP} holds on
+$\Good(<t)$ at every height up to $t+1.01H(t)$, and $E(x)$ uses Lemma~\ref{lem:lemmaP} (directly and through
+Lemma~\ref{lem:rhoA}(a)) only at heights $u\le x$, that is, on the windows $[u,u+h(u)]$ with $u\le x$; so it reads the
+absorbed set only on $[X_0,x+h(x))$. This is the form used below.
 Moreover $|R(x)|\le2x^{\theta}\log^*x$, and the rigid part $E_{\mathrm{rig}}(x):=\Psi(x,X_0)-\Psi(X_0,X_0)-\int_{X_0}^x\rhodet$ of $E$
 satisfies, for every $x\ge X_0$,
 % Logged correction 51
