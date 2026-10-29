@@ -217,6 +217,15 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     - Proposition 6.11 at z = X₀/2 (`Queue6.cluster0_of`), by the paper's low-height argument: capacity 0, then
       Theorem R.
     - T(x) ≤ 3x on the good event (`tbound_of_lemma626`), from Lemma 6.26 on Good(<t).
+- **Added in this repository: §7, the base range** (`Beurling/BaseRange/`, 10 files, 3k lines).
+  - (84) in both directions, and its equivalence with η_H(q) ≤ (log q)^{−3}; it implies `ShortIntervalPNT`.
+  - Lemma 7.1.
+  - Lemma 7.3(a), (d)(i)–(ii), and (c) ⟹ (87) with the certified integrals (constant 689.0 against 690).
+  - The edge numerics and §7.3.
+  - `lemma_7_3` packages Lemma 7.3 in the form Propositions 5.35 and 5.38 consume.
+  - Named inputs: Lemma 7.3(b), (c) pointwise and (d)(iii), and the edge expansion. All of these need the realised
+    operator K_pt of §5, which is not yet defined in Lean.
+  - No errors in §7; the formalization found the definitional slip logged as #105.
 - **Appendix B.** Nearly all the certificates: bs-cert (region Z2 and the auxiliary checks), finite-n, x0-band, the
   constants, the bounds on φ, and rankin_R. Dickman's function is constructed and its facts (R1)–(R4) are proved.
 

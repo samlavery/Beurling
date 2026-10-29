@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#104)
+## Addendum: defects found after the re-check (corrections #31–#105)
 
 After the first public version, a reader reported fifty defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, two end-to-end checks (R14, R15) and an audit of the certificate code (R30), turned up twenty-four more (the last three from the Lean formalization). The full list, with each repair, is entries #31–#104 of `CORRECTIONS-vs-v3.md`:
+re-checking the repairs, two end-to-end checks (R14, R15) and an audit of the certificate code (R30), turned up twenty-five more (the last four from the Lean formalization). The full list, with each repair, is entries #31–#105 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -142,9 +142,10 @@ re-checking the repairs, two end-to-end checks (R14, R15) and an audit of the ce
 | 102 | Lemma 5.7 proof, Assembly | ε₁ := 4300λ + 8.8α′ (u ≥ 27) and 14400λ + α′ (u < 27) understate (a)–(f) (≈ 4802λ; 8.1α′); now 4900λ + 8.8α′ and 14400λ + 8.1α′, still ≤ 0.72ε | Lean formalization |
 | 103 | Cor kr-weights (b); App. B.4 k2, k3 | the chain uses A₀ ≤ 2.06734, A₁ ≤ 9.409 but the certificate checked only 2.07, 9.42 (½λ₀A₁ ≤ 4.71 fails from 9.42 since λ₀ > 1); k2, k3 now certify the sharp values | Lean formalization |
 | 104 | Thm lp Step 7, eq:lp-growth | max(a,b) ≤ a+b−2.975 needs log(k\|t\|+19.2) ≥ 2.975, but it can be 2.958; constant 440.86 → 440.88, inside the 0.7 slack of Y | Lean formalization |
+| 105 | eq:huxley, X_Hux | defined as a min that need not exist; now 1 + inf, with the consequence for q ≥ X₀ stated | Lean formalization |
 
 **Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72 in twenty-two passes
-(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, #79–#82 by R20, #83–#85 by R21, #86 and #87 by R22, #88 and #89 by R23, #90 by R24, #91 by R25, #92 by R26, #93 by R27, #95 and #96 by R28, #97–#100 by R29, #101 came from the bs-cert code audit R30, #102–#104 from the Lean formalization (kernel-checked; #103 also by re-running consts.py), and #94 was checked by R31; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, #79–#82 by R20, #83–#85 by R21, #86 and #87 by R22, #88 and #89 by R23, #90 by R24, #91 by R25, #92 by R26, #93 by R27, #95 and #96 by R28, #97–#100 by R29, #101 came from the bs-cert code audit R30, #102–#105 from the Lean formalization (kernel-checked; #103 also by re-running consts.py), and #94 was checked by R31; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -162,7 +163,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the one hundred and four corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the one hundred and five corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and
