@@ -49,7 +49,7 @@ lemma e1_numeric (hX : 10 ^ 8 ≤ Real.log X₀) (m : ℕ) :
 /-- **E2 per scale**: `∑_{I ∈ 𝓘_u} P(Fr(I)ᶜ ∩ Good(<b)) ≤ u^{-2}`. -/
 theorem e2_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull) (hev : Even X₀)
-    (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueInputs θ X₀) (m : ℕ) :
+    (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueCore θ X₀) (m : ℕ) :
     ∑' p : {p : ℕ × ℤ × ℤ // p.1 = m},
       jitterMeasure ((FrE θ X₀ p.1.1 p.1.2.1 p.1.2.2)ᶜ ∩ G0 θ X₀ Q.sec5 (tE2 p.1.2.2)) ≤
       ENNReal.ofReal (1 / uS X₀ m ^ 2) := by
@@ -138,7 +138,7 @@ theorem e2_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^
 
 /-- **E4 per scale**: `∑_{J ∈ 𝒥_u} P(Land(J)ᶜ ∩ Good) ≤ u^{-2}`. -/
 theorem e4_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
-    (hHB : ShortIntervalPNTFrom X₀) (Q : QueueInputs θ X₀) (m : ℕ) (G : ℕ → Set JitterΩ) :
+    (hHB : ShortIntervalPNTFrom X₀) (Q : QueueCore θ X₀) (m : ℕ) (G : ℕ → Set JitterΩ) :
     ∑' p : {p : ℕ × ℕ × ℕ // p.1 = m},
       jitterMeasure ((LandE θ X₀ p.1.1 p.1.2.1 p.1.2.2)ᶜ ∩ G (tE4 X₀ p.1.1 p.1.2.2)) ≤
       ENNReal.ofReal (1 / uS X₀ m ^ 2) := by
@@ -205,17 +205,12 @@ theorem e4_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^
         mul_le_mul_of_nonneg_right hcard (by positivity)
     _ ≤ 1 / u ^ 2 := hnum
 
-/-- **E1 per scale**: one dyadic height per scale, `(log z)^{-2} ≤ 1.0001 L_u^{-2}`
-(Proposition 6.11: at `z ≥ X₀` from the window model, `eclW_fail`; at `z = X₀/2` the named
-input `cluster0`). -/
-theorem e1_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+/-- **The E1 bound from `QueueInputs`** (Proposition 6.11 on `Good(< t(E1(z_n)))`: at `z ≥ X₀`
+from the window model, `eclW_fail`; at `z = X₀/2` the field `cluster0`). -/
+theorem e1_of_inputs (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (hev : Even X₀) (Q : QueueInputs θ X₀) (m : ℕ) :
-    ∑' n : {n : ℕ // id n = m},
-      jitterMeasure ((E1ev θ X₀ n.1)ᶜ ∩ G0 θ X₀ Q.sec5 (tE1 X₀ n.1)) ≤
-      ENNReal.ofReal (1.0001 / (Real.log X₀ + m * Real.log 2) ^ 2) := by
-  have hsub : Subsingleton {n : ℕ // id n = m} := ⟨fun a b => Subtype.ext (a.2.trans b.2.symm)⟩
-  rw [tsum_eq_single ⟨m, rfl⟩ (fun b hb => absurd (Subsingleton.elim b _) hb)]
-  refine le_trans ?_ (ENNReal.ofReal_le_ofReal (e1_numeric hX m))
+    jitterMeasure ((E1ev θ X₀ m)ᶜ ∩ G0 θ X₀ Q.sec5 (tE1 X₀ m)) ≤
+      ENNReal.ofReal (Real.log (zH X₀ m) ^ (-2 : ℝ)) := by
   rcases Nat.eq_zero_or_pos m with h0 | hm
   · subst h0; exact Q.cluster0
   · have hc : Cond θ X₀ := ⟨hθ, hX, hHB⟩
@@ -223,15 +218,27 @@ theorem e1_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^
       (Q.multi hc hev m hm) (Q.cover hc hev m hm)
     simpa [E1ev, dif_pos (And.intro hc hev)] using this
 
+/-- **E1 per scale**: one dyadic height per scale, `(log z)^{-2} ≤ 1.0001 L_u^{-2}`, from the
+Proposition 6.11 bound `hE1` at every height. -/
+theorem e1_scale (hX : 10 ^ 8 ≤ Real.log X₀) (D : Sec5Family)
+    (hE1 : ∀ n, jitterMeasure ((E1ev θ X₀ n)ᶜ ∩ G0 θ X₀ D (tE1 X₀ n)) ≤
+      ENNReal.ofReal (Real.log (zH X₀ n) ^ (-2 : ℝ))) (m : ℕ) :
+    ∑' n : {n : ℕ // id n = m},
+      jitterMeasure ((E1ev θ X₀ n.1)ᶜ ∩ G0 θ X₀ D (tE1 X₀ n.1)) ≤
+      ENNReal.ofReal (1.0001 / (Real.log X₀ + m * Real.log 2) ^ 2) := by
+  have hsub : Subsingleton {n : ℕ // id n = m} := ⟨fun a b => Subtype.ext (a.2.trans b.2.symm)⟩
+  rw [tsum_eq_single ⟨m, rfl⟩ (fun b hb => absurd (Subsingleton.elim b _) hb)]
+  exact (hE1 m).trans (ENNReal.ofReal_le_ofReal (e1_numeric hX m))
+
 /-- **The target bound per scale** (Lemma 3.4 on the good event): no failure. -/
-theorem tB_scale (Q : QueueInputs θ X₀) (m : ℕ) :
+theorem tB_scale (Q : QueueCore θ X₀) (m : ℕ) :
     ∑' n : {n : ℕ // id n = m},
       jitterMeasure ((tB (θ := θ) (X₀ := X₀) n.1)ᶜ ∩ G0 θ X₀ Q.sec5 (ttB X₀ n.1)) = 0 :=
   ENNReal.tsum_eq_zero.mpr fun n => Q.tbound n.1
 
 /-- **E3, E3′ per scale** (Lemma 5.22): the bound of `QueueInputs.budget5` on the larger good
 event. -/
-theorem e5_scale (Q : QueueInputs θ X₀) (m : ℕ) :
+theorem e5_scale (Q : QueueCore θ X₀) (m : ℕ) :
     ∑' i : {i // Q.sec5.scale i = m},
       jitterMeasure ((Q.sec5.E i)ᶜ ∩ G0 θ X₀ Q.sec5 (Q.sec5.time i)) ≤
       ENNReal.ofReal (1.2 / uS X₀ m ^ 2) := by
@@ -248,7 +255,9 @@ theorem e5_scale (Q : QueueInputs θ X₀) (m : ℕ) :
 scale `m` sum to at most `1.0001 (log X₀ + m log 2)^{-2} + 3.2 (2^m X₀)^{-2}`. -/
 theorem base_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull) (hev : Even X₀)
-    (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueInputs θ X₀) (m : ℕ) :
+    (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueCore θ X₀)
+    (hE1 : ∀ n, jitterMeasure ((E1ev θ X₀ n)ᶜ ∩ G0 θ X₀ Q.sec5 (tE1 X₀ n)) ≤
+      ENNReal.ofReal (Real.log (zH X₀ n) ^ (-2 : ℝ))) (m : ℕ) :
     ∑' i : {i : ι0 Q.sec5 // s0 Q.sec5 i = m},
       jitterMeasure ((E0 θ X₀ Q.sec5 i)ᶜ ∩ G0 θ X₀ Q.sec5 (t0 X₀ Q.sec5 i)) ≤
       ENNReal.ofReal (1.0001 / (Real.log X₀ + m * Real.log 2) ^ 2 + 3.2 / (2 ^ m * X₀) ^ 2) := by
@@ -267,7 +276,7 @@ theorem base_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10
   have bt' : ∑' x : {i // s0 Q.sec5 (Sum.inr (Sum.inr (Sum.inr (Sum.inl i)))) = m},
       f (Sum.inr (Sum.inr (Sum.inr (Sum.inl x.1)))) = 0 := bt
   rw [bt', zero_add]
-  have b1 := e1_scale hθ hX hHB hev Q m
+  have b1 := e1_scale hX Q.sec5 hE1 m
   have b2 := e2_scale hθ hX hHB hnull hev hX₀ Q m
   have b4 := e4_scale hθ hX hHB Q m (G0 θ X₀ Q.sec5)
   have b5 := e5_scale Q m
@@ -296,7 +305,7 @@ theorem base_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10
 /-- The null events of R1′ are null. -/
 lemma nev_null (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull) (hev : Even X₀)
-    (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueInputs θ X₀) (p : ℕ × ℤ × ℤ) :
+    (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueCore θ X₀) (p : ℕ × ℤ × ℤ) :
     jitterMeasure (Nev θ X₀ Q.sec5 p)ᶜ = 0 := by
   by_cases hadm : Adm X₀ p.1 p.2.1 p.2.2
   · have h := R1cond_ae hθ hX hHB hnull hev hX₀ Q hadm
@@ -310,10 +319,13 @@ lemma nev_null (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8
       intro h; exact absurd h hadm
     rw [this, measure_empty]
 
-/-- **Table 1 / Lemma 6.10 per scale for the event family.** -/
-theorem tableBudget_EF (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+/-- **Table 1 / Lemma 6.10 per scale for the event family**, from `QueueCore` and the
+Proposition 6.11 bound at every height. -/
+theorem tableBudget_core (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull)
-    (hev : Even X₀) (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueInputs θ X₀) :
+    (hev : Even X₀) (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueCore θ X₀)
+    (hE1 : ∀ n, jitterMeasure ((E1ev θ X₀ n)ᶜ ∩ G0 θ X₀ Q.sec5 (tE1 X₀ n)) ≤
+      ENNReal.ofReal (Real.log (zH X₀ n) ^ (-2 : ℝ))) :
     TableBudget jitterMeasure X₀ (EF θ X₀ Q.sec5) (tF X₀ Q.sec5) (sF Q.sec5) := by
   intro m
   set f := fun i : ιF Q.sec5 => jitterMeasure ((EF θ X₀ Q.sec5 i)ᶜ ∩
@@ -338,12 +350,20 @@ theorem tableBudget_EF (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
         simp only [goodLt, mem_iInter] at this
         exact this m' (Finset.mem_range.mpr (Nat.lt_succ_self m'))
   rw [hinr, add_zero]
-  refine le_trans (ENNReal.tsum_le_tsum fun x => ?_) (base_scale hθ hX hHB hnull hev hX₀ Q m)
+  refine le_trans (ENNReal.tsum_le_tsum fun x => ?_) (base_scale hθ hX hHB hnull hev hX₀ Q hE1 m)
   simp only [f, EF, tF, Sum.elim_inl]
   unfold G0
   rw [← withQC_fail]
   exact measure_mono (Set.inter_subset_inter_right _
     (goodBefore_sum_inl _ _ _ _ _))
+
+
+/-- **Table 1 / Lemma 6.10 per scale for the event family**, from `QueueInputs`. -/
+theorem tableBudget_EF (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+    (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull)
+    (hev : Even X₀) (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueInputs θ X₀) :
+    TableBudget jitterMeasure X₀ (EF θ X₀ Q.sec5) (tF X₀ Q.sec5) (sF Q.sec5) :=
+  tableBudget_core hθ hX hHB hnull hev hX₀ Q.toQueueCore (e1_of_inputs hθ hX hHB hev Q)
 
 end Queue6
 

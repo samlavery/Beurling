@@ -192,7 +192,10 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
       realised system. That event follows from the Part I conclusions and the cluster event (`sparsEv_of_cluster`).
     - Round 6 removed the Rosser–Schoenfeld input. Lean uses the Mertens product bound ∏_{p<X}(1 − 1/p)^{−1} ≤ 1.8 log X
       (`Mertens.ZinfR_one_le`) in place of the paper's citation of [RS62, (3.29)].
-      - Since e^γ < 1.8, A_top ≤ A_R·e^{2.2/Λ} still holds, so no paper constant changes.
+      - The paper is unchanged: its route through e^γ and [RS62] is correct.
+      - With 1.8 in place of e^γ, the paper's closing inequality A_top ≤ A_R·e^{2.2/Λ} fails for very large z. The Lean
+        route uses instead A_R = 1.8(log z + 0.7) and b = e^{2.21/Λ+10⁻⁶}, which Proposition 6.11's condition
+        θe^{(3H+2)/X₀}b ≤ 1.01 allows (`Queue6/ClusterV.lean`).
       - Round 6 also proved T₀ monotone for the construction (`T0_mono_designed`). So Theorem 5.24 holds for the constructed
         system with only (84) as a standing hypothesis (`theorem_5_24_data`).
 - **Added in this repository: the local prime number theorem, §5.7** (`Beurling/LocalPNT/`, 45 files, 13.4k lines).
@@ -219,6 +222,14 @@ The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
     - Lemma 3.4 on the good event (T(x) ≤ 3x);
     - Appendix A's `MultiRunSkeletonBound`, `CoverSkeletonBound` and (S3)(d);
     - Proposition 6.11 at the lowest height z = X₀/2.
+
+    Queue round 3 removed the Appendix A fields except the cover bound. It proves (S3)(d) on Good(<t(E1)) with a
+    position cut-off, as in the paper's (F3′), and plugs in the multi-run skeleton bound. The current top level is
+    `Queue6.corollary_2_2_of_V : ShortIntervalPNT → Theorem21InputsV → ¬ QuestionQ` (`Queue6/TopV.lean`). Its remaining
+    inputs are:
+    - the §5 events E3/E3′ and their budget (Lemma 5.22);
+    - Corollary 5.40 (R1′ and Comp⁽²⁾);
+    - the Cover Bound (`CoverV`, Proposition 6.19).
 
     Construction round 7 then proved:
     - The landing compensator bound, i.e. the `land` field (`BModel.land_compensator`). The paper's μ̄ is correct: below

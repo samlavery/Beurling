@@ -52,7 +52,7 @@ lemma ae_std (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 �
 /-- **R1′ on `Good(< max I)` in the form of Theorem 6.6**, a.s., from Corollary 5.40. -/
 theorem R1cond_ae (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull) (hev : Even X₀)
-    (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueInputs θ X₀) {m : ℕ} {a b : ℤ}
+    (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueCore θ X₀) {m : ℕ} {a b : ℤ}
     (hadm : Adm X₀ m a b) :
     ∀ᵐ ω ∂jitterMeasure, ω ∈ G0 θ X₀ Q.sec5 (tE2 b) → R1cond θ X₀ m a b ω := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
@@ -81,7 +81,7 @@ theorem R1cond_ae (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 
 /-- **Theorem 6.6(i) for one window of `𝓘_u`.** -/
 theorem frE_fail (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull) (hev : Even X₀)
-    (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueInputs θ X₀) (m : ℕ) (a b : ℤ) :
+    (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueCore θ X₀) (m : ℕ) (a b : ℤ) :
     jitterMeasure ((FrE θ X₀ m a b)ᶜ ∩ G0 θ X₀ Q.sec5 (tE2 b)) ≤
       ENNReal.ofReal ((K0 X₀ (uS X₀ m) + 7) * Real.exp (-(4 * Lq (uS X₀ m)))) := by
   classical
@@ -122,7 +122,7 @@ lemma muBar_pos (hX : 10 ^ 8 ≤ Real.log X₀) {m i j : ℕ} (hij : i < j) : 0 
 
 /-- **Lemma 6.1 (landing count)**: `P(Land(J)ᶜ) ≤ 2 e^{-λ_P}`, with no conditioning. -/
 theorem landE_fail (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
-    (hHB : ShortIntervalPNTFrom X₀) (Q : QueueInputs θ X₀) (m i j : ℕ) :
+    (hHB : ShortIntervalPNTFrom X₀) (Q : QueueCore θ X₀) (m i j : ℕ) :
     jitterMeasure (LandE θ X₀ m i j)ᶜ ≤
       ENNReal.ofReal (2 * Real.exp (-(4 * Real.log (uS X₀ m)))) := by
   classical

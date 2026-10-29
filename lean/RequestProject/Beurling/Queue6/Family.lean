@@ -86,8 +86,10 @@ def R1cond (m : ℕ) (a b : ℤ) (ω : JitterΩ) : Prop :=
   ∀ n, ∑ k ∈ Finset.range n, (jitterMeasure[Xt θ X₀ m a b k | jitterFiltration k]) ω ≤
     (ellIo θ X₀ a b ω : ℝ) * (1 - 0.15 / Lq (uS X₀ m)) + 3
 
-/-- **The inputs of §6.3–§6.4 from other sections** (see the module docstring). -/
-structure QueueInputs where
+/-- **The inputs of §6.3–§6.4 other than the Appendix A inputs of Proposition 6.11** (see the
+module docstring): the landing compensator, the §5 family and its budget, Corollary 5.40, and the
+target bound. -/
+structure QueueCore where
   land : ∀ m i j, AdmJ X₀ m i j → ∀ᵐ ω ∂jitterMeasure, ∀ n,
     ∑ k ∈ Finset.range n, (jitterMeasure[landInd θ X₀ m i j k | jitterFiltration k]) ω ≤
       muBar X₀ m i j
@@ -103,6 +105,9 @@ structure QueueInputs where
   comp2 : ∀ m a b, Adm X₀ m a b → ∀ᵐ ω ∂jitterMeasure, ω ∈ G0 θ X₀ sec5 (tE2 b) → ∀ n,
     ∑ k ∈ Finset.range n, (jitterMeasure[Ind2 θ X₀ a b k | jitterFiltration k]) ω ≤ 1
   tbound : ∀ n, jitterMeasure ((tB (θ := θ) (X₀ := X₀) n)ᶜ ∩ G0 θ X₀ sec5 (ttB X₀ n)) = 0
+
+/-- **The inputs of §6.3–§6.4 from other sections** (see the module docstring). -/
+structure QueueInputs extends QueueCore θ X₀ where
   slotHyp : SlotHyp (capH X₀) X₀
   cluster0 : jitterMeasure ((E1ev θ X₀ 0)ᶜ ∩ G0 θ X₀ sec5 (tE1 X₀ 0)) ≤
     ENNReal.ofReal (Real.log (zH X₀ 0) ^ (-2 : ℝ))
