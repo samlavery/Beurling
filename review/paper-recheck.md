@@ -61,10 +61,10 @@ complete and faithful presentation of its part of the proof of Theorem A.
 **Caveat.** Every check of this paper, and every referee of v3, has been an AI agent. No human expert has verified the
 argument. The authors regard the result as unconfirmed until a specialist has read it.
 
-## Addendum: defects found after the re-check (corrections #31–#107)
+## Addendum: defects found after the re-check (corrections #31–#108)
 
 After the first public version, a reader reported fifty defects that all the AI checks above had missed. Repairing them, and
-re-checking the repairs, two end-to-end checks (R14, R15) and an audit of the certificate code (R30), turned up twenty-seven more (the last six from the Lean formalization). The full list, with each repair, is entries #31–#107 of `CORRECTIONS-vs-v3.md`:
+re-checking the repairs, two end-to-end checks (R14, R15) and an audit of the certificate code (R30), turned up twenty-eight more (the last seven from the Lean formalization). The full list, with each repair, is entries #31–#108 of `CORRECTIONS-vs-v3.md`:
 
 | # | Where | Defect | Found by |
 |---|---|---|---|
@@ -145,9 +145,10 @@ re-checking the repairs, two end-to-end checks (R14, R15) and an audit of the ce
 | 105 | eq:huxley, X_Hux | defined as a min that need not exist; now 1 + inf, with the consequence for q ≥ X₀ stated | Lean formalization |
 | 106 | Lemma T1 statement | "on the event of Lemma P, for all x ≥ X₀" localized: on Good(<t) for X₀ ≤ x ≤ t + 1.01H(t), the range of every use | check prompted by the Lean formalization |
 | 107 | eq:s2 (source s₂) | stated with no event; now on Good(<u) (heights read < 4u/(X₀⁻)² below the horizon), every use on such an event | Lean formalization |
+| 108 | Lemma rhoA(b) | "pointwise" → on Good(<t) at heights u ≤ t + 1.01H(t), as (a); reads (H_BS) only on [1, 2y(u)] | Lean formalization |
 
 **Repairs and their check.** All are repaired. #48's first repair covered one configuration type only; #55 closes it (below). A fresh AI checker checked #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72 in twenty-two passes
-(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, #79–#82 by R20, #83–#85 by R21, #86 and #87 by R22, #88 and #89 by R23, #90 by R24, #91 by R25, #92 by R26, #93 by R27, #95 and #96 by R28, #97–#100 by R29, #101 came from the bs-cert code audit R30, #102–#107 from the Lean formalization (kernel-checked; #103 also by re-running consts.py), and #94 was checked by R31; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
+(`review/recheck/R4.md` §§1–29); #54, #60, #65, #66 and #68–#70 were checked by the checkers of R8 §9, R10, R11 §§12–13, R12 and R13; #74 and #75 by R16, #73 and #76 by R17, and #77 with R17's items by R18, #78 by R19, #79–#82 by R20, #83–#85 by R21, #86 and #87 by R22, #88 and #89 by R23, #90 by R24, #91 by R25, #92 by R26, #93 by R27, #95 and #96 by R28, #97–#100 by R29, #101 came from the bs-cert code audit R30, #102–#108 from the Lean formalization (kernel-checked; #103 also by re-running consts.py), and #94 was checked by R31; the repair of #48 had a separate adversarial check (`review/recheck/R5-pil-repair.md`,
 about 107k exact and float checks, including the counterexample that made the support indicator χ_t explicit). R4's work included:
 - a toy simulation of the #31 identity;
 - arb scans of the new H for 10⁸ ≤ Λ ≤ 10⁵⁰;
@@ -165,7 +166,7 @@ hold). Its fix was confirmed in pass 10 (§17). Pass 11 (§18) found #51 (N26); 
 fixable. R5 found the #48 repair CORRECT
 WITH FIXES; the fixes were applied, and the same checker then found the live text CORRECT.
 
-**Effect on the conclusions.** None of the one hundred and seven corrections changes a conclusion of the paper. Several required new
+**Effect on the conclusions.** None of the one hundred and eight corrections changes a conclusion of the paper. Several required new
 arguments, not just new constants: #31, #32, #36, #37, #40, #43, #44, #45, #46, #47, #48, #49, #51 and #52.
 
 **#48: a gap found and closed.** Two later independent checks reached the same conclusion: `review/recheck/R6-cond-check.md` and

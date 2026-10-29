@@ -1541,8 +1541,11 @@ than $1$.
   below $X_0$.
 % Approved deviation from v3 (CORRECTIONS-vs-v3.md, #16): v3's part (b), an oscillation bound via the local count, is
 % deleted (unused, and its proof does not bound the absorbed count). Parts (c), (d) of v3 are (b), (c) here.
+% Logged correction 108 (CORRECTIONS-vs-v3.md): (b) said "pointwise"; it holds on Good(<t) at heights u <= t + 1.01H(t), as (a).
 \item The source perturbation $\sigma_{\Abs}:=K_{\Abs}\tilde\rho-\rho_{\Abs}$ of Section~\ref{sec:noise} satisfies
-  $|\sigma_{\Abs}|\le2L^{-4}$ pointwise. Its compensator form uses $u=L/\log2y\ge10^8$ wherever $\Abs\ne\emptyset$, the raised
+  $|\sigma_{\Abs}(u)|\le2L^{-4}$ on $\Good(<t)$ at every height $u\le t+1.01H(t)$ (as in (a); the bound on $K_{\Abs}\tilde\rho$
+  reads (H$_{\mathrm{BS}}$) only on $[1,2y(u)]\subset[1,u^{1/100}]$, through Lemma~\ref{lem:cm}(iii),(iv), far below the horizon,
+  Remark~\ref{rem:horizon}). Its compensator form uses $u=L/\log2y\ge10^8$ wherever $\Abs\ne\emptyset$, the raised
   range included.
 \item (Current-height form.) On $\Good(<u)$ the $\Abs$-part of $T'$ is $\sigma_{\Abs}$, since $\bar\rho_{\Abs}=\rho_{\Abs}$.
   So the $\Abs$-part of the oscillation term $o_u$ of Section~\ref{sec:noise} satisfies
