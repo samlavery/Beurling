@@ -37,9 +37,9 @@ lemma exp_sH_ge : (393 : ℝ) ≤ Real.exp 5.9745 := by
   linarith
 
 lemma log_217e6_ge : (19.19 : ℝ) ≤ Real.log 217000000 := by
-  have h := logLoPt_le (a := 217000000) (by norm_num)
-  have hc : (1919 / 100 : ℚ) ≤ logLoPt 217000000 := by native_decide
-  have hc' : ((1919 / 100 : ℚ) : ℝ) ≤ ((logLoPt 217000000 : ℚ) : ℝ) := by exact_mod_cast hc
+  have h := FX.logLoQF_le (a := 217000000) (by norm_num)
+  have hc : (1919 / 100 : ℚ) ≤ FX.logLoQF 217000000 := by decide +kernel
+  have hc' : ((1919 / 100 : ℚ) : ℝ) ≤ ((FX.logLoQF 217000000 : ℚ) : ℝ) := by exact_mod_cast hc
   push_cast at h hc'
   linarith
 
@@ -70,9 +70,9 @@ noncomputable def Af (s Λ : ℝ) : ℝ :=
 noncomputable def Qf (s Λ : ℝ) : ℝ := Af s Λ * (Af s Λ + 1) / (Λ - Af s Λ - 1)
 
 lemma log40_le : Real.log 40 ≤ 3.7 := by
-  have h := le_logHiPt (a := 40) (by norm_num)
-  have hc : logHiPt 40 ≤ (37 / 10 : ℚ) := by native_decide
-  have hc' : ((logHiPt 40 : ℚ) : ℝ) ≤ ((37 / 10 : ℚ) : ℝ) := by exact_mod_cast hc
+  have h := FX.le_logHiQF (a := 40) (by norm_num)
+  have hc : FX.logHiQF 40 ≤ (37 / 10 : ℚ) := by decide +kernel
+  have hc' : ((FX.logHiQF 40 : ℚ) : ℝ) ≤ ((37 / 10 : ℚ) : ℝ) := by exact_mod_cast hc
   push_cast at h hc'
   linarith
 

@@ -22,12 +22,12 @@ open Real Set
 noncomputable def gTarget : ℝ := 1 / 3 - 1 / 100000
 
 lemma log1e8_bounds : (18.42 : ℝ) ≤ Real.log 100000000 ∧ Real.log 100000000 ≤ 18.43 := by
-  have h1 := logLoPt_le (a := 100000000) (by norm_num)
-  have h2 := le_logHiPt (a := 100000000) (by norm_num)
-  have c1 : (1842 / 100 : ℚ) ≤ logLoPt 100000000 := by native_decide
-  have c2 : logHiPt 100000000 ≤ (1843 / 100 : ℚ) := by native_decide
-  have c1' : ((1842 / 100 : ℚ) : ℝ) ≤ ((logLoPt 100000000 : ℚ) : ℝ) := by exact_mod_cast c1
-  have c2' : ((logHiPt 100000000 : ℚ) : ℝ) ≤ ((1843 / 100 : ℚ) : ℝ) := by exact_mod_cast c2
+  have h1 := FX.logLoQF_le (a := 100000000) (by norm_num)
+  have h2 := FX.le_logHiQF (a := 100000000) (by norm_num)
+  have c1 : (1842 / 100 : ℚ) ≤ FX.logLoQF 100000000 := by decide +kernel
+  have c2 : FX.logHiQF 100000000 ≤ (1843 / 100 : ℚ) := by decide +kernel
+  have c1' : ((1842 / 100 : ℚ) : ℝ) ≤ ((FX.logLoQF 100000000 : ℚ) : ℝ) := by exact_mod_cast c1
+  have c2' : ((FX.logHiQF 100000000 : ℚ) : ℝ) ≤ ((1843 / 100 : ℚ) : ℝ) := by exact_mod_cast c2
   push_cast at h1 h2 c1' c2'
   constructor <;> linarith
 
@@ -172,17 +172,54 @@ lemma checkLo_sound {e : Ex} {env : List ℝ} {ienv : List Itv} {t : ℚ} (h : E
 lemma envMem_pt (q : ℚ) : Ex.EnvMem [(q : ℝ)] [Itv.pt q] :=
   List.Forall₂.cons (Itv.mem_pt q) List.Forall₂.nil
 
+/-- Upper check in fixed point: `hi < t`. -/
+def fcheckHi (e : Ex) (fenv : List FX.FI) (t : ℚ) : Bool :=
+  match Ex.feval e fenv with
+  | some I => decide (I.hi < FX.qLo t)
+  | none => false
+
+/-- Lower check in fixed point: `t < lo`. -/
+def fcheckLo (e : Ex) (fenv : List FX.FI) (t : ℚ) : Bool :=
+  match Ex.feval e fenv with
+  | some I => decide (FX.qHi t < I.lo)
+  | none => false
+
+lemma fcheckHi_sound {e : Ex} {env : List ℝ} {fenv : List FX.FI} {t : ℚ} (h : Ex.FEnvMem env fenv)
+    (hc : fcheckHi e fenv t = true) : Ex.eval e env < t := by
+  unfold fcheckHi at hc
+  split at hc
+  · rename_i I hI
+    have h1 := (Ex.feval_sound e env fenv I h hI).2
+    have h2 : FX.toR I.hi < FX.toR (FX.qLo t) := FX.toR_lt_toR.mpr (of_decide_eq_true hc)
+    linarith [FX.qLo_le t]
+  · cases hc
+
+lemma fcheckLo_sound {e : Ex} {env : List ℝ} {fenv : List FX.FI} {t : ℚ} (h : Ex.FEnvMem env fenv)
+    (hc : fcheckLo e fenv t = true) : (t : ℝ) < Ex.eval e env := by
+  unfold fcheckLo at hc
+  split at hc
+  · rename_i I hI
+    have h1 := (Ex.feval_sound e env fenv I h hI).1
+    have h2 : FX.toR (FX.qHi t) < FX.toR I.lo := FX.toR_lt_toR.mpr (of_decide_eq_true hc)
+    linarith [FX.le_qHi t]
+  · cases hc
+
+lemma fenvMem_pt (q : ℚ) : Ex.FEnvMem [(q : ℝ)] [FX.FI.ofQ q] :=
+  List.Forall₂.cons (FX.FI.mem_ofQ q) List.Forall₂.nil
+
 lemma gstar_at_lo : gstar 5.9745 < gTarget := by
-  have hc : checkHi gEx [Itv.pt (59745 / 10000)] (1 / 3 - 1 / 100000) = true := by native_decide
-  have h := checkHi_sound (envMem_pt _) hc
+  have hc : fcheckHi gEx [FX.FI.ofQ (59745 / 10000)] (1 / 3 - 1 / 100000) = true := by
+    decide +kernel
+  have h := fcheckHi_sound (fenvMem_pt _) hc
   rw [gEx_eval (by norm_num)] at h
   unfold gTarget
   norm_num at h ⊢
   exact h
 
 lemma gstar_at_hi : gTarget < gstar 5.9746 := by
-  have hc : checkLo gEx [Itv.pt (59746 / 10000)] (1 / 3 - 1 / 100000) = true := by native_decide
-  have h := checkLo_sound (envMem_pt _) hc
+  have hc : fcheckLo gEx [FX.FI.ofQ (59746 / 10000)] (1 / 3 - 1 / 100000) = true := by
+    decide +kernel
+  have h := fcheckLo_sound (fenvMem_pt _) hc
   rw [gEx_eval (by norm_num)] at h
   unfold gTarget
   norm_num at h ⊢

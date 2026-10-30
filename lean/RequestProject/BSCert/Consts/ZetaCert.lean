@@ -1,7 +1,7 @@
 module
 
 public import RequestProject.BSCert.Consts.ZetaItv
-meta import RequestProject.BSCert.Consts.ZetaItv
+public import RequestProject.BSCert.Consts.ZetaKCert
 
 /-!
 # `consts.py`, lines k1–k5 and x1, x5–x7 (Appendix B.4)
@@ -127,32 +127,92 @@ lemma inv_log_two_le {s : ℝ} (hs : 1.45 ≤ s) : 1 / Real.log 2 ≤ s := by
   rw [div_le_iff₀ (by linarith)]
   nlinarith
 
-/-! ## The finite checks -/
+/-! ## Bounds for `A`, `A₁` from bounds for `ζ`, `-ζ'` -/
 
-lemma check_k1a : optGt (zetaLoQ (17286 / 10000) 3000) 2 = true := by native_decide
-lemma check_k1b : optLt (zetaHiQ (17287 / 10000) 3000) 2 = true := by native_decide
-lemma check_k2 : optLe (ordAHiQ (197 / 100) 3000) (207 / 100) = true := by native_decide
-lemma check_k3 : optLe (ordA1HiQ (197 / 100) 3000) (942 / 100) = true := by native_decide
-lemma check_k4 : optLe (zetaHiQ (18 / 10) 3000) (1883 / 1000 - 1 / 10 ^ 30) = true := by
-  native_decide
-lemma check_x1 : optLe (ordAHiQ (18 / 10 - 3 / 10 ^ 6) 3000) (74915 / 10000) = true := by
-  native_decide
-lemma check_x5 : optLe (ordAHiQ (177 / 100) 3000) (131 / 10) = true := by native_decide
-lemma check_x6 : optLe (zetaHiQ (197 / 100) 3000) (1674 / 1000) = true := by native_decide
-lemma check_x7 : optLe (zetaDHiQ (197 / 100) 3000) (10001 / 10000) = true := by native_decide
+lemma ordA_le_of {s u : ℝ} (hz : zetaR s ≤ u) (hu : u < 2) : ordA s ≤ 1 / (2 - u) - 1 := by
+  unfold ordA
+  have : 1 / (2 - zetaR s) ≤ 1 / (2 - u) := one_div_le_one_div_of_le (by linarith) (by linarith)
+  linarith
+
+lemma ordA1_le_of {s u d : ℝ} (hs : 1 < s) (hz : zetaR s ≤ u) (hu : u < 2) (hd : zetaDR s ≤ d) :
+    ordA1 s ≤ d / (2 - u) ^ 2 := by
+  have hd0 : 0 ≤ zetaDR s := by
+    unfold zetaDR
+    apply tsum_nonneg
+    intro n
+    have := Real.log_nonneg (by linarith [n.cast_nonneg (α := ℝ)] : (1 : ℝ) ≤ (n : ℝ) + 1)
+    have := Real.rpow_nonneg (by positivity : (0 : ℝ) ≤ (n : ℝ) + 1) (-s)
+    positivity
+  unfold ordA1
+  have h1 : (2 - u) ^ 2 ≤ (2 - zetaR s) ^ 2 := by
+    apply pow_le_pow_left₀ (by linarith); linarith
+  have h2 : 0 < (2 - u) ^ 2 := by
+    have : 0 < 2 - u := by linarith
+    positivity
+  calc zetaDR s / (2 - zetaR s) ^ 2 ≤ zetaDR s / (2 - u) ^ 2 :=
+        div_le_div_of_nonneg_left hd0 h2 h1
+    _ ≤ d / (2 - u) ^ 2 := div_le_div_of_nonneg_right hd h2.le
+
+/-- The kernel-checked bounds at the points of `consts.py` (3000 terms and the integral tails;
+`ZetaKCert`). -/
+lemma zH17287 : zetaR 1.7287 ≤ (zUpQ 17287 10000 3000 (zH17287C 6) : ℝ) := by
+  have := zetaR_le_zUpQ (a := 17287) (b := 10000) (by norm_num) (by norm_num) (by norm_num)
+    zH17287_total
+  norm_num at this ⊢; exact this
+lemma zL17286 : (zLoQ 17286 10000 3000 (zL17286C 6) : ℝ) ≤ zetaR 1.7286 := by
+  have := zLoQ_le_zetaR (a := 17286) (b := 10000) (by norm_num) (by norm_num) (by norm_num)
+    zL17286_total
+  norm_num at this ⊢; exact this
+lemma zH197 : zetaR 1.97 ≤ (zUpQ 197 100 3000 (zH197C 6) : ℝ) := by
+  have := zetaR_le_zUpQ (a := 197) (b := 100) (by norm_num) (by norm_num) (by norm_num) zH197_total
+  norm_num at this ⊢; exact this
+lemma zD197 : zetaDR 1.97 ≤ (zdUpQ 197 100 3000 (zD197C 6) : ℝ) := by
+  have := zetaDR_le_zdUpQ (a := 197) (b := 100) (by norm_num) (by norm_num)
+    (inv_log_two_le (by norm_num)) (by norm_num) zD197_total
+  norm_num at this ⊢; exact this
+lemma zH18 : zetaR 1.8 ≤ (zUpQ 18 10 3000 (zH18C 6) : ℝ) := by
+  have := zetaR_le_zUpQ (a := 18) (b := 10) (by norm_num) (by norm_num) (by norm_num) zH18_total
+  norm_num at this ⊢; exact this
+lemma zH1799997 : zetaR (1.8 - 3e-6) ≤ (zUpQ 1799997 1000000 3000 (zH1799997C 6) : ℝ) := by
+  have := zetaR_le_zUpQ (a := 1799997) (b := 1000000) (by norm_num) (by norm_num) (by norm_num)
+    zH1799997_total
+  norm_num at this ⊢; exact this
+lemma zH177 : zetaR 1.77 ≤ (zUpQ 177 100 3000 (zH177C 6) : ℝ) := by
+  have := zetaR_le_zUpQ (a := 177) (b := 100) (by norm_num) (by norm_num) (by norm_num) zH177_total
+  norm_num at this ⊢; exact this
+lemma zH1955 : zetaR 1.955 ≤ (zUpQ 1955 1000 3000 (zH1955C 6) : ℝ) := by
+  have := zetaR_le_zUpQ (a := 1955) (b := 1000) (by norm_num) (by norm_num) (by norm_num)
+    zH1955_total
+  norm_num at this ⊢; exact this
+
+/-- `A(s) ≤ c` from `ζ(s) ≤ u` and the rational check `u < 2`, `1/(2-u) - 1 ≤ c`. -/
+lemma ordA_le_check {s : ℝ} {u c : ℚ} (hz : zetaR s ≤ u) (h : u < 2 ∧ 1 / (2 - u) - 1 ≤ c) :
+    zetaR s < 2 ∧ ordA s ≤ c := by
+  have hu : (u : ℝ) < 2 := by exact_mod_cast h.1
+  have hc : ((1 / (2 - u) - 1 : ℚ) : ℝ) ≤ c := by exact_mod_cast h.2
+  push_cast at hc
+  exact ⟨by linarith, (ordA_le_of hz hu).trans hc⟩
+
+/-- `A₁(s) ≤ c` from `ζ(s) ≤ u`, `-ζ'(s) ≤ d` and the rational check. -/
+lemma ordA1_le_check {s : ℝ} (hs : 1 < s) {u d c : ℚ} (hz : zetaR s ≤ u) (hd : zetaDR s ≤ d)
+    (h : u < 2 ∧ d / (2 - u) ^ 2 ≤ c) : ordA1 s ≤ c := by
+  have hu : (u : ℝ) < 2 := by exact_mod_cast h.1
+  have hc : ((d / (2 - u) ^ 2 : ℚ) : ℝ) ≤ c := by exact_mod_cast h.2
+  push_cast at hc
+  exact (ordA1_le_of hs hz hu hd).trans hc
 
 /-! ## The statements -/
 
 /-- **k1.** `ζ(1.7286) > 2 > ζ(1.7287)`. -/
 theorem zeta_bracket : 2 < zetaR 1.7286 ∧ zetaR 1.7287 < 2 := by
-  obtain ⟨l, hl, hl2⟩ := of_optGt check_k1a
-  obtain ⟨u, hu, hu2⟩ := of_optLt check_k1b
-  have h1 := zetaLoQ_le_zetaR (by norm_num) (by norm_num) hl
-  have h2 := zetaR_le_of_zetaHiQ (by norm_num) (by norm_num) hu
-  have hl2' : (2 : ℝ) < l := by exact_mod_cast hl2
-  have hu2' : (u : ℝ) < 2 := by exact_mod_cast hu2
-  push_cast at h1 h2
-  constructor <;> norm_num at h1 h2 ⊢ <;> linarith
+  have h1 := zL17286
+  have h2 := zH17287
+  have c1 : (2 : ℚ) < zLoQ 17286 10000 3000 (zL17286C 6) := by decide +kernel
+  have c2 : zUpQ 17287 10000 3000 (zH17287C 6) < 2 := by decide +kernel
+  have c1' : ((2 : ℚ) : ℝ) < (zLoQ 17286 10000 3000 (zL17286C 6) : ℝ) := by exact_mod_cast c1
+  have c2' : (zUpQ 17287 10000 3000 (zH17287C 6) : ℝ) < ((2 : ℚ) : ℝ) := by exact_mod_cast c2
+  push_cast at c1' c2'
+  exact ⟨by linarith, by linarith⟩
 
 /-- **k1.** `ζ(s) = 2` has exactly one root `ρ₀` in `(1, ∞)`, and `ρ₀ ∈ (1.7286, 1.7287)`. -/
 theorem rho0_spec : ∃! ρ : ℝ, 1 < ρ ∧ riemannZeta (ρ : ℂ) = 2 ∧ 1.7286 < ρ ∧ ρ < 1.7287 := by
@@ -191,63 +251,54 @@ theorem rho0_mem {ρ : ℝ} (hρ : 1 < ρ) (h : riemannZeta (ρ : ℂ) = 2) :
 
 /-- **k2.** `A₀(0.03) = A(1.97) ≤ 2.07`. -/
 theorem ordA_197_le : ordA 1.97 ≤ 2.07 := by
-  obtain ⟨a, ha, ha2⟩ := of_optLe check_k2
-  have h := (ordA_le (by norm_num) (by norm_num) ha).2
-  have := Rat.cast_le (K := ℝ) |>.mpr ha2
-  push_cast at this
-  push_cast at h; norm_num at h ⊢; linarith
+  exact (ordA_le_check zH197 (by decide +kernel : _ ∧ _ ≤ (207 / 100 : ℚ))).2.trans
+    (by norm_num)
 
 /-- **k3.** `A₁(0.03) = -ζ'(1.97)/(2 - ζ(1.97))² ≤ 9.42`. -/
 theorem ordA1_197_le : ordA1 1.97 ≤ 9.42 := by
-  obtain ⟨a, ha, ha2⟩ := of_optLe check_k3
-  have h := ordA1_le (by norm_num) (inv_log_two_le (by norm_num)) (by norm_num) ha
-  have := Rat.cast_le (K := ℝ) |>.mpr ha2
-  push_cast at this
-  push_cast at h; norm_num at h ⊢; linarith
+  exact (ordA1_le_check (by norm_num) zH197 zD197
+    (by decide +kernel : _ ∧ _ ≤ (942 / 100 : ℚ))).trans (by norm_num)
 
 /-- **k4.** `ζ(1.8) + 10⁻³⁰ ≤ 1.883` (the paper bounds `X₀^{-0.7} < 10⁻³⁰`). -/
 theorem zeta_18_le : zetaR 1.8 + 1 / 10 ^ 30 ≤ 1.883 := by
-  obtain ⟨u, hu, hu2⟩ := of_optLe check_k4
-  have h := zetaR_le_of_zetaHiQ (by norm_num) (by norm_num) hu
-  have := Rat.cast_le (K := ℝ) |>.mpr hu2
-  push_cast at this
-  push_cast at h; norm_num at h ⊢; linarith
+  have h := zH18
+  have c : zUpQ 18 10 3000 (zH18C 6) + 1 / 10 ^ 30 ≤ 1883 / 1000 := by decide +kernel
+  have c' : ((zUpQ 18 10 3000 (zH18C 6) + 1 / 10 ^ 30 : ℚ) : ℝ) ≤ ((1883 / 1000 : ℚ) : ℝ) := by
+    exact_mod_cast c
+  push_cast at c'
+  norm_num at c' ⊢
+  linarith
 
 /-- **k5.** `1/(2 - 1.883) ≤ 8.6`. -/
 theorem k5 : (1 : ℝ) / (2 - 1.883) ≤ 8.6 := by norm_num
 
 /-- **x1.** `A(1.8 - 3·10⁻⁶) ≤ 7.4915`. -/
 theorem ordA_x1_le : ordA (1.8 - 3e-6) ≤ 7.4915 := by
-  obtain ⟨a, ha, ha2⟩ := of_optLe check_x1
-  have h := (ordA_le (by norm_num) (by norm_num) ha).2
-  have := Rat.cast_le (K := ℝ) |>.mpr ha2
-  push_cast at this
-  push_cast at h; norm_num at h ⊢; linarith
+  exact (ordA_le_check zH1799997 (by decide +kernel : _ ∧ _ ≤ (74915 / 10000 : ℚ))).2.trans
+    (by norm_num)
 
 /-- **x5.** `A(1.77) ≤ 13.1` (and `ζ(1.77) < 2`, so `1.77` is beyond the abscissa `ρ₀`). -/
 theorem ordA_177_le : zetaR 1.77 < 2 ∧ ordA 1.77 ≤ 13.1 := by
-  obtain ⟨a, ha, ha2⟩ := of_optLe check_x5
-  have h := ordA_le (by norm_num) (by norm_num) ha
-  have := Rat.cast_le (K := ℝ) |>.mpr ha2
-  push_cast at this
-  push_cast at h; norm_num at h ⊢
-  exact ⟨h.1, by linarith [h.2]⟩
+  have h := ordA_le_check zH177 (by decide +kernel : _ ∧ _ ≤ (131 / 10 : ℚ))
+  exact ⟨h.1, h.2.trans (by norm_num)⟩
 
 /-- **x6.** `∑_{w ≥ 2} w^{-1.97} = ζ(1.97) - 1 ≤ 0.674`. -/
 theorem zeta_197_sub_one_le : zetaR 1.97 - 1 ≤ 0.674 := by
-  obtain ⟨u, hu, hu2⟩ := of_optLe check_x6
-  have h := zetaR_le_of_zetaHiQ (by norm_num) (by norm_num) hu
-  have := Rat.cast_le (K := ℝ) |>.mpr hu2
-  push_cast at this
-  push_cast at h; norm_num at h ⊢; linarith
+  have h := zH197
+  have c : zUpQ 197 100 3000 (zH197C 6) ≤ 1674 / 1000 := by decide +kernel
+  have c' : (zUpQ 197 100 3000 (zH197C 6) : ℝ) ≤ ((1674 / 1000 : ℚ) : ℝ) := by exact_mod_cast c
+  push_cast at c'
+  norm_num at c' ⊢
+  linarith
 
 /-- **x7.** `∑_{w ≥ 2} w^{-1.97} log w = -ζ'(1.97) ≤ 1.0001`. -/
 theorem zetaD_197_le : zetaDR 1.97 ≤ 1.0001 := by
-  obtain ⟨u, hu, hu2⟩ := of_optLe check_x7
-  have h := zetaDR_le_of_zetaDHiQ (by norm_num) (inv_log_two_le (by norm_num)) (by norm_num) hu
-  have := Rat.cast_le (K := ℝ) |>.mpr hu2
-  push_cast at this
-  push_cast at h; norm_num at h ⊢; linarith
+  have h := zD197
+  have c : zdUpQ 197 100 3000 (zD197C 6) ≤ 10001 / 10000 := by decide +kernel
+  have c' : (zdUpQ 197 100 3000 (zD197C 6) : ℝ) ≤ ((10001 / 10000 : ℚ) : ℝ) := by exact_mod_cast c
+  push_cast at c'
+  norm_num at c' ⊢
+  linarith
 
 /-- `-ζ'(1.97) ≤ 1.0001`, stated with Mathlib's `riemannZeta`. -/
 theorem neg_deriv_riemannZeta_197_le :

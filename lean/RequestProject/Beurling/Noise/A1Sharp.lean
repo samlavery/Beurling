@@ -1,7 +1,6 @@
 module
 
 public import RequestProject.BSCert.Consts.ZetaCert
-meta import RequestProject.BSCert.Consts.ZetaCert
 
 /-!
 # A sharper certificate for `A₁(0.03)`
@@ -16,15 +15,10 @@ meta import RequestProject.BSCert.Consts.ZetaCert
 
 namespace BSCert.Consts
 
-lemma check_k3_sharp : optLe (ordA1HiQ (197 / 100) 3000) (941 / 100) = true := by native_decide
-
 /-- `A₁(0.03) = -ζ'(1.97)/(2 - ζ(1.97))² ≤ 9.41`. -/
 theorem ordA1_197_le_sharp : ordA1 1.97 ≤ 9.41 := by
-  obtain ⟨a, ha, ha2⟩ := of_optLe check_k3_sharp
-  have h := ordA1_le (by norm_num) (inv_log_two_le (by norm_num)) (by norm_num) ha
-  have := Rat.cast_le (K := ℝ) |>.mpr ha2
-  push_cast at this
-  push_cast at h; norm_num at h ⊢; linarith
+  exact (ordA1_le_check (by norm_num) zH197 zD197
+    (by decide +kernel : _ ∧ _ ≤ (941 / 100 : ℚ))).trans (by norm_num)
 
 /-- The numerical conditions of Corollary 5.17(b) for `ℕ`: if `1 ≤ λ₀ ≤ 1.001` then
 `1 + ½λ₀A₀(0.03) ≤ 2.04` and `½λ₀A₁(0.03) ≤ 4.71`. -/

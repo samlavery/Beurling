@@ -1,7 +1,7 @@
 module
 
 public import RequestProject.BSCert.Ei
-meta import RequestProject.BSCert.Ei
+public import RequestProject.BSCert.FX.LogQ
 
 /-!
 # `rankin_R.py`, parts (2) and (3)
@@ -43,14 +43,14 @@ lemma expLoQ_le {x : ℚ} (hx : 0 ≤ x) (n : ℕ) : ((expLoQ n x : ℚ) : ℝ) 
 /-! ## Part (2) -/
 
 lemma Ei11_check :
-    (2 / 3 : ℚ) + logHiPt 11 + EinHiQ 40 11 - expLoQ 60 11 * (1 / 11 + 1 / 121) ≤ 134 := by
-  native_decide
+    (2 / 3 : ℚ) + FX.logHiQF 11 + EinHiQ 40 11 - expLoQ 60 11 * (1 / 11 + 1 / 121) ≤ 134 := by
+  decide +kernel
 
 /-- **`rankin_R.py`, check (2a).** `Ei(11) - e¹¹/11 - e¹¹/121 ≤ 134`. -/
 theorem Ei_11_le : Ei 11 - Real.exp 11 / 11 - Real.exp 11 / 121 ≤ 134 := by
   have hγ := Real.eulerMascheroniConstant_lt_two_thirds
-  have hlog : Real.log 11 ≤ ((logHiPt 11 : ℚ) : ℝ) := by
-    have := le_logHiPt (a := 11) (by norm_num); exact_mod_cast this
+  have hlog : Real.log 11 ≤ ((FX.logHiQF 11 : ℚ) : ℝ) := by
+    have := FX.le_logHiQF (a := 11) (by norm_num); exact_mod_cast this
   have hEin : Ein 11 ≤ ((EinHiQ 40 11 : ℚ) : ℝ) := by
     rw [EinHiQ_cast]; push_cast
     exact Ein_le_EinHi (by norm_num) (by norm_num)
@@ -59,7 +59,7 @@ theorem Ei_11_le : Ei 11 - Real.exp 11 / 11 - Real.exp 11 / 121 ≤ 134 := by
   have hc := (Rat.cast_le (K := ℝ)).mpr Ei11_check
   push_cast at hc
   unfold Ei
-  generalize ((logHiPt 11 : ℚ) : ℝ) = a at *
+  generalize ((FX.logHiQF 11 : ℚ) : ℝ) = a at *
   generalize ((EinHiQ 40 11 : ℚ) : ℝ) = b at *
   generalize ((expLoQ 60 11 : ℚ) : ℝ) = c at *
   linarith
@@ -157,9 +157,9 @@ theorem three_halves_rpow_le : (3 / 2 : ℝ) ^ (3 / 4 : ℝ) ≤ 1.3555 := by
   norm_num
 
 lemma EiLog2_check :
-    -1 ≤ (harmonic 1023 : ℚ) - 10 * (6931471808 / 10 ^ 10) + logLoPt (6931471803 / 10 ^ 10)
+    -1 ≤ (harmonic 1023 : ℚ) - 10 * (6931471808 / 10 ^ 10) + FX.logLoQF (6931471803 / 10 ^ 10)
       - 2 * (6931471808 / 10 ^ 10) + EinLoQ 30 (6931471803 / (4 * 10 ^ 10)) := by
-  native_decide
+  decide +kernel
 
 /-- **`rankin_R.py`, check (3b).** `Ei(log 2 / 4) ≥ -1`. -/
 theorem Ei_log2_div4_ge : -1 ≤ Ei (Real.log 2 / 4) := by
@@ -176,12 +176,12 @@ theorem Ei_log2_div4_ge : -1 ≤ Ei (Real.log 2 / 4) := by
     have : 10 * Real.log 2 < 10 * (6931471808 / 10 ^ 10) := by norm_num at hl2 ⊢; linarith
     linarith
   -- `log (log 2 / 4)`
-  have hlog : ((logLoPt (6931471803 / 10 ^ 10) : ℚ) : ℝ) - 2 * (6931471808 / 10 ^ 10)
+  have hlog : ((FX.logLoQF (6931471803 / 10 ^ 10) : ℚ) : ℝ) - 2 * (6931471808 / 10 ^ 10)
       ≤ Real.log (Real.log 2 / 4) := by
     rw [Real.log_div hl0.ne' (by norm_num)]
     have h4 : Real.log 4 = 2 * Real.log 2 := by
       rw [show (4 : ℝ) = 2 ^ 2 by norm_num, Real.log_pow]; norm_num
-    have hA := logLoPt_le (a := 6931471803 / 10 ^ 10) (by norm_num)
+    have hA := FX.logLoQF_le (a := 6931471803 / 10 ^ 10) (by norm_num)
     have hB : Real.log (((6931471803 / 10 ^ 10 : ℚ)) : ℝ) ≤ Real.log (Real.log 2) := by
       apply Real.log_le_log (by norm_num)
       push_cast; norm_num at hl1 ⊢; linarith
@@ -196,7 +196,7 @@ theorem Ei_log2_div4_ge : -1 ≤ Ei (Real.log 2 / 4) := by
   have hc := (Rat.cast_le (K := ℝ)).mpr EiLog2_check
   push_cast at hc
   unfold Ei
-  generalize ((logLoPt (6931471803 / 10 ^ 10) : ℚ) : ℝ) = a at *
+  generalize ((FX.logLoQF (6931471803 / 10 ^ 10) : ℚ) : ℝ) = a at *
   generalize ((EinLoQ 30 (6931471803 / (4 * 10 ^ 10)) : ℚ) : ℝ) = b at *
   linarith
 

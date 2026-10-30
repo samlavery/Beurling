@@ -93,9 +93,9 @@ theorem step3 {sH Λ s : ℝ} (hsH : 5.9745 ≤ sH) (hΛ : 100000000 ≤ Λ) (hs
   have hlogl : 3.68 ≤ Real.log ℓ := by
     have : Real.log 40 ≤ Real.log ℓ := Real.log_le_log (by norm_num) (by linarith)
     have h40 : (3.68 : ℝ) ≤ Real.log 40 := by
-      have h := logLoPt_le (a := 40) (by norm_num)
-      have hc : (368 / 100 : ℚ) ≤ logLoPt 40 := by native_decide
-      have hc' : ((368 / 100 : ℚ) : ℝ) ≤ ((logLoPt 40 : ℚ) : ℝ) := by exact_mod_cast hc
+      have h := FX.logLoQF_le (a := 40) (by norm_num)
+      have hc : (368 / 100 : ℚ) ≤ FX.logLoQF 40 := by decide +kernel
+      have hc' : ((368 / 100 : ℚ) : ℝ) ≤ ((FX.logLoQF 40 : ℚ) : ℝ) := by exact_mod_cast hc
       push_cast at h hc'; linarith
     linarith
   have hapos : 0 < a := by

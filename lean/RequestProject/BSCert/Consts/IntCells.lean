@@ -1,6 +1,7 @@
 module
 
 public import RequestProject.BSCert.Transc
+public import RequestProject.BSCert.FX.LogQ
 
 /-!
 # Certified upper bounds for integrals `∫_a^∞ f(v) dv` with `U = 1 + 2 log v`
@@ -9,7 +10,7 @@ On a cell `[p, q]` the integrand is bounded by `P(U)/v²` with `P` a polynomial 
 in `U = 1 + 2 log v`. Since `(U^m)/v² = d/dv [-S_m(U)/v]` with
 `S_m(U) = ∑_{j ≤ m} 2^j m!/(m-j)! U^{m-j}` (so `S_m - 2 S_m' = U^m`), the integral of the bound is
 `N(U_p)/p - N(U_q)/q` with `N = ∑ a_m S_m`. The values `U_p = 1 + 2 log p` at integer points
-are enclosed with the certified `log`.
+are enclosed with the certified fixed-point `log` (`FX.logLoQF`, `FX.logHiQF`).
 -/
 
 @[expose] public section
@@ -143,12 +144,12 @@ lemma integral_Ioi_le {f : ℝ → ℝ} {a b C : ℝ} (hab : a ≤ b) (hnn : ∀
 /-! ## Interval evaluation -/
 
 /-- Enclosure of `U_p = 1 + 2 log p` for a positive integer `p`. -/
-def UItv (p : ℕ) : Itv := ⟨1 + 2 * logLoPt (p : ℚ), 1 + 2 * logHiPt (p : ℚ)⟩
+def UItv (p : ℕ) : Itv := ⟨1 + 2 * FX.logLoQF (p : ℚ), 1 + 2 * FX.logHiQF (p : ℚ)⟩
 
 lemma mem_UItv {p : ℕ} (hp : 0 < p) : Itv.Mem (Uf p) (UItv p) := by
   have hp' : (0 : ℚ) < p := by exact_mod_cast hp
-  have h1 := logLoPt_le hp'
-  have h2 := le_logHiPt hp'
+  have h1 := FX.logLoQF_le hp'
+  have h2 := FX.le_logHiQF hp'
   push_cast at h1 h2
   constructor <;> simp only [UItv, Uf] <;> push_cast <;> linarith
 
@@ -223,6 +224,42 @@ def chainBound (cb : ℕ → ℕ → Option ℚ) : List ℕ → Option ℚ
     | some u, some r => some (u + r)
     | _, _ => none
   | _ => some 0
+
+/-- Splitting a chain at the point of index `n`. -/
+lemma chainBound_take_drop (cb : ℕ → ℕ → Option ℚ) :
+    ∀ (n : ℕ) (L : List ℕ) (u v : ℚ), n < L.length → chainBound cb (L.take (n + 1)) = some u →
+      chainBound cb (L.drop n) = some v → chainBound cb L = some (u + v) := by
+  intro n
+  induction n with
+  | zero =>
+    intro L u v hn hu hv
+    obtain ⟨a, L', rfl⟩ : ∃ a L', L = a :: L' := by
+      cases L with
+      | nil => simp at hn
+      | cons a L' => exact ⟨a, L', rfl⟩
+    simp only [List.take_succ_cons, List.take_zero, chainBound, Option.some.injEq] at hu
+    simp only [List.drop_zero] at hv
+    rw [hv, ← hu, zero_add]
+  | succ n ih =>
+    intro L u v hn hu hv
+    obtain ⟨a, L', rfl⟩ : ∃ a L', L = a :: L' := by
+      cases L with
+      | nil => simp at hn
+      | cons a L' => exact ⟨a, L', rfl⟩
+    obtain ⟨b, L'', rfl⟩ : ∃ b L'', L' = b :: L'' := by
+      cases L' with
+      | nil => simp at hn
+      | cons b L'' => exact ⟨b, L'', rfl⟩
+    simp only [List.take_succ_cons, List.drop_succ_cons] at hu hv
+    simp only [chainBound] at hu ⊢
+    split at hu
+    · rename_i w r hw hr
+      simp only [Option.some.injEq] at hu
+      subst hu
+      have := ih (b :: L'') r v (by simpa using hn) hr hv
+      rw [hw, this]
+      simp only [Option.some.injEq]; ring
+    · cases hu
 
 lemma chainBound_sound {f : ℝ → ℝ} {cb : ℕ → ℕ → Option ℚ}
     (hcb : ∀ p q u, cb p q = some u → p ≤ q ∧ ∫ v in (p : ℝ)..q, f v ≤ u)

@@ -96,9 +96,9 @@ lemma exp_two_log_add {Λ s : ℝ} (hΛ : 0 < Λ) :
     Real.exp_log (by positivity)]
 
 lemma log_18_42_ge : (2.9 : ℝ) ≤ Real.log 18.42 := by
-  have h := logLoPt_le (a := 1842 / 100) (by norm_num)
-  have hc : (29 / 10 : ℚ) ≤ logLoPt (1842 / 100) := by native_decide
-  have hc' : ((29 / 10 : ℚ) : ℝ) ≤ ((logLoPt (1842 / 100) : ℚ) : ℝ) := by exact_mod_cast hc
+  have h := FX.logLoQF_le (a := 1842 / 100) (by norm_num)
+  have hc : (29 / 10 : ℚ) ≤ FX.logLoQF (1842 / 100) := by decide +kernel
+  have hc' : ((29 / 10 : ℚ) : ℝ) ≤ ((FX.logLoQF (1842 / 100) : ℚ) : ℝ) := by exact_mod_cast hc
   push_cast at h hc'
   norm_num at h hc' ⊢
   linarith

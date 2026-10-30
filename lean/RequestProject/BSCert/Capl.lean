@@ -1,6 +1,8 @@
 module
 
 public import RequestProject.BSCert.Expr
+public import RequestProject.BSCert.FX.Expr
+public import RequestProject.BSCert.FX.LogQ
 
 /-!
 # The capacity parameter of Theorem 6.23: definitions

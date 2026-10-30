@@ -1,0 +1,13 @@
+module
+
+public import RequestProject.BSCert.Consts.MarginCells
+
+/-! Kernel-checked segment 5 of the chain bound `chainBound cb3 pts` (`margins.py`). -/
+
+@[expose] public section
+
+namespace BSCert.Consts
+
+lemma cb3_seg5 : chainBound cb3 ((pts.drop 100).take 21) = some (26094382886524022349293566384033931093949280604256484301138815125258912080521880559013558028177757109382921526489414855917 / 345866613513384540479754782734537715384105621463385633369298519637273196938997308474660209314754055509550660519823119816830484480) := by decide +kernel
+
+end BSCert.Consts
