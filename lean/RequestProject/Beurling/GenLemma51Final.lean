@@ -10,7 +10,8 @@ public import RequestProject.Beurling.GenLemma51
 * `BeurlingSystem.lemma_5_1` : **Lemma 5.1** (i)–(iv) for every `1 ≤ x ≤ z`.
 
 For (iii), `S_P - S_{p,P}` is the contribution of the prime powers `p^k`, `k ≥ 2`. The primes
-below `X₀⁻` are the rational primes and contribute at most `0.75537` (`finite_checks.py`, line 6);
+below `X₀⁻` are the rational primes and contribute at most `0.75539` (`finite_checks.py`, line 6,
+in the kernel-checked weak form `Lemma51Nat.primePowerConst_le_weak`);
 the primes `p ≥ X₀⁻` contribute at most `2.84 · 2 · 2^{-23}`, by the dyadic blocks and (i).
 -/
 
@@ -119,7 +120,7 @@ lemma rest_le (h : P.HBS X0m z η1 η2 ε1) {x : ℝ} (hX : X0m ≤ x) (hxz : x 
   rw [← Finset.sum_filter_add_sum_filter_not T (fun j => P.p j < X0m)]
   -- the rational primes
   have hsmall : ∑ j ∈ T.filter (fun j => P.p j < X0m),
-      Real.log (P.p j) / (P.p j * (P.p j - 1)) ≤ 0.75537 := by
+      Real.log (P.p j) / (P.p j * (P.p j - 1)) ≤ 0.75539 := by
     have hq : ∀ j ∈ T.filter (fun j => P.p j < X0m), P.p j = qp j := by
       intro j hj
       rw [mem_filter] at hj
@@ -127,7 +128,7 @@ lemma rest_le (h : P.HBS X0m z η1 η2 ε1) {x : ℝ} (hX : X0m ≤ x) (hxz : x 
     rw [Finset.sum_congr rfl (fun j hj => by rw [hq j hj])]
     rw [← Finset.sum_image (f := fun r : ℕ => Real.log (r : ℝ) / ((r : ℝ) * ((r : ℝ) - 1)))
       (fun a _ b _ hab => qp_injective hab)]
-    refine le_trans ?_ (Lemma51Nat.primePowerConst_le ⌊x⌋₊)
+    refine le_trans ?_ (Lemma51Nat.primePowerConst_le_weak ⌊x⌋₊)
     apply Finset.sum_le_sum_of_subset_of_nonneg
     · intro r hr
       obtain ⟨j, hj, rfl⟩ := mem_image.mp hr
