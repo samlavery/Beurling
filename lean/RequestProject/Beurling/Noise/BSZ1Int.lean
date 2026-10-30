@@ -39,8 +39,8 @@ lemma exp_neg_le_quad {y : ℝ} (hy : 0 ≤ y) : Real.exp (-y) ≤ 1 - y + y ^ 2
         have h2 : HasDerivAt (fun y : ℝ => 1 - y + y ^ 2 / 2) (-1 + x) x := by
           have := ((hasDerivAt_id x).pow 2).div_const 2
           have h3 := ((hasDerivAt_const x (1 : ℝ)).sub (hasDerivAt_id x)).add this
-          convert h3 using 1; simp
-        convert h2.sub h1 using 1; ring
+          convert! h3 using 1; simp
+        convert! h2.sub h1 using 1; ring
       rw [hd.deriv]
       have := Real.add_one_le_exp (-x)
       linarith
@@ -126,7 +126,7 @@ lemma integral_exp_decay {C lam U : ℝ} (hC : 0 ≤ C) (hlam : 0 < lam) :
     intro w _
     have h1 : HasDerivAt (fun w : ℝ => -(lam * (w - 3))) (-(lam * 1)) w :=
       (((hasDerivAt_id w).sub_const 3).const_mul lam).neg
-    convert (h1.exp).const_mul (-(C / lam)) using 1
+    convert! (h1.exp).const_mul (-(C / lam)) using 1
     field_simp
   rw [integral_eq_sub_of_hasDerivAt hF (by
     apply Continuous.intervalIntegrable; fun_prop)]
@@ -205,7 +205,7 @@ lemma integral_Fz1_le {a U : ℝ} (ha : 0.9 ≤ a) (ha3 : a ≤ 3) (hU : 3 ≤ U
   rw [← integral_add_adjacent_intervals (b := 3) (intervalIntegrable_Fz1 ha0 ha3)
     (intervalIntegrable_Fz1 (by norm_num) hU)]
   have h1 : ∫ w in a..3, Fz1 w ≤ ∫ w in a..3, (4096 * 7.39 / 0.9 : ℝ) :=
-    integral_mono_on ha3 (intervalIntegrable_Fz1 ha0 ha3) intervalIntegral.intervalIntegrable_const
+    integral_mono_on ha3 (intervalIntegrable_Fz1 ha0 ha3) intervalIntegrable_const
       (fun w hw => Fz1_le_head (ha.trans hw.1) hw.2)
   have h2 : ∫ w in (3 : ℝ)..U, Fz1 w ≤
       ∫ w in (3 : ℝ)..U, 0.307 * 46080 * 54.6 / 3 * Real.exp (-(0.629 * (w - 3))) :=
@@ -261,7 +261,7 @@ lemma benefit_piece {a b c k : ℝ} (ha : 1 ≤ a) (hab : a ≤ b) (_hc : 0 ≤ 
     have h2 : HasDerivAt (fun w : ℝ => k ^ 2 * (4 * w ^ 2)⁻¹)
         (k ^ 2 * (-(4 * (2 * w)) / (4 * w ^ 2) ^ 2)) w :=
       (h3.inv (by positivity)).const_mul (k ^ 2)
-    convert (h1.add h2).const_mul c using 1
+    convert! (h1.add h2).const_mul c using 1
     field_simp; ring
   have hcont : ContinuousOn (fun w => c * (k / w ^ 2 - k ^ 2 / (2 * w ^ 3))) (uIcc a b) := by
     rw [uIcc_of_le hab]
@@ -339,13 +339,13 @@ lemma benefit_ge {k : ℝ} (hk : 0 ≤ k) (hk1 : k ≤ 0.13334) :
   have p1 := benefit_piece (a := 1) (b := 2) (c := 1) (k := k) le_rfl (by norm_num)
     (by norm_num) (by norm_num [Dickman.rho_of_le_one]) hk hk2
   have p2 := benefit_piece (a := 2) (b := 2.25) (c := 0.775) (k := k) (by norm_num)
-    (by norm_num) (by norm_num) (by convert rho_125 using 2; norm_num) hk hk2
+    (by norm_num) (by norm_num) (by convert! rho_125 using 2; norm_num) hk hk2
   have p3 := benefit_piece (a := 2.25) (b := 2.5) (c := 0.585) (k := k) (by norm_num)
-    (by norm_num) (by norm_num) (by convert rho_15 using 2; norm_num) hk hk2
+    (by norm_num) (by norm_num) (by convert! rho_15 using 2; norm_num) hk hk2
   have p4 := benefit_piece (a := 2.5) (b := 2.75) (c := 0.418) (k := k) (by norm_num)
-    (by norm_num) (by norm_num) (by convert rho_175 using 2; norm_num) hk hk2
+    (by norm_num) (by norm_num) (by convert! rho_175 using 2; norm_num) hk hk2
   have p5 := benefit_piece (a := 2.75) (b := 3) (c := 0.3068) (k := k) (by norm_num)
-    (by norm_num) (by norm_num) (by convert rho_2.1 using 2; norm_num) hk hk2
+    (by norm_num) (by norm_num) (by convert! rho_2.1 using 2; norm_num) hk hk2
   norm_num at p1 p2 p3 p4 p5
   nlinarith
 

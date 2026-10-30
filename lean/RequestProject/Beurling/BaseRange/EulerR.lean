@@ -70,7 +70,7 @@ theorem hasSum_label_smooth (P : BeurlingSystem) (X : ℕ) {θ : ℝ} (hθ : 0 <
     exact summable_geometric_of_lt_one (hnn p) (hlt hp)
   obtain ⟨-, hh⟩ := EulerProduct.summable_and_hasSum_smoothNumbers_prod_primesBelow_tsum
     h1 hmul hsum X
-  convert hh using 1
+  convert! hh using 1
   apply prod_congr rfl
   intro p hp
   have hp' : p.Prime := (Nat.mem_primesBelow.mp hp).2
@@ -225,7 +225,7 @@ theorem sum_rpow_sub_one_le (h : P.HBS X0m Z η1 η2 ε1) (hZ3 : 3 ≤ Z) {Y σ 
     have hl := hlogpos s hs
     have h1 := ((Real.hasDerivAt_log hs0.ne').const_mul σ).exp.sub_const 1
     have h2 := h1.div (Real.hasDerivAt_log hs0.ne') hl.ne'
-    convert h2 using 1
+    convert! h2 using 1
     simp only [hg']
     field_simp
   have hcont : ContinuousOn g' (Icc a Y) := by
@@ -315,7 +315,7 @@ theorem sum_rpow_sub_one_le (h : P.HBS X0m Z η1 η2 ε1) (hZ3 : 3 ≤ Z) {Y σ 
       have hE := (hasDerivAt_Ein hu).comp s ((Real.hasDerivAt_log hs0.ne').const_mul σ)
       have hlog := (Real.hasDerivAt_log hs0.ne').sub_const 1.77
       have hprod := hlog.mul (hder s hs)
-      convert hprod.sub hE using 1
+      convert! hprod.sub hE using 1
       simp only [hg, hg']
       field_simp
       ring
@@ -357,7 +357,7 @@ theorem sum_log_div_sq_le (h : P.HBS X0m Z η1 η2 ε1) {Y b : ℝ} (hb : 1 ≤ 
     have hs0 : 0 < s := by linarith [hs.1]
     have := hasDerivAt_inv hs0.ne'
     simp only [g, g', one_div]
-    convert this using 1
+    convert! this using 1
   have hcont : ContinuousOn g' (Icc b Y) := by
     apply ContinuousOn.neg
     apply ContinuousOn.div continuousOn_const (continuousOn_pow 2)
@@ -442,7 +442,7 @@ theorem sum_log_div_sq_le (h : P.HBS X0m Z η1 η2 ε1) {Y b : ℝ} (hb : 1 ≤ 
       have hs0 : 0 < s := by linarith [hs.1]
       have h1 := (((Real.hasDerivAt_log hs0.ne').sub_const (Real.log b)).add_const 3.2).div
         (hasDerivAt_id s) hs0.ne'
-      convert h1 using 1
+      convert! h1 using 1
       simp only [g', id]
       field_simp
       ring
@@ -543,7 +543,7 @@ theorem zinf_le (h : P.HBS X0m Z η1 η2 ε1) (hZ3 : 3 ≤ Z) (hXm : 10 ^ 4 ≤ 
   have hprod2 : ∏ j ∈ I2, (1 - P.p j ^ (-(1 : ℝ)))⁻¹ ≤
       Real.exp (∑ j ∈ I2, (1 / P.p j + 2 * (Real.log (P.p j) / P.p j ^ 2))) := by
     rw [Real.exp_sum]
-    apply Finset.prod_le_prod _ hfac
+    apply Finset.prod_le_prod₀ _ hfac
     intro j hj
     have hp := (hI2 j hj).1
     apply inv_nonneg.mpr
@@ -621,7 +621,7 @@ theorem realProd_le (h : P.HBS X0m Z η1 η2 ε1) (hZ3 : 3 ≤ Z) {Y σ : ℝ} (
   have hprod : ∏ j ∈ I, (1 - P.p j ^ (-(1 - σ)))⁻¹ ≤ (∏ j ∈ I, (1 - P.p j ^ (-(1 : ℝ)))⁻¹) *
       Real.exp (∑ j ∈ I, ((P.p j ^ σ - 1) / (P.p j - P.p j ^ σ))) := by
     rw [Real.exp_sum, ← Finset.prod_mul_distrib]
-    apply Finset.prod_le_prod
+    apply Finset.prod_le_prod₀
     · intro j _
       apply inv_nonneg.mpr
       have : P.p j ^ (-(1 - σ)) < 1 :=

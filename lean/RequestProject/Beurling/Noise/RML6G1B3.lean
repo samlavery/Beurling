@@ -64,7 +64,7 @@ lemma invδ_le {X₀ : ℕ} {x δ : ℝ} (hΛ : 100000000 ≤ Real.log X₀) (_h
     rw [Real.rpow_def_of_pos hX0, mul_comm]
   set L := Real.log x with hLdef
   have hL : Real.exp (Λ / 100) ≤ L := by
-    rw [hrp] at hx; convert hx using 2; ring
+    rw [hrp] at hx; convert! hx using 2; ring
   have hL0 : 0 < L := lt_of_lt_of_le (Real.exp_pos _) hL
   have hs := sqrt_log_ge hΛ hL
   set s := √L with hsdef
@@ -113,7 +113,7 @@ theorem thresh_small {X₀ : ℕ} {x δ Hx Kloc : ℝ} (hΛ : 100000000 ≤ Real
     have : (X₀ : ℝ) = 0 := le_antisymm hc (Nat.cast_nonneg _)
     rw [this, Real.log_zero] at hΛ; linarith
   have hL : Real.exp (Real.log X₀ / 100) ≤ L := by
-    rw [Real.rpow_def_of_pos hX0] at hx; convert hx using 2; ring
+    rw [Real.rpow_def_of_pos hX0] at hx; convert! hx using 2; ring
   have hLbig := logx_big hΛ hL
   have hL0 : 0 < L := by linarith
   have hiδ := invδ_le hΛ hx0 hx hδ0 hδlow
@@ -222,7 +222,7 @@ theorem jump_small {X₀ : ℕ} {x δ j0 N HN θ : ℝ} (hΛ : 100000000 ≤ Rea
     have : (X₀ : ℝ) = 0 := le_antisymm hc (Nat.cast_nonneg _)
     rw [this, Real.log_zero] at hΛ; linarith
   have hL : Real.exp (Real.log X₀ / 100) ≤ L := by
-    rw [Real.rpow_def_of_pos hX0] at hx; convert hx using 2; ring
+    rw [Real.rpow_def_of_pos hX0] at hx; convert! hx using 2; ring
   have hLbig := logx_big hΛ hL
   have hL0 : 0 < L := by linarith
   have hN0 : 0 < N := lt_of_lt_of_le (Real.exp_pos _) hN

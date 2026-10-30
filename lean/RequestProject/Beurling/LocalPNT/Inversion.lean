@@ -58,7 +58,6 @@ theorem laplace_inversion {f : ℝ → ℂ} {c : ℝ} (hf : Continuous f)
   have hscale : ∫ w : ℝ, cexp (↑(2 * π * w * x) * I) * L (2 * π * w) =
       (2 * π : ℂ)⁻¹ * ∫ t : ℝ, cexp (↑(t * x) * I) * L t := by
     have := Measure.integral_comp_mul_left (fun t : ℝ => cexp (↑(t * x) * I) * L t) (2 * π)
-    simp only at this
     rw [this, abs_of_pos (by positivity), Complex.real_smul]
     push_cast
     rfl
@@ -99,14 +98,14 @@ theorem pi0Dens_le_one {u : ℝ} (hu : 1 < u) : pi0Dens u ≤ 1 := by
 theorem continuousOn_pi0Dens : ContinuousOn pi0Dens (Ioi 1) := by
   intro u hu
   have hu : 1 < u := hu
-  exact ((continuousAt_const.sub (continuousAt_const.div continuousAt_id (by positivity))).div
-    (Real.continuousAt_log (by positivity)) (Real.log_pos hu).ne').continuousWithinAt
+  exact ((continuousAt_const.sub (continuousAt_const.div continuousAt_id (by simp only [id_eq]; linarith))).div
+    (Real.continuousAt_log (by linarith)) (Real.log_pos hu).ne').continuousWithinAt
 
 theorem integrableOn_rpow_mul_pi0Dens {σ : ℝ} (hσ : 1 < σ) :
     IntegrableOn (fun u : ℝ => u ^ (-σ) * pi0Dens u) (Ioi 1) := by
   refine (integrableOn_Ioi_rpow_of_lt (by linarith : -σ < -1) one_pos).mono' ?_ ?_
   · exact ((continuousOn_id.rpow_const fun u hu => Or.inl (by
-      have : (1 : ℝ) < u := hu; positivity)).mul continuousOn_pi0Dens).aestronglyMeasurable
+      have : (1 : ℝ) < u := hu; simp only [id_eq]; linarith)).mul continuousOn_pi0Dens).aestronglyMeasurable
       measurableSet_Ioi
   · refine (ae_restrict_iff' measurableSet_Ioi).mpr (Eventually.of_forall fun u hu => ?_)
     have hu : 1 < u := hu

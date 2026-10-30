@@ -281,7 +281,7 @@ theorem nu522_tE2 : ∀ᵐ ω ∂jitterMeasure, ∀ b : ℤ, ω ∈ G0 θ X₀ (
     Nu522 θ X₀ ω b (nbQ X₀) := by
   have hnice : ∀ᵐ ω ∂jitterMeasure, ω ∈ NiceEv θ X₀ := by
     have := niceEv_compl_null hc hev
-    rw [ae_iff]; simpa using this
+    rw [ae_iff]; exact this
   filter_upwards [nu522_R hc hev, hnice] with ω hω hN
   intro b hG
   have hb : (b : ℝ) ≤ ((tE2 b : ℕ) : ℝ) := by

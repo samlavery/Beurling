@@ -27,7 +27,7 @@ lemma valN_lv {n : ℕ} (hn : n ≠ 0) : LemmaM.valN lv n = n := by
   rw [Finsupp.prod_congr (g2 := fun p k => ((p ^ k : ℕ) : ℝ)) (fun p hp => by
     rw [lv_prime (Nat.prime_of_mem_primeFactors (by rwa [Nat.support_factorization] at hp))]
     push_cast; rfl)]
-  have := Nat.factorization_prod_pow_eq_self hn
+  have := Nat.prod_factorization_pow_eq_self hn
   unfold Finsupp.prod at this ⊢
   rw [← Nat.cast_prod, this]
 

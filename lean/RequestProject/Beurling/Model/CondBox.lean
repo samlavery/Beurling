@@ -128,7 +128,7 @@ theorem condExp_le_boxMean (n : ℕ) {f : Ω → ℝ} {C : ℝ} (hC : 0 ≤ C) (
             · rw [indicator_of_mem hA, indicator_of_mem h1, Pi.one_apply, one_mul]
               rwa [indicator_of_mem hA] at hω
             · rw [indicator_of_notMem hA] at hω ⊢; exact hω
-          · rw [indicator_of_notMem h1]; exact zero_le _
+          · rw [indicator_of_notMem h1]; exact zero_le
       _ ≤ ∫⁻ ω, (J.A n).indicator (fun ω => ENNReal.ofReal (J.H n ω)⁻¹ *
             ∫⁻ t in box (J.c n ω) (J.H n ω), (S ∩ B).indicator 1 ω * Φ (ω, t)) ω ∂P := hdens
       _ = ∫⁻ ω, (S ∩ B).indicator (boxMean J n Φ) ω ∂P := by

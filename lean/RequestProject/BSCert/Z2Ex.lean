@@ -29,7 +29,7 @@ lemma letChain_eval : ∀ (es : List Ex) (xs : List ℝ) (env : List ℝ) (b : E
   | [], [], env, b, _ => by simp [letChain]
   | e :: es, x :: xs, env, b, h => by
     obtain ⟨h1, h2⟩ := h
-    simp only [letChain, Ex.eval]
+    simp only [letChain, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific]
     rw [h1, letChain_eval es xs (env ++ [x]) b h2]
     simp
   | [], _ :: _, _, _, h => by simp [ChainOK] at h
@@ -109,7 +109,7 @@ lemma z2_chainOK (r : ℝ → ℝ) (ℓ u : ℝ) :
   simp only [z2Lets, z2Vals, ChainOK, List.cons_append, List.nil_append, and_true]
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_,
     ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  all_goals simp only [Ex.eval, etaEx, X, List.getD_cons_zero, List.getD_cons_succ, neg_nonpos]
+  all_goals simp only [Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, etaEx, X, List.getD_cons_zero, List.getD_cons_succ, neg_nonpos]
   all_goals push_cast
   all_goals first
     | rfl
@@ -124,7 +124,7 @@ lemma z2_chainOK (r : ℝ → ℝ) (ℓ u : ℝ) :
 theorem z2Ex_eval (r : ℝ → ℝ) (ℓ u : ℝ) :
     z2Ex.eval [ℓ, u, u - u0 ℓ, r u, r (u - 1)] = Z2Claim r ℓ u := by
   rw [z2Ex, letChain_eval _ _ _ _ (z2_chainOK r ℓ u)]
-  simp only [z2Body, z2Vals, Ex.eval, X, List.cons_append, List.nil_append,
+  simp only [z2Body, z2Vals, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, X, List.cons_append, List.nil_append,
     List.getD_cons_zero, List.getD_cons_succ, Z2Claim, S]
 
 end Z2

@@ -107,7 +107,7 @@ lemma PhiC3_le_PhiBar3 (k : ℕ) (α β : ℝ) (p : JitterΩ × ℝ) :
     by_cases h1 : 2 ≤ ec.2 ∧ ec.1 ∈ cofP2 θ X₀ k p.1 ∧ Sm2 θ X₀ p.1 ec.1 p.2 ∧
         α ≤ eval (DD θ X₀ p.1) ec.1 * p.2 ^ ec.2 ∧ eval (DD θ X₀ p.1) ec.1 * p.2 ^ ec.2 < β
     · rw [if_pos h1, if_pos ⟨h1.1, h1.2.1.1, h1.2.2⟩]
-    · rw [if_neg h1]; exact zero_le _
+    · rw [if_neg h1]; exact zero_le
   · exact le_rfl
 
 lemma PhiC3_le_PhiC2 (k : ℕ) (α β : ℝ) (p : JitterΩ × ℝ) :
@@ -119,7 +119,7 @@ lemma PhiC3_le_PhiC2 (k : ℕ) (α β : ℝ) (p : JitterΩ × ℝ) :
     by_cases h1 : 2 ≤ ec.2 ∧ ec.1 ∈ cofP2 θ X₀ k p.1 ∧ Sm2 θ X₀ p.1 ec.1 p.2 ∧
         α ≤ eval (DD θ X₀ p.1) ec.1 * p.2 ^ ec.2 ∧ eval (DD θ X₀ p.1) ec.1 * p.2 ^ ec.2 < β
     · rw [if_pos h1, if_pos ⟨h1.1, h1.2.1, h1.2.2.2⟩]
-    · rw [if_neg h1]; exact zero_le _
+    · rw [if_neg h1]; exact zero_le
   · exact le_rfl
 
 lemma measurableSet_Sm2 (ω : JitterΩ) (e : PIdx X₀ →₀ ℕ) :
@@ -268,7 +268,7 @@ theorem lintegral_PhiBar3_le {α β : ℝ} (ω : JitterΩ) (B : (PIdx X₀ →�
     intro t
     unfold PhiBar3
     split_ifs with ht
-    swap; · exact zero_le _
+    swap; · exact zero_le
     rw [tsum_eq_sum (s := T) (fun ec hec => by
       refine if_neg fun h1 => hec ?_
       obtain ⟨hc2, hlive, -, hα, hβ⟩ := h1
@@ -307,7 +307,7 @@ theorem lintegral_PhiBar3_le {α β : ℝ} (ω : JitterΩ) (B : (PIdx X₀ →�
     · rw [if_pos h1, indicator_of_mem
         (show t ∈ I3 θ X₀ ω α β e (j + 2) from ⟨ht, h1.2.2.1, h1.2.2.2.1, h1.2.2.2.2⟩)]
       rfl
-    · rw [if_neg h1]; exact zero_le _
+    · rw [if_neg h1]; exact zero_le
   refine (lintegral_mono hpt).trans ?_
   rw [lintegral_finset_sum _ (fun e _ => Finset.measurable_sum _ fun j _ =>
     measurable_one.indicator (measurableSet_I3 ω α β e (j + 2)))]
@@ -411,7 +411,7 @@ theorem vol_I3_le (ω : JitterΩ) {v α β : ℝ} (hv : 0 < v) (hα : v / 4 ≤ 
         rw [one_div, Real.pow_rpow_inv_natCast ht0.le (by omega)] at this
         rw [one_div]
         linarith
-    rw [hempty, measure_empty]; exact zero_le _
+    rw [hempty, measure_empty]; exact zero_le
 
 end Vol3
 
@@ -531,7 +531,7 @@ theorem s2_second_of_block (hBB : BlockBound X₀) : S2SecondBranch θ X₀ := b
       (fun ω => boxMean_PhiC3_ne_top hc hev hab' k ω)
   have hnice : ∀ᵐ ω ∂jitterMeasure, ω ∈ NiceEv θ X₀ := by
     have := niceEv_compl_null hc hev
-    rw [ae_iff]; simpa using this
+    rw [ae_iff]; exact this
   filter_upwards [ae_all_iff.mpr hk, hnice] with ω hω hN hQC hE1 n
   clear hk hnice
   have hU := hN.1

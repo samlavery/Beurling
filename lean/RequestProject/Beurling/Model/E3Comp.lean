@@ -189,7 +189,7 @@ theorem X3_le_PhiC (m : ℕ) (a b : ℤ) (k : ℕ) {ω : JitterΩ} (hω : ω ∈
   · rw [Set.not_nonempty_iff_eq_empty] at hne
     rw [hne, Set.ncard_empty] at hX3
     push_cast at hX3
-    rw [ENNReal.ofReal_eq_zero.mpr hX3]; exact zero_le _
+    rw [ENNReal.ofReal_eq_zero.mpr hX3]; exact zero_le
   obtain ⟨e0, he0⟩ := hne
   have hplaced : placedAt (CM θ X₀ ω) k := by
     have h1 := he0.1 k (by rw [he0.2.2.2.2.2.2.2]; norm_num)
@@ -447,7 +447,7 @@ lemma PhiC_le_PhiBar (k : ℕ) (α β : ℝ) (p : JitterΩ × ℝ) :
     by_cases h1 : e ∈ cofP θ X₀ k p.1 ∧ α ≤ eval (DD θ X₀ p.1) e * p.2 ∧
         eval (DD θ X₀ p.1) e * p.2 < β
     · rw [if_pos h1, if_pos ⟨⟨h1.1.1, h1.1.2.1⟩, h1.2⟩]
-    · rw [if_neg h1]; exact zero_le _
+    · rw [if_neg h1]; exact zero_le
   · exact le_rfl
 
 lemma PhiBar_meas (α β : ℝ) (ω : JitterΩ) : Measurable fun t => PhiBar θ X₀ α β (ω, t) := by
@@ -488,7 +488,7 @@ theorem lintegral_PhiBar_le {α β : ℝ} (hαβ : α ≤ β) (ω : JitterΩ) :
     intro t
     unfold PhiBar
     split_ifs with ht
-    swap; · exact zero_le _
+    swap; · exact zero_le
     rw [tsum_eq_sum (s := F) (fun e he => by
       rw [Set.Finite.mem_toFinset] at he
       refine if_neg fun h1 => he ⟨h1.1, ?_⟩
@@ -507,7 +507,7 @@ theorem lintegral_PhiBar_le {α β : ℝ} (hαβ : α ≤ β) (ω : JitterΩ) :
         · rw [div_le_iff₀ hev]; linarith [h1.2.1]
         · rw [lt_div_iff₀ hev]; linarith [h1.2.2]
       rw [indicator_of_mem hmem]; rfl
-    · rw [if_neg h1]; exact zero_le _
+    · rw [if_neg h1]; exact zero_le
   refine (lintegral_mono hpt).trans ?_
   rw [lintegral_finset_sum _ (fun e _ => measurable_one.indicator measurableSet_Ico)]
   rw [Finset.mul_sum, ENNReal.ofReal_sum_of_nonneg (fun e he => by
@@ -721,7 +721,7 @@ theorem e3CompBound : E3CompBound θ X₀ := by
       (fun ω => boxMean_PhiC_ne_top hc hev hab' k ω)
   have hnice : ∀ᵐ ω ∂jitterMeasure, ω ∈ NiceEv θ X₀ := by
     have := niceEv_compl_null hc hev
-    rw [ae_iff]; simpa using this
+    rw [ae_iff]; exact this
   filter_upwards [ae_all_iff.mpr hk, hnice] with ω hω hN hG n
   obtain ⟨hQC, hE1⟩ := hG
   set Hs := ∑ e ∈ (cof_finite hc (b : ℝ) ω).toFinset, 1 / eval (DD θ X₀ ω) e with hHs
@@ -733,7 +733,7 @@ theorem e3CompBound : E3CompBound θ X₀ := by
   have hsum : ∑' k, boxMean J k (PhiC θ X₀ k a b) ω ≤ 2 * ENNReal.ofReal ((b - a) * Hs) :=
     (sum_boxMean_le J (fun k => PhiC θ X₀ k a b) (PhiBar θ X₀ a b) ω (PhiBar_meas a b ω)
       (fun k t => PhiC_le_PhiBar k a b _)).trans
-      (mul_le_mul_left' (lintegral_PhiBar_le hc hab' ω) 2)
+      (mul_le_mul_right (lintegral_PhiBar_le hc hab' ω) 2)
   have hrhs : 0 ≤ 2 * ((b - a) * Hs) := by
     have : (0 : ℝ) ≤ b - a := by linarith
     positivity

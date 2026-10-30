@@ -46,7 +46,7 @@ lemma integral_Ioi_shift_div {a : ℝ} (ha : 1 ≤ a) :
       (Dickman.rho (x - 1) / x) x := by
     intro x hx
     have := (Dickman.hasDerivAt_rho (lt_of_le_of_lt ha hx)).neg
-    simpa using this
+    simpa [Pi.neg_def] using this
   have hpos : ∀ x ∈ Ioi a, 0 ≤ Dickman.rho (x - 1) / x := fun x hx =>
     div_nonneg (Dickman.rho_pos _).le (by linarith [mem_Ioi.mp hx])
   have hlim : Tendsto (fun w => -Dickman.rho w) atTop (𝓝 (-0)) :=
@@ -137,7 +137,7 @@ lemma integral_Ioi_exp {r u : ℝ} (hr : 0 < r) :
       (Real.exp (-(r * (x - u)))) x := by
     intro x _
     have h := ((((hasDerivAt_id x).sub_const u).const_mul r).neg.exp).neg.div_const r
-    convert h using 1
+    convert! h using 1
     field_simp
     simp
   have hpos : ∀ x ∈ Ioi u, 0 ≤ Real.exp (-(r * (x - u))) := fun _ _ => (Real.exp_pos _).le
@@ -167,7 +167,7 @@ lemma integral_Ioi_moment {r u : ℝ} (hr : 0 < r) :
     have hs := hasDerivAt_id s
     have := (((((hasDerivAt_const s a0).add (hs.const_mul a1)).add
       ((hs.pow 2).const_mul a2)).add ((hs.pow 3).const_mul a3)).add ((hs.pow 4).const_mul a4))
-    convert this using 1
+    convert! this using 1
     simp only [id]; push_cast; ring
   have hderiv : ∀ x ∈ Ici u, HasDerivAt (fun w => -(Real.exp (-(r * (w - u))) * P (w - u)))
       ((x - u) * (1 + (x - u)) ^ 3 * Real.exp (-(r * (x - u)))) x := by
@@ -175,7 +175,7 @@ lemma integral_Ioi_moment {r u : ℝ} (hr : 0 < r) :
     have he := (((hasDerivAt_id x).sub_const u).const_mul r).neg.exp
     have hp := (hPd (x - u)).comp x ((hasDerivAt_id x).sub_const u)
     have h := (he.mul hp).neg
-    convert h using 1
+    convert! h using 1
     simp only [hP, id, Function.comp_apply, Pi.neg_apply, Pi.mul_apply, ha0, ha1, ha2, ha3, ha4]
     field_simp
     ring

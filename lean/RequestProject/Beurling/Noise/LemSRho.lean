@@ -26,7 +26,7 @@ lemma ratio_one : Dickman.ratio 1 = 1 := by
 lemma rho_le_exp_one_sub {u : ℝ} (hu : 1 ≤ u) : Dickman.rho u ≤ Real.exp (1 - u) := by
   have h := Dickman.rho_le_exp (w := 1) (t := u) le_rfl hu
   rw [Dickman.rho_of_le_one le_rfl, ratio_one, one_mul, one_mul] at h
-  convert h using 2; ring
+  convert! h using 2; ring
 
 /-- `ρ(k + f) ∏_{j=1}^{k} (j + f) ≤ 1` for `0 ≤ f ≤ 1`. -/
 lemma rho_mul_prod_le (f : ℝ) (hf0 : 0 ≤ f) (hf1 : f ≤ 1) (k : ℕ) :

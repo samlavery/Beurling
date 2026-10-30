@@ -96,7 +96,7 @@ theorem hasFDerivAt_rmap (a : ι → ℝ) (S : Matrix ι ι ℝ) {q : ι → ℝ
       ((S i j * q j ^ (S i j - 1)) • ContinuousLinearMap.proj j) q :=
     fun j _ => (hasFDerivAt_apply (𝕜 := ℝ) j q).rpow_const (Or.inl (hq j).ne')
   have hprod := (HasFDerivAt.finset_prod hfac).const_mul (a i)
-  convert hprod using 1
+  convert! hprod using 1
   ext v
   simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, ContinuousLinearMap.proj_apply,
     LinearMap.coe_toContinuousLinearMap', Matrix.toLin'_apply, ContinuousLinearMap.coe_smul',

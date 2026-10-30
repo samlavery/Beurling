@@ -39,8 +39,8 @@ lemma linIndepOn_of_notMem_span {ι V : Type*} [AddCommGroup V] [Module K V] [De
   suffices H : ∀ s : Finset ι, s ⊆ S → LinearIndepOn K v (s : Set ι) from H S subset_rfl
   intro s
   induction s using Finset.induction_on_max_value rk with
-  | h0 => intro _; simp
-  | step a s ha hmax ih =>
+  | empty => intro _; simp
+  | insert a s ha hmax ih =>
     intro hsub
     rw [Finset.coe_insert, linearIndepOn_insert (by simpa using ha)]
     refine ⟨ih (fun x hx => hsub (Finset.mem_insert_of_mem hx)), fun hmem => ?_⟩
@@ -264,7 +264,7 @@ theorem stageRows_mono (E : Matrix (Fin r) (Fin m) K) (rk : Fin r → ℕ) {D D'
   have := Submodule.mem_map_of_mem (f := π) hmem
   rw [Submodule.map_span, ← Set.image_comp] at this
   rw [← hπ y]
-  convert this using 3
+  convert! this using 3
 
 /-- **Lemma A.8 (1), last part.** For a rank-full matrix (independent rows), the stage rows
 of the set of all columns are all the rows. -/

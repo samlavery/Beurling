@@ -144,7 +144,7 @@ theorem lintegral_exp_window_z {d z : ℝ} (hd : 0 < d) (hz : 0 < z) {J : Set �
         calc t⁻¹ * z ≤ t⁻¹ * (d * t) := mul_le_mul_of_nonneg_left hzt (inv_nonneg.mpr ht'.le)
           _ = d := by field_simp
       · rw [indicator_of_notMem hJt]; simp
-    · rw [indicator_of_notMem ht]; exact zero_le _
+    · rw [indicator_of_notMem ht]; exact zero_le
   refine (lintegral_mono hpt).trans ?_
   have hmeas : MeasurableSet ((fun t => d * t) ⁻¹' J) := (measurable_const_mul d) hJ
   rw [lintegral_const_mul _ (measurable_one.indicator hmeas), lintegral_indicator_one hmeas]

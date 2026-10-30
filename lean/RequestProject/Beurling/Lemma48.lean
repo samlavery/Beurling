@@ -175,6 +175,7 @@ theorem measure_bad_le {f : ℂ → ℂ} (hf : Differentiable ℂ f) (Γ : ℝ) 
         {p : ℝ × ℂ | p.2 ∈ box (p.1 - 1 / 4) (p.1 + 1 / 4)}.indicator (fun p => F p.2) := by
       funext ⟨γ, z⟩
       simp only [Function.uncurry_apply_pair, K, Set.indicator, Set.mem_setOf_eq]
+      rfl
     rw [this]
     exact (hFm.comp measurable_snd).indicator hset
   set G : ℝ → ENNReal := fun γ => ∫⁻ z, K γ z
@@ -216,7 +217,7 @@ theorem measure_bad_le {f : ℂ → ℂ} (hf : Differentiable ℂ f) (Γ : ℝ) 
         split_ifs with h1 h2
         · exact le_rfl
         · exfalso; apply h2; obtain ⟨_, _, h3, h4⟩ := h1; constructor <;> linarith
-        · exact zero_le _
+        · exact zero_le
         · exact le_rfl
       calc ∫⁻ γ in Icc Γ (2 * Γ), K γ z ≤ ∫⁻ γ, K γ z := setLIntegral_le_lintegral _ _
         _ ≤ ∫⁻ γ, (Icc (z.im - 1 / 4) (z.im + 1 / 4)).indicator (fun _ => F z) γ :=

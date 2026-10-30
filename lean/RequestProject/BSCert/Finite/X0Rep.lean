@@ -63,7 +63,7 @@ lemma nOf_map : ∀ (ps : List ℕ) (f : ℕ → ℕ), nOf ps (ps.map f) = (ps.m
 lemma nOf_map_fac (ps : List ℕ) (hnd : ps.Nodup) {M : ℕ} (hM : M ≠ 0)
     (hsub : M.primeFactors ⊆ ps.toFinset) : nOf ps (ps.map M.factorization) = M := by
   rw [nOf_map, ← List.prod_toFinset _ hnd]
-  conv_rhs => rw [← Nat.factorization_prod_pow_eq_self hM]
+  conv_rhs => rw [← Nat.prod_factorization_pow_eq_self hM]
   rw [Finsupp.prod, Nat.support_factorization]
   symm
   apply Finset.prod_subset hsub
@@ -138,7 +138,7 @@ theorem rep_of (hn : 2 ≤ n) (hle : n ≤ 10 ^ 6) :
     simp only [List.length_map] at hi
     have hi7 : i < 7 := by simpa [PL] using hi
     simp only [List.getElem_map]
-    have hPL : PL[i] = Nat.nth Nat.Prime i := by simp [PL_eq]
+    have hPL : ∀ h : i < PL.length, PL[i]'h = Nat.nth Nat.Prime i := fun h => by simp [PL_eq]
     rw [hPL, ← Finsupp.mem_support_iff, Nat.support_factorization, mem_pf_φ hn0]
     constructor
     · rintro ⟨r, hr, h⟩

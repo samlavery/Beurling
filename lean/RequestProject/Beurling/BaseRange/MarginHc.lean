@@ -468,7 +468,7 @@ lemma eq_wTwo (hc : Cond θ X₀) {ω : JitterΩ} {w : PIdx X₀ →₀ ℕ} (hl
     unfold eval Finsupp.prod
     rw [← Finset.mul_prod_erase _ _ hi]
     have h1 : 1 ≤ ∏ j ∈ w.support.erase i, pval D j ^ w j := by
-      have := Finset.prod_le_prod (s := w.support.erase i) (f := fun _ => (1 : ℝ))
+      have := Finset.prod_le_prod₀ (s := w.support.erase i) (f := fun _ => (1 : ℝ))
         (g := fun j => pval D j ^ w j) (fun _ _ => zero_le_one)
         (fun j hj => one_le_pow₀ (hgt j (Finset.mem_of_mem_erase hj)).le)
       simpa using this
@@ -561,7 +561,7 @@ lemma compDen_le_half (hc : Cond θ X₀) (ω : JitterΩ) {t : ℝ} (ht0 : 0 < t
           rw [div_lt_iff₀ hXm0] at hXm3
           nlinarith
         exact h2 (eq_wTwo hc hl hw0 this)
-      · exact zero_le _
+      · exact zero_le
       · exact le_rfl
     calc ENNReal.ofReal (HF θ X₀ k ω)⁻¹ * (∑' w : PIdx X₀ →₀ ℕ, _)
         ≤ ENNReal.ofReal (HF θ X₀ k ω)⁻¹ *

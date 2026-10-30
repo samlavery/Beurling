@@ -169,7 +169,7 @@ lemma lintegral_dyad_le (G : ℝ → ℝ) (N : ℕ) :
           Real.enorm_eq_ofReal_abs ((2 : ℝ) ^ N), abs_of_pos h2, mul_assoc,
           ← ENNReal.ofReal_mul h2.le, mul_inv_cancel₀ h2.ne', ENNReal.ofReal_one, mul_one]
     _ ≤ eVariationOn G univ :=
-        eVariationOn.sum_le G _ (grid_mono N) (fun _ => mem_univ _)
+        eVariationOn.sum_le (f := G) (grid_mono N) (fun _ => mem_univ _)
 
 /-- On the tile containing `t` (for `N > |t|`), `dyad G N t` is the slope of `G` over it. -/
 lemma dyad_eq (G : ℝ → ℝ) {N : ℕ} {t : ℝ} (ht : |t| < N) :

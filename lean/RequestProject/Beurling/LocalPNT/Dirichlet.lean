@@ -155,7 +155,7 @@ theorem sum_elems_rpow_le {σ : ℝ} (hσ1 : 1 < σ) (hσ2 : σ ≤ 2) :
       10 * (Xm ^ (0.6 - σ) / (σ - 0.6)) + (κ * X₀ + 1) * (Xm ^ (-σ) / σ) := by
     calc _ ≤ ∫ x in Ioi 1, (Ici Xm).indicator
           (fun x : ℝ => 10 * x ^ (0.6 - σ - 1) + (κ * X₀ + 1) * x ^ (-σ - 1)) x := by
-          refine setIntegral_mono_set hiGi ?_ (Ioc_subset_Ioi_self).eventuallyLE
+          refine setIntegral_mono_set hiGi ?_ (Ioc_subset_Ioi_self).eventuallySubset
           refine (ae_restrict_mem measurableSet_Ioi).mono fun x _ => ?_
           apply Set.indicator_nonneg; intro z hz
           have hz0 : 0 < z := lt_of_lt_of_le hXm hz

@@ -173,7 +173,7 @@ lemma harmonic_le_harmHiK : ((harmonic 10000 : ℚ) : ℝ) ≤ FX.toR harmHiK :=
     rw [FX.toR_ZI] at this
     unfold harmTermK; push_cast at this ⊢; exact this) 10000 0 0
   rw [FX.toR_zero, zero_add, zero_add, ← Finset.range_eq_Ico] at h
-  unfold harmonic
+  unfold harmonic harmHiK
   push_cast
   simpa [one_div] using h
 

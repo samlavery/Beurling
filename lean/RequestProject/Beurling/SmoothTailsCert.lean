@@ -141,7 +141,7 @@ lemma sum_rpow_primes_le_abel {σ : ℝ} (hσ : 0 < σ) {N : ℕ} (hN : 2 ≤ N)
       exact hw_anti hσ this (by push_cast; linarith))
     hw2 hN
   refine this.trans (le_of_eq ?_)
-  simp only
+  try simp only
   rw [mul_add, Finset.mul_sum]
   congr 1
   · push_cast; ring
@@ -165,7 +165,7 @@ lemma hasDerivAt_Fcmp {η t : ℝ} (hη : 0 < η) (ht : 1 < t) :
   have h4 := (BSCert.EiFn.hasDerivAt_Ein (mul_pos hη hl)).comp t h3
   have h5 := h2.add h4
   unfold Fcmp
-  convert h5 using 1
+  convert! h5 using 1
   unfold hw
   rw [Real.rpow_def_of_pos ht0]
   have : Real.log t * -(1 - η) = η * Real.log t - Real.log t := by ring

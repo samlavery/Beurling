@@ -37,7 +37,7 @@ lemma abs_sub_half_le {g Ψ : ℝ → ℝ} (hg : Integrable g) (hΨm : Measurabl
     simpa [mul_comm] using hg.bdd_mul (c := 1) hΨm.aestronglyMeasurable hb
   have hi2 : Integrable (fun v => g v * (Ψ v - 1 / 2)) := by
     have := hi.sub (hg.mul_const (1 / 2))
-    simpa [mul_sub] using this
+    simpa [mul_sub, Pi.sub_def] using this
   have e : (∫ v, g v * Ψ v) - (∫ v, g v) * Ψ a =
       (∫ v, g v * (Ψ v - 1 / 2)) - (∫ v, g v) * (Ψ a - 1 / 2) := by
     rw [show (fun v => g v * (Ψ v - 1 / 2)) = fun v => g v * Ψ v - g v * (1 / 2) by

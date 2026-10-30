@@ -30,7 +30,7 @@ noncomputable def extendLe (k : ℕ) (x : Iic k → ℝ) : JitterΩ :=
   fun j => if h : j ≤ k then x ⟨j, mem_Iic.mpr h⟩ else 0
 
 lemma measurable_extendLe (k : ℕ) : Measurable (extendLe k) := by
-  refine measurable_pi_lambda _ fun j => ?_
+  refine Measurable.of_eval fun j => ?_
   unfold extendLe
   by_cases h : j ≤ k
   · simp only [dif_pos h]; exact measurable_pi_apply _

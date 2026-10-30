@@ -38,8 +38,8 @@ theorem norm_mul_setIntegral_cpow_le {y : ℝ} (hy : 0 < y) {B : Set ℝ} (hB : 
     obtain ⟨z, hz, hzx⟩ := exists_lt_of_csInf_lt hne hx
     exact hB hzx.le hz
   have hae : B =ᵐ[volume] Ioi b :=
-    ((HasSubset.Subset.eventuallyLE fun x hx => csInf_le hbdd hx).trans
-      Ioi_ae_eq_Ici.symm.le).antisymm hsub.eventuallyLE
+    ((LE.le.eventuallySubset fun x hx => csInf_le hbdd hx).trans
+      Ioi_ae_eq_Ici.symm.le).antisymm hsub.eventuallySubset
   rw [setIntegral_congr_set hae, setIntegral_congr_set hae,
     integral_Ioi_cpow_of_lt (by simp; linarith) hb, integral_Ioi_rpow_of_lt (by linarith) hb]
   have hs0 : s ≠ 0 := fun h => by simp [h] at hs; linarith

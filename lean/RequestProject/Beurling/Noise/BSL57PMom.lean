@@ -21,7 +21,7 @@ namespace BSaias.Large
 lemma tailMom0_integrable (k : ℕ) {r : ℝ} (hr : 0 < r) :
     IntegrableOn (fun t : ℝ => t ^ k * Real.exp (-(r * t))) (Ioi 0) := by
   have h := integrableOn_rpow_mul_exp_neg_mul_rpow (p := 1) (s := (k : ℝ)) (b := r)
-    (by have := Nat.cast_nonneg (α := ℝ) k; linarith) le_rfl hr
+    (by have := Nat.cast_nonneg (α := ℝ) k; linarith) one_pos hr
   refine h.congr_fun (fun t ht => ?_) measurableSet_Ioi
   simp only [Real.rpow_one, Real.rpow_natCast, neg_mul]
 

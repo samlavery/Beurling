@@ -42,7 +42,7 @@ lemma newPrimeCount_eq_of_le {T P : ℕ} {q b : ℝ} (hPq : (P : ℝ) ≤ q) :
 
 lemma newPrimeCount_eq_zero_of_lt {T : ℕ} {q b : ℝ} (hb : b < T) : newPrimeCount T q b = 0 := by
   unfold newPrimeCount
-  convert Set.ncard_empty ℕ
+  convert! Set.ncard_empty ℕ
   ext p
   simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
   rintro ⟨-, h2, -, h4⟩

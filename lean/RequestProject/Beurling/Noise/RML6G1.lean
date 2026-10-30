@@ -154,7 +154,7 @@ theorem g1B_of {P : BeurlingSystem} {tw : ℕ → ℝ} {X0m : ℝ} {X0 : ℕ} {T
     have : (X0 : ℝ) = 0 := le_antisymm hc (Nat.cast_nonneg _)
     rw [this, Real.log_zero] at hΛ; linarith
   have hLe : Real.exp (Real.log X0 / 100) ≤ L := by
-    rw [Real.rpow_def_of_pos hX0] at hy; convert hy using 2; ring
+    rw [Real.rpow_def_of_pos hX0] at hy; convert! hy using 2; ring
   have hLbig := logx_big hΛ hLe
   have hL0 : 0 < L := by linarith
   set a := y * (1 - 2 * I.δ)

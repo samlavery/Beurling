@@ -89,7 +89,7 @@ theorem window_small {X₀ : ℕ} {x δ F : ℝ} (hΛ : 100000000 ≤ Real.log X
     rw [Real.rpow_def_of_pos hX0, mul_comm]
   set L := Real.log x with hLdef
   have hL : Real.exp (Λ / 100) ≤ L := by
-    rw [hrp] at hx; convert hx using 2; ring
+    rw [hrp] at hx; convert! hx using 2; ring
   have hL0 : 0 < L := lt_of_lt_of_le (Real.exp_pos _) hL
   have hxe : x = Real.exp L := (Real.exp_log hx0).symm
   have hs := sqrt_log_ge hΛ hL

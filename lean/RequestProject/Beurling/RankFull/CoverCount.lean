@@ -345,7 +345,7 @@ theorem cfg_rep {S : Finset (Fin N → ℕ)} {tl : (Fin N → ℕ) → ℕ} {D r
   · have hC := cons_tuple t hk rfl rfl hsum hpos hB1 hsm tl
     have h2 := consM_perm σ hC
     rw [← hpat] at h2
-    convert h2 using 2
+    convert! h2 using 2
     refine Prod.ext (funext fun n => ?_) rfl
     simp only [mem_pivSet t hk n]
   · rw [sameRun_iff t hk rfl hsum h1 h2]
@@ -438,7 +438,7 @@ lemma term_ge_oneC {K : ℕ} (E : Matrix (Fin K) (Fin K) ℕ) (Cd : Finset (Fin 
     rw [Finset.prod_comm]
     exact Finset.prod_congr rfl fun j _ => Finset.prod_pow_eq_pow_sum _ _ _
   rw [h1, ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
-  have := Finset.prod_le_prod (s := univ) (f := fun _ => (1 : ℝ))
+  have := Finset.prod_le_prod₀ (s := univ) (f := fun _ => (1 : ℝ))
     (g := fun j => (q j)⁻¹ * q j ^ (∑ y ∈ Cd, E y j) * (τ j)⁻¹ ^ ((∑ y ∈ Cd, E y j) - 1))
     (fun _ _ => zero_le_one) (fun j _ => by
       have hsj := hs j
@@ -516,13 +516,14 @@ lemma CfgRep.rankC_eq (R : CfgRep S tl D r₀ CB r Cs lab ex s4) (cd : CovD r)
     (hcd : cd.Cd = Cs) {g : Fin N} :
     rankC cd r R.labs R.cont g = lbl CB.1 g := by
   unfold rankC lbl
-  conv_rhs => rw [← Finset.filter_card_add_filter_neg_card_eq_card (fun n => ∃ j, R.p j = n)]
+  conv_rhs => rw [← Finset.card_filter_add_card_filter_not (fun n => ∃ j, R.p j = n)]
   congr 1
   · rw [Finset.filter_filter]
     have himg : (univ.filter fun j : Fin r => R.labs j < (g : ℕ)).image R.p =
         (Covers.P CB.1).filter (fun n => n < g ∧ ∃ j, R.p j = n) := by
       ext n
-      simp only [Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and, CfgRep.labs]
+      simp only [Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and]
+      simp only [CfgRep.labs]
       constructor
       · rintro ⟨j, hj, rfl⟩; exact ⟨R.pivP j, Fin.lt_def.mpr hj, j, rfl⟩
       · rintro ⟨-, hng, j, rfl⟩; exact ⟨j, Fin.lt_def.mp hng, rfl⟩
@@ -656,7 +657,7 @@ theorem CfgRep.one_le_term {k r₀ D Dmax X₀ smax : ℕ} (J : JitterLaw Ω P �
     intro y
     have hel := tailOf_mem (R.memS y)
     have hval := (Finset.mem_filter.mp hel).2.2.2
-    convert hval using 1
+    convert! hval using 1
     unfold cvs cval elemVal
     simp only [CfgRep.cont]
     rw [prod_split_p p R.mono.injective (qOf J ω) (R.T y)]
@@ -688,7 +689,7 @@ theorem CfgRep.one_le_term {k r₀ D Dmax X₀ smax : ℕ} (J : JitterLaw Ω P �
         rw [exp_rowLog E (fun j => J.q (p j : ℕ) ω) hq0 y, Set.indicator_of_mem (hwin y)]
         rfl
     rw [hind, mul_one, ENNReal.ofReal_prod_of_nonneg (fun y _ => Finset.prod_nonneg fun j _ =>
-      pow_nonneg (hq0 j).le _)]
+      pow_nonneg (hq0 j).le (E y j))]
     refine Finset.prod_congr rfl fun y _ => ?_
     rw [exp_rowLog E (fun j => J.q (p j : ℕ) ω) hq0 y]
   rw [hA1, Set.indicator_of_mem hdec, Set.indicator_of_mem hGl, hphi, hinv, hIz]
@@ -696,7 +697,7 @@ theorem CfgRep.one_le_term {k r₀ D Dmax X₀ smax : ℕ} (J : JitterLaw Ω P �
   rw [← ENNReal.ofReal_mul (Finset.prod_nonneg fun j _ => (inv_pos.mpr (hq0 j)).le),
     ← ENNReal.ofReal_mul (mul_nonneg (Finset.prod_nonneg fun j _ =>
       (inv_pos.mpr (hq0 j)).le) (Finset.prod_nonneg fun y _ => Finset.prod_nonneg fun j _ =>
-        pow_nonneg (hq0 j).le _))]
+        pow_nonneg (hq0 j).le (E y j)))]
   rw [← ENNReal.ofReal_one]
   refine ENNReal.ofReal_le_ofReal ?_
   have hexc : ∀ i, exExcess ex i = (∑ y ∈ Cs, E y i) - 1 := by
@@ -851,7 +852,7 @@ theorem coverSkeletonBound_all {θE : ℝ≥0∞} (J : JitterLaw Ω P θE) [IsPr
     refine ⟨[Cs.card], by simp, by simp [hc], ?_⟩
     unfold CoverSkeletonBound
     simp only [h0, MeasureTheory.lintegral_zero]
-    exact zero_le _
+    exact zero_le
   obtain ⟨ω₀, CB₀, hCB₀, hs₀⟩ := href
   obtain ⟨R₀⟩ := cfg_rep (fun v hv => windowVecs_deg hv) hCB₀ hs₀
   obtain ⟨k, rfl⟩ : ∃ k, r = k + 1 := ⟨r - 1, by have := R₀.hr1; omega⟩

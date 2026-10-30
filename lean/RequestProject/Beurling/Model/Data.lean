@@ -108,7 +108,7 @@ noncomputable def stepGammaN (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ
 /-- **The designed heights for a counting function `N`** (Lemma 4.8), by recursion on `k`. -/
 noncomputable def designedGammaN (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
     (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) : ℕ → ℝ :=
-  fun k => Nat.strongRecOn' (P := fun _ => ℝ) k
+  fun k => Nat.strongRecOn (motive := fun _ => ℝ) k
     (fun k IH => stepGammaN N θ X₀ κ A u κ₀ xp a (fun j => if h : j < k then IH j h else 0) k)
 
 /-- For `N = P.N` the heights are the designed heights of `P`. -/
@@ -121,7 +121,7 @@ lemma designedGammaN_rec (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A
     designedGammaN N θ X₀ κ A u κ₀ xp a k = stepGammaN N θ X₀ κ A u κ₀ xp a
       (fun j => if j < k then designedGammaN N θ X₀ κ A u κ₀ xp a j else 0) k := by
   conv_lhs => unfold designedGammaN
-  rw [Nat.strongRecOn'_beta]
+  rw [Nat.strongRecOn_eq]
   simp only [dite_eq_ite]
   rfl
 
@@ -200,7 +200,7 @@ lemma pval_ge_one {D : PrimeData} (hD : Pos D) {e : PIdx X₀ →₀ ℕ} (he : 
 
 lemma one_le_prod_of {ι : Type*} (s : Finset ι) (f : ι → ℝ) (hf : ∀ i ∈ s, 1 ≤ f i) :
     1 ≤ ∏ i ∈ s, f i := by
-  simpa using Finset.prod_le_prod (s := s) (f := fun _ => (1 : ℝ)) (g := f)
+  simpa using Finset.prod_le_prod₀ (s := s) (f := fun _ => (1 : ℝ)) (g := f)
     (fun _ _ => zero_le_one) hf
 
 lemma one_le_eval {D : PrimeData} (hD : Pos D) {e : PIdx X₀ →₀ ℕ} (he : Live D e) :

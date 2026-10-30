@@ -193,7 +193,7 @@ lemma eVariationOn_add_le (f g : ℝ → ℝ) :
           edist (g (u (i + 1))) (g (u i))) :=
         Finset.sum_le_sum fun i _ => edist_add_add_le _ _ _ _
     _ = _ := Finset.sum_add_distrib
-    _ ≤ _ := add_le_add (eVariationOn.sum_le f n hu hs) (eVariationOn.sum_le g n hu hs)
+    _ ≤ _ := add_le_add (eVariationOn.sum_le (f := f) (n := n) hu hs) (eVariationOn.sum_le (f := g) (n := n) hu hs)
 
 lemma eVariationOn_const_mul_le (c : ℝ) (f : ℝ → ℝ) :
     eVariationOn (fun t => c * f t) univ ≤ ENNReal.ofReal |c| * eVariationOn f univ := by
@@ -338,7 +338,7 @@ theorem theorem_5_15 (hval : ∀ p, p.Prime → 1 ≤ val p) (hH : WidthReg H)
         KRB val (Hlev val x H) κ d)))) := by
     intro d hd
     by_cases hk : κ d n = 0
-    · rw [hk, neg_zero, abs_zero, ENNReal.ofReal_zero, zero_mul]; exact zero_le _
+    · rw [hk, neg_zero, abs_zero, ENNReal.ofReal_zero, zero_mul]; exact zero_le
     have hw := LemmaM.valN_pos val hval (n := n / d)
     have hq := eVariationOn_Qv_le hH hw (hBMD d hd)
     have hpt : ∀ v, ‖DkerV val x H κ d v‖ₑ *
@@ -379,7 +379,7 @@ theorem theorem_5_15 (hval : ∀ p, p.Prime → 1 ≤ val p) (hH : WidthReg H)
   refine (eVariationOn_add_le _ _).trans ?_
   refine (add_le_add (eVariationOn_const_mul_le _ _)
     ((eVariationOn_sum_le _ _ _).trans (Finset.sum_le_sum hterm))).trans ?_
-  refine (add_le_add (mul_le_of_le_one_right (zero_le _) (eVariationOn_box_step_le hh a))
+  refine (add_le_add (mul_le_of_le_one_right (zero_le) (eVariationOn_box_step_le hh a))
     le_rfl).trans (le_of_eq ?_)
   rw [← ENNReal.ofReal_sum_of_nonneg hnn, ← ENNReal.ofReal_add (abs_nonneg _)
     (Finset.sum_nonneg hnn)]

@@ -251,7 +251,7 @@ theorem norm_hhat0_le {W : ℂ} (hW : 0 ≤ W.re) : ‖hhat0 W‖ ≤ Real.exp (
   have h := norm_hhat0_le_of_boxFactor (B := 1) (by
     have := norm_boxFactor_le (by norm_num : (0 : ℝ) < 1 / 38) W
     rw [abs_of_nonneg hW] at this
-    rw [mul_one]; convert this using 2; ring)
+    rw [mul_one]; convert! this using 2; ring)
   simpa using h
 
 theorem norm_hhat0_le' {W : ℂ} (hW : 0 ≤ W.re) (hW0 : W ≠ 0) :

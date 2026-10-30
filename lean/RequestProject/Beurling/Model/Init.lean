@@ -140,7 +140,7 @@ lemma exists_num {n : ℕ} (hn : n ≠ 0) (hp : ∀ p ∈ n.primeFactors, p < X�
   · rw [num_eq_map, ← Finsupp.mapDomain_comp]
     have : (ratV ∘ (Sum.inl : _ → RealisedIdx M)) = val := rfl
     rw [this, hmap]
-    exact Nat.factorization_prod_pow_eq_self hn
+    exact Nat.prod_factorization_pow_eq_self hn
 
 /-- A rational element is composite iff its integer is neither `1` nor prime. -/
 lemma composite_iff {e : RealisedIdx M →₀ ℕ} (he : RatOnly e) :

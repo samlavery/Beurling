@@ -89,7 +89,7 @@ theorem svl_B1 {κ : Type*} (Pcur Pearly : Finset κ) (E : κ → ℕ) (q τ : �
     cnoF * (∏ j ∈ Pcur, q j ^ E j) * ∏ j ∈ Pearly, τ j ^ E j ≤ ny := by
   rw [hny]
   have h1 : ∏ j ∈ Pearly, τ j ^ E j ≤ ∏ j ∈ Pearly, q j ^ E j :=
-    Finset.prod_le_prod (fun j hj => pow_nonneg (hτ j hj) _)
+    Finset.prod_le_prod₀ (fun j hj => pow_nonneg (hτ j hj) _)
       fun j hj => pow_le_pow_left₀ (hτ j hj) (hqτ j hj) _
   have h2 : 0 ≤ ∏ j ∈ Pcur, q j ^ E j := Finset.prod_nonneg fun j hj => pow_nonneg (hq0 j hj) _
   have h3 : 0 ≤ ∏ j ∈ Pearly, τ j ^ E j := Finset.prod_nonneg fun j hj => pow_nonneg (hτ j hj) _

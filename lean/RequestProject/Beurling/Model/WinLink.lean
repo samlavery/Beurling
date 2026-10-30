@@ -598,7 +598,7 @@ theorem mem_windowElems {N D Dmax : ℕ} {b : ℝ} {J : Set ℝ}
     have h1 : Xm X₀ ^ (∑ n, winVec θ X₀ N ω e n) ≤
         ∏ n : Fin N, qN θ X₀ N ω n ^ winVec θ X₀ N ω e n := by
       rw [← Finset.prod_pow_eq_pow_sum]
-      refine Finset.prod_le_prod (fun _ _ => pow_nonneg (by linarith) _) fun n _ => ?_
+      refine Finset.prod_le_prod₀ (fun _ _ => pow_nonneg (by linarith) _) fun n _ => ?_
       by_cases hn : n ∈ decN θ X₀ N ω
       · exact pow_le_pow_left₀ (by linarith) (qN_ge_Xm hc ω n hn) _
       · simp [winVec, hn]

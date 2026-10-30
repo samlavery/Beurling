@@ -57,7 +57,7 @@ lemma val_eq_prod {z : ℝ} {e : ℕ →₀ ℕ} (he : e ∈ P.smoothElems z) :
 
 lemma one_le_prod_real (s : Finset ℕ) (f : ℕ → ℝ) (h : ∀ i ∈ s, 1 ≤ f i) :
     1 ≤ ∏ i ∈ s, f i := by
-  have := Finset.prod_le_prod (s := s) (f := fun _ => (1 : ℝ)) (fun _ _ => zero_le_one) h
+  have := Finset.prod_le_prod₀ (s := s) (f := fun _ => (1 : ℝ)) (fun _ _ => zero_le_one) h
   simpa using this
 
 lemma one_le_val (e : ℕ →₀ ℕ) : 1 ≤ P.val e := by
@@ -152,7 +152,7 @@ theorem smoothCountN_le_rankin {σ : ℝ} (hσ : 0 < σ) {Y : ℝ} (hY : 0 ≤ Y
     _ = Y ^ σ * ∏ j : T, ∑ n ∈ range K, q j ^ n := by
         rw [Finset.prod_univ_sum]
     _ ≤ Y ^ σ * ∏ j : T, (1 - q j)⁻¹ := by
-        refine mul_le_mul_of_nonneg_left (Finset.prod_le_prod
+        refine mul_le_mul_of_nonneg_left (Finset.prod_le_prod₀
           (fun j _ => Finset.sum_nonneg fun n _ => pow_nonneg (hq0 j) n) fun j _ => ?_) hYσ
         have := geom_sum_Ico_le_of_lt_one (m := 0) (n := K) (hq0 j) (hq1 j)
         rw [Finset.range_eq_Ico]

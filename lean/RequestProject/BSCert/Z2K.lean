@@ -60,7 +60,7 @@ lemma cellUF_sound {r : ℝ → ℝ} (hr : DickmanRatioFacts r) {la lb ua ub : �
       have := feval_sound vOfUEx [ℓ, u] _ V
         (List.Forall₂.cons (fmem_of hl1 hl2) (List.Forall₂.cons (fmem_of hu1 hu2)
           List.Forall₂.nil)) hV
-      simpa [vOfUEx, Ex.eval, u0] using this
+      simpa [vOfUEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, u0] using this
     rw [← z2Ex_eval]
     refine fcheckPos_sound ?_ h
     refine List.Forall₂.cons (fmem_of hl1 hl2) (List.Forall₂.cons (fmem_of hu1 hu2)
@@ -99,7 +99,7 @@ lemma cellVF_sound {r : ℝ → ℝ} (hr : DickmanRatioFacts r) {la lb va vb : �
       have := feval_sound uOfVEx [ℓ, v] _ U
         (List.Forall₂.cons (fmem_of hl1 hl2) (List.Forall₂.cons (fmem_of hv1 hv2)
           List.Forall₂.nil)) hU
-      simpa [uOfVEx, Ex.eval, u0] using this
+      simpa [uOfVEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, u0] using this
     exact cellVU_sound hr h hl1 hl2 hv1 hv2 hu
   · cases h
 
@@ -142,10 +142,10 @@ theorem bandF_sound {r : ℝ → ℝ} {la lb s va vb : ℤ} (hd : bandDataF la l
     have hl : FI.Mem ℓ ⟨la, lb⟩ := fmem_of hl1 hl2
     have hu0 : FI.Mem (u0 ℓ) U0 := by
       have := feval_sound u0Ex [ℓ] _ U0 (List.Forall₂.cons hl List.Forall₂.nil) hU0
-      simpa [u0Ex, Ex.eval, u0] using this
+      simpa [u0Ex, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, u0] using this
     have hw : FI.Mem (UbMu0 ℓ) W := by
       have := feval_sound ubmu0Ex [ℓ] _ W (List.Forall₂.cons hl List.Forall₂.nil) hW
-      simpa [ubmu0Ex, Ex.eval, UbMu0, u0] using this
+      simpa [ubmu0Ex, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, UbMu0, u0] using this
     set s := Max.max (40 * ZI) (U0.lo / 2)
     by_cases hs : u ≤ toR s
     · exact hU u hu1 hs ℓ hl1 hl2

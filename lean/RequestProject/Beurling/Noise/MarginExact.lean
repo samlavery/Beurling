@@ -77,7 +77,7 @@ theorem rhoTilde_sub (hH : ∀ q ∈ Q, 0 ≤ H (sl q)) {z s : ℝ} (hs : 0 ≤ 
   simp only [Aplus, Aminus, Set.mem_setOf_eq]
   have h' := congrArg (fun r => (H (sl q))⁻¹ * r) h
   simp only [mul_sub, mul_ite, mul_one, mul_zero] at h'
-  convert h' using 3
+  convert! h' using 3
 
 /-- **The weights** of Step 2: with `|H(z)/H(s_q) - 1| ≤ c` on `A₊ ∪ A₋`,
 `|H(z)(ρ̃(z+s) - ρ̃(z)) - (σ(A₊) - σ(A₋))| ≤ c (σ(A₊) + σ(A₋))`. -/

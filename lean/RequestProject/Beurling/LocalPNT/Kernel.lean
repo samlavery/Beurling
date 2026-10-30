@@ -268,7 +268,7 @@ theorem perronKernel_support {x : ℝ} (hx : perronKernel x ≠ 0) : x ∈ Icc (
   constructor <;> linarith [this.1, this.2]
 
 theorem continuous_perronKernel : Continuous perronKernel :=
-  perronBase_props.2.2.comp (continuous_add_right _)
+  perronBase_props.2.2.comp (continuous_add_const _)
 
 /-- The Laplace transform of the Perron kernel in terms of `boxFactor`. -/
 theorem perronKernel_laplace_boxFactor (w : ℂ) :

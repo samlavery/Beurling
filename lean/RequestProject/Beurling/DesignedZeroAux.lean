@@ -45,7 +45,7 @@ lemma norm_one_sub_exp_neg_ge {ξ : ℂ} (hξ : ‖ξ‖ = 1) : (3 / 5 : ℝ) �
   have : ‖p‖ - ‖Complex.exp (-ξ) - (1 + -ξ + ξ ^ 2 / 2 + -ξ ^ 3 / 6)‖ ≤
       ‖p - (Complex.exp (-ξ) - (1 + -ξ + ξ ^ 2 / 2 + -ξ ^ 3 / 6))‖ := norm_sub_norm_le _ _
   have hb' : ‖Complex.exp (-ξ) - (1 + -ξ + ξ ^ 2 / 2 + -ξ ^ 3 / 6)‖ ≤ 5/96 := by
-    convert hb using 3; ring
+    convert! hb using 3; ring
   linarith
 
 /-- The principal logarithm is `2`-Lipschitz on the disc `|z - 1| < 1/2`. -/

@@ -221,7 +221,7 @@ lemma hasDerivAt_phiV (hH : WidthReg H) {w : ℝ} (hw : 0 < w) (t : ℝ) {v : �
   have hnum : HasDerivAt (fun v => t - v / w) (-(1 / w)) v := (hc.const_sub t)
   have := (hnum.div hHd hp.ne').add_const (1 / 2 : ℝ)
   unfold phiV
-  convert this using 1
+  convert! this using 1
   field_simp
   ring
 
@@ -682,15 +682,15 @@ lemma Jv_eq_tent (hH : WidthReg H) (w t v : ℝ) (hw : 0 < w) :
     Jv H w t v = if tL H w v < t ∧ t < tR H w v then
       tA H w v + tS H w v * (t - tL H w v) else 0 := by
   have h := congrFun (Jv_left_eq H w v) t
-  simp only at h
   rw [h, Set.indicator_apply]
   simp only [Set.mem_Ioo, tL, tR]
-  split_ifs
-  · unfold tA tS
+  by_cases hc : v / w - H (v / w) / 2 < t ∧ t < v / w + H (v / w) / 2
+  · simp only [hc, ↓reduceIte, and_self]
+    unfold tA tS
     have hp := hH.pos (v / w)
     field_simp
     ring
-  · rfl
+  · simp only [hc, ↓reduceIte]
 
 lemma tent_params (hH : WidthReg H) {w : ℝ} (hw : 0 < w) (v : ℝ) :
     tL H w v < tR H w v ∧ 0 ≤ tA H w v ∧ 0 ≤ tA H w v + tS H w v * (tR H w v - tL H w v) ∧

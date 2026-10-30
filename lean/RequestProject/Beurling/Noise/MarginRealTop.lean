@@ -77,7 +77,7 @@ theorem r1Ident_of_marginOn (D : Sec5Family)
   obtain ⟨hub, -, hab, -⟩ := hadm'
   have hnice : ∀ᵐ ω ∂jitterMeasure, ω ∈ NiceEv θ X₀ := by
     have := niceEv_compl_null hc hev
-    rw [ae_iff]; simpa using this
+    rw [ae_iff]; exact this
   filter_upwards [hPM m a b hadm, compSum_le hc hev m hab, hnice] with ω hP hS hN hG
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hc.hX

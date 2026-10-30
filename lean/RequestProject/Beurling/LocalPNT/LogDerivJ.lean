@@ -77,7 +77,7 @@ theorem threeFour (P : BeurlingSystem) (J : Finset ℕ) {σ : ℝ} (hσ : 0 < σ
     intro k j _
     have h := ((hasSum_logFactor P j (hsk k)).mul_left (Real.log (P.p j) : ℂ))
     have hre := Complex.reCLM.hasSum h
-    convert hre using 1
+    convert! hre using 1
     · funext m
       simp only [Complex.reCLM_apply]
       rw [Complex.re_ofReal_mul, re_cpow_neg (pow_pos (P.p_pos j) _)]

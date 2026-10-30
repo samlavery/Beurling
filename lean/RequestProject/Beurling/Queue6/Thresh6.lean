@@ -189,12 +189,12 @@ theorem kSum_R (ω : JitterΩ) {Z x : ℝ} (hM : MertensUpTo (PR θ X₀ ω) Z) 
       Finset.prod_nonneg fun i _ => (hp1 i).trans' zero_le_one
     have h1' : 1 ≤ ∏ i ∈ P.primesLe x \ S, (1 + 1 / P.p i) := by
       calc (1 : ℝ) = ∏ i ∈ P.primesLe x \ S, (1 : ℝ) := by simp
-        _ ≤ _ := Finset.prod_le_prod (fun _ _ => zero_le_one) fun i _ => hp1 i
+        _ ≤ _ := Finset.prod_le_prod₀ (fun _ _ => zero_le_one) fun i _ => hp1 i
     nlinarith
   have h3 : ∏ i ∈ P.primesLe x, (1 + 1 / P.p i) ≤
       Real.exp (∑ i ∈ P.primesLe x, wE (P.p i)) := by
     rw [Real.exp_sum]
-    refine Finset.prod_le_prod (fun i _ => (hp1 i).trans' zero_le_one) fun i _ => ?_
+    refine Finset.prod_le_prod₀ (fun i _ => (hp1 i).trans' zero_le_one) fun i _ => ?_
     have hp := P.one_lt i
     have hpos := wE_arg_pos hp
     have hw : (P.p i)⁻¹ ≤ wE (P.p i) := by

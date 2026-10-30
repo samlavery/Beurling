@@ -74,7 +74,7 @@ lemma col_in {C : Finset (Fin r)} {i : Fin r} (hi : i ∈ C) (x : ℝ≥0∞) :
       congr 1
       rw [← Finset.add_sum_erase univ v (Finset.mem_univ i)]
       omega
-    · exact zero_le _
+    · exact zero_le
   calc ∑' v : Fin r → ℕ, (if ColOK C i v then x ^ ((∑ y, v y) - 1) else 0)
       ≤ ∑' v : Fin r → ℕ, ∏ y, φ y (v y) := ENNReal.tsum_le_tsum hpt
     _ = ∏ y, ∑' n, φ y n := tsum_fin_pi_prod r φ
@@ -121,8 +121,8 @@ lemma col_out {C : Finset (Fin r)} {i : Fin r} {x : ℝ≥0∞} (hx0 : x ≠ 0) 
       by_cases hyC : y ∈ C
       · simp [hyC]
       · simp [hyC, hz y hyC]
-    · exact zero_le _
-    · exact zero_le _
+    · exact zero_le
+    · exact zero_le
   have hΨ : ∑' v, Ψ v = (1 - x)⁻¹ ^ C.card := by
     simp only [Ψ]
     rw [tsum_fin_pi_prod r ψ]

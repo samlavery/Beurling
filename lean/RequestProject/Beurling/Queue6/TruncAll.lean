@@ -146,7 +146,7 @@ theorem PhiA_le_trunc {m : ℕ} {a b : ℤ} (hW : AdmW X₀ m a b) (ω : Jitter�
   unfold PhiA
   split_ifs with hXt
   swap
-  · exact zero_le _
+  · exact zero_le
   set S : Set (PIdx X₀ →₀ ℕ) := {e | e ∈ cofP θ X₀ k ω ∧ (a : ℝ) ≤ eval (DD θ X₀ ω) e * t ∧
     eval (DD θ X₀ ω) e * t < b ∧ ¬ (10 ^ 7 ≤ Real.log (eval (DD θ X₀ ω) e * t) ∧
       t < absorbY X₀ (eval (DD θ X₀ ω) e * t))} with hSdef

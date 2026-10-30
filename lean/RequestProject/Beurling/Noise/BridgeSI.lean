@@ -52,7 +52,7 @@ lemma umin_bound {J τ ℓ0 Jt : ℝ} (hJ : 30000000000000000000000000000000000 
     rw [hu_min]
     exact max_le (by positivity) (log_ratio_le hy0 hy6)
   refine hlogu.trans ?_
-  rw [hy, div_add_div_same, mul_div_assoc', div_le_div_iff₀ (by positivity) hJ0]
+  rw [hy, ← add_div, mul_div_assoc', div_le_div_iff₀ (by positivity) hJ0]
   nlinarith
 
 /-- The Rankin terms of all blocks together: `1.1001 η |K| E ≤ 0.01 ητ/J`. -/

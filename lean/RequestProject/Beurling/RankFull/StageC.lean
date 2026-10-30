@@ -59,7 +59,7 @@ lemma cols_li (E : Matrix (Fin K) (Fin K) ℕ) (hE : (Ereal E).det ≠ 0) (p : �
     Matrix.linearIndependent_cols_iff_isUnit.mpr
       ((Matrix.isUnit_iff_isUnit_det _).mpr (isUnit_iff_ne_zero.mpr hE))
   have := hcols.comp (Subtype.val : {j : Fin K // p ≤ (j : ℕ)} → Fin K) Subtype.val_injective
-  convert this using 1
+  convert! this using 1
 
 theorem SR_card (E : Matrix (Fin K) (Fin K) ℕ) (hE : (Ereal E).det ≠ 0) (Cd : Finset (Fin K))
     (p : ℕ) : (SR E Cd p).card = K - p := by

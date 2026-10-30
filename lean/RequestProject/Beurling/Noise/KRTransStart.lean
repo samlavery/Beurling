@@ -101,7 +101,8 @@ theorem widthCond_gen {ε θ lam0 : ℝ} (hP : PaperWidth H X0m ε θ)
       simp only [Real.dist_eq, NNReal.coe_mk]
       exact hP.lip a b (le_of_lt ha) (le_of_lt hb)
     have := norm_deriv_le_of_lipschitzOn (Ioi_mem_nhds hy2) hlo
-    simpa using this
+    rw [Real.norm_eq_abs] at this
+    exact this
   have hHy := hP.reg.pos (v / w)
   have hlow := (abs_le.mp hlip).1
   have hθ := hP.theta_le

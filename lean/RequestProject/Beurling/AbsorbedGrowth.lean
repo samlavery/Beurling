@@ -30,7 +30,7 @@ lemma hasDerivAt_inv_two_add_log {v : ℝ} (hv : 1 ≤ v) :
   have h1 : HasDerivAt (fun v : ℝ => 2 + Real.log v) v⁻¹ v :=
     (Real.hasDerivAt_log hv0).const_add 2
   have h2 := (h1.inv (by positivity)).neg
-  convert h2 using 1
+  convert! h2 using 1
   field_simp
 
 /-- **The `1/16` requirement from a growth condition on `ς`.** -/

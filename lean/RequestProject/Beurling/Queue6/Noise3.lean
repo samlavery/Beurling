@@ -288,7 +288,7 @@ theorem e3_window (hC : E3CompBound θ X₀) (hS : E3S2Bound θ X₀) {m : ℕ} 
         (jitterMeasure[X32 θ X₀ m a b k | jitterFiltration k]) ω)|}
   have hsub : (E3ev θ X₀ m a b)ᶜ ⊆ F1 ∪ F2 := by
     intro ω hω
-    simp only [E3ev, mem_compl_iff, mem_setOf_eq, _root_.not_imp, not_forall] at hω
+    simp only [E3ev, mem_compl_iff, mem_setOf_eq, Classical.not_imp, not_forall] at hω
     obtain ⟨-, n, hn⟩ := hω
     by_cases h1 : |MartE3 θ X₀ m a b n ω| ≤ Real.sqrt (2 * VbE3 X₀ m a b * l) +
         2 * (2 * capM1 X₀ u) * l / 3
@@ -322,7 +322,7 @@ theorem e3_window (hC : E3CompBound θ X₀) (hS : E3S2Bound θ X₀) {m : ℕ} 
           abs_zero, mem_setOf_eq, mem_empty_iff_false, iff_false, not_exists, not_lt]
         intro _
         positivity
-      rw [hF2, Set.empty_inter, measure_empty]; exact zero_le _
+      rw [hF2, Set.empty_inter, measure_empty]; exact zero_le
     · have hb2 : 0 < b2E3 X₀ u := by
         unfold b2E3
         have : (1 : ℝ) ≤ AuE3 X₀ u := by exact_mod_cast hA

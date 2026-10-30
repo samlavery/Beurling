@@ -53,7 +53,7 @@ lemma hasSum_smooth_rpow (X₀ : ℕ) {θ : ℝ} (hθ : 0 < θ) :
   obtain ⟨hs, hh⟩ := EulerProduct.summable_and_hasSum_smoothNumbers_prod_primesBelow_tsum
     h1 hmul hsum X₀
   refine ⟨hs.of_norm, ?_⟩
-  convert hh using 1
+  convert! hh using 1
   unfold rankinConst
   apply prod_congr rfl
   intro p hp

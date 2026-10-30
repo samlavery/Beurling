@@ -196,7 +196,7 @@ lemma exists_rat_elem (M : SlotModel X₀) (U : ℕ → ℝ) {n : ℕ}
     rw [e2, hgF]
     have e3 : (F.prod fun q k => ((q : ℕ) : ℝ) ^ k) = ((F.prod fun q k => q ^ k : ℕ) : ℝ) := by
       rw [Nat.cast_finsuppProd]; push_cast; rfl
-    rw [e3, hF, Nat.factorization_prod_pow_eq_self hn0]
+    rw [e3, hF, Nat.prod_factorization_pow_eq_self hn0]
   · have := Finsupp.mapDomain_support hi
     simp only [Finset.mem_image] at this
     obtain ⟨p, -, rfl⟩ := this

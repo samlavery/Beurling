@@ -354,7 +354,7 @@ lemma pow_lt_of_xset (hok : RealisedOK M (capH X₀) U) {α β : ℝ} {k n : ℕ
   rw [hm] at hv
   have h1 : 1 ≤ idxVal M (capH X₀) U (e.erase i) := by
     unfold idxVal Finsupp.prod
-    have := Finset.prod_le_prod (s := (e.erase i).support) (f := fun _ => (1 : ℝ))
+    have := Finset.prod_le_prod₀ (s := (e.erase i).support) (f := fun _ => (1 : ℝ))
       (g := fun j => realisedVal M (capH X₀) U j ^ (e.erase i) j)
       (fun _ _ => zero_le_one) (fun j _ => one_le_pow₀ (hok.one_lt j).le)
     simpa using this

@@ -117,7 +117,7 @@ theorem abs_rhoSh_le_dyadic {X0 : ℝ} (hX0 : 0 < X0) (hX0m : 0 < X0m) (hx : X0m
       obtain ⟨j, hj, h1, h2⟩ := exists_block hlow J hlt
       have hmem : e ∈ S j := Finset.mem_filter.mpr ⟨he, h1, h2⟩
       have := Finset.single_le_sum (f := fun j => if e ∈ S j then f e else 0)
-        (fun j _ => by dsimp only; split_ifs <;> simp [hf0 e]) (Finset.mem_range.mpr hj)
+        (fun j _ => by split_ifs <;> simp [hf0 e]) (Finset.mem_range.mpr hj)
       simpa [hmem] using this
   rw [rhoSh_eq_elems]
   refine (Finset.abs_sum_le_sum_abs _ _).trans ?_

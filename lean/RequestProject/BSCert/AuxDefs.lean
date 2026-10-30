@@ -91,12 +91,12 @@ def lemVExtEx : Ex :=
     - 2 * 1.01 * R * (.exp 0.141 - 1)
 
 lemma cAEx_eval (r : ℝ → ℝ) (u : ℝ) : cAEx.eval [u, r u, r (u - 1)] = cAMargin r u := by
-  simp [cAEx, Ex.eval, cAMargin, AuxEx.u, AuxEx.R, AuxEx.R0]
+  simp [cAEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, cAMargin, AuxEx.u, AuxEx.R, AuxEx.R0]
   ring
 
 lemma lemVEx_eval (r : ℝ → ℝ) (u : ℝ) :
     lemVEx.eval [u, r u, r (max (u - 1) 1)] = lemVLHS r u := by
-  simp only [lemVEx, Ex.eval, lemVLHS, lemVAlpha, AuxEx.u, AuxEx.R, AuxEx.R0, List.cons_append, List.nil_append, List.getD_cons_zero, List.getD_cons_succ]
+  simp only [lemVEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, lemVLHS, lemVAlpha, AuxEx.u, AuxEx.R, AuxEx.R0, List.cons_append, List.nil_append, List.getD_cons_zero, List.getD_cons_succ]
   have h2 : ∀ u : ℝ, 2 ≤ u → max (u - 1) 1 = u - 1 := fun u h => max_eq_left (by linarith)
   by_cases hu : 2 ≤ u
   · rw [if_pos (by push_cast; linarith), if_pos hu, h2 u hu]
@@ -105,7 +105,7 @@ lemma lemVEx_eval (r : ℝ → ℝ) (u : ℝ) :
     push_cast; ring_nf
 
 lemma lemVExtEx_eval (r : ℝ → ℝ) (u : ℝ) : lemVExtEx.eval [u, r u] = lemVExtLHS r u := by
-  simp only [lemVExtEx, Ex.eval, lemVExtLHS, lemVAlpha, lemVX, AuxEx.u, AuxEx.R, List.cons_append, List.nil_append, List.getD_cons_zero, List.getD_cons_succ]
+  simp only [lemVExtEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, lemVExtLHS, lemVAlpha, lemVX, AuxEx.u, AuxEx.R, List.cons_append, List.nil_append, List.getD_cons_zero, List.getD_cons_succ]
   by_cases hu : u < 1 + Real.log 72 / 100
   · rw [if_neg (by push_cast; linarith), if_pos hu]
     push_cast; ring_nf

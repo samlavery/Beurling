@@ -202,7 +202,7 @@ theorem meas_windowElems_dec {N D Dmax : ℕ} {J : Set ℝ} (hJ : MeasurableSet 
   have hdec : ∀ n : Fin N, MeasurableSet {ω | n ∈ decOf (N := N) (constructionLaw2 hc hev) ω} := by
     intro n
     have : {ω | n ∈ decOf (N := N) (constructionLaw2 hc hev) ω} = lawB θ X₀ n := by
-      ext ω; simp [decOf, constructionLaw2]
+      ext ω; simp only [Set.mem_setOf_eq, decOf, Finset.mem_filter, Finset.mem_univ, true_and]; simp [constructionLaw2]
     rw [this]; exact jitterFiltration.le n _ (lawB_adapted hc n)
   have hP : ∀ p, MeasurableSet {ω | P p ω} := by
     intro p
@@ -330,7 +330,9 @@ theorem card_le_windowElems2 {N D Dmax : ℕ} {b : ℝ} {Jw : Set ℝ} (hJb : Jw
       | inl p => exact absurd (by simp [jitF]) hg
       | inr m =>
         obtain ⟨-, hmN⟩ := hjit e he m (Finsupp.mem_support_iff.mp hi)
-        exact ⟨⟨m, hmN⟩, Finset.mem_univ _, by simpa [slotVec, jitF, qOf] using hg, rfl⟩
+        exact ⟨⟨m, hmN⟩, Finset.mem_univ _, by
+          simp only [slotVec, jitF, qOf, constructionLaw2] at hg ⊢
+          exact hg, rfl⟩
     · rfl
   have hmaps : Set.MapsTo (fun e => (slotVec N e, ratPart e)) S3
       (windowElems (decOf (N := N) (constructionLaw2 hc hev) ω)
@@ -343,7 +345,7 @@ theorem card_le_windowElems2 {N D Dmax : ℕ} {b : ℝ} {Jw : Set ℝ} (hJb : Jw
       have h1 : Xm X₀ ^ (∑ n, slotVec (X₀ := X₀) N e n) ≤
           ∏ n : Fin N, qOf (constructionLaw2 hc hev) ω n ^ slotVec N e n := by
         rw [← Finset.prod_pow_eq_pow_sum]
-        exact Finset.prod_le_prod (fun _ _ => pow_nonneg (by linarith) _) fun n _ =>
+        exact Finset.prod_le_prod₀ (fun _ _ => pow_nonneg (by linarith) _) fun n _ =>
           pow_le_pow_left₀ (by linarith) (valF_ge_Xm hc n ω) _
       have hJ0 : 0 ≤ ∏ i ∈ e.support, jitF (DF θ X₀ ω) i ^ e i := by
         rw [← hjp]

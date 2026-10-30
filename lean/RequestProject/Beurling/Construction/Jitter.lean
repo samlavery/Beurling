@@ -111,9 +111,9 @@ theorem landing_law {s H : ℝ} (hH : 0 < H) (B : Set ℝ) :
     simp only [mem_inter_iff, mem_preimage, mem_Icc]
     constructor
     · rintro ⟨h1, h2, h3⟩
-      refine ⟨by convert h1 using 1; ring, by nlinarith, by nlinarith⟩
+      refine ⟨by convert! h1 using 1; ring, by nlinarith, by nlinarith⟩
     · rintro ⟨h1, h2, h3⟩
-      refine ⟨by convert h1 using 1; ring, ?_, ?_⟩
+      refine ⟨by convert! h1 using 1; ring, ?_, ?_⟩
       · by_contra h; push_neg at h; nlinarith
       · by_contra h; push_neg at h; nlinarith
   rw [e, Real.volume_preimage_mul_left hH.ne', measure_preimage_add_right]

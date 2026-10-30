@@ -150,7 +150,7 @@ lemma ne_zero_of_deriv_eq {U : Set ℂ} (hU : IsOpen U) {F G : ℂ → ℂ}
               (m + 1 : ℂ) * (z - s₀) ^ m * g z + (z - s₀) ^ (m + 1) * deriv g z := by
             have h1 : HasDerivAt (fun z => (z - s₀) ^ (m + 1))
                 ((m + 1 : ℕ) * (z - s₀) ^ m) z := by
-              simpa using ((hasDerivAt_id z).sub_const s₀).pow (m + 1)
+              simpa using ((hasDerivAt_id z).sub_const s₀).fun_pow (m + 1)
             have := h1.mul hgz.differentiableAt.hasDerivAt
             simp only [smul_eq_mul]
             exact this.deriv.trans (by push_cast; ring)

@@ -210,7 +210,7 @@ lemma gammaC_le (hq : ∀ ω, ∀ n : Fin N, ω ∈ J.A n → 1 < J.q n ω) (hEu
       exact PhiC_anti hq hEu _ ω hu
     · rw [one_mul]
       exact PhiC_anti hq hEu _ ω hu
-  · rw [Set.indicator_of_notMem hω, zero_mul]; exact zero_le _
+  · rw [Set.indicator_of_notMem hω, zero_mul]; exact zero_le
 
 /-- **Domination** of the adapted integrands by the label-free one. -/
 theorem PhiMC_le (hq : ∀ ω, ∀ n : Fin N, ω ∈ J.A n → 1 < J.q n ω) (hEu : 0 < Eu)
@@ -236,7 +236,7 @@ theorem PhiMC_le (hq : ∀ ω, ∀ n : Fin N, ω ∈ J.A n → 1 < J.q n ω) (hE
           (∏ j, invq (J.q (lab j) x.1)) * invq x.2 * IzXC J E cd Jw m lab x.1 c (Real.log x.2) *
           ENNReal.ofReal (cd.Wc) := by ring
       _ ≤ _ := by gcongr
-  · rw [if_neg hC]; exact zero_le _
+  · rw [if_neg hC]; exact zero_le
 
 end Steps
 
@@ -575,7 +575,7 @@ theorem hnext_nonlastC (hJw : MeasurableSet Jw) {m : ℕ} (hm : m + 2 ≤ K)
       Fin.prod_univ_castSucc (fun j => invq (J.q (lab j) ω))]
     simp only [Fin.init]
     ring
-  · rw [if_neg hC]; exact zero_le _
+  · rw [if_neg hC]; exact zero_le
 
 end NonLast
 
@@ -663,25 +663,25 @@ lemma last_loC (hfirst : runFirst l (m + 1) = m + 1)
           ∃ y' ∈ cd.Cd, (if (g : ℕ) < lab (Fin.last m) then (c y').1 g else 0) ≠ 0 := by
         simp [hlt]
       by_cases h : ∃ y' ∈ cd.Cd, (c y').1 g ≠ 0
-      · rw [if_pos h, if_pos (hiff.mp h)]
+      · simp only [h, hiff.mp h, ↓reduceIte]
         congr 1
         rw [rankC_snoc lab n c g (by omega)]
         unfold rankC
         congr 1
         congr 1
         ext g'
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and, loC]
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+        simp only [loC]
         constructor
         · rintro ⟨h1, y', hy'C, hy'⟩
           exact ⟨h1, y', hy'C, by rw [if_pos (by omega)]; exact hy'⟩
         · rintro ⟨h1, y', hy'C, hy'⟩
           refine ⟨h1, y', hy'C, ?_⟩
           rwa [if_pos (by omega)] at hy'
-      · rw [if_neg h, if_neg (fun h' => h (hiff.mpr h'))]
-    · rw [if_neg hlt, if_neg]
-      rintro ⟨y', -, hy'⟩
-      simp only [if_neg hlt] at hy'
-      exact hy' rfl
+      · have h' : ¬ ∃ y' ∈ cd.Cd, (if (g : ℕ) < lab (Fin.last m) then (c y').1 g else 0) ≠ 0 :=
+          fun h' => h (hiff.mpr h')
+        simp only [h, h', ↓reduceIte]
+    · simp [hlt]
 
 /-- The rank of a slot of the block just completed. -/
 lemma rank_hi (hfirst : runFirst l (m + 1) = m + 1)
@@ -710,7 +710,8 @@ lemma rank_hi (hfirst : runFirst l (m + 1) = m + 1)
       (univ.filter fun g' : Fin N => ∃ y ∈ cd.Cd, (loC (lab (Fin.last m)) c y).1 g' ≠ 0) ∪
         (suppW (hiC (lab (Fin.last m)) c)).filter (· < g) := by
     ext g'
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_union, loC]
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_union]
+    simp only [loC]
     constructor
     · rintro ⟨h1, y, hyC, hy⟩
       by_cases hlt : (g' : ℕ) < lab (Fin.last m)
@@ -841,7 +842,7 @@ theorem hnext_lastC (hJw : MeasurableSet Jw) (hq : ∀ ω, ∀ n : Fin N, ω ∈
   refine ENNReal.tsum_le_tsum fun lab => ?_
   rcases Nat.eq_zero_or_pos N with hN | hN
   · -- no slots: no admissible labels
-    refine le_of_eq_of_le (Finset.sum_eq_zero fun c _ => ?_) (zero_le _)
+    refine le_of_eq_of_le (Finset.sum_eq_zero fun c _ => ?_) (zero_le)
     rw [if_neg]
     rintro ⟨n, hn⟩
     have := (hn.1.2.1 0).1
@@ -902,7 +903,7 @@ theorem hnext_lastC (hJw : MeasurableSet Jw) (hq : ∀ ω, ∀ n : Fin N, ω ∈
         refine le_of_eq ?_
         ring
       · rw [if_neg (fun h => hω h.2), Set.indicator_of_notMem hω]; simp
-    · rw [if_neg hC]; exact zero_le _
+    · rw [if_neg hC]; exact zero_le
   refine (Finset.sum_le_sum hfac).trans ?_
   -- the injection into pairs
   rw [← Finset.sum_filter]
@@ -963,7 +964,7 @@ theorem hnext_lastC (hJw : MeasurableSet Jw) (hq : ∀ ω, ∀ n : Fin N, ω ∈
         refine Finset.sum_congr rfl fun c' _ => ?_
         rw [Finset.mul_sum]
     _ ≤ ∑ c' ∈ sC, X c' * PhiC (N := N) J cd.lg A Eu (runNum l m) ω b :=
-        Finset.sum_le_sum fun c' _ => mul_le_mul_left' (hblk c') _
+        Finset.sum_le_sum fun c' _ => mul_le_mul_right (hblk c') _
     _ = _ := by
         rw [hsC, Finset.sum_filter]
         refine Finset.sum_congr rfl fun c' _ => ?_
@@ -1055,7 +1056,7 @@ theorem hnext_finalC (hJw : MeasurableSet Jw) (hq : ∀ ω, ∀ n : Fin N, ω �
   rw [tsum_eq_single (Fin.elim0 : Fin 0 → ℕ) (fun b hb => absurd (Subsingleton.elim b _) hb)]
   set lab : Fin 0 → ℕ := Fin.elim0
   rcases Nat.eq_zero_or_pos N with hN | hN
-  · refine le_of_eq_of_le (Finset.sum_eq_zero fun c _ => ?_) (zero_le _)
+  · refine le_of_eq_of_le (Finset.sum_eq_zero fun c _ => ?_) (zero_le)
     rw [if_neg]
     rintro ⟨n, hn⟩
     have := (hn.1.2.1 0).1
@@ -1125,7 +1126,7 @@ theorem hnext_finalC (hJw : MeasurableSet Jw) (hq : ∀ ω, ∀ n : Fin N, ω �
                   else ENNReal.ofReal z⁻¹ * MeasureTheory.volume Jw))) * W := by gcongr
           _ = _ := by ring
       · rw [if_neg (fun h => hω h.2), Set.indicator_of_notMem hω]; simp
-    · rw [if_neg hC]; exact zero_le _
+    · rw [if_neg hC]; exact zero_le
   refine (Finset.sum_le_sum hfac).trans ?_
   rw [← Finset.sum_filter]
   -- the injection into pairs (free part, tails)
@@ -1202,8 +1203,8 @@ theorem hnext_finalC (hJw : MeasurableSet Jw) (hq : ∀ ω, ∀ n : Fin N, ω �
                 refine mul_le_mul' hdet (Finset.prod_le_prod' fun y _ => ?_)
                 simp only [hf]
                 split_ifs
-                · exact mul_le_mul_left' hvol _
-                · exact mul_le_mul_left' hvol _
+                · exact mul_le_mul_right hvol _
+                · exact mul_le_mul_right hvol _
             _ = _ := one_mul _
       _ = ∏ y, ∑ e ∈ (if y ∈ cd.Cd then Nat.smoothNumbersUpTo Dmax X₀ else {cd.tailR y}),
             f y e := by rw [hTS, Finset.prod_univ_sum]
@@ -1307,8 +1308,8 @@ theorem hnext_finalC (hJw : MeasurableSet Jw) (hq : ∀ ω, ∀ n : Fin N, ω �
           ENNReal.ofReal (GT / Eu ^ c)) *
         ((ENNReal.ofReal Eu * ENNReal.ofReal δ) ^ c *
           (ENNReal.ofReal z⁻¹ * ENNReal.ofReal δ) ^ (K - c)) * W := by
-        refine mul_le_mul_right' (mul_le_mul' (add_le_add le_rfl ?_) htails) _
-        convert hblk using 2
+        refine mul_le_mul_left (mul_le_mul' (add_le_add le_rfl ?_) htails) _
+        convert! hblk using 2
     _ = ENNReal.ofReal ((χ0 * (GT1 / Eu ^ rest.sum) + GT / Eu ^ c) *
           ((Eu * δ) ^ c * (z⁻¹ * δ) ^ (K - c)) * cd.Wc) := by
         rw [← ENNReal.ofReal_mul hχ01.1, ← ENNReal.ofReal_add (mul_nonneg hχ01.1

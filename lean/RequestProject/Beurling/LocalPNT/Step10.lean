@@ -46,7 +46,7 @@ lemma integral_four_div_le {D T : ℝ} (hD : 0 < D) (hT : 0 ≤ T) :
       rw [Set.uIcc_of_le hT] at ht
       have h2 : 0 < 2 + D * t := by nlinarith [ht.1]
       have := ((hasDerivAt_id t).const_mul D).const_add 2 |>.log h2.ne'
-      convert this.const_mul 4 using 1
+      convert! this.const_mul 4 using 1
       rw [abs_of_nonneg ht.1]; simp only [id]; field_simp
     rw [intervalIntegral.integral_eq_sub_of_hasDerivAt hderiv (hint 0 T)]
     simp only [mul_zero, add_zero]

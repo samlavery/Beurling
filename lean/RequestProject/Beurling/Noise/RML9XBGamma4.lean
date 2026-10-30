@@ -112,7 +112,6 @@ theorem dyadic_le {Z η1 η2 : ℝ} {ε1 : ℝ → ℝ} (h : P.HBS X0m Z η1 η2
         (show 4 * V0 / 4 ≤ posn P.labelVal y d by linarith) hpy
       have := Finset.single_le_sum (f := fun v => if v ≤ posn P.labelVal y d ∧
         posn P.labelVal y d < 2 * v then F d else 0) (fun v _ => by
-          dsimp only
           split_ifs
           · exact hF0 d
           · exact le_rfl) hvS

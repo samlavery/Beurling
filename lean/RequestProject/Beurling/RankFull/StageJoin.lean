@@ -62,8 +62,8 @@ lemma exists_count_eq {α : Type*} [LinearOrder α] (s : Finset α) :
     ∀ t, 1 ≤ t → t ≤ s.card → ∃ x ∈ s, (s.filter (· ≤ x)).card = t := by
   classical
   induction s using Finset.induction_on_max with
-  | h0 => intro t h1 h2; simp at h2; omega
-  | step a s ha ih =>
+  | empty => intro t h1 h2; simp at h2; omega
+  | insert a s ha ih =>
     intro t h1 h2
     have has : a ∉ s := fun h => lt_irrefl a (ha a h)
     rw [Finset.card_insert_of_notMem has] at h2

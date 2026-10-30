@@ -26,10 +26,10 @@ lemma chainOK_iff : ∀ (l : List REntry), chainOK l = true ↔
     · rintro ⟨h1, h2⟩ i hi
       cases i with
       | zero => simpa using h1
-      | succ i => simpa using h2 i (by simp at hi ⊢; omega)
+      | succ i => exact h2 i (by simp at hi ⊢; omega)
     · intro h
       refine ⟨by simpa using h 0 (by simp), fun i hi => ?_⟩
-      simpa using h (i + 1) (by simp at hi ⊢; omega)
+      exact h (i + 1) (by simp at hi ⊢; omega)
 
 /-- The table as a list. -/
 def rtabL : List REntry := rtabF.toList
@@ -105,7 +105,7 @@ theorem rtabF_ok {r : ℝ → ℝ} (hr : DickmanRatioFacts r) : TabOKF r rtabF :
       have e2 : toR (2 * ZI) = 2 := by
         unfold toR; push_cast; rw [mul_div_assoc, div_self ZR_pos.ne', mul_one]
       rw [e2] at hmem
-      simp only [rExactEx, Ex.eval, List.getD_cons_zero] at hmem
+      simp only [rExactEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, List.getD_cons_zero] at hmem
       have hr2 := hr.exact_one_two 2 (by norm_num) le_rfl
       have he : RInv r e.1 e.2 := by
         refine ⟨by rw [← toR_ZI]; exact toR_le_toR.mpr hZ, ?_⟩

@@ -46,7 +46,7 @@ lemma ordconn_interval {f : ℝ → ℝ} {A : Set ℝ} (hA : A.OrdConnected) (hn
     (hbb : BddBelow A) (hba : BddAbove A) :
     sInf A ≤ sSup A ∧ Ioo (sInf A) (sSup A) ⊆ A ∧ A ⊆ Icc (sInf A) (sSup A) ∧
       ∫ r in A, f r = ∫ r in (sInf A)..(sSup A), f r := by
-  have hab : sInf A ≤ sSup A := csInf_le_csSup hbb hba hne
+  have hab : sInf A ≤ sSup A := csInf_le_csSup hne hbb hba
   have hIoo : Ioo (sInf A) (sSup A) ⊆ A := fun x hx => by
     obtain ⟨p, hp, hpx⟩ := exists_lt_of_csInf_lt hne hx.1
     obtain ⟨q, hq, hxq⟩ := exists_lt_of_lt_csSup hne hx.2

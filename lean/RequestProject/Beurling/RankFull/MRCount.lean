@@ -357,8 +357,8 @@ lemma not_between_run (t : Fin K → (Fin N → ℕ)) (hk : (pivs t).card = K)
     · exact hfree _ h.symm
     · have hs := (sameRun_iff t hk hrun hsum (j := j + d + 1) (by omega) (by omega)).mp hlast
       refine hs ⟨g, hg, ?_, ?_⟩
-      · convert h using 3
-      · convert h2 using 3
+      · convert! h using 3
+      · convert! h2 using 3
 
 /-- The span condition for a free slot of the tuple (Theorem A.10(ii)): its column is a real
 combination of the pattern columns of the pivots decided later. -/
@@ -453,7 +453,7 @@ theorem cons_tuple (t : Fin K → (Fin N → ℕ)) (hk : (pivs t).card = K) (hpa
         rw [show (j : ℕ) + ((j' : ℕ) - j) = j' by omega]; exact hjj)
       apply this
       refine ⟨h1', ?_⟩
-      convert h2' using 2
+      convert! h2' using 2
       exact Fin.ext (by simp; omega)
     refine ⟨fun hK' => ?_, fun j j' hjj => h5 j j' hjj, ?_⟩
     · -- (C4)
@@ -467,7 +467,7 @@ theorem cons_tuple (t : Fin K → (Fin N → ℕ)) (hk : (pivs t).card = K) (hpa
       exact h5 ⟨rf, hrfK⟩ ⟨K - 1, by omega⟩ hrun' ⟨hge, hlast⟩
     · -- (C6)
       have := free_col_span t hk hpat hgS hgp
-      convert this using 1
+      convert! this using 1
       funext y'
       simp [colC, hgp]
   · -- (C7)

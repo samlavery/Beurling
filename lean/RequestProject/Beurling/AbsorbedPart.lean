@@ -137,7 +137,7 @@ lemma countA_lconst {A : Set ℝ} (hA : LocFin A) (s : ℝ) :
       have : a₀ < s := (Finset.mem_filter.mp ha₀).2
       refine ⟨(s - a₀) / 2, by linarith, fun a ha => ?_⟩
       have := hmax a ha
-      simp only at this
+      try simp only at this
       linarith
   obtain ⟨δ, hδ, hG⟩ := key
   refine ⟨δ, hδ, fun y hy hys => ?_⟩

@@ -46,7 +46,7 @@ lemma hasDerivAt_Phi (c : Co) {v : ℝ} (hv : 0 < v) :
     HasDerivAt (Phi c) (polyU c (Uf v) / v ^ 2) v := by
   have hU : HasDerivAt Uf (2 / v) v := by
     have := ((Real.hasDerivAt_log hv.ne').const_mul 2).const_add 1
-    convert this using 1
+    convert! this using 1
   set U := Uf v
   have hN : HasDerivAt (fun x => numU c (Uf x))
       ((c.a1 + c.a2 * (2 * U + 4) + c.a3 * (3 * U ^ 2 + 12 * U + 24)
@@ -65,13 +65,13 @@ lemma hasDerivAt_Phi (c : Co) {v : ℝ} (hv : 0 < v) :
         ((((h3.add (h2.const_mul 6)).add (h1.const_mul 24)).add_const 48).const_mul (c.a3 : ℝ))).add
         (((((h4.add (h3.const_mul 8)).add (h2.const_mul 48)).add (h1.const_mul 192)).add_const
           384).const_mul (c.a4 : ℝ))
-      convert this using 1
+      convert! this using 1
       norm_num
       ring
     exact hp.comp v hU
   have := hN.neg.div (hasDerivAt_id v) hv.ne'
   unfold Phi
-  convert this using 1
+  convert! this using 1
   simp only [id, polyU, numU, Pi.neg_apply]
   field_simp
   ring

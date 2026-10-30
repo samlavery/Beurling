@@ -195,9 +195,12 @@ lemma logDeriv_prod_pow_mul {S : Finset ℂ} {n : ℂ → ℕ} {φ : ℂ → ℂ
     (hgd : DifferentiableAt ℂ g x) :
     logDeriv (fun z => (∏ u ∈ S, φ u z ^ n u) * g z) x =
       ∑ u ∈ S, n u * logDeriv (φ u) x + logDeriv g x := by
-  rw [logDeriv_mul (f := fun z => ∏ u ∈ S, φ u z ^ n u) x
-    (Finset.prod_ne_zero_iff.mpr fun u hu => pow_ne_zero _ (hφ u hu)) hg
-    (DifferentiableAt.fun_finset_prod fun u hu => (hφd u hu).pow _) hgd,
+  rw [show (fun z => (∏ u ∈ S, φ u z ^ n u) * g z) =
+      (∏ u ∈ S, fun z => φ u z ^ n u) * g by ext z; simp [Finset.prod_apply]]
+  rw [logDeriv_mul (f := ∏ u ∈ S, fun z => φ u z ^ n u) x
+    (by rw [Finset.prod_apply]; exact Finset.prod_ne_zero_iff.mpr fun u hu => pow_ne_zero _ (hφ u hu))
+    hg (by rw [Finset.prod_fn]; exact DifferentiableAt.fun_finset_prod fun u hu => (hφd u hu).pow _)
+    hgd,
     logDeriv_prod (f := fun u z => φ u z ^ n u) (fun u hu => pow_ne_zero _ (hφ u hu))
       (fun u hu => (hφd u hu).pow _)]
   congr 1

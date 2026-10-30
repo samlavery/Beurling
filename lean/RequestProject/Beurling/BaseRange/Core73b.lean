@@ -24,7 +24,7 @@ namespace BaseRange
 
 lemma one_le_prod_of_one_le (s : Finset ℕ) (f : ℕ → ℝ) (hf : ∀ i ∈ s, 1 ≤ f i) :
     1 ≤ ∏ i ∈ s, f i := by
-  have := Finset.prod_le_prod (s := s) (f := fun _ => (1 : ℝ)) (g := f) (fun _ _ => zero_le_one) hf
+  have := Finset.prod_le_prod₀ (s := s) (f := fun _ => (1 : ℝ)) (g := f) (fun _ _ => zero_le_one) hf
   simpa using this
 
 lemma prod_le_prod_of_subset_one_le {s t : Finset ℕ} (f : ℕ → ℝ) (h : s ⊆ t)

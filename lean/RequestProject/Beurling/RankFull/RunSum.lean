@@ -99,10 +99,10 @@ lemma hasDerivAt_aCoef_succ (n i : ℕ) (E : ℝ) :
     rw [hf, hg]
     have h1 : HasDerivAt (fun E : ℝ => (-(n : ℝ) * E) ^ (m + 1))
         (((m + 1 : ℕ) : ℝ) * (-(n : ℝ) * E) ^ m * (-(n : ℝ))) E := by
-      have := ((hasDerivAt_id E).const_mul (-(n : ℝ))).pow (m + 1)
+      have := ((hasDerivAt_id' E).const_mul (-(n : ℝ))).fun_pow (m + 1)
       simpa using this
     have h2 := (h1.div_const ((m + 1).factorial : ℝ)).const_mul ((n : ℝ) ^ n / n.factorial)
-    convert h2 using 1
+    convert! h2 using 1
     rw [Nat.factorial_succ]
     push_cast
     field_simp
@@ -169,7 +169,7 @@ lemma hasDerivAt_hPoly_succ (K : ℕ) (E : ℝ) :
     rcases K with _ | K
     · have h1 := hasDerivAt_aCoef_succ n 0 E
       have h2 := (hasDerivAt_id E).mul (hasDerivAt_aCoef_zero n E)
-      convert h1.sub h2 using 1
+      convert! h1.sub h2 using 1
       simp only [id, mul_zero, add_zero, one_mul]
       unfold aCoef
       split_ifs with h
@@ -178,7 +178,7 @@ lemma hasDerivAt_hPoly_succ (K : ℕ) (E : ℝ) :
       · simp
     · have h1 := hasDerivAt_aCoef_succ n (K + 1) E
       have h2 := (hasDerivAt_id E).mul (hasDerivAt_aCoef_succ n K E)
-      convert h1.sub h2 using 1
+      convert! h1.sub h2 using 1
       simp only [id, one_mul]
       have hk := aCoef_key n K E
       push_cast at hk ⊢
@@ -293,7 +293,7 @@ lemma hasDerivAt_Fk (k : ℕ) (ρ : ℝ) :
   unfold Fk
   refine (hasDerivAt_hPoly k ρ).add (HasDerivAt.fun_sum fun j _ => ?_)
   have h1 := (hasDerivAt_pow (j + 1) ρ).mul (hasDerivAt_hPoly (k - 1 - j) ρ)
-  convert h1 using 1
+  convert! h1 using 1
   push_cast; ring
 
 lemma Fk_deriv_nonpos (k : ℕ) {ρ : ℝ} (hρ : ρ ∈ Set.Icc (0 : ℝ) 1) :

@@ -50,7 +50,7 @@ lemma hasDerivAt_polyPart {v : ℝ} (hv0 : v ≠ 0) :
     HasDerivAt polyPart (12 * (2 * Real.log v * v⁻¹) + 9 * v⁻¹) v := by
   have hl := Real.hasDerivAt_log hv0
   have := (((hl.pow 2).const_mul 12).add (hl.const_mul 9)).add_const 8
-  convert this using 1
+  convert! this using 1
   norm_num
 
 /-- `v / g(v)` is non-decreasing on `[e², ∞)`: its derivative has numerator

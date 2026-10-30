@@ -222,7 +222,7 @@ theorem step1_g1 {P : BeurlingSystem} {X₀ : ℕ} {x δ IJ Eloc : ℝ}
     rw [Real.rpow_def_of_pos hX0, mul_comm]
   set L := Real.log x with hLdef
   have hL : Real.exp (Λ / 100) ≤ L := by
-    rw [hrp] at hx; convert hx using 2; ring
+    rw [hrp] at hx; convert! hx using 2; ring
   have hL1 : 1 ≤ L := le_trans (by
     have := Real.add_one_le_exp (Λ / 100); linarith) hL
   have hL0 : 0 < L := by linarith

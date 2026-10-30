@@ -508,7 +508,7 @@ theorem hFr_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt
     refine le_trans ?_ (Finset.single_le_sum (f := fun i =>
       if (i = 0 ∨ Xm X₀ * 2 ^ i ≤ 2.21 * u) ∧ 0.79 * u < 2 * (Xm X₀ * 2 ^ i) then
         FrBv θ X₀ ω nb i else 0) (fun j _ => by
-          dsimp only
+          try dsimp only
           split_ifs
           · exact FrBv_nonneg hc hev hT hnb0 j
           · exact le_rfl) hirange)

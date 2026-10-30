@@ -39,7 +39,7 @@ lemma term_ge_one (E : Matrix (Fin K) (Fin K) ℕ) (hE : (Ereal E).det ≠ 0) (q
     rw [Finset.prod_comm]
     exact Finset.prod_congr rfl fun j _ => Finset.prod_pow_eq_pow_sum _ _ _
   rw [h1, patternWeight, ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
-  have := Finset.prod_le_prod (s := univ) (f := fun _ => (1 : ℝ))
+  have := Finset.prod_le_prod₀ (s := univ) (f := fun _ => (1 : ℝ))
     (g := fun j => (q j)⁻¹ * q j ^ (∑ y, E y j) * (τ j)⁻¹ ^ ((∑ y, E y j) - 1))
     (fun _ _ => zero_le_one) (fun j _ => by
       have hs := RankFull.one_le_colSum hE j
@@ -176,14 +176,14 @@ theorem skelCount_le_ZS {k : ℕ} (J : JitterLaw Ω P θE) (G : ℕ → Set Ω)
         exact absurd i.isLt (by omega)
       rw [hvol, mul_one]
       unfold Lcore
-      rw [ENNReal.ofReal_prod_of_nonneg (fun y _ => Finset.prod_nonneg fun j _ =>
-        pow_nonneg (hq0 j).le _)]
+      rw [ENNReal.ofReal_prod_of_nonneg (f := fun y => ∏ j, J.q (p j : ℕ) ω ^ E y j)
+        (fun y _ => Finset.prod_nonneg fun j _ => pow_nonneg (hq0 j).le _)]
       refine Finset.prod_congr rfl fun y _ => ?_
       rw [exp_rowLog E (fun j => J.q (p j : ℕ) ω) hq0 y]
       have hwin : cvs J ω (gC t) y * ∏ j, J.q (p j : ℕ) ω ^ E y j ∈ Jw := by
         have hel := tailOf_mem (hS' y)
         have hval := (Finset.mem_filter.mp hel).2.2.2
-        convert hval using 1
+        convert! hval using 1
         unfold cvs cval elemVal
         simp only [hgC]
         rw [prod_split t hk (qOf J ω) (t y)]
@@ -197,10 +197,10 @@ theorem skelCount_le_ZS {k : ℕ} (J : JitterLaw Ω P θE) (G : ℕ → Set Ω)
       rw [Set.indicator_of_mem hwin, Pi.one_apply, mul_one]
     rw [hA1, Set.indicator_of_mem hdec, Set.indicator_of_mem hGl, hphi, hinv, hIz]
     simp only [Pi.one_apply, one_mul, mul_one]
-    rw [← ENNReal.ofReal_mul (Finset.prod_nonneg fun j _ => (inv_pos.mpr (hq0 j)).le),
-      ← ENNReal.ofReal_mul (mul_nonneg (Finset.prod_nonneg fun j _ =>
-        (inv_pos.mpr (hq0 j)).le) (Finset.prod_nonneg fun y _ => Finset.prod_nonneg fun j _ =>
-          pow_nonneg (hq0 j).le _))]
+    rw [← ENNReal.ofReal_mul (Finset.prod_nonneg fun j _ => (inv_pos.mpr (hq0 j)).le)]
+    refine le_of_le_of_eq ?_ (ENNReal.ofReal_mul (q := patternWeight τ E) (mul_nonneg
+      (Finset.prod_nonneg fun j _ => (inv_pos.mpr (hq0 j)).le) (Finset.prod_nonneg fun y _ =>
+        Finset.prod_nonneg fun j _ => pow_nonneg (hq0 j).le _)))
     rw [← ENNReal.ofReal_one]
     refine ENNReal.ofReal_le_ofReal (term_ge_one E hE _ τ hτ1 fun j => ?_)
     -- the caps

@@ -36,11 +36,11 @@ lemma hasDerivAt_hfun {w : ℝ} (hw : 0 < w) : HasDerivAt hfun (hder w) w := by
     have := ((hasDerivAt_id w).const_add 2).log h2
     simpa using this
   have hp : HasDerivAt (fun w => (1 + w) ^ 4) (4 * (1 + w) ^ 3) w := by
-    have := ((hasDerivAt_id w).const_add 1).pow 4
-    simpa using this
+    have := ((hasDerivAt_id' w).const_add 1).pow 4
+    simpa [Pi.pow_def] using this
   have := (hp.mul hl).div (hasDerivAt_id w) hw.ne'
   unfold hfun hder
-  convert this using 1
+  convert! this using 1
   simp only [id, Pi.mul_apply]
   field_simp
 

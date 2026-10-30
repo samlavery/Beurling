@@ -77,12 +77,13 @@ lemma tab_spec {i : ℕ} (hi : i ≤ 2 ^ TB) :
   · have := le_logHiQ hq; rw [e] at this; exact this
 
 /-- Lower fixed-point bound for `log 2`. -/
-def lo2 : ℤ := (tab (2 ^ TB)).1
+def lo2 : ℤ := (tabEntry (2 ^ TB)).1
 /-- Upper fixed-point bound for `log 2`. -/
-def hi2 : ℤ := (tab (2 ^ TB)).2
+def hi2 : ℤ := (tabEntry (2 ^ TB)).2
 
 lemma log2_spec : (lo2 : ℝ) ≤ 2 ^ KS * Real.log 2 ∧ 2 ^ KS * Real.log 2 ≤ (hi2 : ℝ) := by
   have h := tab_spec (i := 2 ^ TB) le_rfl
+  rw [tab_eq le_rfl] at h
   have e : ((2 ^ TB + 2 ^ TB : ℕ) : ℝ) / ((2 ^ TB : ℕ) : ℝ) = 2 := by
     push_cast; field_simp; ring
   rw [e] at h

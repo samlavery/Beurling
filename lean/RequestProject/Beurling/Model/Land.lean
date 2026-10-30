@@ -618,7 +618,7 @@ theorem condExp_landInd_le {m i j : ℕ} (hij : i < j) (k : ℕ) :
           ≤ ENNReal.ofReal H⁻¹ * ∫⁻ t in RankFull.box (slotF θ X₀ k ω) H, Φ (ω, t) :=
             indicator_le_self _ _ ω
         _ ≤ ENNReal.ofReal H⁻¹ * ENNReal.ofReal (min H (Jh - Jl)) := by
-            rw [hint]; exact mul_le_mul_left' hv _
+            rw [hint]; exact mul_le_mul_right hv _
         _ = ENNReal.ofReal (gLand θ X₀ m i j k ω) := by
             rw [← ENNReal.ofReal_mul (inv_nonneg.mpr hHp.le)]
             unfold gLand
@@ -633,9 +633,9 @@ theorem condExp_landInd_le {m i j : ℕ} (hij : i < j) (k : ℕ) :
           funext t; rw [hΦ]; exact indicator_of_notMem (fun h => hωS h.1) _
         rw [e]; exact lintegral_zero
       refine le_trans (indicator_le_self _ _ ω) ?_
-      dsimp only
+      try dsimp only
       rw [hz, mul_zero]
-      exact zero_le _
+      exact zero_le
   have hle : ∫⁻ ω in S, ENNReal.ofReal (L ω) ∂jitterMeasure ≤
       ∫⁻ ω in S, ENNReal.ofReal (gLand θ X₀ m i j k ω) ∂jitterMeasure := by
     rw [hlhs, ← lintegral_indicator hSm]

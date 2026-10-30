@@ -90,16 +90,16 @@ lemma hasDerivAt_rho_sub_one {w : ℝ} (hw : w ≠ 2) :
     HasDerivAt (fun w => Dickman.rho (w - 1)) (rhoD1 w) w := by
   rcases lt_or_gt_of_ne hw with h | h
   · have := (Dickman.hasDerivAt_rho_of_lt (u := w - 1) (by linarith)).comp w
-      ((hasDerivAt_id w).sub_const 1)
+      ((hasDerivAt_id' w).sub_const 1)
     unfold rhoD1
     rw [indicator_of_notMem (show w ∉ Ioi (2 : ℝ) from fun h' => absurd (mem_Ioi.mp h') (by
       linarith))]
-    simpa using this
+    simpa [Function.comp_def] using this
   · have := (Dickman.hasDerivAt_rho (u := w - 1) (by linarith)).comp w
       ((hasDerivAt_id w).sub_const 1)
     unfold rhoD1
     rw [indicator_of_mem (show w ∈ Ioi (2 : ℝ) from h), max_eq_left (by linarith)]
-    convert this using 1
+    convert! this using 1
     simp only [Function.comp, id, mul_one]
     ring_nf
 
@@ -112,11 +112,11 @@ noncomputable def H1' (w : ℝ) : ℝ := -(Dickman.rho (w - 1) / w ^ 2) + (1 + w
 lemma hasDerivAt_H1 {w : ℝ} (hw0 : 0 < w) (hw2 : w ≠ 2) : HasDerivAt H1 (H1' w) w := by
   have h1 : HasDerivAt (fun w : ℝ => (1 + w) / w) (-1 / w ^ 2) w := by
     have := ((hasDerivAt_id w).const_add 1).div (hasDerivAt_id w) hw0.ne'
-    convert this using 1
+    convert! this using 1
     simp only [id]; field_simp; ring
   have := h1.mul (hasDerivAt_rho_sub_one hw2)
   unfold H1 H1'
-  convert this using 1
+  convert! this using 1
   ring
 
 lemma H1_nonneg {w : ℝ} (hw : 0 < w) : 0 ≤ H1 w := by
@@ -201,7 +201,7 @@ lemma hasDerivAt_mOf {ℓ w : ℝ} (hw : 0 < w) : HasDerivAt (mOf ℓ) (mOf' ℓ
   have := ((hasDerivAt_id w).const_mul ℓ).div ((hasDerivAt_id w).const_add 1)
     (show (1 : ℝ) + id w ≠ 0 by simp only [id]; linarith)
   unfold mOf mOf'
-  convert this using 1
+  convert! this using 1
   simp only [id]; field_simp; ring
 
 lemma hasDerivAt_Nw {w : ℝ} (hw : 0 < w) : HasDerivAt Nw (Nw' w) w := by
@@ -209,7 +209,7 @@ lemma hasDerivAt_Nw {w : ℝ} (hw : 0 < w) : HasDerivAt Nw (Nw' w) w := by
   have := ((((hasDerivAt_id w).const_add 1).pow 3).const_mul 11).mul
     (((hasDerivAt_id w).const_add 2).log h2)
   unfold Nw Nw'
-  convert this using 1
+  convert! this using 1
   simp only [id, Pi.pow_apply, Nat.cast_ofNat]; field_simp; ring
 
 lemma hasDerivAt_L {τ ℓ w : ℝ} (hℓ : 0 < ℓ) (hw : 0 < w) :
@@ -223,12 +223,12 @@ lemma hasDerivAt_L {τ ℓ w : ℝ} (hℓ : 0 < ℓ) (hw : 0 < w) :
   have hk : HasDerivAt (fun w => -(kappa τ / mOf ℓ w))
       (-(-(kappa τ * mOf' ℓ w) / m ^ 2)) w := by
     have := (hm.inv hm0.ne').const_mul (kappa τ)
-    convert this.neg using 1
+    convert! this.neg using 1
     rw [hmdef]; field_simp
   have hA : HasDerivAt (fun w => BSCert.Z2.A (mOf ℓ w) w)
       ((Nw' w * m - Nw w * mOf' ℓ w) / m ^ 2) w := by
     have := (hasDerivAt_Nw hw).div hm hm0.ne'
-    convert this using 1
+    convert! this using 1
   have hy : HasDerivAt (fun w => w - u0 (mOf ℓ w))
       (1 - mOf' ℓ w / (2 * √m) / (2 * √√m)) w := by
     have := ((hm.sqrt hm0.ne').sqrt hS.ne')
@@ -240,7 +240,7 @@ lemma hasDerivAt_L {τ ℓ w : ℝ} (hℓ : 0 < ℓ) (hw : 0 < w) :
   have hQ := hA.add ha
   have hL := hk.add hQ
   unfold Lfun Qf aQ
-  convert hL using 1
+  convert! hL using 1
   unfold Lp dpos
   simp only [Function.comp]
   have hSS : √m * √m = m := Real.mul_self_sqrt hm0.le
@@ -319,7 +319,7 @@ lemma hasDerivAt_H2 {τ ℓ w : ℝ} (hℓ : 0 < ℓ) (hw : 0 < w) :
     HasDerivAt (H2 τ ℓ) (H2 τ ℓ w * Lp τ ℓ w) w := by
   have := ((hasDerivAt_L (τ := τ) hℓ hw).exp).const_mul (PhiInf τ)
   unfold H2
-  convert this using 1
+  convert! this using 1
   ring
 
 lemma H2_pos (τ ℓ w : ℝ) : 0 < H2 τ ℓ w := by

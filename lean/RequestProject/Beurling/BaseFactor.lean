@@ -81,7 +81,7 @@ end prime
 lemma norm_Zinf_le (X₀ : ℕ) {s : ℂ} (hσ : 0 < s.re) : ‖Zinf X₀ s‖ ≤ ZinfR X₀ s.re := by
   unfold Zinf ZinfR
   rw [norm_prod]
-  apply Finset.prod_le_prod (fun p _ => norm_nonneg _)
+  apply Finset.prod_le_prod₀ (fun p _ => norm_nonneg _)
   intro p hp
   exact norm_factor_le (Nat.mem_primesBelow.mp hp).2 hσ
 
@@ -111,7 +111,7 @@ lemma hasDerivAt_Zinf (X₀ : ℕ) {s : ℂ} (hσ : 0 < s.re) :
     ((hasDerivAt_id s).neg).const_cpow (Or.inl hc)
   have h2 : HasDerivAt (fun z : ℂ => 1 - ((p : ℝ) : ℂ) ^ (-z))
       (Complex.log (p : ℝ) * ((p : ℝ) : ℂ) ^ (-s)) s := by
-    convert (hasDerivAt_const s (1 : ℂ)).sub h1 using 1; ring
+    convert! (hasDerivAt_const s (1 : ℂ)).sub h1 using 1; ring
   exact h2.inv (one_sub_ne_zero hpp hσ)
 
 lemma differentiableAt_Zinf (X₀ : ℕ) {s : ℂ} (hσ : 0 < s.re) : DifferentiableAt ℂ (Zinf X₀) s :=
@@ -131,7 +131,7 @@ lemma norm_deriv_Zinf_le (X₀ : ℕ) {s : ℂ} (hσ : 0 < s.re) :
   have hprod : ‖∏ q ∈ X₀.primesBelow.erase p, (1 - ((q : ℝ) : ℂ) ^ (-s))⁻¹‖ ≤
       ∏ q ∈ X₀.primesBelow.erase p, (1 - (q : ℝ) ^ (-s.re))⁻¹ := by
     rw [norm_prod]
-    apply Finset.prod_le_prod (fun q _ => norm_nonneg _)
+    apply Finset.prod_le_prod₀ (fun q _ => norm_nonneg _)
     intro q hq
     exact norm_factor_le (Nat.mem_primesBelow.mp (Finset.mem_of_mem_erase hq)).2 hσ
   have hP0 : 0 ≤ ∏ q ∈ X₀.primesBelow.erase p, (1 - (q : ℝ) ^ (-s.re))⁻¹ :=
@@ -210,14 +210,14 @@ lemma ZinfR_le_exp (X₀ : ℕ) {σ : ℝ} (hσ0 : 0 < σ) :
     ZinfR X₀ σ ≤ ZinfR X₀ 1 * Real.exp ((1 - σ) * logSum X₀ σ) := by
   unfold ZinfR logSum
   rw [Finset.mul_sum, Real.exp_sum, ← Finset.prod_mul_distrib]
-  apply Finset.prod_le_prod (fun p hp => (factor_pos (Nat.mem_primesBelow.mp hp).2 hσ0).le)
+  apply Finset.prod_le_prod₀ (fun p hp => (factor_pos (Nat.mem_primesBelow.mp hp).2 hσ0).le)
   intro p hp
   exact factor_le (Nat.mem_primesBelow.mp hp).2 hσ0
 
 /-- `Z_∞(σ) ≤ Z_∞(1)` for `σ ≥ 1`. -/
 lemma ZinfR_le_of_one_le (X₀ : ℕ) {σ : ℝ} (hσ1 : 1 ≤ σ) : ZinfR X₀ σ ≤ ZinfR X₀ 1 := by
   unfold ZinfR
-  apply Finset.prod_le_prod (fun p hp => (factor_pos (Nat.mem_primesBelow.mp hp).2
+  apply Finset.prod_le_prod₀ (fun p hp => (factor_pos (Nat.mem_primesBelow.mp hp).2
     (by linarith)).le)
   intro p hp
   have hpp := (Nat.mem_primesBelow.mp hp).2

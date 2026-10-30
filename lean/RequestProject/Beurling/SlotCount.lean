@@ -33,8 +33,8 @@ theorem card_le_of_unit_gaps (F : ℝ → ℝ) (hF : Monotone F) (S : Finset ℝ
     (hgap : ∀ s ∈ S, ∀ t ∈ S, s < t → 1 ≤ F t - F s) :
     (S.card : ℝ) ≤ F b - F a + 1 := by
   induction S using Finset.induction_on_max generalizing b with
-  | h0 => simp only [card_empty, Nat.cast_zero]; linarith [hF hab]
-  | step t S' hlt ih =>
+  | empty => simp only [card_empty, Nat.cast_zero]; linarith [hF hab]
+  | insert t S' hlt ih =>
     have htS' : t ∉ S' := fun h => lt_irrefl t (hlt t h)
     rw [card_insert_of_notMem htS']
     push_cast

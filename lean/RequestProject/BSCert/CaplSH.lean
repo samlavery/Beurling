@@ -134,7 +134,7 @@ lemma gEx_eval {s : ℝ} (hs0 : 0 ≤ s) : Ex.eval gEx [s] = gstar s := by
   rw [LamS_of_nonneg hs0]
   unfold G
   rw [A8_eq hs0]
-  simp [gEx, Ex.eval]
+  simp [gEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific]
   norm_num
 
 /-- Upper check: `iHi e ienv < t`. -/

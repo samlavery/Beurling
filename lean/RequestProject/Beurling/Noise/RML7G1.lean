@@ -51,7 +51,7 @@ theorem abs_D_le_ops (hO : OpHyp P H X0m) (ρ ν NT vtH Tc J : LocInt) (ϑ : ℝ
   simp only [AddSubgroup.coe_sub, AddSubgroup.coe_add, Pi.add_apply, Pi.sub_apply] at hDx
   exact Pred.lemma_5_34_bound (D := fun z => (ρ : ℝ → ℝ) z + (ν : ℝ → ℝ) z +
       (NT : ℝ → ℝ) z - (Bo hO (Ro (tw := tw) hO (Tc + J)) : ℝ → ℝ) z) (vt := ϑ) (H := H)
-    (x := x) (by simp only; rw [hDx, hvt]) hlx (hO.pos x) hK hG hϑ
+    (x := x) (by rw [hDx, hvt]) hlx (hO.pos x) hK hG hϑ
 
 /-- **The field `h34`** of `G1BInputs` on `J = [lo, hi]`, with `ρ_t = ρ`, `BRT = B(R_res T')`:
 from the two bullets of Lemma 5.34 at every `z ∈ J` (bounds `aK z`, `bG z`), `|ϑ| ≤ 6`, `T'`

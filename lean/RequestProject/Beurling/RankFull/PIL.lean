@@ -201,7 +201,7 @@ lemma measurable_fin_cons {α : Type*} [MeasurableSpace α] {k : ℕ} {f : α �
   intro i
   refine Fin.cases ?_ (fun j => ?_) i
   · simpa using hf
-  · simpa using (measurable_pi_apply j).comp hg
+  · simpa [Function.comp_def] using (measurable_pi_apply j).comp hg
 
 /-- `∫ over ℝ^{k+1}` as an iterated integral (first coordinate outside). -/
 lemma lintegral_fin_succ {k : ℕ} (f : (Fin (k + 1) → ℝ) → ℝ≥0∞) (hf : Measurable f) :
@@ -301,7 +301,7 @@ lemma Zs_mono_bound (k : ℕ) {Par : Type} {b b' : ℕ} (h : b ≤ b')
   refine ENNReal.tsum_le_tsum fun n => ?_
   by_cases hn : n < b
   · rw [if_pos hn, if_pos (lt_of_lt_of_le hn h)]
-  · rw [if_neg hn]; exact zero_le _
+  · rw [if_neg hn]; exact zero_le
 
 /-- **Lemma A.5 for one run** (`k` pivots, labels summed, integrand adapted to the past of the
 earliest pivot and dominated by a measurable `Ψ̄`):
@@ -336,7 +336,7 @@ theorem iterated_pivots [SFinite P] : ∀ (k : ℕ) {Par : Type} [MeasurableSpac
         simp only [hΦ]
         split_ifs
         · exact hdom n x.1 p _
-        · exact zero_le _)
+        · exact zero_le)
     have hZ : ∀ ω, J.Zs 1 N Ψ ω p = ∑' n, (J.A n).indicator (fun ω => Φ n (ω, J.q n ω)) ω := by
       intro ω
       simp only [Zs, hΦ]
@@ -395,7 +395,7 @@ theorem iterated_pivots [SFinite P] : ∀ (k : ℕ) {Par : Type} [MeasurableSpac
       simp only [hΦ, hΦbar]
       split_ifs with hn
       · exact J.Zs_mono_bound k hn.le Ψ' x.1 (p, x.2)
-      · exact zero_le _)
+      · exact zero_le)
     have hZ : ∀ ω, J.Zs (k + 2) N Ψ ω p =
         ∑' n, (J.A n).indicator (fun ω => Φ n (ω, J.q n ω)) ω := by
       intro ω

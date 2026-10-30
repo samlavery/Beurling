@@ -448,7 +448,7 @@ lemma summable_rpow_absorbed (h : AbsorbedWindowHyp b X₀ A u)
   obtain ⟨hs, -⟩ := tail_summable h.fin hA1 (ς := fun _ => -Real.log C) monotone_const hN hβ
     le_rfl
   refine (hs.subtype A).congr fun a => ?_
-  show (if (a : ℝ) ∈ A ∧ 1 < (a : ℝ) then (a : ℝ) ^ (-β) else 0) = _
+  show (if a.1 ∈ A ∧ 1 < a.1 then a.1 ^ (-β) else 0) = _
   rw [if_pos ⟨a.2, hA1 _ a.2⟩]
 
 /-- **The absorbed part of the decomposition (14)**: when the cap is inactive, for `σ > b`,

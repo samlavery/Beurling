@@ -136,7 +136,7 @@ theorem whyp_Hc (hX : 10 ^ 8 ≤ Real.log X₀) {ε : ℝ} (hε0 : 0 ≤ ε) (h�
       calc Queue6.Hc X₀ s - Queue6.Hc X₀ z
           ≤ ε * (s - z) / max z (X₀ : ℝ) * Queue6.Hc X₀ z := hinc
         _ ≤ ε * HsW X₀ y / (aW y δ - HsW X₀ y) * Queue6.Hc X₀ s := by
-          apply mul_le_mul _ hzle hHz0.le (by unfold HsW; positivity)
+          apply mul_le_mul _ hzle hHz0.le (div_nonneg (mul_nonneg hε0 (by linarith)) hden0.le)
           apply div_le_div₀ (by positivity) (mul_le_mul_of_nonneg_left hzs' hε0) hden0 hm
 
 /-- `κ (b - a) ≤ H_*` on the window. -/

@@ -117,7 +117,7 @@ lemma rowSum_le {q : Fin N → ℝ} (allowed : Fin N → Prop) (hq : ∀ n, allo
   refine mul_le_mul_of_nonneg_left ?_ (tailSum_nonneg _ _)
   rw [← Finset.prod_univ_sum (fun _ => range (D + 1)) f]
   rw [Finset.prod_filter]
-  apply Finset.prod_le_prod
+  apply Finset.prod_le_prod₀
   · intro n _
     refine Finset.sum_nonneg fun e _ => ?_
     simp only [hf]
@@ -202,7 +202,7 @@ lemma contentSum_le {k : ℕ} {q : Fin N → ℝ} (ok : Fin N → Prop) (hq : �
     · exact le_rfl
   have hrow' : ∑ j ∈ rowSet N D Dmax X₀, g j ≤
       tailSum Dmax X₀ * ∏ n ∈ univ.filter (fun n => ok n ∧ (n : ℕ) < M), (1 - (q n)⁻¹)⁻¹ := by
-    rw [hg]; convert hrow
+    rw [hg]; convert! hrow
   exact pow_le_pow_left₀ hnn hrow' k
 
 /-- **Lemma A.6 (S3)(c) for one run** (Euler chain of the early block and the tails). -/

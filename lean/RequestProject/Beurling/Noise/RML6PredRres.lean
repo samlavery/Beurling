@@ -614,7 +614,6 @@ theorem Rres_eq_Nop (hO : OpHyp P H X0m) (hP : PaperWidth H X0m ε θ) (g : LocI
     (hg : LBd (g : ℝ → ℝ)) (y : ℝ) :
     Rres P H tw X0m y g = (Nop (tw := tw) hO g : ℝ → ℝ) y := by
   have hspec := congrArg (fun u : LocInt => (u : ℝ → ℝ)) (Nop_spec (tw := tw) hO g)
-  simp only at hspec
   have e : (g : ℝ → ℝ) = fun t => (Nop (tw := tw) hO g : ℝ → ℝ) t +
       Kpt P tw X0m (fun s => Margin.Bavg (H s) (Nop (tw := tw) hO g : ℝ → ℝ) s) t := by
     rw [← hspec]; rfl

@@ -116,7 +116,7 @@ lemma hasDerivAt_Af {s Λ : ℝ} (hΛ : 0 < Λ) (hl : 0 < 2 * Real.log Λ + s) :
     (hlog.const_mul 2).add_const s
   have h2 := h1.log hl.ne'
   have h3 := (((hasDerivAt_const Λ (Real.log 2)).add (hlog.const_mul 3)).add_const (2 * s)).sub h2
-  convert h3 using 1
+  convert! h3 using 1
   field_simp
   ring
 

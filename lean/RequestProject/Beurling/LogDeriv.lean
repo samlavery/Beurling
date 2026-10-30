@@ -76,7 +76,7 @@ lemma tsum_divisors_log (e : ℕ →₀ ℕ) :
       Real.log (P.val e) := by
   have hs : Summable fun jk : ℕ × ℕ =>
       (if jk.2 + 1 ≤ e jk.1 then Real.log (P.p jk.1) else 0) := by
-    apply summable_of_finite_support
+    apply summable_of_hasFiniteSupport
     refine (Finset.finite_toSet (e.support ×ˢ Finset.range (e.support.sup e))).subset ?_
     rintro ⟨j, k⟩ h
     simp only [Function.mem_support, ne_eq, ite_eq_right_iff, Classical.not_imp] at h
@@ -160,7 +160,7 @@ lemma hasDerivAt_zeta (h : AbelMellin.Hyp P.val (fun _ => (1 : ℝ)) 1) {s : ℂ
     intro e z
     have hne : ((P.val e : ℝ) : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (P.val_pos e).ne'
     have := (hasDerivAt_neg z).const_cpow (c := ((P.val e : ℝ) : ℂ)) (Or.inl hne)
-    convert this using 1
+    convert! this using 1
     rw [← Complex.ofReal_log (P.val_pos e).le]
     ring
   have hopen : IsOpen {z : ℂ | σ₀ < z.re} := isOpen_lt continuous_const Complex.continuous_re
@@ -176,7 +176,7 @@ lemma hasDerivAt_zeta (h : AbelMellin.Hyp P.val (fun _ => (1 : ℝ)) 1) {s : ℂ
     (show s ∈ {z : ℂ | σ₀ < z.re} from hσ₀s)
   · unfold logZeta
     rw [← tsum_neg]
-    convert this using 2
+    convert! this using 2
     ext e
     ring
   · simp only [Set.mem_setOf_eq] at hz

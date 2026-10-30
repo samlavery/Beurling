@@ -234,7 +234,7 @@ lemma s4_mem {dec : Finset (Fin N)} {q : Fin N → ℝ} {X₀ D Dmax : ℕ} {Jw 
   -- the value
   set Mv := ∏ n, q n ^ v n with hMv
   have hM1 : 1 ≤ Mv := by
-    have h := Finset.prod_le_prod (s := univ) (f := fun _ => (1 : ℝ))
+    have h := Finset.prod_le_prod₀ (s := univ) (f := fun _ => (1 : ℝ))
       (g := fun n => q n ^ v n) (fun _ _ => zero_le_one) (fun n _ => by
         by_cases hvn : v n = 0
         · simp [hvn]
@@ -266,7 +266,7 @@ lemma s4_mem {dec : Finset (Fin N)} {q : Fin N → ℝ} {X₀ D Dmax : ℕ} {Jw 
       symm
       exact Finset.prod_subset (Finset.subset_univ _) fun n _ hn => by simp [hvzero n hn]
     rw [e3]
-    refine Finset.prod_le_prod (fun n hn => pow_nonneg ?_ _) fun n hn => ?_
+    refine Finset.prod_le_prod₀ (fun n hn => pow_nonneg ?_ _) fun n hn => ?_
     · simp only [hτ']; split_ifs <;> [exact hτ0 _; exact zero_le_one]
     · have hlt : lbl C n < (r₀ * D) := Finset.mem_range.mp (hmaps n hn)
       simp only [hτ', dif_pos hlt]
@@ -454,12 +454,12 @@ theorem configCount_le_skel {dec : Finset (Fin N)} {q : Fin N → ℝ} {X₀ D D
     generalize cfgSkel D r₀ tail CB = s at hm ⊢
     obtain ⟨r, C, lab, ex, s4⟩ := s
     obtain ⟨h1, h2, h3, h4, h5⟩ := hm
-    refine le_trans ?_ (Finset.single_le_sum (fun _ _ => zero_le _) (Finset.mem_range.mpr h1))
-    refine le_trans ?_ (Finset.single_le_sum (fun _ _ => zero_le _) h2)
-    refine le_trans ?_ (Finset.single_le_sum (fun _ _ => zero_le _) h3)
+    refine le_trans ?_ (Finset.single_le_sum (fun _ _ => zero_le) (Finset.mem_range.mpr h1))
+    refine le_trans ?_ (Finset.single_le_sum (fun _ _ => zero_le) h2)
+    refine le_trans ?_ (Finset.single_le_sum (fun _ _ => zero_le) h3)
     refine le_trans ?_ (ENNReal.le_tsum ex)
     rw [if_pos h4]
-    refine le_trans ?_ (Finset.single_le_sum (fun _ _ => zero_le _) h5)
+    refine le_trans ?_ (Finset.single_le_sum (fun _ _ => zero_le) h5)
     rw [if_pos rfl]
   have hsum : ∑ CB ∈ configs r₀ 0 0 S, F CB =
       ∑ r ∈ range r₀, ∑ C ∈ CSet r j, ∑ lab ∈ labSet r C.card D, ∑' ex : Fin r → Fin r → ℕ,
@@ -478,7 +478,7 @@ theorem configCount_le_skel {dec : Finset (Fin N)} {q : Fin N → ℝ} {X₀ D D
     · rfl
   rw [configCount_eq, ← hsum, Finset.card_eq_sum_ones, Nat.cast_sum, Nat.cast_one]
   exact (Finset.sum_le_sum hkey).trans
-    (Finset.sum_le_sum_of_subset_of_nonneg (configs_mono r₀ S) fun _ _ _ => zero_le _)
+    (Finset.sum_le_sum_of_subset_of_nonneg (configs_mono r₀ S) fun _ _ _ => zero_le)
 
 /-- **`ConfigSkeletonReduction` for the window model** (the input `hred` of
 `theorem_6_23a_all`): with `X = cfgSkelCount`, for windows `Jw J ⊆ (-∞, 2z + 1]`, prime values

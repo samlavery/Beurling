@@ -127,7 +127,7 @@ theorem Xt_le_PhiA (m : ℕ) (a b : ℤ) (k : ℕ) {ω : JitterΩ} (hω : ω ∈
   · rw [Set.not_nonempty_iff_eq_empty] at hne
     rw [hne, Set.ncard_empty] at hX3
     push_cast at hX3
-    rw [ENNReal.ofReal_eq_zero.mpr hX3]; exact zero_le _
+    rw [ENNReal.ofReal_eq_zero.mpr hX3]; exact zero_le
   obtain ⟨e0, he0⟩ := hne
   have hplaced : placedAt (CM θ X₀ ω) k := by
     have h1 := he0.1 k (by rw [he0.2.2.2.2.2.2.2]; norm_num)
@@ -203,7 +203,7 @@ lemma PhiA_le_PhiBar (k : ℕ) (α β : ℝ) (p : JitterΩ × ℝ) :
         eval (DD θ X₀ p.1) e * p.2 < β ∧ ¬ (10 ^ 7 ≤ Real.log (eval (DD θ X₀ p.1) e * p.2) ∧
           p.2 < absorbY X₀ (eval (DD θ X₀ p.1) e * p.2))
     · rw [if_pos h1, if_pos ⟨⟨h1.1.1, h1.1.2.1⟩, h1.2.1, h1.2.2.1⟩]
-    · rw [if_neg h1]; exact zero_le _
+    · rw [if_neg h1]; exact zero_le
   · exact le_rfl
 
 
@@ -282,7 +282,7 @@ theorem boxMean_le_compTerm (hev : Even X₀) (k : ℕ) (a b : ℝ) (ω : Jitter
   by_cases hA : ω ∈ lawA θ X₀ k
   swap
   · show (lawA θ X₀ k).indicator _ ω ≤ _
-    rw [indicator_of_notMem hA]; exact zero_le _
+    rw [indicator_of_notMem hA]; exact zero_le
   show (lawA θ X₀ k).indicator _ ω ≤ _
   simp only [indicator_of_mem hA]
   set H := HF θ X₀ k ω
@@ -296,7 +296,7 @@ theorem boxMean_le_compTerm (hev : Even X₀) (k : ℕ) (a b : ℝ) (ω : Jitter
     exact (MeasurableSet.const _).inter ((measurableSet_le measurable_const hd).inter
       ((measurableSet_le measurable_const Real.measurable_log).inter
         (measurableSet_lt hd (absorbY_monotone hc.hX).measurable)).compl))]
-  refine mul_le_mul_left' ?_ _
+  refine mul_le_mul_right ?_ _
   -- expand both sides over the cofactors
   have hL : ∫⁻ t in B, PhiA θ X₀ k a b (ω, t) = ∑' w : PIdx X₀ →₀ ℕ, ∫⁻ t, B.indicator
       (fun t => if Xm X₀ ≤ t ∧ (w ∈ cofP θ X₀ k ω ∧ a ≤ eval (DD θ X₀ ω) w * t ∧
@@ -347,7 +347,7 @@ theorem boxMean_le_compTerm (hev : Even X₀) (k : ℕ) (a b : ℝ) (ω : Jitter
       by_cases ht : t ∈ B
       · rw [indicator_of_mem ht, if_neg fun h => hw h.2.1]; rfl
       · rw [indicator_of_notMem ht]; rfl
-    rw [this, lintegral_zero_fun]; exact zero_le _
+    rw [this, lintegral_zero_fun]; exact zero_le
   set e := eval (DD θ X₀ ω) w with he
   have he0 : 0 < e := eval_pos hc hw.1
   set h : ℝ → ℝ≥0∞ := (Ico a b).indicator fun y => if Xm X₀ ≤ y / e ∧
@@ -420,7 +420,7 @@ theorem compDen_le (hev : Even X₀) (ω : JitterΩ) {y b : ℝ} (hyb : y ≤ b)
       by_cases h1 : w ∈ cofP θ X₀ k ω ∧ Xm X₀ ≤ y / eval (DD θ X₀ ω) w ∧
           ¬ (10 ^ 7 ≤ Real.log y ∧ y / eval (DD θ X₀ ω) w < absorbY X₀ y)
       · rw [if_pos h1, if_pos ⟨⟨h1.1.1, h1.1.2.1⟩, h1.2.1⟩, mul_assoc]
-      · rw [if_neg h1, mul_zero]; exact zero_le _
+      · rw [if_neg h1, mul_zero]; exact zero_le
     · simp only [indicator_of_notMem hA, zero_mul, tsum_zero]; exact le_rfl
   have hsum : compDen θ X₀ ω y ≤ ∑' w, g w := by
     unfold compDen
@@ -430,7 +430,7 @@ theorem compDen_le (hev : Even X₀) (ω : JitterΩ) {y b : ℝ} (hyb : y ≤ b)
     rw [ENNReal.tsum_mul_right]
     simp only [g]
     split_ifs with h
-    · exact mul_le_mul_right' (law_slots hc hev ω _) _
+    · exact mul_le_mul_left (law_slots hc hev ω _) _
     · rw [mul_zero]
   refine hsum.trans ?_
   rw [tsum_eq_sum (s := F) (fun w hw => by
@@ -449,7 +449,7 @@ theorem compDen_le (hev : Even X₀) (ω : JitterΩ) {y b : ℝ} (hyb : y ≤ b)
     2 * ENNReal.ofReal (eval (DD θ X₀ ω) w)⁻¹ else 0) ≤ 2 * ENNReal.ofReal (eval (DD θ X₀ ω) w)⁻¹
   by_cases h : (Live (DD θ X₀ ω) w ∧ w ≠ 0) ∧ Xm X₀ ≤ y / eval (DD θ X₀ ω) w
   · rw [if_pos h]
-  · rw [if_neg h]; exact zero_le _
+  · rw [if_neg h]; exact zero_le
 
 /-- **The compensator identification** (§5.3, "`Comp` is the predictable compensator of
 `C⁽¹⁾`"): a.s., every partial sum of the conditional means of Queue6's truncated counts
@@ -753,7 +753,7 @@ theorem r1Ident_of_margin (D : Sec5Family)
   obtain ⟨hub, -, hab, -⟩ := hadm'
   have hnice : ∀ᵐ ω ∂jitterMeasure, ω ∈ NiceEv θ X₀ := by
     have := niceEv_compl_null hc hev
-    rw [ae_iff]; simpa using this
+    exact ae_iff.mpr this
   filter_upwards [hPM m a b hadm, compSum_le hc hev m hab, hnice] with ω hP hS hN hG
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hb : (X₀ : ℝ) ≤ b := (X₀_le_uS (X₀ := X₀) (by
