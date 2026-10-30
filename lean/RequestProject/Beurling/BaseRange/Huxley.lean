@@ -64,8 +64,8 @@ def Huxley84 : Prop := ∃ X : ℝ, HuxleyFrom X
 /-- The set of admissible thresholds in the definition of `X_Hux`. -/
 def huxSet : Set ℝ := {X | Real.exp (10 ^ 8) ≤ X ∧ ∀ q, X ≤ q → etaH q ≤ Real.log q ^ (-3 : ℤ)}
 
-/-- `X_Hux` of (84), without the paper's `1 +` (correction 105: the paper takes `1 + inf`). The set is
-an up-ray, so every `X > XHux` is a threshold, `huxleyFrom_of_XHux_lt`. -/
+/-- `X_Hux` of (84), without the paper's `1 +` (correction 105: the paper takes `1 + inf`).
+The set is an up-ray, so every `X > XHux` is a threshold, `huxleyFrom_of_XHux_lt`. -/
 noncomputable def XHux : ℝ := sInf huxSet
 
 /-! ### `∫ dt/log t` -/
