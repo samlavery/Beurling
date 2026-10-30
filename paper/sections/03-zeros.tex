@@ -476,9 +476,13 @@ proof), so $|Z_B|\ge0.59$ by Lemma~\ref{lem:goodheights}(i); and $|Z_B|\le Z_{\m
 $1-\operatorname{Re}\rho_k\asymp3(1-\theta)\log\log\gamma_k/\log\gamma_k$. This is outside Landau's region
 $1-c(1-\theta)/\log|t|$ by a factor $\log\log\gamma_k$, so it does not contradict it. In this design the loss comes from the
 amplitude condition $\kappa'_k=\kappa_0/\log^2x_k$, which gives $3\log\log$ rather than $1\log\log$. Positivity \eqref{eq:G1}
-alone would allow a constant $\kappa'_k=\kappa_0$. The margin needs a decaying amplitude: the response of the drift to the
+alone would allow a constant $\kappa'_k=\kappa_0$. With the estimate used in Step~4 of Proposition~\ref{prop:g1}, which
+bounds the oscillation response by the weight $\sum\mu^2n^{-\theta}$, the margin needs a decaying amplitude: the response of the drift to the
 oscillation $R_k$ must stay $o(1/\log x)$ on $x_k^2<x<\exp(C'\log^2x_k)$, $C'=(4(1-\theta)/c_{\mathrm{LP}})^2$, where $\gamma_k$ is
 not yet resolvable (proof of Proposition~\ref{prop:g1}, Step~4), and this requires $\kappa'_k\log x_k\to0$. Any power
 $\log^{-1-\delta}x_k$ with $\delta>0$ would do, giving $(2+\delta)\log\log$; the exponent $2$ is a choice of the design.
+% Logged correction 111 (CORRECTIONS-vs-v3.md): the need for a decaying amplitude is a property of the Step 4 estimate, not of the design.
+A sharper estimate of the response (for instance through the Saias weights of Corollary~\ref{cor:saias}) may allow a
+constant amplitude and hence $1\log\log$; we have not carried this out.
 \end{remark}
 \par\endgroup
