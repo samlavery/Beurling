@@ -61,4 +61,23 @@ lemma coverF_sound (P : ℝ → Prop) (f : ℤ → ℤ → Bool)
       · exact bisectF_sound P f hf d x _ h1 u hu1 hm
       · exact ih _ b h2 u hm hu2
 
+/-- Check `f` on the consecutive cells `[x, m₁], [m₁, m₂], …, [m_k, y]` of an explicit list of
+break points. -/
+def coverL (f : ℤ → ℤ → Bool) : ℤ → List ℤ → ℤ → Bool
+  | x, [], y => f x y
+  | x, m :: l, y => f x m && coverL f m l y
+
+lemma coverL_sound (P : ℝ → Prop) (f : ℤ → ℤ → Bool)
+    (hf : ∀ a b : ℤ, f a b = true → ∀ u : ℝ, toR a ≤ u → u ≤ toR b → P u) :
+    ∀ (l : List ℤ) (x y : ℤ), coverL f x l y = true → ∀ u : ℝ, toR x ≤ u → u ≤ toR y → P u := by
+  intro l
+  induction l with
+  | nil => intro x y h; exact hf x y h
+  | cons m l ih =>
+    intro x y h u hu1 hu2
+    simp only [coverL, Bool.and_eq_true] at h
+    rcases le_total u (toR m) with hm | hm
+    · exact hf x m h.1 u hu1 hm
+    · exact ih m y h.2 u hm hu2
+
 end BSCert.FX
