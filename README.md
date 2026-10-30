@@ -2,8 +2,9 @@
 
 Samuel Lavery (sam.lavery@gmail.com)
 
-> **Status: independent human review pending.** The proof has not been verified by a human expert, and it is not formally
-> verified (see [Lean formalization](#lean-formalization)).
+> **Status: independent human review pending.** The proof has not been verified by a human expert. It is formally verified
+> in Lean 4 from one hypothesis, the short-interval prime number theorem (84) for the rational primes (see
+> [Lean formalization](#lean-formalization)).
 >
 > **A gap found and closed after publication (corrections #48 and #55, 2026-10-22).**
 > - Two independent AI checks found that the first repair of #48 (the label sum of Appendix A's Pivot-Integration Lemma)
@@ -169,34 +170,27 @@ theorem for the realised system, and a counting theorem for clusters of composit
 
 ## Lean formalization
 
-The main theorem is not formally verified. A Lean 4 formalization in [`lean/`](lean/), started by
-[Aristotle](https://aristotle.harmonic.fun) (Harmonic) and continued here, proves Corollary 2.2 (the answer to Question Q is
-negative) from two explicit hypotheses, with no `sorry`:
-- the short-interval prime number theorem (84) of Heath-Brown;
-- `Theorem21InputsFinal`.
+A Lean 4 formalization in [`lean/`](lean/), started by [Aristotle](https://aristotle.harmonic.fun) (Harmonic) and
+completed here, proves Corollary 2.2 (the answer to Question Q is negative) from (84) alone, with no `sorry`:
 
-`Theorem21InputsFinal` fixes the construction, which is now built from the jitters in Lean, together with its event
-family and probability budget. What remains are the open inputs of Proposition 5.38 (the pointwise margin) for that
-construction. The §5 chain that proves Proposition 5.38 is assembled and instantiated at the realised system, and each open
-input is a named statement of the paper.
+```lean
+theorem BModel.corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ
+```
 
-- **Proved and used by the top-level theorem:**
-  - Sections 3 and 4, including the construction itself as a causal fixed point, Lemma 3.3 and Lemma 4.8(ii);
-  - the measurability of the construction, its jitter law, and the nullity of the coincidence event 𝒩₌;
-  - Lemma 5.1, (HBS) and Lemma 6.26 on the good event;
-  - Section 6: Theorem 6.6, Lemma 6.1, Proposition 6.11, Theorem 6.23, the event family and Table 1;
-  - all of Appendix A, including the Cover Bound;
-  - nearly all the certificates of Appendix B.
-- **Proved but not yet used by the top-level theorem:** most of §5.1–5.7 (Lemma 5.3, Theorem 5.6, Corollary 5.9,
-  Theorems 5.14 and 5.15, the local PNT Theorem 5.24) and most of §7 (Lemma 7.1, Lemma 7.3 from named inputs).
-- **Not yet proved:** Proposition 5.38 for the construction (the §5 chain is assembled, with named inputs, including
-  Steps 1–3 of Lemma 7.3(b) and Lemma 7.3(d)(iii)).
+- `Huxley84` is (84): relative error ≤ (log q)⁻³ for primes in every interval I ⊂ [q, 2q] with |I| ≥ (2q)^{7/12},
+  for large q. It follows from Heath-Brown's short-interval prime number theorem with the de la Vallée Poussin error
+  term, which are not in Mathlib.
+- `#print axioms` gives `propext`, `Classical.choice`, `Quot.sound`, `Lean.ofReduceBool` and `Lean.trustCompiler`.
+  The last two come from `native_decide`: the finite numerical certificates of Appendix B are evaluated by compiled
+  code rather than re-checked by the kernel.
+- The whole proof is formalized: Sections 2–7 and Appendix A, the construction built from the jitters, its
+  measurability and probability budget, and the certificates.
+- The correspondence between the paper and the Lean statements has been checked by AI agents only.
 
 The formalization found four defects in the paper (corrections #102 and #104, constants in Lemma 5.7 and Theorem 5.24; #103, certificate
 coverage of two constants; #105, the definition of X_Hux), prompted a check that tightened the quantifier of Lemma 3.4 (#106), found that (s2), Lemma 6.27(b) and the bridge's oscillation term needed event qualifiers (#107–#109), led to a constant fix in Lemma predictable (#110), and found two
 defects in the Aristotle model
-(the height rule and the absorbed set), all fixed. The details, and the list of what
-remains, are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
+(the height rule and the absorbed set), all fixed. The details, and the trust base, are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
 
 ## Repository layout
 
@@ -205,8 +199,8 @@ remains, are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
 | `paper/` | the paper (LaTeX). `main.tex` inputs the files in `paper/sections/`. |
 | `certificates/` | the computer-assisted parts and numerical cross-checks (Python 3), described in Appendix B of the paper |
 | `review/` | the AI referee reports written while the proof was developed (two component referees and one end-to-end referee; they refer to working notes that are not included here), the AI consistency check of the paper (`paper-check.md`, `subchecks/`), and the re-check after the fixes (`paper-recheck.md`, `recheck/`) |
-| `lean/` | the Lean 4 project from Aristotle (Lean/Mathlib v4.28.0): Corollary 2.2 proved from (84) and the hypothesis `Theorem21InputsS`, the certificates of Appendix B, and Aristotle's notes |
-| `LEAN-FORMALIZATION.md` | status of the Lean formalization: what is proved, and what the remaining hypothesis contains |
+| `lean/` | the Lean 4 project (Lean/Mathlib v4.28.0), started by Aristotle: Corollary 2.2 proved from (84) alone (`BModel.corollary_2_2_complete`), with the certificates of Appendix B |
+| `LEAN-FORMALIZATION.md` | the Lean formalization: final statement, trust base, defects found, and the progress log |
 | `CORRECTIONS-vs-v3.md` | every deviation of the paper from the refereed draft ("v3"), with justification |
 | `PAPER-SPEC.md`, `paper/LABELS.md`, `review/PAPER-CHECK-BRIEF.md`, `review/RECHECK-BRIEF.md` | process documents: the instructions given to the AI agents that wrote and checked the paper |
 

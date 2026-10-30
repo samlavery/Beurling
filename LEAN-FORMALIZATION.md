@@ -1,16 +1,24 @@
-# Lean formalization: status and what remains
+# Lean formalization: status, trust base and defects
 
-**Summary.** The main theorem is **not** formally verified. The Lean 4 project in [`lean/`](lean/) proves Corollary 2.2
-(the answer to Question Q is negative) from one explicit hypothesis, `Theorem21InputsS`. That hypothesis still contains
-most of the paper's analytic and probabilistic content: about 90 of the roughly 128 pages of proof in Sections 2–7 and
-Appendix A. Everything outside it is proved in Lean with no `sorry`.
+**Summary.** The Lean 4 project in [`lean/`](lean/) proves Corollary 2.2 (the answer to Question Q is negative) from a
+single hypothesis, eq. (84), a short-interval prime number theorem for the rational primes:
+
+```lean
+theorem BModel.corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ
+```
+
+(`lean/RequestProject/Beurling/Model/MarginComplete.lean`). There is no `sorry` and no custom axiom. The trust base is
+Lean's kernel, Mathlib, (84), and the compiler evaluation behind the `native_decide` certificates (see *Trust base*).
+All checking of the correspondence between the paper and the Lean statements has been done by AI agents; independent
+human review is pending.
 
 **Sources.**
-- The project is by [Aristotle](https://aristotle.harmonic.fun) (Harmonic), archive `75307cfd-…-aristotle.tar.gz` of
-  2026-10-26. It replaces an earlier, much smaller run that reduced the theorem to a single `sorry`; that run is in the git
-  history.
-- Aristotle's README is renamed `lean/ARISTOTLE_README.md`. Its summary of the last step is `lean/ARISTOTLE_SUMMARY.md`.
-  Its notes mapping every Lean result to the paper and the certificate scripts are in `lean/BSCERT_NOTES.md`.
+- The project started from [Aristotle](https://aristotle.harmonic.fun) (Harmonic), archive
+  `75307cfd-…-aristotle.tar.gz` of 2026-10-26, which proved the theorem from one large hypothesis (`Theorem21InputsS`,
+  about 90 of the 128 proof pages). The rest was formalized in this repository between 2026-10-26 and 2026-10-29 by
+  Claude agents; the git history has the rounds.
+- Aristotle's README is renamed `lean/ARISTOTLE_README.md`. Its summary of its last step is `lean/ARISTOTLE_SUMMARY.md`.
+  Its notes mapping Lean results to the paper and the certificate scripts are in `lean/BSCERT_NOTES.md`.
 - The archive also bundled a copy of the paper and of the certificate scripts. They are omitted here: the PDF is the
   repository's `beurling-paper.pdf` at 9ac0624, and every script is byte-identical to its copy under `certificates/`.
 
@@ -22,32 +30,51 @@ lake exe cache get
 lake build
 ```
 
-- The full build was re-run for this repository on 2026-10-26 and completed successfully (8237 jobs).
+- On 2026-10-29 a fresh clone of commit b42cf10 (only the Mathlib packages reused) built successfully: 8802 jobs,
+  all 776 project modules compiled from source, 40 minutes wall-clock on 10 cores, no errors.
 - `lakefile.toml` passes `--tstack=262144` to Lean. Without it, the `native_decide` checks in
   `BSCert/Consts/MarginCert.lean` hit Lean's interpreter recursion limit with the default 8 MB thread stack on macOS.
-- `#print axioms Construction.corollary_2_2_of_P` gives `propext`, `Classical.choice`, `Quot.sound`, `Lean.ofReduceBool`
-  and `Lean.trustCompiler`. The last two come from the 77 uses of `native_decide` in the certificates.
-- A search of the sources finds no `sorry`, `admit`, `axiom`, `implemented_by` or `extern`.
+- `#print axioms BModel.corollary_2_2_complete` gives `propext`, `Classical.choice`, `Quot.sound`,
+  `Lean.ofReduceBool` and `Lean.trustCompiler`.
+- The 758 files in its import closure contain no `sorry`, `admit`, `axiom`, `implemented_by`, `extern`, `unsafe`,
+  `opaque`, `debug.skipKernelTC`, `#exit`, or custom `syntax`/`macro`/`elab`.
 
 ## The top-level statement
 
-```lean
-theorem BModel.corollary_2_2_final (hHB : ShortIntervalPNT) (h : Theorem21InputsFinal) : ¬ QuestionQ
-```
+- `QuestionQ` (`Beurling/Defs.lean:73`) is Definition 1.1: every Beurling system with |N(x) − Ax| ≤ Cx^θ for some
+  A > 0, θ < 1/2 has a zero-free half-plane Re s > 1 − ε (for every continuation of ζ_P). Each Lean choice (an
+  infinite ℕ-indexed system, a uniform bound for x ≥ 1, ¬ of ∃ε ∃F) makes ¬Q harder to prove, not easier.
+- `BaseRange.Huxley84` (`Beurling/BaseRange/Huxley.lean:53–62`) is (84) verbatim: there is X such that for every
+  q ≥ X and every interval [a, b] ⊂ [q, 2q] with b − a ≥ (2q)^{7/12}, |π([a,b]) / ∫_a^b dt/log t − 1| ≤ (log q)^{-3}.
+  It follows from Heath-Brown 1988, Theorem (1.2) with ε_HB ≡ 0, together with the de la Vallée Poussin prime number
+  theorem (paper §7.1); it also follows from the Guth–Maynard (2024) zero-density estimate with the
+  Vinogradov–Korobov zero-free region. Neither is in Mathlib, so it is a hypothesis.
+- The proof: `corollary_2_2_hux h84 (theorem21InputsH_proved h84)`. `theorem21InputsH_proved` proves, from (84)
+  alone, every input of Theorem 2.1 for the construction built in Lean from the jitters. The chain ends in
+  `Main.corollary_2_2`: `exists_realisation` takes ω from an event of probability ≥ 1 − 1.5/log X₀ > 0,
+  `TheoremAConclusion.N_bound` proves |N(x) − x| ≤ Cx^{1/3} for the realised system, and
+  `not_hasZeroFreeHalfPlane` moves its zeros ρ_k (Re ρ_k → 1) to any continuation by the identity theorem.
+- Earlier, conditional top levels (`Construction.corollary_2_2_of_O`, …, `BModel.corollary_2_2_hux`) are kept.
 
-- `QuestionQ` is Definition 1.1 (`Beurling/Defs.lean`).
-- `ShortIntervalPNT` (`Beurling/Model/Slope.lean`) is a consequence of the Heath-Brown short-interval prime number
-  theorem (84), stated about ℕ. `BaseRange.shortIntervalPNT_of_huxley84` derives it from the full two-sided (84).
-- `Theorem21InputsFinal` (`Beurling/Model/MarginTop.lean`) is about the construction built in Lean from the jitters.
-  Everything outside Proposition 5.38 for the construction's margin density is proved. Proposition 5.38's §5 chain is
-  assembled and instantiated at the realised system; its remaining inputs are the open fields of the structures
-  `RestBase`, `RestBridge`, `RestRes` and `RestMargin` (collected as `OthersInputs`), plus `Lemma73Low`, the low-height
-  case b < 4X₀ + 2 of Lemma 7.3's inputs. Each open field is a statement of the paper, cited in its docstring.
-- Earlier top levels (`Construction.corollary_2_2_of_O`, …, `BModel.corollary_2_2_of_P`) are kept. Each one implies
-  the previous. `BModel.corollary_2_2_of_P` takes Proposition 5.38 at every height. That input is unprovable on the good
-  event, so `corollary_2_2_final` replaces it with the local form.
+## Trust base
 
-## What is proved
+- **Kernel and Mathlib**, as for any Lean proof.
+- **(84)**, as the hypothesis `Huxley84` (above).
+- **`native_decide`** (`Lean.ofReduceBool`, `Lean.trustCompiler`). These certificates are evaluated by compiled code
+  and trusted through the compiler, not re-checked by the small kernel. They are finite numerical checks:
+  - `BSCert/Z2Chunks/C00–C31`: the 32 band covers of region Z2 (bs-cert);
+  - `BSCert/AuxCert`, `RankinCert`, `EiCert`, `Capl*`: one-variable covers and exp/log/Ei point bounds;
+  - `BSCert/Consts/{ZetaCert, MarginCert, PhiCert}`: the constants of Appendix B (ζ, A(s), Ein(2), I₂, I₃, ‖ϕ''‖);
+  - `BSCert/Finite/{CMCert, SmallCert, X0BandCert}`: `finite_checks.py` (Chebyshev/Mertens up to 10⁷, B(n) ≤ 5/12
+    for n ≤ 10⁶);
+  - `Construction/NatPrimeCount`, and `Noise/{BSL57PSize, BSLargePos, BSLargeRatio, BSLargeSlack, BSLargeEpsCert,
+    KRHordCert, MarginVarCert}`: π(N) ≤ 2N/log N for N ≤ 1000 and point evaluations for Lemma 5.7 and §5.
+  Each mirrors a script under `certificates/`, which reproduces it independently (see `lean/BSCERT_NOTES.md`).
+
+## What is proved (progress log)
+
+This section is the log of the formalization rounds. Items marked open or named there were closed later; the
+final statement is above.
 
 The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
 - **Section 4.**
@@ -320,21 +347,11 @@ hypothesis. They are 75 of the 211 modules, about 10.7k of 44k lines. Examples:
 - Lemma A.8;
 - the bs-cert, Lemma 5.3 and margin certificates.
 
-## What remains (the content of `Theorem21InputsS`)
+## What remains
 
-| Hypothesis | Paper content behind it |
-|---|---|
-| `QueueWindowData` (excess bound on every queue window) | Section 5 except Lemma 5.1: Theorem 5.6's analytic reduction, the kernel theorems, the local PNT, the bridge, R1′. Also Theorem 6.6(i), Corollaries 6.3 and 6.12, Lemma 3.9, and Section 7 |
-| `TableBudget` | the per-event failure bounds of Table 1, i.e. Freedman applied with the construction's filtration |
-| `ClusterUpTo` | Proposition 6.11 with Sections 6.5–6.7: Theorem 6.18, Proposition 6.19, Theorem 6.23(a), Propositions 6.28–6.29, and Appendix A (Volume Lemma, A.5, A.6, the identity of A.10, Theorem R) |
-| the existence of the slot model `M` | the construction recursion itself (Lemmas 3.2 and 3.5, Section 2.4, the choice of ϑ_s), and Lemma 3.3 (positivity of the target), which uses the Heath-Brown short-interval prime number theorem |
-| `ArrivalsLinked`, `SlotFacts` | pathwise slot facts (the base case of Lemma 3.6, the window count of placed slot starts). These hold for the model once it is constructed; `SlotFacts` holds off the null event 𝒩₌, which can be added to the event family |
-
-Notes:
-- **External input.** The Heath-Brown short-interval prime number theorem (used through (84) in Lemma 3.3 and Section 7)
-  is not in Mathlib. It should be kept as a named hypothesis; formalizing it from scratch is a project of its own.
-- **Packaging.** The hypotheses only fix the interfaces between parts of the proof. For example, `ShortWindowData`
-  quantifies its constants existentially, so `QueueWindowData` amounts to assuming the excess bound itself.
+Nothing in the proof. Open items are review, not formalization:
+- independent human review of the paper and of the correspondence between its statements and the Lean statements;
+- (84) stays a hypothesis until a short-interval prime number theorem is formalized.
 
 ## Defects found in the Aristotle formalization
 
@@ -381,10 +398,16 @@ Notes:
   - `RestMarginR.ho` bounded the oscillation `oVc` of T′ = T_c + j₀·1[X₀,∞), which includes the jump at X₀, so
     log X₀·oVc(X₀) ≥ 0.98. The structure is provably empty (`BModel.RML15.restMarginR_isEmpty`). In the paper o_t is
     the oscillation of T_c alone (04a l.83), and the jump enters as a separate base term (04g Step 3; V_{X₀} in Step 5).
-    Being fixed by moving the jump into the chain as a source term.
+    Fixed in 61806ca: the jump is a separate source term of the chain (`MarginRecSuper.super_J`), the oscillation input
+    is that of T_c, and `ho` is proved (`Model/HoC.ho_c`). The emptiness proof was removed once it no longer applied.
 
 ## Status
 
-- **The main theorem is not formally verified.** It is proved in Lean only from `Theorem21InputsS`.
-- The parts of the paper behind that hypothesis have so far been checked only by AI agents (see `review/`). Independent
-  human review is pending.
+- **Corollary 2.2 is formally verified from (84)**: `BModel.corollary_2_2_complete : Huxley84 → ¬QuestionQ`, with the
+  trust base above.
+- Two independent read-only AI audits (2026-10-29) checked that `Huxley84` is implied by Heath-Brown 1988 and is not
+  stronger, that `QuestionQ` is Definition 1.1, that the probability layer is not vacuous, that no input structure is
+  unsatisfiable or exploited through junk values (sSup of unbounded sets, division by zero), and the axiom list.
+- The formalization led to paper corrections #102–#110 (`CORRECTIONS-vs-v3.md`). The defects above were all in Lean
+  statements, not in the paper.
+- Independent human review is pending.
