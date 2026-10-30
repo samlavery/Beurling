@@ -281,10 +281,18 @@ $s/(s-1)=1+1/(s-1)$, \eqref{eq:Rhatbound} (that is, $|\hat R(s)|\le|s|e^{-0.39X_
 \[
   \zeta^\sharp(s)=\zeta(s)+E(s),\qquad|E(s)|\le3X_0^{-0.3}(1+|t|)\qquad(|t|\le X_0,\ \sigma\ge1-8/\Lambda),
 \]
-using $\kappa\le X_0^{-1/3}$ and $e^{\mathrm{Ein}(8)}\le e^{438}$. On $|s-1|\le1/8$ the Laurent series gives
+using $\kappa\le X_0^{-1/3}$ and $e^{\mathrm{Ein}(8)}\le e^{438}$. On $\{|s-1|\le1/8,\ \sigma\ge1-8/\Lambda\}$, where this bound
+% Logged correction 112 (CORRECTIONS-vs-v3.md): the zero-free claim is restricted to sigma >= 1-8/Lambda; zeta^sharp has a real zero to the left (near 1-20.5/Lambda at Lambda = 10^8).
+holds, the Laurent series gives
 $|\zeta(s)-1/(s-1)|\le\gamma+0.02\le0.6$ (as $|\gamma_1|\le0.073$), so $|(s-1)\zeta^\sharp(s)-1|\le0.6/8+10^{-9}<1$, and
 $\zeta^\sharp$ has no zero there. This covers every point with $|t|<1/16$ and $1-8/\Lambda\le\sigma\le1.1$; for
-$\sigma>1.1$, $\zeta^\sharp\ne0$ by Step~3.
+$\sigma>1.1$, $\zeta^\sharp\ne0$ by Step~3. The restriction $\sigma\ge1-8/\Lambda$ cannot be dropped. By the bound above,
+$\zeta^\sharp<0$ on $[1-8/\Lambda,1)$. On the real axis, $\zeta^\sharp-Z_B=\hat R+\hat D^\sharp$ is $O(1)$, and by
+\eqref{eq:ZBformula} $Z_B$ contains the rigid term $(1-W(\sigma))S_{\ge X_0}(\sigma)$ with $1-W>0$ on $(0,1)$ (as
+$(1+\kappa)^\sigma<1+\sigma\kappa$). One checks that at $\sigma=1-u/\Lambda$ this term exceeds the rest once
+$\mathrm{Ein}(u)\ge0.4\Lambda+O(\log\Lambda)$, i.e.\ for some $u_*=\log\Lambda+\log\log\Lambda+O(1)$. So $\zeta^\sharp$ (and $\zeta_{\PP}$)
+has a real zero in $(1-u_*/\Lambda,1-8/\Lambda)$; at $\Lambda=10^8$ it is near $1-20.5/\Lambda$. No step uses zero-freeness to the
+left of $1-8/\Lambda$.
 
 \emph{Step 7: the zero-free region for $|t|\ge1/16$.} Take Landau discs of radius $r:=a/\Lambda$ with $a:=6.8\le8$, so that
 they stay in $\sigma\ge1-8/\Lambda$, where (LP-b) and (LP-c) apply. For $|t|\ge1/16$ they do not meet the pole. Put
@@ -370,7 +378,7 @@ they stay in $\sigma\ge1-8/\Lambda$, where (LP-b) and (LP-c) apply. For $|t|\ge1
 the branch that is real on $(1,\infty)$; it is analytic in the zero-free region, including near $s=1$. Fix $f:=0.9$, and
 for $1/16\le|t|\le T_y$ let $s_1:=1+\eta_t+it$ with $\eta_t:=\kappa_L\delta_t$. Consider the discs centred at $s_1$ of
 radii $R_1=\eta_t+\frac{1+f}2\delta_t$ and $r_1=\eta_t+f\delta_t$. They avoid the pole, and they lie in the zero-free
-region: $R_1=(\kappa_L+0.95)\delta_t\le10^{-9}$, so their points have $|\mathrm{Im}\,s|\le T_y+1$, the range of \eqref{eq:lp-width} and \eqref{eq:lp-zf} (points with $|\mathrm{Im}\,s|<1/16$ lie in the disc of Step~6), and
+region: $R_1=(\kappa_L+0.95)\delta_t\le10^{-9}$, so their points have $|\mathrm{Im}\,s|\le T_y+1$, the range of \eqref{eq:lp-width} and \eqref{eq:lp-zf} (points with $|\mathrm{Im}\,s|<1/16$ lie in the region of Step~6), and
 $\delta_{\mathrm{zf}}$ changes by a relative $10^{-8}$ over them.
 % Logged correction 92: v3 places these discs in the zero-free region for |t| <= T_y although they reach above T_y; the
 % region now extends to T_y + 1.
@@ -384,7 +392,7 @@ $|\log((s-1)/s)|\le\log17.01+\pi\le6$ on these discs, where $|\mathrm{Im}\,s|\ge
 \]
 A point $s=\sigma+it$ of the contour $\sigma=1-f\delta_{\mathrm{zf}}(T_1)$, with $1/16\le|t|\le T_1\le T_y$, satisfies
 $|s-s_1|=\eta_t+f\delta_{\mathrm{zf}}(T_1)\le r_1$, because $\delta_{\mathrm{zf}}$ decreases in $|t|$. For $|t|<1/16$ the contour
-lies in $|s-1|\le1/16+10^{-8}$. There Step~6 gives $|\log((s-1)\zeta^\sharp(s))|\le-\log(1-0.075)\le0.078$, and
+lies in $|s-1|\le1/16+10^{-8}$ and in $\sigma\ge c'\ge1-8/\Lambda$. There Step~6 gives $|\log((s-1)\zeta^\sharp(s))|\le-\log(1-0.075)\le0.078$, and
 $|\log s|\le-\log(1-|s-1|)\le0.0646$, so $|\mathfrak G_1|\le0.1426$. Since
 $Y\le2X$, it follows that for $5\le L\le\log T_y$, on the contour $\sigma=1-f\delta_{\mathrm{zf}}(e^L)$, $|t|\le e^L$,
 \[
@@ -506,7 +514,8 @@ side of (i) for $w\le y$.
     \int\varphi\,d(\Pi-\Pi_0)=\frac1{2\pi i}\int_{(c)}\tilde\varphi(s)\,\mathfrak G_1(s)\,ds,\qquad\mathfrak G_1(s)=\log\frac{\zeta^\sharp(s)(s-1)}s .
   \]
   Put $T_1:=e^{L_1}$ and $c':=1-f\delta_{\mathrm{zf}}(T_1)$, with $f=0.9$ and $\delta_{\mathrm{zf}}(T_1)$ the width of Step~7. The function
-  $\mathfrak G_1$ is analytic on the rectangle $[c',c]\times[-T_1,T_1]$: it lies in $|s-1|\le1/8$ for $|t|<1/16$ (Step~6), and in the
+  $\mathfrak G_1$ is analytic on the rectangle $[c',c]\times[-T_1,T_1]$: since $c'\ge1-8/\Lambda$, it lies in
+$\{|s-1|\le1/8,\ \sigma\ge1-8/\Lambda\}$ for $|t|<1/16$ (Step~6), and in the
   zero-free region of Step~7 for $1/16\le|t|\le T_1\le T_y$ (by the Range bullet below). By Cauchy's theorem the line $(c)$ may be
   replaced by: (A) the segment $\sigma=c'$, $|t|\le T_1$; (B) the two horizontal segments $c'\le\sigma\le c$, $t=\pm T_1$; and
   (C) the two half-lines $\sigma=c$, $|t|\ge T_1$.
