@@ -88,7 +88,7 @@ $\le2.01(X_0+1/\kappa)X_0^{-\sigma}/|s|\le3X_0^{1-\sigma}/|t|$. Up to them,
   S_{\ge X_0}(s):=\sum_{d\in\mathcal D,\,d\ge X_0}d^{-s}.
 \end{equation}
 For $\sigma\le2$, $|W|\le6/(\kappa|t|)$ and $|S_{\ge X_0}(s)|\le Z_\infty(\sigma)$. Also $\log Z_\infty(\frac12)\le3.42\sum_{2\le n<X_0}n^{-1/2}
-\le6.9X_0^{1/2}$, as $-\log(1-y)\le y/(1-y)$, while $\kappa\Gamma_1\ge x_1^{1-\theta}/(2X_0^2\log^3x_1)\ge e^{0.49X_0^2}$, since
+\le6.9X_0^{1/2}$, as $-\log(1-y)\le y/(1-y)$, while $\kappa\Gamma_1\ge x_1^{1-\theta}/(2X_0^2\log x_1)\ge e^{0.49X_0^2}$, since
 $\kappa,\kappa_0\ge X_0^{-1}$ and $\log x_1\ge X_0^2$; and the boundary terms and $X_0^{1-s}/(s-1)$ are $\le4X_0^{1/2}/|t|$ for
 $\sigma\ge\frac12$. So for $|t|\ge\Gamma_1/2$ the difference is at most $(12e^{6.9X_0^{1/2}}+8X_0^{1/2})e^{-0.49X_0^2}\le e^{-X_0^2/4}$.
 On $\sigma\ge1-\delta$ with $\delta\Lambda\le0.01$, we have $p^{\sigma}-1\ge0.98(p-1)$, so
@@ -204,14 +204,14 @@ $\varsigma_*(v)\ge v/(14\log v)$; so that part, and the boundary term, are $\le 
 \]
 Here $Y\le x_k$, so $Y^{\delta_k}\le x_k^{\delta_k}\le(\log x_k)^9$. Also $\log Y\ge0.66\log x_k$, since
 % Logged correction 67: explicit lower bound for log Gamma_k (v3: "- O(log log x_k)").
-$\log\Gamma_k\ge(1-\theta)\log x_k-4\log\log x_k$ (as $\log(1/\kappa_0)\le\Lambda\le\frac12\log\log x_k$) and
+$\log\Gamma_k\ge(1-\theta)\log x_k-2\log\log x_k$ (as $\log(1/\kappa_0)\le\Lambda\le\frac12\log\log x_k$) and
 $(1-\theta)/(1-\theta/2)\ge\tfrac23+8\cdot10^{-5}$. These $a$ lie in the standard regime
 ($\log\log Y\ge2\Lambda-1>\ell_{\mathrm{std}}$), where $\varsigma_*(\log Y)\ge\log Y/(14\log\log Y)\ge\log x_k/(22\log\log x_k)$.
 So these terms are $\le5.4(\log x_k)^9\exp(-\log x_k/(22\log\log x_k))$, which is $\le e^{-10^{11}}$ since $\log x_k\ge X_0^2$.
 
 (b) Mellin--Plancherel gives, at $\sigma=\tfrac34$,
 $(4\pi/\Gamma_k)\sum_{a\in\Abs,\,a\le2x_k}a^{1-2\sigma}\le x_k^{1/2-1/(14\log\log x_k)}/\Gamma_k+2\exp(e^{\ell_{\mathrm{std}}}/2)/\Gamma_k$,
-and $\Gamma_k\asymp x_k^{1-\theta}/\log^3x_k$.
+and $\Gamma_k\asymp x_k^{1-\theta}/\log x_k$.
 % Logged correction 67: part (b) is no longer used (correction 64); its o(1) is therefore not load-bearing.
 Part (b) is not used for Theorem~\ref{thm:A}: the proof of Lemma~\ref{lem:goodheights}(ii) bounds this term directly, with explicit
 constants.
@@ -263,14 +263,15 @@ $|\widehat R_k|\le5|s|x_k^{-0.4}$. Theorem~\ref{thm:lp} uses this.
 Suppose $|Z_B|\in[\tfrac12,Z_{\max}]$ on $|s-(1+i\gamma_k)|\le\delta_k$, where $\delta_k:=9\log\log x_k/\log x_k$. Then
 $Z_B+M_k$ has a zero $s^*$ with
 \[
-  \operatorname{Re}s^*=1-\frac{3\log\log x_k+O_{X_0}(1)}{\log x_k},
+  \operatorname{Re}s^*=1-\frac{\log\log x_k+O_{X_0}(1)}{\log x_k},
 \]
 and $|Z_B+M_k|\ge\tfrac14$ on the circle $|s-s^*|=1/\log x_k$.
 \end{lemma}
 \begin{proof}
 \begin{enumerate}[label=\arabic*.]
 \item The equation is $x_k^w=G(w):=-(\alpha_ks/2)\Phi(w)/(wZ_B(s))$.
-\item Since $\alpha_k\gamma_k=\kappa_0x_k^{1-\theta}/\log^3x_k$, we have $\log|G|=(1-\theta)\log x_k-3\log\log x_k+O_{X_0}(1)$ on the disc $|s-(1+i\gamma_k)|\le\delta_k$.
+% Follow-up landau (FOLLOWUP-LANDAU.md): constant amplitude kappa'_k = kappa_0; the factor 3 log log becomes log log.
+\item Since $\alpha_k\gamma_k=\kappa_0x_k^{1-\theta}/\log x_k$, we have $\log|G|=(1-\theta)\log x_k-\log\log x_k+O_{X_0}(1)$ on the disc $|s-(1+i\gamma_k)|\le\delta_k$.
 % Logged correction 67: the o(1) terms of steps 3-5 are written out with their constants.
 \item On the disc, $|Z_B'|\le4.01\Lambda^2$: Lemma~\ref{lem:ZB} gives $|Z_\infty'|\le4\Lambda^2$, and Cauchy's estimate on discs of radius
 $\frac14$ gives $|(Z_B-Z_\infty)'|\le4e^{-X_0^2/4}$. With $|\Phi'|\le1\le e|\Phi|$ and $|w|\ge0.49$ (step~6), and $|s|\ge\gamma_k-1\ge10^6$,
@@ -288,9 +289,9 @@ $|\epsilon_2|\le8.1\Lambda^2/\log x_k$, by step~3 and $|Z_B(s^*)|\ge\frac12$.
 $|1-e^{-\xi}|\ge1-e^{-1}$ (the minimum is at $\xi=1$) and $|e^{-\xi}|\le e$, so
 $|Z_B+M_k|\ge\frac12(1-e^{-1}-8.1\Lambda^2/X_0^2-5e/X_0^2)\ge0.31\ge\tfrac14$.
 \item The circle lies in the disc. In step~2 the $O_{X_0}(1)$ term lies in $[\log\kappa_0-\log(2\Lambda)-1.5,\ \log\kappa_0+0.72]$,
-since $e^{-1}\le|\Phi(w)|\le1$, $0.49\le|w|\le0.76$ and $\tfrac12\le|Z_B|\le2\Lambda$ there; it is negative, as $\kappa_0\le\tfrac14$.
+since $e^{-1}\le|\Phi(w)|\le1$, $0.49\le|w|\le0.76$ and $\tfrac12\le|Z_B|\le2\Lambda$ there; it is negative, as $\kappa_0\le\Lambda^{-5}$.
 With the branch of step~3, $|\operatorname{Im}F|\le(\pi+0.01)/\log x_k$. Hence
-$|s^*-(1+i\gamma_k)|+1/\log x_k\le(3\log\log x_k+\log(1/\kappa_0)+\log(2\Lambda)+5.7)/\log x_k\le\delta_k$, because
+$|s^*-(1+i\gamma_k)|+1/\log x_k\le(\log\log x_k+\log(1/\kappa_0)+\log(2\Lambda)+5.7)/\log x_k\le\delta_k$, because
 $\kappa_0\ge X_0^{-1}$ and $\log\log x_k\ge2\Lambda$.\qedhere
 \end{enumerate}
 \end{proof}
@@ -324,7 +325,7 @@ $Z_{\max}=2\Lambda$, $\alpha_k\ge1$, $\operatorname{Re}\Phi_{\min}=e^{-1}\cos1\g
 % Logged correction 76 (CORRECTIONS-vs-v3.md): v3 reads D up to x_k, which in this section means x_k^+ = a_k + 2H(a_k); the
 % system on [1,x_k^+) involves slots past x_k^+, where R_k, and so gamma_k, enters T. The information cutoff is now the
 % construction scale a_k, and gamma_k is defined for every omega by an explicit measurable rule (v3 only asserts existence).
-Let $\Gamma_k:=\kappa_0x_k^{1-\theta}/(2\log^3x_k)$, and let $a_k$ be the construction scale of Section~\ref{sec:target}, so that
+Let $\Gamma_k:=\kappa_0x_k^{1-\theta}/(2\log x_k)$, and let $a_k$ be the construction scale of Section~\ref{sec:target}, so that
 $x_k=a_k+2H(a_k)$ in this section. Put $\widehat D_{<a_k}(s):=\int_{[\Xm,a_k)}x^{-s}\,dD$, and let $\mathcal S_k$ be the set of
 $\gamma\in[\Gamma_k,2\Gamma_k]$ with:
 \begin{enumerate}[label=(\roman*)]
@@ -385,9 +386,11 @@ at most $\exp(-X_0^2/4)$.
 % Logged correction 76 (R17, C76-2): gamma_j <= x_j <= 2V, as x_{k-1} = x_{k-1}^+ <= 2a_{k-1} <= 2V.
 \emph{(ii)} Write $f:=\widehat D_{<a_k}$ and $V:=\log a_k\ge X_0^2$, and work on $\Good(<a_k+H(a_k))$, where \eqref{eq:La} holds on
 $[\Xm,a_k+2]$ (Remark~\ref{rem:horizon}). This event contains $\mathcal G$, on which Theorem~\ref{thm:zeros} uses (ii).
-Since $\kappa_0\ge X_0^{-1}$, and $u^{1-\theta}/\log^3u$ increases for $\log u\ge6$ while $x_k\ge a_k$,
+Since $\kappa_0\ge X_0^{-1}$, and $u^{1-\theta}/\log u$ increases for $\log u\ge2$ while $x_k\ge a_k$,
+% Follow-up landau (FOLLOWUP-LANDAU.md): with the constant amplitude Gamma >= a_k^{1-theta}/(2X_0V); the weaker form with V^3,
+% used below, is kept.
 \begin{equation}\label{eq:Gammalow}
-  \Gamma\ge\frac{a_k^{1-\theta}}{2X_0V^3},\qquad 1-\theta\ge\tfrac12+10^{-4}.
+  \Gamma\ge\frac{a_k^{1-\theta}}{2X_0V}\ge\frac{a_k^{1-\theta}}{2X_0V^3},\qquad 1-\theta\ge\tfrac12+10^{-4}.
 \end{equation}
 Let $Q:=[\frac34,\frac54]\times[\Gamma-\frac14,2\Gamma+\frac14]$ in the coordinates $(\sigma,t)$, and
 $\|F\|:=(\Gamma^{-1}\iint_Q|F|^2\,d\sigma\,dt)^{1/2}$. As the area of $Q$ is at most $\Gamma$, $\|F\|\le\sup_Q|F|$.
@@ -451,10 +454,10 @@ well-spaced classes above makes the constant explicit, so that (ii) holds for ev
 \begin{theorem}[Zeros]\label{thm:zeros}
 % v3: Theorem 2.4
 % Logged correction 76: gamma_k is the height defined by the rule of Lemma goodheights (for every omega).
-Let $\gamma_k$ be as in Lemma~\ref{lem:goodheights}, and $\alpha_k:=\kappa_0x_k^{1-\theta}/(\gamma_k\log^3x_k)\in[1,2]$. On
+Let $\gamma_k$ be as in Lemma~\ref{lem:goodheights}, and $\alpha_k:=\kappa_0x_k^{1-\theta}/(\gamma_k\log x_k)\in[1,2]$. On
 $\mathcal G$, $\zeta_{\PP}$ has a zero $\rho_k$ with $|\rho_k-s^*_k|\le1/\log x_k$ for every $k$. Hence
 \[
-  \operatorname{Re}\rho_k=1-\frac{3\log\log x_k+O_{X_0}(1)}{\log x_k}\longrightarrow1.
+  \operatorname{Re}\rho_k=1-\frac{\log\log x_k+O_{X_0}(1)}{\log x_k}\longrightarrow1.
 \]
 \end{theorem}
 \begin{proof}
@@ -472,17 +475,27 @@ Lemma~\ref{lem:designedzero} hold: on the disc, $|Z_B-Z_B(1+i\gamma_k)|\le\delta
 proof), so $|Z_B|\ge0.59$ by Lemma~\ref{lem:goodheights}(i); and $|Z_B|\le Z_{\max}$ by Lemma~\ref{lem:ZB}.
 \end{proof}
 
-\begin{remark}
-$1-\operatorname{Re}\rho_k\asymp3(1-\theta)\log\log\gamma_k/\log\gamma_k$. This is outside Landau's region
-$1-c(1-\theta)/\log|t|$ by a factor $\log\log\gamma_k$, so it does not contradict it. In this design the loss comes from the
-amplitude condition $\kappa'_k=\kappa_0/\log^2x_k$, which gives $3\log\log$ rather than $1\log\log$. Positivity \eqref{eq:G1}
-alone would allow a constant $\kappa'_k=\kappa_0$. With the estimate used in Step~4 of Proposition~\ref{prop:g1}, which
-bounds the oscillation response by the weight $\sum\mu^2n^{-\theta}$, the margin needs a decaying amplitude: the response of the drift to the
-oscillation $R_k$ must stay $o(1/\log x)$ on $x_k^2<x<\exp(C'\log^2x_k)$, $C'=(4(1-\theta)/c_{\mathrm{LP}})^2$, where $\gamma_k$ is
-not yet resolvable (proof of Proposition~\ref{prop:g1}, Step~4), and this requires $\kappa'_k\log x_k\to0$. Any power
-$\log^{-1-\delta}x_k$ with $\delta>0$ would do, giving $(2+\delta)\log\log$; the exponent $2$ is a choice of the design.
-% Logged correction 111 (CORRECTIONS-vs-v3.md): the need for a decaying amplitude is a property of the Step 4 estimate, not of the design.
-A sharper estimate of the response (for instance through the Saias weights of Corollary~\ref{cor:saias}) may allow a
-constant amplitude and hence $1\log\log$; we have not carried this out.
+% Follow-up landau (FOLLOWUP-LANDAU.md): supersedes the text of logged correction 111. The amplitude is now constant and
+% Step 4 of Proposition g1(B) uses the Saias weights, so the loss is the single factor log log.
+\begin{remark}[The factor $\log\log$]\label{rem:landau}
+$1-\operatorname{Re}\rho_k\asymp(1-\theta)\log\log\gamma_k/\log\gamma_k$. This is outside Landau's region
+$1-c(1-\theta)/\log|t|$ by a factor $\log\log\gamma_k$, so it does not contradict it. The factor comes from the relative amplitude
+$\alpha_k\gamma_kx_k^{\theta-1}=\kappa_0/\log x_k$ of $R_k'$ at the switch-on \eqref{eq:ampl}: the amplitude $\kappa'_k=\kappa_0$ is
+constant, and Step~4 of the proof of Proposition~\ref{prop:g1}(B) bounds the response of the drift to $R_k$, through the Saias
+weights of Corollary~\ref{cor:saias}, by $526\kappa_0/\log x$ at every $x\ge x_k$, including the range where $\gamma_k$ is not
+yet resolvable.
+
+Removing the remaining factor $\log\log$ is out of reach of this method. Every available bound for that response is through
+absolute weights of Saias type, so it costs $C_S\sum_v\log(2v)\sup_{[v,2v)}|R_k'|$, and this must stay below the slack $b<1$ of
+the margin. A zero at $1-\delta+i\gamma_k$, obtained by Rouch\'e's theorem against $Z_B$ with $|Z_B|\ge\frac12$, needs
+$|\widehat R_k(1-\delta+i\gamma_k)|\gtrsim\frac12$, while
+$|\widehat R_k(1-\delta+i\gamma_k)|\le\log2\sum_v(2v)^{\delta}\sup_{[v,2v)}|R_k'|$, and $N(x)-x=O(x^\theta)$ forces
+$\sup_{[v,2v)}|R_k'|\lesssim\gamma_kv^{\theta-1}$. Split the sum at the $V$ with $\gamma_kV^{\theta-1}\asymp\log^{-2}V$, so that
+$\log V=\log\gamma_k/(1-\theta)+O(\log\log\gamma_k)$. The part $v\le V$ is at most $(b/C_S)(2V)^{\delta}/\log V$ once
+$\delta\log V\ge1$, and the part $v>V$ is $O(V^{\delta}/\log^2V)$. Hence $V^{\delta}\gtrsim\log V$, that is,
+$1-\operatorname{Re}\rho_k\ge(1-\theta)(\log\log\gamma_k-O(1))/\log\gamma_k$, whatever the shape of the switch-on, the window
+lengths or the spacing. A Landau-type zero would need cancellation in $\sum_nc_n(x)n^{-1-i\gamma_k}$ at heights where $\gamma_k$
+is not resolvable, next to a zero of the realised system; we know no such estimate. This is a reason, not a theorem: it assumes
+that the response is controlled only through absolute weights.
 \end{remark}
 \par\endgroup

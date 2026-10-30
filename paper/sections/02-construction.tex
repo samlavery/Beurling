@@ -41,9 +41,12 @@ $[1,x_k+2H(x_k)]$. The term $2H$ makes Lemma~\ref{lem:adapted} exact: $\gamma_k$
 $x_k+0.51H(x_k)$, and $T$ on $[1,u]$ is read by slots $\le u-H(u)$.
 \item The \emph{amplitude condition}:
 \begin{equation}\label{eq:ampl}
-  \alpha_k\gamma_kx_k^{\theta-1}=\kappa'_k/\log x_k,\qquad \kappa'_k:=\kappa_0/\log^2x_k,\quad \kappa_0\in[X_0^{-1},\tfrac14].
+  \alpha_k\gamma_kx_k^{\theta-1}=\kappa'_k/\log x_k,\qquad \kappa'_k:=\kappa_0,\quad \kappa_0\in[X_0^{-1},\Lambda^{-5}].
 \end{equation}
-It gives $|R'(x)|\le\kappa_+/\log x$ with $\kappa_+=0.8$ (see \eqref{eq:G1}).
+% Follow-up landau (FOLLOWUP-LANDAU.md): the amplitude is constant, kappa'_k = kappa_0 (was kappa_0/log^2 x_k with
+% kappa_0 <= 1/4). The upper bound Lambda^{-5} on kappa_0 is used only in Step 4 of the proof of Proposition g1(B).
+The relative amplitude $\kappa_0/\log x_k$ at the switch-on is what places the designed zero at distance
+$\asymp\log\log x_k/\log x_k$ from the line $\sigma=1$ (Lemma~\ref{lem:designedzero}). The condition gives $|R'(x)|\le\kappa_+/\log x$ with $\kappa_+=0.8$ (see \eqref{eq:G1}).
 % Logged correction 76 (CORRECTIONS-vs-v3.md): gamma_k is defined for every omega by the rule of Lemma goodheights, from the
 % system on [1,x_k) of this section; v3's convention "x_k means x_k^+ in Section 3" also moved this information cutoff to
 % x_k^+, where the choice would read slots that depend on gamma_k. The convention is now split.
@@ -58,7 +61,7 @@ the scale $x_k$ of this section, which is the information cutoff of the choice o
 $[1,a_k)$. There $\alpha_k$ is defined from $x_k^+$, so \eqref{eq:ampl} holds exactly with $x_k^+$ in place of $x_k$, and so do the
 bounds derived from it (the proof of \eqref{eq:G1} below, and \eqref{eq:Rkprime}), since $R_k$ vanishes below $x_k^+$. Read with $x_k$,
 \eqref{eq:ampl}, \eqref{eq:Rkprime} and the range $\gamma_k\in[\Gamma_k,2\Gamma_k]$ with $\Gamma_k$ computed from $x_k$
-(Section~\ref{sec:params}) hold up to a factor in $[1,1+2H(x_k)/x_k]$, as $u^{1-\theta}/\log^3u$ increases; every bound built on them
+(Section~\ref{sec:params}) hold up to a factor in $[1,1+2H(x_k)/x_k]$, as $u^{1-\theta}/\log u$ increases; every bound built on them
 has far more room than this factor.
 
 \emph{The rigid density.} With $\kappa:=X_0^{-5/12+2\eps_\kappa}$, $\eps_\kappa:=0.01$, put
@@ -143,13 +146,13 @@ negative once $\log u>2/\kappa\approx e^{3.97\cdot10^7}$, which is still below $
 (see after \eqref{eq:ampl}), for every $\omega$,
 \[
   |R_k'(x)|\le\alpha_kx^{\theta-1}(\gamma_k+\theta+\|\phi'\|_\infty)\le2\alpha_k\gamma_kx^{\theta-1}
-  =\frac{2\kappa_0(x/x_k^+)^{\theta-1}}{\log^3x_k^+}.
+  =\frac{2\kappa_0(x/x_k^+)^{\theta-1}}{\log x_k^+}.
 \]
 % Logged correction 94: the step theta + ||phi'||_oo <= gamma_k is now justified.
-Here $\theta+\|\phi'\|_\infty\le\theta+2\le\Gamma_k\le\gamma_k$ by \eqref{eq:phibounds}, as $\Gamma_k\ge X_0^{-1}x_k^{1/2}/(2\log^3x_k)$
+Here $\theta+\|\phi'\|_\infty\le\theta+2\le\Gamma_k\le\gamma_k$ by \eqref{eq:phibounds}, as $\Gamma_k\ge X_0^{-1}x_k^{1/2}/(2\log x_k)$
 and $x_k\ge\exp(X_0^2)$. For the last switched-on $k$: if $x\le(x_k^+)^2$ then $\log x\le2\log x_k^+$; otherwise $(x/x_k^+)^{\theta-1}\le x^{-(1-\theta)/2}$. Earlier $k$
 contribute less, by the spacing $x_{k+1}\ge\exp(x_k)$. So
-$|R'(x)|\le16\kappa_0/\log^3x+4\kappa_0x^{-(1-\theta)/2}\le\kappa_+/\log x$, since $\log x\ge X_0^2$.
+$|R'(x)|\le4\kappa_0/\log x+4\kappa_0x^{-(1-\theta)/2}\le5\kappa_0/\log x\le\kappa_+/\log x$, since $\log x\ge X_0^2$ and $\kappa_0\le\Lambda^{-5}$.
 \end{itemize}
 % Logged correction 67: v3's "1/(kappa u) <= X_0^{-7/12} << 0.09/log u" fails once log u > 0.09 X_0^{7/12}; the bound below holds for all u.
 Finally $\kappa u/\log u$ increases on $u\ge X_0$ and is $\ge X_0^{0.6}/\Lambda\ge100$ at $X_0$, so $1/(\kappa u)\le0.01/\log u$ for every
