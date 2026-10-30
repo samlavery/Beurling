@@ -58,7 +58,7 @@ rational prime $p$).
   And $m'\ne1$, since $p^2m'\ge0.74x$ while $p^2\le\delta x/(2H(x))$.
   \begin{itemize}
   \item If $p\le1.01x^{1/4}$: $J_p$ lies in $[0.75U,U)$ with $U:=x/(t(p)p)\ge0.97\sqrt x\ge X_0$, and $|J_p|=\delta U\ge h(U)$,
-    since $U^{1-\theta/2}\ge U^{3/4}\ge0.97x^{3/8}\ge1/\delta$. Cover $J_p$ by $\lceil|J_p|/h(0.75U)\rceil$ windows $[v,v+h(v)]$;
+    since $U^{1-\theta_b}\ge U^{3/4}\ge0.97x^{3/8}\ge1/\delta$. Cover $J_p$ by $\lceil|J_p|/h(0.75U)\rceil$ windows $[v,v+h(v)]$;
     each holds at most $h(v)(\log v)^{-4}$ absorbed elements, so $\#\Abs(J_p)\le(1.08|J_p|+h(U))(\log0.75U)^{-4}\le0.01|J_p|$. As $T$
     jumps by $1$ only at rigid integers and at absorbed elements, and $T'_{\mathrm{cont}}\le1+10^{-8}$ there,
     $T(J_p)\le2.02|J_p|+1$; with $|N-T|\le D\le H(x)\le10^{-3}|J_p|$ at both ends, $N(J_p)\le2.03|J_p|$.
@@ -118,13 +118,13 @@ Since $\log H\ge8(\log\log x)^2\ge16\log\log x$ and $H(x)/\delta\ge1$, this is a
 % v3: Theorem 3.13
 Let $y\ge X_0$, and assume:
 \begin{enumerate}[label=\textup{(LP-\alph*)}]
-\item $N=T_0$ below $\Xm$, and $|N(u)-T_0(u)|\le D_0(u):=B(u)+3H(u)+4+3.1u^{\theta/2}(\log u)^{-4}\le u^{\theta'}$ for
+\item $N=T_0$ below $\Xm$, and $|N(u)-T_0(u)|\le D_0(u):=B(u)+3H(u)+4+3.1u^{\theta_b}(\log u)^{-4}\le u^{\theta'}$ for
   $\Xm\le u\le y$. (On $\Good(<z)$ this holds whenever $y\le\check z=z-12\log z-3$, by Theorem~\ref{thm:queue},
   Corollary~\ref{cor:lag}, \eqref{eq:T1} and Remark~\ref{rem:horizon}; for instance for $y\le z-H(z)/2$.)
 % Logged correction 73 (CORRECTIONS-vs-v3.md): v3 claims (LP-a) on Good(<y) up to y itself; the queue bound is certified
 % there only up to the horizon. Every application takes y below it (Proposition g1(B): y = x(1-delta); Lemma si).
 % Logged correction 34 (CORRECTIONS-vs-v3.md): 3.1 (v3: 2) in D_0, for the accumulated mass deficit of the smoothed
-% absorbed elements. D_0 <= u^{theta'} keeps huge room: theta' >= 0.26, and 3H(u) <= 3exp(8(loglog u)^2 + 1e-6 log u).
+% absorbed elements. D_0 <= u^{theta'} keeps huge room: theta' >= theta_b + 0.01, and 3H(u) <= 3exp(8(loglog u)^2 + 1e-6 log u).
 \item $|\hat E(s)|\le C_8(1+\kappa|s|)e^\gamma\Lambda$ for $\sigma\ge1-8/\Lambda$, with $\log C_8<440$
   (Lemma~\ref{lem:ZBlow} with $a=8$).
 \item $|\hat R(s)|\le|s|$ for $\sigma\ge1-8/\Lambda$. (By \eqref{eq:Rhat}: there $\mathrm{Re}\,w=\sigma-\theta\ge0.4$, so

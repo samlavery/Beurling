@@ -1,6 +1,9 @@
 # Model for Theorem caplw (Section 6 of the paper). All quantities in log space; l = log L, L = log z, Lam = log X0.
 import math
-LAM = 1e8; THETA_B = 1/8; SLACK = 1.0
+# THETA_B is the absorption-window exponent theta_b of Lemma lemmaP (h(u) = u^theta_b). The criterion (eq:twelvetwo) is monotone
+# in theta_b, so the default is the worst case theta_b = 1/20 of the paper (theta = 1/20); set CAPL_THETA_B to override (1/8 is the
+# value for theta in [1/8, 1/4]).
+LAM = 1e8; THETA_B = float(__import__('os').environ.get('CAPL_THETA_B', 1/20)); SLACK = 1.0
 def lse(a, b): m = max(a, b); return m + math.log(math.exp(a - m) + math.exp(b - m))
 def base(l, lam=LAM):
     """log L, log D, log r0, log(pi) with pi = r0*D (worst-case labels)."""

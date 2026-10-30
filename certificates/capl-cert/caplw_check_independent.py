@@ -1,5 +1,8 @@
 # Independent numeric checks of the capacity theorem (paper Thm 6.22) Steps 1-3,5 (Λ-uniform version). Log-domain floats.
-import math, random
+import math, random, os
+# theta_b: absorption-window exponent (worst case 1/20 by default; CAPL_THETA_B overrides).
+THETA_B = float(os.environ.get('CAPL_THETA_B', 1/20))
+print("theta_b =", THETA_B)
 def A(Lam, s): l = 2*math.log(Lam) + s; return math.log(2) + 3*math.log(Lam) + 2*s - math.log(l)
 def G(Lam, s): a = A(Lam, s); return 2*math.sqrt(a*(a+1))*math.exp(s/2)/math.sqrt(Lam - a - 1)
 def gstar(s): return 1.3*G(max(1e8, math.exp(-s)), s)
@@ -11,7 +14,7 @@ for _ in range(100):
     else: hi = m
 sH = lo; print("s_H =", sH)
 def gamma(s): return gstar(s) if s <= sH else (gstar(sH) + (7.5-gstar(sH))*(s-sH) if s <= sH+1 else 7.5)
-random.seed(1); bad1 = bad2 = bad3 = bad5 = 0; minH = minD = math.inf
+random.seed(1); bad1 = bad2 = bad3 = bad5 = badu = 0; minH = minD = min5 = minu = math.inf
 for _ in range(200000):
     Lam = 10**random.uniform(8, 30); s = random.uniform(-math.log(Lam), 60)
     l = 2*math.log(Lam) + s; L = math.exp(l) if l < 700 else None
@@ -40,9 +43,16 @@ for _ in range(200000):
         ratio = onej*g_over_L
         if ratio < 1 + 1e-3: bad3 += 1
         else: minD = min(minD, ratio)
-    # Step 5 condition for s >= sH with log c = γΛ (raised): e^s log(Λ e^s/(8*3.01γ)) >= 107.6 γ^2
+    # Step 5 condition for s >= sH with log c = γΛ (raised): e^s log(θ_b Λ e^s/(3.01γ)) >= 13.45 γ^2/θ_b,
+    # and hypothesis (*) of Lemma P(v): u0 >= θ_b Λ e^s/(3.01γ) >= 2Λ
     if s >= sH and gamma(s)*Lam > 4*l*l:
-        gm = gamma(s)
-        if math.exp(min(s,700))*math.log(Lam*math.exp(min(s,700))/(8*3.01*gm)) < 107.6*gm*gm: bad5 += 1
+        gm = gamma(s); es = math.exp(min(s,700))
+        lhs5 = es*math.log(THETA_B*Lam*es/(3.01*gm)); rhs5 = 13.45*gm*gm/THETA_B
+        if lhs5 < rhs5: bad5 += 1
+        min5 = min(min5, lhs5/rhs5)
+        u0L = THETA_B*es/(3.01*gm)
+        if u0L < 2: badu += 1
+        minu = min(minu, u0L)
 print("Step1 violations:", bad1, " Step2 violations:", bad2, "(min lhs/rhs %.4f)" % minH,
-      " Dickman violations:", bad3, "(min ratio %.4f)" % minD, " Step5 violations:", bad5)
+      " Dickman violations:", bad3, "(min ratio %.4f)" % minD, " Step5 violations:", bad5, "(min lhs/rhs %.4f)" % min5,
+      " u0 >= 2Lam violations:", badu, "(min u0/Lam %.4f)" % minu)

@@ -68,7 +68,8 @@ has far more room than this factor.
 This is a linear-window average with linear normalisation. Each rigid $n\ge X_0(1+\kappa)$ contributes a ramp of total mass
 $\log(1+\kappa)/\kappa=1-\kappa/2+O(\kappa^2)$ on $[n/(1+\kappa),n]$.
 
-\emph{The absorbed set} (random and adapted). Put $L_*:=10^7$, $h(u):=u^{\theta/2}$ and $y(n):=y(x)=H(x)L_0(x)(\log x)^6$, where
+\emph{The absorbed set} (random and adapted). Put $L_*:=10^7$, $h(u):=u^{\theta_b}$ with
+$\theta_b=\min(\theta,\max(\theta/2,\tfrac18))\in[\tfrac1{20},\tfrac14)$ (Section~\ref{sec:params}), and $y(n):=y(x)=H(x)L_0(x)(\log x)^6$, where
 $x$ is the dyadic scale with $n\in[x,2x)$ and $H$, $L_0$ are the parameters of Section~\ref{sec:params}; so $y$ is frozen per
 scale. Then
 \begin{equation}\label{eq:absorbed}
@@ -161,7 +162,7 @@ $u\ge X_0$.
 % Logged correction 106 (CORRECTIONS-vs-v3.md): the event is now localized; every use is on Good(<t) at heights x <= t + 1.01H(t).
 Write $E(x):=T(x)-x-R(x)$. On the event of Lemma~\ref{lem:lemmaP},
 \begin{equation}\label{eq:T1}
-  |E(x)|\le C_{X_0}x^{\theta}+2x^{\theta/2}\qquad\text{for all }x\ge X_0,\quad C_{X_0}<\infty.
+  |E(x)|\le C_{X_0}x^{\theta}+2x^{\theta_b}\qquad\text{for all }x\ge X_0,\quad C_{X_0}<\infty.
 \end{equation}
 More precisely, \eqref{eq:T1} holds on $\Good(<t)$ for $X_0\le x\le t+1.01H(t)$, since Lemma~\ref{lem:lemmaP} holds on
 $\Good(<t)$ at every height up to $t+1.01H(t)$, and $E(x)$ uses Lemma~\ref{lem:lemmaP} (directly and through
@@ -198,7 +199,7 @@ product is $\le e^{5\pi(X_0)}\le e^{0.001X_0^2}\le x^{0.001}$.
 
 \emph{Absorbed part.}
 % Logged correction 34 (CORRECTIONS-vs-v3.md): v3 omitted the mass deficit 1-M_a of the smoothed elements; added here.
-Put $b:=\theta/2$ and, for $a\in\Abs$, let $u_a+h(u_a)=a$ and $M_a:=\int_{u_a}^adu/h(u)$, the mass of the smoothed element $a$.
+Put $b:=\theta_b$ and, for $a\in\Abs$, let $u_a+h(u_a)=a$ and $M_a:=\int_{u_a}^adu/h(u)$, the mass of the smoothed element $a$.
 An element $a$ contributes to $\rho_{\Abs}(u)$ exactly for $u\in[u_a,a]$, so
 \[
   \#\Abs(\le x)-\int^x\rho_{\Abs}=\sum_{a\in\Abs,\,a\le x}(1-M_a)-\sum_{a\in\Abs,\,u_a<x<a}\int_{u_a}^x\frac{du}{h(u)} .
@@ -211,9 +212,10 @@ $a^{b-1}\le M_a^{-1}\int_{u_a}^au^{b-1}du/h(u)$ with $M_a^{-1}\le1.001$, and tha
 \[
   \sum_{a\in\Abs,\,a\le x}a^{b-1}\le1.001\int_{e^{10^7-1}}^xu^{b-1}(\log u)^{-4}\,du\le\frac{1.01}{b}\,x^b(\log x)^{-4},
 \]
-because $u^{b-1}(\log u)^{-4}\le(1-4/(b\log u))^{-1}\frac{d}{du}\bigl(u^b(\log u)^{-4}/b\bigr)$ and $4/(b\log u)\le4\cdot10^{-6}$. So the
-first sum is at most $1.01\,b\cdot1.01\,b^{-1}x^{\theta/2}(\log x)^{-4}\le1.03\,x^{\theta/2}(\log x)^{-4}$, and
-$|\#\Abs(\le x)-\int^x\rho_{\Abs}|\le3.1\,x^{\theta/2}(\log x)^{-4}$ (there is no boundary term, since $\Abs$ is empty near
+because $u^{b-1}(\log u)^{-4}\le(1-4/(b\log u))^{-1}\frac{d}{du}\bigl(u^b(\log u)^{-4}/b\bigr)$ and $4/(b\log u)\le10^{-5}$ (as
+$b\ge\tfrac1{20}$). So the
+first sum is at most $1.01\,b\cdot1.01\,b^{-1}x^{b}(\log x)^{-4}\le1.03\,x^{b}(\log x)^{-4}$, and
+$|\#\Abs(\le x)-\int^x\rho_{\Abs}|\le3.1\,x^{b}(\log x)^{-4}$ (there is no boundary term, since $\Abs$ is empty near
 $X_0$), well within \eqref{eq:T1}.
 % Logged correction 66: only Abs cap (x, x+h(x)) enters the second sum, and v3's +O(1) is superfluous.
 

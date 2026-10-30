@@ -158,7 +158,8 @@ zeta function.
 
 Applied to the ordinary integers, a positive answer would give a zero-free half-plane for the Riemann zeta function.
 
-**Theorem A (informal).** Let θ ∈ [1/4, 1/2 − 10⁻⁴]. There is a discrete Beurling system with N(x) = x + O(x^θ log* x)
+**Theorem A (informal).** Let θ ∈ [1/20, 1/2 − 10⁻⁴] (the range θ < 1/4 is a later extension, checked only by an AI agent; see
+[`FOLLOWUP-THETA.md`](FOLLOWUP-THETA.md)). There is a discrete Beurling system with N(x) = x + O(x^θ log* x)
 (log* the iterated logarithm), whose zeta function has zeros ρ_k with Re ρ_k = 1 − (3 log log x_k + O(1))/log x_k → 1.
 
 So the answer to Q is negative. Equivalently, there is a discrete [1, β]-system with β ≤ θ < 1/2. The result says nothing about the

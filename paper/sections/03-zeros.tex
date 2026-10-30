@@ -43,7 +43,7 @@ $\widehat E_{\Abs}(s)=\sum_{a\in\Abs}a^{-s}(1-w_a(s))$, where
 \]
 is the weight of $a$ in the average $\rho_{\Abs}(u)=\#(\Abs\cap[u,u+h(u)])/h(u)$ over the forward window $[u,u+h(u)]$.
 % Logged correction 33 (CORRECTIONS-vs-v3.md): v3's |w_a(s)| <= min(1, 2a^{1-theta/2}/|t|) is false (w_a(1) > 1); replaced by (i)-(iv).
-Put $b:=\theta/2$, so that $h(u)=u^b$ and $g$ is decreasing, and $M:=\int_{u_a}^ag$. For $a\ge X_0/2$ (so for every $a\in\Abs$)
+Put $b:=\theta_b\in[\tfrac1{20},\tfrac14)$, so that $h(u)=u^b$ and $g$ is decreasing, and $M:=\int_{u_a}^ag$. For $a\ge X_0/2$ (so for every $a\in\Abs$)
 and $0\le\sigma\le2$:
 \begin{enumerate}[label=(\roman*)]
 \item $(u_a/a)^b\le M\le1$ and $a/u_a\le(1-a^{b-1})^{-1}$;
@@ -147,7 +147,7 @@ The local prime number theorem (Theorem~\ref{thm:lp}) compares $N$ with the targ
 $T_0:=T-(\#\Abs-\int\bar\rho_{\Abs})$, whose transform is $\widehat T_0=Z_B+\widehat R=s/(s-1)+\widehat R+\widehat E$. The absorbed part
 $\widehat E_{\Abs}$ is \emph{not} bounded on all of $\sigma\ge1-a/\Lambda$ at large $|t|$ (Remark~\ref{rem:EAhuge}), so it is not put
 % Logged correction 34: the constant 2 became 3.1 (mass deficit of the smoothed absorbed elements).
-into $\widehat T_0$. On $\Good(<y)$, $|N-T_0|\le|N-T|+3.1u^{\theta/2}(\log u)^{-4}+2$ on $[1,y]$ by the absorbed part of
+into $\widehat T_0$. On $\Good(<y)$, $|N-T_0|\le|N-T|+3.1u^{\theta_b}(\log u)^{-4}+2$ on $[1,y]$ by the absorbed part of
 \eqref{eq:T1}. The constant of Lemma~\ref{lem:ZBlow} enters only through $\log C_a$; with $C_0=2.1$, $\log C_8<439.4$.
 
 \begin{lemma}[The absorbed part]\label{lem:ZA}
@@ -185,9 +185,9 @@ least $v_0$ with $e^{v_0}\in\Abs$ satisfies $\tilde u(v_0)\ge\Lambda^2e^{s_H}/(2
 $\varsigma_*(v_0)/2\ge0.45\,u_*\log u_*\ge1.66\cdot10^{10}$ for every $\Lambda\ge10^8$.
 
 (a) Fix $|t|\in[\Gamma_k/2,3\Gamma_k]$ and $1-\delta_k\le\sigma\le2$ (this covers all the sets in (a)), and put
-$Y:=|t|^{1/(1-\theta/2)}\le x_k$.
+$Y:=|t|^{1/(1-\theta_b)}\le x_k$ (as $|t|\le3\Gamma_k\le x_k^{1-\theta}$ and $\theta_b\le\theta$).
 % Logged correction 33: |1-w_a| <= 2.0001 (from (ii)) replaces |1-w_a| <= 2; the a > Y bound is (iv), now proved.
-For the terms $a\le Y$ we use $|1-w_a(s)|\le1+|w_a(s)|\le2+2.1a^{\theta/2-1}\le2.0001$, by (ii) after \eqref{eq:zetadecomp}. By
+For the terms $a\le Y$ we use $|1-w_a(s)|\le1+|w_a(s)|\le2+2.1a^{\theta_b-1}\le2.0001$, by (ii) after \eqref{eq:zetadecomp}. By
 partial summation these terms are then at most $2.0001$ times
 $\exp(\delta_k\log Y-\varsigma_*(\log Y))+\int_{v_0}^{\log Y}\exp(\delta_kv-\varsigma_*(v))\,dv$. This is
 $\le2\exp(-\varsigma_*(v_0)/2)\le2\exp(-0.45\,u_*\log u_*)$, uniformly in $k$.
@@ -197,15 +197,15 @@ $e^{\delta_k\log Y-\varsigma_*(\log Y)/2}+\int_{v_0}^{\log Y}e^{\delta_kv-\varsi
 $[v_0,V]$ we have $\delta_kv\le18\Lambda e^{-2\Lambda}V\le10^{-6}$, since $\delta_k\le9\log\log x_k/\log x_k\le18\Lambda e^{-2\Lambda}$,
 and $\varsigma_*(v)/2\ge\varsigma_*(v_0)/2\ge\ell_{\mathrm{std}}+20$, so that part is $\le1.01\,V e^{-\ell_{\mathrm{std}}-20}\le10^{-8}$. On
 $[V,\log Y]$ we have $\log v\le\log\log x_k$, hence $\delta_kv\le\varsigma_*(v)/4$ (as $504(\log\log x_k)^2\le\log x_k$), and
-$\varsigma_*(v)\ge v/(14\log v)$; so that part, and the boundary term, are $\le e^{-V/(60\log V)}\le10^{-8}$. The terms $a>Y$ use $|1-w_a|\le2|t|a^{\theta/2-1}$, from (iv) after
-\eqref{eq:zetadecomp}. With $b=\theta/2$, $|t|=Y^{1-b}$ and partial summation, they are at most
+$\varsigma_*(v)\ge v/(14\log v)$; so that part, and the boundary term, are $\le e^{-V/(60\log V)}\le10^{-8}$. The terms $a>Y$ use $|1-w_a|\le2|t|a^{\theta_b-1}$, from (iv) after
+\eqref{eq:zetadecomp}. With $b=\theta_b$, $|t|=Y^{1-b}$ and partial summation, they are at most
 \[
   2|t|\sum_{a\in\Abs,\,a>Y}a^{b-2+\delta_k}\le2Y^{1-b}\,\frac{2-b}{1-b-\delta_k}\,Y^{b-1+\delta_k}e^{-\varsigma_*(\log Y)}\le5.4\,Y^{\delta_k}e^{-\varsigma_*(\log Y)} .
 \]
 Here $Y\le x_k$, so $Y^{\delta_k}\le x_k^{\delta_k}\le(\log x_k)^9$. Also $\log Y\ge0.66\log x_k$, since
 % Logged correction 67: explicit lower bound for log Gamma_k (v3: "- O(log log x_k)").
 $\log\Gamma_k\ge(1-\theta)\log x_k-4\log\log x_k$ (as $\log(1/\kappa_0)\le\Lambda\le\frac12\log\log x_k$) and
-$(1-\theta)/(1-\theta/2)\ge\tfrac23+8\cdot10^{-5}$. These $a$ lie in the standard regime
+$(1-\theta)/(1-\theta_b)\ge(1-\theta)/(1-\theta/2)\ge\tfrac23+8\cdot10^{-5}$ (as $\theta_b\ge\theta/2$). These $a$ lie in the standard regime
 ($\log\log Y\ge2\Lambda-1>\ell_{\mathrm{std}}$), where $\varsigma_*(\log Y)\ge\log Y/(14\log\log Y)\ge\log x_k/(22\log\log x_k)$.
 So these terms are $\le5.4(\log x_k)^9\exp(-\log x_k/(22\log\log x_k))$, which is $\le e^{-10^{11}}$ since $\log x_k\ge X_0^2$.
 
@@ -287,10 +287,11 @@ $|\epsilon_2|\le8.1\Lambda^2/\log x_k$, by step~3 and $|Z_B(s^*)|\ge\frac12$.
 \item Since $Z_B(s^*)=-M_k(s^*)$, we get $Z_B+M_k=Z_B(s^*)\bigl(1-e^{-\xi}+\epsilon_2-e^{-\xi}\epsilon_1\bigr)$. On $|\xi|=1$ we have
 $|1-e^{-\xi}|\ge1-e^{-1}$ (the minimum is at $\xi=1$) and $|e^{-\xi}|\le e$, so
 $|Z_B+M_k|\ge\frac12(1-e^{-1}-8.1\Lambda^2/X_0^2-5e/X_0^2)\ge0.31\ge\tfrac14$.
-\item The circle lies in the disc. In step~2 the $O_{X_0}(1)$ term lies in $[\log\kappa_0-\log(2\Lambda)-1.5,\ \log\kappa_0+0.72]$,
-since $e^{-1}\le|\Phi(w)|\le1$, $0.49\le|w|\le0.76$ and $\tfrac12\le|Z_B|\le2\Lambda$ there; it is negative, as $\kappa_0\le\tfrac14$.
+\item The circle lies in the disc. In step~2 the $O_{X_0}(1)$ term lies in $[\log\kappa_0-\log(2\Lambda)-1.7,\ \log\kappa_0+0.72]$,
+since $e^{-1}\le|\Phi(w)|\le1$, $0.49\le|w|\le0.96$ (as $\operatorname{Re}w\in[1-\theta-\delta_k,1-\theta+\delta_k]$, $|\operatorname{Im}w|\le\delta_k$
+and $\theta\in[\tfrac1{20},\theta_1]$) and $\tfrac12\le|Z_B|\le2\Lambda$ there; it is negative, as $\kappa_0\le\tfrac14$.
 With the branch of step~3, $|\operatorname{Im}F|\le(\pi+0.01)/\log x_k$. Hence
-$|s^*-(1+i\gamma_k)|+1/\log x_k\le(3\log\log x_k+\log(1/\kappa_0)+\log(2\Lambda)+5.7)/\log x_k\le\delta_k$, because
+$|s^*-(1+i\gamma_k)|+1/\log x_k\le(3\log\log x_k+\log(1/\kappa_0)+\log(2\Lambda)+5.9)/\log x_k\le\delta_k$, because
 $\kappa_0\ge X_0^{-1}$ and $\log\log x_k\ge2\Lambda$.\qedhere
 \end{enumerate}
 \end{proof}
@@ -307,7 +308,7 @@ On the circle of Lemma~\ref{lem:designedzero}, with $a_k$ as in Lemma~\ref{lem:g
 $\widehat D_{\ge a_k}(s):=\int_{[a_k,\infty)}x^{-s}\,dD$,
 \[
   |\widehat D_{\ge a_k}(s)|\le6.001e\cdot|w^*|\cdot x_k^{\eta-\theta}\cdot\frac{Z_{\max}}{\alpha_k\operatorname{Re}\Phi_{\min}}
-  \le165\,\Lambda\,x_k^{-1/8}\qquad(|w^*|\le1).
+  \le165\,\Lambda\,x_k^{-\theta/2}\qquad(|w^*|\le1).
 \]
 \end{lemma}
 \begin{proof}
@@ -316,7 +317,7 @@ $a_k^{\eta-\sigma}\le x_k^{\eta-\sigma}(x_k/a_k)^{\sigma}\le(1+5H(a_k)/a_k)\,x_k
 $x_k^{-\sigma}\le e\,x_k^{-\operatorname{Re}s^*}=e\,x_k^{-\theta}/|G(w^*)|$, and $|G(w^*)|\ge|s^*|\alpha_k\operatorname{Re}\Phi_{\min}/(2|w^*|Z_{\max})$.
 The factors $|s|/|s^*|\le1.0001$ and $1+5H(a_k)/a_k\le1+10^{-10}$ cost at most $6\cdot1.0001\cdot(1+10^{-10})\le6.001$ in place of
 $6$. For the last bound, $|w^*|\le1$,
-$Z_{\max}=2\Lambda$, $\alpha_k\ge1$, $\operatorname{Re}\Phi_{\min}=e^{-1}\cos1\ge0.198$, and $\eta-\theta\le-\theta/2\le-\frac18$.
+$Z_{\max}=2\Lambda$, $\alpha_k\ge1$, $\operatorname{Re}\Phi_{\min}=e^{-1}\cos1\ge0.198$, and $\eta-\theta\le-\theta/2$.
 \end{proof}
 
 \begin{lemma}[Good heights exist]\label{lem:goodheights}
@@ -463,7 +464,7 @@ bounded by
 % Logged correction 67: the two o(1) terms of v3 are replaced by explicit bounds.
 \[
   |E_k|+\sum_{j\ne k}|\widehat R_j|+|\widehat D_{<a_k}|+|\widehat D_{\ge a_k}|+|\widehat E_{\Abs}|
-  \le3e^{-0.49X_0^2}+\tfrac1{16}+165\Lambda e^{-X_0^2/8}+e^{-10^{10}}<\tfrac14,
+  \le3e^{-0.49X_0^2}+\tfrac1{16}+165\Lambda e^{-\theta X_0^2/2}+e^{-10^{10}}<\tfrac14,
 \]
 by the bullets after \eqref{eq:Rhat} (the circle lies in $0.99\le\sigma\le2$, $|t-\gamma_k|\le1$), Lemmas~\ref{lem:goodheights},
 \ref{lem:latenoise} and~\ref{lem:ZA}, and $x_k\ge x_1\ge e^{X_0^2}$; here $\gamma_k\in\mathcal S_k$ on $\mathcal G$, and the circle lies in the
