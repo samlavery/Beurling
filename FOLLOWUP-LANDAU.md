@@ -16,7 +16,10 @@ Before, it was 3 log log x_k. The O_{X_0}(1) lies in [log κ_0 − log(2Λ) − 
   - Now κ'_k := κ_0 with κ_0 ∈ [X_0⁻¹, Λ⁻⁵].
   - Before, κ'_k = κ_0/log²x_k with κ_0 ∈ [X_0⁻¹, ¼].
   - The plan fixed κ_0 = X_0⁻¹. I kept a range that contains X_0⁻¹, so the lemmas that use κ_0 ≥ X_0⁻¹ are unchanged.
-  - The upper end Λ⁻⁵ is used only in Prop g1(B) Step 4/5. Elsewhere, "κ_0 ≤ ¼" was used only for the sign of the O(1) in designedzero step 6, and Λ⁻⁵ also works there.
+  - The upper end κ_0 ≤ Λ⁻⁵ is used in three places (corrected after the checker; the first version said "only in Step 4/5"):
+    - Lemma G1: 5κ_0 ≤ κ_+ = 0.8, which needs κ_0 ≤ 0.16;
+    - designedzero step 6: the sign of the O(1), which needs log κ_0 + 0.72 < 0;
+    - Prop g1(B) Steps 4–5: 526κ_0 must be o(1). Only this use needs κ_0 to be as small as Λ⁻⁵.
 - Derived quantities:
   - κ_k = 2κ_0/log x_k (eq:Rkprime, 04a-setup).
   - Γ_k = κ_0 x_k^{1−θ}/(2 log x_k).
@@ -110,3 +113,11 @@ I grepped `3\log\log`, `log^3`, `\log^{3}`, `kappa'_k`, `kappa_k`, `kappa_0`, `G
 - The barrier paragraph in rem:landau is heuristic (an order-of-magnitude argument, not a proved lower bound). It assumes the response is controlled only through absolute weights. I did not check whether W^sh is also bounded below by ≍ log v/log y.
 - Cor saias is used at start x on Good(<x), exactly as it already is for μ_1 and σ_A in Prop g1. I did not re-audit its event or horizon conditions beyond 04a-setup's Y' list (Y' = x/v ≤ 2x/X_0⁻).
 - Historical review files (review/*.md, review/subchecks/*) still mention 3 log log and log³. I left them unedited.
+
+## Checker fixes (second commit)
+
+An independent checker passed the mathematics of 92333a3. Its wording fixes:
+- (a) Remark notshown (00-intro): the log log barrier is now stated as heuristic ("Heuristically, … would seem to need …").
+- (b) rem:landau: the caveat "a reason, not a theorem; absolute weights only" is moved into the first sentence.
+- (c) rem:landau, the barrier argument: the bound for the part v ≤ V was wrong as written. (2v)^δ/log(2v) is largest at an endpoint, which can be v ≈ X_0⁻/2. It now reads (b/C_S)·max((2V)^δ/log 2V, 2/log X_0), with v ≥ X_0⁻/2. The 2b/(C_S log X_0) term is far below ½, so the conclusion V^δ ≳ log V is unchanged.
+- (d) Where κ_0 ≤ Λ⁻⁵ is used: corrected in the 02-construction comment and above.

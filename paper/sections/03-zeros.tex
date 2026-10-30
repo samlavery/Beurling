@@ -485,17 +485,18 @@ constant, and Step~4 of the proof of Proposition~\ref{prop:g1}(B) bounds the res
 weights of Corollary~\ref{cor:saias}, by $526\kappa_0/\log x$ at every $x\ge x_k$, including the range where $\gamma_k$ is not
 yet resolvable.
 
-Removing the remaining factor $\log\log$ is out of reach of this method. Every available bound for that response is through
+Heuristically, removing the remaining factor $\log\log$ is out of reach of this method; what follows is a reason, not a
+theorem, and it assumes that the response is controlled only through absolute weights. Every available bound for that response is through
 absolute weights of Saias type, so it costs $C_S\sum_v\log(2v)\sup_{[v,2v)}|R_k'|$, and this must stay below the slack $b<1$ of
 the margin. A zero at $1-\delta+i\gamma_k$, obtained by Rouch\'e's theorem against $Z_B$ with $|Z_B|\ge\frac12$, needs
 $|\widehat R_k(1-\delta+i\gamma_k)|\gtrsim\frac12$, while
 $|\widehat R_k(1-\delta+i\gamma_k)|\le\log2\sum_v(2v)^{\delta}\sup_{[v,2v)}|R_k'|$, and $N(x)-x=O(x^\theta)$ forces
 $\sup_{[v,2v)}|R_k'|\lesssim\gamma_kv^{\theta-1}$. Split the sum at the $V$ with $\gamma_kV^{\theta-1}\asymp\log^{-2}V$, so that
-$\log V=\log\gamma_k/(1-\theta)+O(\log\log\gamma_k)$. The part $v\le V$ is at most $(b/C_S)(2V)^{\delta}/\log V$ once
-$\delta\log V\ge1$, and the part $v>V$ is $O(V^{\delta}/\log^2V)$. Hence $V^{\delta}\gtrsim\log V$, that is,
+$\log V=\log\gamma_k/(1-\theta)+O(\log\log\gamma_k)$. As $v\ge\Xm/2$ and $(2v)^{\delta}/\log(2v)$ is largest at an
+endpoint, the part $v\le V$ is at most $(b/C_S)\max\bigl((2V)^{\delta}/\log2V,\,2/\log X_0\bigr)$, and the part $v>V$ is
+$O(V^{\delta}/\log^2V)$. The term $2b/(C_S\log X_0)$ is far below $\frac12$, so $V^{\delta}\gtrsim\log V$, that is,
 $1-\operatorname{Re}\rho_k\ge(1-\theta)(\log\log\gamma_k-O(1))/\log\gamma_k$, whatever the shape of the switch-on, the window
 lengths or the spacing. A Landau-type zero would need cancellation in $\sum_nc_n(x)n^{-1-i\gamma_k}$ at heights where $\gamma_k$
-is not resolvable, next to a zero of the realised system; we know no such estimate. This is a reason, not a theorem: it assumes
-that the response is controlled only through absolute weights.
+is not resolvable, next to a zero of the realised system; we know no such estimate.
 \end{remark}
 \par\endgroup
