@@ -401,9 +401,8 @@ theorem Hord_log_sum_197_le :
 /-- **x1, as a series.** `∑_{m ≥ 2} H_ord(m) m^{-(1.8 - 3·10⁻⁶)} ≤ 7.4915`. -/
 theorem Hord_sum_x1_le :
     ∑' m : ℕ, (if 2 ≤ m then (Hord m : ℝ) * (m : ℝ) ^ (-(1.8 - 3e-6) : ℝ) else 0) ≤ 7.4915 := by
-  have hz : zetaR (1.8 - 3e-6) < 2 := by
-    obtain ⟨a, ha, -⟩ := of_optLe check_x1
-    exact (ordA_le (by norm_num) (by norm_num) ha).1 |>.trans_eq' (by norm_num)
+  have hz : zetaR (1.8 - 3e-6) < 2 :=
+    (ordA_le_check zH1799997 (by decide +kernel : _ ∧ _ ≤ (74915 / 10000 : ℚ))).1
   rw [← ordA_eq_tsum (by norm_num) hz]
   exact ordA_x1_le
 
