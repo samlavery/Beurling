@@ -70,15 +70,48 @@ Nothing here is a new mathematical inequality: only the cell decomposition and t
 
 Files: `BSCert/Finite/X0Mono.lean` (the reduction), `X0Formula.lean` (the integer formula), `X0Vec.lean` (exponent vectors and the H_ord certificate), `X0Rep.lean` (the representatives), `X0Chunks/X0C0–3.lean` (kernel checks), `X0BandCert.lean` (assembly). The statements `Bx_le_five_twelfths` and `Bx_six` are unchanged.
 
-Notation: B(n) = (1/n)[μ²(n)/2 + (1/2) Σ_{d|n, 1<d<n} (2μ²(d) + (λ/2) X(d)/d)], with X(d) = Σ_{e|d, 1<e<d} μ²(e)·e·H(d/e), H = H_ord and λ = 1.0001.
+**Definitions** (exactly as in `certificates/x0-band/x0band_exact.py` and App. B.3; Lean: `BSCert.X0Band.Hord`, `musq`, `X`, `Bx` in `Finite/X0Band.lean`). For n ≥ 2:
+- B(n) = (1/n)·[ μ²(n)/2 + (1/2)·Σ_{d|n, 1<d<n} T(d) ];
+- T(d) = 2μ²(d) + (λ/2)·X(d)/d, with λ = 1.0001;
+- X(d) = Σ_{e|d, 1<e<d} μ²(e)·e·H(d/e);
+- H(1) = 1 and H(m) = Σ_{g|m, g<m} H(g) for m ≥ 2 (ordered factorisations).
 
-**Lemma M (monotone representative).** Let n ≥ 2, with prime factors p₁ < … < p_k, and let q_i be the i-th prime. Define φ on the divisors of n by φ(∏ p_i^{a_i}) = ∏ q_i^{a_i}. Then B(n) ≤ B(φ(n)), with strict inequality if φ(n) < n.
+The script tests every n ≤ 10⁶ in floating point with a (1+10⁻⁹) inflation, and B(6) exactly. The Lean proof uses exact rationals throughout.
 
-*Proof.* φ is multiplicative, injective on divisors of n, preserves divisibility and the relation d < e for d | e, and fixes 1. Moreover q_i ≤ p_i, so φ(d) ≤ d.
-1. μ²(d) = μ²(φ d): squarefreeness depends only on the exponents.
-2. H(d) = H(φ d): H depends only on the divisor lattice, and φ is a lattice isomorphism from div(d) onto div(φ d). Only H(d) ≤ H(φ d) is used, proved by strong induction from H(m) = Σ_{d|m, d<m} H(d).
-3. X(d)/d ≤ X(φ d)/φ(d). Write X(d)/d = Σ_{e|d, 1<e<d} μ²(e) H(d/e)/(d/e). Then term by term: μ²(e) ≤ μ²(φ e), H(d/e) ≤ H(φ(d)/φ(e)), and 1/(d/e) ≤ 1/φ(d/e), using φ(d/e) = φ(d)/φ(e). The index map e ↦ φ(e) is injective into the index set for φ(d), and the extra terms are ≥ 0.
-4. Hence the bracket [·] of B(n) is ≤ the bracket of B(φ n): the same argument with d ↦ φ(d) over 1 < d < n. The prefactor satisfies 1/n ≤ 1/φ(n), strictly if φ(n) < n, and the bracket of B(φ n) is > 0 since φ(n) ≥ 2. ∎
+**Lemma M (monotone representative).** Let n ≥ 2 have prime factors p₁ < p₂ < … < p_k, and let q_i be the i-th prime (q₁ = 2, q₂ = 3, …). Define φ(d) = ∏_i q_i^{v_{p_i}(d)} for d | n. Then:
+- B(n) ≤ B(φ(n));
+- if φ(n) < n, then B(n) < B(φ(n)).
+
+(Lean: `X0Mono.Bx_le_φ`, with σ(p_i) = q_i written as `Nat.nth Nat.Prime (rk n p)`.)
+
+*Proof.*
+
+(a) Basic properties of φ on D = div(n). Since q_i ≤ p_i, which holds because p_i is at least the i-th prime:
+1. φ(1) = 1, and φ(de) = φ(d)φ(e).
+2. φ is injective on D (it is injective on exponent vectors).
+3. If d | e | n, then φ(d) | φ(e) and φ(e/d) = φ(e)/φ(d).
+4. φ(d) ≤ d.
+5. μ²(φ d) = μ²(d), since both say "all exponents ≤ 1".
+6. For d | n: d > 1 ⇔ φ(d) > 1. For d | e | n: d < e ⇔ φ(d) < φ(e), because d < e with d | e means v(d) ≤ v(e) componentwise with v(d) ≠ v(e).
+
+(b) H(d) ≤ H(φ d) for d | n. Strong induction on d:
+- H(d) = Σ_{g|d, g<d} H(g) ≤ Σ_{g|d, g<d} H(φ g), by the induction hypothesis.
+- That sum is ≤ Σ_{g'|φ(d), g'<φ(d)} H(g'). The map g ↦ φ(g) is injective from {g | d, g < d} into {g' | φ(d), g' < φ(d)} by (a), and H ≥ 0.
+
+Equality actually holds, since φ is a lattice isomorphism div(d) → div(φ d), but only ≤ is needed.
+
+(c) X(d)/d ≤ X(φ d)/φ(d) for d | n. Write X(d)/d = Σ_{e|d, 1<e<d} μ²(e)·H(d/e)/(d/e) (`X_div_eq`). Map e ↦ φ(e), which is injective from {e | d, 1<e<d} into {e' | φ(d), 1<e'<φ(d)}. Term by term:
+- μ²(e) = μ²(φ e);
+- H(d/e) ≤ H(φ(d/e)) = H(φ(d)/φ(e)), by (b) and (a)3;
+- 1/(d/e) ≤ 1/φ(d/e), by (a)4.
+
+All terms are nonnegative, so the terms of the right-hand side outside the image only add.
+
+(d) Brackets. Let [n] = μ²(n)/2 + (1/2)Σ_{d|n, 1<d<n} T(d). By (a)5, (c) and the same injective reindexing d ↦ φ(d) of {d | n, 1<d<n} into {d' | φ(n), 1<d'<φ(n)}, we get [n] ≤ [φ(n)]. Moreover [φ(n)] > 0: φ(n) ≥ 2 and either μ²(φ n) = 1, or φ(n) has a proper squarefree divisor q₁ > 1 with T(q₁) ≥ 2 (`brk_pos`).
+
+(e) Conclusion. B(n) = [n]/n ≤ [φ n]/n ≤ [φ n]/φ(n) = B(φ n), since φ(n) ≤ n. The second inequality is strict when φ(n) < n, because [φ n] > 0. ∎
+
+The argument uses only H ≥ 0, μ² ≥ 0, X ≥ 0 and λ > 0. It does not depend on the value of λ.
 
 **Lemma R (the representatives).** For 2 ≤ n ≤ 10⁶, φ(n) = 2^{a₁}3^{a₂}5^{a₃}7^{a₄}11^{a₅}13^{a₆}17^{a₇}, where the nonzero a_i form a prefix (a_i ≥ 1 exactly for i ≤ k) and k ≤ 7. The bound k ≤ 7 holds because a k ≥ 8 would give φ(n) ≥ 2·3·…·19 = 9699690 > 10⁶ ≥ n ≥ φ(n). There are 784 such numbers ≤ 10⁶ (785 vectors including 0), enumerated by `gen` (`mem_gen`).
 
