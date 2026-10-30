@@ -67,7 +67,8 @@ parameter & value \\ \hline
 $\theta$, $\theta_b$, $\theta'$ & $\theta\in[\theta_0,\theta_1]$, $\theta_0:=\tfrac1{20}$, $\theta_1:=\tfrac12-10^{-4}$, fixed ($\theta=\tfrac14$ suffices for
 Corollary~\ref{cor:notQ}). The absorption window has exponent $\theta_b:=\min(\theta,\max(\theta/2,\tfrac18))$: so $\theta_b=\theta/2$ for
 $\theta\ge\tfrac14$, $\theta_b=\tfrac18$ for $\theta\in[\tfrac18,\tfrac14]$ and $\theta_b=\theta$ for $\theta\le\tfrac18$; always
-$\theta/2\le\theta_b\le\theta$ and $\tfrac1{20}\le\theta_b<\tfrac14$. The local prime number theorem uses the exponent $\theta':=\theta+0.01$. \\
+$\theta/2\le\theta_b\le\theta$ and $\tfrac1{20}\le\theta_b<\tfrac14$. The local prime number theorem uses the exponent $\theta':=\max(\theta+0.01,\,8(\log\log X_0)^2/\log X_0+0.005)$, which is
+$\theta+0.01$ here. \\
 $X_0$ & $X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$, an even integer (for instance the least one): the single regime for the whole
 proof. It is even so that the jump of $T$ at $X_0$ is the jump of $\lfloor x\rfloor$ at the rigid integer $X_0$ (Section~\ref{sec:target}). $X_{\mathrm{Hux}}$ is defined in
 \eqref{eq:huxley}, depends on no parameter, and gives $\mathrm{MA}[\mathbb P](q)\log q\ge0.99$ for every $q\ge X_0$

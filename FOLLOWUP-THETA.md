@@ -1,6 +1,7 @@
 # Follow-up: Theorem A below θ = 1/4 (branch followup-theta)
 
-Status (2026-10-30): paper only. Done and checked by one AI agent (Claude); **no independent or human review.** Scope note:
+Status (2026-10-30): paper only. Done by one AI agent (Claude) and passed by one independent AI check (which redid (12.2), (*),
+the constants, the designed-zero 5.852 ≤ 5.9 and every theta.md row, and reran all scripts); **no human review.** Not formalized in Lean. Scope note:
 /tmp/rhscratch/ext/theta.md (Tier 1).
 
 ## Result
