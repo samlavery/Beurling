@@ -67,7 +67,7 @@ theorem Ei_11_le : Ei 11 - Real.exp 11 / 11 - Real.exp 11 / 121 ≤ 134 := by
 lemma exp11_ge : (59000 : ℝ) ≤ Real.exp 11 := by
   have h := expLoQ_le (x := 11) (by norm_num) 30
   push_cast at h
-  have hc : (59000 : ℚ) ≤ expLoQ 30 11 := by native_decide
+  have hc : (59000 : ℚ) ≤ expLoQ 30 11 := by decide +kernel
   have hc' : (59000 : ℝ) ≤ ((expLoQ 30 11 : ℚ) : ℝ) := by exact_mod_cast hc
   linarith
 

@@ -30,7 +30,7 @@ lemma expLo_le {x : ℚ} (hx : 0 ≤ x) (n : ℕ) : ((expLo n x : ℚ) : ℝ) �
 
 lemma exp_sH_ge : (393 : ℝ) ≤ Real.exp 5.9745 := by
   have h := expLo_le (x := 59745 / 10000) (by norm_num) 40
-  have hc : (393 : ℚ) ≤ expLo 40 (59745 / 10000) := by native_decide
+  have hc : (393 : ℚ) ≤ expLo 40 (59745 / 10000) := by decide +kernel
   have hc' : (393 : ℝ) ≤ ((expLo 40 (59745 / 10000) : ℚ) : ℝ) := by exact_mod_cast hc
   have e : (((59745 / 10000 : ℚ)) : ℝ) = 5.9745 := by norm_num
   rw [e] at h

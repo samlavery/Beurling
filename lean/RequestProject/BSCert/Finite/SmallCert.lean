@@ -13,9 +13,9 @@ namespace BSCert.FiniteN
 
 open Real Finset ArithmeticFunction
 
-lemma win3b_checks : ∀ k ∈ Icc 2 143, win3bCheck k = true := by native_decide
+lemma win3b_checks : ∀ k ∈ Icc 2 143, win3bCheck k = true := by decide +kernel
 
-lemma win3a_checks : winLoop (19999 - 143) 143 (winU 143) = true := by native_decide
+lemma win3a_checks : winLoop (19999 - 143) 143 (winU 143) = true := by decide +kernel
 
 lemma f12_checks : sumLoop (fun _ => 0) f12Hi f12Ok (10 ^ 6) 1 0 0 = true := by native_decide
 

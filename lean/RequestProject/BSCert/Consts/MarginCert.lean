@@ -54,7 +54,7 @@ noncomputable def I3 : ℝ := c3 * ∫ v in Ioi (4 : ℝ), f3 v
 
 /-! ## m1: `Ein(2)` -/
 
-lemma Ein2_check : EinHiQ 30 2 < 369 / 100 ∧ 36838 / 10000 < EinLoQ 30 2 := by native_decide
+lemma Ein2_check : EinHiQ 30 2 < 369 / 100 ∧ 36838 / 10000 < EinLoQ 30 2 := by decide +kernel
 
 /-- **m1.** `3.6838 < Ein(2) < 3.69`. -/
 theorem Ein_two_bounds : 3.6838 < Ein 2 ∧ Ein 2 < 3.69 := by
