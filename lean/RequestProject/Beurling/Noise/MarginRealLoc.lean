@@ -335,10 +335,15 @@ structure RealMarginLoc (hc : Cond θ X₀) (ω : JitterΩ) (b : ℝ) where
     t / KR.Vl (PR θ X₀ ω) w - 0.52 * Queue6.Hc X₀ (t / KR.Vl (PR θ X₀ ω) w) ≤ z' →
       z' ≤ t / KR.Vl (PR θ X₀ ω) w → err z' ≤ e t w
   he0 : ∀ t, T0 ≤ t → t ≤ b → ∀ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t, 0 ≤ e t w
-  /-- the oscillation of `T'` (eq. (osc)) -/
+  /-- the oscillation of `T_c` (eq. (osc); 04a l.83: the jump at `X₀` is not in `o_t`, it is
+  carried by the `j`-term of the super-solution, `hpj`, `hJr`) -/
   hoscV : ∀ t, T0 ≤ t → t ≤ b → ∀ hh, |hh| ≤ 1.01 * Queue6.Hc X₀ t →
-    |(TcR θ X₀ ω j0 (t + hh) + j0 * ind X₀ (t + hh)) - (TcR θ X₀ ω j0 t + j0 * ind X₀ t)| ≤
-      oV t
+    |TcR θ X₀ ω j0 (t + hh) - TcR θ X₀ ω j0 t| ≤ oV t
+  /-- the jump `j₀` is covered by the `j`-term of the super-solution (04g Step 3, base case) -/
+  hpj : j0 ≤ p.j
+  /-- the jump window lies in the radius `r(1)` of the super-solution -/
+  hJr : ∀ t, T0 ≤ t → t ≤ b → |t - X₀| ≤ 1.01 * Queue6.Hc X₀ t →
+    |t - p.X0| ≤ Margin.Rec.radJ (PR θ X₀ ω) p 1
   /-- filter switching and `ΔNT_pt ≤ 2η` -/
   hsw : ∀ t, T0 ≤ t → t ≤ b → ∀ hh, |hh| ≤ 1.01 * Queue6.Hc X₀ t →
     |∑ w ∈ Margin.Rec.Fset (PR θ X₀ ω) p t,
@@ -636,6 +641,8 @@ noncomputable def toCI (R : RealMarginLoc hc ω b) (hev : Even X₀) :
   hS2 := R.hS2_of
   he0 := R.he0
   hoscV := R.hoscV
+  hjp := R.hpj
+  hJr := R.hJr
   hsw := R.hsw
   hS4 := R.hS4
   hbase := R.hbase

@@ -160,64 +160,6 @@ theorem hsize_of (hc : Cond θ X₀) {ω : Construction.JitterΩ} {Z η1 η2 εT
     rw [e]; simpa using h4.trans h3
   nlinarith
 
-/-! ### The field `ho` is false as stated: `o_V` contains the jump at `X₀`
-
-`oVc` (Model/Wire.lean) oscillates `T' = T_c + j₀ 1_{[X₀,∞)}`, so at `t = X₀` it is at least the
-jump `j₀ = jzX X₀ ≈ 1/log X₀` (Huxley), and `log X₀ · o_V(X₀) ≥ log X₀ · j₀ ≈ 1 > 0.0013`.
-Since `T₀ = c_∞ + K_c ≈ 0.605 X₀⁻ < X₀ ≤ b`, the point `t = X₀` is in the range of `ho`. The paper's
-`o_t` is the oscillation of `T_c` (04a l.83, "every oscillation bound refers to `T_c`"), and the
-jump enters only as the base term `j₀ 1[|t - X₀| ≤ 1.01 H(t)]` (04g Step 3, base case; Step 5,
-"the jump"). -/
-
-/-- `j₀ ≤ o_V(X₀)`. -/
-theorem jzX_le_oVc (hc : Cond θ X₀) (hev : Even X₀) (ω : Construction.JitterΩ) {Z η1 η2 εT θT : ℝ}
-    {ε1 : ℝ → ℝ}
-    (htnp : KR.TNP.Hyp (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) Z η1 η2 ε1 εT θT)
-    {b : ℝ} (hb : (X₀ : ℝ) ≤ b) (hZ : 2 * (b + Queue6.Hc X₀ b) / Xm X₀ ≤ Z) :
-    jzX X₀ ≤ oVc θ X₀ ω X₀ := by
-  have hH := (KR.WidthReal.Hc_pos hc.hX (X₀ : ℝ))
-  have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
-  have h := hoscV_c hc hev ω htnp (by linarith) hZ hb (hh := -(Queue6.Hc X₀ X₀ / 2))
-    (by rw [abs_neg, abs_of_pos (by linarith)]; linarith)
-  have e1 : Tpc θ X₀ ω (X₀ + -(Queue6.Hc X₀ X₀ / 2)) = 0 := by
-    unfold Tpc
-    rw [TcR_low hc ω (by linarith)]
-    have : KR.Chain.ind (X₀ : ℝ) (X₀ + -(Queue6.Hc X₀ X₀ / 2)) = 0 := by
-      unfold KR.Chain.ind; rw [Set.indicator_of_notMem]; simp only [Set.mem_Ici, not_le]; linarith
-    rw [this]; ring
-  have e2 : Tpc θ X₀ ω X₀ = jzX X₀ := by
-    unfold Tpc
-    rw [TcR_low hc ω le_rfl]
-    have : KR.Chain.ind (X₀ : ℝ) X₀ = 1 := by
-      unfold KR.Chain.ind; rw [Set.indicator_of_mem (Set.mem_Ici.mpr le_rfl)]
-    rw [this]; ring
-  rw [e1, e2, zero_sub, abs_neg, abs_of_nonneg (jzX_nonneg hc)] at h
-  exact h
-
-/-- **`ho` fails**: with (huxley), `log X₀ · o_V(X₀) ≥ 0.98`, and `X₀ ∈ [T₀, b]`; so no
-`so < 0.98` satisfies the field `ho` (in particular not with `so + 2 s_η ≤ 0.0013`). -/
-theorem ho_false (hc : Cond θ X₀) (hev : Even X₀) (ω : Construction.JitterΩ)
-    {Z η1 η2 εT θT : ℝ} {ε1 : ℝ → ℝ}
-    (htnp : KR.TNP.Hyp (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) Z η1 η2 ε1 εT θT)
-    (hH : BaseRange.HuxleyFrom (X₀ : ℝ)) {b : ℝ} (hb : (X₀ : ℝ) ≤ b)
-    (hZ : 2 * (b + Queue6.Hc X₀ b) / Xm X₀ ≤ Z) (ES j : ℝ) {so : ℝ} (hso : so < 0.98) :
-    ¬ (∀ t, (RML7.canonP X₀ epsH ES j).cinf + (RML7.canonP X₀ epsH ES j).Kc ≤ t → t ≤ b →
-        Real.log t * oVc θ X₀ ω t ≤ so) := by
-  intro hall
-  have hX := hc.hX
-  have hlX : 0 < Real.log X₀ := by linarith
-  have hj := BaseRange.one_sub_rhoDet_ge_099 hX hH (t := X₀) le_rfl
-  have hj' : (0.99 - 1 / 10 ^ 9) / Real.log X₀ ≤ jzX X₀ := by unfold jzX; exact hj
-  have ho := jzX_le_oVc hc hev ω htnp hb hZ
-  have hT : (RML7.canonP X₀ epsH ES j).cinf + (RML7.canonP X₀ epsH ES j).Kc ≤ X₀ :=
-    hT0T_c hc ES j (b := X₀) le_rfl
-  have h1 := hall X₀ hT hb
-  have h2 : 0.98 ≤ Real.log X₀ * oVc θ X₀ ω X₀ := by
-    have : (0.99 - 1 / 10 ^ 9) ≤ Real.log X₀ * jzX X₀ := by
-      rw [div_le_iff₀ hlX] at hj'; linarith
-    nlinarith
-  linarith
-
 end BModel.RML15
 
 end

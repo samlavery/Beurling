@@ -5,6 +5,7 @@ public import RequestProject.Beurling.Model.S2Final
 public import RequestProject.Beurling.Model.Wire3
 public import RequestProject.Beurling.Model.SigmaResp
 public import RequestProject.Beurling.Model.OscBound
+public import RequestProject.Beurling.Noise.RML16Canon
 public import RequestProject.Beurling.Model.BtNT
 public import RequestProject.Beurling.Model.G1BWire
 public import RequestProject.Beurling.Model.G1BJumpProof
@@ -94,6 +95,7 @@ structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (nb : ℕ
   jP : ℝ
   hES0 : 0 ≤ ES
   hjP0 : 0 ≤ jP
+  hjPj : jzX X₀ ≤ jP
   e : ℝ → ℕ → ℝ
   s2mst : ℝ → ℝ
   /-- **Step 2, strip comparison on `A₊`** (§5): `|∫_{A₊} m - ∫_{I₊} m| ≤ 1.05 δ_z H(z) m*`,
@@ -300,6 +302,8 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
   he0 := Mg.he0
   hoscV := fun t _ htb hh hhh => hoscV_c hc hev ω (tnpR hc hev hbs hN.2.1 hX1) (by linarith)
     (Zc_facts hc hb).2.2.2 htb hhh
+  hpj := Mg.hjPj.trans (RML16.canonP_hpj epsH Mg.ES Mg.jP)
+  hJr := fun t _ _ ht => RML16.canonP_hJr hc.hX (PR θ X₀ ω) epsH Mg.ES Mg.jP ht
   hsw := fun t _ htb hh hhh => hsw_c hc hev ω (RML7.canonP X₀ epsH Mg.ES Mg.jP) htb hhh
   hS4 := Mg.hS4
   hbase := hbase_c hc ω Mg.hjP0

@@ -148,6 +148,7 @@ noncomputable def restMargin_of (hc : Cond θ X₀) (hev : Even X₀) {ω : Jitt
     jP := jzX X₀
     hES0 := R.hES0
     hjP0 := jzX_nonneg hc
+    hjPj := le_rfl
     e := RML12M.e12 X₀ (PR θ X₀ ω) (MfH θ X₀ ω)
     s2mst := MfH θ X₀ ω
     hS2sp := RML12M.hS2sp_12 hc.hX (by norm_num) (by norm_num) (CapHSlopeProof.capHSlope hc.hX)

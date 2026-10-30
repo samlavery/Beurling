@@ -94,9 +94,11 @@ noncomputable def Tpc (ω : JitterΩ) (t : ℝ) : ℝ :=
   TcR θ X₀ ω (jzX X₀) t + jzX X₀ * KR.Chain.ind X₀ t
 
 variable (θ X₀) in
-/-- **The canonical oscillation** `o_V(t) = sup_{|h| ≤ 1.01 H(t)} |T'(t+h) - T'(t)|`. -/
+/-- **The canonical oscillation** `o_V(t) = sup_{|h| ≤ 1.01 H(t)} |T_c(t+h) - T_c(t)|` (of `T_c`;
+the jump at `X₀` is a separate source). -/
 noncomputable def oVc (ω : JitterΩ) (t : ℝ) : ℝ :=
-  Margin.RML6.supW (fun h => |Tpc θ X₀ ω (t + h) - Tpc θ X₀ ω t|) (1.01 * Queue6.Hc X₀ t)
+  Margin.RML6.supW (fun h => |TcR θ X₀ ω (jzX X₀) (t + h) - TcR θ X₀ ω (jzX X₀) t|)
+    (1.01 * Queue6.Hc X₀ t)
 
 /-- **The field `hoscV`** at `o_V = oVc`, for `t ≤ b`, below the (H_BS) horizon `Zc b`. -/
 theorem hoscV_c (hc : Cond θ X₀) (hev : Even X₀) (ω : JitterΩ) {Z η1 η2 ε ϑ : ℝ}
@@ -104,29 +106,21 @@ theorem hoscV_c (hc : Cond θ X₀) (hev : Even X₀) (ω : JitterΩ) {Z η1 η2
     (hT : KR.TNP.Hyp (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) Z η1 η2 ε1 ε ϑ)
     {b : ℝ} (hb0 : 0 ≤ b) (hZ : 2 * (b + Queue6.Hc X₀ b) / Xm X₀ ≤ Z) {t : ℝ} (htb : t ≤ b) {hh : ℝ}
     (hhh : |hh| ≤ 1.01 * Queue6.Hc X₀ t) :
-    |Tpc θ X₀ ω (t + hh) - Tpc θ X₀ ω t| ≤ oVc θ X₀ ω t := by
+    |TcR θ X₀ ω (jzX X₀) (t + hh) - TcR θ X₀ ω (jzX X₀) t| ≤ oVc θ X₀ ω t := by
   have hXm0 : 0 < Xm X₀ := by linarith [Queue6.Xm_pos hc]
   have hmono := KR.WidthReal.Hc_mono hc.hX
   have hHt : Queue6.Hc X₀ t ≤ Queue6.Hc X₀ b := hmono htb
   have hH0 : 0 ≤ Queue6.Hc X₀ t := by unfold Queue6.Hc; exact capH_nonneg _ _
-  have hj1 := jzX_le_one hc
-  have hj0 := jzX_nonneg hc
-  have hbd : ∀ y, y ≤ b + 1.01 * Queue6.Hc X₀ b → |Tpc θ X₀ ω y| ≤ 3 := by
+  have hbd : ∀ y, y ≤ b + 1.01 * Queue6.Hc X₀ b → |TcR θ X₀ ω (jzX X₀) y| ≤ 2 := by
     intro y hy
     have hyZ : y / Xm X₀ ≤ Z := by
       refine le_trans ?_ hZ
       rw [div_le_div_iff_of_pos_right hXm0]
       linarith [show (0 : ℝ) ≤ Queue6.Hc X₀ b by unfold Queue6.Hc; exact capH_nonneg _ _]
-    have h1 := TcR_abs_le hc hev ω hT hyZ
-    have h2 : |jzX X₀ * KR.Chain.ind X₀ y| ≤ 1 := by
-      rw [abs_mul, abs_of_nonneg hj0]
-      have := KR.Chain.ind_abs_le (X₀ : ℝ) y
-      nlinarith [abs_nonneg (KR.Chain.ind (X₀ : ℝ) y)]
-    unfold Tpc
-    exact (abs_add_le _ _).trans (by linarith)
+    exact TcR_abs_le hc hev ω hT hyZ
   unfold oVc
-  refine Margin.RML6.le_supW (F := fun h => |Tpc θ X₀ ω (t + h) - Tpc θ X₀ ω t|) (C := 6)
-    (fun h hh' => ?_) hhh
+  refine Margin.RML6.le_supW (F := fun h => |TcR θ X₀ ω (jzX X₀) (t + h) -
+    TcR θ X₀ ω (jzX X₀) t|) (C := 4) (fun h hh' => ?_) hhh
   have hh1 := (abs_le.mp hh').2
   have e1 := hbd (t + h) (by linarith)
   have e2 := hbd t (by linarith)

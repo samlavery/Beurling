@@ -526,8 +526,10 @@ lemma weight_step (h : ChainHyp P p H) {w M : ℕ} (hw : 2 ≤ w) (hM : M ≠ 0)
 
 /-- **`Vsup` is a super-solution** of the Step-3 recursion: at every `t ≥ T₀`,
 `S(t) + ∑_{w ≥ 2} c_w(t) b_w ≤ V(t)` with `b_w ≥ sup_{|t' - t/w| ≤ 2.1H(t/w)} V(t')`. -/
-theorem super (h : ChainHyp P p H) {T0 : ℝ} {S : ℝ → ℝ} {c : ℝ → ℕ → ℝ}
-    (hT0 : p.cinf + p.Kc ≤ T0) (hS : ∀ t, T0 ≤ t → S t ≤ p.ES / Real.log t)
+theorem super_J (h : ChainHyp P p H) {T0 : ℝ} {S : ℝ → ℝ} {c : ℝ → ℕ → ℝ}
+    (hT0 : p.cinf + p.Kc ≤ T0)
+    (hS : ∀ t, T0 ≤ t →
+      S t ≤ p.ES / Real.log t + (if |t - p.X0| ≤ radJ P p 1 then p.j else 0))
     (hc : ∀ t, T0 ≤ t → ∀ w ∈ Fset P p t, 0 ≤ c t w ∧ c t w ≤ 1.0101 * Vv P w ^ (p.ε - 2)) :
     Var.Super T0 (Vsup P p) S (Fset P p) c (Nbhd P H) := by
   classical
@@ -567,9 +569,7 @@ theorem super (h : ChainHyp P p H) {T0 : ℝ} {S : ℝ → ℝ} {c : ℝ → ℕ
     have hcut1 : cutL P p 1 = p.cinf + p.Kc := by
       unfold cutL; rw [Vv_one, Real.one_rpow, mul_one]
     rw [hcut1, if_pos htc]
-    have : 0 ≤ (if |t - p.X0| ≤ radJ P p 1 then p.j else 0) := by
-      split_ifs; exact h.hj; exact le_rfl
-    linarith [hS t ht]
+    exact hS t ht
   -- the chains with a first step
   have hstep : ∑ w ∈ Fset P p t, c t w * bW (P := P) (p := p) t w ≤
       ∑ M ∈ (KR.NAll P t (p.Xm / 2)).filter (2 ≤ ·), Aw P p M * PhiC P p (t / Vv P M) M := by
@@ -652,6 +652,16 @@ theorem super (h : ChainHyp P p H) {T0 : ℝ} {S : ℝ → ℝ} {c : ℝ → ℕ
       _ = _ := hT
   linarith
 
+/-- **`Vsup` is a super-solution** (the form without the jump source). -/
+theorem super (h : ChainHyp P p H) {T0 : ℝ} {S : ℝ → ℝ} {c : ℝ → ℕ → ℝ}
+    (hT0 : p.cinf + p.Kc ≤ T0) (hS : ∀ t, T0 ≤ t → S t ≤ p.ES / Real.log t)
+    (hc : ∀ t, T0 ≤ t → ∀ w ∈ Fset P p t, 0 ≤ c t w ∧ c t w ≤ 1.0101 * Vv P w ^ (p.ε - 2)) :
+    Var.Super T0 (Vsup P p) S (Fset P p) c (Nbhd P H) := by
+  refine super_J h hT0 (fun t ht => (hS t ht).trans ?_) hc
+  have : 0 ≤ (if |t - p.X0| ≤ radJ P p 1 then p.j else 0) := by
+    split_ifs; exact h.hj; exact le_rfl
+  linarith
+
 /-! ## The comparison `v ≤ V` -/
 
 /-- `V ≥ 0`. -/
@@ -687,13 +697,14 @@ satisfies the Step-3 recursion with `0 ≤ c_w ≤ 1.0101 w^{ε-2}` and `S(t) �
 `T₀`, and the base case `v(t) ≤ Φ(t, 1)` below `T₀` (`Φ(t, 1) = 1[t ≥ c(1)] E_S/log t +
 1[|t - X₀| ≤ r(1)] j`: the paper's `v(t) ≤ o_t + j 1[|t - X₀| ≤ 1.01H(t)]`), then
 `v(t) ≤ V(t) = ∑_M H_ord(M) M^{ε'-2} Φ(t/M, M)` for every `t`. -/
-theorem v_le_Vsup (h : ChainHyp P p H) {T0 : ℝ} {v S : ℝ → ℝ} {c : ℝ → ℕ → ℝ}
+theorem v_le_Vsup_J (h : ChainHyp P p H) {T0 : ℝ} {v S : ℝ → ℝ} {c : ℝ → ℕ → ℝ}
     (hT0 : p.cinf + p.Kc ≤ T0) (hT0wf : 2 ≤ T0 * (1 - p.θ0))
-    (hS : ∀ t, T0 ≤ t → S t ≤ p.ES / Real.log t)
+    (hS : ∀ t, T0 ≤ t →
+      S t ≤ p.ES / Real.log t + (if |t - p.X0| ≤ radJ P p 1 then p.j else 0))
     (hc : ∀ t, T0 ≤ t → ∀ w ∈ Fset P p t, 0 ≤ c t w ∧ c t w ≤ 1.0101 * Vv P w ^ (p.ε - 2))
     (hrec : Var.RecIneq T0 v S (Fset P p) c (Nbhd P H))
     (hbase : ∀ t, t < T0 → v t ≤ PhiC P p t 1) : ∀ t, v t ≤ Vsup P p t := by
-  refine Var.le_of_super hrec (super h hT0 hS hc)
+  refine Var.le_of_super hrec (super_J h hT0 hS hc)
     (fun t ht => (hbase t ht).trans (phi_one_le_Vsup h t)) ?_
   intro t ht w hw t' ht'
   have hXm := h.hXm
@@ -714,9 +725,10 @@ theorem v_le_Vsup (h : ChainHyp P p H) {T0 : ℝ} {v S : ℝ → ℝ} {c : ℝ �
 j ∑_{M : |t/M - X₀| ≤ R₀} H_ord(M) M^{ε'-2}` (over the levels with `t/M ≥ X₀⁻/2`; the first sum
 only over `t/M ≥ c(M)`), the second sum being `v_{X₀}(t)/j` over the window `I'_t` of radius
 `R₀` (`= 5.5 H(X₀)` in the paper). -/
-theorem v_le_chain (h : ChainHyp P p H) {T0 : ℝ} {v S : ℝ → ℝ} {c : ℝ → ℕ → ℝ}
+theorem v_le_chain_J (h : ChainHyp P p H) {T0 : ℝ} {v S : ℝ → ℝ} {c : ℝ → ℕ → ℝ}
     (hT0 : p.cinf + p.Kc ≤ T0) (hT0wf : 2 ≤ T0 * (1 - p.θ0))
-    (hS : ∀ t, T0 ≤ t → S t ≤ p.ES / Real.log t)
+    (hS : ∀ t, T0 ≤ t →
+      S t ≤ p.ES / Real.log t + (if |t - p.X0| ≤ radJ P p 1 then p.j else 0))
     (hc : ∀ t, T0 ≤ t → ∀ w ∈ Fset P p t, 0 ≤ c t w ∧ c t w ≤ 1.0101 * Vv P w ^ (p.ε - 2))
     (hrec : Var.RecIneq T0 v S (Fset P p) c (Nbhd P H))
     (hbase : ∀ t, t < T0 → v t ≤ PhiC P p t 1) (t : ℝ) :
@@ -725,7 +737,7 @@ theorem v_le_chain (h : ChainHyp P p H) {T0 : ℝ} {v S : ℝ → ℝ} {c : ℝ 
       p.j * ∑ M ∈ (KR.NAll P t (p.Xm / 2)).filter (fun M => |t / Vv P M - p.X0| ≤ p.R0),
         Aw P p M := by
   classical
-  refine (v_le_Vsup h hT0 hT0wf hS hc hrec hbase t).trans ?_
+  refine (v_le_Vsup_J h hT0 hT0wf hS hc hrec hbase t).trans ?_
   unfold Vsup PhiC
   simp only [mul_add, Finset.sum_add_distrib]
   apply add_le_add
@@ -741,6 +753,37 @@ theorem v_le_chain (h : ChainHyp P p H) {T0 : ℝ} {v S : ℝ → ℝ} {c : ℝ 
     · exact absurd (h1.trans hr) h2
     · rw [mul_zero]; exact mul_nonneg h.hj hA
     · simp
+
+lemma hS_J_of (h : ChainHyp P p H) {T0 : ℝ} {S : ℝ → ℝ}
+    (hS : ∀ t, T0 ≤ t → S t ≤ p.ES / Real.log t) :
+    ∀ t, T0 ≤ t →
+      S t ≤ p.ES / Real.log t + (if |t - p.X0| ≤ radJ P p 1 then p.j else 0) := by
+  intro t ht
+  have : 0 ≤ (if |t - p.X0| ≤ radJ P p 1 then p.j else 0) := by
+    split_ifs; exact h.hj; exact le_rfl
+  linarith [hS t ht]
+
+/-- `v ≤ V` (the form without the jump source). -/
+theorem v_le_Vsup (h : ChainHyp P p H) {T0 : ℝ} {v S : ℝ → ℝ} {c : ℝ → ℕ → ℝ}
+    (hT0 : p.cinf + p.Kc ≤ T0) (hT0wf : 2 ≤ T0 * (1 - p.θ0))
+    (hS : ∀ t, T0 ≤ t → S t ≤ p.ES / Real.log t)
+    (hc : ∀ t, T0 ≤ t → ∀ w ∈ Fset P p t, 0 ≤ c t w ∧ c t w ≤ 1.0101 * Vv P w ^ (p.ε - 2))
+    (hrec : Var.RecIneq T0 v S (Fset P p) c (Nbhd P H))
+    (hbase : ∀ t, t < T0 → v t ≤ PhiC P p t 1) : ∀ t, v t ≤ Vsup P p t :=
+  v_le_Vsup_J h hT0 hT0wf (hS_J_of h hS) hc hrec hbase
+
+/-- Step 5, first display (the form without the jump source). -/
+theorem v_le_chain (h : ChainHyp P p H) {T0 : ℝ} {v S : ℝ → ℝ} {c : ℝ → ℕ → ℝ}
+    (hT0 : p.cinf + p.Kc ≤ T0) (hT0wf : 2 ≤ T0 * (1 - p.θ0))
+    (hS : ∀ t, T0 ≤ t → S t ≤ p.ES / Real.log t)
+    (hc : ∀ t, T0 ≤ t → ∀ w ∈ Fset P p t, 0 ≤ c t w ∧ c t w ≤ 1.0101 * Vv P w ^ (p.ε - 2))
+    (hrec : Var.RecIneq T0 v S (Fset P p) c (Nbhd P H))
+    (hbase : ∀ t, t < T0 → v t ≤ PhiC P p t 1) (t : ℝ) :
+    v t ≤ ∑ M ∈ (KR.NAll P t (p.Xm / 2)).filter (fun M => cutL P p M ≤ t / Vv P M),
+        Aw P p M * (p.ES / Real.log (t / Vv P M)) +
+      p.j * ∑ M ∈ (KR.NAll P t (p.Xm / 2)).filter (fun M => |t / Vv P M - p.X0| ≤ p.R0),
+        Aw P p M :=
+  v_le_chain_J h hT0 hT0wf (hS_J_of h hS) hc hrec hbase t
 
 end Margin.Rec
 

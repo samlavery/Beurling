@@ -1,6 +1,7 @@
 module
 
 public import RequestProject.Beurling.Noise.MarginChainLocRec
+public import RequestProject.Beurling.Noise.MarginChainLin
 
 /-!
 # Proposition 5.38, Steps 3–5, with the filter kept on the Step 3 error terms
@@ -190,6 +191,156 @@ theorem variation_le_chain_loc_kap (P : BeurlingSystem) (p : CP) (tw : ℕ → �
     simp only [truncAt, if_pos (show t ≤ T by linarith)]
     exact hbase t ht
   have := v_le_chain h hT0 hT0wf hS hc hrec hbase' t
+  simp only [truncAt, if_pos htT] at this
+  exact this
+
+/-! ## The jump at `X₀` as a separate source (04g Step 3, base case; Step 5, `V_{X₀}`) -/
+
+/-- The jump indicator `1[|t - X₀| ≤ 1.01 H(t)]`. -/
+noncomputable def jumpI (H : ℝ → ℝ) (X0 t : ℝ) : ℝ := if |t - X0| ≤ 1.01 * H t then 1 else 0
+
+lemma jumpI_nonneg (H : ℝ → ℝ) (X0 t : ℝ) : 0 ≤ jumpI H X0 t := by
+  unfold jumpI; split_ifs <;> norm_num
+
+/-- `|1_{[X₀,∞)}(t + h) - 1_{[X₀,∞)}(t)| ≤ 1[|t - X₀| ≤ 1.01 H(t)]` for `|h| ≤ 1.01 H(t)`. -/
+lemma ind_jump_le {H : ℝ → ℝ} {X0 t hh : ℝ} (hh1 : |hh| ≤ 1.01 * H t) :
+    |KR.Chain.ind X0 (t + hh) - KR.Chain.ind X0 t| ≤ jumpI H X0 t := by
+  unfold jumpI
+  by_cases hc : |t - X0| ≤ 1.01 * H t
+  · rw [if_pos hc]
+    unfold KR.Chain.ind
+    simp only [Set.indicator, Set.mem_Ici]
+    split_ifs <;> norm_num
+  · rw [if_neg hc]
+    have hlt : |hh| < |t - X0| := lt_of_le_of_lt hh1 (not_le.mp hc)
+    have hn := neg_abs_le hh
+    have hp := le_abs_self hh
+    unfold KR.Chain.ind
+    simp only [Set.indicator, Set.mem_Ici]
+    by_cases ht : X0 ≤ t
+    · rw [abs_of_nonneg (by linarith : 0 ≤ t - X0)] at hlt
+      rw [if_pos (by linarith : X0 ≤ t + hh), if_pos ht]; norm_num
+    · push_neg at ht
+      rw [abs_of_neg (by linarith : t - X0 < 0)] at hlt
+      rw [if_neg (by linarith : ¬ X0 ≤ t + hh), if_neg (not_le.mpr ht)]; norm_num
+
+/-- **Proposition 5.38, Steps 1–5, with `T' = T_c + j₀ 1_{[X₀,∞)}`**: as
+`variation_le_chain_loc_kap`, but the oscillation `o_t` is that of `T_c` alone, and the jump
+enters the Step 3 source as `j₀ 1[|t - X₀| ≤ 1.01 H(t)]`, absorbed by the `j`-term of the
+super-solution (`p.j ≥ j₀`, and the window `|t - X₀| ≤ 1.01 H(t)` lies in `|t - p.X₀| ≤ r(1)`). -/
+theorem variation_le_chain_loc_kapJ (P : BeurlingSystem) (p : CP) (tw : ℕ → ℝ)
+    {H Tc NT ρ err : ℝ → ℝ} {o η : ℝ → ℝ} {e : ℝ → ℕ → ℝ} {T0 T X0 j0 : ℝ}
+    (h : ChainHyp P p H) (hε : p.ε ≤ 0.01) (hT0 : p.cinf + p.Kc ≤ T0)
+    (hT0wf : 2 ≤ T0 * (1 - p.θ0)) (hT0T : T0 ≤ T) (hρ : ∀ z, z < p.Xm → ρ z = 0)
+    (hT0' : ∀ t, T0 ≤ t → t ≤ T → 0 ≤ t ∧ 1.01 * H t ≤ t)
+    (hgeom : ∀ t, T0 ≤ t → t ≤ T → ∀ w ∈ Fset P p t,
+      HStep H p.ε t (t / KR.Vl P w) (KR.Vl P w))
+    (hS2 : ∀ t, T0 ≤ t → t ≤ T → ∀ w ∈ Fset P p t, ∀ z',
+      t / KR.Vl P w - 0.52 * H (t / KR.Vl P w) ≤ z' → z' ≤ t / KR.Vl P w →
+        Step2At H ρ (vSup H (fun y => (Tc y + j0 * KR.Chain.ind X0 y) -
+          KR.Sharp.Kpt P tw p.Xm ρ y - NT y)) err z' ∧ err z' ≤ e t w)
+    (he0 : ∀ t, T0 ≤ t → t ≤ T → ∀ w ∈ Fset P p t, 0 ≤ e t w)
+    (hosc : ∀ t, T0 ≤ t → t ≤ T → ∀ hh, |hh| ≤ 1.01 * H t → |Tc (t + hh) - Tc t| ≤ o t)
+    (hj0 : 0 ≤ j0) (hjp : j0 ≤ p.j)
+    (hJr : ∀ t, T0 ≤ t → t ≤ T → |t - X0| ≤ 1.01 * H t → |t - p.X0| ≤ radJ P p 1)
+    (hsw : ∀ t, T0 ≤ t → t ≤ T → ∀ hh, |hh| ≤ 1.01 * H t →
+      |∑ w ∈ Fset P p t, (kap P tw (t + hh) w - kap P tw t w) *
+          (ρ ((t + hh) / KR.Vl P w) / KR.Vl P w)| + |NT (t + hh) - NT t| ≤ 2 * η t)
+    (hS4 : ∀ t, T0 ≤ t → t ≤ T →
+      o t + 2 * η t + ∑ w ∈ Fset P p t, kap P tw t w * (e t w / KR.Vl P w) ≤
+        p.ES / Real.log t)
+    (hbase : ∀ t, t < T0 → vSup H (fun y => (Tc y + j0 * KR.Chain.ind X0 y) -
+      KR.Sharp.Kpt P tw p.Xm ρ y - NT y) t ≤ PhiC P p t 1)
+    (t : ℝ) (htT : t ≤ T) :
+    vSup H (fun y => (Tc y + j0 * KR.Chain.ind X0 y) - KR.Sharp.Kpt P tw p.Xm ρ y - NT y) t ≤
+      ∑ M ∈ (KR.NAll P t (p.Xm / 2)).filter (fun M => cutL P p M ≤ t / Vv P M),
+          Aw P p M * (p.ES / Real.log (t / Vv P M)) +
+        p.j * ∑ M ∈ (KR.NAll P t (p.Xm / 2)).filter
+          (fun M => |t / Vv P M - p.X0| ≤ p.R0), Aw P p M := by
+  have hXm : 0 < p.Xm := by linarith [h.hXm]
+  set Tp := fun y => Tc y + j0 * KR.Chain.ind X0 y
+  set m := fun y => Tp y - KR.Sharp.Kpt P tw p.Xm ρ y - NT y
+  set v := vSup H m
+  set S := fun t => (o t + j0 * jumpI H X0 t) + 2 * η t +
+    ∑ w ∈ Fset P p t, kap P tw t w * (e t w / KR.Vl P w)
+  set c := fun t w => 1.0101 * kap P tw t w * KR.Vl P w ^ (p.ε - 2)
+  have hc0 : ∀ t w, 0 ≤ c t w := fun t w =>
+    mul_nonneg (mul_nonneg (by norm_num) (kap_mem P tw t w).1)
+      (Real.rpow_nonneg (Vv_pos (P := P) w).le _)
+  have hv0 : ∀ x, 0 ≤ truncAt T v x := by
+    intro x; unfold truncAt; split_ifs
+    · exact vSup_nonneg' H m x
+    · exact le_rfl
+  have hoscT : ∀ t, T0 ≤ t → t ≤ T → ∀ hh, |hh| ≤ 1.01 * H t →
+      |Tp (t + hh) - Tp t| ≤ o t + j0 * jumpI H X0 t := by
+    intro t ht htT hh hh1
+    have e1 : Tp (t + hh) - Tp t = (Tc (t + hh) - Tc t) +
+        j0 * (KR.Chain.ind X0 (t + hh) - KR.Chain.ind X0 t) := by
+      simp only [Tp]; ring
+    rw [e1]
+    have h1 := hosc t ht htT hh hh1
+    have h2 : |j0 * (KR.Chain.ind X0 (t + hh) - KR.Chain.ind X0 t)| ≤ j0 * jumpI H X0 t := by
+      rw [abs_mul, abs_of_nonneg hj0]
+      exact mul_le_mul_of_nonneg_left (ind_jump_le hh1) hj0
+    exact (abs_add_le _ _).trans (add_le_add h1 h2)
+  have hrec : Var.RecIneq T0 (truncAt T v) (truncAt T S) (Fset P p) c (Nbhd P H) := by
+    intro t ht b hb
+    have hb0 : ∀ w ∈ Fset P p t, 0 ≤ b w := by
+      intro w hw
+      refine (hv0 _).trans (hb w hw (t / KR.Vl P w) ⟨?_, ?_⟩) <;>
+        linarith [h.hH0 (t / KR.Vl P w)]
+    by_cases htT : t ≤ T
+    · simp only [truncAt, if_pos htT]
+      have hb' : ∀ w ∈ Fset P p t, ∀ t' ∈ Nbhd P H t w, v t' ≤ b w := by
+        intro w hw t' ht'
+        have hle := nbhd_le h hT0 hT0wf ht hw ht'
+        have := hb w hw t' ht'
+        simp only [truncAt, if_pos (show t' ≤ T by linarith)] at this
+        exact this
+      obtain ⟨ht0, hHt⟩ := hT0' t ht htT
+      apply vSup_le (h.hH0 t)
+      intro hh hh1
+      have hth : t + hh ≤ 2 * t := by
+        have := (abs_le.mp hh1).2; linarith
+      exact step3_pointwise_kap P tw hXm hε h.hp2 hρ ht0 hth hh1 (e t) b (hgeom t ht htT)
+        (hS2 t ht htT) (he0 t ht htT) (fun w hw x hx => hb' w hw x hx) hb0
+        (hoscT t ht htT hh hh1) (hsw t ht htT hh hh1)
+    · simp only [truncAt, if_neg htT, zero_add]
+      exact Finset.sum_nonneg fun w hw => mul_nonneg (hc0 t w) (hb0 w hw)
+  have hS : ∀ t, T0 ≤ t → truncAt T S t ≤
+      p.ES / Real.log t + (if |t - p.X0| ≤ radJ P p 1 then p.j else 0) := by
+    intro t ht
+    have hjt : 0 ≤ (if |t - p.X0| ≤ radJ P p 1 then p.j else 0) := by
+      split_ifs; exact h.hj; exact le_rfl
+    by_cases htT : t ≤ T
+    · simp only [truncAt, if_pos htT]
+      have h4 := hS4 t ht htT
+      have hJ : j0 * jumpI H X0 t ≤ (if |t - p.X0| ≤ radJ P p 1 then p.j else 0) := by
+        by_cases h1 : |t - X0| ≤ 1.01 * H t
+        · have h2 := hJr t ht htT h1
+          simp only [jumpI, if_pos h1, if_pos h2, mul_one]; exact hjp
+        · simp only [jumpI, if_neg h1, mul_zero]; exact hjt
+      have eS : S t = (o t + j0 * jumpI H X0 t) + 2 * η t +
+          ∑ w ∈ Fset P p t, kap P tw t w * (e t w / KR.Vl P w) := rfl
+      rw [eS]; linarith
+    · simp only [truncAt, if_neg htT]
+      have h1 := cinf_gt_one h
+      have hl : 0 ≤ Real.log t := Real.log_nonneg (by linarith [h.hKc])
+      have := div_nonneg h.hES hl
+      linarith
+  have hc : ∀ t, T0 ≤ t → ∀ w ∈ Fset P p t, 0 ≤ c t w ∧ c t w ≤ 1.0101 * Vv P w ^ (p.ε - 2) := by
+    intro t' _ w _
+    have hk := kap_mem P tw t' w
+    have hV := Real.rpow_nonneg (Vv_pos (P := P) w).le (p.ε - 2)
+    refine ⟨hc0 t' w, ?_⟩
+    have := mul_le_mul_of_nonneg_right hk.2 hV
+    show 1.0101 * kap P tw t' w * KR.Vl P w ^ (p.ε - 2) ≤ 1.0101 * Vv P w ^ (p.ε - 2)
+    nlinarith
+  have hbase' : ∀ t, t < T0 → truncAt T v t ≤ PhiC P p t 1 := by
+    intro t ht
+    simp only [truncAt, if_pos (show t ≤ T by linarith)]
+    exact hbase t ht
+  have := v_le_chain_J h hT0 hT0wf hS hc hrec hbase' t
   simp only [truncAt, if_pos htT] at this
   exact this
 

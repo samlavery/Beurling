@@ -230,9 +230,13 @@ structure ChainInputsLoc (P : BeurlingSystem) (H : ℝ → ℝ) (tw : ℕ → �
     t / KR.Vl P w - 0.52 * H (t / KR.Vl P w) ≤ z' → z' ≤ t / KR.Vl P w →
       Margin.Rec.Step2At H ρ (Margin.Rec.vSup H m) err z' ∧ err z' ≤ e t w
   he0 : ∀ t, T0 ≤ t → t ≤ T → ∀ w ∈ Margin.Rec.Fset P p t, 0 ≤ e t w
-  /-- the oscillation of `T'` (eq. (osc)) -/
-  hoscV : ∀ t, T0 ≤ t → t ≤ T → ∀ hh, |hh| ≤ 1.01 * H t →
-    |(Tc (t + hh) + j0 * ind X0 (t + hh)) - (Tc t + j0 * ind X0 t)| ≤ oV t
+  /-- the oscillation of `T_c` (eq. (osc); 04a l.83: the jump at `X₀` is not in `o_t`) -/
+  hoscV : ∀ t, T0 ≤ t → t ≤ T → ∀ hh, |hh| ≤ 1.01 * H t → |Tc (t + hh) - Tc t| ≤ oV t
+  /-- the jump `j₀` is covered by the `j`-term of the super-solution (04g Step 3, base case) -/
+  hjp : j0 ≤ p.j
+  /-- the jump window `|t - X₀| ≤ 1.01 H(t)` lies in the radius `r(1)` of the super-solution -/
+  hJr : ∀ t, T0 ≤ t → t ≤ T → |t - X0| ≤ 1.01 * H t →
+    |t - p.X0| ≤ Margin.Rec.radJ P p 1
   /-- filter switching and `ΔNT ≤ 2η` -/
   hsw : ∀ t, T0 ≤ t → t ≤ T → ∀ hh, |hh| ≤ 1.01 * H t →
     |∑ w ∈ Margin.Rec.Fset P p t, (Margin.Rec.kap P tw (t + hh) w - Margin.Rec.kap P tw t w) *
@@ -455,8 +459,8 @@ theorem hv_of (I : ChainInputsLoc P H tw X0m X0 Z η1 η2 ε1 ε θ lam0 Tc j0 x
     have := I.hbase t ht
     rwa [hvs] at this
   rw [hvs]
-  have hvc := Margin.Rec.variation_le_chain_loc_kap P I.p tw I.chain I.hpε I.hT0 I.hT0wf I.hT0T
-    I.hρ0 I.hT0' I.hgeom hS2 I.he0 I.hoscV I.hsw I.hS4 hbase t htT
+  have hvc := Margin.Rec.variation_le_chain_loc_kapJ P I.p tw I.chain I.hpε I.hT0 I.hT0wf
+    I.hT0T I.hρ0 I.hT0' I.hgeom hS2 I.he0 I.hoscV I.hj0 I.hjp I.hJr I.hsw I.hS4 hbase t htT
   have hh := I.hhead t ht htT
   have htl := I.htail t ht htT
   unfold VX
