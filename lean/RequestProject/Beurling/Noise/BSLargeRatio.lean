@@ -1,7 +1,6 @@
 module
 
 public import RequestProject.Beurling.Noise.BSLargePos
-meta import RequestProject.BSCert.AuxCert
 
 /-!
 # Lower bounds for the Dickman ratio used in Lemma 5.7
@@ -17,13 +16,10 @@ open Real
 
 namespace BSaias.Large
 
-lemma rLow_31620 : (1282 / 100 : ℚ) ≤ BSCert.rLow BSCert.auxTable 31620 := by native_decide
-
 lemma ratio_ge_12_82 {v : ℝ} (hv : 31620 ≤ v) : 12.82 ≤ Dickman.ratio v := by
-  have h := ratio_ge_table (x := 31620) (by norm_num) (by exact_mod_cast hv)
-  have h2 : ((1282 / 100 : ℚ) : ℝ) ≤ ((BSCert.rLow BSCert.auxTable 31620 : ℚ) : ℝ) := by
-    exact_mod_cast rLow_31620
-  push_cast at h2; linarith
+  have := ratio_ge_of_tabF (x := 31620) (q := 1282 / 100) (by norm_num) (by decide +kernel)
+    (by exact_mod_cast hv)
+  norm_num at this ⊢; linarith
 
 /-- `r(2) = 1/(2(1 - log 2)) ≥ log 3`. -/
 lemma ratio_two_ge : Real.log 3 ≤ Dickman.ratio 2 := by

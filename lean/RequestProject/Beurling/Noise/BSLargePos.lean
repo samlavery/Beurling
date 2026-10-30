@@ -2,7 +2,7 @@ module
 
 public import RequestProject.Beurling.Noise.BSLargePi
 public import RequestProject.BSCert.DickmanCert
-meta import RequestProject.BSCert.AuxCert
+public import RequestProject.BSCert.FX.RTabCert
 
 /-!
 # Positivity of `c(u)` (Theorem 5.6, Step 7(ii); 04c-saias.tex, lines 505-536)
@@ -29,22 +29,29 @@ lemma ratio_ge_table {x : ℚ} (hx : 1 ≤ x) {v : ℝ} (hv : (x : ℝ) ≤ v) :
   BSCert.rLow_le BSCert.dickmanRatioFacts (BSCert.rlowTable_ok BSCert.dickmanRatioFacts 400000)
     hx hv
 
-lemma rLow_26 : (2 : ℚ) ≤ BSCert.rLow BSCert.auxTable 26 := by native_decide
-
-lemma rLow_399999 : (153 / 10 : ℚ) ≤ BSCert.rLow BSCert.auxTable 399999 := by native_decide
+/-- A lower bound for `r` from the kernel-checked sparse table `BSCert.FX.rtabF`. -/
+lemma ratio_ge_of_tabF {x : ℕ} {q : ℚ} (hx : 1 ≤ x)
+    (h : BSCert.FX.qHi q ≤ BSCert.FX.rLowF BSCert.FX.rtabF ((x : ℤ) * BSCert.FX.ZI)) {v : ℝ}
+    (hv : (x : ℝ) ≤ v) : (q : ℝ) ≤ Dickman.ratio v := by
+  have hX : BSCert.FX.ZI ≤ (x : ℤ) * BSCert.FX.ZI :=
+    le_mul_of_one_le_left BSCert.FX.ZI_pos.le (by exact_mod_cast hx)
+  have hxv : BSCert.FX.toR ((x : ℤ) * BSCert.FX.ZI) ≤ v := by
+    unfold BSCert.FX.toR; push_cast; rwa [mul_div_assoc, div_self BSCert.FX.ZR_pos.ne', mul_one]
+  exact (BSCert.FX.le_qHi q).trans ((BSCert.FX.toR_le_toR.mpr h).trans
+    (BSCert.FX.rLowF_le BSCert.dickmanRatioFacts (BSCert.FX.rtabF_ok BSCert.dickmanRatioFacts)
+      hX hxv))
 
 /-- `r(v) ≥ 2` for `v ≥ 26`. -/
 lemma ratio_ge_two {v : ℝ} (hv : 26 ≤ v) : 2 ≤ Dickman.ratio v := by
-  have h := ratio_ge_table (x := 26) (by norm_num) (by exact_mod_cast hv)
-  have h2 : ((2 : ℚ) : ℝ) ≤ ((BSCert.rLow BSCert.auxTable 26 : ℚ) : ℝ) := by exact_mod_cast rLow_26
-  push_cast at h2; linarith
+  have := ratio_ge_of_tabF (x := 26) (q := 2) (by norm_num) (by decide +kernel)
+    (by exact_mod_cast hv)
+  exact_mod_cast this
 
 /-- `r(v) ≥ 15.3` for `v ≥ 399999`. -/
 lemma ratio_ge_153 {v : ℝ} (hv : 399999 ≤ v) : 15.3 ≤ Dickman.ratio v := by
-  have h := ratio_ge_table (x := 399999) (by norm_num) (by exact_mod_cast hv)
-  have h2 : ((153 / 10 : ℚ) : ℝ) ≤ ((BSCert.rLow BSCert.auxTable 399999 : ℚ) : ℝ) := by
-    exact_mod_cast rLow_399999
-  push_cast at h2; linarith
+  have := ratio_ge_of_tabF (x := 399999) (q := 153 / 10) (by norm_num) (by decide +kernel)
+    (by exact_mod_cast hv)
+  norm_num at this ⊢; linarith
 
 /-- (R4) with `δ = 1/2`: `r(u-1) ≤ 2 log(2u)` for `u ≥ 2`. -/
 lemma ratio_le_two_log {u : ℝ} (hu : 2 ≤ u) : Dickman.ratio (u - 1) ≤ 2 * Real.log (2 * u) := by

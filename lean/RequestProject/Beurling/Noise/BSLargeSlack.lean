@@ -2,7 +2,6 @@ module
 
 public import RequestProject.Beurling.Noise.BSLargeRatio
 public import RequestProject.Beurling.Noise.BSLargeShift
-meta import RequestProject.BSCert.AuxCert
 
 /-!
 # Lemma 5.7: the slack `s_a` (`lemma57Slack`; 04c-saias.tex, lines 336-337 and 424-433)
@@ -360,13 +359,10 @@ lemma slack_big {ℓ u : ℝ} (hℓ : 1000000000000000000 ≤ ℓ) (hu : u0 ℓ 
 
 /-! ## `u < u₀ - 2` -/
 
-lemma rLow_15810 : (9 : ℚ) ≤ BSCert.rLow BSCert.auxTable 15810 := by native_decide
-
 lemma ratio_ge_nine {v : ℝ} (hv : 15810 ≤ v) : 9 ≤ Dickman.ratio v := by
-  have h := ratio_ge_table (x := 15810) (by norm_num) (by exact_mod_cast hv)
-  have h2 : ((9 : ℚ) : ℝ) ≤ ((BSCert.rLow BSCert.auxTable 15810 : ℚ) : ℝ) := by
-    exact_mod_cast rLow_15810
-  push_cast at h2; linarith
+  have := ratio_ge_of_tabF (x := 15810) (q := 9) (by norm_num) (by decide +kernel)
+    (by exact_mod_cast hv)
+  exact_mod_cast this
 
 set_option maxHeartbeats 1000000 in
 lemma slack_small {ℓ u : ℝ} (hℓ : 1000000000000000000 ≤ ℓ) (hu2 : 2 ≤ u)

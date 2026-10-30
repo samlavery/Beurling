@@ -2,7 +2,6 @@ module
 
 public import RequestProject.Beurling.Noise.BSL57RAsm
 public import RequestProject.Beurling.Noise.BSLargeRatio
-meta import RequestProject.BSCert.AuxCert
 
 /-!
 # Lemma 5.7: sizes on the large range
@@ -21,21 +20,15 @@ namespace BSaias.Large
 
 variable {τ ℓ u : ℝ}
 
-lemma rLow_26' : (459 / 100 : ℚ) ≤ BSCert.rLow BSCert.auxTable 26 := by native_decide
-
-lemma rLow_9 : (219 / 100 : ℚ) ≤ BSCert.rLow BSCert.auxTable 9 := by native_decide
-
 lemma ratio_ge_459 {v : ℝ} (hv : 26 ≤ v) : 4.59 ≤ Dickman.ratio v := by
-  have h := ratio_ge_table (x := 26) (by norm_num) (by exact_mod_cast hv)
-  have h2 : ((459 / 100 : ℚ) : ℝ) ≤ ((BSCert.rLow BSCert.auxTable 26 : ℚ) : ℝ) := by
-    exact_mod_cast rLow_26'
-  push_cast at h2; linarith
+  have := ratio_ge_of_tabF (x := 26) (q := 459 / 100) (by norm_num) (by decide +kernel)
+    (by exact_mod_cast hv)
+  norm_num at this ⊢; linarith
 
 lemma ratio_ge_219 {v : ℝ} (hv : 9 ≤ v) : 2.19 ≤ Dickman.ratio v := by
-  have h := ratio_ge_table (x := 9) (by norm_num) (by exact_mod_cast hv)
-  have h2 : ((219 / 100 : ℚ) : ℝ) ≤ ((BSCert.rLow BSCert.auxTable 9 : ℚ) : ℝ) := by
-    exact_mod_cast rLow_9
-  push_cast at h2; linarith
+  have := ratio_ge_of_tabF (x := 9) (q := 219 / 100) (by norm_num) (by decide +kernel)
+    (by exact_mod_cast hv)
+  norm_num at this ⊢; linarith
 
 lemma LargeRange.lam_le (hR : LargeRange τ ℓ u) : lamL τ ℓ ≤ 0.0000015 := by
   obtain ⟨hτ, hτℓ, hℓ, -, -⟩ := hR
