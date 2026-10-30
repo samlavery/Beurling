@@ -65,7 +65,7 @@ lemma val_eq_prod_support {e : ℕ →₀ ℕ} (he : Sqf e) : P.val e = ∏ i �
 
 lemma one_le_prod_p (s : Finset ℕ) : 1 ≤ ∏ i ∈ s, P.p i := by
   calc (1 : ℝ) = ∏ i ∈ s, (1 : ℝ) := by simp
-    _ ≤ ∏ i ∈ s, P.p i := Finset.prod_le_prod (fun _ _ => zero_le_one) fun i _ => (P.one_lt i).le
+    _ ≤ ∏ i ∈ s, P.p i := Finset.prod_le_prod₀ (fun _ _ => zero_le_one) fun i _ => (P.one_lt i).le
 
 lemma prod_p_le_of_subset {s s' : Finset ℕ} (h : s ⊆ s') :
     ∏ i ∈ s, P.p i ≤ ∏ i ∈ s', P.p i := by
@@ -205,7 +205,7 @@ theorem threshSum_le_split (t : ℕ → ℝ) (x δ : ℝ) :
     calc 1 / P.val e = if e ∈ A j then 1 / P.val e else 0 := by rw [if_pos hjA]
       _ ≤ ∑ j ∈ P.primesLe x, (if e ∈ A j then 1 / P.val e else 0) :=
           Finset.single_le_sum (f := fun j => if e ∈ A j then 1 / P.val e else 0)
-            (fun j _ => by dsimp only; split_ifs; exacts [hpos e, le_rfl]) hjx
+            (fun j _ => by split_ifs; exacts [hpos e, le_rfl]) hjx
   refine h1.trans ?_
   rw [Finset.sum_comm]
   refine Finset.sum_le_sum fun j _ => ?_

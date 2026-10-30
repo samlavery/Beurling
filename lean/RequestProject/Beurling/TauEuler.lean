@@ -25,7 +25,7 @@ lemma hasSum_sq_succ_geometric {x : ℝ} (h0 : 0 ≤ x) (h1 : x < 1) :
   have hB := hasSum_choose_mul_geometric_of_norm_lt_one 1 hx
   have h := (hA.mul_left 2).sub hB
   have hne : (1 - x) ≠ 0 := by linarith
-  convert h using 1
+  convert! h using 1
   · funext k
     rw [Nat.cast_choose_two]
     simp only [Nat.choose_one_right]
@@ -73,7 +73,7 @@ lemma hasSum_tau_sq_smooth (X₀ : ℕ) {σ : ℝ} (hσ : 0 < σ) :
     exact (hasSum_sq_succ_geometric (hx0 p) (hx1 hp')).tsum_eq
   rw [hprod] at hh
   have := (hasSum_subtype_iff_indicator (s := (X₀.smoothNumbers : Set ℕ)) (f := f)).mp hh
-  convert this using 1
+  convert! this using 1
   funext d
   simp only [Set.indicator_apply, hf]
 
@@ -191,7 +191,7 @@ theorem tsum_tau_sq_two_le (X₀ : ℕ) :
       Real.rpow_natCast]
   calc ∏ p ∈ X₀.primesBelow, (1 + (p : ℝ) ^ (-(2 : ℝ))) / (1 - (p : ℝ) ^ (-(2 : ℝ))) ^ 3
       ≤ ∏ p ∈ X₀.primesBelow, Real.exp (5 * ((p : ℝ) ^ 2)⁻¹) := by
-        apply Finset.prod_le_prod
+        apply Finset.prod_le_prod₀
         · intro p hp
           have hpp := (Nat.mem_primesBelow.mp hp).2
           have h1 := BaseFactor.rpow_neg_lt_one hpp (by norm_num : (0 : ℝ) < 2)
@@ -219,7 +219,7 @@ theorem tsum_tau_sq_one_le (X₀ : ℕ) :
   rw [(hasSum_tau_sq_smooth X₀ (by norm_num : (0 : ℝ) < 1)).tsum_eq]
   calc ∏ p ∈ X₀.primesBelow, (1 + (p : ℝ) ^ (-(1 : ℝ))) / (1 - (p : ℝ) ^ (-(1 : ℝ))) ^ 3
       ≤ ∏ _p ∈ X₀.primesBelow, (16 : ℝ) := by
-        apply Finset.prod_le_prod
+        apply Finset.prod_le_prod₀
         · intro p hp
           have hpp := (Nat.mem_primesBelow.mp hp).2
           have h1 := BaseFactor.rpow_neg_lt_one hpp (by norm_num : (0 : ℝ) < 1)

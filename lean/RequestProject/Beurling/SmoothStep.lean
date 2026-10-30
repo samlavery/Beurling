@@ -67,11 +67,11 @@ lemma hasDerivAt_smoothTransition {t : ℝ} (ht : t ∈ Ioo (0 : ℝ) 1) :
       simpa [one_div] using this
     have hb : HasDerivAt (fun x : ℝ => 1 / (1 - x)) (1 / (1 - t) ^ 2) t := by
       have := ((hasDerivAt_id t).const_sub 1).inv h1'
-      convert this using 1
+      convert! this using 1
       · ext x; simp [one_div]
       · simp
     have := ha.sub hb
-    convert this using 1
+    convert! this using 1
     ring
   have hE := hg.exp
   have hden : HasDerivAt (fun x => 1 + Real.exp (gExp x))
@@ -79,7 +79,7 @@ lemma hasDerivAt_smoothTransition {t : ℝ} (ht : t ∈ Ioo (0 : ℝ) 1) :
   have hpos : 1 + Real.exp (gExp t) ≠ 0 := by positivity
   have hf := hden.inv hpos
   have hf' : HasDerivAt (fun x => 1 / (1 + Real.exp (gExp x))) (phiDeriv t) t := by
-    convert hf using 1
+    convert! hf using 1
     · ext x; simp [one_div]
     · unfold phiDeriv; ring
   refine hf'.congr_of_eventuallyEq ?_

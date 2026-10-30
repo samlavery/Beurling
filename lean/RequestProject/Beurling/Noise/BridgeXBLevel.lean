@@ -130,7 +130,6 @@ theorem level_identity {X0 ε θ : ℝ} (hP : PaperWidth H X0m ε θ) (hX0e : X0
         stepK P.labelVal x H (constF κ) d n t + TS t) := hA.add hTS
     have e1 := integral_add (μ := volume.restrict (Ici X0)) hAT.integrableOn hB.integrableOn
     have e2 := integral_add (μ := volume.restrict (Ici X0)) hA.integrableOn hTS.integrableOn
-    simp only at e1 e2
     rw [e1, e2, integral_neg, integral_neg,
       integral_finset_sum _ fun d _ => (hstK d).integrableOn,
       integral_finset_sum _ fun d _ => (hsrc d).integrableOn]

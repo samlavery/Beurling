@@ -39,7 +39,7 @@ lemma continuous_boxAvg (hf : Measurable f) (hb : ∀ x, 0 ≤ f x ∧ f x ≤ M
     rw [boxAvg, intervalIntegral.integral_interval_sub_left (hI _ _) (hI _ _)]
   rw [h]
   have hP := intervalIntegral.continuous_primitive hI 0
-  exact continuous_const.mul ((hP.comp (continuous_add_right δ)).sub
+  exact continuous_const.mul ((hP.comp (continuous_add_const (m := δ))).sub
     (hP.comp (continuous_sub_right δ)))
 
 lemma boxAvg_bounds (hδ : 0 < δ) (hf : Measurable f) (hb : ∀ x, 0 ≤ f x ∧ f x ≤ M) (x : ℝ) :

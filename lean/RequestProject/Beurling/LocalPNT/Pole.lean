@@ -116,7 +116,7 @@ lemma integral_log_rpow {η : ℝ} (hη : 0 < η) (hy : 1 ≤ y) :
     have h1 := Real.hasDerivAt_log hx0.ne'
     have h2 := Real.hasDerivAt_rpow_const (x := x) (p := -η) (Or.inl hx0.ne')
     have := (((h1.add_const 0.43).neg.mul h2).div_const η).sub (h2.div_const (η ^ 2))
-    convert this using 1
+    convert! this using 1
     simp only [Pi.neg_apply, Pi.add_apply]
     rw [Real.rpow_sub_one hx0.ne']
     field_simp
@@ -210,7 +210,7 @@ lemma hasSum_Gser_fiber {σ : ℝ} (hσ : 0 < σ) (j : ℕ) (hj : j ∈ P.primes
   have hq1 : P.p j ^ (-σ) < 1 := Real.rpow_lt_one_of_one_lt_of_neg (P.one_lt j) (by linarith)
   have := ((hasSum_geometric_of_lt_one hq0 hq1).mul_left (P.p j ^ (-σ))).mul_left
     (Real.log (P.p j))
-  convert this using 1
+  convert! this using 1
   · funext k
     simp only [Gser, if_pos hj]
     have e : (P.p j ^ (k + 1)) ^ (-σ) = (P.p j ^ (-σ)) ^ (k + 1) := by
@@ -275,7 +275,7 @@ theorem pole_le {η : ℝ} (hη : 0 < η) :
     have : HasSum (fun jk => if jk ∈ A then Gser (P := P) (y := y) σ jk else 0)
         (∑ jk ∈ A, if jk ∈ A then Gser (P := P) (y := y) σ jk else 0) :=
       hasSum_sum_of_ne_finset_zero (fun jk hjk => by simp [hjk])
-    convert this using 1
+    convert! this using 1
     exact Finset.sum_congr rfl fun jk hjk => by rw [if_pos hjk]
   have hrestS : Summable (fun jk => if jk ∈ A then 0 else Gser (P := P) (y := y) σ jk) :=
     hS.of_nonneg_of_le (fun jk => by split_ifs <;> [exact le_rfl; exact Gser_nonneg jk])

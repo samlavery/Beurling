@@ -139,7 +139,7 @@ lemma hasDerivAt_EinLog {η t : ℝ} (hη : 0 < η) (ht : 1 < t) :
   have h1 : HasDerivAt (fun t => Real.log t) t⁻¹ t := Real.hasDerivAt_log ht0.ne'
   have h3 := h1.const_mul η
   have h4 := (BSCert.EiFn.hasDerivAt_Ein (mul_pos hη hl)).comp t h3
-  convert h4 using 1
+  convert! h4 using 1
   unfold gEta
   rw [Real.rpow_def_of_pos ht0, mul_comm (Real.log t) η]
   field_simp

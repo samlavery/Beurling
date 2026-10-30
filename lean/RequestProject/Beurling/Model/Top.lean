@@ -129,8 +129,9 @@ theorem tableBudget_add_null {ι : Type} {E : ι → Set JitterΩ} {time scale :
   set φ : {i // scale i = m} → {i' // scale' i' = m} := fun x => ⟨Sum.inl x.1, x.2⟩
   have hφ : Function.Injective φ := by
     intro x y hxy
-    simp only [φ, Subtype.mk.injEq, Sum.inl.injEq] at hxy
-    exact Subtype.ext hxy
+    have h := congrArg (fun z => z.1) hxy
+    simp only [φ, Sum.inl.injEq] at h
+    exact Subtype.ext h
   have hsupp : Function.support f ⊆ Set.range φ := by
     rintro ⟨i' | u, hi'⟩ hf
     · exact ⟨⟨i', hi'⟩, rfl⟩

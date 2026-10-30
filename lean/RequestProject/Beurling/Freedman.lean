@@ -43,7 +43,7 @@ lemma exp_le_quad_of_nonpos {y : ℝ} (hy : y ≤ 0) : Real.exp y ≤ 1 + y + y 
       have : deriv (fun t : ℝ => 1 + t + t ^ 2 / 2 - Real.exp t) t = 1 + t - Real.exp t := by
         have h : HasDerivAt (fun t : ℝ => 1 + t + t ^ 2 / 2 - Real.exp t)
             (1 + t - Real.exp t) t := by
-          convert (((hasDerivAt_id t).const_add 1).add
+          convert! (((hasDerivAt_id t).const_add 1).add
             ((hasDerivAt_pow 2 t).div_const 2)).sub (Real.hasDerivAt_exp t) using 1
           simp
         exact h.deriv

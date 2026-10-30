@@ -56,8 +56,8 @@ theorem lintegral_exp_window {d : ℝ} (hd : 0 < d) {J : Set ℝ} (hJ : Measurab
       by_cases hJt : d * t ∈ J
       · rw [indicator_of_mem hJt, indicator_of_mem (show t ∈ (fun t => d * t) ⁻¹' J from hJt)]
         simp
-      · rw [indicator_of_notMem hJt]; exact zero_le _
-    · rw [indicator_of_notMem ht]; exact zero_le _
+      · rw [indicator_of_notMem hJt]; exact zero_le
+    · rw [indicator_of_notMem ht]; exact zero_le
   refine (lintegral_mono hpt).trans ?_
   have hpre : (fun t => d * t) ⁻¹' J = d⁻¹ • J := by
     ext t

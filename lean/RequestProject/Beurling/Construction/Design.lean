@@ -86,7 +86,7 @@ noncomputable def stepGamma (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : �
 Lemma 4.8 from `D̂_{<a_k}` computed with `γ_0, …, γ_{k-1}`. -/
 noncomputable def designedGamma (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
     (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) : ℕ → ℝ :=
-  fun k => Nat.strongRecOn' (P := fun _ => ℝ) k
+  fun k => Nat.strongRecOn (motive := fun _ => ℝ) k
     (fun k IH => stepGamma P θ X₀ κ A u κ₀ xp a (fun j => if h : j < k then IH j h else 0) k)
 
 /-- The designed amplitudes `α_k`. -/
@@ -109,7 +109,7 @@ theorem designedGamma_fixed (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : �
       (fun j => if h : j < k then g j else 0) k := by
     rw [hg]
     unfold designedGamma
-    rw [Nat.strongRecOn'_beta]
+    rw [Nat.strongRecOn_eq]
   rw [hrec]
   unfold stepGamma DesignedZero.designGamma designedAlpha
   have hagree : ∀ j < k, (fun j => if h : j < k then g j else 0) j = g j := by
@@ -126,7 +126,7 @@ lemma designedGamma_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) 
   have hrec : designedGamma P θ X₀ κ A u κ₀ xp a k = stepGamma P θ X₀ κ A u κ₀ xp a
       (fun j => if h : j < k then designedGamma P θ X₀ κ A u κ₀ xp a j else 0) k := by
     unfold designedGamma
-    rw [Nat.strongRecOn'_beta]
+    rw [Nat.strongRecOn_eq]
   rw [hrec]
   unfold stepGamma DesignedZero.designGamma
   exact DesignedZero.chooseHeight_mem _ _ _ (hΓ k)

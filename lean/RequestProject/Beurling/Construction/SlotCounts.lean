@@ -391,7 +391,7 @@ theorem capH_initial_le {X₀ : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.lo
     have h3 := ((h2.pow 2).const_mul 8).exp
     have h4 := (hasDerivAt_id y).const_mul ε
     have h5 := h4.sub h3
-    convert h5 using 1
+    convert! h5 using 1
     · simp only [Nat.cast_ofNat, mul_one, hf, Pi.pow_apply]
       ring
   have hcont : ContinuousOn g (Icc X₀ x) := fun y hy =>

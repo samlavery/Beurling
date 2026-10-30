@@ -39,7 +39,7 @@ lemma integral_inv_sq {a b : ℝ} (ha : 0 < a) (hab : a ≤ b) :
     rw [Set.uIcc_of_le hab] at ht
     have ht0 : t ≠ 0 := (lt_of_lt_of_le ha ht.1).ne'
     have := (hasDerivAt_inv ht0).neg
-    convert this using 1
+    convert! this using 1
     · ext s; simp [one_div]
     · field_simp
   rw [integral_eq_sub_of_hasDerivAt hd]

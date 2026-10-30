@@ -47,7 +47,7 @@ lemma integral_exp_mul_smooth {w : ℂ} (hw : w ≠ 0) :
     have h1 : HasDerivAt (fun x : ℝ => -w * (x : ℂ)) (-w) x := by
       simpa using (hasDerivAt_id (x : ℝ)).ofReal_comp.const_mul (-w)
     have := (h1.cexp.neg).div_const w
-    convert this using 1
+    convert! this using 1
     field_simp
   have hcu : Continuous fun x : ℝ => ((deriv Real.smoothTransition x : ℝ) : ℂ) :=
     continuous_ofReal.comp continuous_deriv_smoothTransition
@@ -92,7 +92,7 @@ lemma integral_cpow_smooth_Icc {w : ℂ} {xk : ℝ} (hxk : 0 < xk) :
     (continuous_const.mul Real.continuous_exp).continuousOn
   have hg := (continuousOn_cpow_smooth w hxk).mono (show (fun v => xk * Real.exp v) '' uIcc 0 1 ⊆
     Ioi 0 by rintro _ ⟨v, -, rfl⟩; exact mul_pos hxk (Real.exp_pos v))
-  have key := integral_comp_smul_deriv' hf hf' hg
+  have key := integral_deriv_smul_comp' hf hf' hg
   simp only [Real.exp_zero, mul_one] at key
   rw [← key, ← intervalIntegral.integral_const_mul]
   congr 1
@@ -262,7 +262,7 @@ theorem hasDerivAt_oscTerm {θ α γ xk x : ℝ} (hx : 0 < x) (hxk : 0 < xk) :
       (-Real.sin (γ * Real.log x) * (γ * x⁻¹)) x := (hlog.const_mul γ).cos
   have hlog2 : HasDerivAt (fun y : ℝ => Real.log (y / xk)) x⁻¹ x := by
     have := ((hasDerivAt_id x).div_const xk).log (div_ne_zero hx.ne' hxk.ne')
-    convert this using 1
+    convert! this using 1
     simp only [id]
     field_simp
   have hϕ : HasDerivAt Real.smoothTransition
@@ -271,7 +271,7 @@ theorem hasDerivAt_oscTerm {θ α γ xk x : ℝ} (hx : 0 < x) (hxk : 0 < xk) :
   have h3 := hϕ.comp x hlog2
   have := ((h1.const_mul α).mul h2).mul h3
   unfold oscTerm
-  convert this using 1
+  convert! this using 1
   have hxθ : x ^ θ = x ^ (θ - 1) * x := by
     rw [← Real.rpow_add_one hx.ne']; ring_nf
   simp only [Function.comp, Pi.mul_apply]

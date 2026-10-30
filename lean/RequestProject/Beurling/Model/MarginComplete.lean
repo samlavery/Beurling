@@ -53,7 +53,7 @@ theorem theorem21InputsH_proved (h84 : BaseRange.Huxley84) : Theorem21InputsH :=
   have hc : Cond θ X₀ := ⟨hθ, hlog, hx₁.mono h2b⟩
   have hnice : ∀ᵐ ω ∂jitterMeasure, ω ∈ NiceEv θ X₀ := by
     have := niceEv_compl_null hc hev
-    rw [ae_iff]; simpa using this
+    rw [ae_iff]; exact this
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := QueueMono.one_lt_of_logX hX0 hc.hX
   have hb : (X₀ : ℝ) ≤ b := (X₀_le_uS (X₀ := X₀) (by linarith) m).trans hadm.1

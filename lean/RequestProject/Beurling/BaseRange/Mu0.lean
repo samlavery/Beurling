@@ -275,7 +275,7 @@ theorem nonRigid_eq {X0 : ℕ} (hX0 : 2 ≤ X0) (hXp : ¬ X0.Prime) {κ u : ℝ}
       rw [le_div_iff₀ (by linarith)] at hq; linarith
     have h0 : newPrimeCount (max X0 (Pplus m)) (u / m) ((1 + κ) * (u / m)) = 0 := by
       unfold newPrimeCount
-      convert Set.ncard_empty ℕ
+      convert! Set.ncard_empty ℕ
       ext p
       simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
       rintro ⟨hp, hpT, -, hpb⟩

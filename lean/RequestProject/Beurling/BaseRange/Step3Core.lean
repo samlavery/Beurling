@@ -88,28 +88,20 @@ lemma sum_powerset_nonempty {ι : Type*} [DecidableEq ι] (s : Finset ι) (g : F
     (hR : s.card ≤ R) :
     ∑ T ∈ s.powerset.filter (·.Nonempty), g T = ∑ r ∈ Icc 1 R, ∑ T ∈ s.powersetCard r, g T := by
   classical
-  rw [Finset.powerset_card_disjiUnion, Finset.filter_disjiUnion, Finset.sum_disjiUnion]
-  have h0 : ∀ r ∈ range (s.card + 1), ∑ T ∈ (s.powersetCard r).filter (·.Nonempty), g T =
-      if 1 ≤ r then ∑ T ∈ s.powersetCard r, g T else 0 := by
-    intro r _
-    split_ifs with hr
-    · congr 1
-      apply Finset.filter_true_of_mem
-      intro T hT
-      rw [← Finset.card_pos, (Finset.mem_powersetCard.mp hT).2]; omega
-    · have : r = 0 := by omega
-      subst this
-      rw [Finset.powersetCard_zero, Finset.filter_singleton, if_neg Finset.not_nonempty_empty,
-        Finset.sum_empty]
-  rw [Finset.sum_congr rfl h0, ← Finset.sum_filter]
-  apply Finset.sum_subset
-  · intro r hr
-    simp only [Finset.mem_filter, Finset.mem_range] at hr
-    exact Finset.mem_Icc.mpr ⟨hr.2, by omega⟩
-  · intro r hr hr'
-    simp only [Finset.mem_filter, Finset.mem_range, Finset.mem_Icc] at hr hr'
-    have : s.card < r := by omega
-    rw [Finset.powersetCard_eq_empty.mpr this, Finset.sum_empty]
+  rw [← Finset.sum_fiberwise_of_maps_to (s := s.powerset.filter (·.Nonempty)) (t := Icc 1 R)
+    (g := Finset.card) ?_]
+  · refine Finset.sum_congr rfl fun r hr => ?_
+    have hr1 := (Finset.mem_Icc.mp hr).1
+    congr 1
+    ext T
+    simp only [Finset.mem_filter, Finset.mem_powerset, Finset.mem_powersetCard]
+    constructor
+    · rintro ⟨⟨h1, -⟩, h2⟩; exact ⟨h1, h2⟩
+    · rintro ⟨h1, h2⟩
+      exact ⟨⟨h1, Finset.card_pos.mp (by omega)⟩, h2⟩
+  · intro T hT
+    simp only [Finset.mem_filter, Finset.mem_powerset] at hT
+    exact Finset.mem_Icc.mpr ⟨Finset.card_pos.mpr hT.2, (Finset.card_le_card hT.1).trans hR⟩
 
 /-! ### One system: tuples -/
 

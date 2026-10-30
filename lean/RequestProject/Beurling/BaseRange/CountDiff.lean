@@ -29,7 +29,7 @@ lemma hasDerivAt_inv_log {t : ℝ} (ht : 1 < t) :
   have hl : Real.log t ≠ 0 := (Real.log_pos ht).ne'
   have h := (Real.hasDerivAt_log (by linarith : t ≠ 0)).inv hl
   simp only [one_div] at h ⊢
-  convert h using 1
+  convert! h using 1
   field_simp
 
 lemma continuousOn_inv_log_deriv {a s : ℝ} (ha : 1 < a) :
@@ -69,7 +69,7 @@ theorem count_diff_le {ι κ' : Type*} (vX : ι → ℝ) (vY : κ' → ℝ) (X :
     refine Finset.sum_congr rfl fun z hz => ?_
     have := hlog (vY z) (hYa z (Finset.mem_filter.mp hz).1).le
     field_simp
-  simp only at hA
+  try simp only at hA
   rw [hcX, hcY] at hA
   rw [hA]
   have hs1 := hlog s has

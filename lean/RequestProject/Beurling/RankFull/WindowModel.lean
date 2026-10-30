@@ -68,7 +68,7 @@ theorem card_windowElems_le {dec : Finset (Fin N)} {q : Fin N → ℝ} (hq : ∀
     obtain ⟨hpd, hsupp, -, hval⟩ := Finset.mem_filter.mp hp1
     obtain ⟨hpd', -, -, hval'⟩ := Finset.mem_filter.mp hp1'
     have hM : 1 ≤ ∏ n, q n ^ v n := by
-      have h := Finset.prod_le_prod (s := univ) (f := fun _ => (1 : ℝ))
+      have h := Finset.prod_le_prod₀ (s := univ) (f := fun _ => (1 : ℝ))
         (g := fun n => q n ^ v n) (fun _ _ => zero_le_one) (fun n _ => by
           by_cases hv : v n = 0
           · simp [hv]

@@ -162,18 +162,18 @@ def LMb (f : KR.Ops.LocInt) : Prop := KR.Ops.LBd (f : ℝ → ℝ) ∧ Measurabl
 lemma LMb.add {f g : KR.Ops.LocInt} (hf : LMb f) (hg : LMb g) : LMb (f + g) := by
   refine ⟨?_, hf.2.add hg.2⟩
   have := hf.1.add hg.1
-  simpa [AddSubgroup.coe_add] using this
+  simpa [AddSubgroup.coe_add, Pi.add_def] using this
 
 lemma LMb.neg {f : KR.Ops.LocInt} (hf : LMb f) : LMb (-f) := by
   refine ⟨?_, hf.2.neg⟩
   have := hf.1.neg
-  simpa using this
+  simpa [Pi.neg_def] using this
 
 lemma LMb.sub {f g : KR.Ops.LocInt} (hf : LMb f) (hg : LMb g) : LMb (f - g) := by
   rw [sub_eq_add_neg]; exact hf.add hg.neg
 
 lemma LMb.zero : LMb (0 : KR.Ops.LocInt) :=
-  ⟨by simpa using KR.Ops.LBd_of_BM KR.BM_zero, by
+  ⟨by simpa [Pi.zero_def] using KR.Ops.LBd_of_BM KR.BM_zero, by
     simp only [ZeroMemClass.coe_zero]; exact measurable_zero⟩
 
 lemma LMb.Bo {P : BeurlingSystem} {H : ℝ → ℝ} {X0m : ℝ} (hO : KR.Ops.OpHyp P H X0m)

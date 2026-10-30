@@ -233,7 +233,6 @@ theorem blockSets_le (ok : Fin N → Prop) (q : Fin N → ℝ) (hq : ∀ g, ok g
       have : S'.sup id = m := le_antisymm (Finset.sup_le fun x hx => hmax x hx)
         (Finset.le_sup (f := id) hm)
       rw [this]; simpa using hsub hm
-    simp only
     rw [sup_image_nth Dset hsub hne, Finset.prod_image (fun a ha b' hb' h =>
       nth_injOn Dset (show a < M by simpa using hsub ha) (show b' < M by simpa using hsub hb') h),
       EuS_nth_succ ok q Eu b hsupM]
@@ -271,7 +270,7 @@ lemma geomR_le (R : Finset (Fin K)) (D : ℕ) {x : ℝ} (hx0 : 0 ≤ x) (hx1 : x
     rw [← Finset.prod_const, ← Finset.prod_filter_mul_prod_filter_not univ (· ∈ R)]
     have h1 : ∏ y ∈ univ.filter (· ∈ R), ∑ e ∈ (if y ∈ R then range (D + 1) else {0}), x ^ e ≤
         ∏ y ∈ univ.filter (· ∈ R), (1 - x)⁻¹ := by
-      refine Finset.prod_le_prod (fun y _ => Finset.sum_nonneg fun e _ => pow_nonneg hx0 _)
+      refine Finset.prod_le_prod₀ (fun y _ => Finset.sum_nonneg fun e _ => pow_nonneg hx0 _)
         fun y hy => ?_
       rw [if_pos (Finset.mem_filter.mp hy).2]
       exact RankFull.Config.geom_le hx0 hx1 D
@@ -337,7 +336,7 @@ theorem fiber_le {K : ℕ} (D : ℕ) (R : Finset (Fin K)) (Col : Set (Fin K → 
   have hw : ∀ W ∈ fib, ∏ g, (q g)⁻¹ ^ (∑ y, W y g) ≤ ∏ g, hfun g (φ W g) := by
     intro W hW
     obtain ⟨-, hsupp, -⟩ := Finset.mem_filter.mp hW
-    refine Finset.prod_le_prod (fun g _ => ?_) (fun g _ => ?_)
+    refine Finset.prod_le_prod₀ (fun g _ => ?_) (fun g _ => ?_)
     · by_cases hg : g ∈ S
       · exact pow_nonneg (hqinv g hg).1.le _
       · have : ∀ y, W y g = 0 := by
@@ -373,7 +372,7 @@ theorem fiber_le {K : ℕ} (D : ℕ) (R : Finset (Fin K)) (Col : Set (Fin K → 
         obtain ⟨y, hy⟩ := mem_suppW.mp hg'
         have := hinj (colW W g) (hcol g hg) 0 h0 (fun y' hy' => by
           have := congrFun h0' y'
-          simpa [hy'] using this)
+          simpa [colW, hy'] using this)
         exact hy (congrFun this y)
     · simp [hφ, hg]
   have hinjφ : Set.InjOn φ fib := by
@@ -384,7 +383,7 @@ theorem fiber_le {K : ℕ} (D : ℕ) (R : Finset (Fin K)) (Col : Set (Fin K → 
     by_cases hg : g ∈ S
     · have := hinj (colW W g) (hcol g hg) (colW W' g) (hcol' g hg) (fun y' hy' => by
         have := congrFun (congrFun h g) y'
-        simpa [hφ, hg, hy'] using this)
+        simpa [colW, hφ, hg, hy'] using this)
       exact congrFun this y
     · have h1 : W y g = 0 := by
         by_contra h1; exact hg (hsupp ▸ mem_suppW.mpr ⟨y, h1⟩)
@@ -414,7 +413,7 @@ theorem fiber_le {K : ℕ} (D : ℕ) (R : Finset (Fin K)) (Col : Set (Fin K → 
         rw [if_pos hg]
         exact Finset.sum_congr rfl fun v _ => by simp [hh, hg]
     _ ≤ ∏ g ∈ S, (((1 - (q g)⁻¹)⁻¹) ^ R.card - 1) := by
-        refine Finset.prod_le_prod (fun g hg => Finset.sum_nonneg fun v _ =>
+        refine Finset.prod_le_prod₀ (fun g hg => Finset.sum_nonneg fun v _ =>
           pow_nonneg (hqinv g hg).1.le _) fun g hg => ?_
         exact geomR_le R D (hqinv g hg).1.le (inv_lt_one_of_one_lt₀ (hq g hg))
 

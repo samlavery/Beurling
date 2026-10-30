@@ -26,7 +26,7 @@ lemma one_le_colSum {E : Matrix (Fin k) (Fin k) ℕ} (hE : (Ereal E).det ≠ 0) 
   have h0 : ∀ i, E i j = 0 := fun i => by
     have := Finset.single_le_sum (f := fun i => E i j) (fun _ _ => Nat.zero_le _)
       (Finset.mem_univ i)
-    simp only at this
+    try simp only at this
     omega
   apply hE
   apply Matrix.det_eq_zero_of_column_eq_zero j
@@ -59,7 +59,7 @@ theorem volume_bound_caps {c : Fin k → ℝ} (hc : ∀ i, 0 < c i) {E : Matrix 
     rw [hnc]
     have hpow : (∏ j, τ j ^ ((∑ i, E i j) - 1)) * ∏ j, q j ≤ ∏ j, q j ^ (∑ i, E i j) := by
       rw [← Finset.prod_mul_distrib]
-      apply Finset.prod_le_prod
+      apply Finset.prod_le_prod₀
       · intro j _; exact mul_nonneg (pow_nonneg (by linarith [hτ j]) _) (hqp j).le
       · intro j _
         have : q j ^ (∑ i, E i j) = q j ^ ((∑ i, E i j) - 1) * q j := by

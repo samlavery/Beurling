@@ -183,7 +183,7 @@ theorem prod_weights_le {α : Type*} {R : Finset α} (wy : α → ℝ) {w : ℝ}
     ∏ y ∈ R, wy y ≤ w ^ (1 + j) := by
   obtain ⟨y0, hy0⟩ : R.Nonempty := Finset.card_pos.mp (by omega)
   have hw0 : 0 ≤ w := (h0 y0 hy0).trans (hw y0 hy0)
-  calc ∏ y ∈ R, wy y ≤ ∏ _y ∈ R, w := Finset.prod_le_prod h0 hw
+  calc ∏ y ∈ R, wy y ≤ ∏ _y ∈ R, w := Finset.prod_le_prod₀ h0 hw
     _ = w ^ R.card := Finset.prod_const w
     _ ≤ w ^ (1 + j) := pow_le_pow_of_le_one hw0 hw1 (by omega)
 

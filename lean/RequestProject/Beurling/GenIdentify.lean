@@ -81,7 +81,7 @@ lemma exists_iota_eq {n j : ℕ} (hn : n ≠ 0) (hf : ∀ r ∈ n.primeFactors, 
       rw [← Nat.support_factorization]; exact Finsupp.mem_support_iff.mpr hi'
     exact qp_strictMono.lt_iff_lt.mp (hf _ this)
   · rw [iota_eq_mapDomain, hmap]
-    exact Nat.factorization_prod_pow_eq_self hn
+    exact Nat.prod_factorization_pow_eq_self hn
 
 variable (P : BeurlingSystem)
 
@@ -157,7 +157,7 @@ theorem p_eq_nth_prime {D : Set ℝ} (hD : ∀ u v, u ≤ v → v ∈ D → u �
           exact (Nat.le_floor_iff (by linarith)).mp (mem_Icc.mp hn).2
         · intro a ha b hb hab
           have := congrArg iota hab
-          simp only at this
+          try simp only at this
           rwa [hf2 a ha, hf2 b hb] at this
       simpa using this
     have hsingle : Finsupp.single j 1 ∈ P.elems t := by

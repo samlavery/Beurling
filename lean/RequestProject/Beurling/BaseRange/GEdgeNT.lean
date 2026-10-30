@@ -31,7 +31,7 @@ noncomputable def Nsm (N p : ℕ) : ℕ := (N.factorization.filter (fun q => ¬ 
 
 lemma Nbig_mul_Nsm {N : ℕ} (hN : N ≠ 0) (p : ℕ) : Nbig N p * Nsm N p = N := by
   unfold Nbig Nsm
-  rw [Finsupp.prod_filter_mul_prod_filter_not, Nat.factorization_prod_pow_eq_self hN]
+  rw [Finsupp.prod_filter_mul_prod_filter_not, Nat.prod_factorization_pow_eq_self hN]
 
 lemma factorization_Nbig (N p : ℕ) :
     (Nbig N p).factorization = N.factorization.filter (p < ·) := by

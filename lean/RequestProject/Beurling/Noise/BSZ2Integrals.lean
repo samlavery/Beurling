@@ -71,7 +71,7 @@ lemma integral_expl {k u c d : ℝ} (hk : k ≠ 0) :
     have h1 : HasDerivAt (fun w => -(k * (w - u))) (-(k * 1)) w :=
       (((hasDerivAt_id w).sub_const u).const_mul k).neg
     have := (h1.exp.neg).div_const k
-    convert this using 1
+    convert! this using 1
     field_simp
   rw [intervalIntegral.integral_eq_sub_of_hasDerivAt hF (intervalIntegrable_expl k u c d)]
   ring

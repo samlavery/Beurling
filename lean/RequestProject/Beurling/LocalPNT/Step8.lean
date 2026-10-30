@@ -325,7 +325,6 @@ theorem G1_disc_bound {T₁ : ℝ} (hT : 1 ≤ T₁)
     have hl2 : Real.log (0.98 * η) ≤ Real.log ‖f s₁‖ := Real.log_le_log (by positivity) hfs₁
     rw [Real.log_mul (by norm_num) hη0.ne'] at hl2
     have h5 : Real.log (1 / η) = -Real.log η := by rw [one_div, Real.log_inv]
-    simp only [Nat.cast_one] at hlogBk
     linarith
   -- Borel–Carathéodory
   set F : ℂ → ℂ := fun z => ℓ (s₁ + z) - ℓ s₁
@@ -342,7 +341,8 @@ theorem G1_disc_bound {T₁ : ℝ} (hT : 1 ≤ T₁)
       rw [mem_ball, dist_eq_norm, add_sub_cancel_left]; simpa using hz
     exact hre _ hz'
   have hsz : ‖s - s₁‖ ≤ r₁ := hs
-  have hBC := Complex.borelCaratheodory_zero (by linarith) hFd hFm (by linarith)
+  have hBC := Complex.borelCaratheodory_zero (M := Yt Λ t + 1) (by linarith) hFd
+    (hFm.mono_right fun _ hz => Set.mem_setOf.mpr (le_of_lt (Set.mem_setOf.mp hz))) (by linarith)
     (show s - s₁ ∈ ball (0 : ℂ) R₁ by rw [mem_ball, dist_zero_right]; linarith)
     (by simp [F])
   have hFs : F (s - s₁) = ℓ s - ℓ s₁ := by simp [F]
@@ -419,7 +419,6 @@ theorem G1_disc_bound {T₁ : ℝ} (hT : 1 ≤ T₁)
     (⟨hs₁b, hs₁U⟩ : s₁ ∈ ball s₁ R₁ ∩ rectU Λ T₁) (by simp only [C]; ring)
   have hsb : s ∈ ball s₁ R₁ := by rw [mem_ball, dist_eq_norm]; linarith
   have hGs := hrel s ⟨hsb, hsU⟩
-  simp only at hGs
   have hGdecomp : G s = G s₁ + (Complex.log ((s - 1) / s) - Complex.log ((s₁ - 1) / s₁)) +
       (ℓ s - ℓ s₁) := by rw [hGs]; simp only [C]; ring
   -- the anchor `G(s₁) = Gright(s₁)`

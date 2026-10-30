@@ -100,7 +100,7 @@ lemma ZinfR_le_four_pow (X₀ : ℕ) {σ : ℝ} (hσ : 1 / 2 ≤ σ) : ZinfR X�
     have h3 : 0 < 1 - (p : ℝ) ^ (-σ) := by linarith [rpow_neg_lt_one hpp (by linarith : (0:ℝ) < σ)]
     rw [inv_le_comm₀ h3 (by norm_num)]; linarith
   calc ZinfR X₀ σ ≤ ∏ _p ∈ X₀.primesBelow, (4 : ℝ) :=
-        Finset.prod_le_prod (fun p hp => (factor_pos (Nat.mem_primesBelow.mp hp).2
+        Finset.prod_le_prod₀ (fun p hp => (factor_pos (Nat.mem_primesBelow.mp hp).2
           (by linarith)).le) hfac
     _ = 4 ^ X₀.primesBelow.card := by rw [Finset.prod_const]
     _ ≤ 4 ^ X₀ := by

@@ -40,7 +40,7 @@ theorem exists_split {z h : ℝ} (hh : 1 ≤ h) {e : ℕ →₀ ℕ} (he : e ∈
   set D := (Finset.Iic e).filter (fun d => P.val d ≤ h) with hD
   have h0 : (0 : ℕ →₀ ℕ) ∈ D := by
     rw [hD, Finset.mem_filter, Finset.mem_Iic]
-    exact ⟨zero_le _, by rw [P.val_zero]; exact hh⟩
+    exact ⟨zero_le, by rw [P.val_zero]; exact hh⟩
   obtain ⟨d0, hd0, hmax⟩ := Finset.exists_max_image D P.val ⟨0, h0⟩
   rw [hD, Finset.mem_filter, Finset.mem_Iic] at hd0
   have hne : d0 ≠ e := by

@@ -133,7 +133,7 @@ lemma primeCount_le_abel {N : ℕ} (hN : 2 ≤ N) :
       have : (2 : ℝ) ≤ n := by exact_mod_cast hn
       exact div_nonneg zero_le_one (Real.log_nonneg (by linarith))) hN
   refine hab.trans (le_of_eq ?_)
-  simp only
+  try simp only
   rw [Finset.mul_sum]
   congr 1
   · push_cast; ring
@@ -226,7 +226,7 @@ lemma log_1000_le : Real.log 1000 ≤ 695 / 100 := by
   have h1 : ((1 : ℝ) + 695 / 100000) ^ 1000 ≤ Real.exp (695 / 100) := by
     have := pow_le_pow_left₀ (by norm_num) (Real.add_one_le_exp (695 / 100000 : ℝ)) 1000
     rw [← Real.exp_nat_mul, add_comm] at this
-    convert this using 2
+    convert! this using 2
     norm_num
   have h2 : (1000 : ℝ) ≤ ((1 : ℝ) + 695 / 100000) ^ 1000 := by
     have : 1000 * 100000 ^ 1000 ≤ 100695 ^ 1000 := by decide +kernel

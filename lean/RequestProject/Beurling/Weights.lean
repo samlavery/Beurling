@@ -143,14 +143,14 @@ theorem massM_bounds : (u / a) ^ b ≤ massM b a u ∧ massM b a u ≤ 1 := by
     (hcont.mono (by rw [uIcc_of_le hua])).intervalIntegrable
   constructor
   · have hmono : ∫ v in u..a, a ^ (-b) ≤ massM b a u := by
-      apply intervalIntegral.integral_mono_on hua intervalIntegral.intervalIntegrable_const hint
+      apply intervalIntegral.integral_mono_on hua intervalIntegrable_const hint
       intro v hv
       exact Real.rpow_le_rpow_of_nonpos (by linarith [hv.1]) hv.2 (by linarith [h.b_pos])
     rw [intervalIntegral.integral_const, smul_eq_mul, h.a_sub_u] at hmono
     rw [Real.div_rpow hu.le h.a_pos.le, div_eq_mul_inv, ← Real.rpow_neg h.a_pos.le]
     exact hmono
   · have hmono : massM b a u ≤ ∫ v in u..a, u ^ (-b) := by
-      apply intervalIntegral.integral_mono_on hua hint intervalIntegral.intervalIntegrable_const
+      apply intervalIntegral.integral_mono_on hua hint intervalIntegrable_const
       intro v hv
       exact Real.rpow_le_rpow_of_nonpos hu hv.1 (by linarith [h.b_pos])
     rw [intervalIntegral.integral_const, smul_eq_mul, h.a_sub_u, ← Real.rpow_add hu] at hmono

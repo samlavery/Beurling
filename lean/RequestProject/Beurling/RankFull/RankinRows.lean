@@ -194,7 +194,7 @@ theorem card_admGen_le_rankin {π k₁ K X₀ : ℕ} {Y : ℝ} (hY : 0 ≤ Y) {�
           Finset.sum_le_sum_of_subset_of_nonneg hsub fun v _ _ =>
             Finset.prod_nonneg fun i _ => pow_nonneg (hx0 i) _
       _ = ∏ i, ∑ n ∈ range (K + 1), x i ^ n := (Finset.prod_univ_sum _ _).symm
-      _ ≤ ∏ i, (1 - x i)⁻¹ := Finset.prod_le_prod
+      _ ≤ ∏ i, (1 - x i)⁻¹ := Finset.prod_le_prod₀
           (fun i _ => Finset.sum_nonneg fun n _ => pow_nonneg (hx0 i) _)
           fun i _ => geom_partial_le (hx0 i) (hx1 i) _
   have hSmsum := sum_smooth_rpow_le X₀ ⌊Y⌋₊ (θ := 3 / 4) (by norm_num)

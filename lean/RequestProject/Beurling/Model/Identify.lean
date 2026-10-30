@@ -65,7 +65,7 @@ lemma mapE_apply_inr (M : SlotModel X₀) (e : RealisedIdx M →₀ ℕ) (k : �
   unfold mapE
   split_ifs with hk
   · have : Sum.inr k = toPIdx M (Sum.inr ⟨k, hk⟩) := rfl
-    rw [this, Finsupp.mapDomain_apply (toPIdx_injective M)]
+    rw [this, Finsupp.mapDomain_apply_of_injective (toPIdx_injective M)]
   · rw [Finsupp.mapDomain_notin_range]
     rintro ⟨i, hi⟩
     cases i with

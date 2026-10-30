@@ -219,7 +219,7 @@ theorem set_margin {ω : JitterΩ} {t : ℕ} (hG : ω ∈ G0 θ X₀ (e3Family �
   have haX : (X₀ : ℝ) ≤ a := le_csInf hne fun x hx => hx.2
   have haP : P ≤ a := le_csInf hne fun x hx => (hAb x hx.1 hx.2).1.le
   have hbP : b ≤ P + s + 3 / 4 := csSup_le hne fun x hx => (hAb x hx.1 hx.2).2
-  have hab : a ≤ b := csInf_le_csSup hbb hba hne
+  have hab : a ≤ b := csInf_le_csSup hne hbb hba
   have hIoo : Ioo a b ⊆ A' := fun x hx => by
     obtain ⟨p, hp, hpx⟩ := exists_lt_of_csInf_lt hne hx.1
     obtain ⟨q, hq, hxq⟩ := exists_lt_of_lt_csSup hne hx.2
@@ -404,7 +404,8 @@ lemma sigmaS_eq {ω : JitterΩ} (hN : ω ∈ NiceEv θ X₀) {z s : ℝ} {A : Se
   rw [← Set.ncard_coe_finset]
   congr 1
   ext k
-  simp only [Finset.coe_filter, mem_setOf_eq, mem_s2Q, s2sl]
+  rw [Finset.mem_coe, Finset.mem_filter]
+  simp only [mem_setOf_eq, mem_s2Q, s2sl]
   have hsg : ω ∈ stageGood θ X₀ k := by
     have := hN.2.1; simp only [SG, mem_iInter] at this; exact this k
   have hX := slotF_ge hc k ω

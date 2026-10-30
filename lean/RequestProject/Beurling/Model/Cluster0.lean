@@ -79,7 +79,7 @@ theorem low_vec_unit {N D Dmax : ℕ} (ω : JitterΩ) {J : Set ℝ}
   -- the product is at least `X₀⁻^{deg}`
   have hP : Xm' ^ (∑ n, p.1 n) ≤ ∏ n, qOf (constructionLaw2 hc hev) ω n ^ p.1 n := by
     rw [← Finset.prod_pow_eq_pow_sum]
-    refine Finset.prod_le_prod (fun _ _ => by positivity) fun n _ => ?_
+    refine Finset.prod_le_prod₀ (fun _ _ => by positivity) fun n _ => ?_
     by_cases hn : p.1 n = 0
     · simp [hn]
     · exact pow_le_pow_left₀ (by linarith) (hq n hn) _
@@ -290,7 +290,7 @@ theorem eclW_fail_zero (G : Set JitterΩ)
       exact h)
     (by
       -- the capacity-`0` case: `rank S(J) = |S(J)|`, so the event is empty
-      refine le_of_eq_of_le ?_ (zero_le _)
+      refine le_of_eq_of_le ?_ (zero_le)
       refine measure_mono_null (fun ω hω => ?_) measure_empty
       obtain ⟨⟨k, hk, hlt, hle⟩, -⟩ := hω
       have hr := low_rank_eq_card hc hev (N := NpZ z) (D := DpZ X₀ z) (Dmax := DmaxZ z) ω

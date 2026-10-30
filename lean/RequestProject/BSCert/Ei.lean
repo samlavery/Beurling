@@ -69,7 +69,7 @@ lemma real_exp_bound' {x : ℝ} {n : ℕ} (hx : |x| / n.succ ≤ 1 / 2) :
 lemma le_highPoly {w : ℝ} (hw : 0 < w) {K : ℕ} (hK : w / (K + 2) ≤ 1 / 2) :
     (Real.exp w - 1) / w ≤ lowPoly K w + 2 * w ^ K / ((K + 1).factorial : ℝ) := by
   have h := real_exp_bound' (x := w) (n := K + 1) (by
-    rw [abs_of_pos hw]; push_cast; convert hK using 2; ring)
+    rw [abs_of_pos hw]; push_cast; convert! hK using 2; ring)
   have h2 := (abs_le.mp h).2
   rw [Finset.sum_range_succ'] at h2
   simp only [pow_zero, Nat.factorial_zero, Nat.cast_one, div_one] at h2
@@ -165,7 +165,7 @@ lemma hasDerivAt_Ein {x : ℝ} (hx : 0 < x) : HasDerivAt Ein ((Real.exp x - 1) /
 lemma hasDerivAt_Ei {x : ℝ} (hx : 0 < x) : HasDerivAt Ei (Real.exp x / x) x := by
   have h := ((hasDerivAt_const x Real.eulerMascheroniConstant).add
     (Real.hasDerivAt_log hx.ne')).add (hasDerivAt_Ein hx)
-  convert h using 1
+  convert! h using 1
   · field_simp
     ring
 

@@ -40,12 +40,12 @@ lemma hasDerivAt_GV {L s : ℝ} (hs0 : -2 < s) (hs1 : s ≠ 1) :
   · have hρ := hasDerivAt_rho_of_lt h
     have := ((hρ.const_mul C0).mul hφ)
     unfold GV GVd
-    convert this using 1
+    convert! this using 1
     rw [if_neg (by linarith)]; ring
   · have hρ := hasDerivAt_rho h
     have := ((hρ.const_mul C0).mul hφ)
     unfold GV GVd
-    convert this using 1
+    convert! this using 1
     rw [if_pos h.le]; ring
 
 lemma continuousAt_GV {L s : ℝ} (hs0 : -2 < s) : ContinuousAt (GV L) s :=
@@ -123,9 +123,9 @@ theorem main_terms_le {ι : Type*} (s : Finset ι) (a σ : ι → ℝ) {L ℓ : 
     intro x h1 h2
     have hin : HasDerivAt (fun x => (ℓ - x) / L) (-(1 / L)) x := by
       have := ((hasDerivAt_const x ℓ).sub (hasDerivAt_id x)).div_const L
-      convert this using 1; simp; ring
+      convert! this using 1; simp; ring
     have := (hasDerivAt_GV (L := L) h2 h1).comp x hin
-    convert this using 1
+    convert! this using 1
     simp only [F']; ring
   have hs_ne : ∀ x ∈ Ioo 0 L, x ≠ c → (ℓ - x) / L ≠ 1 := by
     intro x hx hxc heq

@@ -275,10 +275,11 @@ theorem far_bound {ε θ lam0 X0 : ℝ} (hP : PaperWidth H X0m ε θ) (hX0e : X0
     set Φt : ℝ → ℝ := fun v => (Icc lo hi).restrict Φ (projIcc lo hi hlohi v)
     have hΦt : LipschitzWith ⟨Lc / w, by positivity⟩ Φt := by
       have := hΦlip.to_restrict.comp (LipschitzWith.projIcc hlohi)
-      simpa using this
+      exact this.weaken (mul_one _).le
     have hΦtΦ : ∀ v ∈ Icc lo hi, Φt v = Φ v := by
       intro v hv
-      simp only [Φt, projIcc_of_mem hlohi hv, Set.restrict_apply]
+      simp only [Φt, projIcc_of_mem hlohi hv]
+      rfl
     have hamem : a ∈ Icc lo hi := ⟨by simp only [lo]; linarith, by simp only [hi]; linarith⟩
     have hint2 : ∫ v, g' v * (Φ v - Φ a) = ∫ v, g' v * (Φt v - Φt a) := by
       congr 1; funext v
@@ -298,7 +299,7 @@ theorem far_bound {ε θ lam0 X0 : ℝ} (hP : PaperWidth H X0m ε θ) (hX0e : X0
     calc kapN tw X0m P.labelVal x d n * |∫ v, g' v * (Φt v - Φt a)|
         ≤ 1 * |∫ v, g' v * (Φt v - Φt a)| :=
           mul_le_mul_of_nonneg_right hk.2 (abs_nonneg _)
-      _ ≤ Lc / w * KRD P H tw X0m x d := by rw [one_mul]; simpa using hkr
+      _ ≤ Lc / w * KRD P H tw X0m x d := by rw [one_mul]; exact hkr
       _ ≤ lam0 / Hn / w * KRD P H tw X0m x d := by gcongr
       _ = lam0 * KRD P H tw X0m x d / (w * Hn) := by field_simp
   · -- `G` is constant on the support

@@ -56,7 +56,7 @@ lemma labelVal_qp (j : ℕ) : P.labelVal (qp j) = P.p j := by
 lemma one_le_labelVal (r : ℕ) : 1 ≤ P.labelVal r := (P.one_lt _).le
 
 lemma factorization_iota_qp (e : ℕ →₀ ℕ) (j : ℕ) : (iota e).factorization (qp j) = e j := by
-  rw [factorization_iota, Finsupp.mapDomain_apply qp_injective]
+  rw [factorization_iota, Finsupp.mapDomain_apply_of_injective qp_injective]
 
 lemma primeFactors_iota (e : ℕ →₀ ℕ) : (iota e).primeFactors = e.support.image qp := by
   rw [← Nat.support_factorization, factorization_iota,

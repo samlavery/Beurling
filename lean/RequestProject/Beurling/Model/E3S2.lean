@@ -151,7 +151,7 @@ lemma PhiC2_le_PhiBar2 (k : ℕ) (α β : ℝ) (p : JitterΩ × ℝ) :
     by_cases h1 : 2 ≤ ec.2 ∧ ec.1 ∈ cofP2 θ X₀ k p.1 ∧
         α ≤ eval (DD θ X₀ p.1) ec.1 * p.2 ^ ec.2 ∧ eval (DD θ X₀ p.1) ec.1 * p.2 ^ ec.2 < β
     · rw [if_pos h1, if_pos ⟨h1.1, h1.2.1.1, h1.2.2⟩]
-    · rw [if_neg h1]; exact zero_le _
+    · rw [if_neg h1]; exact zero_le
   · exact le_rfl
 
 lemma PhiBar2_meas (α β : ℝ) (ω : JitterΩ) : Measurable fun t => PhiBar2 θ X₀ α β (ω, t) := by
@@ -297,7 +297,7 @@ theorem X2_le_PhiC2 (a b : ℝ) (C : ℝ) (k : ℕ) {ω : JitterΩ} (hω : ω �
   · rw [Set.not_nonempty_iff_eq_empty] at hne
     rw [hne, Set.ncard_empty] at hX2
     push_cast at hX2
-    rw [ENNReal.ofReal_eq_zero.mpr hX2]; exact zero_le _
+    rw [ENNReal.ofReal_eq_zero.mpr hX2]; exact zero_le
   obtain ⟨e0, he0⟩ := hne
   have hplaced : placedAt (CM θ X₀ ω) k := by
     have hk2 : 2 ≤ e0 (Sum.inr k) := he0.2.2.2.2.2.2.2
@@ -399,7 +399,7 @@ theorem lintegral_PhiBar2_le {α β : ℝ} (hαβ : α ≤ β) (ω : JitterΩ) :
     intro t
     unfold PhiBar2
     split_ifs with ht
-    swap; · exact zero_le _
+    swap; · exact zero_le
     rw [tsum_eq_sum (s := T) (fun ec hec => by
       refine if_neg fun h1 => hec ?_
       obtain ⟨hc2, hlive, hα, hβ⟩ := h1
@@ -437,7 +437,7 @@ theorem lintegral_PhiBar2_le {α β : ℝ} (hαβ : α ≤ β) (ω : JitterΩ) :
         eval (DD θ X₀ (ω, t).1) (e, j + 2).1 * (ω, t).2 ^ (e, j + 2).2 < β
     · rw [if_pos h1, indicator_of_mem (show t ∈ I e (j + 2) from ⟨ht, h1.2.2.1, h1.2.2.2⟩)]
       rfl
-    · rw [if_neg h1]; exact zero_le _
+    · rw [if_neg h1]; exact zero_le
   refine (lintegral_mono hpt).trans ?_
   rw [lintegral_finset_sum _ (fun e _ => Finset.measurable_sum _ fun j _ =>
     measurable_one.indicator (hImeas e (j + 2)))]
@@ -766,7 +766,7 @@ theorem s2_first {C : ℝ} (hC0 : 0 ≤ C) {a b : ℤ} {v : ℝ} (hv : (X₀ : �
       (fun ω => boxMean_PhiC2_ne_top hc hev hab' k ω)
   have hnice : ∀ᵐ ω ∂jitterMeasure, ω ∈ NiceEv θ X₀ := by
     have := niceEv_compl_null hc hev
-    rw [ae_iff]; simpa using this
+    rw [ae_iff]; exact this
   filter_upwards [ae_all_iff.mpr hk, hnice] with ω hω hN hQC hE1 n
   have hXm := Queue6.Xm_pos hc
   have hXm0 : 0 < Xm X₀ := by linarith
@@ -786,7 +786,7 @@ theorem s2_first {C : ℝ} (hC0 : 0 ≤ C) {a b : ℤ} {v : ℝ} (hv : (X₀ : �
   have hsum : ∑' k, boxMean J k (PhiC2 θ X₀ k a b) ω ≤ 2 * ENNReal.ofReal ((b - a) * S) :=
     (sum_boxMean_le J (fun k => PhiC2 θ X₀ k a b) (PhiBar2 θ X₀ a b) ω (PhiBar2_meas a b ω)
       (fun k t => PhiC2_le_PhiBar2 k a b _)).trans
-      (mul_le_mul_left' (lintegral_PhiBar2_le hc hab' ω) 2)
+      (mul_le_mul_right (lintegral_PhiBar2_le hc hab' ω) 2)
   have hrhs : 0 ≤ 2 * ((b - a) * S) := by
     have : (0 : ℝ) ≤ b - a := by linarith
     positivity

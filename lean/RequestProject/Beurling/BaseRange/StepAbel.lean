@@ -443,7 +443,7 @@ theorem one_replacement {ι κ' : Type*} (vX : ι → ℝ) (vY : κ' → ℝ) (X
         rw [Set.uIcc_of_le haβ] at hs
         have hs0 : 0 < s := by linarith [hs.1]
         have := ((Real.hasDerivAt_log hs0.ne').pow 2).div_const 2
-        convert this using 1
+        convert! this using 1
         field_simp
         push_cast
         ring

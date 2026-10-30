@@ -127,11 +127,11 @@ lemma neg_log_one_sub_le {x : ℝ} (hx0 : 0 ≤ x) (hx1 : x < 1) :
     intro s hs
     have hs1 : 1 - s ≠ 0 := by linarith [hs.2]
     have h1 : HasDerivAt (fun s : ℝ => 1 - s) (-1) s := by
-      simpa using (hasDerivAt_const s (1 : ℝ)).sub (hasDerivAt_id s)
+      simpa [Pi.sub_def] using (hasDerivAt_const s (1 : ℝ)).sub (hasDerivAt_id' s)
     have h2 := ((hasDerivAt_id s).pow 2).div (h1.const_mul 2) (mul_ne_zero two_ne_zero hs1)
     have h3 := h1.log hs1
     have := ((hasDerivAt_id s).add h2).add h3
-    convert this using 1
+    convert! this using 1
     · simp only [id, Pi.pow_apply]
       field_simp
       ring
@@ -151,7 +151,7 @@ lemma neg_log_one_sub_le {x : ℝ} (hx0 : 0 ≤ x) (hx1 : x < 1) :
 lemma prod_inv_le_exp (J : Finset ℕ) (x : ℕ → ℝ) (hx : ∀ j ∈ J, 0 ≤ x j ∧ x j < 1) :
     ∏ j ∈ J, (1 - x j)⁻¹ ≤ Real.exp (∑ j ∈ J, (x j + x j ^ 2 / (2 * (1 - x j)))) := by
   rw [Real.exp_sum]
-  apply Finset.prod_le_prod
+  apply Finset.prod_le_prod₀
   · intro j hj; have := (hx j hj).2; exact inv_nonneg.mpr (by linarith)
   · intro j hj
     obtain ⟨h0, h1⟩ := hx j hj

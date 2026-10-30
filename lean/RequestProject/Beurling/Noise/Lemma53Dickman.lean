@@ -33,7 +33,7 @@ lemma hasDerivAt_phiV (L : ℝ) {s : ℝ} (hs : -2 < s) : HasDerivAt (phiV L) (p
   have h := (((hasDerivAt_id s).const_mul 12.8).mul
     ((Real.hasDerivAt_log h2).comp s ((hasDerivAt_id s).add_const 2))).div_const L
   unfold phiV phiV'
-  convert h using 1
+  convert! h using 1
   simp only [Function.comp, id]; field_simp
 
 lemma aV_eq_phiV {L u : ℝ} (hu : u ≠ 0) : aV (u * L) u = phiV L u := by
@@ -151,7 +151,7 @@ lemma integral_rho_mul_ge_half (u : ℝ) :
     (1 / 2) * ∫ s in (u - 1)..u, rho s ≤ ∫ s in (u - 1)..u, rho s * (u - s) := by
   have hc : ∫ s in (u - 1)..u, rho (u - 1 / 2) * (u - 1 / 2 - s) = 0 := by
     rw [intervalIntegral.integral_const_mul, intervalIntegral.integral_sub
-      intervalIntegral.intervalIntegrable_const intervalIntegrable_id]
+      intervalIntegrable_const intervalIntegrable_id]
     simp only [intervalIntegral.integral_const, smul_eq_mul, integral_id]
     ring
   have hle : ∫ s in (u - 1)..u, rho (u - 1 / 2) * (u - 1 / 2 - s) ≤
@@ -182,8 +182,8 @@ lemma integral_rho_mul_ge_ratio {u : ℝ} (hu : 2 ≤ u) :
   have hd : ∀ s ∈ Ioo (u - 1) u, HasDerivAt φ (φ' s) s := by
     intro s hs
     have := (hasDerivAt_rho (show 1 < s by linarith [hs.1])).mul
-      (((hasDerivAt_id s).sub_const u).add_const 1)
-    simpa [φ, φ'] using this
+      (((hasDerivAt_id' s).sub_const u).add_const 1)
+    simpa [φ, φ', Pi.mul_def] using this
   have hφ'c : ContinuousOn φ' (Icc (u - 1) u) := by
     apply ContinuousOn.add _ continuous_rho.continuousOn
     apply ContinuousOn.mul _ (by fun_prop)

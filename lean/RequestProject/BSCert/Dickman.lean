@@ -121,7 +121,7 @@ lemma rl2_spec {r : ℝ → ℝ} (hr : DickmanRatioFacts r) : 1 ≤ rl2 ∧ (rl2
     · refine ⟨h, ?_⟩
       have := Ex.iLo_sound (env := [(2 : ℚ)]) (List.Forall₂.cons (Itv.mem_pt 2) List.Forall₂.nil) hq
       rw [hr.exact_one_two 2 (by norm_num) le_rfl]
-      simpa [rExactEx, Ex.eval] using this
+      simpa [rExactEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific] using this
     · exact ⟨le_rfl, by simpa using h1⟩
   · exact ⟨le_rfl, by simpa using h1⟩
 
@@ -133,7 +133,7 @@ lemma rl2L_spec : 0 ≤ rl2L ∧ (rl2L : ℝ) ≤ Real.exp (-(rl2 : ℝ)) := by
       (List.Forall₂.cons (Itv.mem_pt rl2) List.Forall₂.nil) hq
     refine ⟨le_max_right _ _, ?_⟩
     push_cast
-    exact max_le (by simpa [expNegEx, Ex.eval] using this) (Real.exp_pos _).le
+    exact max_le (by simpa [expNegEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific] using this) (Real.exp_pos _).le
   · exact ⟨le_rfl, by simp [(Real.exp_pos _).le]⟩
 
 /-- Invariant of the recursion. -/
@@ -191,7 +191,7 @@ lemma rlSeq_spec {r : ℝ → ℝ} (hr : DickmanRatioFacts r) (n : ℕ) :
             (List.Forall₂.cons (Itv.mem_pt a') List.Forall₂.nil) hq
           refine ⟨le_max_right _ _, ?_⟩
           push_cast
-          exact max_le (by simpa [expNegEx, Ex.eval] using this) (Real.exp_pos _).le
+          exact max_le (by simpa [expNegEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific] using this) (Real.exp_pos _).le
         · exact ⟨le_rfl, by simp [(Real.exp_pos _).le]⟩
       rw [if_pos hsmall]
       refine ⟨le_trans ha1 haa', ha'r, le_max_left _ _, ?_⟩
@@ -296,7 +296,7 @@ lemma rLow_le {r : ℝ → ℝ} (hr : DickmanRatioFacts r) {tbl : Array ℚ} (ht
       have hx2 : (x : ℝ) ≤ 2 := by exact_mod_cast h2.le
       · push_cast
         refine max_le ?_ hone
-        simp only [rExactEx, Ex.eval, List.getD_cons_zero] at this
+        simp only [rExactEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, List.getD_cons_zero] at this
         rw [hr.exact_one_two x hx' hx2] at hmono
         push_cast at this
         linarith
@@ -331,12 +331,12 @@ lemma le_rUp {r : ℝ → ℝ} (hr : DickmanRatioFacts r) {x q : ℚ} (h : rUp x
       List.Forall₂.nil) h
     have hx2 : (x : ℝ) ≤ 2 := by exact_mod_cast h2
     rw [hr.exact_one_two x hx1 hx2] at hmono
-    simp only [rExactEx, Ex.eval, List.getD_cons_zero] at this
+    simp only [rExactEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, List.getD_cons_zero] at this
     push_cast at this
     linarith
   · have := Ex.iHi_sound (env := [(x : ℝ)]) (List.Forall₂.cons (Itv.mem_pt x)
       List.Forall₂.nil) h
-    simp only [rUpEx, Ex.eval, List.getD_cons_zero] at this
+    simp only [rUpEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, List.getD_cons_zero] at this
     have hx2 : (2 : ℝ) ≤ x := by exact_mod_cast (not_le.mp h2).le
     have hd0 : (0 : ℝ) < chooseDelta x := by exact_mod_cast hd.1
     have hd1 : ((chooseDelta x : ℚ) : ℝ) < 1 := by exact_mod_cast hd.2

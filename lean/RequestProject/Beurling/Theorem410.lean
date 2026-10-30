@@ -73,7 +73,7 @@ theorem hasDerivAt_phiTransform (w₀ : ℂ) :
       refine Filter.Eventually.of_forall fun v _ w _ => ?_
       have := ((hasDerivAt_id w).neg.mul_const (v:ℂ)).cexp.mul_const
         ((deriv Real.smoothTransition v : ℝ) : ℂ)
-      convert this using 1
+      convert! this using 1
       simp only [Pi.neg_apply, id]; ring)
   exact key.2
 
@@ -123,7 +123,7 @@ lemma w_ne_zero_of_mem (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) {s : ℂ}
     (hs : s ∈ closedBall (1 + γ * I) (designRadius x)) : s - θ - γ * I ≠ 0 := by
   have hw : s - θ - γ * I ∈ closedBall (cen θ) (designRadius x) := by
     rw [mem_closedBall, dist_eq_norm] at hs ⊢
-    convert hs using 2; simp only [cen]; push_cast; ring
+    convert! hs using 2; simp only [cen]; push_cast; ring
   exact h.w_ne_zero hw
 
 end Lemma46Hyp

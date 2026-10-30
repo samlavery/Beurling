@@ -564,7 +564,7 @@ lemma prod_tau_le (hH : SlotHyp (capH X₀) X₀) {r : ℕ} (hr : r < r0At z) :
   have hprod : ∏ j ∈ Finset.range r, (1 - (tauSlot (capH X₀) X₀ j)⁻¹)⁻¹ ≤
       Real.exp (∑ j ∈ Finset.range r, 1 / (tauSlot (capH X₀) X₀ j - 1)) := by
     rw [Real.exp_sum]
-    exact Finset.prod_le_prod (fun j _ => by
+    exact Finset.prod_le_prod₀ (fun j _ => by
       have := hτ j
       have : 0 < 1 - (tauSlot (capH X₀) X₀ j)⁻¹ := by
         rw [sub_pos]; exact inv_lt_one_of_one_lt₀ this

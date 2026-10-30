@@ -371,7 +371,7 @@ theorem ZinfR_le_exp_Ein {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) {a σ : �
   calc BaseFactor.ZinfR X₀ σ ≤ ∏ p ∈ X₀.primesBelow, ((1 - (p : ℝ) ^ (-(1 : ℝ)))⁻¹ *
         Real.exp (((p : ℝ) ^ (a / Real.log X₀) - 1) / (p - (p : ℝ) ^ (a / Real.log X₀)))) := by
         unfold BaseFactor.ZinfR
-        apply Finset.prod_le_prod
+        apply Finset.prod_le_prod₀
         · intro p hp
           exact (BaseFactor.factor_pos (Nat.mem_primesBelow.mp hp).2 hσ0).le
         · intro p hp

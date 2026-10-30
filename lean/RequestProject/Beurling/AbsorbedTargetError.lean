@@ -300,7 +300,7 @@ theorem absorbed_target_error (h : AbsorbedWindowHyp b X₀ A u) {ε : ℝ}
         ∫ v in X₀..x, ε * v ^ (b - 1) := by
       apply intervalIntegral.integral_mono_on hx
       · have := IntervalIntegrable.sum S fun a _ => (hint a).mul_continuousOn hcont
-        convert this using 1; ext v; simp [Finset.sum_apply]
+        convert! this using 1; ext v; simp [Finset.sum_apply]
       · exact (hcont.intervalIntegrable).const_mul ε
       · intro v hv
         rw [← Finset.sum_mul, ← absorbedDensity_eq_sum h hv.1 hv.2]

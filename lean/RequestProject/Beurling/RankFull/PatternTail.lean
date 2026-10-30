@@ -240,7 +240,7 @@ theorem pattern_sum_tail (k : ℕ) :
   have hbase : 0 < 1 + (k : ℝ) / X₀ := by positivity
   calc ∏ j ∈ range k, (1 - (tauSlot H X₀ j)⁻¹)⁻¹ ^ k
       ≤ ∏ j ∈ range k, Real.exp (1 / (tauSlot H X₀ j - 1)) ^ k := by
-        apply Finset.prod_le_prod
+        apply Finset.prod_le_prod₀
         · intro j _
           exact pow_nonneg (inv_nonneg.mpr (sub_pos.mpr (inv_lt_one_of_one_lt₀
             (h.one_lt_tauSlot j))).le) k

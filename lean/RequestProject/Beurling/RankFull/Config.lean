@@ -171,7 +171,7 @@ theorem skel_mem {k : ℕ} {t : Fin k → (Fin N → ℕ)}
     set e := (pivs t).orderEmbOfFin hk with he
     have hmat : (pattern t).map (Nat.cast : ℕ → ℚ) =
         Matrix.of fun i j => cfgMat t i (e (Fin.rev j)) := by
-      ext i j; simp [pattern, hk, cfgMat, he]
+      ext i j; simp [pattern, hk, cfgMat, he]; rfl
     rw [hmat]
     have hli := pivots_linIndepOn (cfgMat t) Set.univ
     have hcols : LinearIndependent ℚ (Matrix.of fun i j => cfgMat t i (e (Fin.rev j))).col := by
@@ -182,7 +182,7 @@ theorem skel_mem {k : ℕ} {t : Fin k → (Fin N → ℕ)}
         have := congrArg Subtype.val hab
         simpa using this
       have h3 := h1.comp _ h2
-      convert h3 using 1
+      convert! h3 using 1
     exact ((Matrix.isUnit_iff_isUnit_det _).mp
       (Matrix.linearIndependent_cols_iff_isUnit.mp hcols)).ne_zero
   · -- the run structure is a composition of `k`

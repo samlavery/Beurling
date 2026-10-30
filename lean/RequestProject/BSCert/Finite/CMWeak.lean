@@ -326,7 +326,7 @@ theorem sum_log_div_prime_le_weak :
         have hI : Ico 100001 (M + 1) = Ioc 100000 M := by ext; simp; omega
         rw [Finset.range_eq_Ico,
           ← Finset.sum_Ico_consecutive _ (Nat.zero_le 100001) (by omega : 100001 ≤ M + 1),
-          hI]
+          hI, ← Finset.range_eq_Ico]
       rw [hsplit]
       push_cast at ht hF
       norm_num at ht
@@ -345,6 +345,7 @@ theorem sum_log_div_prime_le_weak :
       rw [Finset.sum_map]
       apply Finset.sum_congr rfl
       intro p _
+      change _ = cm3g (p : ℕ)
       simp [cm3g, p.2]
     rw [e]
     refine le_trans ?_ (hfin0 M)

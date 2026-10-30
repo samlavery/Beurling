@@ -80,7 +80,7 @@ lemma hasSum_smooth_cpow (X₀ : ℕ) {s : ℂ} (hσ : 0 < s.re) :
     rw [tsum_geometric_of_norm_lt_one (hnorm hp')]
   rw [hprod] at hh
   have := (hasSum_subtype_iff_indicator (s := (X₀.smoothNumbers : Set ℕ)) (f := f)).mp hh
-  convert this using 1
+  convert! this using 1
   funext d
   simp only [Set.indicator_apply, hf]
 
@@ -94,10 +94,10 @@ lemma hasSum_smooth_ge (X₀ : ℕ) {s : ℂ} (hσ : 0 < s.re) :
       (s := Finset.Ico 1 X₀)
       (f := fun d : ℕ => if d ∈ Finset.Ico 1 X₀ then ((d : ℝ) : ℂ) ^ (-s) else 0)
       (fun d hd => if_neg hd)
-    convert this using 1
+    convert! this using 1
     unfold headSum
     exact Finset.sum_congr rfl fun d hd => (if_pos hd).symm
-  convert (hasSum_smooth_cpow X₀ hσ).sub hlt using 1
+  convert! (hasSum_smooth_cpow X₀ hσ).sub hlt using 1
   funext d
   by_cases hd : d ∈ X₀.smoothNumbers
   · have h0 : d ≠ 0 := Nat.ne_zero_of_mem_smoothNumbers hd
@@ -136,7 +136,7 @@ lemma hasSum_ramp (X₀ : ℕ) {κ : ℝ} (hκ : 0 < κ) (s : ℂ) {x : ℝ} (hx
   have hval : ∑ d ∈ S, ramp X₀ κ s d x = (S.card : ℂ) * ((x : ℂ) ^ (-s - 1) / κ) := by
     rw [Finset.sum_congr rfl (fun d hd => by rw [hramp, if_pos hd]), Finset.sum_const,
       nsmul_eq_mul]
-  convert hsum using 1
+  convert! hsum using 1
   rw [hval]
   have hx0 : (x : ℂ) ≠ 0 := by exact_mod_cast hx.ne'
   have hκ0 : (κ : ℂ) ≠ 0 := by exact_mod_cast hκ.ne'
@@ -239,7 +239,7 @@ lemma summable_integral_norm_ramp (X₀ : ℕ) {κ : ℝ} (hκ : 0 < κ) {s : �
     (summable_subtype_iff_indicator).mp hs
   refine Summable.of_nonneg_of_le (fun d => integral_nonneg fun x => norm_nonneg _)
     (fun d => integral_norm_ramp_le X₀ hκ hσ d) ?_
-  convert hs'.mul_left ((1 + κ) ^ s.re) using 1
+  convert! hs'.mul_left ((1 + κ) ^ s.re) using 1
   funext d
   by_cases hd : d ∈ X₀.smoothNumbers
   · rw [if_pos hd, Set.indicator_of_mem hd]
@@ -363,7 +363,7 @@ lemma hasSum_rampVal (X₀ : ℕ) {κ : ℝ} {s : ℂ} (hσ : 0 < s.re) :
     unfold boundary
     exact Finset.sum_congr rfl fun d hd => if_pos hd
   rw [hBv] at hB
-  convert hA.sub hB using 1
+  convert! hA.sub hB using 1
   funext d
   unfold rampVal
   rw [mul_ite, mul_zero]

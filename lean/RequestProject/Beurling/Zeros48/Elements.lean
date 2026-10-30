@@ -43,7 +43,7 @@ lemma val_rigidElem (h : RealisedOK M H U) {n : ℕ} (hn : n ∈ X₀.smoothNumb
   have hn0 : n ≠ 0 := (Nat.mem_smoothNumbers.mp hn).1
   unfold rigidElem BeurlingSystem.val
   rw [Finsupp.prod_mapDomain_index (fun _ => pow_zero _) (fun _ _ _ => pow_add _ _ _)]
-  conv_rhs => rw [← Nat.factorization_prod_pow_eq_self hn0]
+  conv_rhs => rw [← Nat.prod_factorization_pow_eq_self hn0]
   have hc : ((n.factorization.prod fun x1 x2 => x1 ^ x2 : ℕ) : ℝ) =
       n.factorization.prod fun q m => (q : ℝ) ^ m := by
     unfold Finsupp.prod; push_cast; rfl

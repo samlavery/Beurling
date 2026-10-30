@@ -110,8 +110,10 @@ theorem svl_C6 (E : Matrix (Fin r) (Fin m) ℕ) (t : ℕ)
     have := congrFun (congrFun hMN (e.symm a)) (e.symm a')
     simp only [Matrix.mul_apply, Matrix.of_apply, Matrix.map_apply, A, N', toQ] at this ⊢
     push_cast
-    convert this using 1
-    simp [Matrix.one_apply, e.symm.injective.eq_iff]
+    convert! this using 1
+    by_cases h : a = a'
+    · subst h; simp only [Matrix.one_apply_eq]; exact (Matrix.one_apply_eq _).symm
+    · rw [Matrix.one_apply_ne h]; exact (Matrix.one_apply_ne (e.symm.injective.ne h)).symm
   have hdet : (A.map (Int.cast : ℤ → ℚ)).det ≠ 0 := by
     intro h0
     have := congrArg Matrix.det hAQ

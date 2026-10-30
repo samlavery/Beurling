@@ -191,7 +191,7 @@ theorem realised_floor_eq (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1) (hX : 10 ^ 8 ≤
       apply hpq i (Or.inr _)
       have hdvd : qp i ∈ n.primeFactors := by
         rw [← he, ← Nat.support_factorization, factorization_iota]
-        rw [Finsupp.mem_support_iff, Finsupp.mapDomain_apply qp_injective]
+        rw [Finsupp.mem_support_iff, Finsupp.mapDomain_apply_of_injective qp_injective]
         exact Finsupp.mem_support_iff.mp hi
       have : qp i ≤ n := Nat.le_of_dvd (by omega) (Nat.dvd_of_mem_primeFactors hdvd)
       have : (qp i : ℝ) ≤ n := by exact_mod_cast this

@@ -41,7 +41,7 @@ lemma mul_one_sub_exp_mono {c a b : ℝ} (hc : 0 ≤ c) (ha : 0 < a) (hab : a �
     intro L hL
     have h1 : HasDerivAt (fun L : ℝ => c / L) (-(c / L ^ 2)) L := by
       have := (hasDerivAt_inv hL.ne').const_mul c
-      convert this using 1
+      convert! this using 1
       ring
     have h2 := ((h1.neg).exp)
     exact (hasDerivAt_id L).mul ((hasDerivAt_const L 1).sub h2) |>.congr_deriv (by simp)

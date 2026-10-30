@@ -145,7 +145,7 @@ theorem thrPart_le (ω : JitterΩ) {Z η1 η2 ε ϑ : ℝ} {ε1 : ℝ → ℝ}
         unfold thrS threshSum
         refine Finset.sum_le_sum_of_subset_of_nonneg ?_ fun e _ _ =>
           div_nonneg zero_le_one (P.val_pos e).le
-        convert hsub using 2
+        convert! hsub using 2
 
 /-- **The jump at `X₀`** (Step 3, second bullet): `|∑_n c_n(y) 1[z/n < X₀ ≤ y/n]/n| ≤ jS` for
 `r ≥ 1 - 2δ`. -/
@@ -330,7 +330,6 @@ theorem hdec34_R (ω : JitterΩ) {Z η1 η2 ε ϑ : ℝ} {ε1 : ℝ → ℝ}
   have h4 := neg_abs_le (rhoSh (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) y (jF X₀ (z / y)))
   have h5 : -(jzX X₀ * rhoSh (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) y (jF X₀ (z / y))) ≤
       jzX X₀ * jS θ X₀ ω y δ := by nlinarith
-  simp only at hD hO hS
   linarith
 
 end

@@ -162,7 +162,7 @@ theorem compE3_eq {m : ℕ} {a b : ℤ} (hW : AdmW X₀ m a b) :
         rw [h]
         by_cases hA : ω ∈ lawA θ X₀ k
         · rw [Set.indicator_of_mem hA]; exact htr k hcl _
-        · rw [Set.indicator_of_notMem hA]; exact zero_le _
+        · rw [Set.indicator_of_notMem hA]; exact zero_le
       exact (ENNReal.ofReal_le_ofReal_iff hC).mp this
     unfold X3; exact min_eq_left hle
   refine ⟨hX3, ?_⟩

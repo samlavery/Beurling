@@ -68,7 +68,7 @@ theorem I1_eq : I1 = 16 * Real.log 2 + 3.825 := by
     have hx0 : x ≠ 0 := by linarith [hx.1]
     have h := ((((hasDerivAt_pow 2 x).mul (Real.hasDerivAt_log hx0)).div_const 2).sub
       ((hasDerivAt_pow 2 x).div_const 4)).add (((hasDerivAt_pow 2 x).const_mul 1.01).div_const 2)
-    convert h using 1
+    convert! h using 1
     field_simp
     ring
   unfold I1

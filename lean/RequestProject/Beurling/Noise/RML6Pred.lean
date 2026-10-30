@@ -114,12 +114,11 @@ theorem hpred_of_ops (ρ ν NT vtH Tc J : LocInt) (ϑ : ℝ → ℝ)
   have hH := hO.pos x
   have hb := Pred.lemma_5_34_bound (D := fun z => (ρ : ℝ → ℝ) z + (ν : ℝ → ℝ) z +
       (NT : ℝ → ℝ) z - (Bo hO (Ro (tw := tw) hO (Tc + J)) : ℝ → ℝ) z) (vt := ϑ) (H := H)
-    (x := x) (by simp only; rw [hDx, hvt]) hlx hH hK hG hϑ
+    (x := x) (by rw [hDx, hvt]) hlx hH hK hG hϑ
   have habs := neg_abs_le ((ρ : ℝ → ℝ) x + (ν : ℝ → ℝ) x + (NT : ℝ → ℝ) x -
     (Bo hO (Ro (tw := tw) hO (Tc + J)) : ℝ → ℝ) x)
   have hBx : (Bo hO (Ro (tw := tw) hO (Tc + J)) : ℝ → ℝ) x =
       Margin.Bavg (H x) (Ro (tw := tw) hO (Tc + J)) x := rfl
-  simp only at hb
   rw [hBx] at habs hb
   nlinarith
 

@@ -40,7 +40,7 @@ theorem fiber_leC {K : ℕ} (D : ℕ) (R Cd : Finset (Fin K)) (hRC : R ⊆ Cd)
   have hw : ∀ W ∈ fib, ∏ g, (q g)⁻¹ ^ (∑ y ∈ Cd, W y g) ≤ ∏ g, hfun g (φ W g) := by
     intro W hW
     obtain ⟨-, hsupp, -⟩ := Finset.mem_filter.mp hW
-    refine Finset.prod_le_prod (fun g _ => ?_) (fun g _ => ?_)
+    refine Finset.prod_le_prod₀ (fun g _ => ?_) (fun g _ => ?_)
     · by_cases hg : g ∈ S
       · exact pow_nonneg (hqinv g hg).1.le _
       · have : ∀ y, W y g = 0 := by
@@ -85,7 +85,7 @@ theorem fiber_leC {K : ℕ} (D : ℕ) (R Cd : Finset (Fin K)) (hRC : R ⊆ Cd)
     by_cases hg : g ∈ S
     · have := hinj g (colW W g) (hcol g hg) (colW W' g) (hcol' g hg) (fun y' hy' => by
         have := congrFun (congrFun h g) y'
-        simpa [hφ, hg, hy'] using this)
+        simpa [colW, hφ, hg, hy'] using this)
       exact congrFun this y
     · have h1 : W y g = 0 := by
         by_contra h1; exact hg (hsupp ▸ mem_suppW.mpr ⟨y, h1⟩)
@@ -115,7 +115,7 @@ theorem fiber_leC {K : ℕ} (D : ℕ) (R Cd : Finset (Fin K)) (hRC : R ⊆ Cd)
         rw [if_pos hg]
         exact Finset.sum_congr rfl fun v _ => by simp [hh, hg]
     _ ≤ ∏ g ∈ S, (((1 - (q g)⁻¹)⁻¹) ^ R.card - 1) := by
-        refine Finset.prod_le_prod (fun g hg => Finset.sum_nonneg fun v _ =>
+        refine Finset.prod_le_prod₀ (fun g hg => Finset.sum_nonneg fun v _ =>
           pow_nonneg (hqinv g hg).1.le _) fun g hg => ?_
         exact geomR_le R D (hqinv g hg).1.le (inv_lt_one_of_one_lt₀ (hq g hg))
 

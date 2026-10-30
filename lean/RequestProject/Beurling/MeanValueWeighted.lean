@@ -207,7 +207,8 @@ theorem hilbert_weighted (lam : ι → ℝ) (hinj : Function.Injective lam) (ω 
   set H : Matrix ι ι ℂ := fun r s => I * ((q r * q s : ℝ) : ℂ) * hk lam r s
   have hH : H.IsHermitian := by
     ext r s
-    simp only [H, Matrix.conjTranspose_apply, star_mul', Complex.star_def, Complex.conj_I,
+    rw [Matrix.conjTranspose_apply]
+    simp only [H, star_mul', Complex.star_def, Complex.conj_I,
       hk_conj, hk_swap lam s r, Complex.conj_ofReal]
     push_cast
     ring
@@ -352,7 +353,7 @@ lemma termD_tele {s r : ℕ} (hs : 1 ≤ s) (hr : s + 2 ≤ r) :
   have ha0 : 0 < a := lt_of_lt_of_le (div_pos (by linarith) (by linarith)) ha
   have hba : b - a = Real.log r - Real.log (r - 1) := by simp only [a, b]; ring
   have hba' : 1 / (r : ℝ) ≤ b - a := by
-    rw [hba]; convert hb using 1; field_simp; ring
+    rw [hba]; convert! hb using 1; field_simp; ring
   have hb0 : a ≤ b := by linarith [div_pos one_pos hr0]
   have hb0' : 0 < b := by linarith
   calc (1 / (r : ℝ)) * (b⁻¹) ^ 2 = (1 / r) / b ^ 2 := by field_simp
@@ -576,7 +577,7 @@ theorem mean_value_weighted (S : Finset ℕ) (hS : ∀ n ∈ S, 1 ≤ n) (a : �
                       positivity)
       (M := 26) (fun s hs => weight_bound_log S hS (hS s hs)) (fun n => a n * e n t)
     simp only [norm_mul, he, mul_one, div_div_eq_mul_div, div_one] at this
-    convert this using 3 with n
+    convert! this using 3 with n
     ring
   have hint := integral_sq_eq S hSN a T₀ T e he_def Q hQ_def
   have key : (∫ t in T₀..T₀ + T, ‖∑ n ∈ S, a n * e n t‖ ^ 2) - T * ∑ n ∈ S, ‖a n‖ ^ 2 =

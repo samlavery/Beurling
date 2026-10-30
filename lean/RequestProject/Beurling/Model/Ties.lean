@@ -126,7 +126,7 @@ theorem patEvent_null {k a : ℕ} (ha : 1 ≤ a) {r g : PIdx X₀ →₀ ℕ} (h
         exact (pow_left_inj₀ ht0.le ht0'.le (by omega)).mp h1
       have hnull : volume {t : ℝ | (ω, t) ∈ B} = 0 := hsing.measure_zero _
       have : ∫⁻ t in box (slotF θ X₀ k ω) (HF θ X₀ k ω), Φ (ω, t) = 0 := by
-        refine le_antisymm ?_ (zero_le _)
+        refine le_antisymm ?_ (zero_le)
         calc ∫⁻ t in box (slotF θ X₀ k ω) (HF θ X₀ k ω), Φ (ω, t)
             ≤ ∫⁻ t, Φ (ω, t) := setLIntegral_le_lintegral _ _
           _ = ∫⁻ t, {t : ℝ | (ω, t) ∈ B}.indicator 1 t := by

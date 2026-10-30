@@ -64,14 +64,14 @@ lemma pow_le_finsupp_prod {I : Type*} (v : I → ℝ) (hv : ∀ i, 1 ≤ v i) (e
   · unfold Finsupp.prod
     rw [← Finset.mul_prod_erase _ _ hi]
     have h1 : 1 ≤ ∏ x ∈ e.support.erase i, v x ^ e x := by
-      simpa using Finset.prod_le_prod (s := e.support.erase i) (f := fun _ => (1 : ℝ))
+      simpa using Finset.prod_le_prod₀ (s := e.support.erase i) (f := fun _ => (1 : ℝ))
         (g := fun x => v x ^ e x) (fun _ _ => zero_le_one) (fun j _ => one_le_pow₀ (hv j))
     have h0 : 0 ≤ v i ^ e i := pow_nonneg (by linarith [hv i]) _
     nlinarith
   · have : e i = 0 := by simpa using hi
     rw [this, pow_zero]
     unfold Finsupp.prod
-    simpa using Finset.prod_le_prod (s := e.support) (f := fun _ => (1 : ℝ))
+    simpa using Finset.prod_le_prod₀ (s := e.support) (f := fun _ => (1 : ℝ))
       (g := fun x => v x ^ e x) (fun _ _ => zero_le_one) (fun j _ => one_le_pow₀ (hv j))
 
 /-- **Few elements over finitely many primes**: with `m` primes, all `≥ 2`, there are at most

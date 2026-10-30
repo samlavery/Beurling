@@ -111,7 +111,7 @@ theorem hasFDerivAt_nmap (c : Fin k → ℝ) (E : Matrix (Fin k) (Fin k) ℕ) {q
       (((E i j : ℕ) • q j ^ (E i j - 1)) • ContinuousLinearMap.proj j) q :=
     fun j _ => (hasFDerivAt_apply (𝕜 := ℝ) j q).pow (E i j)
   have hprod := (HasFDerivAt.finset_prod hfac).const_mul (c i)
-  convert hprod using 1
+  convert! hprod using 1
   ext v
   simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, ContinuousLinearMap.proj_apply,
     LinearMap.coe_toContinuousLinearMap', Matrix.toLin'_apply, ContinuousLinearMap.coe_smul',
@@ -169,7 +169,7 @@ theorem volume_bound {c : Fin k → ℝ} (hc : ∀ i, 0 < c i) {E : Matrix (Fin 
     have h0 : ∀ i, E i j = 0 := fun i => by
       have := Finset.single_le_sum (f := fun i => E i j) (fun _ _ => Nat.zero_le _)
         (Finset.mem_univ i)
-      simp only at this
+      try simp only at this
       omega
     apply hE
     apply Matrix.det_eq_zero_of_column_eq_zero j
@@ -187,14 +187,14 @@ theorem volume_bound {c : Fin k → ℝ} (hc : ∀ i, 0 < c i) {E : Matrix (Fin 
     -- `∏_j q_j^{s_j} ≥ Xm^{M-k} ∏_j q_j`
     have hpow : Xm ^ ((∑ i, ∑ j, E i j) - k) * ∏ j, q j ≤ ∏ j, q j ^ (∑ i, E i j) := by
       have hM : (∑ i, ∑ j, E i j) - k = ∑ j, ((∑ i, E i j) - 1) := by
-        rw [Finset.sum_comm]
+        rw [show (∑ i, ∑ j, E i j) = ∑ j, ∑ i, E i j from Finset.sum_comm]
         have h2 : ∑ j : Fin k, ((∑ i, E i j) - 1 + 1) = ∑ j, ∑ i, E i j :=
           Finset.sum_congr rfl fun j _ => Nat.sub_add_cancel (hcol j)
         have h3 : ∑ j : Fin k, ((∑ i, E i j) - 1 + 1) = ∑ j : Fin k, ((∑ i, E i j) - 1) + k := by
           rw [Finset.sum_add_distrib]; simp
         omega
       rw [hM, ← Finset.prod_pow_eq_pow_sum, ← Finset.prod_mul_distrib]
-      apply Finset.prod_le_prod
+      apply Finset.prod_le_prod₀
       · intro j _; exact mul_nonneg (pow_nonneg (by linarith) _) (hqp j).le
       · intro j _
         have : q j ^ (∑ i, E i j) = q j ^ ((∑ i, E i j) - 1) * q j := by

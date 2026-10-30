@@ -61,7 +61,7 @@ lemma hasDerivAt_gq {t : ℝ} (h0 : t ≠ 0) (h1 : t ≠ 1) : HasDerivAt gq (-qq
   have hb := ((hasDerivAt_const t (1 : ℝ)).sub (hasDerivAt_id t)).inv h1'
   have := ha.sub hb
   unfold gq qq
-  convert this using 1
+  convert! this using 1
   · funext x; simp only [Pi.sub_apply, Pi.inv_apply, id, one_div]
   · simp only [Pi.sub_apply, id, one_div]; field_simp; ring
 
@@ -71,7 +71,7 @@ lemma hasDerivAt_qq {t : ℝ} (h0 : t ≠ 0) (h1 : t ≠ 1) : HasDerivAt qq (dq 
   have hb := (((hasDerivAt_const t (1 : ℝ)).sub (hasDerivAt_id t)).pow 2).inv (pow_ne_zero 2 h1')
   have := ha.add hb
   unfold qq dq
-  convert this using 1
+  convert! this using 1
   · funext x; simp only [Pi.add_apply, Pi.sub_apply, Pi.inv_apply, Pi.pow_apply, id, one_div]
   · simp only [Pi.sub_apply, Pi.pow_apply, id]; field_simp; ring
 
@@ -81,7 +81,7 @@ lemma hasDerivAt_phi0 {t : ℝ} (h0 : t ≠ 0) (h1 : t ≠ 1) :
   have hpos : 1 + Real.exp (gq t) ≠ 0 := by positivity
   have := ((hasDerivAt_const t (1 : ℝ)).add hE).inv hpos
   unfold D1
-  convert this using 1
+  convert! this using 1
   · funext x; simp only [Pi.add_apply, Pi.inv_apply, one_div]
   · simp only [Pi.add_apply]; field_simp; ring
 
@@ -93,7 +93,7 @@ lemma hasDerivAt_D1 {t : ℝ} (h0 : t ≠ 0) (h1 : t ≠ 1) : HasDerivAt D1 (D2 
   unfold D2
   have hp1 : (Real.exp (gq t) + 1) ≠ 0 := by positivity
   have hp2 : (1 + Real.exp (gq t)) ≠ 0 := by positivity
-  convert this using 1
+  convert! this using 1
   simp only [Pi.add_apply, Pi.mul_apply, Pi.pow_apply]
   simp only [Nat.cast_ofNat]
   field_simp

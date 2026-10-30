@@ -367,7 +367,8 @@ theorem hilbert_inequality (lam : ι → ℝ) {δ : ℝ} (hδ : 0 < δ)
   set H : Matrix ι ι ℂ := fun r s => I * hk lam r s
   have hH : H.IsHermitian := by
     ext r s
-    simp only [H, Matrix.conjTranspose_apply, star_mul', Complex.star_def, Complex.conj_I,
+    rw [Matrix.conjTranspose_apply]
+    simp only [H, star_mul', Complex.star_def, Complex.conj_I,
       hk_conj, hk_swap lam s r]
     ring
   have heig : ∀ j, |hH.eigenvalues j| ≤ Real.pi / δ := by

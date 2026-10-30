@@ -117,7 +117,7 @@ theorem Ei_le_of_ge_11 {x : ℝ} (hx : 11 ≤ x) :
     have h2 := ((Real.hasDerivAt_exp y).const_mul 2).div (hasDerivAt_pow 2 y)
       (pow_ne_zero 2 hy.ne')
     have h3 := hasDerivAt_Ei hy
-    convert (h1.add h2).sub h3 using 1
+    convert! (h1.add h2).sub h3 using 1
     field_simp
     ring
   have hmono : MonotoneOn G (Set.Ici 11) := by

@@ -57,7 +57,7 @@ lemma monoVal_ge {π k : ℕ} {τl : Fin π → ℝ} {Xm : ℝ} (hXm : 0 < Xm) (
     {v : Fin π → ℕ} (hv : ∑ i, v i = k) : Xm ^ k ≤ monoVal τl v := by
   unfold monoVal
   rw [← hv, ← Finset.prod_pow_eq_pow_sum]
-  exact Finset.prod_le_prod (fun i _ => pow_nonneg hXm.le _)
+  exact Finset.prod_le_prod₀ (fun i _ => pow_nonneg hXm.le _)
     fun i _ => pow_le_pow_left₀ hXm.le (hτl i) _
 
 /-- **Lemma 6.22(a)**, smooth tails: `#admDick ≤ ∑_{k=1}^{K} C(π+k-1, k) Ψ(Y/Xm^k, X₀)`. -/

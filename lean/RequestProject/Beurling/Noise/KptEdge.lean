@@ -53,7 +53,7 @@ lemma valN_eq_nat {X0m Z η1 η2 : ℝ} {ε1 : ℝ → ℝ} (h : P.HBS X0m Z η1
     rw [Nat.support_factorization] at hp
     rw [hlab p hp]
   rw [e]
-  have := Nat.factorization_prod_pow_eq_self hn
+  have := Nat.prod_factorization_pow_eq_self hn
   conv_rhs => rw [← this]
   simp only [Finsupp.prod]
   push_cast

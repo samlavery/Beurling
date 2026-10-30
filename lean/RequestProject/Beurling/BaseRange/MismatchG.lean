@@ -160,8 +160,8 @@ theorem kpt_sub_kvalG_le (tw : ℕ → ℝ) (H : ℝ → ℝ) {X0 : ℕ} {X0m u 
           |P.p j - u / P.val e| ≤ H (P.p j) then 1 / P.val e else 0) := by
         have := Finset.single_le_sum (f := fun j => if j ∈ e.support ∧ X0m / 2 ≤ P.p j ∧
           |P.p j - u / P.val e| ≤ H (P.p j) then 1 / P.val e else 0)
-          (fun j _ => by simp only; split_ifs <;> positivity) hjL
-        simp only at this
+          (fun j _ => by (try simp only); split_ifs <;> positivity) hjL
+        try simp only at this
         rwa [if_pos ⟨hj, hj2, hj3⟩] at this
       have hne' : (∀ j ∈ e.support, tw (qp j) * P.val e < u) ↔
           ¬ (P.val e * S3.maxV P e < u) := by rw [mul_comm]; exact hne

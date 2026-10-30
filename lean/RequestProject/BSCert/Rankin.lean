@@ -194,13 +194,15 @@ theorem R_le_of {σ : ℝ} (hσ1 : 1 / 2 < σ) (hσ2 : σ ≤ 1) {N : ℕ} (hN :
   set M := s.sup (fun p : Nat.Primes => (p : ℕ)) with hM
   set A := (range (M + 1)).filter Nat.Prime with hA
   have h1 : ∑ p ∈ s, rTerm σ (p : ℕ) ≤ ∑ n ∈ A, rTerm σ n := by
-    have e := Finset.sum_map s (Function.Embedding.subtype _) (fun n => rTerm σ n)
+    have e := Finset.sum_map s ⟨fun p : Nat.Primes => (p : ℕ), Subtype.val_injective⟩
+      (fun n => rTerm σ n)
     refine le_trans (le_of_eq e.symm) ?_
     apply Finset.sum_le_sum_of_subset_of_nonneg
     · intro n hn
-      simp only [Finset.mem_map] at hn
+      rw [Finset.mem_map] at hn
       obtain ⟨p, hp, rfl⟩ := hn
-      simp only [hA, Finset.mem_filter, Finset.mem_range]
+      show (p : ℕ) ∈ (range (M + 1)).filter Nat.Prime
+      rw [Finset.mem_filter, Finset.mem_range]
       exact ⟨Nat.lt_succ_of_le (Finset.le_sup (f := fun p : Nat.Primes => (p : ℕ)) hp), p.2⟩
     · intro n hn _
       simp only [hA, Finset.mem_filter] at hn

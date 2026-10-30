@@ -82,6 +82,7 @@ lemma lag_integrableOn_Ioc (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X�
   have hx0' : (x : ℂ) ≠ 0 := by exact_mod_cast hx0.ne'
   have e : (x : ℂ) ^ (-(2 : ℂ) - 1) = ((x : ℂ) ^ (3 : ℕ))⁻¹ := by
     rw [show -(2 : ℂ) - 1 = -((3 : ℕ) : ℂ) by norm_num, Complex.cpow_neg, Complex.cpow_natCast]
+  beta_reduce
   rw [e, mul_assoc, inv_mul_cancel₀ (pow_ne_zero _ hx0'), mul_one]
   exact Complex.ofReal_re _
 

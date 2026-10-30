@@ -201,7 +201,7 @@ lemma EuSω_mono (hq : ∀ ω, ∀ n : Fin N, ω ∈ J.A n → 1 < J.q n ω) (hE
   rw [← Finset.prod_sdiff hsub]
   have h1 : 1 ≤ ∏ g ∈ univ.filter (fun g : Fin N => ω ∈ J.A g ∧ (g : ℕ) < u') \
       univ.filter (fun g : Fin N => ω ∈ J.A g ∧ (g : ℕ) < u), (1 - (J.q g ω)⁻¹)⁻¹ := by
-    have := Finset.prod_le_prod (s := univ.filter (fun g : Fin N => ω ∈ J.A g ∧ (g : ℕ) < u') \
+    have := Finset.prod_le_prod₀ (s := univ.filter (fun g : Fin N => ω ∈ J.A g ∧ (g : ℕ) < u') \
       univ.filter (fun g : Fin N => ω ∈ J.A g ∧ (g : ℕ) < u)) (f := fun _ => (1 : ℝ))
       (fun _ _ => zero_le_one) (fun g hg => hge g (Finset.mem_sdiff.mp hg).1)
     simpa using this
@@ -272,7 +272,7 @@ lemma gamma_le (hq : ∀ ω, ∀ n : Fin N, ω ∈ J.A n → 1 < J.q n ω) (hEu 
       exact PhiC_anti hq hEu _ ω hu
     · rw [one_mul]
       exact PhiC_anti hq hEu _ ω hu
-  · rw [Set.indicator_of_notMem hω, zero_mul]; exact zero_le _
+  · rw [Set.indicator_of_notMem hω, zero_mul]; exact zero_le
 
 /-- **Domination** of the adapted integrands by the label-free one. -/
 theorem PhiM_le (hq : ∀ ω, ∀ n : Fin N, ω ∈ J.A n → 1 < J.q n ω) (hEu : 0 < Eu)
@@ -298,7 +298,7 @@ theorem PhiM_le (hq : ∀ ω, ∀ n : Fin N, ω ∈ J.A n → 1 < J.q n ω) (hEu
           (∏ j, invq (J.q (lab j) x.1)) * invq x.2 * IzX J E Jw m lab x.1 c (Real.log x.2) *
           ENNReal.ofReal (patternWeight τ E) := by ring
       _ ≤ _ := by gcongr
-  · rw [if_neg hC]; exact zero_le _
+  · rw [if_neg hC]; exact zero_le
 
 end Steps
 
@@ -397,7 +397,7 @@ lemma EuS_ge (ok : Fin N → Prop) (q : Fin N → ℝ) (hq : ∀ g, ok g → 1 <
     (hEu : 0 < Eu) (u : ℕ) : Eu ≤ EuS ok q Eu u := by
   unfold EuS
   have h1 : 1 ≤ ∏ g ∈ univ.filter (fun g : Fin N => ok g ∧ (g : ℕ) < u), (1 - (q g)⁻¹)⁻¹ := by
-    have := Finset.prod_le_prod (s := univ.filter (fun g : Fin N => ok g ∧ (g : ℕ) < u))
+    have := Finset.prod_le_prod₀ (s := univ.filter (fun g : Fin N => ok g ∧ (g : ℕ) < u))
       (f := fun _ => (1 : ℝ)) (g := fun g => (1 - (q g)⁻¹)⁻¹) (fun _ _ => zero_le_one)
       (fun g hg => by
         have h1 := hq g (Finset.mem_filter.mp hg).2.1
@@ -831,7 +831,7 @@ theorem hnext_nonlast (hJw : MeasurableSet Jw) {m : ℕ} (hm : m + 2 ≤ K)
       Fin.prod_univ_castSucc (fun j => invq (J.q (lab j) ω))]
     simp only [Fin.init]
     ring
-  · rw [if_neg hC]; exact zero_le _
+  · rw [if_neg hC]; exact zero_le
 
 end NonLast
 
@@ -1027,14 +1027,12 @@ lemma last_uOf (hfirst : runFirst l (m + 1) = m + 1)
     by_cases hgt : lab (Fin.last m) < (g : ℕ)
     · have hmem : g ∈ suppW (hiC (lab (Fin.last m)) c) := mem_suppW_hiC.mpr ⟨hgt, y, hg⟩
       have := Finset.le_sup (f := fun g : Fin N => (g : ℕ) + 1) hmem
-      dsimp only at this
       simp only [uW]; omega
     · have hlt : (g : ℕ) < lab (Fin.last m) := by
         have := hnb y g hg; omega
       obtain ⟨g', hg'⟩ := hne
       have h1 := (mem_suppW_hiC.mp hg').1
       have := Finset.le_sup (f := fun g : Fin N => (g : ℕ) + 1) hg'
-      dsimp only at this
       simp only [uW]; omega
   · refine Finset.sup_le fun g hg => ?_
     obtain ⟨-, y, hy⟩ := mem_suppW_hiC.mp hg
@@ -1051,7 +1049,7 @@ variable {K : ℕ}
 
 lemma card_ge (p : ℕ) : Fintype.card {j : Fin K // p ≤ (j : ℕ)} = K - p := by
   rw [Fintype.card_subtype]
-  have h1 := Finset.filter_card_add_filter_neg_card_eq_card (s := (univ : Finset (Fin K)))
+  have h1 := Finset.card_filter_add_card_filter_not (s := (univ : Finset (Fin K)))
     (fun j : Fin K => (j : ℕ) < p)
   have h2 : (univ.filter fun j : Fin K => (j : ℕ) < p).card = min K p := Fin.card_filter_val_lt
   have h3 : (univ.filter fun j : Fin K => ¬ (j : ℕ) < p) =
@@ -1072,7 +1070,7 @@ theorem stage_rows (E : Matrix (Fin K) (Fin K) ℕ) (hE : (Ereal E).det ≠ 0) (
       Matrix.linearIndependent_cols_iff_isUnit.mpr
         ((Matrix.isUnit_iff_isUnit_det _).mpr (isUnit_iff_ne_zero.mpr hE))
     have := hcols.comp (Subtype.val : {j : Fin K // p ≤ (j : ℕ)} → Fin K) Subtype.val_injective
-    convert this using 1
+    convert! this using 1
   obtain ⟨R, hR, hinj⟩ := RankFull.exists_rows_inj M hli
   refine ⟨R, by rw [hR, card_ge], ?_⟩
   rintro w ⟨v, hv0, hv⟩ w' ⟨v', hv0', hv'⟩ hR'
@@ -1359,7 +1357,7 @@ theorem hnext_last (hJw : MeasurableSet Jw) (hq : ∀ ω, ∀ n : Fin N, ω ∈ 
   refine ENNReal.tsum_le_tsum fun lab => ?_
   rcases Nat.eq_zero_or_pos N with hN | hN
   · -- no slots: no admissible labels
-    refine le_of_eq_of_le (Finset.sum_eq_zero fun c _ => ?_) (zero_le _)
+    refine le_of_eq_of_le (Finset.sum_eq_zero fun c _ => ?_) (zero_le)
     rw [if_neg]
     rintro ⟨n, hn⟩
     have := (hn.2.1 0).1
@@ -1414,7 +1412,7 @@ theorem hnext_last (hJw : MeasurableSet Jw) (hq : ∀ ω, ∀ n : Fin N, ω ∈ 
         refine le_of_eq ?_
         ring
       · rw [if_neg (fun h => hω h.2), Set.indicator_of_notMem hω]; simp
-    · rw [if_neg hC]; exact zero_le _
+    · rw [if_neg hC]; exact zero_le
   refine (Finset.sum_le_sum hfac).trans ?_
   -- the injection into pairs
   rw [← Finset.sum_filter]
@@ -1443,7 +1441,7 @@ theorem hnext_last (hJw : MeasurableSet Jw) (hq : ∀ ω, ∀ n : Fin N, ω ∈ 
         refine Finset.sum_congr rfl fun c' _ => ?_
         rw [Finset.mul_sum]
     _ ≤ ∑ c' ∈ sC, X c' * PhiC (N := N) J l A Eu (runNum l m) ω b :=
-        Finset.sum_le_sum fun c' _ => mul_le_mul_left' hblk _
+        Finset.sum_le_sum fun c' _ => mul_le_mul_right hblk _
     _ = _ := by
         rw [hsC, Finset.sum_filter]
         refine Finset.sum_congr rfl fun c' _ => ?_
@@ -1527,7 +1525,7 @@ theorem hnext_final (hJw : MeasurableSet Jw) (hq : ∀ ω, ∀ n : Fin N, ω ∈
   rw [tsum_eq_single (Fin.elim0 : Fin 0 → ℕ) (fun b hb => absurd (Subsingleton.elim b _) hb)]
   set lab : Fin 0 → ℕ := Fin.elim0
   rcases Nat.eq_zero_or_pos N with hN | hN
-  · refine le_of_eq_of_le (Finset.sum_eq_zero fun c _ => ?_) (zero_le _)
+  · refine le_of_eq_of_le (Finset.sum_eq_zero fun c _ => ?_) (zero_le)
     rw [if_neg]
     rintro ⟨n, hn⟩
     have := (hn.2.1 0).1
@@ -1589,7 +1587,7 @@ theorem hnext_final (hJw : MeasurableSet Jw) (hq : ∀ ω, ∀ n : Fin N, ω ∈
                   MeasureTheory.volume Jw))) * W := by gcongr
           _ = _ := by ring
       · rw [if_neg (fun h => hω h.2), Set.indicator_of_notMem hω]; simp
-    · rw [if_neg hC]; exact zero_le _
+    · rw [if_neg hC]; exact zero_le
   refine (Finset.sum_le_sum hfac).trans ?_
   rw [← Finset.sum_filter]
   -- the injection into pairs (free part, tails)
@@ -1730,8 +1728,8 @@ theorem hnext_final (hJw : MeasurableSet Jw) (hq : ∀ ω, ∀ n : Fin N, ω ∈
       ≤ (ENNReal.ofReal χ0 * ENNReal.ofReal (GT1 / Eu ^ rest.sum) +
           ENNReal.ofReal (GT / Eu ^ (j + rest.sum))) *
         (ENNReal.ofReal Eu * ENNReal.ofReal δ) ^ K * W := by
-        refine mul_le_mul_right' (mul_le_mul' (add_le_add_right ?_ _) htails) _
-        convert hblk using 2
+        refine mul_le_mul_left (mul_le_mul' (add_le_add_right ?_ _) htails) _
+        convert! hblk using 2
     _ = ENNReal.ofReal ((χ0 * (GT1 / Eu ^ rest.sum) + GT / Eu ^ K) * Eu ^ K * δ ^ K *
           patternWeight τ E) := by
         rw [show j + rest.sum = K by omega]

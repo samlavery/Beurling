@@ -217,7 +217,7 @@ theorem TVt_le_aLev {X0 ε θ : ℝ} (hP : PaperWidth H X0m ε θ) (hX0 : X0m = 
 
 /-- `TV(δ_x) ≥ 1`. -/
 lemma one_le_eVariationOn_stepF (a : ℝ) : 1 ≤ eVariationOn (stepF a) univ := by
-  have := eVariationOn.sum_le (stepF a) 1 (u := fun i => a - 1 + i) (s := univ)
+  have := eVariationOn.sum_le (f := stepF a) (n := 1) (u := fun i => a - 1 + i) (s := univ)
     (fun i j hij => by have : (i : ℝ) ≤ j := by exact_mod_cast hij
                        linarith) (fun _ => mem_univ _)
   simp only [Finset.range_one, Finset.sum_singleton] at this
@@ -309,7 +309,7 @@ theorem Stau_le {X0 ε θ : ℝ} (hP : PaperWidth H X0m ε θ) (hX0 : X0m = X0 -
     obtain ⟨hdm, hXd⟩ := Finset.mem_filter.mp hd
     by_cases h1 : d = 1
     · subst h1
-      simp only [srcStep_one hval, enorm_zero, lintegral_zero]; exact zero_le _
+      simp only [srcStep_one hval, enorm_zero, lintegral_zero]; exact zero_le
     by_cases hD : d ∈ Dset P H tw X0m x X0 n'
     · rw [if_pos hD]
       have hTd : ¬ Terminal P.labelVal x H X0m X0 d := by
@@ -340,7 +340,7 @@ theorem Stau_le {X0 ε θ : ℝ} (hP : PaperWidth H X0m ε θ) (hX0 : X0m = X0 -
           refine lintegral_mono fun t => ?_
           unfold Stau SsrcP
           rw [enorm_neg]
-          convert enorm_sum_le _ _
+          convert! enorm_sum_le _ _
       _ = ∑ d ∈ n'.properDivisors.filter (fun d => ¬ X0Near P.labelVal x H X0m d n'),
             ∫⁻ t, ‖srcStep P.labelVal x H (phiT tw X0m) (kapN tw X0m P.labelVal x) d n' t‖ₑ :=
           lintegral_finset_sum _ fun d _ => (integrable_srcStep hH d n').2.enorm
@@ -352,7 +352,7 @@ theorem Stau_le {X0 ε θ : ℝ} (hP : PaperWidth H X0m ε θ) (hX0 : X0m = X0 -
     apply Finset.sum_le_sum_of_subset_of_nonneg
     · intro d hd
       exact (Finset.mem_filter.mp hd).2
-    · intro _ _ _; exact zero_le _
+    · intro _ _ _; exact zero_le
   exact ENNReal.toReal_le_of_le_ofReal (Finset.sum_nonneg fun d _ => aLev_nonneg d)
     (hle.trans hsum)
 

@@ -95,11 +95,11 @@ theorem sum_sep_le {g : ℝ → ℝ} {V0 r : ℝ} (_hV0 : 0 < V0) (_hr0 : 0 ≤ 
       ∑ v ∈ S, g v ≤ g m / (1 - r) := by
     intro S
     induction S using Finset.induction_on_min with
-    | h0 =>
+    | empty =>
       intro _ m hm _
       simp only [Finset.sum_empty]
       exact div_nonneg (hg0 m hm) h1r.le
-    | step a s hlt ih =>
+    | insert a s hlt ih =>
       intro hS m hm hmS
       have ha : m ≤ a := hmS a (Finset.mem_insert_self a s)
       have has : a ∉ s := fun h => lt_irrefl a (hlt a h)

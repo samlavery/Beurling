@@ -79,7 +79,7 @@ lemma sum_log_le (n : ℕ) : ∑ p ∈ (n + 1).primesBelow, Real.log p ≤ n * R
     · rfl
     · intro p hp; simp at hp; exact_mod_cast hp.2.ne_zero
   rw [h]
-  have := primorial_le_4_pow n
+  have := primorial_le_four_pow n
   calc Real.log ((primorial n : ℕ) : ℝ) ≤ Real.log ((4 ^ n : ℕ) : ℝ) :=
         Real.log_le_log (by exact_mod_cast primorial_pos n) (by exact_mod_cast this)
     _ = n * Real.log 4 := by push_cast; rw [Real.log_pow]
@@ -208,7 +208,7 @@ lemma sum_log_div_mul_pred_le (N : ℕ) :
       have : (2 : ℝ) ≤ n := by exact_mod_cast hn
       apply div_nonneg zero_le_one (by linarith)) hN
   refine hab.trans ?_
-  dsimp only
+  try dsimp only
   have h2 : ∑ n ∈ Icc 3 N, (Real.log n + Real.log 4 - (Real.log ((n - 1 : ℕ) : ℝ) +
       Real.log 4)) * (1 / ((n : ℝ) - 1)) ≤ ∑ n ∈ Icc 3 N, 1 / ((n : ℝ) - 1) ^ 2 := by
     apply Finset.sum_le_sum
@@ -290,9 +290,9 @@ lemma ZinfR_le_of_one_lt (N : ℕ) {σ : ℝ} (hσ : 1 < σ) :
     congr 1; ext n
     rw [Real.rpow_neg (by positivity), one_div]
   have h3 := ZetaAsymptotics.zeta_limit_aux1 hσ
-  have h4 : 0 ≤ ZetaAsymptotics.term_tsum σ :=
+  have h4 : 0 ≤ ZetaAsymptotics.termTSum σ :=
     tsum_nonneg (fun n => ZetaAsymptotics.term_nonneg _ _)
-  have h5 : 0 ≤ σ * ZetaAsymptotics.term_tsum σ := mul_nonneg (by linarith) h4
+  have h5 : 0 ≤ σ * ZetaAsymptotics.termTSum σ := mul_nonneg (by linarith) h4
   linarith
 
 /-- `(1 - 1/p)^{-1} ≤ (1 - p^{-1-ε})^{-1} e^{(1 - p^{-ε})/(p-1)}`. -/
@@ -325,7 +325,7 @@ lemma ZinfR_one_le_mul_exp (N : ℕ) {ε : ℝ} (hε : 0 < ε) :
       Real.exp (∑ p ∈ N.primesBelow, (1 - (p : ℝ) ^ (-ε)) / (p - 1)) := by
   unfold BaseFactor.ZinfR
   rw [Real.exp_sum, ← Finset.prod_mul_distrib]
-  apply Finset.prod_le_prod
+  apply Finset.prod_le_prod₀
   · intro p hp
     have hpp := (Nat.mem_primesBelow.mp hp).2
     have hp2 : (2 : ℝ) ≤ p := by exact_mod_cast hpp.two_le
@@ -356,7 +356,7 @@ lemma hasDerivAt_expNegTaylor (n : ℕ) (u : ℝ) :
         (((n + 1 : ℕ) : ℝ) * (-u) ^ n * (-1) / ((n + 1)! : ℝ)) u := by
       have := ((hasDerivAt_neg u).pow (n + 1)).div_const ((n + 1)! : ℝ)
       simpa using this
-    convert (ih u).add h2 using 1
+    convert! (ih u).add h2 using 1
     simp only [expNegTaylor]
     rw [Finset.sum_range_succ, Nat.factorial_succ]
     push_cast
@@ -373,8 +373,8 @@ lemma expNegTaylor_alt (n : ℕ) {u : ℝ} (hu : 0 ≤ u) :
     have hd : ∀ v, HasDerivAt f ((-1) ^ n * (Real.exp (-v) - expNegTaylor n v)) v := by
       intro v
       have h1 : HasDerivAt (fun v => Real.exp (-v)) (-Real.exp (-v)) v := by
-        simpa using (Real.hasDerivAt_exp (-v)).comp v (hasDerivAt_neg v)
-      convert (h1.sub (hasDerivAt_expNegTaylor n v)).const_mul ((-1 : ℝ) ^ (n + 1)) using 1
+        simpa [Function.comp_def] using (Real.hasDerivAt_exp (-v)).comp v (hasDerivAt_neg v)
+      convert! (h1.sub (hasDerivAt_expNegTaylor n v)).const_mul ((-1 : ℝ) ^ (n + 1)) using 1
       ring
     have hmono : MonotoneOn f (Set.Ici 0) := by
       apply monotoneOn_of_deriv_nonneg (convex_Ici 0)
@@ -421,10 +421,10 @@ lemma hasDerivAt_einQ (u : ℝ) : HasDerivAt einQ (einP u) u := by
     intro k _
     have h := ((hasDerivAt_pow (k + 1) u).const_mul ((-1 : ℝ) ^ k)).div_const
       ((k + 1 : ℝ) * ((k + 1)! : ℝ))
-    convert h using 1
+    convert! h using 1
     push_cast
     field_simp
-  convert HasDerivAt.sum this using 1
+  convert! HasDerivAt.sum this using 1
 
 lemma einQ_five_le : einQ 5 ≤ 2.1884 := by
   norm_num [einQ, Finset.sum_range_succ, Nat.factorial]
@@ -468,8 +468,8 @@ lemma step_le {ε a b : ℝ} (hε : 0 < ε) (ha : 0 ≤ a) (hab : a ≤ b) :
     intro t
     have h1 : HasDerivAt (fun t => einQ (ε * t)) (einP (ε * t) * ε) t := by
       have := (hasDerivAt_einQ (ε * t)).comp t ((hasDerivAt_id t).const_mul ε)
-      simpa using this
-    convert h1.sub ((hasDerivAt_id t).mul_const c) using 1
+      simpa [Function.comp_def] using this
+    convert! h1.sub ((hasDerivAt_id t).mul_const c) using 1
     simp; ring
   have hmono : MonotoneOn F (Set.Icc a b) := by
     apply monotoneOn_of_deriv_nonneg (convex_Icc a b)
@@ -538,7 +538,7 @@ lemma sum_one_sub_rpow_div_le {ε : ℝ} (hε : 0 < ε) {N : ℕ} (hN : 2 ≤ N)
       apply mul_le_mul_of_nonneg_left _ hε.le
       exact Real.log_le_log (by linarith) (by push_cast; linarith)) hw0 hN
   refine hab.trans ?_
-  dsimp only
+  try dsimp only
   have h1 : ∑ n ∈ Icc 3 N, (Real.log n + Real.log 4 - (Real.log ((n - 1 : ℕ) : ℝ) +
       Real.log 4)) * w n = ∑ n ∈ Icc 3 N, (Real.log n - Real.log ((n - 1 : ℕ) : ℝ)) * w n := by
     apply Finset.sum_congr rfl; intro n _; ring

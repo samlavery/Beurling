@@ -25,7 +25,7 @@ lemma p_pos (j : ℕ) : 0 < P.p j := lt_trans one_pos (P.one_lt j)
 
 private lemma one_le_finset_prod (s : Finset ℕ) (f : ℕ → ℝ) (h : ∀ i ∈ s, 1 ≤ f i) :
     1 ≤ ∏ i ∈ s, f i := by
-  have := Finset.prod_le_prod (s := s) (f := fun _ => (1:ℝ)) (g := f) (fun _ _ => zero_le_one) h
+  have := Finset.prod_le_prod₀ (s := s) (f := fun _ => (1:ℝ)) (g := f) (fun _ _ => zero_le_one) h
   simpa using this
 
 lemma one_le_val (e : ℕ →₀ ℕ) : 1 ≤ P.val e := by
@@ -135,14 +135,14 @@ lemma psi_eq_cnt (x : ℝ) :
 
 lemma summable_N_ite (x : ℝ) :
     Summable fun e : ℕ →₀ ℕ => if P.val e ≤ x then (1 : ℝ) else 0 := by
-  apply summable_of_finite_support
+  apply summable_of_hasFiniteSupport
   refine (P.finite_val_le x).subset fun e he => ?_
   by_contra h
   exact he (if_neg h)
 
 lemma summable_psi_ite (x : ℝ) :
     Summable fun jk : ℕ × ℕ => if P.p jk.1 ^ (jk.2 + 1) ≤ x then Real.log (P.p jk.1) else 0 := by
-  apply summable_of_finite_support
+  apply summable_of_hasFiniteSupport
   refine (P.finite_primePow_le x).subset fun e he => ?_
   by_contra h
   exact he (if_neg h)

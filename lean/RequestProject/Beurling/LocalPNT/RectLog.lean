@@ -83,7 +83,7 @@ lemma wedgeIntegral_sub_wedgeIntegral_rect {f : ℂ → ℂ}
   have hI₀ : I₇ - I₅ + I₈ - I₄ = 0 := by
     have hU : Rectangle (z.re + p.im * I) (w.re + z.im * I) ⊆ Ioo a b ×ℂ Ioo c d :=
       rectangle_subset_rect (add_mul_I_mem_rect hz.1 hp.2) (add_mul_I_mem_rect hw.1 hz.2)
-    simpa [← add_eq_zero_iff_eq_neg, wedgeIntegral_add_wedgeIntegral_eq] using
+    simpa [I₄, I₅, I₇, I₈, ← add_eq_zero_iff_eq_neg, wedgeIntegral_add_wedgeIntegral_eq] using
       hf.isConservativeOn (z.re + p.im * I) (w.re + z.im * I) hU
   grind [wedgeIntegral]
 
@@ -115,7 +115,7 @@ theorem log_eq_of_exp_eq {U : Set ℂ} (hU : IsPreconnected U) {L₁ L₂ : ℂ 
   have hT : IsDiscrete (range (Int.cast : ℤ → ℂ)) := by
     have h : Topology.IsEmbedding (Int.cast : ℤ → ℂ) :=
       Complex.isometry_ofReal.isEmbedding.comp Int.isClosedEmbedding_coe_real.isEmbedding
-    simpa using (IsDiscrete.univ (X := ℤ)).image h
+    simpa using (IsDiscrete.univ (X := ℤ)).image h.isInducing
   have hπ : (2 * π * I : ℂ) ≠ 0 := by simp [Real.pi_ne_zero]
   have hmaps : MapsTo (fun z ↦ (L₁ z - L₂ z) / (2 * π * I)) U (range (Int.cast : ℤ → ℂ)) := by
     intro z hz
@@ -123,7 +123,7 @@ theorem log_eq_of_exp_eq {U : Set ℂ} (hU : IsPreconnected U) {L₁ L₂ : ℂ 
     exact ⟨n, by simp only [hn]; field_simp; ring⟩
   intro z hz
   have := hU.constant_of_mapsTo hT ((h1.sub h2).div_const _) hmaps hz hz₁
-  simp only [h₁, sub_self, zero_div, div_eq_zero_iff, hπ, or_false] at this
+  simp only [Pi.sub_apply, h₁, sub_self, zero_div, div_eq_zero_iff, hπ, or_false] at this
   exact sub_eq_zero.mp this
 
 /-- A holomorphic nowhere-zero function on an open convex set, whose logarithmic derivative has
@@ -138,7 +138,7 @@ lemma exists_log_of_primitive {g : ℂ → ℂ} {U : Set ℂ} (hU : IsOpen U) (h
     ((hg z hz).differentiableAt (hU.mem_nhds hz)).hasDerivAt
   have hh : ∀ z ∈ U, HasDerivAt (fun w ↦ g w * Complex.exp (-F w)) 0 z := by
     intro z hz
-    convert (hgd z hz).mul ((hF z hz).neg.cexp) using 1
+    convert! (hgd z hz).mul ((hF z hz).neg.cexp) using 1
     field_simp [hg0 z hz]
     ring
   have hconst : ∀ z ∈ U, g z * Complex.exp (-F z) = g p * Complex.exp (-F p) := fun z hz ↦

@@ -119,7 +119,7 @@ lemma isOpen_puncturedHalfPlane (a : ℝ) : IsOpen (puncturedHalfPlane a) :=
 lemma isPreconnected_puncturedHalfPlane (a : ℝ) :
     IsPreconnected (puncturedHalfPlane a) := by
   rcases le_or_gt 1 a with ha | ha
-  · convert (convex_halfSpace_re_gt a).isPreconnected using 1
+  · convert! (convex_halfSpace_re_gt a).isPreconnected using 1
     ext s
     simp only [puncturedHalfPlane, Set.mem_diff, Set.mem_setOf_eq, Set.mem_singleton_iff]
     exact ⟨fun h => h.1, fun h => ⟨h, fun e => by subst e; simp at h; linarith⟩⟩
@@ -130,7 +130,7 @@ lemma isPreconnected_puncturedHalfPlane (a : ℝ) :
     ((convex_halfSpace_re_gt a).inter (convex_halfSpace_re_lt 1)).isPreconnected
   have hC := hB.union (2 - I) (by left; right; simp) (by simp; linarith)
     ((convex_halfSpace_re_gt a).inter (convex_halfSpace_im_lt 0)).isPreconnected
-  convert hC using 1
+  convert! hC using 1
   ext s
   simp only [puncturedHalfPlane, Set.mem_diff, Set.mem_setOf_eq, Set.mem_singleton_iff,
     Set.mem_union, Set.mem_inter_iff]

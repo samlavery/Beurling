@@ -60,7 +60,7 @@ lemma zetaF_tail {s : ℂ} (hs : 1 ≤ s.re) :
     have : HasSum (fun e : ℕ →₀ ℕ => if P.val e ≤ y then ((P.val e : ℝ) : ℂ) ^ (-s) else 0)
         (∑ e ∈ P.elems y, if P.val e ≤ y then ((P.val e : ℝ) : ℂ) ^ (-s) else 0) :=
       hasSum_sum_of_ne_finset_zero hfin
-    convert this using 1
+    convert! this using 1
     exact Finset.sum_congr rfl fun e he => by rw [if_pos ((BeurlingSystem.mem_elems P).mp he)]
   have hFR : HasSum (fun e : ℕ →₀ ℕ => if P.val e ≤ y then P.val e ^ (-s.re) else 0)
       (∑ e ∈ P.elems y, P.val e ^ (-s.re)) := by
@@ -69,7 +69,7 @@ lemma zetaF_tail {s : ℂ} (hs : 1 ≤ s.re) :
     have : HasSum (fun e : ℕ →₀ ℕ => if P.val e ≤ y then P.val e ^ (-s.re) else 0)
         (∑ e ∈ P.elems y, if P.val e ≤ y then P.val e ^ (-s.re) else 0) :=
       hasSum_sum_of_ne_finset_zero hfin'
-    convert this using 1
+    convert! this using 1
     exact Finset.sum_congr rfl fun e he => by rw [if_pos ((BeurlingSystem.mem_elems P).mp he)]
   -- the tails
   set tC : (ℕ →₀ ℕ) → ℂ := fun e => if e.support ⊆ J ∧ y < P.val e then
@@ -96,11 +96,11 @@ lemma zetaF_tail {s : ℂ} (hs : 1 ≤ s.re) :
       · rw [if_neg hJ, if_neg (fun h => hJ h.1)]; ring
   have htC : HasSum tC (zetaF P J s - ∑ e ∈ P.elems y, ((P.val e : ℝ) : ℂ) ^ (-s)) := by
     have := hC.sub hF
-    convert this using 2 with e
+    convert! this using 2 with e
     rw [hsplitC e]; ring
   have htR : HasSum tR (zetaFR P J s.re - ∑ e ∈ P.elems y, P.val e ^ (-s.re)) := by
     have := hR.sub hFR
-    convert this using 2 with e
+    convert! this using 2 with e
     rw [hsplitR e]; ring
   -- majorant `y^{1-σ} · (term at σ = 1)`
   have hmaj : ∀ e, tR e ≤ y ^ (1 - s.re) * (if e.support ⊆ J then P.val e ^ (-(1 : ℝ)) else 0) := by

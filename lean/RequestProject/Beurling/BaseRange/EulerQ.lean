@@ -290,7 +290,7 @@ theorem rankinConst_le {σ : ℝ} (hσ : 0 < σ) (hσ1 : σ ≤ 1 / 100) {N : �
       Real.exp (∑ p ∈ (N + 1).primesBelow, (((p : ℝ) ^ σ - 1) / (p - (p : ℝ) ^ σ))) := by
     unfold Rankin.rankinConst BaseFactor.ZinfR
     rw [Real.exp_sum, ← Finset.prod_mul_distrib]
-    apply Finset.prod_le_prod
+    apply Finset.prod_le_prod₀
     · intro p hp
       have hp2 : (2 : ℝ) ≤ p := by exact_mod_cast (hmem p hp).1
       apply inv_nonneg.mpr

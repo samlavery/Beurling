@@ -48,7 +48,7 @@ lemma hasDerivAt_neg_inv_log {v : ℝ} (hv : 1 < v) :
   have h1 : HasDerivAt Real.log v⁻¹ v := Real.hasDerivAt_log (by linarith)
   have hl : Real.log v ≠ 0 := (Real.log_pos hv).ne'
   have h2 := (h1.inv hl).neg
-  convert h2 using 1
+  convert! h2 using 1
   unfold g; field_simp
 
 lemma integral_g {a b : ℝ} (ha : 1 < a) (hab : a ≤ b) :
@@ -75,7 +75,7 @@ lemma integral_log_mul_g {a b : ℝ} (ha : 1 < a) (hab : a ≤ b) :
     have hl : Real.log v ≠ 0 := (Real.log_pos hv1).ne'
     have h1 : HasDerivAt Real.log v⁻¹ v := Real.hasDerivAt_log (by linarith)
     have h2 := h1.log hl
-    convert h2 using 1
+    convert! h2 using 1
     unfold g; field_simp
   · exact (continuousOn_log_mul_g ha hab).intervalIntegrable
 

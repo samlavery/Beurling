@@ -153,7 +153,7 @@ theorem ps_bound {ι : Type*} (s : Finset ι) (w c : ι → ℝ) {a b ℓ K : �
         have h1 : HasDerivAt (fun x => (1 + x) / (1 + a)) (1 / (1 + a)) x := by
           simpa using ((hasDerivAt_id x).const_add 1).div_const (1 + a)
         have h2 := h1.log (div_pos hx1 (by linarith)).ne'
-        convert h2 using 1
+        convert! h2 using 1
         field_simp
       exact (Hd x hx).mul hdL
     · exact iHL.add iHinv
@@ -171,7 +171,7 @@ theorem ps_bound {ι : Type*} (s : Finset ι) (w c : ι → ℝ) {a b ℓ K : �
   -- e = R - L
   have iHe : IntervalIntegrable (fun x => H' x * (R x - L x)) volume a b := by
     have := iHR.sub iHL
-    convert this using 1
+    convert! this using 1
     funext x; ring
   have hsplitRL : ∫ x in a..b, H' x * R x =
       (∫ x in a..b, H' x * L x) + ∫ x in a..b, H' x * (R x - L x) := by
@@ -196,7 +196,7 @@ theorem ps_bound {ι : Type*} (s : Finset ι) (w c : ι → ℝ) {a b ℓ K : �
       (fun x => (-H' x + 2 * H x * η x) * (K * (1 + x) / ℓ)) volume a b := by
     have i2 : IntervalIntegrable (fun x => 2 * H x * η x) volume a b := by
       have := ((Hc.mul hη).intervalIntegrable_of_Icc (μ := volume) hab).const_mul 2
-      convert this using 1
+      convert! this using 1
       funext x; simp only [Pi.mul_apply]; ring
     refine (Hi.neg.add i2).mul_continuousOn ?_
     rw [hUI]

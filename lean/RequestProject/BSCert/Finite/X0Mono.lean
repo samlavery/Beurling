@@ -137,7 +137,7 @@ lemma φ_dvd {d e : ℕ} (hn : n ≠ 0) (he : e ∣ n) (hde : d ∣ e) : φ n d 
 lemma φ_le {d : ℕ} (hn : n ≠ 0) (hd : d ∣ n) : φ n d ≤ d := by
   have hd0 : d ≠ 0 := ne_zero_of_dvd hn hd
   have e : d = ∏ p ∈ n.primeFactors, p ^ d.factorization p := by
-    conv_lhs => rw [← Nat.factorization_prod_pow_eq_self hd0]
+    conv_lhs => rw [← Nat.prod_factorization_pow_eq_self hd0]
     rw [Finsupp.prod, Nat.support_factorization]
     apply Finset.prod_subset (Nat.primeFactors_mono hd hn)
     intro p _ hp

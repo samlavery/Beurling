@@ -202,7 +202,6 @@ theorem hG_field_paper {Z η1 η2 ε lam0 b j0 : ℝ} {ε1 : ℝ → ℝ}
     exact hXm8.trans (Real.log_le_log hXmpos this)
   have hre := KR.RML8G.reindex7 (L := fun i => Real.log (3 * (Xm X₀ * 2 ^ i)))
     (o := ob x) (Fb := Fb x) hLi (fun i => by
-      simp only
       rw [show 3 * (Xm X₀ * 2 ^ (i + 1)) = (3 * (Xm X₀ * 2 ^ i)) * 2 by ring,
         Real.log_mul (by positivity) (by norm_num)])
     (fun j => (hob x j).1) (fun j => (hob x j).2) (Jf x)

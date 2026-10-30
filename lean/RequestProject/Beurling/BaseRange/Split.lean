@@ -143,7 +143,7 @@ lemma integral_inv_mul_log {x M : ℝ} (hM : 1 ≤ M) (hMx : M < x) :
     have h1' : HasDerivAt (fun t => x / t) (x * -(t ^ 2)⁻¹) t := by
       simpa [div_eq_mul_inv] using h1
     have h2 := ((h1'.log (div_pos hx0 ht0).ne').log hl.ne').neg
-    convert h2 using 1
+    convert! h2 using 1
     field_simp
   have hcont : ContinuousOn (fun t => 1 / (t * Real.log (x / t))) (Set.uIcc (1 : ℝ) M) := by
     intro t ht

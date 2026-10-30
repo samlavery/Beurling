@@ -524,6 +524,6 @@ theorem theorem_6_23a_step2 {Ω ι : Type*} [MeasurableSpace Ω] (P : Measure Ω
       have := hdeg y hy
       have := hD J ω y (hBS (Finset.mem_sdiff.mp hy).1)
       omega
-    rw [hempty, measure_empty]; exact zero_le _
+    rw [hempty, measure_empty]; exact zero_le
 
 end RankFull

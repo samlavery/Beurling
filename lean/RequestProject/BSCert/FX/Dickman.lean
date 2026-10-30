@@ -294,7 +294,7 @@ lemma rLowF_le {r : ℝ → ℝ} (hr : DickmanRatioFacts r) {t : RT} (ht : TabOK
         linarith
       rw [FI.toR_max]
       refine max_le ?_ hZ
-      simp only [rExactEx, Ex.eval, List.getD_cons_zero] at this
+      simp only [rExactEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, List.getD_cons_zero] at this
       rw [hr.exact_one_two (toR X) hX1 hx2] at hmono
       push_cast at this
       linarith [this.1]
@@ -337,14 +337,14 @@ lemma le_rUpF {r : ℝ → ℝ} (hr : DickmanRatioFacts r) {X h : ℤ} (hh : rUp
       unfold toR at this ⊢; push_cast at this; rw [mul_div_assoc, div_self ZR_pos.ne'] at this
       linarith
     rw [hr.exact_one_two (toR X) hx1 hx2] at hmono
-    simp only [rExactEx, Ex.eval, List.getD_cons_zero] at this
+    simp only [rExactEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, List.getD_cons_zero] at this
     push_cast at this
     linarith [this.2]
   · simp only [Option.map_eq_some_iff] at hh
     obtain ⟨I, hI, rfl⟩ := hh
     have := feval_sound (rUpEx (deltaF X)) [toR X] _ I
       (List.Forall₂.cons (mem_pt X) List.Forall₂.nil) hI
-    simp only [rUpEx, Ex.eval, List.getD_cons_zero] at this
+    simp only [rUpEx, Ex.eval, Ex.eval_hadd, Ex.eval_hsub, Ex.eval_hmul, Ex.eval_hdiv, Ex.eval_hneg, Ex.eval_ofNat, Ex.eval_ofScientific, List.getD_cons_zero] at this
     have hx2 : (2 : ℝ) ≤ toR X := by
       have : toR (2 * ZI) < toR X := toR_lt_toR.mpr (not_le.mp h2)
       unfold toR at this ⊢; push_cast at this; rw [mul_div_assoc, div_self ZR_pos.ne'] at this

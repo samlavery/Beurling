@@ -285,7 +285,7 @@ lemma norm_earlyNoise_le {s : ℂ} (hs : thetaPrime θ X₀ < s.re) :
               have : |lag0 P θ X₀ α γ xp x| = 0 := le_antisymm hb (abs_nonneg _)
               rw [this, zero_mul]
       _ ≤ ∫ x in Ioi 1, (Ici Xm).indicator (fun x => x ^ (θ' - s.re - 1)) x := by
-          refine setIntegral_mono_set ?_ ?_ (Ioc_subset_Ioi_self).eventuallyLE
+          refine setIntegral_mono_set ?_ ?_ (Ioc_subset_Ioi_self).eventuallySubset
           · exact ((integrable_indicator_iff measurableSet_Ici).mpr hgiI).integrableOn
           · exact (ae_restrict_mem measurableSet_Ioi).mono fun x hx => by
               by_cases hm : x ∈ Ici Xm

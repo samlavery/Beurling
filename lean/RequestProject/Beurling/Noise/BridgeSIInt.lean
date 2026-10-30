@@ -105,7 +105,7 @@ lemma integral_fOf {Jt a b : ℝ} (ha : 0 < a) (hab : a ≤ b) (hb : b < Jt) :
     have h1 : Jt - x ≠ 0 := by linarith [hx.2]
     have := (hasDerivAt_id' x).div ((hasDerivAt_id' x).const_sub Jt) h1
     unfold uOf
-    convert this using 1
+    convert! this using 1
     field_simp; ring
   have hcont' : ContinuousOn (fun x => Jt / (Jt - x) ^ 2) (uIcc a b) := by
     intro x hx

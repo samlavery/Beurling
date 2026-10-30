@@ -36,7 +36,7 @@ lemma integral_Ioi_quad {r b c0 c1 c2 : ℝ} (hr : 0 < r) (h0 : 0 ≤ c0) (h1 : 
     intro s
     have hs := hasDerivAt_id s
     have := (((hasDerivAt_const s a0).add (hs.const_mul a1)).add ((hs.pow 2).const_mul a2))
-    convert this using 1
+    convert! this using 1
     simp only [id]; push_cast; ring
   have hderiv : ∀ x ∈ Ici b, HasDerivAt (fun w => -(Real.exp (-(r * (w - b))) * P (w - b)))
       ((c0 + c1 * (x - b) + c2 * (x - b) ^ 2) * Real.exp (-(r * (x - b)))) x := by
@@ -44,7 +44,7 @@ lemma integral_Ioi_quad {r b c0 c1 c2 : ℝ} (hr : 0 < r) (h0 : 0 ≤ c0) (h1 : 
     have he := (((hasDerivAt_id x).sub_const b).const_mul r).neg.exp
     have hp := (hPd (x - b)).comp x ((hasDerivAt_id x).sub_const b)
     have h := (he.mul hp).neg
-    convert h using 1
+    convert! h using 1
     simp only [hP, id, Function.comp_apply, Pi.neg_apply, Pi.mul_apply, ha0, ha1, ha2]
     field_simp
     ring

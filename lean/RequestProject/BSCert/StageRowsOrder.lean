@@ -80,7 +80,7 @@ lemma ex_stage2 : 2 ≤ stageOf exE 2 := by
     · simp [ex_runStart0]
     · simp [ex_runStart2]
   have := Finset.card_le_card hsub
-  convert this using 1
+  convert! this using 1
 
 lemma ex_stage0 : stageOf exE 0 ≤ 1 := by
   classical

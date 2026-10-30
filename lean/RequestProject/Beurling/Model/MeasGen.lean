@@ -102,7 +102,7 @@ theorem measurable_tsum_of_finite_support {α ι : Type*} [MeasurableSpace α] [
   have hsum : ∀ x, HasSum (fun n => f' n x) (∑' n, f' n x) := by
     intro x
     apply Summable.hasSum
-    apply summable_of_finite_support
+    apply summable_of_hasFiniteSupport
     have : Function.support (fun n => f' n x) ⊆ enc '' Function.support (fun i => f i x) := by
       intro n hn
       simp only [Function.mem_support, hf'] at hn
@@ -417,7 +417,7 @@ theorem exists_good_iff (hκ : 0 < κ) {f : ℂ → ℂ} (hf : Continuous f) {Γ
     have hφt : Tendsto (fun k => 1 / ((φ k : ℝ) + 1)) atTop (𝓝 0) := by
       have h1 : Tendsto (fun k => (φ k : ℝ)) atTop atTop :=
         tendsto_natCast_atTop_atTop.comp hφ.tendsto_atTop
-      simpa using (tendsto_inv_atTop_zero.comp
+      simpa [Function.comp_def] using (tendsto_inv_atTop_zero.comp
         (tendsto_atTop_add_const_right _ 1 h1))
     refine ⟨⟨hγ.1, hγ.2.trans hc⟩, ?_, ?_⟩
     · have hZ : Tendsto (fun k => ‖zLine X₀ κ (q (φ k))‖) atTop (𝓝 ‖zLine X₀ κ γ‖) :=

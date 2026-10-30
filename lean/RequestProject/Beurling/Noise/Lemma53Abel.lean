@@ -115,8 +115,8 @@ theorem abel_unimodal {ι : Type*} (s : Finset ι) (a σ : ι → ℝ) {L K c : 
       hi.continuousOn_mul continuousOn_id
     have := ftc_off_point (F := fun x => x * F x) (F' := fun x => F x + x * F' x) (c := c) hL
       (continuousOn_id.mul hFc) (fun x hx hxc => by
-        have := (hasDerivAt_id x).mul (hd x hx hxc)
-        simpa using this) (hFi'.add hxFi)
+        have := (hasDerivAt_id' x).mul (hd x hx hxc)
+        simpa [Pi.mul_def] using this) (hFi'.add hxFi)
     rw [integral_add hFi' hxFi] at this
     simp only [zero_mul, sub_zero] at this
     linarith

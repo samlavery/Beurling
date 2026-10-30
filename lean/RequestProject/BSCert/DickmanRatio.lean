@@ -77,7 +77,7 @@ lemma hasDerivAt_invRatio {v : ℝ} (hv : 2 < v) :
     HasDerivAt.comp (h₂ := rho) (h := fun v : ℝ => v - 1) v
       (hasDerivAt_rho (by linarith)) ((hasDerivAt_id v).sub_const 1)
   have h := h1.div h2 (rho_pos _).ne'
-  convert h using 1
+  convert! h using 1
   unfold Jfun ratio
   have hv0 : v ≠ 0 := by linarith
   have hv1 : v - 1 ≠ 0 := by linarith
@@ -294,7 +294,7 @@ theorem ratio_recursion {v : ℝ} (hv : 2 ≤ v) :
       have h1 : HasDerivAt (fun t => -(a * (t - (v - 1)))) (-(a * 1)) t :=
         (((hasDerivAt_id t).sub_const (v - 1)).const_mul a).neg
       have h2 := ((h1.exp).const_mul (rho (v - 1))).neg.div_const a
-      convert h2 using 1
+      convert! h2 using 1
       field_simp
     rw [intervalIntegral.integral_eq_sub_of_hasDerivAt hF (hcont.intervalIntegrable _ _)]
     have e : -(a * (v - (v - 1))) = -a := by ring
@@ -325,7 +325,7 @@ theorem ratio_upper {x δ : ℝ} (hx : 1 ≤ x) (hδ0 : 0 < δ) (hδ1 : δ < 1) 
       ← intervalIntegral.integral_add_adjacent_intervals (b := x)
         (continuous_rho.intervalIntegrable _ _) (continuous_rho.intervalIntegrable _ _)]
     have h1 : ∫ t in (v - 1)..x, rho x ≤ ∫ t in (v - 1)..x, rho t :=
-      intervalIntegral.integral_mono_on (by linarith) intervalIntegral.intervalIntegrable_const
+      intervalIntegral.integral_mono_on (by linarith) intervalIntegrable_const
         (continuous_rho.intervalIntegrable _ _) (fun t ht => rho_antitone ht.2)
     have h2 : 0 ≤ ∫ t in x..v, rho t :=
       intervalIntegral.integral_nonneg (by linarith) (fun t _ => (rho_pos t).le)

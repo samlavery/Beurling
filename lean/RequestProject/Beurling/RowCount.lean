@@ -41,7 +41,7 @@ theorem row_monomial_le {pi k : ℕ} {X : ℝ} (hX : 0 < X) {p : Fin pi → ℝ}
     {v : Fin pi → ℕ} (hv : ∑ i, v i = k) :
     ∏ i, (p i)⁻¹ ^ v i ≤ X⁻¹ ^ k := by
   rw [← hv, ← Finset.prod_pow_eq_pow_sum]
-  apply Finset.prod_le_prod (fun i _ => pow_nonneg (inv_nonneg.mpr (hX.trans_le (hp i)).le) _)
+  apply Finset.prod_le_prod₀ (fun i _ => pow_nonneg (inv_nonneg.mpr (hX.trans_le (hp i)).le) _)
   intro i _
   apply pow_le_pow_left₀ (inv_nonneg.mpr (hX.trans_le (hp i)).le)
   exact inv_anti₀ hX (hp i)

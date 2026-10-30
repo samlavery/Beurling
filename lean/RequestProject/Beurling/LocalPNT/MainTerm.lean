@@ -57,7 +57,7 @@ theorem pi0Int_lpWindow_ge {v η : ℝ} (hv1 : 1 < v) (hv : 10 ^ 5 ≤ Real.log 
     mul_nonneg (lpWindow_bounds hv1 hlv hη hη2 u).1 (pi0Dens_nonneg hu)
   have h1 : ∫ u in Icc v (v * (1 + η)), lpWindow v η u * pi0Dens u ≤ pi0Int (lpWindow v η) :=
     setIntegral_mono_set hint ((ae_restrict_mem measurableSet_Ioi).mono hnn)
-      (hsub.eventuallyLE)
+      (hsub.eventuallySubset)
   set c0 := (1 - 1 / v) / Real.log (v * (1 + η))
   have hlog : Real.log (v * (1 + η)) ≤ Real.log v + 1 := by
     rw [Real.log_mul hv0.ne' (by linarith)]

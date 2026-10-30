@@ -558,7 +558,7 @@ theorem eclV_fail_zero (D : Sec5Family) :
       exact hboundV hc hev (n := 0) hz2 hGM (fun ω hω => hω.1.2) (fun ω hω => hω.2) k hk)
     (by
       -- the capacity-`0` case: `rank S(J) = |S(J)|`, so the event is empty
-      refine le_of_eq_of_le ?_ (zero_le _)
+      refine le_of_eq_of_le ?_ (zero_le)
       refine measure_mono_null (fun ω hω => ?_) measure_empty
       obtain ⟨⟨k, hk, hlt, hle⟩, -⟩ := hω
       have hr := low_rank_eq_card hc hev (N := NpZ z) (D := DpZ X₀ z) (Dmax := DmaxZ z) ω

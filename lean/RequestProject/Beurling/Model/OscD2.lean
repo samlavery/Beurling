@@ -71,7 +71,7 @@ theorem hasDerivAt_oscD {θ α γ xk x : ℝ} (hx : 0 < x) (hxk : 0 < xk) :
       (Real.cos (γ * Real.log x) * (γ * x⁻¹)) x := (hlog.const_mul γ).sin
   have hlog2 : HasDerivAt (fun y : ℝ => Real.log (y / xk)) x⁻¹ x := by
     have := ((hasDerivAt_id x).div_const xk).log (div_ne_zero hx.ne' hxk.ne')
-    convert this using 1
+    convert! this using 1
     simp only [id]
     field_simp
   have hϕ : HasDerivAt Real.smoothTransition

@@ -183,7 +183,7 @@ theorem mul_rho_eq_integral {u : ℝ} (hu : 1 ≤ u) : u * rho u = ∫ t in (u -
     have h2 := (hasDerivAt_integral_window x).hasDerivWithinAt (s := Ici x)
     have h := h1.sub h2
     have hx0 : x ≠ 0 := by linarith [hx.1]
-    convert h using 1
+    convert! h using 1
     simp only [id]
     field_simp
     ring
@@ -287,7 +287,7 @@ theorem mul_rho_le {u : ℝ} (hu : 1 ≤ u) : u * rho u ≤ rho (u - 1) := by
   rw [mul_rho_eq_integral hu]
   have h : ∫ t in (u - 1)..u, rho t ≤ ∫ t in (u - 1)..u, rho (u - 1) :=
     intervalIntegral.integral_mono_on (by linarith : u - 1 ≤ u)
-      (continuous_rho.intervalIntegrable _ _) intervalIntegral.intervalIntegrable_const
+      (continuous_rho.intervalIntegrable _ _) intervalIntegrable_const
       (fun t ht => rho_antitone ht.1)
   rw [intervalIntegral.integral_const, smul_eq_mul] at h
   simpa using h

@@ -89,7 +89,7 @@ theorem psiOne_le_psiBar {K : ℕ} (J : JitterLaw Ω P θ) {G : ℕ → Set Ω}
     rw [hbox]
     gcongr
     exact hG _ _ h.1
-  · rw [if_neg h]; exact zero_le _
+  · rw [if_neg h]; exact zero_le
 
 /-! ## Measurability -/
 
@@ -296,7 +296,7 @@ theorem lintegral_psiBar_le {K : ℕ} (J : JitterLaw Ω P θ) (G : ℕ → Set �
           rw [Set.indicator_of_notMem this, zero_mul]
         · rfl
       simp only [h0, lintegral_zero]
-      exact zero_le _
+      exact zero_le
   have hmeas : ∀ c ∈ contents K N D Dmax X₀, AEMeasurable (fun t =>
       (if uOf c ≤ smax then (decSet J c ∩ G (uOf c)).indicator (1 : Ω → ℝ≥0∞) ω *
         (boxSet τ' E' Jw fun i => cval (fun n => J.q n ω) (c i)).indicator 1 t else 0)) := by
@@ -354,13 +354,11 @@ lemma elemVal_ge {q : Fin N → ℝ} {x : (Fin N → ℕ) × ℕ} (hd : 1 ≤ x.
     · simp [h]
     · exact one_le_pow₀ (hq m h)
   have h2 : q n ^ x.1 n ≤ ∏ m, q m ^ x.1 m := by
-    have := Finset.prod_le_prod (s := univ) (f := fun m => if m = n then q n ^ x.1 n else 1)
+    have := Finset.prod_le_prod₀ (s := univ) (f := fun m => if m = n then q n ^ x.1 n else 1)
       (g := fun m => q m ^ x.1 m) (fun m _ => by
-        dsimp only
         split_ifs with h
         · exact le_trans zero_le_one (h ▸ h1 m (mem_univ _))
         · exact zero_le_one) (fun m hm => by
-        dsimp only
         split_ifs with h
         · rw [h]
         · exact h1 m hm)
@@ -505,7 +503,7 @@ theorem skelCount_le_Zs {k : ℕ} (J : JitterLaw Ω P θ) (G : ℕ → Set Ω)
       · -- the window
         have hel := tailOf_mem (hS' i)
         have hval := (Finset.mem_filter.mp hel).2.2.2
-        convert hval using 1
+        convert! hval using 1
         unfold nmap elemVal
         dsimp only
         rw [cvalLt_eq hu i]

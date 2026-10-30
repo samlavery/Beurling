@@ -77,7 +77,7 @@ lemma moebius_eq_card {d : ℕ} (hd : Squarefree d) : μ d = (-1) ^ d.primeFacto
 lemma one_le_prod_real {s : Finset ℕ} {f : ℕ → ℝ} (h : ∀ i ∈ s, 1 ≤ f i) :
     1 ≤ ∏ i ∈ s, f i := by
   calc (1 : ℝ) = ∏ i ∈ s, (1 : ℝ) := by simp
-    _ ≤ ∏ i ∈ s, f i := Finset.prod_le_prod (fun _ _ => zero_le_one) h
+    _ ≤ ∏ i ∈ s, f i := Finset.prod_le_prod₀ (fun _ _ => zero_le_one) h
 
 lemma valN_one : valN val 1 = 1 := by simp [valN]
 

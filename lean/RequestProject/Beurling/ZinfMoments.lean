@@ -44,14 +44,14 @@ lemma hasSum_invSmooth (X₀ : ℕ) : HasSum (invSmooth X₀) (ZinfR X₀ 1) := 
   have h := (Rankin.hasSum_smooth_rpow X₀ (θ := 1) one_pos).2
   have h' := (hasSum_subtype_iff_indicator (s := (X₀.smoothNumbers : Set ℕ))
     (f := fun n : ℕ => (n : ℝ) ^ (-(1 : ℝ)))).mp h
-  convert h' using 1
+  convert! h' using 1
   funext n
   unfold invSmooth
   simp only [Set.indicator_apply, Real.rpow_neg_one]
 
 lemma tendsto_tailSum (X₀ : ℕ) : Tendsto (tailSum X₀) atTop (𝓝 0) := by
   have h := (tendsto_sum_nat_add (invSmooth X₀)).comp (tendsto_add_atTop_nat 1)
-  convert h using 1
+  convert! h using 1
 
 lemma cpow_one_add (n : ℕ) (hn : n ≠ 0) (t : ℝ) :
     ((n : ℝ) : ℂ) ^ (-(1 + t * I)) = (n : ℂ)⁻¹ * (n : ℂ) ^ (-(t * I)) := by
@@ -82,7 +82,7 @@ lemma norm_Zinf_sub_Pol_le (X₀ N : ℕ) (t : ℝ) :
   rw [hhead] at htail
   have hg : HasSum (fun k => invSmooth X₀ (k + (N + 1))) (tailSum X₀ N) := by
     have hs := ((summable_nat_add_iff (N + 1)).mpr (hasSum_invSmooth X₀).summable).hasSum
-    convert hs using 1
+    convert! hs using 1
   rw [← htail.tsum_eq]
   refine tsum_of_norm_bounded hg fun k => ?_
   simp only [hF, invSmooth]
@@ -308,7 +308,7 @@ lemma paley_zygmund {f : ℝ → ℝ} (hf : Continuous f) {a b c : ℝ}
       linarith
     rw [integral_div, integral_add (hf2G.const_mul l) (integrableOn_const hvolG.ne),
       integral_const_mul, setIntegral_const, smul_eq_mul] at h1
-    rw [hB]; convert h1 using 2; ring
+    rw [hB]; convert! h1 using 2; ring
   have hA0 : 0 ≤ A := by linarith
   have hAB : A ^ 2 ≤ volume.real G * B := by
     rcases hA0.eq_or_lt with h | h

@@ -81,6 +81,7 @@ lemma continuousOn_g0 {τ ℓ u a b : ℝ} (hℓ : 0 < ℓ) (ha : 0 < a) :
     positivity
   refine this.congr fun w hw => ?_
   have hw0 : 0 < w := lt_of_lt_of_le ha hw.1
+  beta_reduce
   rw [Hf_eq_G (u := u) hℓ hw0]
   have : 0 < 1 + w := by linarith
   field_simp

@@ -163,7 +163,7 @@ theorem sum_le_vSmooth (h : RealisedOK M (capH X₀) U) (F : Finset (PIdx X₀ �
   have hmapE : ∀ (f : RealisedIdx M →₀ ℕ) (i : RealisedIdx M), mapE M f (toPIdx M i) = f i := by
     intro f i
     unfold mapE
-    exact Finsupp.mapDomain_apply (toPIdx_injective M) f i
+    exact Finsupp.mapDomain_apply_of_injective (toPIdx_injective M) f i
   have hinj : Set.InjOn φ F := by
     intro e1 h1 e2 h2 h12
     have := congrArg (Finsupp.equivMapDomain h.equiv) h12

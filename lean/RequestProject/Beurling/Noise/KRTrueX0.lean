@@ -533,7 +533,6 @@ lemma sum_g2 {X0 : ℝ} (hX : 0 < X0) {S : Finset ℝ} (hS : Sep2 S) (hSV : ∀ 
         field_simp
       rw [e]
       nlinarith [Real.sqrt_nonneg X0]) S hS hSV
-  simp only at h1
   refine h1.trans ?_
   rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 2) X0]
   have hsX : 0 < √X0 := Real.sqrt_pos.mpr hX

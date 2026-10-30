@@ -145,7 +145,7 @@ theorem riemannZeta_eq_zetaR {s : ℝ} (hs : 1 < s) : riemannZeta (s : ℂ) = (z
 lemma zeta_hasDeriv {s : ℝ} (hs : 1 < s) {x : ℝ} (hx : 0 < x) :
     HasDerivAt (fun y : ℝ => y ^ (1 - s) / (s - 1)) (-(x ^ (-s))) x := by
   have h := (Real.hasDerivAt_rpow_const (x := x) (p := 1 - s) (Or.inl hx.ne')).div_const (s - 1)
-  convert h using 1
+  convert! h using 1
   have hs1 : s - 1 ≠ 0 := by linarith
   field_simp
   ring_nf
@@ -201,7 +201,7 @@ lemma zetaD_hasDeriv {s : ℝ} (hs : 1 < s) {x : ℝ} (hx : 0 < x) :
   have h2 := ((Real.hasDerivAt_log hx.ne').div_const (s - 1)).add_const (1 / (s - 1) ^ 2)
   have h := h1.mul h2
   unfold zetaDF
-  convert h using 1
+  convert! h using 1
   have hs1 : s - 1 ≠ 0 := by linarith
   have e : x ^ (1 - s - 1) = x ^ (-s) := by ring_nf
   have e2 : x ^ (1 - s) = x * x ^ (-s) := by

@@ -80,7 +80,7 @@ noncomputable def truncLaw (J : JitterLaw Ω P θE) (b : ℝ) : JitterLaw Ω P �
     exact h
   slots ω t := by
     refine le_trans (ENNReal.tsum_le_tsum fun n => ?_) (J.slots ω t)
-    exact Set.indicator_le_indicator_of_subset Set.inter_subset_left (fun _ => zero_le _) ω
+    exact Set.indicator_le_indicator_of_subset Set.inter_subset_left (fun _ => zero_le) ω
 
 lemma truncLaw_A (J : JitterLaw Ω P θE) (b : ℝ) (n : ℕ) :
     (truncLaw J b).A n = J.A n ∩ cutSet J b n := rfl
@@ -143,7 +143,7 @@ theorem windowElems_trunc (J : JitterLaw Ω P θE) (b : ℝ) (ω : Ω)
           by_cases h0 : p.1 m = 0
           · simp [h0]
           · exact one_le_pow₀ (hq1' m h0)
-      have h := Finset.prod_le_prod (s := univ)
+      have h := Finset.prod_le_prod₀ (s := univ)
         (fun m _ => by
           by_cases hmn : m = n
           · rw [if_pos hmn]; exact pow_nonneg (by linarith [hq1' n hn]) _

@@ -217,7 +217,7 @@ lemma one_lt_val {P : BeurlingSystem} {e : ℕ →₀ ℕ} (he : e ≠ 0) : 1 < 
   have h1 : 1 < P.p j ^ e j := one_lt_pow₀ (P.one_lt j) (by simpa using hj)
   have h2 : 1 ≤ ∏ x ∈ e.support.erase j, P.p x ^ e x :=
     calc (1 : ℝ) = ∏ x ∈ e.support.erase j, (1 : ℝ) := by simp
-      _ ≤ _ := Finset.prod_le_prod (fun _ _ => zero_le_one)
+      _ ≤ _ := Finset.prod_le_prod₀ (fun _ _ => zero_le_one)
           (fun i _ => one_le_pow₀ (P.one_lt i).le)
   nlinarith
 
@@ -258,7 +258,7 @@ theorem cofactor_sum_le (h : P.HBS X0m Z η1 η2 ε1) {b x : ℝ} (hb : 1 ≤ b)
       simpa [div_eq_mul_inv] using h1
     have h2 := (h1'.log (div_pos hx0 hs0).ne').inv hl.ne'
     simp only [hg, hg', one_div]
-    convert h2 using 1
+    convert! h2 using 1
     field_simp
   have hcont : ContinuousOn g' (Icc 1 b) := by
     intro s hs
@@ -355,7 +355,7 @@ theorem cofactor_sum_le (h : P.HBS X0m Z η1 η2 ε1) {b x : ℝ} (hb : 1 ≤ b)
       have hLL := hL.log hl.ne'
       have hlog := (Real.hasDerivAt_log hs0.ne').sub_const 1.01
       have hprod := hlog.mul (hder s hs)
-      convert hprod.add hLL using 1
+      convert! hprod.add hLL using 1
       simp only [hg, hg']
       field_simp
       ring

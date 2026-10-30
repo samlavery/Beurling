@@ -227,7 +227,7 @@ theorem hasSum_Hord {s : ℝ} (hs : 1 < s) (hz : zetaR s < 2) :
     simp only [Finset.mem_singleton] at hn
     simp [rterm, dN, hn]
   have hL := congrArg (fun f => LSeries f (s : ℂ)) hid
-  simp only at hL
+  try simp only at hL
   rw [LSeries_add hdL (hHL.convolution hgS), LSeries_convolution' hHL hgS, LSeries_delta,
     LSeries_natCast _ hs0, hgL] at hL
   have hL' : ∑' n, rterm Hord s n = 1 + (∑' n, rterm Hord s n) * Z := by
@@ -253,7 +253,7 @@ theorem ordA_eq_tsum {s : ℝ} (hs : 1 < s) (hz : zetaR s < 2) :
     · simp [hm, show m ≠ 1 by omega]
   rw [e] at h
   have h1 : HasSum (fun m : ℕ => if m = 1 then (1 : ℝ) else 0) 1 := by
-    convert hasSum_ite_eq 1 (1 : ℝ) using 1
+    convert! hasSum_ite_eq 1 (1 : ℝ) using 1
   have h2 := (h.sub h1)
   simp only [add_sub_cancel_left] at h2
   unfold ordA
@@ -315,7 +315,7 @@ lemma LSeries_Hord_mul {z : ℂ} (hz : 1 < z.re) (hH : LSeriesSummable (fun n =>
     simp only [Finset.mem_singleton] at hn
     rw [term_def]; split_ifs <;> simp [delta, hn]
   have hL := congrArg (fun f => LSeries f z) hid
-  simp only at hL
+  try simp only at hL
   rw [LSeries_add hdL (hH.convolution hgS), LSeries_convolution' hH hgS, LSeries_delta, hgL] at hL
   simp only [Pi.one_apply] at hL
   linear_combination hL

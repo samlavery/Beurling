@@ -236,7 +236,7 @@ lemma compDen_le_harm (ω : JitterΩ) (x : ℝ) :
   set F := (P.elems (x / Xm X₀)).filter (fun f => 2 ≤ BeurlingSystem.iota f)
   have hle : compDen θ X₀ ω x ≤ ∑ f ∈ F, 2 * ENNReal.ofReal (P.val f)⁻¹ := by
     rw [compDen_eq hc h x]
-    exact Finset.sum_le_sum fun f _ => mul_le_mul_right' ((r_le h f x).trans
+    exact Finset.sum_le_sum fun f _ => mul_le_mul_left ((r_le h f x).trans
       (bw_sum_le hc hev ω _)) _
   have e : ∑ f ∈ F, 2 * ENNReal.ofReal (P.val f)⁻¹ =
       ENNReal.ofReal (∑ f ∈ F, 2 * (P.val f)⁻¹) := by

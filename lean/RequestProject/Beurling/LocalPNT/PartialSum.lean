@@ -175,7 +175,7 @@ theorem hasDerivAt_mul_exp_neg_sqrt_log (c : ℝ) {u : ℝ} (hu : 1 < u) :
   have hs : 0 < Real.sqrt (Real.log u) := Real.sqrt_pos.mpr hl
   have h := (hasDerivAt_id u).mul
     ((((Real.hasDerivAt_log hu0).sqrt hl.ne').const_mul c).neg.exp)
-  convert h using 1
+  convert! h using 1
   simp only [id, Pi.neg_apply]
   field_simp
   ring

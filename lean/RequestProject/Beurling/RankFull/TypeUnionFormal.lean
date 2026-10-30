@@ -171,7 +171,7 @@ theorem type_union_sum {L Λ Ch B lam w : ℝ} {r j Dn : ℕ} (hr1 : 1 ≤ r) {�
   have hu1 : ∀ i, 1 ≤ (1 - (τ i)⁻¹)⁻¹ := fun i =>
     one_le_inv₀ (by linarith [inv_lt_one_of_one_lt₀ (hτ i)]) |>.mpr (by linarith [hτ0 i])
   have hB1 : 1 ≤ B := by
-    have := Finset.prod_le_prod (s := univ) (fun _ _ => zero_le_one) (fun i _ => hu1 i)
+    have := Finset.prod_le_prod₀ (s := univ) (fun _ _ => zero_le_one) (fun i _ => hu1 i)
     simp only [Finset.prod_const_one] at this
     exact this.trans hBτ
   set C' := 2 * (Real.exp 1 * (Dn : ℝ)) * Real.exp 1 * Ch * B ^ 2 with hC'

@@ -305,7 +305,7 @@ theorem cm3_partial_of_check
         ∑ n ∈ range (cm3N + 1), cm3g n + ∑ n ∈ Ioc cm3N M, cm3g n := by
       rw [Finset.range_eq_Ico,
         ← Finset.sum_Ico_consecutive _ (Nat.zero_le (cm3N + 1)) (by omega : cm3N + 1 ≤ M + 1),
-        Finset.Ico_add_one_add_one_eq_Ioc]
+        Finset.Ico_add_one_add_one_eq_Ioc, ← Finset.range_eq_Ico]
     have ht := cm3_tail cm3N (by norm_num [cm3N]) M hM.le
     rw [hsplit]
     linarith [cm3F_nonneg M]
@@ -327,6 +327,7 @@ theorem cm3_of_check (h : sumLoop (fun _ => 0) cm3Hi cm3Ok (cm3N + 1) 0 0 0 = tr
       rw [Finset.sum_map]
       apply Finset.sum_congr rfl
       intro p _
+      change _ = cm3g (p : ℕ)
       simp [cm3g, p.2]
     rw [e]
     refine le_trans ?_ (cm3_partial_of_check h M)

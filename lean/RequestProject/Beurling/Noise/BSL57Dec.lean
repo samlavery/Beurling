@@ -33,7 +33,7 @@ lemma exp_le_quad_pos (x : ℝ) : Real.exp x ≤ 1 + x + x ^ 2 / 2 * Real.exp (m
       intro t
       have h1 := ((hasDerivAt_id t).const_add 1).mul ((hasDerivAt_neg t).exp)
       have h2 := ((hasDerivAt_id t).pow 2).div_const 2
-      convert h1.add h2 using 1
+      convert! h1.add h2 using 1
       simp only [id]; ring
     have hmono : MonotoneOn h (Ici 0) := by
       apply monotoneOn_of_hasDerivWithinAt_nonneg (convex_Ici 0)
@@ -54,7 +54,7 @@ lemma exp_le_quad_pos (x : ℝ) : Real.exp x ≤ 1 + x + x ^ 2 / 2 * Real.exp (m
     have hd : ∀ t, HasDerivAt k (1 + t - Real.exp t) t := by
       intro t
       have h1 := ((hasDerivAt_id t).const_add 1).add (((hasDerivAt_id t).pow 2).div_const 2)
-      convert h1.sub (Real.hasDerivAt_exp t) using 1
+      convert! h1.sub (Real.hasDerivAt_exp t) using 1
       simp only [id]; ring
     have hanti : AntitoneOn k (Iic 0) := by
       apply antitoneOn_of_hasDerivWithinAt_nonpos (convex_Iic 0)

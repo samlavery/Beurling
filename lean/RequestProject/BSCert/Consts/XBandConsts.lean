@@ -47,7 +47,7 @@ lemma prod_four_div_le (S : Finset ℕ) (hS : ∀ p ∈ S, p.Prime) :
       Finset.prod_pair (by norm_num)]
     split_ifs <;> norm_num
   have h2 : ∏ p ∈ S.filter (fun p => ¬ p ≤ 3), (4 / (p : ℝ)) ≤ 1 := by
-    apply Finset.prod_le_one
+    apply Finset.prod_le_one₀
     · intro p _; positivity
     · intro p hp
       simp only [mem_filter] at hp

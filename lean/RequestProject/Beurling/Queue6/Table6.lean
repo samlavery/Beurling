@@ -270,7 +270,6 @@ theorem base_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10
     (fun i => s0 Q.sec5 (Sum.inr (Sum.inr i))) m
   have h4 := tsum_subtype_sum (f := fun i => f (Sum.inr (Sum.inr (Sum.inr i))))
     (fun i => s0 Q.sec5 (Sum.inr (Sum.inr (Sum.inr i)))) m
-  simp only at h2 h3 h4
   rw [h1, h2, h3, h4]
   have bt := tB_scale Q m
   have bt' : ∑' x : {i // s0 Q.sec5 (Sum.inr (Sum.inr (Sum.inr (Sum.inl i)))) = m},

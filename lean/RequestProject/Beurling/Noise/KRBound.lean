@@ -123,7 +123,6 @@ lemma sum_Hord_div {n e : ℕ} (hn : n ≠ 0) (he : e ∣ n) (hen : e < n) (he0 
     show e * (e * g / e) = e * g
     rw [Nat.mul_div_cancel_left g he0]
   · intro g _
-    simp only
     rw [Nat.mul_div_cancel_left g he0]
   · intro d _; rfl
 
