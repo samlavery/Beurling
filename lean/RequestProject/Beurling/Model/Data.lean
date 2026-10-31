@@ -168,22 +168,22 @@ lemma designedGammaN_mem (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A
 
 /-! ### The target of the data -/
 
-/-- `u_a`: the solution of `u + u^{θ/2} = a`. -/
-noncomputable def uA (θ : ℝ) : ℝ → ℝ := fun n => solveU (thetaB θ) n
+/-- `u_a`: the solution of `u + h(u) = a`, `h = winH X₀` the θ-free absorption window. -/
+noncomputable def uA (X₀ : ℝ) : ℝ → ℝ := fun n => solveU (winH X₀) n
 
 /-- The heights `γ_k` of the data (Lemma 4.8, with `κ, κ₀, x⁺, a_k` of Section 2.2). -/
 noncomputable def gammaD (θ : ℝ) (X₀ : ℕ) (D : PrimeData) : ℕ → ℝ :=
-  designedGammaN (NCount X₀ D) θ X₀ (kappaParam X₀) (absSet X₀ D) (uA θ) (kappa0Param X₀)
-    (switchOn X₀) (constructionScale X₀)
+  designedGammaN (NCount X₀ D) θ X₀ (kappaParam X₀) (absSet X₀ D) (uA X₀) (kappa0Param X₀)
+    (switchOn (swS θ X₀)) (constructionScale X₀ (swS θ X₀))
 
 /-- The amplitudes `α_k` of the data. -/
 noncomputable def alphaD (θ : ℝ) (X₀ : ℕ) (D : PrimeData) : ℕ → ℝ :=
-  amplitudes θ (kappa0Param X₀) (switchOn X₀) (gammaD θ X₀ D)
+  amplitudes θ (kappa0Param X₀) (switchOn (swS θ X₀)) (gammaD θ X₀ D)
 
 /-- **The target (6) of the data.** -/
 noncomputable def targetD (θ : ℝ) (X₀ : ℕ) (D : PrimeData) : ℝ → ℝ :=
-  target X₀ (kappaParam X₀) (countA (absSet X₀ D)) (absorbedDensityCap (thetaB θ) (absSet X₀ D)
-    (uA θ)) (osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀))
+  target X₀ (kappaParam X₀) (countA (absSet X₀ D)) (absorbedDensityCap (winH X₀) (absSet X₀ D)
+    (uA X₀)) (osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀)))
 
 /-! ### Values of elements -/
 

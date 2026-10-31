@@ -22,7 +22,7 @@ namespace DesignedZero
 
 /-- The numerical parameters of Lemma 4.6 (the hypotheses not involving `Z_B`). -/
 structure DesignParams (θ Λ κ₀ α γ x : ℝ) : Prop where
-  θ_ge : 1 / 20 ≤ θ
+  θ_ge : 2 * designRadius x ≤ θ
   θ_le : θ ≤ 1 / 2
   Λ_ge : 10 ≤ Λ
   κ_ge : Real.exp (-Λ) ≤ κ₀
@@ -112,20 +112,20 @@ def Theorem410InputsBase (θ : ℝ) (F : ℂ → ℂ) : Prop :=
     0 ≤ η ∧ η ≤ θ / 2 ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
     (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
-    AbsorbedHyp (thetaB θ) A u ∧ Monotone ς ∧
+    AbsorbedHyp (winH X₀) A u ∧ Monotone ς ∧
     (∀ x ≥ 1, countA A x ≤ x * Real.exp (-ς (Real.log x))) ∧
     (∀ k, ∀ τ : ℝ, |τ - γ k| ≤ 1 →
-      absorbedBound ς (designRadius (xp k)) (|τ| ^ (1 / (1 - thetaB θ))) ≤ 1 / 16) ∧
+      absorbedBound ς (designRadius (xp k)) (|τ| ^ (8 / 7 : ℝ)) ≤ 1 / 16) ∧
     (∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xp k)),
       F s = ZB s + (∑' j, oscHat θ (α j) (γ j) (xp j) s) + (Dlt k s + lateNoise D (a k) s) +
-        absorbedHat (thetaB θ) A u s) ∧
+        absorbedHat (winH X₀) A u s) ∧
     (∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xp k)), ‖Dlt k s‖ ≤ 1 / 16)
 
 theorem Theorem410InputsBase.absorbed {θ : ℝ} {F : ℂ → ℂ} (h : Theorem410InputsBase θ F) :
     Theorem410InputsAbsorbed θ F := by
   obtain ⟨X₀, T, κ₀, η, α, γ, xp, a, ZB, D, Dlt, A, u, ς, hX, hM1, hM2, hdiff, hclose, hP, hγT,
     hc, hα, hsp, hγx, hη0, hη, ha, hD, hA, hς, hN, hB, hdec, hDlt⟩ := h
-  exact ⟨Real.log X₀, κ₀, η, α, γ, xp, a, ZB, D, Dlt, A, u, ς,
+  exact ⟨Real.log X₀, κ₀, η, α, γ, xp, a, ZB, D, Dlt, A, u, winH X₀, ς,
     fun k => (hP k).toLemma46HypPre hX hM1 hM2 hdiff hclose (hγT k), hc, hα, hsp, hγx, hη0, hη,
     ha, hD, hA, hς, hN, hB, hdec, hDlt⟩
 
@@ -140,7 +140,7 @@ def TheoremAInputsBase (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 
 /-- **Theorem 2.1, refined hypothesis (Lemma 4.2's bounds and Lemma 4.4(a) derived).** -/
 def Theorem21InputsBase : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

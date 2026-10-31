@@ -190,23 +190,32 @@ lemma rpow_neg_two_fifths_le (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) :
   have := Real.add_one_le_exp (Real.log x * (2 / 5))
   norm_num at this ⊢; linarith
 
-/-- `165 Λ x^{-θ/2} ≤ 1/100` (`θ ≥ 1/20`). -/
+/-- `165 Λ x^{-θ/2} ≤ 1/100` (`θ ≥ 2δ_k`, so `θ log x/2 ≥ 9 log log x ≥ 18Λ`). -/
 lemma lateNoise_numeric (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) :
     165 * Λ * x ^ (-(θ / 2)) ≤ 1 / 100 := by
-  have hL := h.L_ge_big
   have hΛ := h.Λ_ge
-  have hΛL : Λ ≤ Real.log x := by
-    have := h.loglog_ge
-    have := Real.log_le_sub_one_of_pos h.L_pos
-    linarith
-  have hmono : x ^ (-(θ / 2)) ≤ x ^ (-(1 / 40 : ℝ)) :=
-    Real.rpow_le_rpow_of_exponent_le h.one_lt_x.le (by linarith [h.θ_ge])
-  refine le_trans (mul_le_mul_of_nonneg_left hmono (by linarith)) ?_
-  rw [h.rpow_eq_exp, show Real.log x * (-(1 / 40 : ℝ)) = -(Real.log x / 40) by ring, Real.exp_neg]
-  have hq := Real.quadratic_le_exp_of_nonneg (show 0 ≤ Real.log x / 40 by linarith)
-  have hpos := Real.exp_pos (Real.log x / 40)
+  have hL := h.L_pos
+  have hll := h.loglog_ge
+  -- `θ L / 2 ≥ 9 ℓ ≥ 18 Λ`
+  have hθL : 18 * Λ ≤ θ * Real.log x / 2 := by
+    have h1 := h.θ_ge
+    unfold designRadius at h1
+    rw [← mul_div_assoc, div_le_iff₀ hL] at h1
+    nlinarith
+  rw [h.rpow_eq_exp, show Real.log x * (-(θ / 2)) = -(θ * Real.log x / 2) by ring, Real.exp_neg]
+  have hmono : Real.exp (18 * Λ) ≤ Real.exp (θ * Real.log x / 2) := Real.exp_le_exp.mpr hθL
+  have h6 : 6 * Λ ≤ Real.exp (6 * Λ) := by linarith [Real.add_one_le_exp (6 * Λ)]
+  have hcube : (6 * Λ) ^ 3 ≤ Real.exp (18 * Λ) := by
+    have e : Real.exp (18 * Λ) = Real.exp (6 * Λ) ^ 3 := by
+      rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+    rw [e]; exact pow_le_pow_left₀ (by linarith) h6 3
+  have hpos := Real.exp_pos (θ * Real.log x / 2)
+  have hΛ3 : 165 * Λ * 100 ≤ (6 * Λ) ^ 3 := by
+    have : 100 ≤ Λ ^ 2 := by nlinarith
+    have e : (6 * Λ) ^ 3 = 216 * Λ * Λ ^ 2 := by ring
+    rw [e]; nlinarith
   rw [← div_eq_mul_inv, div_le_div_iff₀ hpos (by norm_num)]
-  nlinarith
+  linarith
 
 /-- `γ ≥ 2 log x + 5`, from `α γ = κ₀ x^{1-θ}/log x`, `α ≤ 2`, `κ₀ ≥ e^{-Λ}`. -/
 lemma γ_ge_log (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) (hα : α ≤ 2) :
@@ -416,7 +425,7 @@ the hypotheses of Lemma 4.6 (with the bounds of Lemma 4.2 on `Z_B`), the decompo
 lag bound (13) beyond `a_k`, Lemma 4.8(ii) and Lemma 4.4(a). Lemmas 4.6 and 4.7, the bounds on
 the oscillations, the perturbation bound and Rouché's theorem are proved. -/
 def Theorem21InputsPaper : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

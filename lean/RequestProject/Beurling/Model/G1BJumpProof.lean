@@ -44,7 +44,7 @@ theorem lag_absA {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (
       |(PR θ X₀ ω).N u - targetD θ X₀ (DF θ X₀ ω) u| ≤ u ^ lagExponent θ) ∧
     (∀ u, (X₀ : ℝ) ≤ u → u ≤ y * (1 - deltaB θ X₀ ω y) →
       |countA (absSet X₀ (DF θ X₀ ω)) u - ∫ v in (X₀ : ℝ)..u,
-        absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v| ≤ 2 * u ^ (thetaB θ)) := by
+        absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) v| ≤ 2 * u ^ (thetaB θ)) := by
   classical
   have hNice := hN
   obtain ⟨hU, hSG, hnt⟩ := hN
@@ -114,7 +114,7 @@ theorem lag_absA {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (
   have hAeq : realisedA M (capH X₀) ω = absSet X₀ (DF θ X₀ ω) := by
     rw [realisedA_eq hok hnc, hDF]
   have hT := limModel_T_formula h0 hnc
-  have L : LinkedModel θ X₀ M ω (constructionScale X₀) :=
+  have L : LinkedModel θ X₀ M ω (constructionScale X₀ (swS θ X₀)) :=
     ⟨hc.hθ, hX, hU, hT, limModel_linked h0⟩
   have S := limModel_slotFacts h0 hev ht
   have hreg := jitterWidthRegular hX
@@ -155,13 +155,13 @@ theorem lag_absA {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (
   have C : AbsorbedCoupling (realisedSystem M (capH X₀) ω) R.M R.H R.U
       (realisedA M (capH X₀) ω) (realisedLatest M (capH X₀) ω) := realisedCoupling hok
   have hb2 : 0 < thetaB θ := thetaB_pos (by linarith [hc.hθ.1])
-  have hW : AbsorbedWindowHyp (thetaB θ) X₀ (absSet X₀ (DF θ X₀ ω)) (uA θ) := by
+  have hW : AbsorbedWindowHyp (thetaB θ) X₀ (absSet X₀ (DF θ X₀ ω)) (uA X₀) := by
     rw [← hAeq]
     exact ⟨hb2, thetaB_le_one (by linarith [hc.hθ.2]), hX1.le, fun a ha => (hAu a ha).1,
       fun a ha => (hAu a ha).2, C.locFin⟩
   have hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
       |countA (absSet X₀ (DF θ X₀ ω)) u - ∫ v in (X₀ : ℝ)..u,
-        absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v| ≤ 2 * u ^ (thetaB θ) := by
+        absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) v| ≤ 2 * u ^ (thetaB θ) := by
     intro u hu huz
     refine absorbed_target_error_cap_loc hW (by linarith) hu fun v hv hvu => ?_
     refine rhoA_le_L4 hc hev hb hbt hQC hE1 hNice hv ?_
@@ -216,17 +216,17 @@ lemma smoothCount_sub_le (X₀ : ℕ) {a N : ℝ} (ha : 0 ≤ a) (haN : a ≤ N)
 /-- `|R(N) - R(a)| ≤ 10⁻⁹ (N - a)` on `[X₀, ∞)` (Lemma 3.3: `|R'| ≤ 0.02/log`). -/
 lemma osc_sub_le (hc : Cond θ X₀) (D : PrimeData) {a N : ℝ} (ha : (X₀ : ℝ) ≤ a)
     (haN : a ≤ N) :
-    |Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀) N -
-      Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀) a| ≤
+    |Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀)) N -
+      Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀)) a| ≤
         (N - a) / 10 ^ 9 := by
   have hX := hc.hX
   have hX1 := QueueMono.one_lt_of_logX (Nat.cast_nonneg (α := ℝ) X₀) hX
   have hd : ∀ x ∈ Set.Icc a N,
       DifferentiableAt ℝ
-        (Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀)) x :=
+        (Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀))) x :=
     fun x hx => (hasDerivAt_osc _ _ hX1.le (by linarith [hx.1])).differentiableAt
   have hb : ∀ x ∈ Set.Icc a N,
-      ‖deriv (Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀)) x‖ ≤
+      ‖deriv (Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀))) x‖ ≤
         1 / 10 ^ 9 := by
     intro x hx
     have hxX : (X₀ : ℝ) ≤ x := ha.trans hx.1
@@ -353,13 +353,13 @@ theorem jumpCount_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ
   have hT : targetD θ X₀ D Nn - targetD θ X₀ D a =
       ((Rankin.smoothCount X₀ Nn : ℝ) - Rankin.smoothCount X₀ a) +
       (countA (absSet X₀ D) Nn - ∫ v in (X₀ : ℝ)..Nn,
-        absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ) v) -
+        absorbedDensityCap (winH X₀) (absSet X₀ D) (uA X₀) v) -
       (countA (absSet X₀ D) a - ∫ v in (X₀ : ℝ)..a,
-        absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ) v) + (Nn - a) -
+        absorbedDensityCap (winH X₀) (absSet X₀ D) (uA X₀) v) + (Nn - a) -
       ((∫ u in (X₀ : ℝ)..Nn, Target.rhoDet X₀ (kappaParam X₀) u) -
         ∫ u in (X₀ : ℝ)..a, Target.rhoDet X₀ (kappaParam X₀) u) +
-      (Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀) Nn -
-        Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀) a) := by
+      (Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀)) Nn -
+        Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀)) a) := by
     unfold targetD Target.target
     rw [if_neg (not_lt.mpr hNX), if_neg (not_lt.mpr haX)]
     ring

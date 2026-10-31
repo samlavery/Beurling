@@ -519,8 +519,8 @@ variable (θ X₀) in
 target (6)), `0` below `X₀`. -/
 noncomputable def TpCont (ω : JitterΩ) (y : ℝ) : ℝ :=
   if (X₀ : ℝ) ≤ y then 1 - rhoDet X₀ (kappaParam X₀) y -
-    absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) y +
-    deriv (Oscillation.osc θ (alphaD θ X₀ (DF θ X₀ ω)) (gammaD θ X₀ (DF θ X₀ ω)) (switchOn X₀)) y
+    absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) y +
+    deriv (Oscillation.osc θ (alphaD θ X₀ (DF θ X₀ ω)) (gammaD θ X₀ (DF θ X₀ ω)) (switchOn (swS θ X₀))) y
   else 0
 
 variable (θ X₀) in
@@ -547,9 +547,9 @@ theorem integral_TpCont (ω : JitterΩ) {a b : ℝ} (hab : a ≤ b) (hb : (X₀ 
   set D := DF θ X₀ ω
   have hD : LocFinD D := locFinD_DM hX (fun j => clamp01_mem (ω j)) _
   have hA := absSet_locFin (X₀ := X₀) hD
-  set R := Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀)
+  set R := Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀))
   set g : ℝ → ℝ := fun y => 1 - rhoDet X₀ (kappaParam X₀) y -
-    absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ) y + deriv R y
+    absorbedDensityCap (winH X₀) (absSet X₀ D) (uA X₀) y + deriv R y
   set a' := max a (X₀ : ℝ)
   have ha'b : a' ≤ b := max_le hab hb
   have hXa' : (X₀ : ℝ) ≤ a' := le_max_right _ _
@@ -557,7 +557,7 @@ theorem integral_TpCont (ω : JitterΩ) {a b : ℝ} (hab : a ≤ b) (hb : (X₀ 
   have hρ : IntervalIntegrable (rhoDet X₀ (kappaParam X₀)) volume a' b :=
     (intervalIntegrable_rhoDet X₀ hκ0 hX1n hb).mono_set (by
       rw [uIcc_of_le ha'b, uIcc_of_le hb]; exact Icc_subset_Icc hXa' le_rfl)
-  have hρA : IntervalIntegrable (absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ)) volume a' b :=
+  have hρA : IntervalIntegrable (absorbedDensityCap (winH X₀) (absSet X₀ D) (uA X₀)) volume a' b :=
     (intervalIntegrable_absorbedDensityCap _ hA hb2 hX1 hb).mono_set (by
       rw [uIcc_of_le ha'b, uIcc_of_le hb]; exact Icc_subset_Icc hXa' le_rfl)
   have hγ := gammaD_range (θ := θ) hX D
@@ -618,7 +618,7 @@ theorem integral_TpCont (ω : JitterΩ) {a b : ℝ} (hab : a ≤ b) (hb : (X₀ 
   rw [h1, h2, zero_add]
   have hFTC := intervalIntegral.integral_deriv_eq_sub hdR hRint
   have hsplit : ∫ y in a'..b, g y = (b - a') - (∫ y in a'..b, rhoDet X₀ (kappaParam X₀) y) -
-      (∫ y in a'..b, absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ) y) +
+      (∫ y in a'..b, absorbedDensityCap (winH X₀) (absSet X₀ D) (uA X₀) y) +
       ∫ y in a'..b, deriv R y := by
     simp only [g]
     rw [intervalIntegral.integral_add ((hc1.sub hρ).sub hρA) hRint,
@@ -627,7 +627,7 @@ theorem integral_TpCont (ω : JitterΩ) {a b : ℝ} (hab : a ≤ b) (hb : (X₀ 
     simp
   rw [hsplit, hFTC]
   unfold contD
-  rw [show uA θ = (fun n => solveU (thetaB θ) n) from rfl]
+  rw [show uA X₀ = (fun n => solveU (winH X₀) n) from rfl]
   rw [contPart_sub (fun y hy => intervalIntegrable_rhoDet X₀ hκ0 hX1n hy)
     (fun y hy => intervalIntegrable_absorbedDensityCap _ hA hb2 hX1 hy) hXa' ha'b]
 

@@ -141,7 +141,7 @@ lemma exp_neg83_ge : (5 : ℝ) / 10 ^ 37 ≤ Real.exp (-83) := by
 
 /-- `R'`, the derivative of the designed oscillation of the realised data. -/
 noncomputable abbrev Rd (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) : ℝ → ℝ :=
-  deriv (Oscillation.osc θ (alphaD θ X₀ (DF θ X₀ ω)) (gammaD θ X₀ (DF θ X₀ ω)) (switchOn X₀))
+  deriv (Oscillation.osc θ (alphaD θ X₀ (DF θ X₀ ω)) (gammaD θ X₀ (DF θ X₀ ω)) (switchOn (swS θ X₀)))
 
 section Tc
 
@@ -160,7 +160,7 @@ lemma TcR_eq_max (ω : JitterΩ) (v : ℝ) :
 lemma TcR_split (ω : JitterΩ) {v : ℝ} (hv : (X₀ : ℝ) ≤ v) :
     TcR θ X₀ ω (jzX X₀) v = (Target.rhoDet X₀ (kappaParam X₀) X₀ -
         Target.rhoDet X₀ (kappaParam X₀) v) -
-      absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v + Rd θ X₀ ω v +
+      absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) v + Rd θ X₀ ω v +
       KAbsR θ X₀ ω (rhoT θ X₀ ω) v := by
   have hi : KR.Chain.ind X₀ v = 1 := by
     unfold KR.Chain.ind; exact Set.indicator_of_mem (by simpa using hv) _
@@ -185,10 +185,10 @@ lemma absParts {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
     {v : ℝ} (hvX : (X₀ : ℝ) ≤ v) (hv2 : v ≤ 2 * (b + Queue6.Hc X₀ b)) :
     (0 ≤ KAbsR θ X₀ ω (rhoT θ X₀ ω) v ∧ KAbsR θ X₀ ω (rhoT θ X₀ ω) v ≤ (Real.log v ^ 4)⁻¹ ∧
       (Real.log v ≤ Lstar X₀ → KAbsR θ X₀ ω (rhoT θ X₀ ω) v = 0)) ∧
-    (0 ≤ absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v ∧
-      absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v ≤ (Real.log v ^ 4)⁻¹ ∧
+    (0 ≤ absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) v ∧
+      absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) v ≤ (Real.log v ^ 4)⁻¹ ∧
       (Real.log v ≤ Lstar X₀ →
-        absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v = 0)) := by
+        absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) v = 0)) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1' := QueueMono.one_lt_of_logX hX0 hc.hX
   have hv0 : 0 < v := by linarith
@@ -206,7 +206,7 @@ lemma absParts {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
   · refine le_min (tsum_nonneg fun a => ?_) (div_nonneg (by norm_num) hLv0.le)
     unfold absorbedBump
     split_ifs
-    · by_cases hm : v ∈ Icc (uA θ a) a
+    · by_cases hm : v ∈ Icc (uA X₀ a) a
       · rw [Set.indicator_of_mem hm]; exact (Real.rpow_pos_of_pos hv0 _).le
       · rw [Set.indicator_of_notMem hm]
     · exact le_rfl
@@ -246,8 +246,8 @@ lemma Tc_pair_le {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (
   obtain ⟨⟨hK0u, hKu, hKu0⟩, ⟨hA0u, hAu, hAu0⟩⟩ := absParts hc hev hb hbt hQC hE1 hN hT hu hu2
   set Ks := KAbsR θ X₀ ω (rhoT θ X₀ ω) s
   set Ku := KAbsR θ X₀ ω (rhoT θ X₀ ω) u
-  set As := absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) s
-  set Au := absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) u
+  set As := absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) s
+  set Au := absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) u
   have hlog : Real.log s ≤ Real.log u := Real.log_le_log hs0 hsu
   have hLs0 : 0 < Real.log s := by linarith [Real.log_le_log (by linarith) hs, hc.hX]
   have hinv : (Real.log u ^ 4)⁻¹ ≤ (Real.log s ^ 4)⁻¹ :=

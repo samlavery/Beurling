@@ -19,7 +19,7 @@ For a landing window `J = [P + i/2, P + j/2)` of `𝒥_P` (`AdmJ`), the compensa
 `C(b) - C(a) + 1` (`card_le_contD`: consecutive placed slots with unit jumps are `≥ 1` apart in
 `C`). The slot-density excess is absorbed as in the paper (§6.2, after the definition of `μ̄`):
 
-* below `x₁ = switchOn X₀ 0` the oscillation vanishes, so `C(b) - C(a) ≤ b - a`
+* below `x₁ = switchOn (swS θ X₀) 0` the oscillation vanishes, so `C(b) - C(a) ≤ b - a`
   (`contD_upper_below`; the density is `≤ 1`, not only `≤ 1 + 1/(κt)`);
 * if `b > x₁`, then `log log (5P) ≥ log X₀`, `H = H_std` on `[5P, 8P]` (`capH_eq_std_large`) and
   the gap `H(8P) - H(5P) ≥ 7 H(5P)/log(8P)` (`capH_gap`) exceeds the excess
@@ -62,9 +62,9 @@ lemma slot_gt (k : ℕ) : (X₀ : ℝ) < h.limModel.slot (k + 1) := by
   linarith
 
 /-- **Below `x₁` the slot density is at most `1`**: `C(x') - C(x) ≤ x' - x` for
-`X₀ ≤ x ≤ x' ≤ x₁ = switchOn X₀ 0` (the oscillation vanishes there, `ρ_det, ρ̄_A ≥ 0`). -/
+`X₀ ≤ x ≤ x' ≤ x₁ = switchOn (swS θ X₀) 0` (the oscillation vanishes there, `ρ_det, ρ̄_A ≥ 0`). -/
 lemma contD_upper_below (D : PrimeData) (hD : LocFinD D) {x x' : ℝ} (hx : (X₀ : ℝ) ≤ x)
-    (hxx : x ≤ x') (hx1 : x' ≤ switchOn X₀ 0) :
+    (hxx : x ≤ x') (hx1 : x' ≤ switchOn (swS θ X₀) 0) :
     contD θ X₀ D x' - contD θ X₀ D x ≤ x' - x := by
   have hX := h.hX
   have hX1 : (1 : ℝ) < X₀ := QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hX
@@ -73,19 +73,19 @@ lemma contD_upper_below (D : PrimeData) (hD : LocFinD D) {x x' : ℝ} (hx : (X�
   obtain ⟨hκ0, -⟩ := kappa_facts hX
   have hA := absSet_locFin (X₀ := X₀) hD
   unfold contD
-  rw [show uA θ = (fun n => solveU (thetaB θ) n) from rfl]
+  rw [show uA X₀ = (fun n => solveU (winH X₀) n) from rfl]
   rw [contPart_sub (fun y hy => intervalIntegrable_rhoDet X₀ hκ0 hX1n hy)
     (fun y hy => intervalIntegrable_absorbedDensityCap _ hA hb hX1 hy) hx hxx]
   have h1 : 0 ≤ ∫ u in x..x', Target.rhoDet X₀ (kappaParam X₀) u :=
     intervalIntegral.integral_nonneg hxx fun u hu => rhoDet_nonneg X₀ hκ0 (by linarith [hu.1])
-  have h2 : 0 ≤ ∫ u in x..x', absorbedDensityCap (thetaB θ) (absSet X₀ D)
-      (fun n => solveU (thetaB θ) n) u :=
+  have h2 : 0 ≤ ∫ u in x..x', absorbedDensityCap (winH X₀) (absSet X₀ D)
+      (fun n => solveU (winH X₀) n) u :=
     intervalIntegral.integral_nonneg hxx fun u hu =>
       (absorbedDensityCap_mem _ (by linarith [hu.1]) _).1
-  have hsp := switchOn_spacing (X₀ : ℝ)
-  have hR1 : osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀) x' = 0 :=
+  have hsp := switchOn_spacing (swS θ (X₀ : ℝ))
+  have hR1 : osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀)) x' = 0 :=
     Target.osc_eq_zero_of_le hsp (by linarith) hx1
-  have hR2 : osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀) x = 0 :=
+  have hR2 : osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀)) x = 0 :=
     Target.osc_eq_zero_of_le hsp (by linarith) (hxx.trans hx1)
   rw [hR1, hR2]
   linarith
@@ -402,7 +402,7 @@ theorem cand_card_le {m i j : ℕ} (hJ : Queue6.AdmJ X₀ m i j) (S : Finset ℕ
     obtain ⟨hgt, -, hHk⟩ := hcand k hk
     refine ⟨hp, hu, max_lt hgt (by linarith), by rw [hb]; linarith⟩) haX hab
   have hD := locFinD_DM hX h.hU M
-  by_cases hb1 : b ≤ switchOn X₀ 0
+  by_cases hb1 : b ≤ switchOn (swS θ X₀) 0
   · have hC := contD_upper_below h (DM M U) hD haX hab hb1
     linarith
   · push_neg at hb1

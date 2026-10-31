@@ -176,19 +176,19 @@ lemma solveU_mono {b : ℝ} (hb : 0 < b) : Monotone (solveU b) := by
     have := Real.rpow_le_rpow h0' hlt.le hb.le
     linarith
 
-lemma measurable_uA {θ : ℝ} (hθ : 0 < θ) : Measurable (uA θ) :=
+lemma measurable_uA {θ : ℝ} (hθ : 0 < θ) : Measurable (uA X₀) :=
   (solveU_mono (thetaB_pos (by linarith))).measurable
 
 /-- The bump `1[u_a ≤ v ≤ a] v^{-b}` is jointly measurable. -/
 lemma measurable_bump {θ : ℝ} (hθ : 0 < θ) :
     Measurable (Function.uncurry fun a v : ℝ =>
-      (Icc (uA θ a) a).indicator (fun w => w ^ (-(thetaB θ))) v) := by
-  have hS : MeasurableSet {p : ℝ × ℝ | uA θ p.1 ≤ p.2 ∧ p.2 ≤ p.1} :=
+      (Icc (uA X₀ a) a).indicator (fun w => w ^ (-(thetaB θ))) v) := by
+  have hS : MeasurableSet {p : ℝ × ℝ | uA X₀ p.1 ≤ p.2 ∧ p.2 ≤ p.1} :=
     (measurableSet_le ((measurable_uA hθ).comp measurable_fst) measurable_snd).inter
       (measurableSet_le measurable_snd measurable_fst)
   have : (Function.uncurry fun a v : ℝ =>
-      (Icc (uA θ a) a).indicator (fun w => w ^ (-(thetaB θ))) v) =
-      {p : ℝ × ℝ | uA θ p.1 ≤ p.2 ∧ p.2 ≤ p.1}.indicator fun p => p.2 ^ (-(thetaB θ)) := by
+      (Icc (uA X₀ a) a).indicator (fun w => w ^ (-(thetaB θ))) v) =
+      {p : ℝ × ℝ | uA X₀ p.1 ≤ p.2 ∧ p.2 ≤ p.1}.indicator fun p => p.2 ^ (-(thetaB θ)) := by
     funext p; simp [Set.indicator, Function.uncurry]
   rw [this]
   exact (measurable_snd.pow_const _).indicator hS
@@ -201,7 +201,7 @@ include hD hL hP
 /-- **The capped absorbed density `ρ̄_A(v)` is jointly measurable.** -/
 theorem measurable_rhoCap (hX : 10 ^ 8 ≤ Real.log X₀) {θ : ℝ} (hθ : 0 < θ) :
     Measurable fun p : Ω × ℝ =>
-      absorbedDensityCap (thetaB θ) (absSet X₀ (D p.1)) (uA θ) p.2 := by
+      absorbedDensityCap (winH X₀) (absSet X₀ (D p.1)) (uA X₀) p.2 := by
   classical
   unfold absorbedDensityCap absorbedDensity absorbedBump
   refine Measurable.min ?_ (measurable_const.div (Real.measurable_log.comp measurable_snd))
@@ -211,7 +211,7 @@ theorem measurable_rhoCap (hX : 10 ^ 8 ≤ Real.log X₀) {θ : ℝ} (hθ : 0 < 
   refine (finite_le hL hP ω (v + v ^ (thetaB θ))).subset ?_
   rintro e ⟨hq, hF⟩
   refine ⟨hq.2.1, ?_⟩
-  have hmem : v ∈ Icc (uA θ (eval (D ω) e)) (eval (D ω) e) := by
+  have hmem : v ∈ Icc (uA X₀ (eval (D ω) e)) (eval (D ω) e) := by
     by_contra hc
     exact hF (indicator_of_notMem hc _)
   have hpos : 0 ≤ eval (D ω) e := le_trans zero_le_one (one_le_eval (hP ω).pos hq.2.1)
@@ -290,7 +290,7 @@ lemma lt_abs_of_oscTerm_ne {θ α γ xp x : ℝ} (hxp : 0 < xp) (h : oscTerm θ 
 /-- **The oscillation is jointly measurable** in measurable amplitudes and heights. -/
 theorem measurable_osc_fam {θ : ℝ} (hX : 10 ^ 8 ≤ Real.log X₀) {α γ : Ω → ℕ → ℝ}
     (hα : ∀ j, Measurable fun ω => α ω j) (hγ : ∀ j, Measurable fun ω => γ ω j) :
-    Measurable fun p : Ω × ℝ => osc θ (α p.1) (γ p.1) (switchOn X₀) p.2 := by
+    Measurable fun p : Ω × ℝ => osc θ (α p.1) (γ p.1) (switchOn (swS θ X₀)) p.2 := by
   have hX1 : (1 : ℝ) ≤ X₀ := (one_lt_of_logX (Nat.cast_nonneg _) hX).le
   unfold osc
   refine measurable_tsum_of_finite_support (fun j => ?_) (fun p => ?_)

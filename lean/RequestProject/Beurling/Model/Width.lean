@@ -81,13 +81,13 @@ theorem floor_quasi_mono (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) {x s
 
 /-- The construction scale satisfies `a_k + 2H(a_k) ≤ x⁺_k + 3`. -/
 theorem scale_add_two_capH_le (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) (k : ℕ) :
-    constructionScale X₀ k + 2 * capH X₀ (constructionScale X₀ k) ≤ switchOn X₀ k + 3 := by
+    constructionScale X₀ (swS θ X₀) k + 2 * capH X₀ (constructionScale X₀ (swS θ X₀) k) ≤ switchOn (swS θ X₀) k + 3 := by
   obtain ⟨hXa, ha0, -, hxa⟩ := constructionScale_spec hX0 hX k
-  set a := constructionScale X₀ k
+  set a := constructionScale X₀ (swS θ X₀) k
   have hX1 := one_lt_of_logX hX0 hX
   -- `a ≥ X₀ + 1`
-  have hX2 : X₀ ^ 2 + 1 ≤ switchOn X₀ k := by
-    have h0 : X₀ ^ 2 + 1 ≤ switchOn X₀ 0 := by
+  have hX2 : X₀ ^ 2 + 1 ≤ switchOn (swS θ X₀) k := by
+    have h0 : X₀ ^ 2 + 1 ≤ switchOn (swS θ X₀) 0 := by
       show X₀ ^ 2 + 1 ≤ Real.exp (X₀ ^ 2)
       linarith [Real.add_one_le_exp (X₀ ^ 2)]
     exact h0.trans (switchOn_mono X₀ (Nat.zero_le k))

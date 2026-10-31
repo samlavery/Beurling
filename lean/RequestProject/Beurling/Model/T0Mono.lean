@@ -12,7 +12,7 @@ The `A`-free target `T₀ = target X₀ κ 0 0 R` of §5.6 (`LocalPNT.T0`) split
 set: the capped density of `∅` vanishes on `[X₀, ∞)`).
 
 * `T0_mono_designed` : `T₀` is monotone on `[X₀, ∞)` for designed heights `γ`, the designed
-  amplitudes and the switch-on points `x_k = switchOn X₀ k`, under (84) (`ShortIntervalPNTFrom`);
+  amplitudes and the switch-on points `x_k = switchOn (swS θ X₀) k`, under (84) (`ShortIntervalPNTFrom`);
 * `theorem_5_24_data` : `LocalPNT.theorem_5_24_of_lag` with `hmono`, `hα`, `h0`, `hsp`
   discharged, for the heights and amplitudes `gammaD`, `alphaD` of any prime data (in
   particular the realised data `DM (Mcl θ X₀ ω) (Ucl ω)` of the construction).
@@ -46,11 +46,11 @@ lemma contPart_zero_eq {X₀ : ℕ} (hX1 : (1 : ℝ) < X₀) (κ b : ℝ) (u R :
   exact (min_eq_left (by positivity)).symm
 
 /-- **`T₀` is non-decreasing on `[X₀, ∞)`** (positivity of the target, Lemma 3.3), for designed
-heights `γ`, the designed amplitudes and `x_k = switchOn X₀ k`. -/
-theorem T0_mono_designed {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+heights `γ`, the designed amplitudes and `x_k = switchOn (swS θ X₀) k`. -/
+theorem T0_mono_designed {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) {γ : ℕ → ℝ}
     (hγ : DesignedRange θ X₀ γ) :
-    MonotoneOn (LocalPNT.T0 θ X₀ (amplitudes θ (kappa0Param X₀) (switchOn X₀) γ) γ (switchOn X₀))
+    MonotoneOn (LocalPNT.T0 θ X₀ (amplitudes θ (kappa0Param X₀) (switchOn (swS θ X₀)) γ) γ (switchOn (swS θ X₀)))
       (Ici (X₀ : ℝ)) := by
   have hX1 : (1 : ℝ) < X₀ := QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hX
   intro x hx x' hx' hxx
@@ -71,23 +71,23 @@ theorem T0_mono_designed {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 
   · exact hx'
 
 /-- **Theorem 5.24 on `Good(<z)` for the designed oscillation of prime data `D`**:
-`LocalPNT.theorem_5_24_of_lag` at `α = alphaD`, `γ = gammaD`, `x_k = switchOn X₀ k`, with the
+`LocalPNT.theorem_5_24_of_lag` at `α = alphaD`, `γ = gammaD`, `x_k = switchOn (swS θ X₀) k`, with the
 positivity margin (`T₀` monotone, Lemma 3.3), `|α_k| ≤ 2`, `x₀ ≥ e^{X₀²}` and the spacing
 discharged. The remaining inputs are those of `theorem_5_24_of_lag` (the queue-lag bound up to
 the horizon, the absorbed-count bound and the floor of `P`) and (84). -/
 theorem theorem_5_24_data {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} (D : PrimeData)
-    {Xm zc y : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+    {Xm zc y : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hev : Even X₀) (hHB : ShortIntervalPNTFrom X₀) (cntA rhoA : ℝ → ℝ)
     (hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 40 : ℝ) ≤ Xm) (hXmX : Xm ≤ X₀)
     (hfl : ∀ u, u < Xm → P.N u = ⌊u⌋₊)
     (hlag : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
       |P.N u - Target.target X₀ (LocalPNT.kap X₀) cntA rhoA
-        (osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀)) u| ≤ u ^ lagExponent θ)
+        (osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀))) u| ≤ u ^ lagExponent θ)
     (hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc → |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| ≤ 2 * u ^ (thetaB θ))
     (hy : (X₀ : ℝ) ≤ y) (hyz : y ≤ zc) :
     LocalPNT.Theorem524Concl P X₀ y :=
   LocalPNT.theorem_5_24_of_lag hθ hX hev (fun k => abs_alphaD_le hX D k) le_rfl
-    (switchOn_spacing X₀).exp_le (T0_mono_designed hθ hX hHB (gammaD_range hX D)) cntA rhoA
+    (switchOn_spacing _).exp_le (T0_mono_designed hθ hX hHB (gammaD_range hX D)) cntA rhoA
     hXm hXmX hfl hlag hA hy hyz
 
 end BModel

@@ -78,7 +78,7 @@ theorem rhoA_le_QE {t : ℕ} {ω : JitterΩ} (hQC : ω ∈ QC (okQ θ X₀) (tq 
     (hZX : (X₀ : ℝ) ≤ Z) (hZt : 4 * Z + 2 ≤ t) {u : ℝ} (hu : (X₀ : ℝ) ≤ u)
     (h2y : 2 * AbsorbEmpty.absorbYAt X₀ (2 * u) ≤ Z)
     (hut : 20 * u / Real.log u ^ 11 + 5 ≤ t) :
-    absorbedDensity (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) u ≤ Real.log u ^ (-4 : ℤ) := by
+    absorbedDensity (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) u ≤ Real.log u ^ (-4 : ℤ) := by
   classical
   obtain ⟨hU, hSG, hnt⟩ := hN
   have hX := hc.hX
@@ -147,7 +147,7 @@ theorem rhoA_le_QE {t : ℕ} {ω : JitterΩ} (hQC : ω ∈ QC (okQ θ X₀) (tq 
     have hXb := X₀_ge_two_pow hX
     linarith
   have hT := limModel_T_formula h0 hnc
-  have L : LinkedModel θ X₀ M ω (constructionScale X₀) :=
+  have L : LinkedModel θ X₀ M ω (constructionScale X₀ (swS θ X₀)) :=
     ⟨hc.hθ, hX, hU, hT, limModel_linked h0⟩
   have S := limModel_slotFacts h0 hev ht
   have hreg := jitterWidthRegular hX
@@ -217,7 +217,7 @@ theorem rhoA_le_QE {t : ℕ} {ω : JitterΩ} (hQC : ω ∈ QC (okQ θ X₀) (tq 
     exact_mod_cast lt_of_lt_of_le this (h2.trans hut)
   have hclu := cluster_of_QE' hc hev hE1 hTB h0 hSG hu hvt hm1 hm2
   have hmain := lemma626_horizon hc.hθ hX M ω hU (limModel_placed_infinite h0)
-    (constructionScale X₀) hT Real.log
+    (constructionScale X₀ (swS θ X₀)) hT Real.log
     (fun x hx => ⟨Real.log_nonneg (by linarith), le_rfl⟩)
     (fun x hx _ => landing_of_linked L S hreg hok hx)
     (fun x hx hearly => landingInit_of_linked L S hreg hok hx hearly) hZX hQ hcl u hu h2y hclu

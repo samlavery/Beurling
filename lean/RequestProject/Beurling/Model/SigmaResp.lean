@@ -88,7 +88,7 @@ lemma KAbsR_eq_zero_of_small (ω : JitterΩ) (g : ℝ → ℝ) {t : ℝ}
 
 /-- `ρ_𝒜(t) = 0` for `log t ≤ L_* = Λ² e^{s_H} - 1`. -/
 lemma rhoA_eq_zero_of_small (ω : JitterΩ) {t : ℝ} (ht : Real.log t ≤ Lstar X₀) :
-    absorbedDensity (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) t = 0 := by
+    absorbedDensity (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) t = 0 := by
   have hb : 0 < thetaB θ := thetaB_pos (by linarith [hc.hθ.1])
   have hb1 : thetaB θ ≤ 1 := (thetaB_le_quarter (by linarith [hc.hθ.2])).trans (by norm_num)
   unfold absorbedDensity
@@ -104,15 +104,15 @@ lemma rhoA_eq_zero_of_small (ω : JitterΩ) {t : ℝ} (ht : Real.log t ≤ Lstar
     have ha1 : 1 ≤ a := by
       rw [← hev]; exact one_le_evalD hc hlive
     obtain ⟨hu0, hu⟩ := solveU_spec hb (show 0 ≤ a by linarith)
-    have hU : uA θ a = solveU (thetaB θ) a := rfl
+    have hU : uA X₀ a = solveU (winH X₀) a := rfl
     rw [hU] at h1
-    have hhalf : a / 2 ≤ solveU (thetaB θ) a := by
-      rcases le_or_gt 1 (solveU (thetaB θ) a) with hu1 | hu1
-      · have : solveU (thetaB θ) a ^ (thetaB θ) ≤ solveU (thetaB θ) a :=
+    have hhalf : a / 2 ≤ solveU (winH X₀) a := by
+      rcases le_or_gt 1 (solveU (winH X₀) a) with hu1 | hu1
+      · have : solveU (winH X₀) a ^ (thetaB θ) ≤ solveU (winH X₀) a :=
           Real.rpow_le_self_of_one_le hu1 hb1
         linarith
       · exfalso
-        have : solveU (thetaB θ) a ^ (thetaB θ) ≤ 1 := Real.rpow_le_one hu0 hu1.le hb.le
+        have : solveU (winH X₀) a ^ (thetaB θ) ≤ 1 := Real.rpow_le_one hu0 hu1.le hb.le
         -- then `a ≤ 2`, contradicting `log a > Λ² e^{s_H}`
         have ha2 : a ≤ 2 := by linarith
         have : Real.log a ≤ Real.log 2 := Real.log_le_log (by linarith) ha2
@@ -133,10 +133,10 @@ lemma rhoA_eq_zero_of_small (ω : JitterΩ) {t : ℝ} (ht : Real.log t ≤ Lstar
 
 omit hc in
 /-- `R' = 0` below `x₁ ≥ e^{X₀²}`. -/
-lemma deriv_osc_low (α γ : ℕ → ℝ) {t : ℝ} (ht0 : 0 < t) (ht : t < switchOn X₀ 0) :
-    deriv (Oscillation.osc θ α γ (switchOn X₀)) t = 0 := by
-  have hev : Oscillation.osc θ α γ (switchOn X₀) =ᶠ[nhds t] fun _ => 0 := by
-    have hmem : Ioo (0 : ℝ) (switchOn X₀ 0) ∈ nhds t := Ioo_mem_nhds ht0 ht
+lemma deriv_osc_low (α γ : ℕ → ℝ) {t : ℝ} (ht0 : 0 < t) (ht : t < switchOn (swS θ X₀) 0) :
+    deriv (Oscillation.osc θ α γ (switchOn (swS θ X₀))) t = 0 := by
+  have hev : Oscillation.osc θ α γ (switchOn (swS θ X₀)) =ᶠ[nhds t] fun _ => 0 := by
+    have hmem : Ioo (0 : ℝ) (switchOn (swS θ X₀) 0) ∈ nhds t := Ioo_mem_nhds ht0 ht
     filter_upwards [hmem] with x hx
     exact Target.osc_eq_zero_of_le (switchOn_spacing _) hx.1 hx.2.le
   rw [hev.deriv_eq]
@@ -155,9 +155,9 @@ variable (hc : Cond θ X₀)
 include hc
 
 /-- `f = K_𝒜 ρ̃ - ρ̄_𝒜` on `[X₀, x₁)`, `f = 0` below `X₀`. -/
-lemma fA_eq (ω : JitterΩ) {t : ℝ} (ht : t < switchOn X₀ 0) :
+lemma fA_eq (ω : JitterΩ) {t : ℝ} (ht : t < switchOn (swS θ X₀) 0) :
     fA θ X₀ ω t = if (X₀ : ℝ) ≤ t then KAbsR θ X₀ ω (rhoT θ X₀ ω) t -
-      absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) t else 0 := by
+      absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) t else 0 := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := QueueMono.one_lt_of_logX hX0 hc.hX
   unfold fA
@@ -165,7 +165,7 @@ lemma fA_eq (ω : JitterΩ) {t : ℝ} (ht : t < switchOn X₀ 0) :
   · have hi : KR.Chain.ind X₀ t = 1 := by
       unfold KR.Chain.ind; exact Set.indicator_of_mem (by simpa using hge) _
     have hT : TpCont θ X₀ ω t = 1 - Target.rhoDet X₀ (kappaParam X₀) t -
-        absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) t := by
+        absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) t := by
       unfold TpCont
       rw [if_pos hge, deriv_osc_low (X₀ := X₀) _ _ (by linarith) ht]
       ring
@@ -310,7 +310,7 @@ lemma rhoCap_le_L4 {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ}
     (hQC : ω ∈ QC (okQ θ X₀) (tq θ X₀) t) (hE1 : ∀ n, tE1 X₀ n < t → ω ∈ E1ev θ X₀ n)
     (hN : ω ∈ NiceEv θ X₀) {u : ℝ} (huX : (X₀ : ℝ) ≤ u)
     (hu2 : u ≤ 2 * (b + Queue6.Hc X₀ b)) :
-    absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) u ≤ (Real.log u ^ 4)⁻¹ := by
+    absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) u ≤ (Real.log u ^ 4)⁻¹ := by
   have hX := hc.hX
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1' := QueueMono.one_lt_of_logX hX0 hX
@@ -322,7 +322,7 @@ lemma rhoCap_le_L4 {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ}
     have := four_capH_le hX0 hX hb; linarith
   set Λ := Real.log X₀ with hΛdef
   by_cases hsmall : Real.log u ≤ Lstar X₀
-  · have : absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) u = 0 := by
+  · have : absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) u = 0 := by
       unfold absorbedDensityCap
       rw [rhoA_eq_zero_of_small hc ω hsmall]
       exact min_eq_left (div_nonneg (by norm_num) hLu0.le)
@@ -418,7 +418,7 @@ lemma fA_bound {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
     (hT : KR.TNP.Hyp (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω) (Xm X₀) (Zc X₀ b) (1 / 1000)
       (1 / 1000) (hbsEps X₀) epsH (epsH / 10))
     {u : ℝ} (huX : (X₀ : ℝ) ≤ u) (hu2 : u ≤ 2 * (b + Queue6.Hc X₀ b))
-    (hux : u < switchOn X₀ 0) :
+    (hux : u < switchOn (swS θ X₀) 0) :
     |fA θ X₀ ω u| ≤ (Real.log u ^ 4)⁻¹ ∧ (Real.log u ≤ Lstar X₀ → fA θ X₀ ω u = 0) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1' := QueueMono.one_lt_of_logX hX0 hc.hX
@@ -427,11 +427,11 @@ lemma fA_bound {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
     linarith [Real.log_le_log (by linarith) huX, hc.hX]
   rw [fA_eq hc ω hux, if_pos huX]
   have hK0 : 0 ≤ KAbsR θ X₀ ω (rhoT θ X₀ ω) u := KAbsR_nonneg ω (rhoT_nonneg ω) u
-  have hA0 : 0 ≤ absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) u := by
+  have hA0 : 0 ≤ absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) u := by
     refine le_min (tsum_nonneg fun a => ?_) (div_nonneg (by norm_num) hLu0.le)
     unfold absorbedBump
     split_ifs
-    · by_cases hm : u ∈ Icc (uA θ a) a
+    · by_cases hm : u ∈ Icc (uA X₀ a) a
       · rw [Set.indicator_of_mem hm]; exact (Real.rpow_pos_of_pos hu0 _).le
       · rw [Set.indicator_of_notMem hm]
     · exact le_rfl
@@ -446,7 +446,7 @@ lemma fA_bound {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
   · rw [abs_le]; constructor <;> linarith
   · have hK : KAbsR θ X₀ ω (rhoT θ X₀ ω) u = 0 :=
       KAbsR_eq_zero_of_small hc ω _ (by unfold Lstar at hsmall; linarith)
-    have hA : absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) u = 0 := by
+    have hA : absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) u = 0 := by
       unfold absorbedDensityCap
       rw [rhoA_eq_zero_of_small hc ω hsmall]
       exact min_eq_left (div_nonneg (by norm_num) hLu0.le)
@@ -522,7 +522,7 @@ theorem sigmaAResp_R {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : �
     have h2 := exp_sH_ge
     nlinarith
   -- the heights read lie below `x₁`
-  have hsw : ∀ u : ℝ, 0 < u → u ≤ 2 * y → u < switchOn X₀ 0 := by
+  have hsw : ∀ u : ℝ, 0 < u → u ≤ 2 * y → u < switchOn (swS θ X₀) 0 := by
     intro u hu0 hu
     show u < Real.exp ((X₀ : ℝ) ^ 2)
     have h1 : Real.log u ≤ Real.log 2 + Real.log y := by
@@ -550,7 +550,7 @@ theorem sigmaAResp_R {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : �
       linarith
   have hg0 : ∀ u : ℝ, u < X₀ → fA θ X₀ ω u = 0 := by
     intro u hu
-    rw [fA_eq hc ω (lt_of_lt_of_le hu (switchOn_zero_ge _)), if_neg (not_le.mpr hu)]
+    rw [fA_eq hc ω (lt_of_lt_of_le hu (switchOn_zero_ge_swS _ _)), if_neg (not_le.mpr hu)]
   have hblk : ∀ (j : ℕ) (u : ℝ), 2 ^ j * (X₀ : ℝ) ≤ u → u ≤ 2 * (2 ^ j * X₀) →
       |fA θ X₀ ω u| ≤ bj j := by
     intro j u h1 h2

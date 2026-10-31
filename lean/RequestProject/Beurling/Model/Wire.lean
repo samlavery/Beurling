@@ -43,21 +43,21 @@ lemma TpCont_abs_le (ω : JitterΩ) (t : ℝ) : |TpCont θ X₀ ω t| ≤ 2 := b
     have hdt1 : Target.rhoDet X₀ (kappaParam X₀) t ≤ 1 + 1 / 100 :=
       (BaseRange.rhoDet_le_one_add X₀ hκ0 ht0).trans (by linarith [inv_kappa_le hc hge])
     set D := DF θ X₀ ω
-    have hA1 : absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ) t ≤ 1 / 100 := by
+    have hA1 : absorbedDensityCap (winH X₀) (absSet X₀ D) (uA X₀) t ≤ 1 / 100 := by
       refine (min_le_right _ _).trans ?_
       rw [div_le_div_iff₀ (by linarith) (by norm_num)]; linarith
-    have hA0 : 0 ≤ absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ) t := by
+    have hA0 : 0 ≤ absorbedDensityCap (winH X₀) (absSet X₀ D) (uA X₀) t := by
       refine le_min (tsum_nonneg fun a => ?_) (div_nonneg (by norm_num) (by linarith))
       unfold absorbedBump
       split_ifs
-      · by_cases hm : t ∈ Icc (uA θ a) a
+      · by_cases hm : t ∈ Icc (uA X₀ a) a
         · rw [Set.indicator_of_mem hm]; exact (Real.rpow_pos_of_pos ht0 _).le
         · rw [Set.indicator_of_notMem hm]
       · exact le_rfl
     have hR := abs_deriv_osc_le hc.hθ hc.hX (gammaD_range (θ := θ) hc.hX D) hge
     have hR1 : 0.02 / Real.log t ≤ 1 / 100 := by
       rw [div_le_div_iff₀ (by linarith) (by norm_num)]; linarith
-    have hR2 : |deriv (Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀)) t| ≤
+    have hR2 : |deriv (Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀))) t| ≤
         1 / 100 := hR.trans hR1
     have hR' := abs_le.mp hR2
     unfold TpCont; rw [if_pos hge, abs_le]

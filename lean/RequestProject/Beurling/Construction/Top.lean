@@ -38,11 +38,11 @@ namespace Construction
 /-- `PartIRest` without Lemma 6.26. -/
 def PartIRestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (M : SlotModel X₀) : Prop :=
-  (∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + u n ^ (thetaB θ) = n) ∧
-    (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (thetaB θ) A u)
-      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (switchOn X₀)) x) ∧
+  (∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + winH X₀ (u n) = n) ∧
+    (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (winH X₀) A u)
+      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (switchOn (swS θ X₀))) x) ∧
     M.QueueWindowData ∧
     ∃ κp : ℝ → ℝ,
     (∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x) ∧
@@ -55,12 +55,12 @@ def PartIRestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : 
 Rankin bound for `A`: the pieces of `D̂_{<a_k}` and the construction scales. -/
 def Theorem410RestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ)
     (a : ℕ → ℝ) : Prop :=
-  (∀ k, Lemma48PiecesCount X₀ (heightScale θ (kappa0Param X₀) (switchOn X₀ k))
+  (∀ k, Lemma48PiecesCount X₀ (heightScale θ (kappa0Param X₀) (switchOn (swS θ X₀) k))
       (earlyOf P θ X₀ (kappaParam X₀) A u
-        (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (switchOn X₀) a k)) ∧
-    (∀ k, 0 < a k ∧ a k ≤ switchOn X₀ k ∧ switchOn X₀ k ≤ (1 + 1 / 1000) * a k)
+        (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (switchOn (swS θ X₀)) a k)) ∧
+    (∀ k, 0 < a k ∧ a k ≤ switchOn (swS θ X₀) k ∧ switchOn (swS θ X₀) k ≤ (1 + 1 / 1000) * a k)
 
 /-- (HBS) for the realised system at every height and the cluster event at every height. -/
 def SparsityInputs (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
@@ -73,7 +73,7 @@ bound for `A`.** As `Theorem21InputsFix`, with those two inputs replaced by the 
 with the construction, (HBS) and the cluster event, and with the probability budget replaced by
 the per-scale bounds of Table 1. -/
 def Theorem21InputsSp : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -109,7 +109,7 @@ theorem theorem21InputsFixP_of_sp (h : Theorem21InputsSp) : Theorem21InputsFixP 
     simp only [target, if_pos hx]
   let R : GreedyRun X₀ := ⟨M, capH X₀, ω, hTlow⟩
   have C' : AbsorbedCoupling (P ω) R.M R.H R.U A latest := C
-  have h626 := lemma626_construction C' hlog hθ.1 (by linarith [hθ.2]) rfl hω hHBS hX0m hX0mX hcl
+  have h626 := lemma626_construction C' hlog rfl hω hHBS hX0m hX0mX hcl
   have hrank := rankinA_construction C' hlog rfl hω hHBS hX0m
   exact ⟨A, u, a, M, latest, ⟨hAu, C'.locFin, h626, hT, hq, κp, hκp, hland, hinit⟩,
     ⟨C.rule, hpieces, ha, hrank⟩⟩

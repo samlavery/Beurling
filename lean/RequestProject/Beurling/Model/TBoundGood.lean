@@ -317,7 +317,7 @@ theorem lemma626_G0 {n : ℕ} (hn : 2 ≤ n) {ω : JitterΩ} (hω : ω ∈ G0 θ
       ClusterUpTo (realisedSystem M (capH X₀) ω) X₀ (4 * v / Real.log v ^ 11) (capM1 X₀ v) :=
     fun v hv hvZ => hclv v hv (by linarith)
   have hT := limModel_T_formula h0 hnc
-  have L : LinkedModel θ X₀ M ω (constructionScale X₀) :=
+  have L : LinkedModel θ X₀ M ω (constructionScale X₀ (swS θ X₀)) :=
     ⟨hc.hθ, hX, hU, hT, limModel_linked h0⟩
   have S := limModel_slotFacts h0 hev ht
   have hreg := jitterWidthRegular hX
@@ -326,7 +326,7 @@ theorem lemma626_G0 {n : ℕ} (hn : 2 ≤ n) {ω : JitterΩ} (hω : ω ∈ G0 θ
     · exact hy.le.trans hZX
     · exact hy.trans ((by linarith : u / 2 ≤ x / 2).trans (le_max_right _ _))
   have hmain := lemma626_horizon hc.hθ hX M ω hU (limModel_placed_infinite h0)
-    (constructionScale X₀) hT Real.log
+    (constructionScale X₀ (swS θ X₀)) hT Real.log
     (fun x hx => ⟨Real.log_nonneg (by linarith), le_rfl⟩)
     (fun x hx _ => landing_of_linked L S hreg hok hx)
     (fun x hx hearly => landingInit_of_linked L S hreg hok hx hearly) hZX hQ hcl u hu h2y

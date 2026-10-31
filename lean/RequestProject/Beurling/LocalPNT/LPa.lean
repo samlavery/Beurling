@@ -31,7 +31,7 @@ lemma target_sub_T0 {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ → ℝ} (cntA rhoA 
 
 /-- `2u^a + 4u^b + 6 X₀^{1/40} + 2 ≤ u^{θ'}` when `a, b ≤ θ`, `θ' ≥ θ + 0.01`, `θ ≥ 1/20` and
 `u ≥ X₀ / 2`. -/
-lemma two_pow_le_thetaPrime {θ : ℝ} {X₀ : ℕ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
+lemma two_pow_le_thetaPrime {θ : ℝ} {X₀ : ℕ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) {u a b : ℝ} (hu : (X₀ : ℝ) / 2 ≤ u) (ha : a ≤ θ)
     (hb : b ≤ θ) :
     2 * u ^ a + 4 * u ^ b + 6 * (X₀ : ℝ) ^ (1 / 40 : ℝ) + 2 ≤ u ^ thetaPrime θ X₀ := by
@@ -65,7 +65,7 @@ lemma two_pow_le_thetaPrime {θ : ℝ} {X₀ : ℕ} (hθ : θ ∈ Icc (1 / 20 : 
 /-- **(LP-a) from the lag bound (13) below the horizon** (Theorem 5.24, (LP-a); Remark
 `horizon`(ii)). -/
 theorem lpa_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ → ℝ} {Xm zc : ℝ}
-    (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+    (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (cntA rhoA : ℝ → ℝ) (hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 40 : ℝ) ≤ Xm) (hXmX : Xm ≤ X₀)
     (hfl : ∀ u, u < Xm → P.N u = ⌊u⌋₊)
     (hlag : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
@@ -162,7 +162,7 @@ theorem lpa_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ 
 /-- **The hypotheses of Theorem 5.24 at every `y ∈ [X₀, ž]`** from the design, Lemma 3.3 for
 `T₀`, and the lag bound (13) with the absorbed target error below the horizon `ž`. -/
 theorem lpHyp_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ → ℝ} {Xm zc y : ℝ}
-    (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀) (hev : Even X₀)
+    (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀) (hev : Even X₀)
     (hα : ∀ k, |α k| ≤ 2) (h0 : Real.exp ((X₀ : ℝ) ^ 2) ≤ xp 0)
     (hsp : ∀ k, Real.exp (xp k) ≤ xp (k + 1)) (hmono : MonotoneOn (T0 θ X₀ α γ xp) (Ici (X₀ : ℝ)))
     (cntA rhoA : ℝ → ℝ) (hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 40 : ℝ) ≤ Xm) (hXmX : Xm ≤ X₀)

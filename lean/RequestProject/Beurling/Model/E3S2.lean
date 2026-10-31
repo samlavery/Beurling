@@ -508,7 +508,7 @@ theorem NCount_X₀_le {t : ℕ} {ω : JitterΩ} (hQC : ω ∈ QC (okQ θ X₀) 
   have hnc := noCoincidence_of_tieFree ht
   have hok := limModel_realisedOK h0
   have hT := limModel_T_formula h0 hnc
-  have L : LinkedModel θ X₀ M ω (constructionScale X₀) :=
+  have L : LinkedModel θ X₀ M ω (constructionScale X₀ (swS θ X₀)) :=
     ⟨hc.hθ, hX, hU, hT, limModel_linked h0⟩
   have S := limModel_slotFacts h0 hev ht
   have hreg := jitterWidthRegular hX

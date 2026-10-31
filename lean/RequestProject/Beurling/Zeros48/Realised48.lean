@@ -19,42 +19,42 @@ set_option maxHeartbeats 400000 in
 /-- **Lemma 4.8(ii), the pieces of `D̂_{<a_k}`, for the realised system.** From the target
 formula (6), the lag bound (13) on `[X₀, ∞)`, `X₀` even (so `X₀`-smooth), jitters in `[0, 1]` and
 the realised primes forming a Beurling system: `Lemma48PiecesCount` holds at every scale `k`. -/
-theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
+theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (hXs : X₀ ∈ X₀.smoothNumbers) (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1)
     (h : RealisedOK M (capH X₀) U)
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) U))
-      (absorbedDensityCap (thetaB θ) (realisedA M (capH X₀) U) (fun n => solveU (thetaB θ) n))
+      (absorbedDensityCap (winH X₀) (realisedA M (capH X₀) U) (fun n => solveU (winH X₀) n))
       (osc θ (designedAlpha (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀)
-          (constructionScale X₀))
+          (realisedA M (capH X₀) U) (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀))
+          (constructionScale X₀ (swS θ X₀)))
         (designedGamma (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀)
-          (constructionScale X₀))
-        (switchOn X₀)) x)
+          (realisedA M (capH X₀) U) (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀))
+          (constructionScale X₀ (swS θ X₀)))
+        (switchOn (swS θ X₀))) x)
     (hlag : ∀ x ≥ (X₀ : ℝ),
       |(realisedSystem M (capH X₀) U).N x - M.T x| ≤ x ^ lagExponent θ)
     (k : ℕ) :
-    Lemma48PiecesCount X₀ (heightScale θ (kappa0Param X₀) (switchOn X₀ k))
+    Lemma48PiecesCount X₀ (heightScale θ (kappa0Param X₀) (switchOn (swS θ X₀) k))
       (earlyOf (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀) (realisedA M (capH X₀) U)
-        (fun n => solveU (thetaB θ) n)
+        (fun n => solveU (winH X₀) n)
         (designedAlpha (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀)
-          (constructionScale X₀))
+          (realisedA M (capH X₀) U) (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀))
+          (constructionScale X₀ (swS θ X₀)))
         (designedGamma (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀)
-          (constructionScale X₀))
-        (switchOn X₀) (constructionScale X₀) k) := by
+          (realisedA M (capH X₀) U) (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀))
+          (constructionScale X₀ (swS θ X₀)))
+        (switchOn (swS θ X₀)) (constructionScale X₀ (swS θ X₀)) k) := by
   classical
   set P := realisedSystem M (capH X₀) U with hP
   set A := realisedA M (capH X₀) U with hA
-  set u : ℝ → ℝ := fun n => solveU (thetaB θ) n with hu
+  set u : ℝ → ℝ := fun n => solveU (winH X₀) n with hu
   set κ := kappaParam (X₀ : ℝ) with hκdef
-  set xp := switchOn (X₀ : ℝ) with hxpdef
-  set αd := designedAlpha P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀) with hαd
-  set γd := designedGamma P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀) with hγd
+  set xp := switchOn (swS θ X₀) with hxpdef
+  set αd := designedAlpha P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀ (swS θ X₀)) with hαd
+  set γd := designedGamma P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀ (swS θ X₀)) with hγd
   set R := osc θ αd γd xp with hR
-  set rhoA := absorbedDensityCap (thetaB θ) A u with hrhoA
-  set ak := constructionScale (X₀ : ℝ) k with hak
+  set rhoA := absorbedDensityCap (winH X₀) A u with hrhoA
+  set ak := constructionScale X₀ (swS θ X₀) k with hak
   set xk := xp k with hxk
   set η := lagExponent θ with hη
   set D := lagOf P θ X₀ κ A u αd γd xp with hD
@@ -116,10 +116,10 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 
         exact Real.one_lt_exp_iff.mpr (by positivity)
       linarith)
   have hαb : ∀ j, |αd j| ≤ 2 := fun j => by
-    have := designedAlpha_mem P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀) hΓpos j
+    have := designedAlpha_mem P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀ (swS θ X₀)) hΓpos j
     rw [abs_of_nonneg (by linarith [this.1])]; exact this.2
   have hγb : ∀ j, |γd j| ≤ 2 * heightScale θ (kappa0Param X₀) (xp j) := fun j => by
-    have := designedGamma_mem P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀)
+    have := designedGamma_mem P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀ (swS θ X₀))
       (fun j => (hΓpos j).le) j
     rw [abs_of_nonneg (by linarith [this.1, hΓpos j])]; exact this.2
   set L := ∑ j ∈ Finset.range k, oscLip θ (αd j) (γd j) (xp j) with hLdef

@@ -102,7 +102,7 @@ half-plane `Re s > a`, `a < 1`, and has zeros `ρ_k` there with, along `x_k → 
 `log Im ρ_k = (1 - θ) log x_k - log log x_k + O_{X₀}(1)` (so `x_k` is pinned by the height of
 `ρ_k`, and `1 - Re ρ_k ≍ (1-θ) log log Im ρ_k / log Im ρ_k`). -/
 theorem theoremA_ii_complete (h84 : BaseRange.Huxley84) :
-    ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+    ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
       Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
       ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
         IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

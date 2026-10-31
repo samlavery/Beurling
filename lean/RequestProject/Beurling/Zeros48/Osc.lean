@@ -113,9 +113,9 @@ lemma abs_oscPart_sub_le {θ : ℝ} {α γ xp : ℕ → ℝ} (hθ : θ ≤ 1) (h
 `x⁺_j` of Section 2.2, `|α_j| ≤ 2` and `|γ_j| ≤ 2Γ_j = (x⁺_j)^{1-θ}/(X₀ log x⁺_j)`. -/
 lemma sum_oscLip_switchOn_le {θ X₀ : ℝ} (hθ0 : 0 ≤ θ) (hθ : θ ≤ 1 / 2) (hX : 10 ≤ X₀)
     {α γ : ℕ → ℝ} (hα : ∀ j, |α j| ≤ 2)
-    (hγ : ∀ j, |γ j| ≤ 2 * DesignedZero.heightScale θ (kappa0Param X₀) (switchOn X₀ j)) (k : ℕ) :
-    ∑ j ∈ range k, oscLip θ (α j) (γ j) (switchOn X₀ j) ≤ 1 / 100 := by
-  set x := switchOn X₀ with hxdef
+    (hγ : ∀ j, |γ j| ≤ 2 * DesignedZero.heightScale θ (kappa0Param X₀) (switchOn (swS θ X₀) j)) (k : ℕ) :
+    ∑ j ∈ range k, oscLip θ (α j) (γ j) (switchOn (swS θ X₀) j) ≤ 1 / 100 := by
+  set x := switchOn (swS θ X₀) with hxdef
   have hX2 : (100 : ℝ) ≤ X₀ ^ 2 := by nlinarith
   -- `log x_j ≥ 100 · 2^j`
   have hlog : ∀ j, 100 * 2 ^ j ≤ Real.log (x j) := by
@@ -124,17 +124,17 @@ lemma sum_oscLip_switchOn_le {θ X₀ : ℝ} (hθ0 : 0 ≤ θ) (hθ : θ ≤ 1 /
     | zero => rw [hxdef, log_switchOn_zero]; simpa using hX2
     | succ j ih =>
       have e : Real.log (x (j + 1)) = x j := by
-        rw [hxdef]; show Real.log (Real.exp (switchOn X₀ j)) = _; rw [Real.log_exp]
+        rw [hxdef]; show Real.log (Real.exp (switchOn (swS θ X₀) j)) = _; rw [Real.log_exp]
       have hL0 : 0 ≤ Real.log (x j) := le_trans (by positivity) ih
       have hxj : x j = Real.exp (Real.log (x j)) := by
-        rw [Real.exp_log (lt_of_lt_of_le one_pos ((switchOn_spacing X₀).one_le_all j))]
+        rw [Real.exp_log (lt_of_lt_of_le one_pos ((switchOn_spacing _).one_le_all j))]
       have hq := Real.quadratic_le_exp_of_nonneg hL0
       rw [e, hxj, pow_succ]
       nlinarith
   have hterm : ∀ j, oscLip θ (α j) (γ j) (x j) ≤ 41 / 10 ^ 4 * (1 / 2) ^ j := by
     intro j
     set L := Real.log (x j) with hL
-    have hx1 : 1 ≤ x j := (switchOn_spacing X₀).one_le_all j
+    have hx1 : 1 ≤ x j := (switchOn_spacing _).one_le_all j
     have hx0 : 0 < x j := by linarith
     have hLj := hlog j
     have h2j : (1 : ℝ) ≤ 2 ^ j := one_le_pow₀ (by norm_num)

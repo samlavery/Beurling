@@ -62,7 +62,7 @@ theorem lag_G0 {t : ℕ} {ω : JitterΩ} (hω : ω ∈ G0 θ X₀ D t) (hN : ω 
   have hnc := noCoincidence_of_tieFree ht
   have hok := limModel_realisedOK h0
   have hT := limModel_T_formula h0 hnc
-  have L : LinkedModel θ X₀ M ω (constructionScale X₀) :=
+  have L : LinkedModel θ X₀ M ω (constructionScale X₀ (swS θ X₀)) :=
     ⟨hc.hθ, hX, hU, hT, limModel_linked h0⟩
   have S := limModel_slotFacts h0 hev ht
   have hreg := jitterWidthRegular hX

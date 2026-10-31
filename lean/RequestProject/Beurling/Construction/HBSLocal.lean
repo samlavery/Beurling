@@ -19,24 +19,26 @@ namespace Construction
 /-- **Lemma 6.26 for the construction, local version**: as `lemma626_construction`, at one height
 `v ≥ X₀`, with (HBS) assumed only up to `2y(2v)` and `N(w) = ⌊w⌋` below `X₀⁻`. -/
 theorem lemma626_local {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℝ}
-    {latest : ℝ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {θ X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
-    (hX : 10 ^ 8 ≤ Real.log X₀) (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2)
+    {latest : ℝ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
+    (hX : 10 ^ 8 ≤ Real.log X₀)
     (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc (0 : ℝ) 1)
     (hX0m : 100 ≤ Real.log X0m) (hX0mX : (X₀ : ℝ) / 2 + 1 ≤ X0m)
     (hfl : ∀ w, 1 ≤ w → w < X0m → P.N w = ⌊w⌋₊)
     (hcl : ∀ v ≥ (X₀ : ℝ), ClusterUpTo P X₀ (4 * v / Real.log v ^ 11) (capM1 X₀ v))
     {v : ℝ} (hv : (X₀ : ℝ) ≤ v) (hHBS : P.HBS X0m (2 * absorbYAt X₀ (2 * v)) η1 η2 ε1) :
-      (Absorbed.localCountA A v (v + v ^ (thetaB θ)) : ℝ) ≤ v ^ (thetaB θ) * Real.log v ^ (-4 : ℤ) := by
+      (Absorbed.localCountA A v (v + Absorbed.winH X₀ v) : ℝ) ≤
+        Absorbed.winH X₀ v * Real.log v ^ (-4 : ℤ) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hX
   obtain ⟨hv0, hL, hl, -⟩ := height_facts hX0 hX hv
-  set h := v ^ (thetaB θ) with hh
+  set h := Absorbed.winH X₀ v with hh
   set L := Real.log v with hLdef
   have hv1 : 1 < v := by linarith
-  have h1 : 1 ≤ h := Real.one_le_rpow hv1.le (thetaB_pos (by linarith)).le
+  have h1 : 1 ≤ h := Absorbed.winH_one_le hX hv1.le
   have hlt : h < v := by
-    have := Real.rpow_lt_rpow_of_exponent_lt hv1 (show thetaB θ < 1 from (thetaB_le_quarter (by linarith)).trans_lt (by norm_num))
-    rwa [Real.rpow_one] at this
+    have h2 := Absorbed.winH_le_rpow (X₀ : ℝ) hv0
+    have := Real.rpow_lt_rpow_of_exponent_lt hv1 (show (1 / 8 : ℝ) < 1 by norm_num)
+    rw [Real.rpow_one] at this; linarith
   by_cases hne : ∃ n ∈ A, v ≤ n ∧ (n : ℝ) ≤ v + h
   swap
   · push_neg at hne
@@ -47,7 +49,7 @@ theorem lemma626_local {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A
   obtain ⟨n0, hn0, -, hn0v⟩ := hne
   have h2v : (X₀ : ℝ) ≤ 2 * v := by linarith
   have hy := C.two_y_gt hRH hU hX hn0 (x := 2 * v) (by linarith) h2v
-  obtain ⟨hus, hll, hη, hu01, hu0, h81⟩ := cond81_window hX0 hX hθ1 hθ2 hv (by linarith) le_rfl hy
+  obtain ⟨hus, hll, hη, hu01, hu0, h81⟩ := cond81_window hX0 hX hv (by linarith) le_rfl hy
   set y := absorbYAt X₀ (2 * v) with hydef
   have hy4 : 4 ≤ y := by
     have := exp_le_absorbYAt hX0 hX h2v
@@ -63,7 +65,7 @@ theorem lemma626_local {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A
   · intro n hn hun hnu
     exact C.smooth hRH hU hX hn (by linarith) h2v
   · intro d hd hdh hdle
-    have hhL := log_pow_le_rpow hv0 hL hθ1
+    have hhL := log_pow_le_winH hX hv0 hL
     rw [← hh] at hhL
     have hL11 : 0 < L ^ 11 := by positivity
     have huZ : v + h ≤ h * (4 * v / L ^ 11) := by

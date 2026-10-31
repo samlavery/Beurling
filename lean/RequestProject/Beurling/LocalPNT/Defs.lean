@@ -161,7 +161,7 @@ noncomputable def relBound (Λ v η : ℝ) : ℝ :=
 `a = 8` and (18) (`LocalPNT.lpb`, `LocalPNT.lpc`). -/
 structure LPHyp (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (α γ xp : ℕ → ℝ) (Xm y : ℝ)
     (D0 : ℝ → ℝ) : Prop where
-  theta_mem : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)
+  theta_mem : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)
   logX : 10 ^ 8 ≤ Real.log X₀
   even : Even X₀
   alpha_le : ∀ k, |α k| ≤ 2

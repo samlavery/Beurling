@@ -187,7 +187,7 @@ lemma abs_oscD2_le {θ α γ xk x : ℝ} (hθ0 : 0 ≤ θ) (hθ1 : θ ≤ 1) (h�
     _ ≤ _ := by nlinarith
 
 set_option maxHeartbeats 1000000 in
-/-- **The designed `R_k''`**: for `x⁺_k = switchOn X₀ k`, `γ_k ∈ [Γ_k, 2Γ_k]`,
+/-- **The designed `R_k''`**: for `x⁺_k = switchOn (swS θ X₀) k`, `γ_k ∈ [Γ_k, 2Γ_k]`,
 `α_k = κ₀ (x⁺_k)^{1-θ}/(γ_k L)` (`κ₀ = X⁻¹`), `|R_k''(x)| ≤ 2⁻ᵏ x^{-1/20}/10¹⁴` (the bound
 `γ_k κ_k ≤ x_k^{1-θ}` of the `o_R` bullet of eq. (osc), with `log x⁺_k ≥ 2ᵏ X₀²`). -/
 theorem abs_oscD2_designed_le {θ : ℝ} (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2) {X : ℝ}
@@ -361,13 +361,13 @@ lemma deriv_osc_eq_sum {θ : ℝ} (α γ : ℕ → ℝ) (X : ℝ) {K : ℕ} {y :
 
 /-- **The `R'` modulus** (§5, eq. (osc), the `o_R` bullet): for `X₀ ≤ s ≤ t`,
 `|R'(t) - R'(s)| ≤ (t - s) s^{-1/20}`, from `|R''(x)| ≤ ∑_k 2⁻ᵏ x^{-1/20}/10¹⁴`. -/
-theorem deriv_osc_sub_le {θ : ℝ} (hθ : θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem deriv_osc_sub_le {θ : ℝ} (hθ : θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) {s t : ℝ}
     (hs : (X₀ : ℝ) ≤ s) (hst : s ≤ t) :
     |deriv (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
-        (Construction.switchOn X₀) γ) γ (Construction.switchOn X₀)) t -
+        (Construction.switchOn (swS θ X₀)) γ) γ (Construction.switchOn (swS θ X₀))) t -
       deriv (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
-        (Construction.switchOn X₀) γ) γ (Construction.switchOn X₀)) s| ≤
+        (Construction.switchOn (swS θ X₀)) γ) γ (Construction.switchOn (swS θ X₀))) s| ≤
       (t - s) * s ^ (-(1 / 20 : ℝ)) := by
   set X : ℝ := (X₀ : ℝ) with hXdef
   have hX1 : 1 < X := QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hX

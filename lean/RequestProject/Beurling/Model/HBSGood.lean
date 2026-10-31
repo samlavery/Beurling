@@ -117,24 +117,26 @@ open BSCert.Capl AbsorbEmpty
 `v` only (Lemma 6.26 depends on Proposition 6.11 at the height `v` and (HBS) up to `2y(2v)`). -/
 theorem lemma626_at {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℝ}
     {latest : ℝ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {θ X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
-    (hX : 10 ^ 8 ≤ Real.log X₀) (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2)
+    (hX : 10 ^ 8 ≤ Real.log X₀)
     (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc (0 : ℝ) 1)
     (hX0m : 100 ≤ Real.log X0m) (hX0mX : (X₀ : ℝ) / 2 + 1 ≤ X0m)
     (hfl : ∀ w, 1 ≤ w → w < X0m → P.N w = ⌊w⌋₊)
     {v : ℝ} (hv : (X₀ : ℝ) ≤ v)
     (hclv : ClusterUpTo P X₀ (4 * v / Real.log v ^ 11) (capM1 X₀ v))
     (hHBS : P.HBS X0m (2 * absorbYAt X₀ (2 * v)) η1 η2 ε1) :
-      (Absorbed.localCountA A v (v + v ^ (thetaB θ)) : ℝ) ≤ v ^ (thetaB θ) * Real.log v ^ (-4 : ℤ) := by
+      (Absorbed.localCountA A v (v + Absorbed.winH X₀ v) : ℝ) ≤
+        Absorbed.winH X₀ v * Real.log v ^ (-4 : ℤ) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hX
   obtain ⟨hv0, hL, hl, -⟩ := height_facts hX0 hX hv
-  set h := v ^ (thetaB θ) with hh
+  set h := Absorbed.winH X₀ v with hh
   set L := Real.log v with hLdef
   have hv1 : 1 < v := by linarith
-  have h1 : 1 ≤ h := Real.one_le_rpow hv1.le (thetaB_pos (by linarith)).le
+  have h1 : 1 ≤ h := Absorbed.winH_one_le hX hv1.le
   have hlt : h < v := by
-    have := Real.rpow_lt_rpow_of_exponent_lt hv1 (show thetaB θ < 1 from (thetaB_le_quarter (by linarith)).trans_lt (by norm_num))
-    rwa [Real.rpow_one] at this
+    have h2 := Absorbed.winH_le_rpow (X₀ : ℝ) hv0
+    have := Real.rpow_lt_rpow_of_exponent_lt hv1 (show (1 / 8 : ℝ) < 1 by norm_num)
+    rw [Real.rpow_one] at this; linarith
   by_cases hne : ∃ n ∈ A, v ≤ n ∧ (n : ℝ) ≤ v + h
   swap
   · push_neg at hne
@@ -145,7 +147,7 @@ theorem lemma626_at {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : 
   obtain ⟨n0, hn0, -, hn0v⟩ := hne
   have h2v : (X₀ : ℝ) ≤ 2 * v := by linarith
   have hy := C.two_y_gt hRH hU hX hn0 (x := 2 * v) (by linarith) h2v
-  obtain ⟨hus, hll, hη, hu01, hu0, h81⟩ := cond81_window hX0 hX hθ1 hθ2 hv (by linarith) le_rfl hy
+  obtain ⟨hus, hll, hη, hu01, hu0, h81⟩ := cond81_window hX0 hX hv (by linarith) le_rfl hy
   set y := absorbYAt X₀ (2 * v) with hydef
   have hy4 : 4 ≤ y := by
     have := exp_le_absorbYAt hX0 hX h2v
@@ -161,7 +163,7 @@ theorem lemma626_at {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : 
   · intro n hn hun hnu
     exact C.smooth hRH hU hX hn (by linarith) h2v
   · intro d hd hdh hdle
-    have hhL := log_pow_le_rpow hv0 hL hθ1
+    have hhL := log_pow_le_winH hX hv0 hL
     rw [← hh] at hhL
     have hL11 : 0 < L ^ 11 := by positivity
     have huZ : v + h ≤ h * (4 * v / L ^ 11) := by
@@ -192,16 +194,16 @@ open AbsorbEmpty
 /-- **(HBS) up to a horizon** (Remark *horizon*): the induction of
 `Construction.sparsityInputs_of_cluster`, reading the queue bound only at the slots of the heights
 `v ≤ Z` and the cluster event only at the heights `v ≤ Z`. -/
-theorem hbs_local {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
+theorem hbs_local {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
     {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) (M : SlotModel X₀) (ω : JitterΩ)
     (hω : ∀ j, ω j ∈ Icc (0 : ℝ) 1) (hinf : {k | placedAt M k}.Infinite) (a : ℕ → ℝ)
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) ω))
-      (absorbedDensityCap (thetaB θ) (realisedA M (capH X₀) ω) (fun n => solveU (thetaB θ) n))
+      (absorbedDensityCap (winH X₀) (realisedA M (capH X₀) ω) (fun n => solveU (winH X₀) n))
       (osc θ (designedAlpha (realisedSystem M (capH X₀) ω) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) ω) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a)
+          (realisedA M (capH X₀) ω) (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a)
         (designedGamma (realisedSystem M (capH X₀) ω) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) ω) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a)
-        (switchOn X₀)) x)
+          (realisedA M (capH X₀) ω) (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (switchOn (swS θ X₀))) x)
     (κp : ℝ → ℝ) (hκp : ∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x)
     (hland : ∀ x ≥ (X₀ : ℝ), (X₀ : ℝ) + 2 * capH X₀ x ≤ x →
       M.Landing ((realisedSystem M (capH X₀) ω).N x) (capH X₀ x / 2 * (1 + κp x / Real.log x)) x)
@@ -289,7 +291,7 @@ theorem hbs_local {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000
     · have hv0 : 0 < v := by linarith
       have hvfl : (v : ℝ) < ⌊v⌋₊ + 1 := Nat.lt_floor_add_one v
       have hdens : ∀ u, (X₀ : ℝ) ≤ u → u ≤ v →
-          absorbedDensity (thetaB θ) A (fun n => solveU (thetaB θ) n) u ≤
+          absorbedDensity (winH X₀) A (fun n => solveU (winH X₀) n) u ≤
             Real.log u ^ (-4 : ℤ) := by
         intro u hu huv
         have hHBSu : P.HBS X0m (2 * absorbYAt X₀ (2 * u)) (1 / 1000) (1 / 1000) (hbsEps X₀) := by
@@ -308,24 +310,24 @@ theorem hbs_local {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000
         have hloc := lemma626_at C hX hθ.1 (by linarith [hθ.2]) rfl hω hX0mlog hX0m2 hfl hu
           (hcl u hu (huv.trans hvZ)) hHBSu
         exact absorbedDensity_le_of_localCount hb (by linarith) hAu C.locFin hu hloc
-      have hW : AbsorbedWindowHyp (thetaB θ) X₀ A (fun n => solveU (thetaB θ) n) :=
+      have hW : AbsorbedWindowHyp (thetaB θ) X₀ A (fun n => solveU (winH X₀) n) :=
         ⟨hb, thetaB_le_one (by linarith [hθ.2]), hX1.le, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2,
           C.locFin⟩
       have hEA := absorbed_target_error_cap_loc hW (by linarith) hhigh hdens
-      have hsp := switchOn_spacing (X₀ : ℝ)
-      have hα : ∀ k, |designedAlpha P θ X₀ (kappaParam X₀) A (fun n => solveU (thetaB θ) n)
-          (kappa0Param X₀) (switchOn X₀) a k| ≤ 2 := by
+      have hsp := switchOn_spacing (swS θ (X₀ : ℝ))
+      have hα : ∀ k, |designedAlpha P θ X₀ (kappaParam X₀) A (fun n => solveU (winH X₀) n)
+          (kappa0Param X₀) (switchOn (swS θ X₀)) a k| ≤ 2 := by
         intro k
-        have hm := designedAlpha_mem P θ X₀ (kappaParam X₀) A (fun n => solveU (thetaB θ) n)
-          (kappa0Param X₀) (switchOn X₀) a (heightScale_switchOn_pos θ hX1.le) k
+        have hm := designedAlpha_mem P θ X₀ (kappaParam X₀) A (fun n => solveU (winH X₀) n)
+          (kappa0Param X₀) (switchOn (swS θ X₀)) a (heightScale_switchOn_pos θ hX1.le) k
         rw [abs_of_nonneg (by linarith [hm.1])]
         exact hm.2
       have hR := abs_osc_le (θ := θ) (γ := designedGamma P θ X₀ (kappaParam X₀) A
-        (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a) hsp hα (x := v) (by linarith)
+        (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a) hsp hα (x := v) (by linarith)
       have hR0 := osc_eq_zero_of_le (θ := θ) (α := designedAlpha P θ X₀ (kappaParam X₀) A
-        (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a) (γ := designedGamma P θ X₀
-        (kappaParam X₀) A (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a) hsp
-        (by linarith : (0 : ℝ) < X₀) (switchOn_zero_ge _)
+        (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a) (γ := designedGamma P θ X₀
+        (kappaParam X₀) A (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a) hsp
+        (by linarith : (0 : ℝ) < X₀) (switchOn_zero_ge_swS _ _)
       have hl := hlag v hhigh hvZ
       rw [hT v] at hl
       exact hbs_err_high hX hθ.2 hhigh hl hEA hR hR0
@@ -334,16 +336,16 @@ theorem hbs_local {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000
 /-- **Lemma 6.26 up to a horizon** (Lemma 6.26 on `Good(< t)`): at every height `u ≥ X₀` with
 `2y(2u) ≤ Z`, from the queue bound and the cluster event at heights `≤ Z` and the cluster event
 at `u`. -/
-theorem lemma626_horizon {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
+theorem lemma626_horizon {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
     {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) (M : SlotModel X₀) (ω : JitterΩ)
     (hω : ∀ j, ω j ∈ Icc (0 : ℝ) 1) (hinf : {k | placedAt M k}.Infinite) (a : ℕ → ℝ)
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) ω))
-      (absorbedDensityCap (thetaB θ) (realisedA M (capH X₀) ω) (fun n => solveU (thetaB θ) n))
+      (absorbedDensityCap (winH X₀) (realisedA M (capH X₀) ω) (fun n => solveU (winH X₀) n))
       (osc θ (designedAlpha (realisedSystem M (capH X₀) ω) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) ω) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a)
+          (realisedA M (capH X₀) ω) (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a)
         (designedGamma (realisedSystem M (capH X₀) ω) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) ω) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a)
-        (switchOn X₀)) x)
+          (realisedA M (capH X₀) ω) (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (switchOn (swS θ X₀))) x)
     (κp : ℝ → ℝ) (hκp : ∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x)
     (hland : ∀ x ≥ (X₀ : ℝ), (X₀ : ℝ) + 2 * capH X₀ x ≤ x →
       M.Landing ((realisedSystem M (capH X₀) ω).N x) (capH X₀ x / 2 * (1 + κp x / Real.log x)) x)

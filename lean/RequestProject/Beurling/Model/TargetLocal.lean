@@ -46,27 +46,27 @@ lemma add_rpow_le_add_rpow {b s t : ℝ} (hb : 0 < b) (hs : 0 ≤ s) (hst : s �
 
 lemma absorbedBump_congr {θ : ℝ} (hθ : 0 < θ) {A A' : Set ℝ} {Z v : ℝ} (hA : AAgree A A' Z)
     (hvZ : v + v ^ (thetaB θ) ≤ Z) (a : ℝ) :
-    absorbedBump (thetaB θ) A (uA θ) a v = absorbedBump (thetaB θ) A' (uA θ) a v := by
+    absorbedBump (thetaB θ) A (uA X₀) a v = absorbedBump (thetaB θ) A' (uA X₀) a v := by
   classical
   unfold absorbedBump
   by_cases haZ : (a : ℝ) ≤ Z
   · simp only [hA a haZ]
   · push_neg at haZ
     have hb : 0 < thetaB θ := thetaB_pos (by linarith)
-    have hnot : v ∉ Icc (uA θ a) (a : ℝ) := by
+    have hnot : v ∉ Icc (uA X₀ a) (a : ℝ) := by
       rintro ⟨h1, h2⟩
-      have hu0' : 0 ≤ uA θ a := solveU_nonneg _ _
+      have hu0' : 0 ≤ uA X₀ a := solveU_nonneg _ _
       have hv0 : 0 ≤ v := hu0'.trans h1
       have := Real.rpow_nonneg hv0 (thetaB θ)
       obtain ⟨hu0, hua⟩ := solveU_spec hb (show 0 ≤ a by linarith)
       have := add_rpow_le_add_rpow hb hu0 h1
-      have : uA θ a + uA θ a ^ (thetaB θ) = a := hua
+      have : uA X₀ a + uA X₀ a ^ (thetaB θ) = a := hua
       linarith
     simp only [Set.indicator_of_notMem hnot, ite_self]
 
 lemma absorbedDensityCap_congr {θ : ℝ} (hθ : 0 < θ) {A A' : Set ℝ} {Z v : ℝ}
     (hA : AAgree A A' Z) (hvZ : v + v ^ (thetaB θ) ≤ Z) :
-    absorbedDensityCap (thetaB θ) A (uA θ) v = absorbedDensityCap (thetaB θ) A' (uA θ) v := by
+    absorbedDensityCap (winH X₀) A (uA X₀) v = absorbedDensityCap (winH X₀) A' (uA X₀) v := by
   unfold absorbedDensityCap absorbedDensity
   congr 1
   exact tsum_congr (absorbedBump_congr hθ hA hvZ)
@@ -87,8 +87,8 @@ lemma osc_congr_of {θ : ℝ} {α γ α' γ' xp : ℕ → ℝ} {z : ℝ}
 theorem target_congr {X₀ : ℕ} (hX1 : 1 ≤ X₀) {κ θ : ℝ} (hθ : 0 < θ) {A A' : Set ℝ}
     {α γ α' γ' xp : ℕ → ℝ} {z Z : ℝ} (hZ : z + z ^ (thetaB θ) ≤ Z) (hA : AAgree A A' Z)
     (hosc : ∀ j, xp j < z → α j = α' j ∧ γ j = γ' j) {x : ℝ} (hx : x ≤ z) :
-    target X₀ κ (countA A) (absorbedDensityCap (thetaB θ) A (uA θ)) (osc θ α γ xp) x =
-      target X₀ κ (countA A') (absorbedDensityCap (thetaB θ) A' (uA θ)) (osc θ α' γ' xp) x := by
+    target X₀ κ (countA A) (absorbedDensityCap (winH X₀) A (uA X₀)) (osc θ α γ xp) x =
+      target X₀ κ (countA A') (absorbedDensityCap (winH X₀) A' (uA X₀)) (osc θ α' γ' xp) x := by
   have hX0 : (0 : ℝ) < X₀ := by exact_mod_cast hX1
   unfold target
   by_cases hlt : x < X₀
@@ -100,8 +100,8 @@ theorem target_congr {X₀ : ℕ} (hX1 : 1 ≤ X₀) {κ θ : ℝ} (hθ : 0 < θ
     have hxZ : x ≤ Z := by
       have := Real.rpow_nonneg (hx0.trans hx) (thetaB θ)
       linarith
-    have hint : (∫ v in (X₀ : ℝ)..x, absorbedDensityCap (thetaB θ) A (uA θ) v) =
-        ∫ v in (X₀ : ℝ)..x, absorbedDensityCap (thetaB θ) A' (uA θ) v := by
+    have hint : (∫ v in (X₀ : ℝ)..x, absorbedDensityCap (winH X₀) A (uA X₀) v) =
+        ∫ v in (X₀ : ℝ)..x, absorbedDensityCap (winH X₀) A' (uA X₀) v := by
       refine intervalIntegral.integral_congr fun v hv => ?_
       rw [uIcc_of_le hlt] at hv
       have hv0 : 0 ≤ v := by linarith [hv.1]
@@ -112,8 +112,8 @@ theorem target_congr {X₀ : ℕ} (hX1 : 1 ≤ X₀) {κ θ : ℝ} (hθ : 0 < θ
 
 /-- `targetOf` is `target` with the solved `u_a`. -/
 lemma targetOf_eq (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ) (α γ xp : ℕ → ℝ) :
-    targetOf θ X₀ κ A (uA θ) α γ xp =
-      target X₀ κ (countA A) (absorbedDensityCap (thetaB θ) A (uA θ)) (osc θ α γ xp) := rfl
+    targetOf θ X₀ κ A (uA X₀) α γ xp =
+      target X₀ κ (countA A) (absorbedDensityCap (winH X₀) A (uA X₀)) (osc θ α γ xp) := rfl
 
 /-- **Locality of the designed heights** (Lemma 4.8: `γ_j` reads only the system on `[1, a_j)`):
 if `N` agrees below `Y` and `A` agrees on `[0, Z]` with `Y + Y^{θ/2} ≤ Z`, then every `γ_j`
@@ -122,8 +122,8 @@ theorem designedGammaN_congr {N N' : ℝ → ℝ} {θ : ℝ} (hθ : 0 < θ) {X�
     {A A' : Set ℝ} {κ₀ : ℝ} {xp a : ℕ → ℝ} (hsp : Spacing xp) (hX1 : 1 ≤ X₀)
     (hxp : (X₀ : ℝ) ≤ xp 0) (ha : ∀ k, 0 < a k ∧ a k ≤ xp k) {Y Z : ℝ}
     (hZ : Y + Y ^ (thetaB θ) ≤ Z) (hN : ∀ x, x < Y → N x = N' x) (hA : AAgree A A' Z) :
-    ∀ j, a j < Y → designedGammaN N θ X₀ κ A (uA θ) κ₀ xp a j =
-      designedGammaN N' θ X₀ κ A' (uA θ) κ₀ xp a j := by
+    ∀ j, a j < Y → designedGammaN N θ X₀ κ A (uA X₀) κ₀ xp a j =
+      designedGammaN N' θ X₀ κ A' (uA X₀) κ₀ xp a j := by
   have hb : 0 < thetaB θ := thetaB_pos (by linarith)
   intro j
   induction j using Nat.strong_induction_on with
@@ -157,7 +157,7 @@ theorem targetD_congr {θ : ℝ} (hθ : 0 < θ) {X₀ : ℕ} (hX : 10 ^ 8 ≤ Re
     {D D' : PrimeData} (hD : Pos D) (hD' : Pos D') {Y z Z : ℝ} (h : DAgree D D' Y)
     (hY0 : 0 ≤ Y) (hYz : Y ≤ z) (hZ : z + z ^ (thetaB θ) ≤ Z)
     (hYA : ∀ n : ℝ, n ≤ Z → absorbY X₀ n ≤ Y)
-    (hYγ : ∀ j, switchOn X₀ j < z → constructionScale X₀ j < Y) {x : ℝ} (hx : x ≤ z) :
+    (hYγ : ∀ j, switchOn (swS θ X₀) j < z → constructionScale X₀ (swS θ X₀) j < Y) {x : ℝ} (hx : x ≤ z) :
     targetD θ X₀ D x = targetD θ X₀ D' x := by
   have hb : 0 < thetaB θ := thetaB_pos (by linarith)
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
@@ -166,10 +166,10 @@ theorem targetD_congr {θ : ℝ} (hθ : 0 < θ) {X₀ : ℕ} (hX : 10 ^ 8 ≤ Re
     absSet_iff_of_agree h (hYA n hn)
   have hN : ∀ x, x < Y → NCount X₀ D x = NCount X₀ D' x := fun x hx =>
     NCount_eq_of_agree h hD hD' hx
-  have ha : ∀ k, 0 < constructionScale X₀ k ∧ constructionScale X₀ k ≤ switchOn X₀ k :=
+  have ha : ∀ k, 0 < constructionScale X₀ (swS θ X₀) k ∧ constructionScale X₀ (swS θ X₀) k ≤ switchOn (swS θ X₀) k :=
     fun k => ⟨(constructionScale_spec hX0 hX k).2.1, (constructionScale_spec hX0 hX k).2.2.1⟩
   have hγ := designedGammaN_congr (κ := kappaParam X₀) (κ₀ := (kappa0Param X₀)) hθ
-    (switchOn_spacing _) hX1 (switchOn_zero_ge _) ha
+    (switchOn_spacing _) hX1 (switchOn_zero_ge_swS _ _) ha
     ((add_rpow_le_add_rpow hb hY0 hYz).trans hZ) hN hA
   unfold targetD
   refine target_congr hX1 hθ hZ hA (fun j hj => ?_) hx

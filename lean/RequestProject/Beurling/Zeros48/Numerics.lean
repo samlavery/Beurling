@@ -43,7 +43,7 @@ lemma sq_le_imp {A B : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B) (h : A ^ 2 ≤ B ^ 2) 
   (pow_le_pow_iff_left₀ hA hB (by norm_num)).mp h
 
 set_option maxHeartbeats 1000000 in
-theorem lemma48_numerics {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) {X₀ a xk : ℝ}
+theorem lemma48_numerics {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ a xk : ℝ}
     (hX0 : 0 < X₀) (hX : 10 ^ 8 ≤ Real.log X₀) (ha : X₀ ≤ a) (haxk : a ≤ xk)
     (hxk : xk ≤ (1 + 1 / 1000) * a) (hxk0 : X₀ ^ 2 ≤ Real.log xk) {c : ℝ} (hc0 : 0 < c)
     (hc : c ≤ 4 * X₀) {J : ℕ} (hJ : 2 ^ J * (X₀ + 1) ≤ 2 * a) :

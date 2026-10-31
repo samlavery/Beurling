@@ -13,8 +13,9 @@ The absorbed part of the target (6) is `E_A(x) = #(A ∩ [X₀, x]) - ∫_{X₀}
 
   `s ∫_1^∞ E_A(x) x^{-s-1} dx = Ê_A(s) = ∑_{a ∈ A} a^{-s} (1 - w_a(s))`    (`mellin_absE`)
 
-for `σ > b = θ/2`. The proof splits `E_A = ∑_a e_a` with `e_a(x) = 1[a ≤ x] - ∫_{X₀}^x 1[u_a ≤ v ≤ a]
-v^{-b} dv`, computes each transform, and integrates term by term: `∫ |e_a(x)| x^{-σ-1} dx ≪ a^{b-σ-1}`.
+for `σ > 1/8` (the window satisfies `h(u) ≤ u^{1/8}`). The proof splits `E_A = ∑_a e_a` with
+`e_a(x) = 1[a ≤ x] - ∫_{X₀}^x 1[u_a ≤ v ≤ a] dv/h(v)`, computes each transform, and integrates term
+by term: `∫ |e_a(x)| x^{-σ-1} dx ≪ a^{1/8-σ-1}`.
 -/
 
 @[expose] public section
@@ -24,46 +25,46 @@ open scoped Classical
 
 namespace Decomp
 
-variable {b X₀ : ℝ} {A : Set ℝ} {u : ℝ → ℝ}
+variable {w : ℝ → ℝ} {X₀ : ℝ} {A : Set ℝ} {u : ℝ → ℝ}
 
 /-- The absorbed part of the target, `#(A ∩ [1,x]) - ∫_{X₀}^x ρ̄_A` from `X₀` on, `0` below. -/
 noncomputable def absE (X₀ : ℝ) (cntA rhoA : ℝ → ℝ) (x : ℝ) : ℝ :=
   if x < X₀ then 0 else cntA x - ∫ v in X₀..x, rhoA v
 
-/-- The contribution of one element `a`: `e_a(x) = 1[a ∈ A, a ≤ x] - ∫_{X₀}^x 1[u_a ≤ v ≤ a] v^{-b}`
+/-- The contribution of one element `a`: `e_a(x) = 1[a ∈ A, a ≤ x] - ∫_{X₀}^x 1[u_a ≤ v ≤ a] dv/h(v)`
 from `X₀` on, `0` below. -/
-noncomputable def absTerm (b X₀ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (a : ℝ) (x : ℝ) : ℝ :=
+noncomputable def absTerm (w : ℝ → ℝ) (X₀ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (a : ℝ) (x : ℝ) : ℝ :=
   if x < X₀ then 0 else
-    (if a ∈ A ∧ (a : ℝ) ≤ x then (1 : ℝ) else 0) - ∫ v in X₀..x, absorbedBump b A u a v
+    (if a ∈ A ∧ (a : ℝ) ≤ x then (1 : ℝ) else 0) - ∫ v in X₀..x, absorbedBump w A u a v
 
-lemma absTerm_of_notMem {a : ℝ} (hA : a ∉ A) (x : ℝ) : absTerm b X₀ A u a x = 0 := by
-  have hb : absorbedBump b A u a = fun _ => 0 := by ext v; simp [absorbedBump, hA]
+lemma absTerm_of_notMem {a : ℝ} (hA : a ∉ A) (x : ℝ) : absTerm w X₀ A u a x = 0 := by
+  have hb : absorbedBump w A u a = fun _ => 0 := by ext v; simp [absorbedBump, hA]
   simp [absTerm, hb, hA]
 
 /-- `E_A = ∑_a e_a` when the cap is inactive. -/
-lemma absE_eq_tsum (h : AbsorbedWindowHyp b X₀ A u)
-    (hcap : ∀ v ≥ X₀, absorbedDensity b A u v ≤ 0.1 / Real.log v) (x : ℝ) :
-    absE X₀ (countA A) (absorbedDensityCap b A u) x = ∑' a : ℝ, absTerm b X₀ A u a x := by
+lemma absE_eq_tsum (h : AbsorbedWindowHyp w X₀ A u)
+    (hcap : ∀ v ≥ X₀, absorbedDensity w A u v ≤ 0.1 / Real.log v) (x : ℝ) :
+    absE X₀ (countA A) (absorbedDensityCap w A u) x = ∑' a : ℝ, absTerm w X₀ A u a x := by
   by_cases hx : x < X₀
   · simp [absE, absTerm, hx]
   push_neg at hx
   have hx1 : 1 ≤ x := le_trans h.X₀_ge hx
   set S := below h.fin (2 * x)
-  have hcapI : ∫ v in X₀..x, absorbedDensityCap b A u v =
-      ∑ a ∈ S, ∫ v in X₀..x, absorbedBump b A u a v := by
+  have hcapI : ∫ v in X₀..x, absorbedDensityCap w A u v =
+      ∑ a ∈ S, ∫ v in X₀..x, absorbedBump w A u a v := by
     rw [← intervalIntegral.integral_finset_sum fun a _ => intervalIntegrable_absorbedBump h a hx]
     refine intervalIntegral.integral_congr fun v hv => ?_
     rw [uIcc_of_le hx] at hv
     simp only [absorbedDensityCap]
     rw [min_eq_left (hcap v hv.1), absorbedDensity_eq_sum h hv.1 hv.2]
-  have hzero : ∀ a ∉ S, absTerm b X₀ A u a x = 0 := by
+  have hzero : ∀ a ∉ S, absTerm w X₀ A u a x = 0 := by
     intro a ha
     by_cases hA : a ∈ A
     swap
     · exact absTerm_of_notMem hA x
     have ha' : 2 * x < a := by
       by_contra hc; exact ha ((mem_below h.fin).2 ⟨hA, not_lt.mp hc⟩)
-    have hI : ∫ v in X₀..x, absorbedBump b A u a v = 0 := by
+    have hI : ∫ v in X₀..x, absorbedBump w A u a v = 0 := by
       rw [intervalIntegral.integral_congr (g := fun _ => (0 : ℝ)) ?_, intervalIntegral.integral_zero]
       intro v hv
       rw [uIcc_of_le hx] at hv
@@ -71,10 +72,9 @@ lemma absE_eq_tsum (h : AbsorbedWindowHyp b X₀ A u)
       rw [if_pos hA]
       apply Set.indicator_of_notMem
       rintro ⟨h1, h2⟩
-      have hU : 0 ≤ u a := by linarith [h.u_ge a hA, h.X₀_ge]
-      have e1 : u a ^ b ≤ x ^ b := Real.rpow_le_rpow hU (h1.trans hv.2) h.b_pos.le
-      have e2 : x ^ b ≤ x := by
-        simpa using Real.rpow_le_rpow_of_exponent_le hx1 h.b_le
+      have hU := u_pos h hA
+      have e1 : w (u a) ≤ w x := h.win.mono' hU (h1.trans hv.2)
+      have e2 : w x ≤ x := h.win.le_self hx1
       linarith [h.u_eq a hA, hv.2]
     have hnot : ¬ (a ∈ A ∧ (a : ℝ) ≤ x) := fun hc => by linarith [hc.2]
     simp [absTerm, not_lt.mpr hx, hnot, hI]
@@ -82,8 +82,8 @@ lemma absE_eq_tsum (h : AbsorbedWindowHyp b X₀ A u)
   simp only [absE, absTerm, if_neg (not_lt.mpr hx)]
   rw [Finset.sum_sub_distrib, countA_eq_sum h hx, hcapI]
 
-lemma absTerm_of_le (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {x : ℝ} (hx : x ≤ X₀) :
-    absTerm b X₀ A u a x = 0 := by
+lemma absTerm_of_le (h : AbsorbedWindowHyp w X₀ A u) (a : ℝ) {x : ℝ} (hx : x ≤ X₀) :
+    absTerm w X₀ A u a x = 0 := by
   by_cases hA : a ∈ A
   · rcases hx.lt_or_eq with hx | hx
     · simp [absTerm, hx]
@@ -92,26 +92,26 @@ lemma absTerm_of_le (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {x : ℝ} (hx :
   · exact absTerm_of_notMem hA x
 
 lemma bump_eq_indicator {a : ℝ} (hA : a ∈ A) :
-    absorbedBump b A u a = (Icc (u a) (a : ℝ)).indicator (fun w => w ^ (-b)) := by
+    absorbedBump w A u a = (Icc (u a) (a : ℝ)).indicator (fun v => (w v)⁻¹) := by
   ext v; simp [absorbedBump, hA]
 
-/-- `∫_{X₀}^∞ 1[u_a ≤ v ≤ a] v^{-b} v^{-s} dv = a^{-s} w_a(s)`. -/
-lemma integral_bump_cpow (h : AbsorbedWindowHyp b X₀ A u) {a : ℝ} (hA : a ∈ A) (s : ℂ) :
-    ∫ v in Ioi X₀, (absorbedBump b A u a v : ℂ) * (v : ℂ) ^ (-s) =
-      ((a : ℝ) : ℂ) ^ (-s) * Weights.weight b a (u a) s := by
+/-- `∫_{X₀}^∞ 1[u_a ≤ v ≤ a] h(v)⁻¹ v^{-s} dv = a^{-s} w_a(s)`. -/
+lemma integral_bump_cpow (h : AbsorbedWindowHyp w X₀ A u) {a : ℝ} (hA : a ∈ A) (s : ℂ) :
+    ∫ v in Ioi X₀, (absorbedBump w A u a v : ℂ) * (v : ℂ) ^ (-s) =
+      ((a : ℝ) : ℂ) ^ (-s) * Weights.weight w a (u a) s := by
   have hUX := h.u_ge a hA
   have hUa := u_lt h hA
   have hU : 0 < u a := by linarith [h.X₀_ge]
   have ha : (0 : ℝ) < a := by linarith
-  have e : (fun v : ℝ => (absorbedBump b A u a v : ℂ) * (v : ℂ) ^ (-s)) =
-      (Icc (u a) (a : ℝ)).indicator (fun v : ℝ => ((v ^ (-b) : ℝ) : ℂ) * (v : ℂ) ^ (-s)) := by
+  have e : (fun v : ℝ => (absorbedBump w A u a v : ℂ) * (v : ℂ) ^ (-s)) =
+      (Icc (u a) (a : ℝ)).indicator (fun v : ℝ => (((w v)⁻¹ : ℝ) : ℂ) * (v : ℂ) ^ (-s)) := by
     funext v
     rw [bump_eq_indicator hA]
     by_cases hv : v ∈ Icc (u a) (a : ℝ)
     · simp [indicator_of_mem hv]
     · simp [indicator_of_notMem hv]
-  have hset : ∫ v in Ioi X₀ ∩ Icc (u a) (a : ℝ), ((v ^ (-b) : ℝ) : ℂ) * (v : ℂ) ^ (-s) =
-      ∫ v in Ioc (u a) (a : ℝ), ((v ^ (-b) : ℝ) : ℂ) * (v : ℂ) ^ (-s) := by
+  have hset : ∫ v in Ioi X₀ ∩ Icc (u a) (a : ℝ), (((w v)⁻¹ : ℝ) : ℂ) * (v : ℂ) ^ (-s) =
+      ∫ v in Ioc (u a) (a : ℝ), (((w v)⁻¹ : ℝ) : ℂ) * (v : ℂ) ^ (-s) := by
     rcases hUX.lt_or_eq with hlt | heq
     · rw [inter_eq_right.mpr (Icc_subset_Ioi_iff hUa.le |>.mpr hlt), integral_Icc_eq_integral_Ioc]
     · have hs : Ioi X₀ ∩ Icc (u a) (a : ℝ) = Ioc (u a) (a : ℝ) := by
@@ -138,11 +138,11 @@ lemma integral_bump_cpow (h : AbsorbedWindowHyp b X₀ A u) {a : ℝ} (hA : a �
 
 /-- The transform of one element: `s ∫_1^∞ e_a(x) x^{-s-1} dx = a^{-s}(1 - w_a(s))` (and `0` for
 `a ∉ A`). -/
-lemma mellin_absTerm (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {s : ℂ} (hs : 0 < s.re) :
-    IntegrableOn (fun x : ℝ => (absTerm b X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1)) (Ioi 1) ∧
-      s * tailMellin (absTerm b X₀ A u a) s = absorbedTerm b A u s a := by
+lemma mellin_absTerm (h : AbsorbedWindowHyp w X₀ A u) (a : ℝ) {s : ℂ} (hs : 0 < s.re) :
+    IntegrableOn (fun x : ℝ => (absTerm w X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1)) (Ioi 1) ∧
+      s * tailMellin (absTerm w X₀ A u a) s = absorbedTerm w A u s a := by
   by_cases hA : a ∉ A
-  · have hz : (fun x : ℝ => (absTerm b X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1)) = fun _ => 0 := by
+  · have hz : (fun x : ℝ => (absTerm w X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1)) = fun _ => 0 := by
       funext x; simp [absTerm_of_notMem hA x]
     refine ⟨by rw [hz]; exact integrableOn_zero, ?_⟩
     unfold tailMellin absorbedTerm
@@ -155,21 +155,21 @@ lemma mellin_absTerm (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {s : ℂ} (hs 
   have hU : 0 < u a := by linarith
   have haX : X₀ < a := lt_of_le_of_lt hUX hUa
   -- integrability of the bump against `v^{-σ}`
-  have hg : IntegrableOn (fun v => absorbedBump b A u a v * v ^ (-s.re)) (Ioi X₀) := by
-    have e : (fun v => absorbedBump b A u a v * v ^ (-s.re)) =
-        (Icc (u a) (a : ℝ)).indicator (fun v => v ^ (-b) * v ^ (-s.re)) := by
+  have hg : IntegrableOn (fun v => absorbedBump w A u a v * v ^ (-s.re)) (Ioi X₀) := by
+    have e : (fun v => absorbedBump w A u a v * v ^ (-s.re)) =
+        (Icc (u a) (a : ℝ)).indicator (fun v => (w v)⁻¹ * v ^ (-s.re)) := by
       rw [bump_eq_indicator hA]; ext v; rw [Set.indicator_mul_left]
     rw [e]
     refine Integrable.integrableOn ((integrable_indicator_iff measurableSet_Icc).mpr ?_)
-    refine ContinuousOn.integrableOn_Icc fun v hv => ?_
+    refine ContinuousOn.integrableOn_Icc ((continuousOn_inv_win h.win hU).mul ?_)
+    intro v hv
     have hv0 : 0 < v := lt_of_lt_of_le hU hv.1
-    exact ((Real.continuousAt_rpow_const _ _ (Or.inl hv0.ne')).mul
-      (Real.continuousAt_rpow_const _ _ (Or.inl hv0.ne'))).continuousWithinAt
+    exact (Real.continuousAt_rpow_const _ _ (Or.inl hv0.ne')).continuousWithinAt
   obtain ⟨hPint, hPval⟩ := mellin_primitive hX0 hs hg
   set F : ℝ → ℂ := fun x => (if (a : ℝ) ≤ x then (x : ℂ) ^ (-s - 1) else 0) -
-    ((∫ v in X₀..x, absorbedBump b A u a v : ℝ) : ℂ) * (x : ℂ) ^ (-s - 1) with hF
+    ((∫ v in X₀..x, absorbedBump w A u a v : ℝ) : ℂ) * (x : ℂ) ^ (-s - 1) with hF
   have hFint : IntegrableOn F (Ioi X₀) := (integrableOn_Ioi_ite_cpow hX0 hs).sub hPint
-  have heq : ∀ x ∈ Ioi (1 : ℝ), (absTerm b X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1) =
+  have heq : ∀ x ∈ Ioi (1 : ℝ), (absTerm w X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1) =
       (Ioi X₀).indicator F x := by
     intro x _
     by_cases hx : x ≤ X₀
@@ -180,7 +180,7 @@ lemma mellin_absTerm (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {s : ℂ} (hs 
       by_cases hax : (a : ℝ) ≤ x
       · simp [hax, hA]; ring
       · simp [hax]
-  have hint : IntegrableOn (fun x : ℝ => (absTerm b X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1))
+  have hint : IntegrableOn (fun x : ℝ => (absTerm w X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1))
       (Ioi 1) := by
     refine IntegrableOn.congr_fun ?_ (fun x hx => (heq x hx).symm) measurableSet_Ioi
     exact ((integrable_indicator_iff measurableSet_Ioi).mpr hFint).integrableOn
@@ -193,20 +193,19 @@ lemma mellin_absTerm (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {s : ℂ} (hs 
   have hs0 : s ≠ 0 := by rintro rfl; simp at hs
   field_simp
 
-/-- The integral of the norm of one term: `∫_1^∞ |e_a(x)| x^{-σ-1} dx ≤ K a^{b-σ-1}` with
-`K = 2^{σ+1-b} (1 + 1/σ)`. -/
-lemma lintegral_absTerm_le (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {s : ℂ} (hs : b < s.re) :
-    ∫⁻ x in Ioi (1 : ℝ), ‖(absTerm b X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1)‖ₑ ≤
-      ENNReal.ofReal (2 ^ (s.re + 1 - b) * (1 + 1 / s.re) * (a : ℝ) ^ (b - s.re - 1)) := by
+/-- The integral of the norm of one term: `∫_1^∞ |e_a(x)| x^{-σ-1} dx ≤ K a^{1/8-σ-1}` with
+`K = 2^{σ+1-1/8} (1 + 1/σ)`. -/
+lemma lintegral_absTerm_le (h : AbsorbedWindowHyp w X₀ A u) (a : ℝ) {s : ℂ}
+    (hs : (1 / 8 : ℝ) < s.re) :
+    ∫⁻ x in Ioi (1 : ℝ), ‖(absTerm w X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1)‖ₑ ≤
+      ENNReal.ofReal (2 ^ (s.re + 1 - 1 / 8) * (1 + 1 / s.re) * (a : ℝ) ^ (1 / 8 - s.re - 1)) := by
   by_cases hA : a ∉ A
-  · have hz : ∀ x, ‖(absTerm b X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1)‖ₑ = 0 := fun x => by
+  · have hz : ∀ x, ‖(absTerm w X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1)‖ₑ = 0 := fun x => by
       simp [absTerm_of_notMem hA x]
     simp only [hz, lintegral_zero, zero_le]
   push_neg at hA
   set σ := s.re with hσdef
-  have hb := h.b_pos
-  have hb1 := h.b_le
-  have hσ : 0 < σ := lt_trans hb hs
+  have hσ : 0 < σ := lt_trans (by norm_num) hs
   have hX1 := h.X₀_ge
   have hUX := h.u_ge a hA
   have hUa := u_lt h hA
@@ -215,18 +214,18 @@ lemma lintegral_absTerm_le (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {s : ℂ
   have hU1 : 1 ≤ U := by linarith
   have ha : (0 : ℝ) < a := by linarith
   have ha1 : (1 : ℝ) ≤ a := by linarith
-  have hdiff : (a : ℝ) - U = U ^ b := by linarith [h.u_eq a hA]
+  have hdiff : (a : ℝ) - U = w U := by linarith [h.u_eq a hA]
   obtain ⟨hM1, hM2⟩ := mass_bounds h hA
-  set M := ∫ v in U..(a : ℝ), v ^ (-b) with hM
-  set ε := 1 - U ^ b * (a : ℝ) ^ (-b) with hε
+  set M := ∫ v in U..(a : ℝ), (w v)⁻¹ with hM
+  set ε := 1 - (U / a) ^ (1 / 8 : ℝ) with hε
   have hε0 : 0 ≤ ε := by linarith
   have hM0 : 0 ≤ M := by
-    refine intervalIntegral.integral_nonneg hUa.le fun v hv => Real.rpow_nonneg ?_ _
-    linarith [hv.1]
+    refine intervalIntegral.integral_nonneg hUa.le fun v hv =>
+      inv_nonneg.mpr (h.win.pos v (by linarith [hv.1])).le
   -- the pointwise bound
   set G : ℝ → ℝ := fun x => (Ico U (a : ℝ)).indicator (fun _ => U ^ (-σ - 1)) x +
     (if (a : ℝ) ≤ x then ε else 0) * x ^ (-σ - 1) with hG
-  have hpt : ∀ x ∈ Ioi (1 : ℝ), ‖(absTerm b X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1)‖ ≤ G x := by
+  have hpt : ∀ x ∈ Ioi (1 : ℝ), ‖(absTerm w X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1)‖ ≤ G x := by
     intro x hx
     have hx0 : (0 : ℝ) < x := lt_trans one_pos hx
     have hxs : 0 ≤ x ^ (-σ - 1) := Real.rpow_nonneg hx0.le _
@@ -240,12 +239,12 @@ lemma lintegral_absTerm_le (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {s : ℂ
     by_cases hxX : x ≤ X₀
     · rw [absTerm_of_le h a hxX]; simp only [abs_zero, zero_mul]; exact add_nonneg hG1 hG2
     push_neg at hxX
-    have hval : absTerm b X₀ A u a x = (if (a : ℝ) ≤ x then (1 : ℝ) else 0) -
-        ∫ v in X₀..x, absorbedBump b A u a v := by
+    have hval : absTerm w X₀ A u a x = (if (a : ℝ) ≤ x then (1 : ℝ) else 0) -
+        ∫ v in X₀..x, absorbedBump w A u a v := by
       simp [absTerm, not_lt.mpr hxX.le, hA]
     rw [hval, bump_eq_indicator hA]
     by_cases hxU : x < U
-    · have hI : ∫ v in X₀..x, (Icc U (a : ℝ)).indicator (fun w => w ^ (-b)) v = 0 := by
+    · have hI : ∫ v in X₀..x, (Icc U (a : ℝ)).indicator (fun v => (w v)⁻¹) v = 0 := by
         rw [intervalIntegral.integral_congr (g := fun _ => (0 : ℝ)) ?_,
           intervalIntegral.integral_zero]
         intro v hv
@@ -264,16 +263,17 @@ lemma lintegral_absTerm_le (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {s : ℂ
       exact mul_le_mul_of_nonneg_right (by linarith) hxs
     · push_neg at hax
       rw [if_neg (not_le.mpr hax), min_eq_right hax.le, zero_sub, abs_neg]
-      have hI0 : 0 ≤ ∫ v in U..x, v ^ (-b) :=
-        intervalIntegral.integral_nonneg hxU fun v hv => Real.rpow_nonneg (by linarith [hv.1]) _
-      have hI1 : ∫ v in U..x, v ^ (-b) ≤ M := by
+      have hI0 : 0 ≤ ∫ v in U..x, (w v)⁻¹ :=
+        intervalIntegral.integral_nonneg hxU fun v hv =>
+          inv_nonneg.mpr (h.win.pos v (by linarith [hv.1])).le
+      have hI1 : ∫ v in U..x, (w v)⁻¹ ≤ M := by
         rw [hM]
         refine intervalIntegral.integral_mono_interval le_rfl hxU hax.le ?_ ?_
         · refine (ae_restrict_mem measurableSet_Ioc).mono fun v hv => ?_
-          exact Real.rpow_nonneg (by linarith [hv.1]) _
-        · refine ContinuousOn.intervalIntegrable fun v hv => ?_
-          rw [uIcc_of_le hUa.le] at hv
-          exact (Real.continuousAt_rpow_const _ _ (Or.inl (by linarith [hv.1]))).continuousWithinAt
+          exact inv_nonneg.mpr (h.win.pos v (by linarith [hv.1])).le
+        · refine ContinuousOn.intervalIntegrable ?_
+          rw [uIcc_of_le hUa.le]
+          exact continuousOn_inv_win h.win hU
       rw [abs_of_nonneg hI0]
       have hind : (Ico U (a : ℝ)).indicator (fun _ => U ^ (-σ - 1)) x = U ^ (-σ - 1) :=
         Set.indicator_of_mem (show x ∈ Ico U (a : ℝ) from ⟨hxU, hax⟩) _
@@ -281,7 +281,7 @@ lemma lintegral_absTerm_le (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {s : ℂ
         rw [if_neg (not_le.mpr hax), zero_mul]
       simp only [hG]
       rw [hind, h2, add_zero]
-      calc (∫ v in U..x, v ^ (-b)) * x ^ (-σ - 1) ≤ 1 * x ^ (-σ - 1) :=
+      calc (∫ v in U..x, (w v)⁻¹) * x ^ (-σ - 1) ≤ 1 * x ^ (-σ - 1) :=
             mul_le_mul_of_nonneg_right (by linarith) hxs
         _ ≤ U ^ (-σ - 1) := by
             rw [one_mul]; exact Real.rpow_le_rpow_of_nonpos hU hxU (by linarith)
@@ -317,50 +317,54 @@ lemma lintegral_absTerm_le (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {s : ℂ
       _ = ENNReal.ofReal ((a : ℝ) - U) := Real.volume_Ico
   -- the numerical bound
   have hnum : U ^ (-σ - 1) * ((a : ℝ) - U) + ε * (a : ℝ) ^ (-σ) / σ ≤
-      2 ^ (σ + 1 - b) * (1 + 1 / σ) * (a : ℝ) ^ (b - σ - 1) := by
-    have hUb : U ^ b ≤ U := by
-      simpa using Real.rpow_le_rpow_of_exponent_le hU1 hb1
+      2 ^ (σ + 1 - 1 / 8) * (1 + 1 / σ) * (a : ℝ) ^ (1 / 8 - σ - 1) := by
+    have hwU : w U ≤ U ^ (1 / 8 : ℝ) := h.win.le_rpow U hU
+    have hwU1 : w U ≤ U := h.win.le_self hU1
     have ha2 : (a : ℝ) / 2 ≤ U := by linarith
-    have hε' : ε ≤ U ^ b / a := by
+    have hε' : ε ≤ w U / a := by
       have hr0 : 0 < U / a := div_pos hU ha
       have hr1 : U / a ≤ 1 := (div_le_one ha).mpr hUa.le
-      have h1 : U / a ≤ (U / a) ^ b := by
-        simpa using Real.rpow_le_rpow_of_exponent_ge hr0 hr1 hb1
-      have h2 : (U / a) ^ b = U ^ b * (a : ℝ) ^ (-b) := by
-        rw [Real.div_rpow hU.le ha.le, Real.rpow_neg ha.le, div_eq_mul_inv]
-      rw [hε, ← h2]
-      have h3 : U ^ b / a = 1 - U / a := by
+      have h1 : U / a ≤ (U / a) ^ (1 / 8 : ℝ) := by
+        simpa using Real.rpow_le_rpow_of_exponent_ge hr0 hr1 (show (1 / 8 : ℝ) ≤ 1 by norm_num)
+      have h3 : w U / a = 1 - U / a := by
         rw [← hdiff]; field_simp
-      rw [h3]; linarith
-    have hT1 : U ^ (-σ - 1) * ((a : ℝ) - U) = U ^ (b - σ - 1) := by
-      rw [hdiff, ← Real.rpow_add hU]; ring_nf
-    have hT2 : ε * (a : ℝ) ^ (-σ) / σ ≤ U ^ (b - σ - 1) / σ := by
-      have h1 : ε * (a : ℝ) ^ (-σ) ≤ U ^ b * (a : ℝ) ^ (-σ - 1) := by
-        calc ε * (a : ℝ) ^ (-σ) ≤ U ^ b / a * (a : ℝ) ^ (-σ) :=
+      rw [hε, h3]; linarith
+    have hT1 : U ^ (-σ - 1) * ((a : ℝ) - U) ≤ U ^ (1 / 8 - σ - 1) := by
+      rw [hdiff]
+      calc U ^ (-σ - 1) * w U ≤ U ^ (-σ - 1) * U ^ (1 / 8 : ℝ) :=
+            mul_le_mul_of_nonneg_left hwU (Real.rpow_nonneg hU.le _)
+        _ = U ^ (1 / 8 - σ - 1) := by rw [← Real.rpow_add hU]; ring_nf
+    have hT2 : ε * (a : ℝ) ^ (-σ) / σ ≤ U ^ (1 / 8 - σ - 1) / σ := by
+      have h1 : ε * (a : ℝ) ^ (-σ) ≤ U ^ (1 / 8 : ℝ) * (a : ℝ) ^ (-σ - 1) := by
+        calc ε * (a : ℝ) ^ (-σ) ≤ w U / a * (a : ℝ) ^ (-σ) :=
               mul_le_mul_of_nonneg_right hε' (Real.rpow_nonneg ha.le _)
-          _ = U ^ b * (a : ℝ) ^ (-σ - 1) := by
+          _ ≤ U ^ (1 / 8 : ℝ) / a * (a : ℝ) ^ (-σ) :=
+              mul_le_mul_of_nonneg_right (div_le_div_of_nonneg_right hwU ha.le)
+                (Real.rpow_nonneg ha.le _)
+          _ = U ^ (1 / 8 : ℝ) * (a : ℝ) ^ (-σ - 1) := by
               rw [Real.rpow_sub ha, Real.rpow_one]; ring
-      have h2 : U ^ b * (a : ℝ) ^ (-σ - 1) ≤ U ^ b * U ^ (-σ - 1) :=
+      have h2 : U ^ (1 / 8 : ℝ) * (a : ℝ) ^ (-σ - 1) ≤ U ^ (1 / 8 : ℝ) * U ^ (-σ - 1) :=
         mul_le_mul_of_nonneg_left (Real.rpow_le_rpow_of_nonpos hU hUa.le (by linarith))
           (Real.rpow_nonneg hU.le _)
-      have h3 : U ^ b * U ^ (-σ - 1) = U ^ (b - σ - 1) := by
+      have h3 : U ^ (1 / 8 : ℝ) * U ^ (-σ - 1) = U ^ (1 / 8 - σ - 1) := by
         rw [← Real.rpow_add hU]; ring_nf
       exact div_le_div_of_nonneg_right (h1.trans (h2.trans h3.le)) hσ.le
-    have hT3 : U ^ (b - σ - 1) ≤ 2 ^ (σ + 1 - b) * (a : ℝ) ^ (b - σ - 1) := by
-      have h1 : U ^ (b - σ - 1) ≤ ((a : ℝ) / 2) ^ (b - σ - 1) :=
+    have hT3 : U ^ (1 / 8 - σ - 1) ≤ 2 ^ (σ + 1 - 1 / 8) * (a : ℝ) ^ (1 / 8 - σ - 1) := by
+      have h1 : U ^ (1 / 8 - σ - 1) ≤ ((a : ℝ) / 2) ^ (1 / 8 - σ - 1) :=
         Real.rpow_le_rpow_of_nonpos (by positivity) ha2 (by linarith)
-      have h2 : ((a : ℝ) / 2) ^ (b - σ - 1) = 2 ^ (σ + 1 - b) * (a : ℝ) ^ (b - σ - 1) := by
+      have h2 : ((a : ℝ) / 2) ^ (1 / 8 - σ - 1) =
+          2 ^ (σ + 1 - 1 / 8) * (a : ℝ) ^ (1 / 8 - σ - 1) := by
         rw [Real.div_rpow ha.le (by norm_num), div_eq_mul_inv, ← Real.rpow_neg (by norm_num)]
         ring_nf
       linarith
-    have hpos : 0 ≤ U ^ (b - σ - 1) := Real.rpow_nonneg hU.le _
+    have hpos : 0 ≤ U ^ (1 / 8 - σ - 1) := Real.rpow_nonneg hU.le _
     calc U ^ (-σ - 1) * ((a : ℝ) - U) + ε * (a : ℝ) ^ (-σ) / σ
-        ≤ U ^ (b - σ - 1) + U ^ (b - σ - 1) / σ := by rw [hT1]; linarith
-      _ = (1 + 1 / σ) * U ^ (b - σ - 1) := by ring
-      _ ≤ (1 + 1 / σ) * (2 ^ (σ + 1 - b) * (a : ℝ) ^ (b - σ - 1)) := by
+        ≤ U ^ (1 / 8 - σ - 1) + U ^ (1 / 8 - σ - 1) / σ := by linarith
+      _ = (1 + 1 / σ) * U ^ (1 / 8 - σ - 1) := by ring
+      _ ≤ (1 + 1 / σ) * (2 ^ (σ + 1 - 1 / 8) * (a : ℝ) ^ (1 / 8 - σ - 1)) := by
           gcongr
-      _ = 2 ^ (σ + 1 - b) * (1 + 1 / σ) * (a : ℝ) ^ (b - σ - 1) := by ring
-  calc ∫⁻ x in Ioi (1 : ℝ), ‖(absTerm b X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1)‖ₑ
+      _ = 2 ^ (σ + 1 - 1 / 8) * (1 + 1 / σ) * (a : ℝ) ^ (1 / 8 - σ - 1) := by ring
+  calc ∫⁻ x in Ioi (1 : ℝ), ‖(absTerm w X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1)‖ₑ
       ≤ ∫⁻ x in Ioi (1 : ℝ), ENNReal.ofReal (G x) := by
         refine setLIntegral_mono' measurableSet_Ioi fun x hx => ?_
         rw [← ofReal_norm_eq_enorm]
@@ -369,18 +373,18 @@ lemma lintegral_absTerm_le (h : AbsorbedWindowHyp b X₀ A u) (a : ℝ) {s : ℂ
     _ ≤ _ := ENNReal.ofReal_le_ofReal hnum
 
 /-- The absorbed density is at most the number of elements of `A` up to `2v`. -/
-lemma absorbedDensity_le_card (h : AbsorbedWindowHyp b X₀ A u) {v : ℝ} (hv : X₀ ≤ v) :
-    absorbedDensity b A u v ≤ (below h.fin (2 * v)).card := by
+lemma absorbedDensity_le_card (h : AbsorbedWindowHyp w X₀ A u) {v : ℝ} (hv : X₀ ≤ v) :
+    absorbedDensity w A u v ≤ (below h.fin (2 * v)).card := by
   rw [absorbedDensity_eq_sum h hv le_rfl]
   have hv1 : 1 ≤ v := h.X₀_ge.trans hv
-  calc ∑ a ∈ below h.fin (2 * v), absorbedBump b A u a v
+  calc ∑ a ∈ below h.fin (2 * v), absorbedBump w A u a v
       ≤ ∑ _a ∈ below h.fin (2 * v), (1 : ℝ) := by
         refine Finset.sum_le_sum fun a _ => ?_
         unfold absorbedBump
         split_ifs
         · unfold Set.indicator
           split_ifs
-          · exact Real.rpow_le_one_of_one_le_of_nonpos hv1 (by linarith [h.b_pos])
+          · exact inv_le_one_of_one_le₀ (h.win.one_le v hv1)
           · norm_num
         · norm_num
     _ = _ := by simp
@@ -388,11 +392,11 @@ lemma absorbedDensity_le_card (h : AbsorbedWindowHyp b X₀ A u) {v : ℝ} (hv :
 /-- **A linear bound for the count from the cap.** If `ρ_A ≤ 0.1/log` on `[X₀, ∞)`, then
 `#(A ∩ [1, x]) ≤ C x` for some `C > 0` (by Lemma 3.4). (For `A ⊆ ℕ` this was automatic; for a set
 of real values it is what makes `∑_{a ∈ A} a^{-σ}` converge for `σ > 1`.) -/
-lemma countA_le_linear (h : AbsorbedWindowHyp b X₀ A u)
-    (hcap : ∀ v ≥ X₀, absorbedDensity b A u v ≤ 0.1 / Real.log v) :
+lemma countA_le_linear (h : AbsorbedWindowHyp w X₀ A u)
+    (hcap : ∀ v ≥ X₀, absorbedDensity w A u v ≤ 0.1 / Real.log v) :
     ∃ C > 0, ∀ x ≥ 1, countA A x ≤ C * x := by
   set ε : ℝ := 0.1 + (below h.fin (2 * Real.exp 1)).card with hεdef
-  have hε : ∀ v ≥ X₀, absorbedDensity b A u v ≤ ε := by
+  have hε : ∀ v ≥ X₀, absorbedDensity w A u v ≤ ε := by
     intro v hv
     have hv0 : 0 < v := by linarith [h.X₀_ge]
     have hc0 : (0 : ℝ) ≤ (below h.fin (2 * Real.exp 1)).card := Nat.cast_nonneg _
@@ -407,7 +411,7 @@ lemma countA_le_linear (h : AbsorbedWindowHyp b X₀ A u)
           rw [mem_below] at ha ⊢; exact ⟨ha.1, by linarith [ha.2]⟩
       linarith
   have hε0 : 0 < ε := by positivity
-  refine ⟨2 * ε, by positivity, fun x hx => ?_⟩
+  refine ⟨3 * ε, by positivity, fun x hx => ?_⟩
   by_cases hxX : x < X₀
   · have h0 : countA A x = 0 := by
       unfold countA
@@ -418,25 +422,41 @@ lemma countA_le_linear (h : AbsorbedWindowHyp b X₀ A u)
     rw [h0]; positivity
   push_neg at hxX
   have herr := absorbed_target_error h hε hxX
-  have hρi : IntervalIntegrable (absorbedDensity b A u) volume X₀ x := by
+  have hρi : IntervalIntegrable (absorbedDensity w A u) volume X₀ x := by
     refine (IntervalIntegrable.sum (below h.fin (2 * x)) fun a _ =>
       intervalIntegrable_absorbedBump h a hxX).congr ?_
     intro v hv
     rw [uIoc_of_le hxX] at hv
     simp only [Finset.sum_apply]
     exact (absorbedDensity_eq_sum h hv.1.le hv.2).symm
-  have hint : ∫ v in X₀..x, absorbedDensity b A u v ≤ ε * x := by
+  have hint : ∫ v in X₀..x, absorbedDensity w A u v ≤ ε * x := by
     have := intervalIntegral.integral_mono_on hxX hρi intervalIntegrable_const
       (fun v hv => hε v hv.1)
     simp only [intervalIntegral.integral_const, smul_eq_mul] at this
     nlinarith [h.X₀_ge]
-  have hxb : x ^ b ≤ x := by simpa using Real.rpow_le_rpow_of_exponent_le hx h.b_le
+  have hxb : w x ≤ x := h.win.le_self hx
+  have hJ : ∫ v in X₀..x, absorbedDensity w A u v * (w v / v) ≤ ε * x := by
+    have hc : ContinuousOn (fun v : ℝ => w v / v) (uIcc X₀ x) := by
+      rw [uIcc_of_le hxX]; exact continuousOn_win_div h.win (by linarith [h.X₀_ge])
+    have := intervalIntegral.integral_mono_on hxX (hρi.mul_continuousOn hc)
+      (intervalIntegrable_const (c := ε)) (fun v hv => by
+        have hv0 : 0 < v := by linarith [hv.1, h.X₀_ge]
+        have h0 : 0 ≤ absorbedDensity w A u v := by
+          rw [absorbedDensity_eq_sum h hv.1 hv.2]
+          exact Finset.sum_nonneg fun a _ => absorbedBump_nonneg h.win (by linarith [h.X₀_ge]) hv.1
+        have h1 : w v / v ≤ 1 := (div_le_one hv0).mpr (h.win.le_self (by linarith [hv.1, h.X₀_ge]))
+        have h2 : 0 ≤ w v / v := div_nonneg (h.win.pos v hv0).le hv0.le
+        calc absorbedDensity w A u v * (w v / v) ≤ ε * 1 :=
+              mul_le_mul (hε v hv.1) h1 h2 hε0.le
+          _ = ε := mul_one _)
+    simp only [intervalIntegral.integral_const, smul_eq_mul] at this
+    nlinarith [h.X₀_ge]
   have := (abs_le.mp herr).2
   nlinarith
 
 /-- `∑_{a ∈ A} a^{-β}` converges for `β > 1` when the cap is inactive. -/
-lemma summable_rpow_absorbed (h : AbsorbedWindowHyp b X₀ A u)
-    (hcap : ∀ v ≥ X₀, absorbedDensity b A u v ≤ 0.1 / Real.log v) {β : ℝ} (hβ : 1 < β) :
+lemma summable_rpow_absorbed (h : AbsorbedWindowHyp w X₀ A u)
+    (hcap : ∀ v ≥ X₀, absorbedDensity w A u v ≤ 0.1 / Real.log v) {β : ℝ} (hβ : 1 < β) :
     Summable fun a : A => (a : ℝ) ^ (-β) := by
   obtain ⟨C, hC, hlin⟩ := countA_le_linear h hcap
   have hN : ∀ x ≥ 1, countA A x ≤ x * Real.exp (-(fun _ : ℝ => -Real.log C) (Real.log x)) := by
@@ -451,22 +471,23 @@ lemma summable_rpow_absorbed (h : AbsorbedWindowHyp b X₀ A u)
   show (if a.1 ∈ A ∧ 1 < a.1 then a.1 ^ (-β) else 0) = _
   rw [if_pos ⟨a.2, hA1 _ a.2⟩]
 
-/-- **The absorbed part of the decomposition (14)**: when the cap is inactive, for `σ > b`,
+/-- **The absorbed part of the decomposition (14)**: when the cap is inactive, for `σ > 1/8`,
 `s ∫_1^∞ E_A(x) x^{-s-1} dx = Ê_A(s)` (with the integrand integrable). -/
-theorem mellin_absE (h : AbsorbedWindowHyp b X₀ A u)
-    (hcap : ∀ v ≥ X₀, absorbedDensity b A u v ≤ 0.1 / Real.log v) {s : ℂ} (hs : b < s.re) :
-    IntegrableOn (fun x : ℝ => (absE X₀ (countA A) (absorbedDensityCap b A u) x : ℂ) *
+theorem mellin_absE (h : AbsorbedWindowHyp w X₀ A u)
+    (hcap : ∀ v ≥ X₀, absorbedDensity w A u v ≤ 0.1 / Real.log v) {s : ℂ}
+    (hs : (1 / 8 : ℝ) < s.re) :
+    IntegrableOn (fun x : ℝ => (absE X₀ (countA A) (absorbedDensityCap w A u) x : ℂ) *
         (x : ℂ) ^ (-s - 1)) (Ioi 1) ∧
-      s * tailMellin (absE X₀ (countA A) (absorbedDensityCap b A u)) s = absorbedHat b A u s := by
-  have hs0 : 0 < s.re := lt_trans h.b_pos hs
+      s * tailMellin (absE X₀ (countA A) (absorbedDensityCap w A u)) s = absorbedHat w A u s := by
+  have hs0 : 0 < s.re := lt_trans (by norm_num) hs
   haveI : Countable A := h.fin.countable.to_subtype
-  set f : A → ℝ → ℂ := fun a x => (absTerm b X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1) with hf
+  set f : A → ℝ → ℂ := fun a x => (absTerm w X₀ A u a x : ℂ) * (x : ℂ) ^ (-s - 1) with hf
   have hfm : ∀ a, AEStronglyMeasurable (f a) (volume.restrict (Ioi 1)) := fun a =>
     (mellin_absTerm h a hs0).1.1
   have hsumm : Summable fun a : A =>
-      2 ^ (s.re + 1 - b) * (1 + 1 / s.re) * (a : ℝ) ^ (b - s.re - 1) := by
-    refine ((summable_rpow_absorbed h hcap (β := 1 + s.re - b) (by linarith)).mul_left
-      (2 ^ (s.re + 1 - b) * (1 + 1 / s.re))).congr fun a => ?_
+      2 ^ (s.re + 1 - 1 / 8) * (1 + 1 / s.re) * (a : ℝ) ^ (1 / 8 - s.re - 1) := by
+    refine ((summable_rpow_absorbed h hcap (β := 1 + s.re - 1 / 8) (by linarith)).mul_left
+      (2 ^ (s.re + 1 - 1 / 8) * (1 + 1 / s.re))).congr fun a => ?_
     congr 2
     ring
   have hfin : ∑' a, ∫⁻ x in Ioi (1 : ℝ), ‖f a x‖ₑ ≠ ⊤ := by
@@ -477,10 +498,10 @@ theorem mellin_absE (h : AbsorbedWindowHyp b X₀ A u)
       have : 0 ≤ (a : ℝ) := by
         linarith [lt_of_le_of_lt (h.u_ge a a.2) (u_lt h a.2), h.X₀_ge]
       positivity
-  have hsupp : ∀ x, ∑' a : ℝ, absTerm b X₀ A u a x = ∑' a : A, absTerm b X₀ A u a x :=
+  have hsupp : ∀ x, ∑' a : ℝ, absTerm w X₀ A u a x = ∑' a : A, absTerm w X₀ A u a x :=
     fun x => (tsum_subtype_eq_of_support_subset fun a ha => by
       by_contra hA; exact ha (absTerm_of_notMem hA x)).symm
-  have heq : (fun x : ℝ => (absE X₀ (countA A) (absorbedDensityCap b A u) x : ℂ) *
+  have heq : (fun x : ℝ => (absE X₀ (countA A) (absorbedDensityCap w A u) x : ℂ) *
       (x : ℂ) ^ (-s - 1)) = fun x => ∑' a, f a x := by
     funext x
     simp only [hf]

@@ -11,17 +11,18 @@ public import RequestProject.Beurling.Construction.LocalCount
 (they are now proved):
 
 * the parameters of Section 2.2 are fixed: `κ = X₀^{-5/12+2ε_κ}`, `κ₀ = X₀⁻¹`,
-  `x⁺_0 = exp(X₀²)`, `x⁺_{k+1} = exp(x⁺_k)`; their required properties (`0 < κ ≤ 1`,
-  `κ, κ₀ ≥ X₀⁻¹`, `κ₀ ≤ 1/4`, the spacing, `x⁺_0 ≥ X₀`, `log x⁺_0 ≥ X₀²`) are proved;
+  `x⁺_0 = exp(S²)` (`S = max(X₀, 1000/θ)`), `x⁺_{k+1} = exp(x⁺_k)`; their required properties
+  (`0 < κ ≤ 1`, `κ, κ₀ ≥ X₀⁻¹`, `κ₀ ≤ 1/4`, the spacing, `x⁺_0 ≥ X₀`, `log x⁺_0 ≥ X₀²`, the
+  switch-on condition) are proved;
 * the heights `γ_k` and amplitudes `α_k` are *defined* by the recursive rule of Lemma 4.8
   (`designedGamma`, `designedAlpha`); the fixed-point condition and `|α_k| ≤ 2` are proved;
 * the monotonicity of `v - H(v)/2` is no longer assumed: the floor `s - H(s)/2 ≥ X₀ - H(X₀)/2`
   for slots `s ≥ X₀`, which is what the placement of the jittered primes uses, is proved
   (`JitterFloor.capH_floor`);
 * `ρ_A ≤ (log v)^{-4}` (Lemma 6.27(a)) is derived from the pointwise sparsity of Lemma 6.26,
-  `#(A ∩ [v, v + v^{θ/2}]) ≤ v^{θ/2} (log v)^{-4}`, which takes its place (as in the paper,
+  `#(A ∩ [v, v + h(v)]) ≤ h(v) (log v)^{-4}`, which takes its place (as in the paper,
   "(a) is Lemma 6.26");
-* the weight hypotheses on `A` (`AbsorbedHyp`) are derived from `u_a + u_a^{θ/2} = a`, `u_a ≥ X₀`.
+* the weight hypotheses on `A` (`AbsorbedHyp`) are derived from `u_a + h(u_a) = a`, `u_a ≥ X₀`.
 -/
 
 @[expose] public section
@@ -36,13 +37,13 @@ namespace Construction
 scales `a_k` and the slot model `M`; `κ`, `x⁺`, `γ`, `α` are the fixed / designed ones. -/
 def PartIRest (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (M : SlotModel X₀) : Prop :=
-  (∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + u n ^ (thetaB θ) = n) ∧ LocFin A ∧
+  (∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + winH X₀ (u n) = n) ∧ LocFin A ∧
     (∀ v ≥ (X₀ : ℝ),
-      (localCountA A v (v + v ^ (thetaB θ)) : ℝ) ≤ v ^ (thetaB θ) * Real.log v ^ (-4 : ℤ)) ∧
-    (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (thetaB θ) A u)
-      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (switchOn X₀)) x) ∧
+      (localCountA A v (v + winH X₀ v) : ℝ) ≤ winH X₀ v * Real.log v ^ (-4 : ℤ)) ∧
+    (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (winH X₀) A u)
+      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (switchOn (swS θ X₀))) x) ∧
     M.QueueWindowData ∧
     ∃ κp : ℝ → ℝ,
     (∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x) ∧
@@ -58,12 +59,12 @@ jittered primes `jit` and the latest-prime map `latest`); the pieces of `D̂_{<a
 def Theorem410Rest (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (jit : Set ℝ) (latest : ℝ → ℝ) : Prop :=
   A ⊆ absorbedRule (10 ^ 7) jit latest (absorbY X₀) ∧
-    (∀ k, Lemma48PiecesCount X₀ (heightScale θ (kappa0Param X₀) (switchOn X₀ k))
+    (∀ k, Lemma48PiecesCount X₀ (heightScale θ (kappa0Param X₀) (switchOn (swS θ X₀) k))
       (earlyOf P θ X₀ (kappaParam X₀) A u
-        (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (switchOn X₀) a k)) ∧
-    (∀ k, 0 < a k ∧ a k ≤ switchOn X₀ k ∧ switchOn X₀ k ≤ (1 + 1 / 1000) * a k) ∧
+        (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (switchOn (swS θ X₀)) a k)) ∧
+    (∀ k, 0 < a k ∧ a k ≤ switchOn (swS θ X₀) k ∧ switchOn (swS θ X₀) k ≤ (1 + 1 / 1000) * a k) ∧
     (∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →
       countA A x ≤ x * Real.exp (-sigmaStar (Real.log X₀) (Real.log x)))
 
@@ -72,7 +73,7 @@ heights designed.** As `Theorem21InputsCon`, without the monotonicity of `v - H(
 the parameter conditions of Section 2.2 and without the fixed-point condition on `γ_k, α_k`; the
 density bound `ρ_A ≤ (log v)^{-4}` is replaced by Lemma 6.26. -/
 def Theorem21InputsFix : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -99,23 +100,24 @@ theorem GreedyRun.jittered_ge_of_floor {X₀ : ℕ} (R : GreedyRun X₀)
 
 /-- `Γ_k > 0` for the switch-on points. -/
 lemma heightScale_switchOn_pos (θ : ℝ) {X₀ : ℝ} (hX : 1 ≤ X₀) (k : ℕ) :
-    0 < heightScale θ (kappa0Param X₀) (switchOn X₀ k) := by
-  have h1 : 1 < switchOn X₀ k := by
+    0 < heightScale θ (kappa0Param X₀) (switchOn (swS θ X₀) k) := by
+  have h1 : 1 < switchOn (swS θ X₀) k := by
     cases k with
     | zero =>
-      show 1 < Real.exp (X₀ ^ 2)
-      exact Real.one_lt_exp_iff.mpr (by positivity)
-    | succ k => exact switchOn_gt_one X₀ k
+      show 1 < Real.exp (swS θ X₀ ^ 2)
+      have := le_swS θ X₀
+      exact Real.one_lt_exp_iff.mpr (by nlinarith)
+    | succ k => exact switchOn_gt_one _ k
   have hL := Real.log_pos h1
   unfold heightScale kappa0Param
   have : 0 < X₀ := by linarith
-  have := Real.rpow_pos_of_pos (by linarith : (0 : ℝ) < switchOn X₀ k) (1 - θ)
+  have := Real.rpow_pos_of_pos (by linarith : (0 : ℝ) < switchOn (swS θ X₀) k) (1 - θ)
   positivity
 
 /-- `Theorem21InputsFix` with the probability budget stated as its conclusion
 `P(G) ≥ 1 - 1.5/log X₀` (for the good event `G = ⋂ E`). -/
 def Theorem21InputsFixP : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (E : ι → Set JitterΩ),
       ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ jitterMeasure (goodAll E) ∧
@@ -164,13 +166,13 @@ theorem theorem21InputsDec_of_fixP (h : Theorem21InputsFixP) : Theorem21InputsDe
     obtain ⟨hAu, hAfin, h626, hT, hq, κp, hκp, hland, hinit⟩ := hI
     obtain ⟨hArule, hpieces, ha, hbound⟩ := hC
     set κ := kappaParam (X₀ : ℝ) with hκdef
-    set xp := switchOn (X₀ : ℝ) with hxpdef
+    set xp := switchOn (swS θ X₀) with hxpdef
     set γ := designedGamma (P ω) θ X₀ κ A u (kappa0Param X₀) xp a with hγdef
     set α := designedAlpha (P ω) θ X₀ κ A u (kappa0Param X₀) xp a with hαdef
     have hsp : Spacing xp := switchOn_spacing _
-    have hxp0 : (X₀ : ℝ) ≤ xp 0 := switchOn_zero_ge _
-    have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
-    have hρ := rhoA_le_of_lemma626 hb (by linarith) hAu hAfin h626
+    have hxp0 : (X₀ : ℝ) ≤ xp 0 := (le_swS θ X₀).trans (switchOn_zero_ge _)
+    have hwin := winH_isWin (X₀ := (X₀ : ℝ)) hlog
+    have hρ := rhoA_le_of_lemma626 hwin (by linarith) hAu hAfin h626
     have hPI : PartIWith θ X₀ (P ω) κ A u α γ xp M := by
       refine ⟨kappaParam_pos (by linarith), kappaParam_le_one hX1.le, hsp, fun k => ?_,
         hxp0, hAu, hAfin, hρ, hT, hq, κp, hκp, hland, hinit⟩
@@ -178,19 +180,21 @@ theorem theorem21InputsDec_of_fixP (h : Theorem21InputsFixP) : Theorem21InputsDe
         (heightScale_switchOn_pos θ hX1.le) k
       rw [abs_of_nonneg (by linarith [hm.1])]
       exact hm.2
-    have hAbs : AbsorbedHyp (thetaB θ) A u := by
-      refine ⟨hb, thetaB_le_quarter (by linarith [hθ.2]),
-        fun n hn => ⟨hb, thetaB_le_quarter (by linarith [hθ.2]), ?_, ?_, (hAu n hn).2⟩, hAfin⟩
+    have hAbs : AbsorbedHyp (winH X₀) A u := by
+      refine ⟨hwin, fun n hn => ⟨hwin, ?_, ?_, (hAu n hn).2⟩, hAfin⟩
       · have hu := (hAu n hn).1
-        have hr : 0 ≤ u n ^ (thetaB θ) := Real.rpow_nonneg (by linarith) _
+        have hr : 0 < winH X₀ (u n) := winH_pos _ _
         have := (hAu n hn).2
         nlinarith
       · linarith [(hAu n hn).1]
     have hCo : Theorem410InputsCoupled θ X₀ (P ω) κ A u α γ xp
         (jitteredPrimesOf M (capH X₀) ω) latest := by
       refine ⟨(kappa0Param X₀), a, hArule, kappaParam_ge hX1.le, kappa0Param_ge hX4,
-        kappa0Param_le hX4, ?_, fun k => ?_, fun k => rfl, hpieces, ha, hAbs, hbound⟩
+        kappa0Param_le hX4, ?_, switchOn_cond hθ.1 hX0 hlog, fun k => ?_, fun k => rfl, hpieces,
+        ha, hAbs, hbound⟩
       · rw [hxpdef, log_switchOn_zero]
+        have := le_swS θ (X₀ : ℝ)
+        nlinarith
       · exact designedGamma_fixed (P ω) hsp hX1n hxp0 (fun k => ⟨(ha k).1, (ha k).2.1⟩) k
     refine ⟨hPI.toInit, hCo.toDec hθ.1 hθ.2 hlog hev ?_ hPI⟩
     have hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊ := by

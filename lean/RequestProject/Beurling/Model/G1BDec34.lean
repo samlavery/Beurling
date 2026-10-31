@@ -205,14 +205,14 @@ lemma abs_sigR_le (ω : JitterΩ) {u Y : ℝ} (hu : (X₀ : ℝ) ≤ u) (huY : u
   have hρ2 : ∀ z, |rhoT θ X₀ ω z| ≤ 2 := fun z => by
     rw [abs_of_nonneg (rhoT_nonneg ω z)]; exact rhoT_le_two hc hev ω z
   have hK := KAbsR_abs_le hc ω hρ2 huY
-  have hA1 : absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) u ≤ 1 := by
+  have hA1 : absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) u ≤ 1 := by
     refine (min_le_right _ _).trans ?_
     rw [div_le_iff₀ (by linarith)]; linarith
-  have hA0 : 0 ≤ absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) u := by
+  have hA0 : 0 ≤ absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) u := by
     refine le_min (tsum_nonneg fun a => ?_) (div_nonneg (by norm_num) (by linarith))
     unfold absorbedBump
     split_ifs
-    · by_cases hm : u ∈ Icc (uA θ a) a
+    · by_cases hm : u ∈ Icc (uA X₀ a) a
       · rw [Set.indicator_of_mem hm]; exact (Real.rpow_pos_of_pos hu0 _).le
       · rw [Set.indicator_of_notMem hm]
     · exact le_rfl

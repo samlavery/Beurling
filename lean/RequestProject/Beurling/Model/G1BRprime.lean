@@ -147,18 +147,18 @@ variable (X₀) in
 /-- The pointwise bound of the current `R_k'` on the block `[2^{j-1}X₀, 2^{j+1}X₀]` (Step 4,
 "Pointwise"; Lemma G1): `1[x_k < 2^{j+1}X₀] 2κ₀ (2x_k/2ʲX₀)^{1/2}/L_k`, `κ₀ = X₀⁻¹`. -/
 noncomputable def βk (j k : ℕ) : ℝ :=
-  if switchOn (X₀ : ℝ) k < 2 * (2 ^ j * (X₀ : ℝ)) then
-    2 * Real.sqrt (2 * switchOn (X₀ : ℝ) k / (2 ^ j * X₀)) /
-      ((X₀ : ℝ) * Real.log (switchOn (X₀ : ℝ) k))
+  if switchOn (swS θ X₀) k < 2 * (2 ^ j * (X₀ : ℝ)) then
+    2 * Real.sqrt (2 * switchOn (swS θ X₀) k / (2 ^ j * X₀)) /
+      ((X₀ : ℝ) * Real.log (switchOn (swS θ X₀) k))
   else 0
 
 variable (X₀) in
 /-- The smooth-change bound of an old (resolvable) `R_k'` on the block `[2ʲX₀, 2^{j+1}X₀]`
 (Step 3, "Resolvable `R'_j`"): `1[x_k < 2^{j+1}X₀] 352 (2x_k/2ʲX₀)^{1/2} x_k^{-1/2} log⁻⁴ y`. -/
 noncomputable def βo (y : ℝ) (j k : ℕ) : ℝ :=
-  if switchOn (X₀ : ℝ) k < 2 * (2 ^ j * (X₀ : ℝ)) then
-    352 * Real.sqrt (2 * switchOn (X₀ : ℝ) k / (2 ^ j * X₀)) /
-      (Real.sqrt (switchOn (X₀ : ℝ) k) * Real.log y ^ 4)
+  if switchOn (swS θ X₀) k < 2 * (2 ^ j * (X₀ : ℝ)) then
+    352 * Real.sqrt (2 * switchOn (swS θ X₀) k / (2 ^ j * X₀)) /
+      (Real.sqrt (switchOn (swS θ X₀) k) * Real.log y ^ 4)
   else 0
 
 variable (X₀) in
@@ -168,7 +168,7 @@ noncomputable def Kb (j : ℕ) : ℕ := ⌈2 * (2 ^ j * (X₀ : ℝ))⌉₊ + 1
 lemma βk_nonneg (j k : ℕ) : 0 ≤ βk X₀ j k := by
   unfold βk; split_ifs
   · have h := log_switchOn_ge (X₀ : ℝ) k
-    have : 0 ≤ Real.log (switchOn (X₀ : ℝ) k) := le_trans (by positivity) h
+    have : 0 ≤ Real.log (switchOn (swS θ X₀) k) := le_trans (by positivity) h
     exact div_nonneg (by positivity) (by positivity)
   · exact le_rfl
 
@@ -214,7 +214,7 @@ include hc
 `[2^{j-1}X₀, 2^{j+1}X₀]`. -/
 lemma abs_oscD_le_βk (ω : JitterΩ) (j k : ℕ) {w : ℝ} (hw1 : 2 ^ j * (X₀ : ℝ) / 2 ≤ w)
     (hw2 : w ≤ 2 * (2 ^ j * X₀)) :
-    |oscD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn X₀ k) w| ≤
+    |oscD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k) w| ≤
       βk X₀ j k := by
   have hX := hc.hX
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
@@ -222,12 +222,12 @@ lemma abs_oscD_le_βk (ω : JitterΩ) (j k : ℕ) {w : ℝ} (hw1 : 2 ^ j * (X₀
   have hX65 := KR.WidthReal.X0_ge hX (X₀ := X₀)
   have hw0 : 0 < w := lt_of_lt_of_le (by positivity) hw1
   have hxk := switchOn_pos (X₀ : ℝ) k
-  rcases le_or_gt w (switchOn (X₀ : ℝ) k) with h | h
+  rcases le_or_gt w (switchOn (swS θ X₀) k) with h | h
   · rw [oscD_eq_zero_of_le' hw0 hxk h, abs_zero]; exact βk_nonneg j k
   · have hb : |deriv (Oscillation.oscTerm θ (alphaD θ X₀ (DF θ X₀ ω) k)
-        (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn X₀ k)) w| ≤
-        2 * Real.sqrt (switchOn (X₀ : ℝ) k / w) /
-          ((X₀ : ℝ) * Real.log (switchOn (X₀ : ℝ) k)) :=
+        (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k)) w| ≤
+        2 * Real.sqrt (switchOn (swS θ X₀) k / w) /
+          ((X₀ : ℝ) * Real.log (switchOn (swS θ X₀) k)) :=
       abs_deriv_oscTerm_designed (by linarith [hc.hθ.1]) (by linarith [hc.hθ.2]) (by linarith) k
         (gammaD_range (θ := θ) hX (DF θ X₀ ω) k) h.le
     rw [deriv_oscTerm_eq hw0 hxk] at hb
@@ -235,7 +235,7 @@ lemma abs_oscD_le_βk (ω : JitterΩ) (j k : ℕ) {w : ℝ} (hw1 : 2 ^ j * (X₀
     unfold βk
     rw [if_pos (lt_of_lt_of_le h hw2)]
     have hLk := log_switchOn_ge (X₀ : ℝ) k
-    have hL : 0 < Real.log (switchOn (X₀ : ℝ) k) := lt_of_lt_of_le (by positivity) hLk
+    have hL : 0 < Real.log (switchOn (swS θ X₀) k) := lt_of_lt_of_le (by positivity) hLk
     apply div_le_div_of_nonneg_right _ (by positivity)
     apply mul_le_mul_of_nonneg_left _ (by norm_num)
     apply Real.sqrt_le_sqrt
@@ -249,9 +249,9 @@ lemma abs_oscD_sub_le_βo (ω : JitterΩ) {y δ r : ℝ} (j k : ℕ)
     (hres : δ * gammaD θ X₀ (DF θ X₀ ω) k ^ 2 ≤ 1 / Real.log y ^ 4) (hr0 : 1 / 2 ≤ r)
     (hr1 : r ≤ 1) (hrδ : 1 - r ≤ 2 * δ) {u : ℝ} (hu1 : 2 ^ j * (X₀ : ℝ) ≤ u)
     (hu2 : u ≤ 2 * (2 ^ j * X₀)) :
-    |oscD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn X₀ k)
+    |oscD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k)
         (max (r * u) X₀) -
-      oscD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn X₀ k) u| ≤
+      oscD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k) u| ≤
       βo X₀ y j k := by
   have hX := hc.hX
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
@@ -264,7 +264,7 @@ lemma abs_oscD_sub_le_βo (ω : JitterΩ) {y δ r : ℝ} (j k : ℕ)
   set w₁ := max (r * u) (X₀ : ℝ) with hw₁
   have hw0 : 0 < w₁ := by linarith
   have hxk := switchOn_pos (X₀ : ℝ) k
-  set xk := switchOn (X₀ : ℝ) k with hxkdef
+  set xk := switchOn (swS θ X₀) k with hxkdef
   set g := gammaD θ X₀ (DF θ X₀ ω) k with hg
   set α := alphaD θ X₀ (DF θ X₀ ω) k with hα
   rcases le_or_gt u xk with h | h
@@ -353,11 +353,11 @@ lemma abs_oscD_sub_le_βo (ω : JitterΩ) {y δ r : ℝ} (j k : ℕ)
 /-- `R'` at `w` is the finite sum of the `R_k'(w)`, `k < K_j`, for `w ≤ 2^{j+1}X₀`. -/
 lemma RpR_eq_sum (ω : JitterΩ) (j : ℕ) {w : ℝ} (hw0 : 0 < w) (hw2 : w ≤ 2 * (2 ^ j * X₀)) :
     RpR θ X₀ ω w = ∑ k ∈ Finset.range (Kb X₀ j),
-      oscD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn X₀ k) w := by
+      oscD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k) w := by
   have hX := hc.hX
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := QueueMono.one_lt_of_logX hX0 hX
-  have hwK : w < switchOn (X₀ : ℝ) (Kb X₀ j) := by
+  have hwK : w < switchOn (swS θ X₀) (Kb X₀ j) := by
     have h1 := nat_lt_switchOn hX1.le (Kb X₀ j)
     have h2 : 2 * (2 ^ j * (X₀ : ℝ)) ≤ ⌈2 * (2 ^ j * (X₀ : ℝ))⌉₊ := Nat.le_ceil _
     have h3 : ((Kb X₀ j : ℕ) : ℝ) = ⌈2 * (2 ^ j * (X₀ : ℝ))⌉₊ + 1 := by
@@ -417,7 +417,7 @@ lemma log_two_mul_le_GammaRes {y : ℝ} (hy0 : 0 < y) (hy : (X₀ : ℝ) ^ 5 ≤
   linarith
 
 /-- **Old heights are resolvable**: if `x_{k+1} < 2y`, then `γ_k ≤ x_k < log 2y ≤ Γ(y)`. -/
-lemma gammaD_res_of_old (ω : JitterΩ) {y : ℝ} {k : ℕ} (hk : switchOn (X₀ : ℝ) (k + 1) < 2 * y) :
+lemma gammaD_res_of_old (ω : JitterΩ) {y : ℝ} {k : ℕ} (hk : switchOn (swS θ X₀) (k + 1) < 2 * y) :
     gammaD θ X₀ (DF θ X₀ ω) k ≤ GammaRes X₀ y := by
   have hX := hc.hX
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
@@ -425,23 +425,23 @@ lemma gammaD_res_of_old (ω : JitterΩ) {y : ℝ} {k : ℕ} (hk : switchOn (X₀
   have hX65 := KR.WidthReal.X0_ge hX (X₀ := X₀)
   have hxk := switchOn_pos (X₀ : ℝ) k
   have hLk := log_switchOn_ge (X₀ : ℝ) k
-  have hL1 : 1 ≤ Real.log (switchOn (X₀ : ℝ) k) :=
+  have hL1 : 1 ≤ Real.log (switchOn (swS θ X₀) k) :=
     le_trans (by have : (1 : ℝ) ≤ 2 ^ k := one_le_pow₀ (by norm_num); nlinarith) hLk
-  have hxk1 : 1 < switchOn (X₀ : ℝ) k := by
+  have hxk1 : 1 < switchOn (swS θ X₀) k := by
     rw [← Real.exp_log hxk]; exact Real.one_lt_exp_iff.mpr (by linarith)
   have hγ := gammaD_range (θ := θ) hX (DF θ X₀ ω) k
-  have h1 : gammaD θ X₀ (DF θ X₀ ω) k ≤ switchOn (X₀ : ℝ) k :=
+  have h1 : gammaD θ X₀ (DF θ X₀ ω) k ≤ switchOn (swS θ X₀) k :=
     hγ.2.trans (DesignedZero.two_heightScale_le (by linarith [hc.hθ.1])
       (kappa0Param_pos (by linarith)).le (kappa0Param_le (by linarith)) hxk1 hL1)
   have hy0 : 0 < 2 * y := lt_of_lt_of_le (switchOn_pos _ _) hk.le
-  have h2 : switchOn (X₀ : ℝ) k < Real.log (2 * y) := by
-    have e : switchOn (X₀ : ℝ) (k + 1) = Real.exp (switchOn (X₀ : ℝ) k) := rfl
+  have h2 : switchOn (swS θ X₀) k < Real.log (2 * y) := by
+    have e : switchOn (swS θ X₀) (k + 1) = Real.exp (switchOn (swS θ X₀) k) := rfl
     rw [e] at hk
     rw [Real.lt_log_iff_exp_lt hy0]; exact hk
   -- `log y ≥ X₀⁵`
   have h3 : (X₀ : ℝ) ^ 5 ≤ Real.log y := by
-    have hx1 : switchOn (X₀ : ℝ) 1 ≤ switchOn (X₀ : ℝ) (k + 1) := switchOn_mono _ (by omega)
-    have e1 : switchOn (X₀ : ℝ) 1 = Real.exp (Real.exp ((X₀ : ℝ) ^ 2)) := rfl
+    have hx1 : switchOn (swS θ X₀) 1 ≤ switchOn (swS θ X₀) (k + 1) := switchOn_mono _ (by omega)
+    have e1 : switchOn (swS θ X₀) 1 = Real.exp (Real.exp ((X₀ : ℝ) ^ 2)) := rfl
     have hlt : Real.exp ((X₀ : ℝ) ^ 2) < Real.log (2 * y) := by
       rw [Real.lt_log_iff_exp_lt hy0, ← e1]; linarith
     rw [Real.log_mul (by norm_num) (by linarith)] at hlt
@@ -501,7 +501,7 @@ theorem rprimeChange_all (ω : JitterΩ) {b : ℝ} (hb : (X₀ : ℝ) ≤ b)
     nlinarith
   -- the per-oscillation block bound
   set t : ℕ → ℕ → ℝ := fun j k =>
-    if switchOn (X₀ : ℝ) (k + 1) < 2 * y then βo X₀ y j k else 2 * βk X₀ j k with ht
+    if switchOn (swS θ X₀) (k + 1) < 2 * y then βo X₀ y j k else 2 * βk X₀ j k with ht
   have ht0 : ∀ j k, 0 ≤ t j k := fun j k => by
     simp only [ht]; split_ifs
     · exact βo_nonneg y j k
@@ -561,12 +561,12 @@ theorem rprimeChange_all (ω : JitterΩ) {b : ℝ} (hb : (X₀ : ℝ) ≤ b)
     exact Finset.sum_le_sum_of_subset_of_nonneg hsub
       fun k _ _ => mul_nonneg (hlw j) (ht0 j k)
   -- one oscillation
-  set W : ℕ → ℝ := fun k => if switchOn (X₀ : ℝ) k < 2 * y ∧ 2 * y ≤ switchOn (X₀ : ℝ) (k + 1)
+  set W : ℕ → ℝ := fun k => if switchOn (swS θ X₀) k < 2 * y ∧ 2 * y ≤ switchOn (swS θ X₀) (k + 1)
     then 28.9 / (X₀ : ℝ) else 0 with hW
   have hk : ∀ k : ℕ, ∑ j ∈ F, Real.log (2 * (2 ^ j * X₀)) * t j k ≤
       W k + 2.1 * 10 ^ 6 * (1 / 4) ^ k / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4) := by
     intro k
-    set xk := switchOn (X₀ : ℝ) k with hxk
+    set xk := switchOn (swS θ X₀) k with hxk
     set L := Real.log xk with hL
     have hLk := log_switchOn_ge (X₀ : ℝ) k
     have hxk0 := switchOn_pos (X₀ : ℝ) k
@@ -587,7 +587,7 @@ theorem rprimeChange_all (ω : JitterΩ) {b : ℝ} (hb : (X₀ : ℝ) ≤ b)
     have hFJ : ∀ f : ℕ → ℝ, (∀ j, 0 ≤ f j) → ∑ j ∈ F, f j ≤ ∑ j ∈ Finset.range J, f j :=
       fun f hf => Finset.sum_le_sum_of_subset_of_nonneg (Finset.filter_subset _ _)
         fun j _ _ => hf j
-    by_cases hold : switchOn (X₀ : ℝ) (k + 1) < 2 * y
+    by_cases hold : switchOn (swS θ X₀) (k + 1) < 2 * y
     · -- an old oscillation: smooth change
       have e : ∀ j, Real.log (2 * (2 ^ j * X₀)) * t j k =
           (if xk < 2 * (2 ^ j * X₀) then

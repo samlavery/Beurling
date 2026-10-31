@@ -1,6 +1,7 @@
 module
 
 public import RequestProject.Beurling.Lemmas
+public import RequestProject.Beurling.Window
 
 /-!
 # Theorem 2.1 (Theorem A) and Corollary 2.2
@@ -24,7 +25,8 @@ elementary analysis:
 * `corollary_2_2` : the answer to Question Q is negative;
 * `corollary_2_2_one_beta_system` : a discrete `[1, β]`-system with `β ≤ 1/4 < 1/2` exists;
 * `theorem21_part_i_of_bounds` : the derivation of Theorem 2.1(i) from the target error (8),
-  the bound `|R| ≤ 2 x^θ log* x` of Lemma 3.4 and the lag bound (13).
+  the bound `|R| ≤ 2 x^θ log* x` of Lemma 3.4 and the lag bound (`|D| ≤ D_max`, eq. (La)),
+  where the absorbed part of (8) and `D_max` are `x^{o(1)}` (`SubPow`).
 -/
 
 @[expose] public section
@@ -69,9 +71,80 @@ lemma thetaB_eq_half {θ : ℝ} (hθ : 1 / 4 ≤ θ) : thetaB θ = θ / 2 := by
   rw [max_eq_left (show (1 / 8 : ℝ) ≤ θ / 2 by linarith),
     min_eq_right (show θ / 2 ≤ θ by linarith)]
 
+/-- `E = x^{o(1)}` on `[X, ∞)`: for every `ε > 0` there is `C` with `E(x) ≤ C x^ε` for `x ≥ X`.
+(The absorption window `h` and the lag bound `D_max` of the paper are `x^{o(1)}`.) -/
+def SubPow (E : ℝ → ℝ) (X : ℝ) : Prop := ∀ ε > (0 : ℝ), ∃ C : ℝ, ∀ x ≥ X, E x ≤ C * x ^ ε
+
+lemma SubPow.add {E₁ E₂ : ℝ → ℝ} {X : ℝ} (h₁ : SubPow E₁ X) (h₂ : SubPow E₂ X) :
+    SubPow (fun x => E₁ x + E₂ x) X := fun ε hε => by
+  obtain ⟨C₁, hC₁⟩ := h₁ ε hε
+  obtain ⟨C₂, hC₂⟩ := h₂ ε hε
+  exact ⟨C₁ + C₂, fun x hx => by have := hC₁ x hx; have := hC₂ x hx; linarith⟩
+
+lemma SubPow.const_mul {E : ℝ → ℝ} {X : ℝ} (h : SubPow E X) (c : ℝ) (hc : 0 ≤ c) :
+    SubPow (fun x => c * E x) X := fun ε hε => by
+  obtain ⟨C, hC⟩ := h ε hε
+  exact ⟨c * C, fun x hx => by
+    have := mul_le_mul_of_nonneg_left (hC x hx) hc; linarith⟩
+
+lemma SubPow.mono {E E' : ℝ → ℝ} {X X' : ℝ} (h : SubPow E X) (hX : X ≤ X')
+    (hE : ∀ x ≥ X', E' x ≤ E x) : SubPow E' X' := fun ε hε => by
+  obtain ⟨C, hC⟩ := h ε hε
+  exact ⟨C, fun x hx => (hE x hx).trans (hC x (hX.trans hx))⟩
+
+lemma subPow_const (c : ℝ) {X : ℝ} (hX : 1 ≤ X) : SubPow (fun _ => c) X := fun ε hε =>
+  ⟨|c|, fun x hx => (le_abs_self c).trans
+    (le_mul_of_one_le_right (abs_nonneg c) (Real.one_le_rpow (hX.trans hx) hε.le))⟩
+
+/-- `(log x)^n = x^{o(1)}`. -/
+lemma subPow_log_pow (n : ℕ) {X : ℝ} (hX : 1 ≤ X) : SubPow (fun x => Real.log x ^ n) X :=
+  fun ε hε => by
+  set δ := ε / (n + 1) with hδ
+  have hδ0 : 0 < δ := by positivity
+  refine ⟨(1 / δ) ^ n, fun x hx => ?_⟩
+  have hx1 : 1 ≤ x := hX.trans hx
+  have hl0 : 0 ≤ Real.log x := Real.log_nonneg hx1
+  have hl : Real.log x ≤ x ^ δ / δ := Real.log_le_rpow_div (by linarith) hδ0
+  have h1 : Real.log x ^ n ≤ (x ^ δ / δ) ^ n := pow_le_pow_left₀ hl0 hl n
+  have h2 : (x ^ δ / δ) ^ n = (1 / δ) ^ n * x ^ (n * δ) := by
+    rw [div_eq_mul_one_div, mul_pow, mul_comm, ← Real.rpow_natCast (x ^ δ),
+      ← Real.rpow_mul (by linarith), mul_comm δ]
+  have h3 : x ^ ((n : ℝ) * δ) ≤ x ^ ε := Real.rpow_le_rpow_of_exponent_le hx1 (by
+    rw [hδ, mul_div_assoc', div_le_iff₀ (by positivity)]; nlinarith)
+  rw [h2] at h1
+  exact h1.trans (mul_le_mul_of_nonneg_left h3 (by positivity))
+
+/-- A product of non-negative `x^{o(1)}` functions is `x^{o(1)}`. -/
+lemma SubPow.mul {f g : ℝ → ℝ} {X : ℝ} (hX : 0 < X) (hf : SubPow f X) (hg : SubPow g X)
+    (hf0 : ∀ x ≥ X, 0 ≤ f x) (hg0 : ∀ x ≥ X, 0 ≤ g x) : SubPow (fun x => f x * g x) X :=
+  fun ε hε => by
+  obtain ⟨C₁, hC₁⟩ := hf (ε / 2) (by positivity)
+  obtain ⟨C₂, hC₂⟩ := hg (ε / 2) (by positivity)
+  have hC₁0 : 0 ≤ C₁ := by
+    have h1 := hC₁ X le_rfl; have h2 := hf0 X le_rfl
+    have h3 : 0 < X ^ (ε / 2) := Real.rpow_pos_of_pos hX _
+    by_contra hc; push_neg at hc; nlinarith
+  refine ⟨C₁ * C₂, fun x hx => ?_⟩
+  have hx0 : 0 < x := lt_of_lt_of_le hX hx
+  have e : x ^ ε = x ^ (ε / 2) * x ^ (ε / 2) := by
+    rw [← Real.rpow_add hx0]; ring_nf
+  have h1 := hC₁ x hx; have h2 := hC₂ x hx
+  have hp : 0 ≤ x ^ (ε / 2) := Real.rpow_nonneg hx0.le _
+  calc f x * g x ≤ (C₁ * x ^ (ε / 2)) * (C₂ * x ^ (ε / 2)) :=
+        mul_le_mul h1 h2 (hg0 x hx) (by positivity)
+    _ = C₁ * C₂ * x ^ ε := by rw [e]; ring
+
+/-- The absorption window `winH X₀` is `x^{o(1)}` (for `log X₀ ≥ 10⁸`). -/
+lemma subPow_winH {X₀ : ℝ} (hX : 10 ^ 8 ≤ Real.log X₀) (X : ℝ) (hX1 : 1 ≤ X) :
+    SubPow (Absorbed.winH X₀) X := fun ε hε => by
+  obtain ⟨C, hC⟩ := Absorbed.winH_le_rpow_eps hX hε
+  exact ⟨C, fun x hx => hC x (hX1.trans hx)⟩
+
 /-- The conclusions (i) and (ii) of Theorem 2.1 for one fixed (realised) system `P`:
 
-(i) `|N_P(x) - x| ≤ C x^θ + 3 x^θ log* x + x^η` for all `x ≥ 1`;
+(i) `|N_P(x) - x| ≤ C x^θ + 3 x^θ log* x + x^η` for all `x ≥ 1` (here `x^η`, `η = lagExponent θ`,
+is absorbed by `C x^θ`; the paper's explicit form `C_{X₀}x^θ + 2x^θ log* x + D_max(x) + h(x)Λ⁻⁸`
+gives this since `D_max` and `h` are `x^{o(1)}`);
 
 (ii) `ζ_P` continues analytically to a punctured half-plane `Re s > a` (`a < 1`) and has zeros
 `ρ_k` there with `Re ρ_k = 1 - (log log x_k + O(1)) / log x_k` along a sequence `x_k → ∞`; the
@@ -86,12 +159,12 @@ def TheoremAConclusion (θ : ℝ) (P : BeurlingSystem) : Prop :=
       (∀ k, |(1 - (ρ k).re) * Real.log (xk k) - Real.log (Real.log (xk k))| ≤ C) ∧
       ∀ k, |Real.log (ρ k).im - ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k)))| ≤ C)
 
-/-- **Theorem 2.1 (Theorem A)**, taken as a hypothesis. For every `θ ∈ [1/20, 1/2 - 10⁻⁴]`
+/-- **Theorem 2.1 (Theorem A)**, taken as a hypothesis. For every `θ ∈ (0, 1/2 - 10⁻⁴]`
 there is a threshold `X_Hux` such that for every even integer `X₀ ≥ max(e^{10^8}, X_Hux)` the
 random system `P` of Section 3 (on some probability space) satisfies the conclusions (i), (ii)
 on an event `G` of probability at least `1 - 1.5 / log X₀`. -/
 def Theorem21 : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
@@ -109,7 +182,7 @@ def Remark12_ba : Prop :=
 /-- "Fix any `ω ∈ G`": since `P(G) ≥ 1 - 1.5 / log X₀ > 0`, Theorem 2.1 yields a fixed
 (deterministic) discrete Beurling system satisfying (i) and (ii). -/
 theorem exists_realisation (h : Theorem21) {θ : ℝ}
-    (hθ : θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) :
+    (hθ : θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) :
     ∃ P : BeurlingSystem, TheoremAConclusion θ P := by
   obtain ⟨XHux, hX⟩ := h θ hθ
   set n : ℕ := ⌈max (Real.exp (10 ^ 8)) XHux⌉₊
@@ -184,7 +257,7 @@ end TheoremAConclusion
 /-- **Corollary 2.2**: assuming Theorem 2.1, the answer to Question Q is negative. -/
 theorem corollary_2_2 (h : Theorem21) : ¬ QuestionQ := by
   intro hQ
-  have hθ : (1 / 4 : ℝ) ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000) := by
+  have hθ : (1 / 4 : ℝ) ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000) := by
     constructor <;> norm_num
   obtain ⟨P, hP⟩ := exists_realisation h hθ
   obtain ⟨C, hC⟩ := hP.N_bound (by norm_num) (β := 1 / 3) (by norm_num)
@@ -197,7 +270,7 @@ theorem corollary_2_2_one_beta_system (h : Theorem21) (hR : Remark12_ba) :
     ∃ P : BeurlingSystem,
       (∀ β > (1 / 4 : ℝ), ∃ C : ℝ, ∀ x ≥ (1 : ℝ), |P.N x - x| ≤ C * x ^ β) ∧
       ∀ ε' > (0 : ℝ), ¬ ∃ C : ℝ, ∀ x ≥ (1 : ℝ), |P.psi x - x| ≤ C * x ^ (1 - ε') := by
-  have hθ : (1 / 4 : ℝ) ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000) := by
+  have hθ : (1 / 4 : ℝ) ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000) := by
     constructor <;> norm_num
   obtain ⟨P, hP⟩ := exists_realisation h hθ
   refine ⟨P, fun β hβ => ?_, fun ε' hε' hψ => ?_⟩
@@ -208,26 +281,28 @@ theorem corollary_2_2_one_beta_system (h : Theorem21) (hR : Remark12_ba) :
 
 /-- **Proof of Theorem 2.1(i)** from the section-level bounds. Write `D := N - T` (the lag),
 `E := T - x - R` (the target error) and `R` (the oscillations). If, for `x ≥ X₀`,
-the target error (8) `|E(x)| ≤ C₀ x^θ + 2 x^{θ_b}`, the oscillation bound
-`|R(x)| ≤ 2 x^θ log* x` (Lemma 3.4) and the lag bound (13) `|D(x)| ≤ x^η` hold, and `N` is
-bounded on `[1, X₀)`, then `|N(x) - x| ≤ C x^θ + 3 x^θ log* x + x^η` for all `x ≥ 1`.
-(Since `θ_b ≤ θ`, `2 x^{θ_b} ≤ 2 x^θ` is absorbed into `C x^θ`; the hypothesis
-`X₀^{θ_b} ≥ 2` is not needed.) -/
-theorem theorem21_part_i_of_bounds {θ η C₀ X₀ : ℝ} (N T R : ℝ → ℝ) (hθ : 0 < θ)
-    (hX₀ : 1 < X₀) (hX₀θ : 2 ≤ X₀ ^ (thetaB θ))
-    (hE : ∀ x ≥ X₀, |T x - x - R x| ≤ C₀ * x ^ θ + 2 * x ^ (thetaB θ))
+the target error (8) `|E(x)| ≤ C₀ x^θ + E₁(x)`, the oscillation bound
+`|R(x)| ≤ 2 x^θ log* x` (Lemma 3.4) and the lag bound (La) `|D(x)| ≤ E₂(x)` hold, where
+`E₁` (the absorbed part, `2h(x)`) and `E₂` (`D_max`) are `x^{o(1)}`, and `N` is bounded on
+`[1, X₀)`, then `|N(x) - x| ≤ C x^θ + 3 x^θ log* x + x^η` for all `x ≥ 1` (for any `η`). -/
+theorem theorem21_part_i_of_bounds {θ η C₀ X₀ : ℝ} (N T R E₁ E₂ : ℝ → ℝ) (hθ : 0 < θ)
+    (hX₀ : 1 < X₀)
+    (hE : ∀ x ≥ X₀, |T x - x - R x| ≤ C₀ * x ^ θ + E₁ x)
     (hR : ∀ x ≥ X₀, |R x| ≤ 2 * x ^ θ * (logStar x : ℝ))
-    (hD : ∀ x ≥ X₀, |N x - T x| ≤ x ^ η)
+    (hD : ∀ x ≥ X₀, |N x - T x| ≤ E₂ x)
+    (h₁ : SubPow E₁ X₀) (h₂ : SubPow E₂ X₀)
     (hN : ∃ B : ℝ, ∀ x, 1 ≤ x → x < X₀ → |N x| ≤ B) :
     ∃ C : ℝ, ∀ x ≥ (1 : ℝ),
       |N x - x| ≤ C * x ^ θ + 3 * x ^ θ * (logStar x : ℝ) + x ^ η := by
   obtain ⟨B, hB⟩ := hN
-  refine ⟨|C₀| + 2 + |B| + X₀, fun x hx => ?_⟩
+  obtain ⟨C₁, hC₁⟩ := h₁ θ hθ
+  obtain ⟨C₂, hC₂⟩ := h₂ θ hθ
+  refine ⟨|C₀| + |C₁| + |C₂| + |B| + X₀, fun x hx => ?_⟩
   have hxθ : 1 ≤ x ^ θ := Real.one_le_rpow hx hθ.le
   have hL : (0 : ℝ) ≤ logStar x := Nat.cast_nonneg _
   have hxη : 0 ≤ x ^ η := Real.rpow_nonneg (by linarith) η
-  have hC : 0 ≤ |C₀| + 2 + |B| + X₀ := by positivity
-  have hCx : |C₀| + 2 + |B| + X₀ ≤ (|C₀| + 2 + |B| + X₀) * x ^ θ :=
+  have hC : 0 ≤ |C₀| + |C₁| + |C₂| + |B| + X₀ := by positivity
+  have hCx : |C₀| + |C₁| + |C₂| + |B| + X₀ ≤ (|C₀| + |C₁| + |C₂| + |B| + X₀) * x ^ θ :=
     le_mul_of_one_le_right hC hxθ
   have hθL : 0 ≤ x ^ θ * (logStar x : ℝ) := by positivity
   rcases lt_or_ge x X₀ with hlt | hge
@@ -235,15 +310,17 @@ theorem theorem21_part_i_of_bounds {θ η C₀ X₀ : ℝ} (N T R : ℝ → ℝ)
     have h2 : |N x - x| ≤ |N x| + |x| := abs_sub _ _
     rw [abs_of_nonneg (by linarith : (0 : ℝ) ≤ x)] at h2
     have := abs_nonneg C₀
+    have := abs_nonneg C₁
+    have := abs_nonneg C₂
     have := le_abs_self B
     linarith
   · have hL1 : (1 : ℝ) ≤ logStar x := by exact_mod_cast one_le_logStar (by linarith)
-    have h2 : 2 * x ^ (thetaB θ) ≤ 2 * x ^ θ := by
-      have := Real.rpow_le_rpow_of_exponent_le hx (thetaB_le_self θ); linarith
     have h3 : x ^ θ ≤ x ^ θ * (logStar x : ℝ) := le_mul_of_one_le_right (by linarith) hL1
-    have h4 : (C₀ + 2) * x ^ θ ≤ (|C₀| + 2 + |B| + X₀) * x ^ θ := by
-      apply mul_le_mul_of_nonneg_right _ (by linarith)
-      have := le_abs_self C₀; have := abs_nonneg B; linarith
+    have hx0 : 0 ≤ x ^ θ := by linarith
+    have h4 : (C₀ + C₁ + C₂) * x ^ θ ≤ (|C₀| + |C₁| + |C₂| + |B| + X₀) * x ^ θ := by
+      apply mul_le_mul_of_nonneg_right _ hx0
+      have := le_abs_self C₀; have := le_abs_self C₁; have := le_abs_self C₂
+      have := abs_nonneg B; linarith
     have e : N x - x = (N x - T x) + (T x - x - R x) + R x := by ring
     have htri : |N x - x| ≤ |N x - T x| + |T x - x - R x| + |R x| := by
       rw [e]; exact (abs_add_le _ _).trans (add_le_add_left (abs_add_le _ _) _) |>.trans
@@ -251,6 +328,8 @@ theorem theorem21_part_i_of_bounds {θ η C₀ X₀ : ℝ} (N T R : ℝ → ℝ)
     have := hE x hge
     have := hR x hge
     have := hD x hge
-    linarith
+    have := hC₁ x hge
+    have := hC₂ x hge
+    nlinarith
 
 end
