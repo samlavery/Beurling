@@ -39,7 +39,7 @@ theorem s2Core (hc : Cond θ X₀) (hev : Even X₀) : S2Core θ X₀ :=
 /-- **Theorem 2.1, hypothesis**: Proposition 5.38 for the margin density of the construction,
 a.s. on `Good(< t(E2))`. -/
 def Theorem21InputsP : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
       ∀ m a b, Adm X₀ m a b → ∀ᵐ ω ∂jitterMeasure,
         ω ∈ G0 θ X₀ (e3Family θ X₀) (tE2 b) → Margin.PointwiseMargin (marginM θ X₀ ω) X₀

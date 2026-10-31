@@ -300,7 +300,7 @@ of jittered primes (§6.8). -/
 def Theorem410InputsAbs (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (X₀ : ℕ) (κ κ₀ η : ℝ) (xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
     (A : Set ℝ) (u : ℝ → ℝ),
-    10 ^ 8 ≤ Real.log X₀ ∧ 1 / 4 ≤ θ ∧ θ ≤ 1 / 2 ∧
+    10 ^ 8 ≤ Real.log X₀ ∧ 1 / 20 ≤ θ ∧ θ ≤ 1 / 2 ∧
     Real.exp (-Real.log X₀) ≤ κ ∧ κ ≤ 1 ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧
     (X₀ : ℝ) ^ 2 ≤ Real.log (xp 0) ∧
@@ -310,7 +310,7 @@ def Theorem410InputsAbs (θ : ℝ) (F : ℂ → ℂ) : Prop :=
     0 ≤ η ∧ η ≤ θ / 2 ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
     (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
-    AbsorbedHyp (θ / 2) A u ∧
+    AbsorbedHyp (thetaB θ) A u ∧
     (∀ n ∈ A, ∃ r : ℝ, (X₀ : ℝ) - CaplLink.capH X₀ X₀ / 2 ≤ r ∧ r < absorbY X₀ n) ∧
     (∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →
       countA A x ≤ x * Real.exp (-sigmaStar (Real.log X₀) (Real.log x))) ∧
@@ -318,7 +318,7 @@ def Theorem410InputsAbs (θ : ℝ) (F : ℂ → ℂ) : Prop :=
       F s = ZBcont X₀ κ s +
         (∑' j, oscHat θ (designAlpha X₀ κ θ κ₀ Dlt xp j) (designGamma X₀ κ θ κ₀ Dlt xp j)
           (xp j) s) +
-        (Dlt k s + lateNoise D (a k) s) + absorbedHat (θ / 2) A u s)
+        (Dlt k s + lateNoise D (a k) s) + absorbedHat (thetaB θ) A u s)
 
 /-- **The emptiness of `A` at low heights is derived**: `Theorem410InputsAbs` gives
 `Theorem410InputsSize`. -/
@@ -337,7 +337,7 @@ def TheoremAInputsAbs (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21InputsInitSize`, without the emptiness of
 the absorbed set at low heights (derived from the definition of `A`). -/
 def Theorem21InputsAbs : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

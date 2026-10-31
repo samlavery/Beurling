@@ -3,6 +3,7 @@ module
 public import RequestProject.Beurling.Noise.KRTrueTerm
 public import RequestProject.Beurling.Noise.KRTrueX0Aux
 public import RequestProject.Beurling.Noise.Saias59
+public import RequestProject.Beurling.Main
 
 /-!
 # Proposition 5.18, step (iii): the bullets `EtaX0Sum`
@@ -58,9 +59,9 @@ structure Hyp (P : BeurlingSystem) (H : ℝ → ℝ) (X0m X0 Z η1 η2 : ℝ) (�
   hθ1 : θo ≤ 1 / 2
   /-- **the window count of step (iii), second bullet** (Corollary 3.8, target (6),
   Lemma 6.26): for `X₀²/2 < y ≤ Y` the window holds at most
-  `4.21 H(y)/X₀ + 2H(y/X₀) + 4 + 2(y/X₀)^{θ/2}` elements (localized to the heights `≤ Y`) -/
+  `4.21 H(y)/X₀ + 2H(y/X₀) + 4 + 2(y/X₀)^{θ_b}` elements (localized to the heights `≤ Y`) -/
   count : ∀ y, X0 ^ 2 / 2 < y → y ≤ Y →
-    ((Win P H X0m y).card : ℝ) ≤ 4.21 * H y / X0 + 2 * H (y / X0) + 4 + 2 * (y / X0) ^ (θo / 2)
+    ((Win P H X0m y).card : ℝ) ≤ 4.21 * H y / X0 + 2 * H (y / X0) + 4 + 2 * (y / X0) ^ (thetaB θo)
 
 /-! ## Numerical facts for `t = X₀^{1/8} ≥ 10¹²` -/
 
@@ -392,12 +393,12 @@ theorem etaX0_le_high {y : ℝ} (hy2 : X0 ^ 2 / 2 < y) (hyY : y ≤ Y) :
     have hq1 : y / X0 ≤ y := div_le_self hy0.le hX1
     have := le_r8_of_pow8 (hy.hH0 _) ((hy.hHg (y / X0) hq).trans (max_le hq1 (by linarith)))
     exact this.trans hrr
-  have hC : (y / X0) ^ (θo / 2) ≤ r8 y ^ 2 := by
+  have hC : (y / X0) ^ (thetaB θo) ≤ r8 y ^ 2 := by
     have hq1 : 1 ≤ y / X0 := by
       rw [le_div_iff₀ hX0p]; linarith
     have hq2 : y / X0 ≤ y := div_le_self hy0.le hX1
-    calc (y / X0) ^ (θo / 2) ≤ (y / X0) ^ (1 / 4 : ℝ) :=
-          Real.rpow_le_rpow_of_exponent_le hq1 (by linarith [hy.hθ1])
+    calc (y / X0) ^ (thetaB θo) ≤ (y / X0) ^ (1 / 4 : ℝ) :=
+          Real.rpow_le_rpow_of_exponent_le hq1 (thetaB_le_quarter hy.hθ1)
       _ ≤ y ^ (1 / 4 : ℝ) := Real.rpow_le_rpow (by linarith) hq2 (by norm_num)
       _ = r8 y ^ 2 := (sqrt_sqrt_eq_rpow hy0.le).symm
   have hcard : ((Win P H X0m y).card : ℝ) ≤ 4 + 8.21 * r8 y ^ 2 := by linarith

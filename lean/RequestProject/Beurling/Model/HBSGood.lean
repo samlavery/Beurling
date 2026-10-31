@@ -78,7 +78,7 @@ theorem LandingInit.abs_le_loc (hX : 10 ^ 8 ≤ Real.log X₀) {N W x : ℝ}
 
 /-- **The lag bound at one height** (Corollary 3.8 / Proposition 4.1, `lag_of_slotData`), from
 the landing data at `x` and the queue bound at the slot of `x` only. -/
-theorem lag_local {θ : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
+theorem lag_local {θ : ℝ} (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
     (hX : 10 ^ 8 ≤ Real.log X₀) (N : ℝ → ℝ) (κp : ℝ → ℝ)
     (hκp : ∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x)
     (hland : ∀ x ≥ (X₀ : ℝ), (X₀ : ℝ) + 2 * capH X₀ x ≤ x →
@@ -101,7 +101,7 @@ theorem lag_local {θ : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10
         -(capH X₀ x / 2) * (1 + κp x / Real.log x) := by ring
     rw [e] at h12
     have hB0 := queueB_nonneg hX0 hX hx
-    exact lag_rpow_of_queue hθ1 hθ2 hX0 hX hx
+    exact lag_rpow_of_queue (by linarith) hθ2 hX0 hX hx
       (abs_lag_le_of_two_sided hLx (hκp x hx).1 (hκp x hx).2 hH hB0 le_rfl h12.1 h12.2)
   · exact lag_rpow_initial hθ1 hθ2 hX0 hX hx (hκp X₀ le_rfl).1 (hκp X₀ le_rfl).2
       (LandingInit.abs_le_loc M hX hx hearly hQ (hinit x hx hearly))
@@ -117,23 +117,23 @@ open BSCert.Capl AbsorbEmpty
 `v` only (Lemma 6.26 depends on Proposition 6.11 at the height `v` and (HBS) up to `2y(2v)`). -/
 theorem lemma626_at {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℝ}
     {latest : ℝ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {θ X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
-    (hX : 10 ^ 8 ≤ Real.log X₀) (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2)
+    (hX : 10 ^ 8 ≤ Real.log X₀) (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2)
     (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc (0 : ℝ) 1)
     (hX0m : 100 ≤ Real.log X0m) (hX0mX : (X₀ : ℝ) / 2 + 1 ≤ X0m)
     (hfl : ∀ w, 1 ≤ w → w < X0m → P.N w = ⌊w⌋₊)
     {v : ℝ} (hv : (X₀ : ℝ) ≤ v)
     (hclv : ClusterUpTo P X₀ (4 * v / Real.log v ^ 11) (capM1 X₀ v))
     (hHBS : P.HBS X0m (2 * absorbYAt X₀ (2 * v)) η1 η2 ε1) :
-      (Absorbed.localCountA A v (v + v ^ (θ / 2)) : ℝ) ≤ v ^ (θ / 2) * Real.log v ^ (-4 : ℤ) := by
+      (Absorbed.localCountA A v (v + v ^ (thetaB θ)) : ℝ) ≤ v ^ (thetaB θ) * Real.log v ^ (-4 : ℤ) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hX
   obtain ⟨hv0, hL, hl, -⟩ := height_facts hX0 hX hv
-  set h := v ^ (θ / 2) with hh
+  set h := v ^ (thetaB θ) with hh
   set L := Real.log v with hLdef
   have hv1 : 1 < v := by linarith
-  have h1 : 1 ≤ h := Real.one_le_rpow hv1.le (by linarith)
+  have h1 : 1 ≤ h := Real.one_le_rpow hv1.le (thetaB_pos (by linarith)).le
   have hlt : h < v := by
-    have := Real.rpow_lt_rpow_of_exponent_lt hv1 (show θ / 2 < 1 by linarith)
+    have := Real.rpow_lt_rpow_of_exponent_lt hv1 (show thetaB θ < 1 from (thetaB_le_quarter (by linarith)).trans_lt (by norm_num))
     rwa [Real.rpow_one] at this
   by_cases hne : ∃ n ∈ A, v ≤ n ∧ (n : ℝ) ≤ v + h
   swap
@@ -192,15 +192,15 @@ open AbsorbEmpty
 /-- **(HBS) up to a horizon** (Remark *horizon*): the induction of
 `Construction.sparsityInputs_of_cluster`, reading the queue bound only at the slots of the heights
 `v ≤ Z` and the cluster event only at the heights `v ≤ Z`. -/
-theorem hbs_local {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+theorem hbs_local {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) (M : SlotModel X₀) (ω : JitterΩ)
     (hω : ∀ j, ω j ∈ Icc (0 : ℝ) 1) (hinf : {k | placedAt M k}.Infinite) (a : ℕ → ℝ)
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) ω))
-      (absorbedDensityCap (θ / 2) (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n))
+      (absorbedDensityCap (thetaB θ) (realisedA M (capH X₀) ω) (fun n => solveU (thetaB θ) n))
       (osc θ (designedAlpha (realisedSystem M (capH X₀) ω) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a)
+          (realisedA M (capH X₀) ω) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a)
         (designedGamma (realisedSystem M (capH X₀) ω) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a)
+          (realisedA M (capH X₀) ω) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a)
         (switchOn X₀)) x)
     (κp : ℝ → ℝ) (hκp : ∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x)
     (hland : ∀ x ≥ (X₀ : ℝ), (X₀ : ℝ) + 2 * capH X₀ x ≤ x →
@@ -245,7 +245,7 @@ theorem hbs_local {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)
   have hlag : ∀ x, (X₀ : ℝ) ≤ x → x ≤ Z → |P.N x - M.T x| ≤ x ^ lagExponent θ :=
     fun x hx hxZ => lag_local M hθ.1 hθ.2 hX P.N κp hκp hland hinit hx (hQ x hx hxZ)
   have hAu := realisedU_spec hok hω hX hTlow (θ := θ) (by linarith [hθ.1]) (by linarith [hθ.2])
-  have hb : 0 < θ / 2 := by linarith [hθ.1]
+  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
   -- (HBS) up to `z` from the error bound up to `z`
   have hHBS_of : ∀ z, (∀ v, X0m ≤ v → v ≤ z → |P.N v - ⌊v⌋₊| ≤ hbsEps X₀ v * v) →
       P.HBS X0m z (1 / 1000) (1 / 1000) (hbsEps X₀) := by
@@ -289,7 +289,7 @@ theorem hbs_local {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)
     · have hv0 : 0 < v := by linarith
       have hvfl : (v : ℝ) < ⌊v⌋₊ + 1 := Nat.lt_floor_add_one v
       have hdens : ∀ u, (X₀ : ℝ) ≤ u → u ≤ v →
-          absorbedDensity (θ / 2) A (fun n => solveU (θ / 2) n) u ≤
+          absorbedDensity (thetaB θ) A (fun n => solveU (thetaB θ) n) u ≤
             Real.log u ^ (-4 : ℤ) := by
         intro u hu huv
         have hHBSu : P.HBS X0m (2 * absorbYAt X₀ (2 * u)) (1 / 1000) (1 / 1000) (hbsEps X₀) := by
@@ -308,23 +308,23 @@ theorem hbs_local {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)
         have hloc := lemma626_at C hX hθ.1 (by linarith [hθ.2]) rfl hω hX0mlog hX0m2 hfl hu
           (hcl u hu (huv.trans hvZ)) hHBSu
         exact absorbedDensity_le_of_localCount hb (by linarith) hAu C.locFin hu hloc
-      have hW : AbsorbedWindowHyp (θ / 2) X₀ A (fun n => solveU (θ / 2) n) :=
-        ⟨hb, by linarith [hθ.2], hX1.le, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2,
+      have hW : AbsorbedWindowHyp (thetaB θ) X₀ A (fun n => solveU (thetaB θ) n) :=
+        ⟨hb, thetaB_le_one (by linarith [hθ.2]), hX1.le, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2,
           C.locFin⟩
       have hEA := absorbed_target_error_cap_loc hW (by linarith) hhigh hdens
       have hsp := switchOn_spacing (X₀ : ℝ)
-      have hα : ∀ k, |designedAlpha P θ X₀ (kappaParam X₀) A (fun n => solveU (θ / 2) n)
+      have hα : ∀ k, |designedAlpha P θ X₀ (kappaParam X₀) A (fun n => solveU (thetaB θ) n)
           (kappa0Param X₀) (switchOn X₀) a k| ≤ 2 := by
         intro k
-        have hm := designedAlpha_mem P θ X₀ (kappaParam X₀) A (fun n => solveU (θ / 2) n)
+        have hm := designedAlpha_mem P θ X₀ (kappaParam X₀) A (fun n => solveU (thetaB θ) n)
           (kappa0Param X₀) (switchOn X₀) a (heightScale_switchOn_pos θ hX1.le) k
         rw [abs_of_nonneg (by linarith [hm.1])]
         exact hm.2
       have hR := abs_osc_le (θ := θ) (γ := designedGamma P θ X₀ (kappaParam X₀) A
-        (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a) hsp hα (x := v) (by linarith)
+        (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a) hsp hα (x := v) (by linarith)
       have hR0 := osc_eq_zero_of_le (θ := θ) (α := designedAlpha P θ X₀ (kappaParam X₀) A
-        (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a) (γ := designedGamma P θ X₀
-        (kappaParam X₀) A (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a) hsp
+        (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a) (γ := designedGamma P θ X₀
+        (kappaParam X₀) A (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a) hsp
         (by linarith : (0 : ℝ) < X₀) (switchOn_zero_ge _)
       have hl := hlag v hhigh hvZ
       rw [hT v] at hl
@@ -334,15 +334,15 @@ theorem hbs_local {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)
 /-- **Lemma 6.26 up to a horizon** (Lemma 6.26 on `Good(< t)`): at every height `u ≥ X₀` with
 `2y(2u) ≤ Z`, from the queue bound and the cluster event at heights `≤ Z` and the cluster event
 at `u`. -/
-theorem lemma626_horizon {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+theorem lemma626_horizon {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) (M : SlotModel X₀) (ω : JitterΩ)
     (hω : ∀ j, ω j ∈ Icc (0 : ℝ) 1) (hinf : {k | placedAt M k}.Infinite) (a : ℕ → ℝ)
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) ω))
-      (absorbedDensityCap (θ / 2) (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n))
+      (absorbedDensityCap (thetaB θ) (realisedA M (capH X₀) ω) (fun n => solveU (thetaB θ) n))
       (osc θ (designedAlpha (realisedSystem M (capH X₀) ω) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a)
+          (realisedA M (capH X₀) ω) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a)
         (designedGamma (realisedSystem M (capH X₀) ω) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a)
+          (realisedA M (capH X₀) ω) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a)
         (switchOn X₀)) x)
     (κp : ℝ → ℝ) (hκp : ∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x)
     (hland : ∀ x ≥ (X₀ : ℝ), (X₀ : ℝ) + 2 * capH X₀ x ≤ x →
@@ -357,8 +357,8 @@ theorem lemma626_horizon {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
       (4 * v / Real.log v ^ 11) (capM1 X₀ v)) :
     ∀ u, (X₀ : ℝ) ≤ u → 2 * absorbYAt X₀ (2 * u) ≤ Z →
       ClusterUpTo (realisedSystem M (capH X₀) ω) X₀ (4 * u / Real.log u ^ 11) (capM1 X₀ u) →
-      (Absorbed.localCountA (realisedA M (capH X₀) ω) u (u + u ^ (θ / 2)) : ℝ) ≤
-        u ^ (θ / 2) * Real.log u ^ (-4 : ℤ) := by
+      (Absorbed.localCountA (realisedA M (capH X₀) ω) u (u + u ^ (thetaB θ)) : ℝ) ≤
+        u ^ (thetaB θ) * Real.log u ^ (-4 : ℤ) := by
   set P := realisedSystem M (capH X₀) ω with hP
   set A := realisedA M (capH X₀) ω with hAdef
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
@@ -389,7 +389,7 @@ theorem lemma626_horizon {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
   have hlag : ∀ x, (X₀ : ℝ) ≤ x → x ≤ Z → |P.N x - M.T x| ≤ x ^ lagExponent θ :=
     fun x hx hxZ => lag_local M hθ.1 hθ.2 hX P.N κp hκp hland hinit hx (hQ x hx hxZ)
   have hAu := realisedU_spec hok hω hX hTlow (θ := θ) (by linarith [hθ.1]) (by linarith [hθ.2])
-  have hb : 0 < θ / 2 := by linarith [hθ.1]
+  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
   -- (HBS) up to `z` from the error bound up to `z`
   have hHBS_of : ∀ z, (∀ v, X0m ≤ v → v ≤ z → |P.N v - ⌊v⌋₊| ≤ hbsEps X₀ v * v) →
       P.HBS X0m z (1 / 1000) (1 / 1000) (hbsEps X₀) := by

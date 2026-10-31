@@ -35,7 +35,7 @@ variable {θ : ℝ} {X₀ : ℕ} {U : ℕ → ℝ}
 /-- The standing conditions of the construction: admissible `θ`, `log X₀ ≥ 10⁸`, jitters in
 `[0, 1]`, and (84) from `X₀` on (the input of Lemma 3.3). -/
 structure Std (θ : ℝ) (X₀ : ℕ) (U : ℕ → ℝ) : Prop where
-  hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)
+  hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)
   hX : 10 ^ 8 ≤ Real.log X₀
   hU : ∀ j, U j ∈ Icc (0 : ℝ) 1
   hHB : ShortIntervalPNTFrom X₀

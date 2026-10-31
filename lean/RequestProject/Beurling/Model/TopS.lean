@@ -22,7 +22,7 @@ namespace BModel
 
 /-- **Theorem 2.1, hypothesis with the slot model constructed and Lemma 4.8(ii) derived.** -/
 def Theorem21InputsS : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ) (time : ι → ℕ),
       (∃ scale : ι → ℕ, TableBudget jitterMeasure X₀ E time scale) ∧

@@ -32,7 +32,7 @@ lemma measurable_amplitudes {g : Ω → ℕ → ℝ} (hg : ∀ j, Measurable fun
 
 section Heights
 
-variable (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+variable (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
   (hHB : ShortIntervalPNTFrom X₀) {D : Ω → PrimeData} (hD : DFam D)
   (hL : ∀ ω, LocFinD (D ω)) (hP : ∀ ω, Pos2 (D ω))
 include hθ hX hD hL hP
@@ -47,11 +47,11 @@ lemma measurable_lag_fam {g : Ω → ℕ → ℝ} (hg : ∀ j, Measurable fun ω
   rw [show (fun p : Ω × ℝ => targetOf θ X₀ (kappaParam X₀) (absSet X₀ (D p.1)) (uA θ)
       (amplitudes θ (kappa0Param X₀) (switchOn X₀) (g p.1)) (g p.1) (switchOn X₀) p.2) =
       fun p : Ω × ℝ => target X₀ (kappaParam X₀) (countA (absSet X₀ (D p.1)))
-        (absorbedDensityCap (θ / 2) (absSet X₀ (D p.1)) (uA θ))
+        (absorbedDensityCap (thetaB θ) (absSet X₀ (D p.1)) (uA θ))
         (osc θ (amplitudes θ (kappa0Param X₀) (switchOn X₀) (g p.1)) (g p.1) (switchOn X₀)) p.2
       from rfl]
   exact measurable_target_fam X₀ _ (cnt := fun ω => countA (absSet X₀ (D ω)))
-    (rho := fun ω => absorbedDensityCap (θ / 2) (absSet X₀ (D ω)) (uA θ))
+    (rho := fun ω => absorbedDensityCap (thetaB θ) (absSet X₀ (D ω)) (uA θ))
     (R := fun ω => osc θ (amplitudes θ (kappa0Param X₀) (switchOn X₀) (g ω)) (g ω) (switchOn X₀))
     (measurable_countA hD hL hP hX)
     (measurable_rhoCap hD hL hP hX (by linarith [hθ.1]))
@@ -136,7 +136,7 @@ theorem measurable_targetD :
   have hc := measurable_countA hD hL hP hX
   have hr := measurable_rhoCap hD hL hP hX (by linarith [hθ.1] : 0 < θ)
   have h := measurable_target_fam (cnt := fun ω => countA (absSet X₀ (D ω)))
-    (rho := fun ω => absorbedDensityCap (θ / 2) (absSet X₀ (D ω)) (uA θ))
+    (rho := fun ω => absorbedDensityCap (thetaB θ) (absSet X₀ (D ω)) (uA θ))
     (R := fun ω => osc θ (alphaD θ X₀ (D ω)) (gammaD θ X₀ (D ω)) (switchOn X₀))
     X₀ (kappaParam X₀) hc hr hR
   exact h

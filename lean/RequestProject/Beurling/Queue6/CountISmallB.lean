@@ -102,9 +102,9 @@ theorem countI_smallB {t₀ : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t�
   have ha0 : 0 < a := by linarith
   -- `h = a^{θ/2} ≤ d^{1/4}`, `d^{1/4} ≥ 0.99 q³`
   have hθ := hc.hθ
-  have hθ4 : θ / 2 ≤ 1 / 4 := by linarith [hθ.2]
-  have hθ0 : 0 ≤ θ / 2 := by linarith [hθ.1]
-  set h := a ^ (θ / 2) with hhe
+  have hθ4 : thetaB θ ≤ 1 / 4 := thetaB_le_quarter (by linarith [hθ.2])
+  have hθ0 : 0 ≤ thetaB θ := (thetaB_pos (by linarith [hθ.1])).le
+  set h := a ^ (thetaB θ) with hhe
   have hh0 : 0 < h := Real.rpow_pos_of_pos ha0 _
   set s := d ^ (1 / 4 : ℝ) with hse
   have hs4 : s ^ 4 = d := by
@@ -112,7 +112,7 @@ theorem countI_smallB {t₀ : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t�
   have hs0 : 0 < s := Real.rpow_pos_of_pos hd0 _
   have hhs : h ≤ s := by
     rw [hhe, hse]
-    calc a ^ (θ / 2) ≤ a ^ (1 / 4 : ℝ) := Real.rpow_le_rpow_of_exponent_le (by linarith) hθ4
+    calc a ^ (thetaB θ) ≤ a ^ (1 / 4 : ℝ) := Real.rpow_le_rpow_of_exponent_le (by linarith) hθ4
       _ ≤ d ^ (1 / 4 : ℝ) := Real.rpow_le_rpow ha0.le had (by norm_num)
   have hsq : 0.99 * q ^ 3 ≤ s := by
     by_contra hlt; push_neg at hlt
@@ -203,24 +203,24 @@ theorem countI_smallB {t₀ : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t�
   have hratio : (d + h) / a ≤ 1.4 := by
     rw [div_le_iff₀ ha0, hae, hcd]; nlinarith
   have hratio1 : 1 ≤ (d + h) / a := by rw [le_div_iff₀ ha0]; linarith
-  have hpowr : (d + h) ^ (θ / 2) ≤ 1.4 * h := by
-    have e : (d + h) ^ (θ / 2) = ((d + h) / a) ^ (θ / 2) * h := by
+  have hpowr : (d + h) ^ (thetaB θ) ≤ 1.4 * h := by
+    have e : (d + h) ^ (thetaB θ) = ((d + h) / a) ^ (thetaB θ) * h := by
       rw [Real.div_rpow (by linarith) ha0.le, hhe, div_mul_cancel₀ _ (by positivity)]
     rw [e]
-    have : ((d + h) / a) ^ (θ / 2) ≤ (d + h) / a := by
-      calc ((d + h) / a) ^ (θ / 2) ≤ ((d + h) / a) ^ (1 : ℝ) :=
+    have : ((d + h) / a) ^ (thetaB θ) ≤ (d + h) / a := by
+      calc ((d + h) / a) ^ (thetaB θ) ≤ ((d + h) / a) ^ (1 : ℝ) :=
             Real.rpow_le_rpow_of_exponent_le hratio1 (by linarith)
         _ = (d + h) / a := Real.rpow_one _
     nlinarith
   have hda : d - a = δ * d + 1 := by rw [hae, hcd]; ring
-  have habs : ((d - a) / h + 2) * ((d + h) ^ (θ / 2) * Real.log a ^ (-4 : ℤ)) ≤
+  have habs : ((d - a) / h + 2) * ((d + h) ^ (thetaB θ) * Real.log a ^ (-4 : ℤ)) ≤
       δ * d / 10 ^ 30 := by
-    have h1 : (d + h) ^ (θ / 2) * Real.log a ^ (-4 : ℤ) ≤ 1.4 * h * (1 / 10 ^ 32) :=
+    have h1 : (d + h) ^ (thetaB θ) * Real.log a ^ (-4 : ℤ) ≤ 1.4 * h * (1 / 10 ^ 32) :=
       mul_le_mul hpowr hla4 hla40 (by positivity)
     have h2 : 0 ≤ (d - a) / h + 2 := by
       have : 0 ≤ (d - a) / h := div_nonneg (by linarith) hh0.le
       linarith
-    calc ((d - a) / h + 2) * ((d + h) ^ (θ / 2) * Real.log a ^ (-4 : ℤ))
+    calc ((d - a) / h + 2) * ((d + h) ^ (thetaB θ) * Real.log a ^ (-4 : ℤ))
         ≤ ((d - a) / h + 2) * (1.4 * h * (1 / 10 ^ 32)) := mul_le_mul_of_nonneg_left h1 h2
       _ = 1.4 * (d - a + 2 * h) / 10 ^ 32 := by field_simp
       _ ≤ δ * d / 10 ^ 30 := by

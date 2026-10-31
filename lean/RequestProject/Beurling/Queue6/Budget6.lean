@@ -38,7 +38,7 @@ lemma r1_numeric {ℓ len Lb Lq S : ℝ} (hlen : 0 ≤ len) (hℓ : ℓ ≤ 1.01
   rw [e]; linarith
 
 /-- Almost every `ω` has jitters in `[0, 1]` and no ties. -/
-lemma ae_std (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+lemma ae_std (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull) (hev : Even X₀)
     (hX₀ : Real.exp (10 ^ 8) ≤ X₀) :
     ∀ᵐ ω ∂jitterMeasure, ∃ h : Std θ X₀ ω, TieFree (constructedModel θ X₀ ω) ω := by
@@ -50,7 +50,7 @@ lemma ae_std (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 �
   by_contra hc; exact ht ⟨h, hc⟩
 
 /-- **R1′ on `Good(< max I)` in the form of Theorem 6.6**, a.s., from Corollary 5.40. -/
-theorem R1cond_ae (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+theorem R1cond_ae (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull) (hev : Even X₀)
     (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueCore θ X₀) {m : ℕ} {a b : ℤ}
     (hadm : Adm X₀ m a b) :
@@ -79,7 +79,7 @@ theorem R1cond_ae (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 
   exact r1_numeric hlen hℓ (Lq_big hX0 hX hu) hLb0 hLb hR
 
 /-- **Theorem 6.6(i) for one window of `𝓘_u`.** -/
-theorem frE_fail (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+theorem frE_fail (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull) (hev : Even X₀)
     (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueCore θ X₀) (m : ℕ) (a b : ℤ) :
     jitterMeasure ((FrE θ X₀ m a b)ᶜ ∩ G0 θ X₀ Q.sec5 (tE2 b)) ≤
@@ -121,7 +121,7 @@ lemma muBar_pos (hX : 10 ^ 8 ≤ Real.log X₀) {m i j : ℕ} (hij : i < j) : 0 
   exact mul_pos (by linarith) (lt_min one_pos (div_pos hJ hH2))
 
 /-- **Lemma 6.1 (landing count)**: `P(Land(J)ᶜ) ≤ 2 e^{-λ_P}`, with no conditioning. -/
-theorem landE_fail (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+theorem landE_fail (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (Q : QueueCore θ X₀) (m i j : ℕ) :
     jitterMeasure (LandE θ X₀ m i j)ᶜ ≤
       ENNReal.ofReal (2 * Real.exp (-(4 * Real.log (uS X₀ m)))) := by

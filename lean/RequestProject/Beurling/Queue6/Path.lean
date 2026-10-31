@@ -375,7 +375,7 @@ lemma cluster_time_le (hX : 10 ^ 8 ≤ Real.log X₀) {u : ℝ} (hu : (X₀ : �
   linarith
 
 /-- **Theorem 6.6(ii) and the cluster bound on the good event.** -/
-theorem goodAll_facts (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+theorem goodAll_facts (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (hev : Even X₀) (hHB : ShortIntervalPNTFrom X₀) {ω : JitterΩ}
     (hω : ω ∈ goodAll (EF θ X₀ D)) (hU : ∀ k, ω k ∈ Icc (0 : ℝ) 1) :
     (constructedModel θ X₀ ω).QueueWindowData ∧ ∀ v ≥ (X₀ : ℝ),

@@ -51,7 +51,7 @@ def OthersInputsH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) : Prop :=
 /-- **Theorem 2.1, hypothesis**: for `X₀` beyond some threshold, a.s. on `Good(< b)` for every
 admissible window `[a, b)`, the open inputs `OthersInputsH`. -/
 def Theorem21InputsH : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ X : ℝ, ∀ X₀ : ℕ, Even X₀ → X ≤ X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ X : ℝ, ∀ X₀ : ℕ, Even X₀ → X ≤ X₀ →
     ∀ m a b, Adm X₀ m a b → ∀ᵐ ω ∂jitterMeasure,
       ω ∈ G0 θ X₀ (e3Family θ X₀) (tE2 b) → OthersInputsH θ X₀ ω b
 

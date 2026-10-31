@@ -82,8 +82,8 @@ theorem ho_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt 
       have t1 : (5 * (hi - lo) + 3) / (kappaParam X₀ * lo) ≤
           (10 * (2.04 * Queue6.Hc X₀ (2 * lo)) + 6) / (kappaParam X₀ * lo) :=
         div_le_div_of_nonneg_right (by linarith) (by positivity)
-      have t2 : (hi - lo) * lo ^ (-(1 / 4 : ℝ)) ≤
-          2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 4 : ℝ)) :=
+      have t2 : (hi - lo) * lo ^ (-(1 / 20 : ℝ)) ≤
+          2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 20 : ℝ)) :=
         mul_le_mul hd2 (Real.rpow_le_rpow_of_nonpos (by linarith) (by linarith) (by norm_num))
           (Real.rpow_nonneg hlo0.le _) (by
             have := (KR.WidthReal.Hc_pos hX (X₀ := X₀) (2 * lo)).le; positivity)
@@ -97,8 +97,8 @@ theorem ho_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt 
         split_ifs
         · exact le_rfl
         · positivity
-      -- `lo^{-1/10} ≤ 10⁻⁴³`
-      have hr : lo ^ (-(1 / 10 : ℝ)) ≤ 1 / 10 ^ 43 :=
+      -- `lo^{-1/40} ≤ 10⁻⁴³`
+      have hr : lo ^ (-(1 / 40 : ℝ)) ≤ 1 / 10 ^ 43 :=
         (Real.rpow_le_rpow_of_nonpos (by positivity) (by linarith) (by norm_num)).trans
           (X0_quarter_rpow_le hX)
       have hA : Real.log (2 * lo) * (2 * (Real.log lo ^ 4)⁻¹) ≤ 4 / 10 ^ 24 := by
@@ -118,20 +118,20 @@ theorem ho_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt 
         · exact h0)]
       have hS : |TcR θ X₀ ω (jzX X₀) lo - TcR θ X₀ ω (jzX X₀) hi| ≤
           ((10 * (2.04 * Queue6.Hc X₀ (2 * lo)) + 6) / (kappaParam X₀ * lo) +
-            2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 4 : ℝ))) +
+            2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 20 : ℝ))) +
           2 * (Real.log lo ^ 4)⁻¹ := by linarith
       have hpos : 0 ≤ ((10 * (2.04 * Queue6.Hc X₀ (2 * lo)) + 6) / (kappaParam X₀ * lo) +
-            2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 4 : ℝ))) := by
+            2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 20 : ℝ))) := by
         have := (KR.WidthReal.Hc_pos hX (X₀ := X₀) (2 * lo)).le
-        have : 0 ≤ (lo / 2) ^ (-(1 / 4 : ℝ)) := Real.rpow_nonneg (by linarith) _
+        have : 0 ≤ (lo / 2) ^ (-(1 / 20 : ℝ)) := Real.rpow_nonneg (by linarith) _
         positivity
       calc Real.log t' * |TcR θ X₀ ω (jzX X₀) lo - TcR θ X₀ ω (jzX X₀) hi|
           ≤ Real.log (2 * lo) * (((10 * (2.04 * Queue6.Hc X₀ (2 * lo)) + 6) /
-              (kappaParam X₀ * lo) + 2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 4 : ℝ))) +
+              (kappaParam X₀ * lo) + 2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 20 : ℝ))) +
               2 * (Real.log lo ^ 4)⁻¹) :=
             mul_le_mul hl2 hS (abs_nonneg _) (by linarith)
         _ = Real.log (2 * lo) * ((10 * (2.04 * Queue6.Hc X₀ (2 * lo)) + 6) /
-              (kappaParam X₀ * lo) + 2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 4 : ℝ))) +
+              (kappaParam X₀ * lo) + 2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 20 : ℝ))) +
             Real.log (2 * lo) * (2 * (Real.log lo ^ 4)⁻¹) := by ring
         _ ≤ 1 / 10 ^ 43 + 4 / 10 ^ 24 := by linarith
         _ ≤ 1 / 10 ^ 20 := by norm_num

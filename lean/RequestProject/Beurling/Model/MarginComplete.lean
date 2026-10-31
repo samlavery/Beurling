@@ -11,6 +11,7 @@ public import RequestProject.Beurling.Noise.RML15Eta
 `E_S = 0.0014`): `so = 10⁻²⁰` (`ho_c`, the oscillation of `T_c`), `sη = s_η` (`RML15.hη_canon`),
 `so + 2 s_η ≤ 0.0013` (`RML15.hsize_of`). So `Theorem21InputsH` holds given (84)
 (`theorem21InputsH_proved`), and `corollary_2_2_complete : Huxley84 → ¬ QuestionQ`.
+`theoremA_full : Huxley84 → Theorem21` is Theorem A for every `θ ∈ [1/20, 1/2 - 10⁻⁴]`.
 -/
 
 @[expose] public section
@@ -73,6 +74,17 @@ theorem theorem21InputsH_proved (h84 : BaseRange.Huxley84) : Theorem21InputsH :=
 theorem corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ :=
   corollary_2_2_hux h84 (theorem21InputsH_proved h84)
 
+/-- **Theorem A (Theorem 2.1) for every `θ ∈ [1/20, 1/2 - 10⁻⁴]`**, from eq. (84) alone:
+for each such `θ` there is `X_Hux` such that for every even `X₀ ≥ max(e^{10⁸}, X_Hux)` the random
+system of Section 3 satisfies (i) `|N(x) - x| ≤ C x^θ + 3 x^θ log* x + x^η` and (ii) the designed
+zeros `Re ρ_k = 1 - (log log x_k + O(1))/log x_k`, `log Im ρ_k = (1-θ) log x_k - log log x_k + O(1)` on an event of probability
+`≥ 1 - 1.5/log X₀` (`Theorem21`, `TheoremAConclusion`). The absorption window is
+`h(u) = u^{θ_b}`, `θ_b = min(θ, max(θ/2, 1/8))` (`thetaB`). -/
+theorem theoremA_full (h84 : BaseRange.Huxley84) : Theorem21 :=
+  Queue6.theorem21_of_X (BaseRange.shortIntervalPNT_of_huxley h84)
+    (Queue6.theorem21InputsX_of_Y (Queue6.theorem21InputsY_of_Z
+      (theorem21InputsZ_hux h84 (theorem21InputsH_proved h84))))
+
 /-- **Theorem 2.1 (Theorem A)** from eq. (84) alone: the full conclusion, (i) and (ii), for the
 realised systems on an event of probability `≥ 1 - 1.5/log X₀`. -/
 theorem theorem21_complete (h84 : BaseRange.Huxley84) : Theorem21 :=
@@ -83,14 +95,14 @@ theorem theorem21_complete (h84 : BaseRange.Huxley84) : Theorem21 :=
 
 /-- **Theorem A(ii), the designed zeros at `1·log log`** (eq. (ampl) with the constant relative
 amplitude `κ'_k = κ₀ = X₀⁻¹ ∈ [X₀⁻¹, Λ⁻⁵]`), from eq. (84) alone: for every
-`θ ∈ [1/4, 1/2 - 10⁻⁴]` and every even `X₀ ≥ max(e^{10⁸}, X_Hux)`, on an event `G` of probability
+`θ ∈ [1/20, 1/2 - 10⁻⁴]` and every even `X₀ ≥ max(e^{10⁸}, X_Hux)`, on an event `G` of probability
 `≥ 1 - 1.5/log X₀`, the zeta function of the realised system `P(ω)` continues to a punctured
 half-plane `Re s > a`, `a < 1`, and has zeros `ρ_k` there with, along `x_k → ∞`,
 `Re ρ_k = 1 - (log log x_k + O_{X₀}(1))/log x_k` and
 `log Im ρ_k = (1 - θ) log x_k - log log x_k + O_{X₀}(1)` (so `x_k` is pinned by the height of
 `ρ_k`, and `1 - Re ρ_k ≍ (1-θ) log log Im ρ_k / log Im ρ_k`). -/
 theorem theoremA_ii_complete (h84 : BaseRange.Huxley84) :
-    ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+    ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
       Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
       ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
         IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

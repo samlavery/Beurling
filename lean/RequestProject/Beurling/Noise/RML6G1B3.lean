@@ -215,7 +215,7 @@ theorem jump_small {X₀ : ℕ} {x δ j0 N HN θ : ℝ} (hΛ : 100000000 ≤ Rea
     (hδL : δ ≤ 1 / Real.log x ^ 4) (_hj0 : 0 ≤ j0) (hj1 : j0 ≤ 1)
     (hN : Real.exp (Real.log x / 2) ≤ N) (hHN0 : 0 ≤ HN) (hHN : HN ≤ N ^ (1 / 8 : ℝ))
     (_hθ0 : 0 ≤ θ) (hθ : θ ≤ 1 / 2) :
-    Real.log x * j0 * (4.1 * δ + 3 * HN / N + 2 * N ^ (θ / 2 - 1)) ≤ 1 / 10 ^ 27 := by
+    Real.log x * j0 * (4.1 * δ + 3 * HN / N + 2 * N ^ (thetaB θ - 1)) ≤ 1 / 10 ^ 27 := by
   set L := Real.log x with hLdef
   have hX0 : (0 : ℝ) < X₀ := by
     by_contra hc; push_neg at hc
@@ -259,17 +259,17 @@ theorem jump_small {X₀ : ℕ} {x δ j0 N HN θ : ℝ} (hΛ : 100000000 ≤ Rea
       _ ≤ 3 * (Real.exp (L / 16) * Real.exp (-(7 * L / 16))) := by
           gcongr
       _ = 3 * Real.exp (-(3 * L / 8)) := by rw [← Real.exp_add]; congr 2; ring
-  have hT3 : L * (2 * N ^ (θ / 2 - 1)) ≤ 2 * Real.exp (-(5 * L / 16)) := by
-    have hp : N ^ (θ / 2 - 1) ≤ Real.exp (-(3 * L / 8)) := by
+  have hT3 : L * (2 * N ^ (thetaB θ - 1)) ≤ 2 * Real.exp (-(5 * L / 16)) := by
+    have hp : N ^ (thetaB θ - 1) ≤ Real.exp (-(3 * L / 8)) := by
       rw [hrp]; apply Real.exp_le_exp.mpr
-      have : θ / 2 - 1 ≤ -(3 / 4) := by linarith
+      have : thetaB θ - 1 ≤ -(3 / 4) := by linarith [thetaB_le_quarter hθ]
       nlinarith
-    calc L * (2 * N ^ (θ / 2 - 1)) = 2 * (L * N ^ (θ / 2 - 1)) := by ring
+    calc L * (2 * N ^ (thetaB θ - 1)) = 2 * (L * N ^ (thetaB θ - 1)) := by ring
       _ ≤ 2 * (Real.exp (L / 16) * Real.exp (-(3 * L / 8))) := by
-          have : 0 ≤ N ^ (θ / 2 - 1) := Real.rpow_nonneg hN0.le _
+          have : 0 ≤ N ^ (thetaB θ - 1) := Real.rpow_nonneg hN0.le _
           gcongr
       _ = 2 * Real.exp (-(5 * L / 16)) := by rw [← Real.exp_add]; congr 2; ring
-  have hsum : L * (4.1 * δ + 3 * HN / N + 2 * N ^ (θ / 2 - 1)) ≤ 1 / 10 ^ 27 := by
+  have hsum : L * (4.1 * δ + 3 * HN / N + 2 * N ^ (thetaB θ - 1)) ≤ 1 / 10 ^ 27 := by
     have he1 : Real.exp (-(3 * L / 8)) ≤ Real.exp (-200) := Real.exp_le_exp.mpr (by linarith)
     have he2 : Real.exp (-(5 * L / 16)) ≤ Real.exp (-200) := Real.exp_le_exp.mpr (by linarith)
     have h200 : 5 * Real.exp (-200) ≤ 1 / (2 * 10 ^ 27) := by
@@ -289,12 +289,12 @@ theorem jump_small {X₀ : ℕ} {x δ j0 N HN θ : ℝ} (hΛ : 100000000 ≤ Rea
     have : (1 : ℝ) / (2 * 10 ^ 27) + 1 / (2 * 10 ^ 27) = 1 / 10 ^ 27 := by norm_num
     rw [mul_add, mul_add]
     linarith
-  have hnn : 0 ≤ L * (4.1 * δ + 3 * HN / N + 2 * N ^ (θ / 2 - 1)) := by
-    have : 0 ≤ N ^ (θ / 2 - 1) := Real.rpow_nonneg hN0.le _
+  have hnn : 0 ≤ L * (4.1 * δ + 3 * HN / N + 2 * N ^ (thetaB θ - 1)) := by
+    have : 0 ≤ N ^ (thetaB θ - 1) := Real.rpow_nonneg hN0.le _
     positivity
-  calc L * j0 * (4.1 * δ + 3 * HN / N + 2 * N ^ (θ / 2 - 1))
-      = j0 * (L * (4.1 * δ + 3 * HN / N + 2 * N ^ (θ / 2 - 1))) := by ring
-    _ ≤ 1 * (L * (4.1 * δ + 3 * HN / N + 2 * N ^ (θ / 2 - 1))) :=
+  calc L * j0 * (4.1 * δ + 3 * HN / N + 2 * N ^ (thetaB θ - 1))
+      = j0 * (L * (4.1 * δ + 3 * HN / N + 2 * N ^ (thetaB θ - 1))) := by ring
+    _ ≤ 1 * (L * (4.1 * δ + 3 * HN / N + 2 * N ^ (thetaB θ - 1))) :=
         mul_le_mul_of_nonneg_right hj1 hnn
     _ ≤ 1 / 10 ^ 27 := by rw [one_mul]; exact hsum
 

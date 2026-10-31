@@ -67,11 +67,9 @@ theorem hT_at {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt
     · rw [(PR θ X₀ ω).N_eq_zero h1, Nat.floor_eq_zero.mpr h1]; simp
     · rw [hPR]
       exact realised_floor_eq hok hU hX hTlow h1 (by unfold Xm at hu; exact hu)
-  have hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 4 : ℝ) ≤ Xm X₀ := by
+  have hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 40 : ℝ) ≤ Xm X₀ := by
     unfold Xm
-    have h1 := InitialRange.capH_le_rpow hX0 hX (le_refl (X₀ : ℝ))
-    have h2 : (X₀ : ℝ) ^ (1 / 8 : ℝ) ≤ (X₀ : ℝ) ^ (1 / 4 : ℝ) :=
-      Real.rpow_le_rpow_of_exponent_le hX1.le (by norm_num)
+    have h1 := InitialRange.capH_le_rpow40 hX0 hX (le_refl (X₀ : ℝ))
     have h3 : 0 ≤ capH X₀ X₀ := by linarith [capH_ge_one hX0 hX (le_refl (X₀ : ℝ))]
     linarith
   -- the lag
@@ -91,14 +89,14 @@ theorem hT_at {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt
   let R : GreedyRun X₀ := ⟨M, capH X₀, ω, hTlow⟩
   have C : AbsorbedCoupling (realisedSystem M (capH X₀) ω) R.M R.H R.U
       (realisedA M (capH X₀) ω) (realisedLatest M (capH X₀) ω) := realisedCoupling hok
-  have hb2 : 0 < θ / 2 := by linarith [hc.hθ.1]
-  have hW : AbsorbedWindowHyp (θ / 2) X₀ (absSet X₀ (DF θ X₀ ω)) (uA θ) := by
+  have hb2 : 0 < thetaB θ := thetaB_pos (by linarith [hc.hθ.1])
+  have hW : AbsorbedWindowHyp (thetaB θ) X₀ (absSet X₀ (DF θ X₀ ω)) (uA θ) := by
     rw [← hAeq]
-    exact ⟨hb2, by linarith [hc.hθ.2], hX1.le, fun a ha => (hAu a ha).1,
+    exact ⟨hb2, thetaB_le_one (by linarith [hc.hθ.2]), hX1.le, fun a ha => (hAu a ha).1,
       fun a ha => (hAu a ha).2, C.locFin⟩
   have hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
       |countA (absSet X₀ (DF θ X₀ ω)) u - ∫ v in (X₀ : ℝ)..u,
-        absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) v| ≤ 2 * u ^ (θ / 2) := by
+        absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v| ≤ 2 * u ^ (thetaB θ) := by
     intro u hu huz
     refine absorbed_target_error_cap_loc hW (by linarith) hu fun v hv hvu => ?_
     refine rhoA_le_L4 hc hev hb hbt hQC hE1 hNice hv ?_
@@ -106,7 +104,7 @@ theorem hT_at {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt
     linarith [hvu.trans huz, hzcb]
   exact theorem_5_24_data (DF θ X₀ ω) hc.hθ hX hev hc.hHB
     (countA (absSet X₀ (DF θ X₀ ω)))
-    (absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ)) hXm (Xm_le_X0 hc) hfl hlag hA
+    (absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ)) hXm (Xm_le_X0 hc) hfl hlag hA
     hzcX le_rfl
 
 set_option maxHeartbeats 2000000 in

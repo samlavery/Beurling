@@ -20,12 +20,12 @@ noncomputable def Mk (θ α γ x : ℝ) (s : ℂ) : ℂ :=
 /-- The radius `δ_k = 9 log log x_k / log x_k` of Lemma 4.6. -/
 noncomputable def designRadius (x : ℝ) : ℝ := 9 * Real.log (Real.log x) / Real.log x
 
-/-- The hypotheses of Lemma 4.6, in the parameter range of the paper: `θ ∈ [1/4, 1/2]`,
+/-- The hypotheses of Lemma 4.6, in the parameter range of the paper: `θ ∈ [1/20, 1/2]`,
 `Λ = log X₀ ≥ 10`, `κ₀ ∈ [X₀⁻¹, 1/4]`, `log log x_k ≥ 2Λ`, `α_k γ_k = κ₀ x_k^{1-θ}/log x_k` (eq. (ampl), `κ'_k = κ₀`),
 and on the disc `|s - (1 + iγ_k)| ≤ δ_k`: `Z_B` is holomorphic, `1/2 ≤ |Z_B| ≤ Z_max = 2Λ` (the
 hypothesis of the lemma) and `|Z_B'| ≤ 4.01 Λ²` (from Lemma 4.2, step 3 of the proof). -/
 structure Lemma46Hyp (θ Λ κ₀ α γ x : ℝ) (ZB : ℂ → ℂ) : Prop where
-  θ_ge : 1 / 4 ≤ θ
+  θ_ge : 1 / 20 ≤ θ
   θ_le : θ ≤ 1 / 2
   Λ_ge : 10 ≤ Λ
   κ_ge : Real.exp (-Λ) ≤ κ₀

@@ -78,7 +78,7 @@ theorem rhoA_le_QE {t : ℕ} {ω : JitterΩ} (hQC : ω ∈ QC (okQ θ X₀) (tq 
     (hZX : (X₀ : ℝ) ≤ Z) (hZt : 4 * Z + 2 ≤ t) {u : ℝ} (hu : (X₀ : ℝ) ≤ u)
     (h2y : 2 * AbsorbEmpty.absorbYAt X₀ (2 * u) ≤ Z)
     (hut : 20 * u / Real.log u ^ 11 + 5 ≤ t) :
-    absorbedDensity (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) u ≤ Real.log u ^ (-4 : ℤ) := by
+    absorbedDensity (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) u ≤ Real.log u ^ (-4 : ℤ) := by
   classical
   obtain ⟨hU, hSG, hnt⟩ := hN
   have hX := hc.hX
@@ -227,7 +227,7 @@ theorem rhoA_le_QE {t : ℕ} {ω : JitterΩ} (hQC : ω ∈ QC (okQ θ X₀) (tq 
   let R : GreedyRun X₀ := ⟨M, capH X₀, ω, hTlow⟩
   have C : AbsorbedCoupling (realisedSystem M (capH X₀) ω) R.M R.H R.U
       (realisedA M (capH X₀) ω) (realisedLatest M (capH X₀) ω) := realisedCoupling hok
-  have hb : 0 < θ / 2 := by linarith [hc.hθ.1]
+  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hc.hθ.1])
   have hd := absorbedDensity_le_of_localCount hb (by linarith) hAu C.locFin hu hmain
   have hA : realisedA M (capH X₀) ω = absSet X₀ (DF θ X₀ ω) := by
     rw [realisedA_eq hok hnc]

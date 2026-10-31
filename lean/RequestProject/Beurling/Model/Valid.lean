@@ -29,7 +29,7 @@ variable {θ : ℝ} {X₀ : ℕ}
 
 /-- The continuous part of the target of the data. -/
 noncomputable def contD (θ : ℝ) (X₀ : ℕ) (D : PrimeData) : ℝ → ℝ :=
-  contPart X₀ (kappaParam X₀) (absorbedDensityCap (θ / 2) (absSet X₀ D) (uA θ))
+  contPart X₀ (kappaParam X₀) (absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ))
     (osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀))
 
 /-- The jump part of the target of the data. -/
@@ -72,18 +72,18 @@ lemma abs_alphaD_le (hX : 10 ^ 8 ≤ Real.log X₀) (D : PrimeData) (k : ℕ) :
   have h := alphaD_mem (θ := θ) hX D k
   rw [abs_of_nonneg (by linarith [h.1])]; exact h.2
 
-lemma contD_lower (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+lemma contD_lower (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (D : PrimeData) (hD : LocFinD D) {x x' : ℝ}
     (hx : (X₀ : ℝ) ≤ x) (hxx : x ≤ x') :
     0.08 * (x' - x) / Real.log x' ≤ contD θ X₀ D x' - contD θ X₀ D x :=
   contPart_lower hθ hX (gammaD_range hX D) (absSet X₀ D) (absSet_locFin hD) hHB hx hxx
 
-lemma contD_upper (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+lemma contD_upper (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (D : PrimeData) (hD : LocFinD D) {x x' : ℝ} (hx : (X₀ : ℝ) ≤ x) (hxx : x ≤ x') :
     contD θ X₀ D x' - contD θ X₀ D x ≤ 1.01 * (x' - x) :=
   contPart_upper hθ hX (gammaD_range hX D) (absSet X₀ D) (absSet_locFin hD) hx hxx
 
-lemma contD_continuousOn (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+lemma contD_continuousOn (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (D : PrimeData) (hD : LocFinD D) :
     ContinuousOn (contD θ X₀ D) (Ici (X₀ : ℝ)) :=
   contPart_continuousOn hθ hX (gammaD θ X₀ D) (absSet X₀ D) (absSet_locFin hD)
@@ -161,7 +161,7 @@ theorem targetD_ge_linear (hθ : θ ≤ 1 / 2) (hX : 10 ^ 8 ≤ Real.log X₀) (
   linarith
 
 /-- **Lemma 3.3: the target of any data is a valid slot-model target.** -/
-theorem tvalid_targetD (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+theorem tvalid_targetD (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) (D : PrimeData)
     (hD : LocFinD D) : TValid X₀ (targetD θ X₀ D) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
@@ -218,12 +218,12 @@ theorem tvalid_targetD (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
     linarith
 
 /-- **`ValidHyp` from (84)**. -/
-theorem validHyp_of_HB (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+theorem validHyp_of_HB (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) : ValidHyp θ X₀ :=
   fun D hD => tvalid_targetD hθ hX hHB D hD
 
 /-- **`SlopeHyp` from (84)**: `T(x') - T(x) ≥ C(x') - C(x) ≥ 0.08 (x' - x)/log x'`. -/
-theorem slopeHyp_of_HB (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+theorem slopeHyp_of_HB (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) : SlopeHyp θ X₀ := by
   intro D hD x x' hx hxx
   rw [targetD_split θ D hx, targetD_split θ D (hx.trans hxx)]

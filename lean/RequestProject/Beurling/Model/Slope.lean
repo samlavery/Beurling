@@ -555,7 +555,7 @@ lemma hasDerivAt_osc {θ : ℝ} (α γ : ℕ → ℝ) {X : ℝ} (hX : 1 ≤ X) {
 
 /-- **The oscillation slope bound** (proof of Lemma 3.3): `|R'(x)| ≤ 0.02/log x` for `x ≥ X₀`,
 for heights in the designed range and the designed amplitudes. -/
-theorem abs_deriv_osc_le {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem abs_deriv_osc_le {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) {x : ℝ}
     (hx : (X₀ : ℝ) ≤ x) :
     |deriv (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
@@ -653,7 +653,7 @@ theorem abs_deriv_osc_le {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
         linarith
 
 /-- The oscillation is `0.01`-Lipschitz on `[X₀, ∞)`. -/
-theorem osc_lipschitz {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem osc_lipschitz {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) {x x' : ℝ}
     (hx : (X₀ : ℝ) ≤ x) (hx' : (X₀ : ℝ) ≤ x') :
     |Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
@@ -690,27 +690,27 @@ lemma contPart_sub {X₀ : ℕ} {κ : ℝ} {rhoA R : ℝ → ℝ} {x x' : ℝ}
   linarith
 
 /-- **Upper slope bound**: `C(x') - C(x) ≤ 1.01 (x' - x)` (`ρ_det, ρ̄_A ≥ 0`, `|R'| ≤ 0.01`). -/
-theorem contPart_upper {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem contPart_upper {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) (A : Set ℝ)
     (hA : Absorbed.LocFin A) {x x' : ℝ} (hx : (X₀ : ℝ) ≤ x) (hxx : x ≤ x') :
     contPart X₀ (Construction.kappaParam X₀)
-        (Absorbed.absorbedDensityCap (θ / 2) A (fun n => Construction.solveU (θ / 2) n))
+        (Absorbed.absorbedDensityCap (thetaB θ) A (fun n => Construction.solveU (thetaB θ) n))
         (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
           (Construction.switchOn X₀) γ) γ (Construction.switchOn X₀)) x' -
       contPart X₀ (Construction.kappaParam X₀)
-        (Absorbed.absorbedDensityCap (θ / 2) A (fun n => Construction.solveU (θ / 2) n))
+        (Absorbed.absorbedDensityCap (thetaB θ) A (fun n => Construction.solveU (thetaB θ) n))
         (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
           (Construction.switchOn X₀) γ) γ (Construction.switchOn X₀)) x ≤ 1.01 * (x' - x) := by
   have hX1 : (1 : ℝ) < X₀ := QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hX
   have hX1n : 1 ≤ X₀ := by exact_mod_cast hX1.le
-  have hb : 0 < θ / 2 := by linarith [hθ.1]
+  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
   obtain ⟨hκ0, -⟩ := kappa_facts hX
   rw [contPart_sub (fun y hy => intervalIntegrable_rhoDet X₀ hκ0 hX1n hy)
     (fun y hy => intervalIntegrable_absorbedDensityCap A hA hb hX1 hy) hx hxx]
   have h1 : 0 ≤ ∫ u in x..x', Target.rhoDet X₀ (Construction.kappaParam X₀) u :=
     intervalIntegral.integral_nonneg hxx fun u hu => rhoDet_nonneg X₀ hκ0 (by linarith [hu.1])
   have h2 : 0 ≤ ∫ u in x..x',
-      Absorbed.absorbedDensityCap (θ / 2) A (fun n => Construction.solveU (θ / 2) n) u :=
+      Absorbed.absorbedDensityCap (thetaB θ) A (fun n => Construction.solveU (thetaB θ) n) u :=
     intervalIntegral.integral_nonneg hxx fun u hu =>
       (absorbedDensityCap_mem A (by linarith [hu.1]) _).1
   have h3 := osc_lipschitz hθ hX hγ hx (hx.trans hxx)
@@ -737,15 +737,15 @@ lemma continuousOn_primitive_Ici {f : ℝ → ℝ} {X : ℝ}
   rwa [uIcc_of_le hy] at this
 
 /-- **`C` is continuous on `[X₀, ∞)`.** -/
-theorem contPart_continuousOn {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem contPart_continuousOn {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) (γ : ℕ → ℝ) (A : Set ℝ) (hA : Absorbed.LocFin A) :
     ContinuousOn (contPart X₀ (Construction.kappaParam X₀)
-        (Absorbed.absorbedDensityCap (θ / 2) A (fun n => Construction.solveU (θ / 2) n))
+        (Absorbed.absorbedDensityCap (thetaB θ) A (fun n => Construction.solveU (thetaB θ) n))
         (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
           (Construction.switchOn X₀) γ) γ (Construction.switchOn X₀))) (Ici (X₀ : ℝ)) := by
   have hX1 : (1 : ℝ) < X₀ := QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hX
   have hX1n : 1 ≤ X₀ := by exact_mod_cast hX1.le
-  have hb : 0 < θ / 2 := by linarith [hθ.1]
+  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
   obtain ⟨hκ0, -⟩ := kappa_facts hX
   have hR : ContinuousOn (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
       (Construction.switchOn X₀) γ) γ (Construction.switchOn X₀)) (Ici (X₀ : ℝ)) := fun y hy =>
@@ -767,25 +767,25 @@ lemma continuous_invLogMax {X : ℝ} (hX : 1 < X) :
     have := lt_of_lt_of_le (by linarith : (0 : ℝ) < X) (le_max_right u X); exact this.ne')
 
 /-- **Lower slope bound (Lemma 3.3)**: `C(x') - C(x) ≥ 0.08 (x' - x)/log x'`, from (84). -/
-theorem contPart_lower {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem contPart_lower {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) (A : Set ℝ)
     (hA : Absorbed.LocFin A) (hHB : ShortIntervalPNTFrom X₀) {x x' : ℝ} (hx : (X₀ : ℝ) ≤ x)
     (hxx : x ≤ x') :
     0.08 * (x' - x) / Real.log x' ≤
       contPart X₀ (Construction.kappaParam X₀)
-        (Absorbed.absorbedDensityCap (θ / 2) A (fun n => Construction.solveU (θ / 2) n))
+        (Absorbed.absorbedDensityCap (thetaB θ) A (fun n => Construction.solveU (thetaB θ) n))
         (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
           (Construction.switchOn X₀) γ) γ (Construction.switchOn X₀)) x' -
       contPart X₀ (Construction.kappaParam X₀)
-        (Absorbed.absorbedDensityCap (θ / 2) A (fun n => Construction.solveU (θ / 2) n))
+        (Absorbed.absorbedDensityCap (thetaB θ) A (fun n => Construction.solveU (thetaB θ) n))
         (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
           (Construction.switchOn X₀) γ) γ (Construction.switchOn X₀)) x := by
   have hX1 : (1 : ℝ) < (X₀ : ℝ) := QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hX
   have hX1n : 1 ≤ X₀ := by exact_mod_cast hX1.le
-  have hb : 0 < θ / 2 := by linarith [hθ.1]
+  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
   obtain ⟨hκ0, -⟩ := kappa_facts hX
   set κ := Construction.kappaParam (X₀ : ℝ) with hκ
-  set ρA := Absorbed.absorbedDensityCap (θ / 2) A (fun n => Construction.solveU (θ / 2) n)
+  set ρA := Absorbed.absorbedDensityCap (thetaB θ) A (fun n => Construction.solveU (thetaB θ) n)
   set R := Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
     (Construction.switchOn (X₀ : ℝ)) γ) γ (Construction.switchOn (X₀ : ℝ)) with hRdef
   set c : ℝ → ℝ := fun u => 1 / Real.log (max u (X₀ : ℝ)) with hc
@@ -809,8 +809,8 @@ theorem contPart_lower {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 1
     have hXu : (X₀ : ℝ) ≤ u := hx.trans hu.1
     have hl : 10 ^ 8 ≤ Real.log u := hX.trans (Real.log_le_log (by linarith) hXu)
     have h1 := rhoDet_le hX hHB hXu
-    have h2 := (absorbedDensityCap_mem A (b := θ / 2) (v := u) (by linarith)
-      (fun n => Construction.solveU (θ / 2) n)).2
+    have h2 := (absorbedDensityCap_mem A (b := thetaB θ) (v := u) (by linarith)
+      (fun n => Construction.solveU (thetaB θ) n)).2
     have h3 := Positivity.inv_kappa_mul_le (by linarith) hX hXu
     have e : ((X₀ : ℝ) : ℝ) ^ (-(5 / 12 - 1 / 50 : ℝ)) = κ := by
       rw [hκ, Construction.kappaParam]; norm_num

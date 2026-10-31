@@ -104,10 +104,10 @@ lemma two_heightScale_le {θ κ₀ x : ℝ} (hθ : 0 ≤ θ) (hκ0 : 0 ≤ κ₀
   rw [div_le_iff₀ (by linarith)]
   nlinarith
 
-/-- **The design parameters**: for `θ ∈ [1/4, 1/2]`, `Λ ≥ 10`, `e^{-Λ} ≤ κ₀ ≤ 1/4`, `x > 1`
+/-- **The design parameters**: for `θ ∈ [1/20, 1/2]`, `Λ ≥ 10`, `e^{-Λ} ≤ κ₀ ≤ 1/4`, `x > 1`
 with `log log x ≥ 2Λ`, `Γ(x) ≥ 2` and any `γ ∈ [Γ(x), 2Γ(x)]`, the amplitude `α = amplitudeOf`
 satisfies `DesignParams`, `1 ≤ α ≤ 2`, and `γ ≤ x`. -/
-theorem designParams_of_mem {θ Λ κ₀ γ x : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2)
+theorem designParams_of_mem {θ Λ κ₀ γ x : ℝ} (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2)
     (hΛ : 10 ≤ Λ) (hκ1 : Real.exp (-Λ) ≤ κ₀) (hκ2 : κ₀ ≤ 1 / 4) (hx : 1 < x)
     (hLL : 2 * Λ ≤ Real.log (Real.log x)) (hΓ : 2 ≤ heightScale θ κ₀ x)
     (hγ : γ ∈ Icc (heightScale θ κ₀ x) (2 * heightScale θ κ₀ x)) :
@@ -138,7 +138,7 @@ lemma log_lt_two_sqrt {L : ℝ} (hL : 0 < L) : Real.log L < 2 * Real.sqrt L := b
 theorem growth_of_uniform {ς : ℝ → ℝ} (hς : ∀ ℓ, 0 ≤ ℓ → 42 * Real.log (2 + ℓ) + 5 ≤ ς ℓ)
     {θ γ x : ℝ} (hθ : θ ≤ 1 / 2) (hγ0 : 0 ≤ γ) (hγ : γ ≤ x) (hx : 1 < x)
     (hLL : 1 ≤ Real.log (Real.log x)) :
-    ∀ ℓ ∈ Icc 0 (Real.log (γ + 1) / (1 - θ / 2)),
+    ∀ ℓ ∈ Icc 0 (Real.log (γ + 1) / (1 - thetaB θ)),
       designRadius x * ℓ + 2 * Real.log (2 + ℓ) + 5 ≤ ς ℓ := by
   intro ℓ hℓ
   set L := Real.log x with hLdef
@@ -155,9 +155,10 @@ theorem growth_of_uniform {ς : ℝ → ℝ} (hς : ∀ ℓ, 0 ≤ ℓ → 42 * 
         _ = Real.log 2 + L := by rw [Real.log_mul (by norm_num) hx0.ne']
         _ ≤ 1 + L := by linarith [Real.log_two_lt_d9]
         _ = L + 1 := by ring
-    have h2 : ℓ * (1 - θ / 2) ≤ Real.log (γ + 1) :=
+    have hb := thetaB_le_quarter hθ
+    have h2 : ℓ * (1 - thetaB θ) ≤ Real.log (γ + 1) :=
       (le_div_iff₀ (by linarith)).mp hℓ.2
-    nlinarith [hℓ.1]
+    nlinarith [hℓ.1, mul_nonneg hℓ.1 (show 0 ≤ 1 / 4 - thetaB θ by linarith)]
   have hℓ0 := hℓ.1
   have hLL0 : 0 ≤ Real.log L := by linarith
   -- `δ ℓ ≤ 40 log(2 + ℓ)`
@@ -197,12 +198,12 @@ noncomputable def designAlpha (X₀ : ℕ) (κ θ κ₀ : ℝ) (Dlt : ℕ → �
 `Theorem410InputsCount`, but `γ_k` is chosen by the rule of Lemma 4.8 in `[Γ_k, 2Γ_k]` with
 `Γ_k = κ₀ (x⁺_k)^{1-θ}/(2 log x⁺_k)`, `α_k = κ₀ (x⁺_k)^{1-θ}/(γ_k log x⁺_k)`, and the
 absorbed-set growth is the single condition `42 log(2 + ℓ) + 5 ≤ ς(ℓ)` for `ℓ ≥ 0`. The remaining
-conditions on the design are `θ ∈ [1/4, 1/2]`, `1/X₀ ≤ κ₀ ≤ 1/4`, `x⁺_k > 1`,
+conditions on the design are `θ ∈ [1/20, 1/2]`, `1/X₀ ≤ κ₀ ≤ 1/4`, `x⁺_k > 1`,
 `log log x⁺_k ≥ 2 log X₀`, `Γ_k ≥ T + 1/2`, `κ Γ_k ≥ e^{X₀²/3}`. -/
 def Theorem410InputsDesign (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (X₀ : ℕ) (κ T κ₀ η : ℝ) (xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
     (A : Set ℝ) (u : ℝ → ℝ) (ς : ℝ → ℝ),
-    10 ^ 4 ≤ Real.log X₀ ∧ 1 / 4 ≤ θ ∧ θ ≤ 1 / 2 ∧ 0 < κ ∧ κ ≤ 1 ∧
+    10 ^ 4 ≤ Real.log X₀ ∧ 1 / 20 ≤ θ ∧ θ ≤ 1 / 2 ∧ 0 < κ ∧ κ ≤ 1 ∧
     Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * T ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧
     (∀ k, 1 < xp k) ∧ (∀ k, 2 * Real.log X₀ ≤ Real.log (Real.log (xp k))) ∧
@@ -214,14 +215,14 @@ def Theorem410InputsDesign (θ : ℝ) (F : ℂ → ℂ) : Prop :=
     0 ≤ η ∧ η ≤ θ / 2 ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
     (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
-    AbsorbedHyp (θ / 2) A u ∧ Monotone ς ∧
+    AbsorbedHyp (thetaB θ) A u ∧ Monotone ς ∧
     (∀ x ≥ 1, countA A x ≤ x * Real.exp (-ς (Real.log x))) ∧
     (∀ ℓ, 0 ≤ ℓ → 42 * Real.log (2 + ℓ) + 5 ≤ ς ℓ) ∧
     (∀ k, ∀ s ∈ closedBall (1 + designGamma X₀ κ θ κ₀ Dlt xp k * I) (designRadius (xp k)),
       F s = ZBcont X₀ κ s +
         (∑' j, oscHat θ (designAlpha X₀ κ θ κ₀ Dlt xp j) (designGamma X₀ κ θ κ₀ Dlt xp j)
           (xp j) s) +
-        (Dlt k s + lateNoise D (a k) s) + absorbedHat (θ / 2) A u s)
+        (Dlt k s + lateNoise D (a k) s) + absorbedHat (thetaB θ) A u s)
 
 /-- The designed inputs give `Theorem410InputsCount`: the design parameters, the choice rule and
 the absorbed-set growth for every `k` are derived. -/
@@ -269,7 +270,7 @@ def TheoremAInputsDesign (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21InputsCount`, with the inputs of
 Theorem 4.10 as in `Theorem410InputsDesign`. -/
 def Theorem21InputsDesign : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

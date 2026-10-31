@@ -75,7 +75,7 @@ events.** `Theorem21InputsJ` with the condition `FailureAdapted jitterFiltration
 The failure events `E`, their times and scales are only required to satisfy the per-scale bounds
 of Table 1 (`TableBudget`). -/
 def Theorem21InputsK : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -84,9 +84,9 @@ def Theorem21InputsK : Prop :=
         {k | placedAt (M ω) k}.Infinite ∧
         ∃ a : ℕ → ℝ,
           PartIRestJ θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-            (fun n => solveU (θ / 2) n) a (M ω) ∧
+            (fun n => solveU (thetaB θ) n) a (M ω) ∧
           Theorem410RestSp θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-            (fun n => solveU (θ / 2) n) a ∧
+            (fun n => solveU (thetaB θ) n) a ∧
           SparsityInputs X₀ (realisedSystem (M ω) (capH X₀) ω)
 
 /-- `Theorem21InputsK` is weaker than `Theorem21InputsJ`. -/
@@ -125,7 +125,7 @@ theorem theorem21InputsFixP_of_K (h : Theorem21InputsK) : Theorem21InputsFixP :=
       (realisedA (M ω) (capH X₀) ω) (realisedLatest (M ω) (capH X₀) ω) := realisedCoupling hok
   have h626 := lemma626_construction C' hlog hθ.1 (by linarith [hθ.2]) rfl hω hHBS hX0m hX0mX hcl
   have hrank := rankinA_construction C' hlog rfl hω hHBS hX0m
-  exact ⟨realisedA (M ω) (capH X₀) ω, fun n => solveU (θ / 2) n, a, M ω,
+  exact ⟨realisedA (M ω) (capH X₀) ω, fun n => solveU (thetaB θ) n, a, M ω,
     realisedLatest (M ω) (capH X₀) ω,
     ⟨realisedU_spec hok hω hlog hTlow (by linarith [hθ.1]) (by linarith [hθ.2]), C'.locFin,
       h626,

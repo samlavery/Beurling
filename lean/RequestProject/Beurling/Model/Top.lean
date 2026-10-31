@@ -49,7 +49,7 @@ pair divides one side only, so it would have to land on a point fixed by the pas
 probability `0` by the box-uniform landing law"). A named hypothesis: the paper's claim for the
 constructed model. -/
 def TiesNull : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → jitterMeasure (tiesEvent θ X₀) = 0
 
 section Ties
@@ -99,14 +99,14 @@ end Constructed
 (`constructedModel θ X₀`), and without the conjuncts `ArrivalsLinked`, `SlotFacts` and the target
 formula of `PartIRestO`, which are proved. -/
 def Theorem21InputsQ : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ) (time : ι → ℕ),
       (∃ scale : ι → ℕ, TableBudget jitterMeasure X₀ E time scale) ∧
       ∀ ω ∈ goodAll E, (∀ j, ω j ∈ Icc (0 : ℝ) 1) →
         (constructedModel θ X₀ ω).QueueWindowData ∧
         Theorem410RestM θ X₀ (realisedSystem (constructedModel θ X₀ ω) (capH X₀) ω)
-          (realisedA (constructedModel θ X₀ ω) (capH X₀) ω) (fun n => solveU (θ / 2) n) ∧
+          (realisedA (constructedModel θ X₀ ω) (capH X₀) ω) (fun n => solveU (thetaB θ) n) ∧
         ∀ v ≥ (X₀ : ℝ), ClusterUpTo (realisedSystem (constructedModel θ X₀ ω) (capH X₀) ω) X₀
           (4 * v / Real.log v ^ 11) (capM1 X₀ v)
 

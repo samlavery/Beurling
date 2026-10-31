@@ -75,12 +75,12 @@ lemma deriv_osc_zero_low (α γ : ℕ → ℝ) {y : ℝ} (hy0 : 0 < y)
 /-- **`𝒜` is empty below `2X₀`**: the capped absorbed density vanishes on `[X₀, 2X₀)`. -/
 lemma absDenCap_zero_low (hc : Cond θ X₀) (ω : JitterΩ) {y : ℝ} (hy0 : (X₀ : ℝ) ≤ y)
     (hy : y < 2 * X₀) :
-    absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) y = 0 := by
+    absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) y = 0 := by
   have hX := hc.hX
   have hX0 : (0 : ℝ) < X₀ := by linarith [one_lt_of_log hX]
-  have hb : 0 < θ / 2 := by linarith [hc.hθ.1]
-  have hb1 : θ / 2 ≤ 1 := by linarith [hc.hθ.2]
-  have hzero : absorbedDensity (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) y = 0 := by
+  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hc.hθ.1])
+  have hb1 : thetaB θ ≤ 1 := (thetaB_le_quarter (by linarith [hc.hθ.2])).trans (by norm_num)
+  have hzero : absorbedDensity (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) y = 0 := by
     unfold absorbedDensity
     refine (tsum_congr fun a => ?_).trans tsum_zero
     unfold absorbedBump
@@ -90,15 +90,15 @@ lemma absDenCap_zero_low (hc : Cond θ X₀) (ω : JitterΩ) {y : ℝ} (hy0 : (X
       obtain ⟨-, e, -, -, -, k, -, -, hk⟩ := ha
       have ha0 : 0 ≤ a := by linarith
       obtain ⟨hu0, hu⟩ := solveU_spec hb ha0
-      have hu1 : uA θ a = solveU (θ / 2) a := rfl
+      have hu1 : uA θ a = solveU (thetaB θ) a := rfl
       rw [← hu1] at hu0 hu
-      have hub : uA θ a ^ (θ / 2) ≤ 2 * X₀ := by
+      have hub : uA θ a ^ (thetaB θ) ≤ 2 * X₀ := by
         rcases le_or_gt 1 (uA θ a) with h | h
-        · calc uA θ a ^ (θ / 2) ≤ uA θ a ^ (1 : ℝ) :=
+        · calc uA θ a ^ (thetaB θ) ≤ uA θ a ^ (1 : ℝ) :=
                 Real.rpow_le_rpow_of_exponent_le h hb1
             _ = uA θ a := Real.rpow_one _
             _ ≤ 2 * X₀ := by linarith
-        · have : uA θ a ^ (θ / 2) ≤ 1 := Real.rpow_le_one hu0 h.le hb.le
+        · have : uA θ a ^ (thetaB θ) ≤ 1 := Real.rpow_le_one hu0 h.le hb.le
           have : (1 : ℝ) ≤ 2 * X₀ := by linarith [one_lt_of_log hX]
           linarith
       have ha4 : a ≤ 4 * X₀ := by linarith

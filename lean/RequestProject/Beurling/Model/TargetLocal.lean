@@ -45,28 +45,28 @@ lemma add_rpow_le_add_rpow {b s t : ℝ} (hb : 0 < b) (hs : 0 ≤ s) (hst : s �
   linarith
 
 lemma absorbedBump_congr {θ : ℝ} (hθ : 0 < θ) {A A' : Set ℝ} {Z v : ℝ} (hA : AAgree A A' Z)
-    (hvZ : v + v ^ (θ / 2) ≤ Z) (a : ℝ) :
-    absorbedBump (θ / 2) A (uA θ) a v = absorbedBump (θ / 2) A' (uA θ) a v := by
+    (hvZ : v + v ^ (thetaB θ) ≤ Z) (a : ℝ) :
+    absorbedBump (thetaB θ) A (uA θ) a v = absorbedBump (thetaB θ) A' (uA θ) a v := by
   classical
   unfold absorbedBump
   by_cases haZ : (a : ℝ) ≤ Z
   · simp only [hA a haZ]
   · push_neg at haZ
-    have hb : 0 < θ / 2 := by linarith
+    have hb : 0 < thetaB θ := thetaB_pos (by linarith)
     have hnot : v ∉ Icc (uA θ a) (a : ℝ) := by
       rintro ⟨h1, h2⟩
       have hu0' : 0 ≤ uA θ a := solveU_nonneg _ _
       have hv0 : 0 ≤ v := hu0'.trans h1
-      have := Real.rpow_nonneg hv0 (θ / 2)
+      have := Real.rpow_nonneg hv0 (thetaB θ)
       obtain ⟨hu0, hua⟩ := solveU_spec hb (show 0 ≤ a by linarith)
       have := add_rpow_le_add_rpow hb hu0 h1
-      have : uA θ a + uA θ a ^ (θ / 2) = a := hua
+      have : uA θ a + uA θ a ^ (thetaB θ) = a := hua
       linarith
     simp only [Set.indicator_of_notMem hnot, ite_self]
 
 lemma absorbedDensityCap_congr {θ : ℝ} (hθ : 0 < θ) {A A' : Set ℝ} {Z v : ℝ}
-    (hA : AAgree A A' Z) (hvZ : v + v ^ (θ / 2) ≤ Z) :
-    absorbedDensityCap (θ / 2) A (uA θ) v = absorbedDensityCap (θ / 2) A' (uA θ) v := by
+    (hA : AAgree A A' Z) (hvZ : v + v ^ (thetaB θ) ≤ Z) :
+    absorbedDensityCap (thetaB θ) A (uA θ) v = absorbedDensityCap (thetaB θ) A' (uA θ) v := by
   unfold absorbedDensityCap absorbedDensity
   congr 1
   exact tsum_congr (absorbedBump_congr hθ hA hvZ)
@@ -85,23 +85,23 @@ lemma osc_congr_of {θ : ℝ} {α γ α' γ' xp : ℕ → ℝ} {z : ℝ}
 /-- **Locality of the target**: at heights `x ≤ z` the target only reads `A` on `[0, Z]`
 (`z + z^{θ/2} ≤ Z`) and the oscillation parameters with `x⁺_j < z`. -/
 theorem target_congr {X₀ : ℕ} (hX1 : 1 ≤ X₀) {κ θ : ℝ} (hθ : 0 < θ) {A A' : Set ℝ}
-    {α γ α' γ' xp : ℕ → ℝ} {z Z : ℝ} (hZ : z + z ^ (θ / 2) ≤ Z) (hA : AAgree A A' Z)
+    {α γ α' γ' xp : ℕ → ℝ} {z Z : ℝ} (hZ : z + z ^ (thetaB θ) ≤ Z) (hA : AAgree A A' Z)
     (hosc : ∀ j, xp j < z → α j = α' j ∧ γ j = γ' j) {x : ℝ} (hx : x ≤ z) :
-    target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A (uA θ)) (osc θ α γ xp) x =
-      target X₀ κ (countA A') (absorbedDensityCap (θ / 2) A' (uA θ)) (osc θ α' γ' xp) x := by
+    target X₀ κ (countA A) (absorbedDensityCap (thetaB θ) A (uA θ)) (osc θ α γ xp) x =
+      target X₀ κ (countA A') (absorbedDensityCap (thetaB θ) A' (uA θ)) (osc θ α' γ' xp) x := by
   have hX0 : (0 : ℝ) < X₀ := by exact_mod_cast hX1
   unfold target
   by_cases hlt : x < X₀
   · simp only [if_pos hlt]
   · simp only [if_neg hlt]
     push_neg at hlt
-    have hb : 0 < θ / 2 := by linarith
+    have hb : 0 < thetaB θ := thetaB_pos (by linarith)
     have hx0 : 0 ≤ x := by linarith
     have hxZ : x ≤ Z := by
-      have := Real.rpow_nonneg (hx0.trans hx) (θ / 2)
+      have := Real.rpow_nonneg (hx0.trans hx) (thetaB θ)
       linarith
-    have hint : (∫ v in (X₀ : ℝ)..x, absorbedDensityCap (θ / 2) A (uA θ) v) =
-        ∫ v in (X₀ : ℝ)..x, absorbedDensityCap (θ / 2) A' (uA θ) v := by
+    have hint : (∫ v in (X₀ : ℝ)..x, absorbedDensityCap (thetaB θ) A (uA θ) v) =
+        ∫ v in (X₀ : ℝ)..x, absorbedDensityCap (thetaB θ) A' (uA θ) v := by
       refine intervalIntegral.integral_congr fun v hv => ?_
       rw [uIcc_of_le hlt] at hv
       have hv0 : 0 ≤ v := by linarith [hv.1]
@@ -113,7 +113,7 @@ theorem target_congr {X₀ : ℕ} (hX1 : 1 ≤ X₀) {κ θ : ℝ} (hθ : 0 < θ
 /-- `targetOf` is `target` with the solved `u_a`. -/
 lemma targetOf_eq (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ) (α γ xp : ℕ → ℝ) :
     targetOf θ X₀ κ A (uA θ) α γ xp =
-      target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A (uA θ)) (osc θ α γ xp) := rfl
+      target X₀ κ (countA A) (absorbedDensityCap (thetaB θ) A (uA θ)) (osc θ α γ xp) := rfl
 
 /-- **Locality of the designed heights** (Lemma 4.8: `γ_j` reads only the system on `[1, a_j)`):
 if `N` agrees below `Y` and `A` agrees on `[0, Z]` with `Y + Y^{θ/2} ≤ Z`, then every `γ_j`
@@ -121,10 +121,10 @@ with `a_j < Y` agrees. -/
 theorem designedGammaN_congr {N N' : ℝ → ℝ} {θ : ℝ} (hθ : 0 < θ) {X₀ : ℕ} {κ : ℝ}
     {A A' : Set ℝ} {κ₀ : ℝ} {xp a : ℕ → ℝ} (hsp : Spacing xp) (hX1 : 1 ≤ X₀)
     (hxp : (X₀ : ℝ) ≤ xp 0) (ha : ∀ k, 0 < a k ∧ a k ≤ xp k) {Y Z : ℝ}
-    (hZ : Y + Y ^ (θ / 2) ≤ Z) (hN : ∀ x, x < Y → N x = N' x) (hA : AAgree A A' Z) :
+    (hZ : Y + Y ^ (thetaB θ) ≤ Z) (hN : ∀ x, x < Y → N x = N' x) (hA : AAgree A A' Z) :
     ∀ j, a j < Y → designedGammaN N θ X₀ κ A (uA θ) κ₀ xp a j =
       designedGammaN N' θ X₀ κ A' (uA θ) κ₀ xp a j := by
-  have hb : 0 < θ / 2 := by linarith
+  have hb : 0 < thetaB θ := thetaB_pos (by linarith)
   intro j
   induction j using Nat.strong_induction_on with
   | _ j IH =>
@@ -137,7 +137,7 @@ theorem designedGammaN_congr {N N' : ℝ → ℝ} {θ : ℝ} (hθ : 0 < θ) {X�
   unfold lagN
   have hxY : x < Y := lt_of_le_of_lt hxa hj
   rw [hN x hxY, targetOf_eq, targetOf_eq]
-  have hZj : a j + a j ^ (θ / 2) ≤ Z :=
+  have hZj : a j + a j ^ (thetaB θ) ≤ Z :=
     (add_rpow_le_add_rpow hb (ha j).1.le hj.le).trans hZ
   congr 1
   refine target_congr hX1 hθ hZj hA (fun i hi => ?_) hxa
@@ -155,11 +155,11 @@ data agree at every height `x ≤ z`, provided `y(n) ≤ Y` for every `n ≤ Z`,
 `a_j < Y` for every `j` with `x⁺_j < z`. -/
 theorem targetD_congr {θ : ℝ} (hθ : 0 < θ) {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀)
     {D D' : PrimeData} (hD : Pos D) (hD' : Pos D') {Y z Z : ℝ} (h : DAgree D D' Y)
-    (hY0 : 0 ≤ Y) (hYz : Y ≤ z) (hZ : z + z ^ (θ / 2) ≤ Z)
+    (hY0 : 0 ≤ Y) (hYz : Y ≤ z) (hZ : z + z ^ (thetaB θ) ≤ Z)
     (hYA : ∀ n : ℝ, n ≤ Z → absorbY X₀ n ≤ Y)
     (hYγ : ∀ j, switchOn X₀ j < z → constructionScale X₀ j < Y) {x : ℝ} (hx : x ≤ z) :
     targetD θ X₀ D x = targetD θ X₀ D' x := by
-  have hb : 0 < θ / 2 := by linarith
+  have hb : 0 < thetaB θ := thetaB_pos (by linarith)
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 : 1 ≤ X₀ := by exact_mod_cast (QueueMono.one_lt_of_logX hX0 hX).le
   have hA : AAgree (absSet X₀ D) (absSet X₀ D') Z := fun n hn =>

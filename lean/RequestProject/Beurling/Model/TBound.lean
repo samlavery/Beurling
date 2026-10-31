@@ -36,8 +36,8 @@ variable {θ : ℝ} {X₀ : ℕ}
 def Lemma626Good (θ : ℝ) (X₀ : ℕ) (D : Sec5Family) : Prop :=
   ∀ (t : ℕ) (u : ℝ) (ω : JitterΩ), (X₀ : ℝ) ≤ u →
     9 * u / Real.log u ^ 11 + capH X₀ u ≤ t → ω ∈ G0 θ X₀ D t →
-      (localCountA (absSet X₀ (DF θ X₀ ω)) u (u + u ^ (θ / 2)) : ℝ) ≤
-        u ^ (θ / 2) / Real.log u ^ 4
+      (localCountA (absSet X₀ (DF θ X₀ ω)) u (u + u ^ (thetaB θ)) : ℝ) ≤
+        u ^ (thetaB θ) / Real.log u ^ 4
 
 /-- **The covering count.** If `A` is locally finite with no element in `[1, X]`, and every window
 `[u, u + u^b]` with `X ≤ u < x` holds at most `u^b/4` points of `A`, then
@@ -151,10 +151,10 @@ theorem T_le_three_of_lemma626 (hc : Cond θ X₀) {D : Sec5Family} (hL : Lemma6
     unfold countA at h0
     have h0' : (A ∩ Icc 1 (X₀ : ℝ)).ncard = 0 := by exact_mod_cast h0
     exact (Set.ncard_eq_zero (hAfin.finite_Icc _ _)).mp h0'
-  have hb0 : 0 ≤ θ / 2 := by linarith [hc.hθ.1]
-  have hb1 : θ / 2 ≤ 1 := by linarith [hc.hθ.2]
+  have hb0 : 0 ≤ thetaB θ := (thetaB_pos (by linarith [hc.hθ.1])).le
+  have hb1 : thetaB θ ≤ 1 := (thetaB_le_quarter (by linarith [hc.hθ.2])).trans (by norm_num)
   have hwin : ∀ u, (X₀ : ℝ) ≤ u → u < x →
-      (localCountA A u (u + u ^ (θ / 2)) : ℝ) ≤ u ^ (θ / 2) / 4 := by
+      (localCountA A u (u + u ^ (thetaB θ)) : ℝ) ≤ u ^ (thetaB θ) / 4 := by
     intro u hu hux
     obtain ⟨hLu, -, -⟩ := logs_of_ge hX0 hc.hX hu
     have h4 := four_capH_le hX0 hc.hX hu
@@ -168,14 +168,14 @@ theorem T_le_three_of_lemma626 (hc : Cond θ X₀) {D : Sec5Family} (hL : Lemma6
         rw [div_le_iff₀ (by linarith)]; nlinarith
       linarith
     have h := hL t u ω hu htu hω
-    have hp : 0 ≤ u ^ (θ / 2) := Real.rpow_nonneg hu0.le _
+    have hp : 0 ≤ u ^ (thetaB θ) := Real.rpow_nonneg hu0.le _
     have h44 : (4 : ℝ) ≤ Real.log u ^ 4 := by
       have : (10 ^ 8 : ℝ) ≤ Real.log u ^ 4 :=
         hLu.trans (le_self_pow₀ (by linarith) (by norm_num))
       linarith
     exact h.trans (div_le_div_of_nonneg_left hp (by norm_num) h44)
   have hcnt := countA_le_of_windows hAfin hX1.le hb0 hlow hwin hx
-  have hxb : x ^ (θ / 2) ≤ x := by
+  have hxb : x ^ (thetaB θ) ≤ x := by
     conv_rhs => rw [← Real.rpow_one x]
     exact Real.rpow_le_rpow_of_exponent_le (by linarith) hb1
   -- the smooth count

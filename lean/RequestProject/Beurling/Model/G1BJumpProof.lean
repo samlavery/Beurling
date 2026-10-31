@@ -44,7 +44,7 @@ theorem lag_absA {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (
       |(PR θ X₀ ω).N u - targetD θ X₀ (DF θ X₀ ω) u| ≤ u ^ lagExponent θ) ∧
     (∀ u, (X₀ : ℝ) ≤ u → u ≤ y * (1 - deltaB θ X₀ ω y) →
       |countA (absSet X₀ (DF θ X₀ ω)) u - ∫ v in (X₀ : ℝ)..u,
-        absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) v| ≤ 2 * u ^ (θ / 2)) := by
+        absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v| ≤ 2 * u ^ (thetaB θ)) := by
   classical
   have hNice := hN
   obtain ⟨hU, hSG, hnt⟩ := hN
@@ -154,14 +154,14 @@ theorem lag_absA {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (
   let R : GreedyRun X₀ := ⟨M, capH X₀, ω, hTlow⟩
   have C : AbsorbedCoupling (realisedSystem M (capH X₀) ω) R.M R.H R.U
       (realisedA M (capH X₀) ω) (realisedLatest M (capH X₀) ω) := realisedCoupling hok
-  have hb2 : 0 < θ / 2 := by linarith [hc.hθ.1]
-  have hW : AbsorbedWindowHyp (θ / 2) X₀ (absSet X₀ (DF θ X₀ ω)) (uA θ) := by
+  have hb2 : 0 < thetaB θ := thetaB_pos (by linarith [hc.hθ.1])
+  have hW : AbsorbedWindowHyp (thetaB θ) X₀ (absSet X₀ (DF θ X₀ ω)) (uA θ) := by
     rw [← hAeq]
-    exact ⟨hb2, by linarith [hc.hθ.2], hX1.le, fun a ha => (hAu a ha).1,
+    exact ⟨hb2, thetaB_le_one (by linarith [hc.hθ.2]), hX1.le, fun a ha => (hAu a ha).1,
       fun a ha => (hAu a ha).2, C.locFin⟩
   have hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
       |countA (absSet X₀ (DF θ X₀ ω)) u - ∫ v in (X₀ : ℝ)..u,
-        absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) v| ≤ 2 * u ^ (θ / 2) := by
+        absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v| ≤ 2 * u ^ (thetaB θ) := by
     intro u hu huz
     refine absorbed_target_error_cap_loc hW (by linarith) hu fun v hv hvu => ?_
     refine rhoA_le_L4 hc hev hb hbt hQC hE1 hNice hv ?_
@@ -353,9 +353,9 @@ theorem jumpCount_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ
   have hT : targetD θ X₀ D Nn - targetD θ X₀ D a =
       ((Rankin.smoothCount X₀ Nn : ℝ) - Rankin.smoothCount X₀ a) +
       (countA (absSet X₀ D) Nn - ∫ v in (X₀ : ℝ)..Nn,
-        absorbedDensityCap (θ / 2) (absSet X₀ D) (uA θ) v) -
+        absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ) v) -
       (countA (absSet X₀ D) a - ∫ v in (X₀ : ℝ)..a,
-        absorbedDensityCap (θ / 2) (absSet X₀ D) (uA θ) v) + (Nn - a) -
+        absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ) v) + (Nn - a) -
       ((∫ u in (X₀ : ℝ)..Nn, Target.rhoDet X₀ (kappaParam X₀) u) -
         ∫ u in (X₀ : ℝ)..a, Target.rhoDet X₀ (kappaParam X₀) u) +
       (Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀) Nn -
@@ -375,18 +375,19 @@ theorem jumpCount_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ
   have hR := abs_le.mp (osc_sub_le hc D haX haN)
   -- the powers
   have hN1 : (1 : ℝ) ≤ Nn := by linarith
-  have hθ2 : θ / 2 ≤ 1 / 4 := by linarith [hc.hθ.2]
-  have hlagθ : lagExponent θ ≤ θ / 2 := by
+  have hθ2 : thetaB θ ≤ 1 / 4 := thetaB_le_quarter (by linarith [hc.hθ.2])
+  have hlagθ : lagExponent θ ≤ thetaB θ := by
     unfold lagExponent
-    have := min_le_left θ (1 / 2 - θ); linarith
-  have hθ0 : 0 ≤ θ / 2 := by linarith [hc.hθ.1]
+    have := min_le_left θ (1 / 2 - θ)
+    have := half_le_thetaB (show 0 ≤ θ by linarith [hc.hθ.1]); linarith
+  have hθ0 : 0 ≤ thetaB θ := (thetaB_pos (by linarith [hc.hθ.1])).le
   have ha1 : (1 : ℝ) ≤ a := by linarith
-  have p1 : a ^ (θ / 2) ≤ Nn ^ (θ / 2) := Real.rpow_le_rpow (by linarith) haN hθ0
-  have p2 : Nn ^ lagExponent θ ≤ Nn ^ (θ / 2) :=
+  have p1 : a ^ (thetaB θ) ≤ Nn ^ (thetaB θ) := Real.rpow_le_rpow (by linarith) haN hθ0
+  have p2 : Nn ^ lagExponent θ ≤ Nn ^ (thetaB θ) :=
     Real.rpow_le_rpow_of_exponent_le hN1 hlagθ
-  have p3 : a ^ lagExponent θ ≤ Nn ^ (θ / 2) :=
+  have p3 : a ^ lagExponent θ ≤ Nn ^ (thetaB θ) :=
     (Real.rpow_le_rpow_of_exponent_le ha1 hlagθ).trans p1
-  have p4 : Nn ^ (θ / 2) ≤ Nn ^ (1 / 4 : ℝ) := Real.rpow_le_rpow_of_exponent_le hN1 hθ2
+  have p4 : Nn ^ (thetaB θ) ≤ Nn ^ (1 / 4 : ℝ) := Real.rpow_le_rpow_of_exponent_le hN1 hθ2
   -- the numerics: `5 N^{1/4} ≤ 0.009 δ N`
   have hnum : 5 * Nn ^ (1 / 4 : ℝ) ≤ 0.009 * (δ * Nn) := by
     have hq : Nn ^ (1 / 4 : ℝ) = Real.exp ((L - Λ) / 4) := by

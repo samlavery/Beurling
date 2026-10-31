@@ -51,7 +51,7 @@ noncomputable def RpR (ω : JitterΩ) (u : ℝ) : ℝ :=
 variable (θ X₀) in
 /-- `σ_𝒜 = K_𝒜 ρ̃ - ρ̄_𝒜`. -/
 noncomputable def sigR (ω : JitterΩ) (u : ℝ) : ℝ :=
-  KAbsR θ X₀ ω (rhoT θ X₀ ω) u - absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) u
+  KAbsR θ X₀ ω (rhoT θ X₀ ω) u - absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) u
 
 variable (X₀) in
 /-- The `ρ_det` smooth change `ρ_det(v) - ρ_det(max(rv, X₀))` (`v ≥ X₀`). -/

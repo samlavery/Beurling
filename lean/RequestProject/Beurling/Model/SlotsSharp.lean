@@ -22,23 +22,23 @@ namespace BModel
 variable {θ : ℝ} {X₀ : ℕ}
 
 /-- **The sharp upper slope of the continuous part.** -/
-theorem contD_upper_log (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+theorem contD_upper_log (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (D : PrimeData) (hD : LocFinD D) {x x' : ℝ}
     (hx : (X₀ : ℝ) ≤ x) (hxx : x ≤ x') :
     contD θ X₀ D x' - contD θ X₀ D x ≤ (1 + 0.02 / Real.log x) * (x' - x) := by
   have hX1 : (1 : ℝ) < X₀ := QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hX
   have hX1n : 1 ≤ X₀ := by exact_mod_cast hX1.le
-  have hb : 0 < θ / 2 := by linarith [hθ.1]
+  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
   obtain ⟨hκ0, -⟩ := kappa_facts hX
   have hA := absSet_locFin (X₀ := X₀) hD
   unfold contD
-  rw [show uA θ = (fun n => solveU (θ / 2) n) from rfl]
+  rw [show uA θ = (fun n => solveU (thetaB θ) n) from rfl]
   rw [contPart_sub (fun y hy => intervalIntegrable_rhoDet X₀ hκ0 hX1n hy)
     (fun y hy => intervalIntegrable_absorbedDensityCap _ hA hb hX1 hy) hx hxx]
   have h1 : 0 ≤ ∫ u in x..x', Target.rhoDet X₀ (kappaParam X₀) u :=
     intervalIntegral.integral_nonneg hxx fun u hu => rhoDet_nonneg X₀ hκ0 (by linarith [hu.1])
-  have h2 : 0 ≤ ∫ u in x..x', absorbedDensityCap (θ / 2) (absSet X₀ D)
-      (fun n => solveU (θ / 2) n) u :=
+  have h2 : 0 ≤ ∫ u in x..x', absorbedDensityCap (thetaB θ) (absSet X₀ D)
+      (fun n => solveU (thetaB θ) n) u :=
     intervalIntegral.integral_nonneg hxx fun u hu =>
       (absorbedDensityCap_mem _ (by linarith [hu.1]) _).1
   have hlx : 10 ^ 8 ≤ Real.log x := hX.trans (Real.log_le_log (by linarith) hx)

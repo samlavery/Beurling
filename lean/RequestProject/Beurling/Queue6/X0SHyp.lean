@@ -80,7 +80,7 @@ theorem x0sHyp_R {ω : JitterΩ} {Z η1 η2 θo Y : ℝ} {ε1 : ℝ → ℝ}
     (hθ1 : θo ≤ 1 / 2)
     (hcount : ∀ y, (X₀ : ℝ) ^ 2 / 2 < y → y ≤ Y →
       ((KR.X0S.Win (PR θ X₀ ω) (Hc X₀) (Xm X₀) y).card : ℝ) ≤
-        4.21 * Hc X₀ y / X₀ + 2 * Hc X₀ (y / X₀) + 4 + 2 * (y / X₀) ^ (θo / 2)) :
+        4.21 * Hc X₀ y / X₀ + 2 * Hc X₀ (y / X₀) + 4 + 2 * (y / X₀) ^ (thetaB θo)) :
     KR.X0S.Hyp (PR θ X₀ ω) (Hc X₀) (Xm X₀) X₀ Z η1 η2 ε1 θo Y where
   hbs := hbs
   hZ := hZ

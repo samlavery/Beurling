@@ -47,7 +47,7 @@ lemma e1_numeric (hX : 10 ^ 8 ≤ Real.log X₀) (m : ℕ) :
   nlinarith
 
 /-- **E2 per scale**: `∑_{I ∈ 𝓘_u} P(Fr(I)ᶜ ∩ Good(<b)) ≤ u^{-2}`. -/
-theorem e2_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+theorem e2_scale (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull) (hev : Even X₀)
     (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueCore θ X₀) (m : ℕ) :
     ∑' p : {p : ℕ × ℤ × ℤ // p.1 = m},
@@ -137,7 +137,7 @@ theorem e2_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^
     _ ≤ 1 / u ^ 2 := hnum
 
 /-- **E4 per scale**: `∑_{J ∈ 𝒥_u} P(Land(J)ᶜ ∩ Good) ≤ u^{-2}`. -/
-theorem e4_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+theorem e4_scale (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (Q : QueueCore θ X₀) (m : ℕ) (G : ℕ → Set JitterΩ) :
     ∑' p : {p : ℕ × ℕ × ℕ // p.1 = m},
       jitterMeasure ((LandE θ X₀ p.1.1 p.1.2.1 p.1.2.2)ᶜ ∩ G (tE4 X₀ p.1.1 p.1.2.2)) ≤
@@ -207,7 +207,7 @@ theorem e4_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^
 
 /-- **The E1 bound from `QueueInputs`** (Proposition 6.11 on `Good(< t(E1(z_n)))`: at `z ≥ X₀`
 from the window model, `eclW_fail`; at `z = X₀/2` the field `cluster0`). -/
-theorem e1_of_inputs (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+theorem e1_of_inputs (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (hev : Even X₀) (Q : QueueInputs θ X₀) (m : ℕ) :
     jitterMeasure ((E1ev θ X₀ m)ᶜ ∩ G0 θ X₀ Q.sec5 (tE1 X₀ m)) ≤
       ENNReal.ofReal (Real.log (zH X₀ m) ^ (-2 : ℝ)) := by
@@ -253,7 +253,7 @@ theorem e5_scale (Q : QueueCore θ X₀) (m : ℕ) :
 
 /-- **Table 1 for the base family**: on the good events of Definition 6.8, the failures at the
 scale `m` sum to at most `1.0001 (log X₀ + m log 2)^{-2} + 3.2 (2^m X₀)^{-2}`. -/
-theorem base_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+theorem base_scale (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull) (hev : Even X₀)
     (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueCore θ X₀)
     (hE1 : ∀ n, jitterMeasure ((E1ev θ X₀ n)ᶜ ∩ G0 θ X₀ Q.sec5 (tE1 X₀ n)) ≤
@@ -302,7 +302,7 @@ theorem base_scale (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10
         linarith
 
 /-- The null events of R1′ are null. -/
-lemma nev_null (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+lemma nev_null (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull) (hev : Even X₀)
     (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueCore θ X₀) (p : ℕ × ℤ × ℤ) :
     jitterMeasure (Nev θ X₀ Q.sec5 p)ᶜ = 0 := by
@@ -320,7 +320,7 @@ lemma nev_null (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8
 
 /-- **Table 1 / Lemma 6.10 per scale for the event family**, from `QueueCore` and the
 Proposition 6.11 bound at every height. -/
-theorem tableBudget_core (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+theorem tableBudget_core (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull)
     (hev : Even X₀) (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueCore θ X₀)
     (hE1 : ∀ n, jitterMeasure ((E1ev θ X₀ n)ᶜ ∩ G0 θ X₀ Q.sec5 (tE1 X₀ n)) ≤
@@ -358,7 +358,7 @@ theorem tableBudget_core (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
 
 
 /-- **Table 1 / Lemma 6.10 per scale for the event family**, from `QueueInputs`. -/
-theorem tableBudget_EF (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+theorem tableBudget_EF (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) (hnull : TiesNull)
     (hev : Even X₀) (hX₀ : Real.exp (10 ^ 8) ≤ X₀) (Q : QueueInputs θ X₀) :
     TableBudget jitterMeasure X₀ (EF θ X₀ Q.sec5) (tF X₀ Q.sec5) (sF Q.sec5) :=

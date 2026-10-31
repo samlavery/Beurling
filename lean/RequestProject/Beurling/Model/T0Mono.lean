@@ -47,7 +47,7 @@ lemma contPart_zero_eq {X₀ : ℕ} (hX1 : (1 : ℝ) < X₀) (κ b : ℝ) (u R :
 
 /-- **`T₀` is non-decreasing on `[X₀, ∞)`** (positivity of the target, Lemma 3.3), for designed
 heights `γ`, the designed amplitudes and `x_k = switchOn X₀ k`. -/
-theorem T0_mono_designed {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem T0_mono_designed {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) {γ : ℕ → ℝ}
     (hγ : DesignedRange θ X₀ γ) :
     MonotoneOn (LocalPNT.T0 θ X₀ (amplitudes θ (kappa0Param X₀) (switchOn X₀) γ) γ (switchOn X₀))
@@ -76,14 +76,14 @@ positivity margin (`T₀` monotone, Lemma 3.3), `|α_k| ≤ 2`, `x₀ ≥ e^{X�
 discharged. The remaining inputs are those of `theorem_5_24_of_lag` (the queue-lag bound up to
 the horizon, the absorbed-count bound and the floor of `P`) and (84). -/
 theorem theorem_5_24_data {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} (D : PrimeData)
-    {Xm zc y : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+    {Xm zc y : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hev : Even X₀) (hHB : ShortIntervalPNTFrom X₀) (cntA rhoA : ℝ → ℝ)
-    (hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 4 : ℝ) ≤ Xm) (hXmX : Xm ≤ X₀)
+    (hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 40 : ℝ) ≤ Xm) (hXmX : Xm ≤ X₀)
     (hfl : ∀ u, u < Xm → P.N u = ⌊u⌋₊)
     (hlag : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
       |P.N u - Target.target X₀ (LocalPNT.kap X₀) cntA rhoA
         (osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀)) u| ≤ u ^ lagExponent θ)
-    (hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc → |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| ≤ 2 * u ^ (θ / 2))
+    (hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc → |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| ≤ 2 * u ^ (thetaB θ))
     (hy : (X₀ : ℝ) ≤ y) (hyz : y ≤ zc) :
     LocalPNT.Theorem524Concl P X₀ y :=
   LocalPNT.theorem_5_24_of_lag hθ hX hev (fun k => abs_alphaD_le hX D k) le_rfl

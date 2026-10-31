@@ -43,10 +43,10 @@ lemma TpCont_abs_le (ω : JitterΩ) (t : ℝ) : |TpCont θ X₀ ω t| ≤ 2 := b
     have hdt1 : Target.rhoDet X₀ (kappaParam X₀) t ≤ 1 + 1 / 100 :=
       (BaseRange.rhoDet_le_one_add X₀ hκ0 ht0).trans (by linarith [inv_kappa_le hc hge])
     set D := DF θ X₀ ω
-    have hA1 : absorbedDensityCap (θ / 2) (absSet X₀ D) (uA θ) t ≤ 1 / 100 := by
+    have hA1 : absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ) t ≤ 1 / 100 := by
       refine (min_le_right _ _).trans ?_
       rw [div_le_div_iff₀ (by linarith) (by norm_num)]; linarith
-    have hA0 : 0 ≤ absorbedDensityCap (θ / 2) (absSet X₀ D) (uA θ) t := by
+    have hA0 : 0 ≤ absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ) t := by
       refine le_min (tsum_nonneg fun a => ?_) (div_nonneg (by norm_num) (by linarith))
       unfold absorbedBump
       split_ifs

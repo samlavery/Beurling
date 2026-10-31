@@ -6,7 +6,7 @@ public import RequestProject.Beurling.Model.OscBlockG
 # A sharper form of eq. (osc), second display (round 12)
 
 `BModel.sum_oscG_le` (Model) gives `∑_j (log 3v_j)² o_j ≤ e^{-41}`. Its proof actually gives
-`≤ 34·10⁻⁴³ + 2.0001/(δ M)` with `M = L_* - 4 log 2 ≥ 3.928·10¹⁸`; the `G`-term of Lemma 5.34
+`≤ 73·10⁻⁴³ + 2.0001/(δ M)` with `M = L_* - 4 log 2 ≥ 3.928·10¹⁸`; the `G`-term of Lemma 5.34
 (`Gsum`) contains `o_j` twice (once as `o_j`, once inside `F̄_r(j)`), so the sharper constant
 `7.4·10⁻¹⁹ ≤ e^{-41}/2` is needed: `sum_oscG_sharp` is the same proof with the final
 constants tightened.
@@ -58,7 +58,7 @@ theorem sum_oscG_sharp (hX : 10 ^ 8 ≤ Real.log X₀) (J : ℕ) :
   set φ : ℕ → ℝ := fun i => psi1 M (Λ + i * δ - δ) with hφ
   -- split each term
   have hsplit : ∀ i : ℕ, Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG X₀ i ≤
-      (Xm X₀ * 2 ^ i) ^ (-(1 / 20 : ℝ)) + 2.0001 / δ * (φ i - φ (i + 1)) := by
+      (Xm X₀ * 2 ^ i) ^ (-(1 / 50 : ℝ)) + 2.0001 / δ * (φ i - φ (i + 1)) := by
     intro i
     obtain ⟨e1, e2, e3⟩ := logs_blk hX i
     set u := Xm X₀ * 2 ^ i with hu
@@ -97,10 +97,10 @@ theorem sum_oscG_sharp (hX : 10 ^ 8 ≤ Real.log X₀) (J : ℕ) :
     unfold obG Bsc
     rw [← hu]
     have e : Real.log (3 * u) ^ 2 * ((10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) /
-        (kappaParam X₀ * u) + 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 4 : ℝ)) +
+        (kappaParam X₀ * u) + 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ)) +
         2 * (if Lstar X₀ < Real.log (4 * u) then (Real.log (u / 2) ^ 4)⁻¹ else 0)) =
         Real.log (3 * u) ^ 2 * ((10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) /
-        (kappaParam X₀ * u) + 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 4 : ℝ))) +
+        (kappaParam X₀ * u) + 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ))) +
         Real.log (3 * u) ^ 2 * (2 * (if Lstar X₀ < Real.log (4 * u) then
           (Real.log (u / 2) ^ 4)⁻¹ else 0)) := by ring
     rw [e]
@@ -120,12 +120,12 @@ theorem sum_oscG_sharp (hX : 10 ^ 8 ≤ Real.log X₀) (J : ℕ) :
           rw [← div_eq_mul_inv, div_div, div_le_div_iff₀ (by positivity) (by norm_num)]
           nlinarith
   calc ∑ i ∈ Finset.range (J + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG X₀ i
-      ≤ ∑ i ∈ Finset.range (J + 1), ((Xm X₀ * 2 ^ i) ^ (-(1 / 20 : ℝ)) +
+      ≤ ∑ i ∈ Finset.range (J + 1), ((Xm X₀ * 2 ^ i) ^ (-(1 / 50 : ℝ)) +
           2.0001 / δ * (φ i - φ (i + 1))) := Finset.sum_le_sum fun i _ => hsplit i
-    _ = ∑ i ∈ Finset.range (J + 1), (Xm X₀ * 2 ^ i) ^ (-(1 / 20 : ℝ)) +
+    _ = ∑ i ∈ Finset.range (J + 1), (Xm X₀ * 2 ^ i) ^ (-(1 / 50 : ℝ)) +
           ∑ i ∈ Finset.range (J + 1), 2.0001 / δ * (φ i - φ (i + 1)) :=
         Finset.sum_add_distrib
-    _ ≤ 34 * (1 / 10 ^ 43) + 7347 / 10 ^ 22 := by nlinarith
+    _ ≤ 73 * (1 / 10 ^ 43) + 7347 / 10 ^ 22 := by nlinarith
     _ ≤ 74 / 10 ^ 20 := by norm_num
 
 end BModel.RML12

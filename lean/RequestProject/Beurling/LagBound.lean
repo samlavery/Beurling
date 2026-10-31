@@ -11,7 +11,7 @@ public import RequestProject.Beurling.Theorem410Lemma48
 * `Bookkeeping.lag_bound` : **Proposition 4.1**: if `|D| ≤ B + 3H + 3`, where the queue bound
   satisfies `B ≤ 34 M₁ L²` (75), the jitter width satisfies `H ≥ M₁²`, `H ≥ H_std = e^{8ℓ²}` and
   `log H - log H_std ≤ 10⁻⁶ L` (Theorem 6.23(c)), then `|D(x)| ≤ x^η`, `η = min(θ, 1/2 - θ)/2`,
-  for `θ ∈ [1/4, 1/2 - 10⁻⁴]` and `log x ≥ 10⁸ - 1`.
+  for `θ ∈ [1/20, 1/2 - 10⁻⁴]` and `log x ≥ 10⁸ - 1`.
 * `PartIInputsQueue` : the inputs of Theorem 2.1(i) with the lag bound (13) replaced by the bound
   `|N_P - T| ≤ B + 3H + 3` (from (12) and the queue bound, Theorem 6.6) and the size conditions on
   `B` and `H`; `PartIInputsQueue.toTarget` derives `PartIInputsTarget`.
@@ -36,13 +36,13 @@ theorem abs_lag_le_of_two_sided {D Qmax B H κp Lx : ℝ} (hLx : 0 < Lx) (hκ0 :
   have h0 : 0 ≤ κp / Lx := div_nonneg hκ0 hLx.le
   rw [abs_le]; constructor <;> nlinarith
 
-/-- **Proposition 4.1 (the lag bound (13))**. Let `θ ∈ [1/4, 1/2 - 10⁻⁴]`, `η = min(θ, 1/2 - θ)/2`
+/-- **Proposition 4.1 (the lag bound (13))**. Let `θ ∈ [1/20, 1/2 - 10⁻⁴]`, `η = min(θ, 1/2 - θ)/2`
 and `X > 0` with `log X ≥ 10⁸ - 1`. Suppose that for `x ≥ X` the lag satisfies `|D(x)| ≤ B(x) + 3H(x) + 3`
 (by (12) and the queue bound, Theorem 6.6), where the queue bound satisfies
 `B(x) ≤ 34 M₁(x) L²` ((75), `L = log x`), and the jitter width satisfies `H ≥ M₁²`,
 `H ≥ H_std = exp(8ℓ²)` (`ℓ = log L`) and `log H - 8ℓ² ≤ 10⁻⁶ L` (Theorem 6.23(c)).
 Then `|D(x)| ≤ x^η` for all `x ≥ X`. -/
-theorem lag_bound {θ X : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
+theorem lag_bound {θ X : ℝ} (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
     (hX0 : 0 < X) (hX : 10 ^ 8 - 1 ≤ Real.log X) (D B H M₁ : ℝ → ℝ)
     (hB : ∀ x ≥ X, B x ≤ 34 * M₁ x * Real.log x ^ 2)
     (hM : ∀ x ≥ X, M₁ x ^ 2 ≤ H x)
@@ -83,7 +83,7 @@ together with the absorbed part of the target error, as in `PartIInputsTarget`. 
 def PartIInputsQueue (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
   ∃ (κ : ℝ) (cntA rhoA : ℝ → ℝ) (α γ xp : ℕ → ℝ) (B H M₁ : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
-    (∀ x ≥ (X₀ : ℝ), |cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u| ≤ 2 * x ^ (θ / 2)) ∧
+    (∀ x ≥ (X₀ : ℝ), |cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u| ≤ 2 * x ^ (thetaB θ)) ∧
     (∀ x ≥ (X₀ : ℝ), B x ≤ 34 * M₁ x * Real.log x ^ 2) ∧
     (∀ x ≥ (X₀ : ℝ), M₁ x ^ 2 ≤ H x) ∧
     (∀ x ≥ (X₀ : ℝ), Real.exp (8 * Real.log (Real.log x) ^ 2) ≤ H x) ∧
@@ -93,7 +93,7 @@ def PartIInputsQueue (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 
 /-- Proposition 4.1 turns `PartIInputsQueue` into `PartIInputsTarget`. -/
 theorem PartIInputsQueue.toTarget {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
-    (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000) (hX : 10 ^ 8 - 1 ≤ Real.log X₀)
+    (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000) (hX : 10 ^ 8 - 1 ≤ Real.log X₀)
     (h : PartIInputsQueue θ X₀ P) : PartIInputsTarget θ X₀ P := by
   obtain ⟨κ, cntA, rhoA, α, γ, xp, B, H, M₁, hκ, hκ1, hsp, hα, hxp, hA, hB, hM, hstd, hraise,
     hD⟩ := h
@@ -112,7 +112,7 @@ def TheoremAInputsQueue (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis** with the lag bound (13) replaced by its inputs in
 Proposition 4.1. -/
 def Theorem21InputsQueue : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

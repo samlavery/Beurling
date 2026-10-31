@@ -101,7 +101,7 @@ lemma Tc_pair_le_Bsc {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : �
       mul_le_mul_of_nonneg_right (by linarith) (by positivity)
     have e2 := mul_le_mul_of_nonneg_left hks (show 0 ≤ 10 * (2.04 * H (2 * u)) + 6 by linarith)
     nlinarith
-  have t2 : (v - s) * s ^ (-(1 / 4 : ℝ)) ≤ 2.04 * H (2 * u) * (u / 2) ^ (-(1 / 4 : ℝ)) :=
+  have t2 : (v - s) * s ^ (-(1 / 20 : ℝ)) ≤ 2.04 * H (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ)) :=
     mul_le_mul hvs (Real.rpow_le_rpow_of_nonpos (by linarith) hs2 (by norm_num))
       (Real.rpow_nonneg hs0.le _) hW0
   have t3 : (if Lstar X₀ < Real.log v then (Real.log s ^ 4)⁻¹ else 0) ≤
@@ -180,31 +180,31 @@ end Pair
 
 /-! ### The sizes -/
 
-/-- `2^{-1/20} ≤ 33/34`. -/
-lemma two_rpow_neg_twentieth_le : (2 : ℝ) ^ (-(1 / 20 : ℝ)) ≤ 33 / 34 := by
-  have h : (34 / 33 : ℝ) ≤ (2 : ℝ) ^ (1 / 20 : ℝ) := by
-    have h1 : ((34 / 33 : ℝ) ^ (20 : ℕ)) ≤ 2 := by norm_num
-    have h2 := Real.rpow_le_rpow (by norm_num) h1 (show (0 : ℝ) ≤ 1 / 20 by norm_num)
-    rwa [← Real.rpow_natCast, ← Real.rpow_mul (by norm_num), show ((20 : ℕ) : ℝ) * (1 / 20) = 1
+/-- `2^{-1/50} ≤ 72/73`. -/
+lemma two_rpow_neg_twentieth_le : (2 : ℝ) ^ (-(1 / 50 : ℝ)) ≤ 72 / 73 := by
+  have h : (73 / 72 : ℝ) ≤ (2 : ℝ) ^ (1 / 50 : ℝ) := by
+    have h1 : ((73 / 72 : ℝ) ^ (50 : ℕ)) ≤ 2 := by norm_num
+    have h2 := Real.rpow_le_rpow (by norm_num) h1 (show (0 : ℝ) ≤ 1 / 50 by norm_num)
+    rwa [← Real.rpow_natCast, ← Real.rpow_mul (by norm_num), show ((50 : ℕ) : ℝ) * (1 / 50) = 1
       by norm_num, Real.rpow_one] at h2
   rw [Real.rpow_neg (by norm_num)]
-  calc ((2 : ℝ) ^ (1 / 20 : ℝ))⁻¹ ≤ (34 / 33 : ℝ)⁻¹ := inv_anti₀ (by norm_num) h
-    _ = 33 / 34 := by norm_num
+  calc ((2 : ℝ) ^ (1 / 50 : ℝ))⁻¹ ≤ (73 / 72 : ℝ)⁻¹ := inv_anti₀ (by norm_num) h
+    _ = 72 / 73 := by norm_num
 
-/-- `∑_{k<N} (c 2ᵏ)^{-1/20} ≤ 34 c^{-1/20}`. -/
+/-- `∑_{k<N} (c 2ᵏ)^{-1/50} ≤ 73 c^{-1/50}`. -/
 lemma sum_geom_twentieth {c : ℝ} (hc : 0 < c) (N : ℕ) :
-    ∑ k ∈ Finset.range N, (c * 2 ^ k) ^ (-(1 / 20 : ℝ)) ≤ 34 * c ^ (-(1 / 20 : ℝ)) := by
-  set r : ℝ := (2 : ℝ) ^ (-(1 / 20 : ℝ)) with hr
+    ∑ k ∈ Finset.range N, (c * 2 ^ k) ^ (-(1 / 50 : ℝ)) ≤ 73 * c ^ (-(1 / 50 : ℝ)) := by
+  set r : ℝ := (2 : ℝ) ^ (-(1 / 50 : ℝ)) with hr
   have hr0 : 0 ≤ r := Real.rpow_nonneg (by norm_num) _
   have hr1 := two_rpow_neg_twentieth_le
-  have e : ∀ k : ℕ, (c * 2 ^ k) ^ (-(1 / 20 : ℝ)) = c ^ (-(1 / 20 : ℝ)) * r ^ k := by
+  have e : ∀ k : ℕ, (c * 2 ^ k) ^ (-(1 / 50 : ℝ)) = c ^ (-(1 / 50 : ℝ)) * r ^ k := by
     intro k
     rw [Real.mul_rpow hc.le (by positivity), hr, ← Real.rpow_natCast, ← Real.rpow_natCast,
       ← Real.rpow_mul (by norm_num), ← Real.rpow_mul (by norm_num), mul_comm (k : ℝ), mul_comm]
   simp_rw [e]
   rw [← Finset.mul_sum]
-  have hc0 : 0 ≤ c ^ (-(1 / 20 : ℝ)) := Real.rpow_nonneg hc.le _
-  have hgs : ∑ k ∈ Finset.range N, r ^ k ≤ 34 := by
+  have hc0 : 0 ≤ c ^ (-(1 / 50 : ℝ)) := Real.rpow_nonneg hc.le _
+  have hgs : ∑ k ∈ Finset.range N, r ^ k ≤ 73 := by
     have hr1' : r < 1 := by linarith
     rw [geom_sum_eq (show r ≠ 1 by linarith) N, div_le_iff_of_neg (by linarith)]
     have : 0 ≤ r ^ N := pow_nonneg hr0 N
@@ -212,19 +212,19 @@ lemma sum_geom_twentieth {c : ℝ} (hc : 0 < c) (N : ℕ) :
   nlinarith
 
 set_option maxHeartbeats 1000000 in
-/-- `(log 3u)² (B(u) - 𝒜-part) ≤ u^{-1/20}` for `u ≥ X₀/4`. -/
+/-- `(log 3u)² (B(u) - 𝒜-part) ≤ u^{-1/50}` for `u ≥ X₀/4`. -/
 lemma nonA3_le (hX : 10 ^ 8 ≤ Real.log X₀) {u : ℝ} (hu4 : (X₀ : ℝ) ≤ 4 * u) :
     Real.log (3 * u) ^ 2 * ((10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) / (kappaParam X₀ * u) +
-      2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 4 : ℝ))) ≤ u ^ (-(1 / 20 : ℝ)) := by
+      2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ))) ≤ u ^ (-(1 / 50 : ℝ)) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hXge := KR.WidthReal.X0_ge hX (X₀ := X₀)
   have hu0 : 0 < u := by linarith
   set NA := (10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) / (kappaParam X₀ * u) +
-      2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 4 : ℝ)) with hNA
+      2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ)) with hNA
   have hκ := (kappa_facts hX).1
   have hH0 := (KR.WidthReal.Hc_pos hX (X₀ := X₀) (2 * u)).le
   have hNA0 : 0 ≤ NA := by
-    have : 0 ≤ (u / 2) ^ (-(1 / 4 : ℝ)) := Real.rpow_nonneg (by linarith) _
+    have : 0 ≤ (u / 2) ^ (-(1 / 20 : ℝ)) := Real.rpow_nonneg (by linarith) _
     positivity
   have h1 := nonA_le hX hu4
   rw [← hNA] at h1
@@ -245,50 +245,52 @@ lemma nonA3_le (hX : 10 ^ 8 ≤ Real.log X₀) {u : ℝ} (hu4 : (X₀ : ℝ) ≤
       have := Real.log_le_sub_one_of_pos (show (0 : ℝ) < 1.5 by norm_num); linarith
     linarith
   have h3u0 : 0 ≤ Real.log (3 * u) := Real.log_nonneg (by linarith)
-  have step1 : Real.log (3 * u) ^ 2 * NA ≤ 2 * Real.log (3 * u) * u ^ (-(1 / 10 : ℝ)) := by
+  have step1 : Real.log (3 * u) ^ 2 * NA ≤ 2 * Real.log (3 * u) * u ^ (-(1 / 40 : ℝ)) := by
     have : Real.log (3 * u) ^ 2 * NA ≤ Real.log (3 * u) * (2 * Real.log (2 * u)) * NA := by
       rw [sq]
       exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left h3u h3u0) hNA0
-    have h4 : Real.log (2 * u) * NA ≤ u ^ (-(1 / 10 : ℝ)) := h1
+    have h4 : Real.log (2 * u) * NA ≤ u ^ (-(1 / 40 : ℝ)) := h1
     nlinarith
-  -- `log(3u) ≤ 80 u^{1/40}`
-  have hlog : Real.log (3 * u) ≤ 80 * u ^ (1 / 40 : ℝ) := by
+  -- `log(3u) ≤ 800 u^{1/400}`
+  have hlog : Real.log (3 * u) ≤ 800 * u ^ (1 / 400 : ℝ) := by
     have h := Real.log_le_rpow_div (show (0 : ℝ) ≤ 3 * u by positivity)
-      (show (0 : ℝ) < 1 / 40 by norm_num)
+      (show (0 : ℝ) < 1 / 400 by norm_num)
     rw [Real.mul_rpow (by norm_num) hu0.le] at h
-    have : (3 : ℝ) ^ (1 / 40 : ℝ) ≤ 2 := by
-      calc (3 : ℝ) ^ (1 / 40 : ℝ) ≤ ((2 : ℝ) ^ (40 : ℕ)) ^ (1 / 40 : ℝ) :=
+    have : (3 : ℝ) ^ (1 / 400 : ℝ) ≤ 2 := by
+      calc (3 : ℝ) ^ (1 / 400 : ℝ) ≤ (4 : ℝ) ^ (1 / 400 : ℝ) :=
             Real.rpow_le_rpow (by norm_num) (by norm_num) (by norm_num)
+        _ ≤ (4 : ℝ) ^ (1 / 2 : ℝ) :=
+            Real.rpow_le_rpow_of_exponent_le (by norm_num) (by norm_num)
         _ = 2 := by
-            rw [← Real.rpow_natCast, ← Real.rpow_mul (by norm_num)]; norm_num
-    have hp : 0 ≤ u ^ (1 / 40 : ℝ) := Real.rpow_nonneg hu0.le _
-    have : (3 : ℝ) ^ (1 / 40 : ℝ) * u ^ (1 / 40 : ℝ) / (1 / 40) ≤ 80 * u ^ (1 / 40 : ℝ) := by
+            rw [show (4 : ℝ) = 2 ^ (2 : ℝ) by norm_num, ← Real.rpow_mul (by norm_num)]; norm_num
+    have hp : 0 ≤ u ^ (1 / 400 : ℝ) := Real.rpow_nonneg hu0.le _
+    have : (3 : ℝ) ^ (1 / 400 : ℝ) * u ^ (1 / 400 : ℝ) / (1 / 400) ≤ 800 * u ^ (1 / 400 : ℝ) := by
       rw [div_le_iff₀ (by norm_num)]; nlinarith
     linarith
-  -- `u^{1/40} ≥ 160`
-  have hbig : (160 : ℝ) ≤ u ^ (1 / 40 : ℝ) := by
+  -- `u^{1/400} ≥ 1600`
+  have hbig : (1600 : ℝ) ≤ u ^ (1 / 400 : ℝ) := by
     rw [Real.rpow_def_of_pos hu0]
-    have := Real.add_one_le_exp (Real.log u * (1 / 40))
+    have := Real.add_one_le_exp (Real.log u * (1 / 400))
     nlinarith
-  have hpos : 0 < u ^ (1 / 40 : ℝ) := Real.rpow_pos_of_pos hu0 _
-  have e1 : u ^ (-(1 / 10 : ℝ)) = u ^ (-(1 / 20 : ℝ)) * (u ^ (1 / 40 : ℝ))⁻¹ *
-      (u ^ (1 / 40 : ℝ))⁻¹ := by
+  have hpos : 0 < u ^ (1 / 400 : ℝ) := Real.rpow_pos_of_pos hu0 _
+  have e1 : u ^ (-(1 / 40 : ℝ)) = u ^ (-(1 / 50 : ℝ)) * (u ^ (1 / 400 : ℝ))⁻¹ *
+      (u ^ (1 / 400 : ℝ))⁻¹ := by
     rw [← Real.rpow_neg hu0.le, mul_assoc, ← Real.rpow_add hu0, ← Real.rpow_add hu0]
     norm_num
-  have hq0 : 0 ≤ u ^ (-(1 / 20 : ℝ)) := Real.rpow_nonneg hu0.le _
-  calc Real.log (3 * u) ^ 2 * NA ≤ 2 * Real.log (3 * u) * u ^ (-(1 / 10 : ℝ)) := step1
-    _ ≤ 2 * (80 * u ^ (1 / 40 : ℝ)) * u ^ (-(1 / 10 : ℝ)) := by
-        have : 0 ≤ u ^ (-(1 / 10 : ℝ)) := Real.rpow_nonneg hu0.le _
+  have hq0 : 0 ≤ u ^ (-(1 / 50 : ℝ)) := Real.rpow_nonneg hu0.le _
+  calc Real.log (3 * u) ^ 2 * NA ≤ 2 * Real.log (3 * u) * u ^ (-(1 / 40 : ℝ)) := step1
+    _ ≤ 2 * (800 * u ^ (1 / 400 : ℝ)) * u ^ (-(1 / 40 : ℝ)) := by
+        have : 0 ≤ u ^ (-(1 / 40 : ℝ)) := Real.rpow_nonneg hu0.le _
         nlinarith
-    _ = 160 * (u ^ (1 / 40 : ℝ))⁻¹ * u ^ (-(1 / 20 : ℝ)) := by
+    _ = 1600 * (u ^ (1 / 400 : ℝ))⁻¹ * u ^ (-(1 / 50 : ℝ)) := by
         rw [e1]; field_simp; norm_num
-    _ ≤ 1 * u ^ (-(1 / 20 : ℝ)) := by
+    _ ≤ 1 * u ^ (-(1 / 50 : ℝ)) := by
         apply mul_le_mul_of_nonneg_right _ hq0
         rw [← div_eq_mul_inv, div_le_one hpos]; exact hbig
-    _ = u ^ (-(1 / 20 : ℝ)) := one_mul _
+    _ = u ^ (-(1 / 50 : ℝ)) := one_mul _
 
-/-- `X₀⁻^{-1/20} ≤ 10⁻⁴³`. -/
-lemma Xm_rpow_le (hX : 10 ^ 8 ≤ Real.log X₀) : Xm X₀ ^ (-(1 / 20 : ℝ)) ≤ 1 / 10 ^ 43 := by
+/-- `X₀⁻^{-1/50} ≤ 10⁻⁴³`. -/
+lemma Xm_rpow_le (hX : 10 ^ 8 ≤ Real.log X₀) : Xm X₀ ^ (-(1 / 50 : ℝ)) ≤ 1 / 10 ^ 43 := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hXge := KR.WidthReal.X0_ge hX (X₀ := X₀)
   have hXm := KR.WidthReal.Xm_ge hX (X₀ := X₀)
@@ -304,7 +306,7 @@ lemma Xm_rpow_le (hX : 10 ^ 8 ≤ Real.log X₀) : Xm X₀ ^ (-(1 / 20 : ℝ)) �
     rw [e]
     calc (10 : ℝ) ^ 43 ≤ 2.7182818283 ^ 100 := by norm_num
       _ ≤ Real.exp 1 ^ 100 := by gcongr
-  have h1 : Real.exp (Real.log (Xm X₀) * -(1 / 20)) ≤ Real.exp (-100) :=
+  have h1 : Real.exp (Real.log (Xm X₀) * -(1 / 50)) ≤ Real.exp (-100) :=
     Real.exp_le_exp.mpr (by linarith)
   refine h1.trans ?_
   rw [Real.exp_neg, one_div]
@@ -377,7 +379,7 @@ theorem sum_oscG_le (hX : 10 ^ 8 ≤ Real.log X₀) (J : ℕ) :
   set φ : ℕ → ℝ := fun i => psi1 M (Λ + i * δ - δ) with hφ
   -- split each term
   have hsplit : ∀ i : ℕ, Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG X₀ i ≤
-      (Xm X₀ * 2 ^ i) ^ (-(1 / 20 : ℝ)) + 2.0001 / δ * (φ i - φ (i + 1)) := by
+      (Xm X₀ * 2 ^ i) ^ (-(1 / 50 : ℝ)) + 2.0001 / δ * (φ i - φ (i + 1)) := by
     intro i
     obtain ⟨e1, e2, e3⟩ := logs_blk hX i
     set u := Xm X₀ * 2 ^ i with hu
@@ -416,10 +418,10 @@ theorem sum_oscG_le (hX : 10 ^ 8 ≤ Real.log X₀) (J : ℕ) :
     unfold obG Bsc
     rw [← hu]
     have e : Real.log (3 * u) ^ 2 * ((10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) /
-        (kappaParam X₀ * u) + 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 4 : ℝ)) +
+        (kappaParam X₀ * u) + 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ)) +
         2 * (if Lstar X₀ < Real.log (4 * u) then (Real.log (u / 2) ^ 4)⁻¹ else 0)) =
         Real.log (3 * u) ^ 2 * ((10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) /
-        (kappaParam X₀ * u) + 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 4 : ℝ))) +
+        (kappaParam X₀ * u) + 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ))) +
         Real.log (3 * u) ^ 2 * (2 * (if Lstar X₀ < Real.log (4 * u) then
           (Real.log (u / 2) ^ 4)⁻¹ else 0)) := by ring
     rw [e]
@@ -440,12 +442,12 @@ theorem sum_oscG_le (hX : 10 ^ 8 ≤ Real.log X₀) (J : ℕ) :
           nlinarith
   have he := exp_neg41_ge
   calc ∑ i ∈ Finset.range (J + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG X₀ i
-      ≤ ∑ i ∈ Finset.range (J + 1), ((Xm X₀ * 2 ^ i) ^ (-(1 / 20 : ℝ)) +
+      ≤ ∑ i ∈ Finset.range (J + 1), ((Xm X₀ * 2 ^ i) ^ (-(1 / 50 : ℝ)) +
           2.0001 / δ * (φ i - φ (i + 1))) := Finset.sum_le_sum fun i _ => hsplit i
-    _ = ∑ i ∈ Finset.range (J + 1), (Xm X₀ * 2 ^ i) ^ (-(1 / 20 : ℝ)) +
+    _ = ∑ i ∈ Finset.range (J + 1), (Xm X₀ * 2 ^ i) ^ (-(1 / 50 : ℝ)) +
           ∑ i ∈ Finset.range (J + 1), 2.0001 / δ * (φ i - φ (i + 1)) :=
         Finset.sum_add_distrib
-    _ ≤ 34 * (1 / 10 ^ 43) + 8 / 10 ^ 19 := by nlinarith
+    _ ≤ 73 * (1 / 10 ^ 43) + 8 / 10 ^ 19 := by nlinarith
     _ ≤ Real.exp (-41) := by linarith
 
 set_option maxHeartbeats 2000000 in

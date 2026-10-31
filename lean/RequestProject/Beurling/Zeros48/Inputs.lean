@@ -21,16 +21,16 @@ open Set MeasureTheory Construction Target Absorbed Decomp Oscillation CaplLink 
 namespace Zeros48
 
 /-- **`Theorem410RestM` from the other conjuncts of `Theorem21InputsP`.** For
-`θ ∈ [1/4, 1/2 - 10⁻⁴]`, `X₀` even with `X₀ ≥ e^{10⁸}`, jitters in `[0, 1]`, the arrival link,
+`θ ∈ [1/20, 1/2 - 10⁻⁴]`, `X₀` even with `X₀ ≥ e^{10⁸}`, jitters in `[0, 1]`, the arrival link,
 the slot facts and the Part I data (target formula (6), queue window data) give the pieces of
 Lemma 4.8(ii) at every scale. -/
-theorem theorem410RestM_of_inputs {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+theorem theorem410RestM_of_inputs {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     {X₀ : ℕ} (hev : Even X₀) (h1 : Real.exp (10 ^ 8) ≤ X₀) {M : SlotModel X₀} {ω : ℕ → ℝ}
     (hω : ∀ j, ω j ∈ Icc (0 : ℝ) 1) (hlink : ArrivalsLinked M (capH X₀) ω) (hS : SlotFacts M ω)
     (hI : PartIRestO θ X₀ (realisedSystem M (capH X₀) ω) (realisedA M (capH X₀) ω)
-      (fun n => solveU (θ / 2) n) (constructionScale X₀) M) :
+      (fun n => solveU (thetaB θ) n) (constructionScale X₀) M) :
     Theorem410RestM θ X₀ (realisedSystem M (capH X₀) ω) (realisedA M (capH X₀) ω)
-      (fun n => solveU (θ / 2) n) := by
+      (fun n => solveU (thetaB θ) n) := by
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this
@@ -63,7 +63,7 @@ namespace Construction
 /-- **Theorem 2.1, hypothesis on the concrete construction**: `Theorem21InputsP` without the
 conjunct `Theorem410RestM` (Lemma 4.8(ii), now derived: `Zeros48.theorem410RestM_of_inputs`). -/
 def Theorem21InputsR : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -71,7 +71,7 @@ def Theorem21InputsR : Prop :=
       ∀ ω ∈ goodAll E, (∀ j, ω j ∈ Set.Icc (0 : ℝ) 1) →
         ArrivalsLinked (M ω) (capH X₀) ω ∧ SlotFacts (M ω) ω ∧
         PartIRestO θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-          (fun n => solveU (θ / 2) n) (constructionScale X₀) (M ω) ∧
+          (fun n => solveU (thetaB θ) n) (constructionScale X₀) (M ω) ∧
         ∀ v ≥ (X₀ : ℝ), ClusterUpTo (realisedSystem (M ω) (capH X₀) ω) X₀
           (4 * v / Real.log v ^ 11) (capM1 X₀ v)
 

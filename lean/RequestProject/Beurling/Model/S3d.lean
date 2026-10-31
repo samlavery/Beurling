@@ -291,7 +291,7 @@ event `ClusterUpTo P(ω) X₀ (4v/log¹¹ v) M̄₁(v)` for all `v ≥ X₀` giv
 lemma sparsEv_of_cluster (hc : Cond θ X₀) {ω : JitterΩ} (hω : ∀ j, ω j ∈ Set.Icc (0 : ℝ) 1)
     (a : ℕ → ℝ)
     (hI : PartIRestJ θ X₀ (realisedSystem (Mcl θ X₀ ω) (capH X₀) ω)
-      (realisedA (Mcl θ X₀ ω) (capH X₀) ω) (fun n => solveU (θ / 2) n) a (Mcl θ X₀ ω))
+      (realisedA (Mcl θ X₀ ω) (capH X₀) ω) (fun n => solveU (thetaB θ) n) a (Mcl θ X₀ ω))
     (hcl : ∀ v ≥ (X₀ : ℝ), ClusterUpTo (realisedSystem (Mcl θ X₀ ω) (capH X₀) ω) X₀
       (4 * v / Real.log v ^ 11) (capM1 X₀ v)) :
     ω ∈ SparsEv θ X₀ := by

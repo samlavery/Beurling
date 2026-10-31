@@ -161,7 +161,7 @@ theorem lag_le_rpow {x D B H η : ℝ} (hx : 0 < x) (hL : 10 ^ 8 - 1 ≤ Real.lo
     _ = x ^ η := by rw [Real.rpow_def_of_pos hx, mul_comm]
 
 /-- `η = min(θ, 1/2 - θ)/2 ≥ 5·10⁻⁵` for `θ ∈ [10⁻⁴, 1/2 - 10⁻⁴]`; in particular on
-`[1/4, 1/2 - 10⁻⁴]`. This is where `θ ≤ θ₁ = 1/2 - 10⁻⁴` is used. -/
+`[1/20, 1/2 - 10⁻⁴]`. This is where `θ ≤ θ₁ = 1/2 - 10⁻⁴` is used. -/
 theorem lagExponent_ge {θ : ℝ} (h1 : 1 / 10000 ≤ θ) (h2 : θ ≤ 1 / 2 - 1 / 10000) :
     5e-5 ≤ lagExponent θ := by
   unfold lagExponent

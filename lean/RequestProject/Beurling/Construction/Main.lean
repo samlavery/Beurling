@@ -42,10 +42,10 @@ def PartIWith (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (κ : ℝ) (A : Set �
     (α γ xp : ℕ → ℝ) (M : SlotModel X₀) : Prop :=
   0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
-    (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) ∧
+    (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (thetaB θ) = a) ∧
     LocFin A ∧
-    (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
-    (∀ x, M.T x = target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A u) (osc θ α γ xp) x) ∧
+    (∀ v ≥ (X₀ : ℝ), absorbedDensity (thetaB θ) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
+    (∀ x, M.T x = target X₀ κ (countA A) (absorbedDensityCap (thetaB θ) A u) (osc θ α γ xp) x) ∧
     M.QueueWindowData ∧
     ∃ κp : ℝ → ℝ,
     (∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x) ∧
@@ -62,7 +62,7 @@ theorem PartIWith.toInit {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ}
 
 /-- **The lag bound (13) for the given data** (Proposition 4.1): `|N - T| ≤ x^η` on `[X₀, ∞)`. -/
 theorem PartIWith.lag {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ} {A : Set ℝ}
-    {u : ℝ → ℝ} {α γ xp : ℕ → ℝ} {M : SlotModel X₀} (hθ1 : 1 / 4 ≤ θ)
+    {u : ℝ → ℝ} {α γ xp : ℕ → ℝ} {M : SlotModel X₀} (hθ1 : 1 / 20 ≤ θ)
     (hθ2 : θ ≤ 1 / 2 - 1 / 10000) (hX : 10 ^ 8 ≤ Real.log X₀)
     (h : PartIWith θ X₀ P κ A u α γ xp M) :
     ∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ x ^ lagExponent θ := by
@@ -83,7 +83,7 @@ theorem PartIWith.lag {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ} {A
         -(capH X₀ x / 2) * (1 + κp x / Real.log x) := by ring
     rw [e2] at h12
     have hB := queueB_nonneg hX0 hX hx
-    exact lag_rpow_of_queue hθ1 hθ2 hX0 hX hx
+    exact lag_rpow_of_queue (by linarith) hθ2 hX0 hX hx
       (abs_lag_le_of_two_sided hLx (hκp x hx).1 (hκp x hx).2 hH hB le_rfl h12.1 h12.2)
   · exact lag_rpow_initial hθ1 hθ2 hX0 hX hx (hκp X₀ le_rfl).1 (hκp X₀ le_rfl).2
       ((hinit x hx hearly).abs_le M hX hq hx hearly)
@@ -130,7 +130,7 @@ def Theorem410InputsCoupled (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (κ : �
     (∀ k, α k = amplitudeOf θ κ₀ (γ k) (xp k)) ∧
     (∀ k, Lemma48PiecesCount X₀ (heightScale θ κ₀ (xp k)) (earlyOf P θ X₀ κ A u α γ xp a k)) ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
-    AbsorbedHyp (θ / 2) A u ∧
+    AbsorbedHyp (thetaB θ) A u ∧
     (∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →
       countA A x ≤ x * Real.exp (-sigmaStar (Real.log X₀) (Real.log x)))
 
@@ -138,7 +138,7 @@ def Theorem410InputsCoupled (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (κ : �
 bound, the cap, `X₀`-smoothness, `u_a ≥ X₀` and the placement fact are derived. -/
 theorem Theorem410InputsCoupled.toDec {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ}
     {A : Set ℝ} {u : ℝ → ℝ} {α γ xp : ℕ → ℝ} {M : SlotModel X₀} {jit : Set ℝ}
-    {latest : ℝ → ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
+    {latest : ℝ → ℝ} (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
     (hX : 10 ^ 8 ≤ Real.log X₀) (hev : Even X₀)
     (hjit : ∀ r ∈ jit, (X₀ : ℝ) - capH X₀ X₀ / 2 ≤ r)
     (hI : PartIWith θ X₀ P κ A u α γ xp M)
@@ -186,7 +186,7 @@ theorem Theorem410InputsCoupled.toDec {θ : ℝ} {X₀ : ℕ} {P : BeurlingSyste
   with `M`, and the Theorem 4.10 inputs hold, coupled to the same data, with the jittered primes
   being those placed by the greedy rule from `M`, the width `H` and the jitters `ω`. -/
 def Theorem21InputsCon : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     MonotoneOn (fun v => v - capH X₀ v / 2) (Ici (X₀ : ℝ)) ∧
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)

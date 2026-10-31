@@ -60,7 +60,7 @@ noncomputable def queueCore_of_V (hc : Cond θ X₀) (hev : Even X₀) (Q : Queu
 
 /-- **Theorem 2.1, hypothesis with §6 formalized up to §5 and the Cover Bound.** -/
 def Theorem21InputsV : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → Nonempty (QueueInputsV θ X₀)
 
 /-- **`Theorem21InputsV` implies `Theorem21InputsS`**, given (84). -/

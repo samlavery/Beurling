@@ -199,9 +199,9 @@ lemma target_sub_eq (X₀ : ℕ) (κ : ℝ) (cntA rhoA R : ℝ → ℝ) {x : ℝ
 `|T(x) - x - R(x)| ≤ C x^θ + 2 x^{θ/2}` for `x ≥ X₀`, with `C = 2^θ ∏_{p<X₀}(1 - p^{-θ})^{-1}`. -/
 theorem target_error (X₀ : ℕ) {κ θ : ℝ} (cntA rhoA R : ℝ → ℝ) (hκ : 0 < κ) (hκ1 : κ ≤ 1)
     (hX0 : 1 ≤ X₀) (hθ : 0 < θ) (hR0 : R X₀ = 0)
-    (hA : ∀ x ≥ (X₀ : ℝ), |cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u| ≤ 2 * x ^ (θ / 2)) :
+    (hA : ∀ x ≥ (X₀ : ℝ), |cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u| ≤ 2 * x ^ (thetaB θ)) :
     ∀ x ≥ (X₀ : ℝ), |target X₀ κ cntA rhoA R x - x - R x| ≤
-      (2 ^ θ * rankinConst X₀ θ) * x ^ θ + 2 * x ^ (θ / 2) := by
+      (2 ^ θ * rankinConst X₀ θ) * x ^ θ + 2 * x ^ (thetaB θ) := by
   intro x hx
   have hx0 : 0 ≤ x := le_trans (Nat.cast_nonneg _) hx
   rw [target_sub_eq X₀ κ cntA rhoA R hx, hR0, sub_zero]
@@ -210,7 +210,7 @@ theorem target_error (X₀ : ℕ) {κ θ : ℝ} (cntA rhoA R : ℝ → ℝ) (hκ
   have h2 := hA x hx
   calc |rigidErr X₀ κ x + (cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u)|
       ≤ |rigidErr X₀ κ x| + |cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u| := abs_add_le _ _
-    _ ≤ (2 ^ θ * rankinConst X₀ θ) * x ^ θ + 2 * x ^ (θ / 2) := by nlinarith
+    _ ≤ (2 ^ θ * rankinConst X₀ θ) * x ^ θ + 2 * x ^ (thetaB θ) := by nlinarith
 
 lemma osc_eq_zero_of_le {θ : ℝ} {α γ xp : ℕ → ℝ} (h : Spacing xp) {x : ℝ} (hx : 0 < x)
     (hxp : x ≤ xp 0) : osc θ α γ xp x = 0 := by
@@ -235,7 +235,7 @@ both for `x ≥ X₀`. -/
 def PartIInputsTarget (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
   ∃ (κ : ℝ) (cntA rhoA : ℝ → ℝ) (α γ xp : ℕ → ℝ), 0 < κ ∧ κ ≤ 1 ∧ Spacing xp ∧
     (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
-    (∀ x ≥ (X₀ : ℝ), |cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u| ≤ 2 * x ^ (θ / 2)) ∧
+    (∀ x ≥ (X₀ : ℝ), |cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u| ≤ 2 * x ^ (thetaB θ)) ∧
     (∀ x ≥ (X₀ : ℝ), |P.N x - target X₀ κ cntA rhoA (osc θ α γ xp) x| ≤ x ^ lagExponent θ)
 
 theorem PartIInputsTarget.partIInputs {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} (hθ : 0 < θ)
@@ -254,7 +254,7 @@ def TheoremAInputsTarget (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 part (i) is reduced to the absorbed part of the target error and the lag bound (13) for the
 concrete target (6). -/
 def Theorem21InputsTarget : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

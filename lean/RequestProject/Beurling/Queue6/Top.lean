@@ -34,7 +34,7 @@ namespace Queue6
 /-- **Theorem 2.1, hypothesis with §6.1–§6.4 formalized**: the inputs of §6.3–§6.4 from other
 sections, for every admissible `θ` and every even `X₀ ≥ max(e^{10⁸}, X_Hux)`. -/
 def Theorem21InputsT : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → Nonempty (QueueInputs θ X₀)
 
 instance (D : Sec5Family) : Countable (ιF D) := by unfold ιF ι0; infer_instance

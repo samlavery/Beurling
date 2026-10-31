@@ -39,8 +39,8 @@ variable {θ : ℝ} {X₀ : ℕ}
 `u ∈ [X₀, x)`. -/
 theorem T_le_three_of_loc (hc : Cond θ X₀) {ω : JitterΩ} {x : ℝ} (hx : (X₀ : ℝ) ≤ x)
     (hloc : ∀ u, (X₀ : ℝ) ≤ u → u < x →
-      (localCountA (absSet X₀ (DF θ X₀ ω)) u (u + u ^ (θ / 2)) : ℝ) ≤
-        u ^ (θ / 2) * Real.log u ^ (-4 : ℤ)) : (Mcl θ X₀ ω).T x ≤ 3 * x := by
+      (localCountA (absSet X₀ (DF θ X₀ ω)) u (u + u ^ (thetaB θ)) : ℝ) ≤
+        u ^ (thetaB θ) * Real.log u ^ (-4 : ℤ)) : (Mcl θ X₀ ω).T x ≤ 3 * x := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hc.hX
   have hstd := hc.std ω
@@ -68,24 +68,24 @@ theorem T_le_three_of_loc (hc : Cond θ X₀) {ω : JitterΩ} {x : ℝ} (hx : (X
     unfold countA at h0
     have h0' : (A ∩ Icc 1 (X₀ : ℝ)).ncard = 0 := by exact_mod_cast h0
     exact (Set.ncard_eq_zero (hAfin.finite_Icc _ _)).mp h0'
-  have hb0 : 0 ≤ θ / 2 := by linarith [hc.hθ.1]
-  have hb1 : θ / 2 ≤ 1 := by linarith [hc.hθ.2]
+  have hb0 : 0 ≤ thetaB θ := (thetaB_pos (by linarith [hc.hθ.1])).le
+  have hb1 : thetaB θ ≤ 1 := (thetaB_le_quarter (by linarith [hc.hθ.2])).trans (by norm_num)
   have hwin : ∀ u, (X₀ : ℝ) ≤ u → u < x →
-      (localCountA A u (u + u ^ (θ / 2)) : ℝ) ≤ u ^ (θ / 2) / 4 := by
+      (localCountA A u (u + u ^ (thetaB θ)) : ℝ) ≤ u ^ (thetaB θ) / 4 := by
     intro u hu hux
     obtain ⟨hLu, -, -⟩ := logs_of_ge hX0 hc.hX hu
     have h4 := four_capH_le hX0 hc.hX hu
     have hu0 : 0 < u := by linarith
     have h := hloc u hu hux
     rw [zpow_neg, zpow_ofNat, ← div_eq_mul_inv] at h
-    have hp : 0 ≤ u ^ (θ / 2) := Real.rpow_nonneg hu0.le _
+    have hp : 0 ≤ u ^ (thetaB θ) := Real.rpow_nonneg hu0.le _
     have h44 : (4 : ℝ) ≤ Real.log u ^ 4 := by
       have : (10 ^ 8 : ℝ) ≤ Real.log u ^ 4 :=
         hLu.trans (le_self_pow₀ (by linarith) (by norm_num))
       linarith
     exact h.trans (div_le_div_of_nonneg_left hp (by norm_num) h44)
   have hcnt := countA_le_of_windows hAfin hX1.le hb0 hlow hwin hx
-  have hxb : x ^ (θ / 2) ≤ x := by
+  have hxb : x ^ (thetaB θ) ≤ x := by
     conv_rhs => rw [← Real.rpow_one x]
     exact Real.rpow_le_rpow_of_exponent_le (by linarith) hb1
   -- the smooth count
@@ -241,8 +241,8 @@ cluster events, all of time `< t(tB n)`. -/
 theorem lemma626_G0 {n : ℕ} (hn : 2 ≤ n) {ω : JitterΩ} (hω : ω ∈ G0 θ X₀ D (ttB X₀ n))
     (hN : ω ∈ NiceEv θ X₀) {x : ℝ} (hxW : x ≤ 2 ^ n * (X₀ : ℝ) / 2) {u : ℝ}
     (hu : (X₀ : ℝ) ≤ u) (hux : u < x) :
-    (localCountA (absSet X₀ (DF θ X₀ ω)) u (u + u ^ (θ / 2)) : ℝ) ≤
-      u ^ (θ / 2) * Real.log u ^ (-4 : ℤ) := by
+    (localCountA (absSet X₀ (DF θ X₀ ω)) u (u + u ^ (thetaB θ)) : ℝ) ≤
+      u ^ (thetaB θ) * Real.log u ^ (-4 : ℤ) := by
   obtain ⟨hU, hSG, hnt⟩ := hN
   have hX := hc.hX
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _

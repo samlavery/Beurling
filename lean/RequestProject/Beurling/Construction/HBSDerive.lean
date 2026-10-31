@@ -52,7 +52,7 @@ bound, `|N - ⌊v⌋| ≤ ε₁(v) v`. -/
 theorem hbs_err_high {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) {θ : ℝ}
     (hθ2 : θ ≤ 1 / 2 - 1 / 10000) {cntA rhoA R : ℝ → ℝ} {N v : ℝ} (hv : (X₀ : ℝ) ≤ v)
     (hlag : |N - target X₀ (kappaParam X₀) cntA rhoA R v| ≤ v ^ lagExponent θ)
-    (hA : |cntA v - ∫ u in (X₀ : ℝ)..v, rhoA u| ≤ 2 * v ^ (θ / 2))
+    (hA : |cntA v - ∫ u in (X₀ : ℝ)..v, rhoA u| ≤ 2 * v ^ (thetaB θ))
     (hR : |R v| ≤ 2 * v ^ θ * (logStar v : ℝ)) (hR0 : R X₀ = 0) :
     |N - ⌊v⌋₊| ≤ hbsEps X₀ v * v := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
@@ -75,7 +75,8 @@ theorem hbs_err_high {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) {θ : ℝ}
   have hη : lagExponent θ ≤ 0.6 := by
     unfold lagExponent; have := min_le_left θ (1 / 2 - θ); linarith
   have p1 : v ^ lagExponent θ ≤ v ^ (0.6 : ℝ) := Real.rpow_le_rpow_of_exponent_le hv1 hη
-  have p2 : v ^ (θ / 2) ≤ v ^ (0.6 : ℝ) := Real.rpow_le_rpow_of_exponent_le hv1 (by linarith)
+  have p2 : v ^ (thetaB θ) ≤ v ^ (0.6 : ℝ) :=
+    Real.rpow_le_rpow_of_exponent_le hv1 (by linarith [thetaB_le_self θ])
   have p3 : 1 ≤ v ^ (0.6 : ℝ) := Real.one_le_rpow hv1 (by norm_num)
   have hls := logStar_le_rpow hv1 (show (0 : ℝ) < 0.05 by norm_num)
   have hbig := rpow_ge_of_half hX (v := v) (by linarith) (show (0 : ℝ) ≤ 0.05 by norm_num)
@@ -148,11 +149,11 @@ theorem hbs_err_low {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) {θ : ℝ}
   constructor <;> nlinarith
 
 /-- **(HBS) for the realised system, derived from the slot data and the cluster event.** -/
-theorem sparsityInputs_of_cluster {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+theorem sparsityInputs_of_cluster {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) (M : SlotModel X₀) (ω : JitterΩ)
     (hω : ∀ j, ω j ∈ Icc (0 : ℝ) 1) (hinf : {k | placedAt M k}.Infinite) (a : ℕ → ℝ)
     (hI : PartIRestJ θ X₀ (realisedSystem M (capH X₀) ω) (realisedA M (capH X₀) ω)
-      (fun n => solveU (θ / 2) n) a M)
+      (fun n => solveU (thetaB θ) n) a M)
     (hcl : ∀ v ≥ (X₀ : ℝ), ClusterUpTo (realisedSystem M (capH X₀) ω) X₀
       (4 * v / Real.log v ^ 11) (capM1 X₀ v)) :
     SparsityInputs X₀ (realisedSystem M (capH X₀) ω) := by
@@ -186,7 +187,7 @@ theorem sparsityInputs_of_cluster {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 
     fun w hw1 hw2 => realised_floor_eq hok hω hX hTlow hw1 hw2
   have hlag := lag_of_slotData hθ.1 hθ.2 hX M P.N hq κp hκp hland hinit
   have hAu := realisedU_spec hok hω hX hTlow (θ := θ) (by linarith [hθ.1]) (by linarith [hθ.2])
-  have hb : 0 < θ / 2 := by linarith [hθ.1]
+  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
   -- (HBS) up to `z` from the error bound up to `z`
   have hHBS_of : ∀ z, (∀ v, X0m ≤ v → v ≤ z → |P.N v - ⌊v⌋₊| ≤ hbsEps X₀ v * v) →
       P.HBS X0m z (1 / 1000) (1 / 1000) (hbsEps X₀) := by
@@ -229,7 +230,7 @@ theorem sparsityInputs_of_cluster {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 
     · have hv0 : 0 < v := by linarith
       have hvfl : (v : ℝ) < ⌊v⌋₊ + 1 := Nat.lt_floor_add_one v
       have hdens : ∀ u, (X₀ : ℝ) ≤ u → u ≤ v →
-          absorbedDensity (θ / 2) A (fun n => solveU (θ / 2) n) u ≤
+          absorbedDensity (thetaB θ) A (fun n => solveU (thetaB θ) n) u ≤
             Real.log u ^ (-4 : ℤ) := by
         intro u hu huv
         have hHBSu : P.HBS X0m (2 * absorbYAt X₀ (2 * u)) (1 / 1000) (1 / 1000) (hbsEps X₀) := by
@@ -245,23 +246,23 @@ theorem sparsityInputs_of_cluster {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 
         have hloc := lemma626_local C hX hθ.1 (by linarith [hθ.2]) rfl hω hX0mlog hX0m2 hfl hcl hu
           hHBSu
         exact absorbedDensity_le_of_localCount hb (by linarith) hAu C.locFin hu hloc
-      have hW : AbsorbedWindowHyp (θ / 2) X₀ A (fun n => solveU (θ / 2) n) :=
-        ⟨hb, by linarith [hθ.2], hX1.le, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2,
+      have hW : AbsorbedWindowHyp (thetaB θ) X₀ A (fun n => solveU (thetaB θ) n) :=
+        ⟨hb, thetaB_le_one (by linarith [hθ.2]), hX1.le, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2,
           C.locFin⟩
       have hEA := absorbed_target_error_cap_loc hW (by linarith) hhigh hdens
       have hsp := switchOn_spacing (X₀ : ℝ)
-      have hα : ∀ k, |designedAlpha P θ X₀ (kappaParam X₀) A (fun n => solveU (θ / 2) n)
+      have hα : ∀ k, |designedAlpha P θ X₀ (kappaParam X₀) A (fun n => solveU (thetaB θ) n)
           (kappa0Param X₀) (switchOn X₀) a k| ≤ 2 := by
         intro k
-        have hm := designedAlpha_mem P θ X₀ (kappaParam X₀) A (fun n => solveU (θ / 2) n)
+        have hm := designedAlpha_mem P θ X₀ (kappaParam X₀) A (fun n => solveU (thetaB θ) n)
           (kappa0Param X₀) (switchOn X₀) a (heightScale_switchOn_pos θ hX1.le) k
         rw [abs_of_nonneg (by linarith [hm.1])]
         exact hm.2
       have hR := abs_osc_le (θ := θ) (γ := designedGamma P θ X₀ (kappaParam X₀) A
-        (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a) hsp hα (x := v) (by linarith)
+        (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a) hsp hα (x := v) (by linarith)
       have hR0 := osc_eq_zero_of_le (θ := θ) (α := designedAlpha P θ X₀ (kappaParam X₀) A
-        (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a) (γ := designedGamma P θ X₀
-        (kappaParam X₀) A (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a) hsp
+        (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a) (γ := designedGamma P θ X₀
+        (kappaParam X₀) A (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a) hsp
         (by linarith : (0 : ℝ) < X₀) (switchOn_zero_ge _)
       have hl := hlag v hhigh
       rw [hT v] at hl

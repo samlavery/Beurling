@@ -35,17 +35,17 @@ set_option maxHeartbeats 1600000 in
 /-- **The integer count of a window `(a, d]`** on `Good(< t) ∩ NiceEv`. -/
 theorem Ncount_le {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (hN : ω ∈ NiceEv θ X₀)
     {a d : ℝ} (ha : (X₀ : ℝ) ≤ a) (had : a ≤ d) (ht1 : d + 26 * Real.log d + 2 < t)
-    (ht2 : 2 * (d + a ^ (θ / 2)) + 2 * X₀ + 4 ≤ t) :
+    (ht2 : 2 * (d + a ^ (thetaB θ)) + 2 * X₀ + 4 ≤ t) :
     (PR θ X₀ ω).N d - (PR θ X₀ ω).N a ≤
-      2.00005 * (d - a) + 1 + ((d - a) / a ^ (θ / 2) + 2) *
-        ((d + a ^ (θ / 2)) ^ (θ / 2) * Real.log a ^ (-4 : ℤ)) + lagD X₀ d + lagD X₀ a := by
+      2.00005 * (d - a) + 1 + ((d - a) / a ^ (thetaB θ) + 2) *
+        ((d + a ^ (thetaB θ)) ^ (thetaB θ) * Real.log a ^ (-4 : ℤ)) + lagD X₀ d + lagD X₀ a := by
   classical
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hc.hX
   have ha0 : 0 < a := by linarith
   have hθ := hc.hθ
-  have hθ0 : 0 ≤ θ / 2 := by linarith [hθ.1]
-  set h := a ^ (θ / 2) with hhdef
+  have hθ0 : 0 ≤ thetaB θ := (thetaB_pos (by linarith [hθ.1])).le
+  set h := a ^ (thetaB θ) with hhdef
   have hh0 : 0 < h := Real.rpow_pos_of_pos ha0 _
   -- the lag at both ends
   have hla := lag_G0 D hc hev hG hN ha (by
@@ -60,7 +60,7 @@ theorem Ncount_le {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (hN : �
   have hU : ∀ j, Ucl ω j ∈ Icc (0 : ℝ) 1 := fun j => clamp01_mem _
   have hAfin := absSet_locFin (X₀ := X₀) (locFinD_DM hc.hX hU (Mcl θ X₀ ω))
   set n := ⌈(d - a) / h⌉₊ + 1
-  set Mw := (d + h) ^ (θ / 2) * Real.log a ^ (-4 : ℤ)
+  set Mw := (d + h) ^ (thetaB θ) * Real.log a ^ (-4 : ℤ)
   have hcov := count_le_of_cover (S := A ∩ Icc a d) n
     (fun i => A ∩ Icc (a + i * h) (a + i * h + h))
     (fun i => (hAfin (a + i * h + h)).subset fun y hy => ⟨hy.1, hy.2.2⟩)
@@ -81,10 +81,10 @@ theorem Ncount_le {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (hN : �
           exact this
         linarith
       have hw0 : 0 < w := by linarith
-      have hwθ : h ≤ w ^ (θ / 2) := Real.rpow_le_rpow ha0.le hw hθ0
+      have hwθ : h ≤ w ^ (thetaB θ) := Real.rpow_le_rpow ha0.le hw hθ0
       have hLC := LC_G0 D hc hev hG hN (x := w) (x' := w + h) (ha.trans hw) (by linarith)
         (by linarith)
-      have hLC' : ((A ∩ Icc w (w + h)).ncard : ℝ) ≤ w ^ (θ / 2) * Real.log w ^ (-4 : ℤ) :=
+      have hLC' : ((A ∩ Icc w (w + h)).ncard : ℝ) ≤ w ^ (thetaB θ) * Real.log w ^ (-4 : ℤ) :=
         hLC
       refine hLC'.trans ?_
       have hlw : Real.log a ≤ Real.log w := Real.log_le_log ha0 hw
