@@ -13,7 +13,8 @@ early part of its transform (`earlyNoise`). The decomposition and the entireness
 then *proved* (`decomposition_14`, `differentiable_earlyNoise_of_integrableOn`), from:
 
 * `X₀` is `X₀`-smooth, the windows of `A` start at or after `X₀`, and the cap in (6) is inactive;
-* the global lag bound `|D(x)| ≤ K x^η` for `x ≥ X₀` (the lag bound (13));
+* the global lag bound `|D(x)| ≤ K x^{η_G}` for `x ≥ X₀` (from (La), `η_G ≤ 1/2`), and the late
+  bound `|D(y)| ≤ y^η` (`η ≤ θ/2`) for `y ≥ a_k` (from (La) and the switch-on condition);
 * the heights and amplitudes of the oscillation are the ones designed in Lemma 4.8
   (`γ_k` chosen by the rule of Lemma 4.8 for `f = D̂_{<a_k}`, `α_k = κ₀ x_k^{1-θ}/((log x_k)³ γ_k)`).
 
@@ -63,15 +64,16 @@ lemma lag_abs_le (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Se
 /-- The lag is integrable on `(1, a]`. -/
 lemma lag_integrableOn_Ioc (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.smoothNumbers)
     {κ θ : ℝ} (hκ : 0 < κ) (hθ0 : 0 < θ) (hθ2 : θ < 2) {A : Set ℝ} {u : ℝ → ℝ}
-    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (thetaB θ) = a) (hAfin : LocFin A)
-    (hcap : ∀ v ≥ (X₀ : ℝ), absorbedDensity (thetaB θ) A u v ≤ 0.1 / Real.log v)
+    (hXw : 10 ^ 8 ≤ Real.log X₀)
+    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + winH X₀ (u a) = a) (hAfin : LocFin A)
+    (hcap : ∀ v ≥ (X₀ : ℝ), absorbedDensity (winH X₀) A u v ≤ 0.1 / Real.log v)
     {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : ℝ} (hα : ∀ k, |α k| ≤ C) (hxp : (X₀ : ℝ) ≤ xp 0)
     {η K : ℝ} (hη : 0 ≤ η) (hη2 : η < 2)
     (hD : ∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ K * x ^ η) (a : ℝ) :
     IntegrableOn (lagOf P θ X₀ κ A u α γ xp) (Ioc 1 a) := by
   set D := lagOf P θ X₀ κ A u α γ xp with hDdef
-  have hg := lag_integrableOn P hXs hκ hθ0 hθ2.le hAu hAfin hcap hsp hα hxp hη hD
-    (s := 2) (by simpa using hθ2) (by simpa using hη2) (by norm_num)
+  have hg := lag_integrableOn P hXs hκ hθ0 hθ2.le hXw hAu hAfin hcap hsp hα hxp hη hD
+    (s := 2) (by simpa using hθ2) (by simpa using hη2) (by norm_num) (by norm_num)
   have hgI : IntegrableOn (fun x : ℝ => (D x : ℂ) * (x : ℂ) ^ (-(2 : ℂ) - 1)) (Icc 1 a) :=
     (integrableOn_Icc_iff_integrableOn_Ioc).mpr (hg.mono_set Ioc_subset_Ioi_self)
   have hcont : ContinuousOn (fun x : ℝ => ((x : ℂ) ^ (3 : ℕ))) (Icc 1 a) :=
@@ -90,11 +92,12 @@ lemma lag_integrableOn_Ioc (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X�
 `Theorem410InputsAbs θ (zetaCont P 1)`, but the decomposition of `ζ_P` on the discs is no longer
 assumed and `D̂_{<a_k}` is the early part of the transform of the lag `D = N_P - T` (whose
 entireness is derived). In their place: `X₀` is `X₀`-smooth, the windows of `A` start after `X₀`,
-the cap of (6) is inactive, the lag bound `|D(x)| ≤ K x^η` holds on `[X₀, ∞)`, and `α, γ` are the
-designed amplitudes and heights. -/
+the cap of (6) is inactive, the lag bound `|D(x)| ≤ K x^{η_G}` holds on `[X₀, ∞)`, and `α, γ` are
+the designed amplitudes and heights. -/
 def Theorem410InputsDec (θ : ℝ) (P : BeurlingSystem) : Prop :=
-  ∃ (X₀ : ℕ) (κ κ₀ η K : ℝ) (xp a : ℕ → ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ : ℕ → ℝ),
-    10 ^ 8 ≤ Real.log X₀ ∧ X₀ ∈ X₀.smoothNumbers ∧ 1 / 20 ≤ θ ∧ θ ≤ 1 / 2 ∧
+  ∃ (X₀ : ℕ) (κ κ₀ η ηG K : ℝ) (xp a : ℕ → ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ : ℕ → ℝ),
+    10 ^ 8 ≤ Real.log X₀ ∧ X₀ ∈ X₀.smoothNumbers ∧ (∀ k, 2 * designRadius (xp k) ≤ θ) ∧
+    θ ≤ 1 / 2 ∧
     Real.exp (-Real.log X₀) ≤ κ ∧ κ ≤ 1 ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧
     (X₀ : ℝ) ^ 2 ≤ Real.log (xp 0) ∧
@@ -102,13 +105,13 @@ def Theorem410InputsDec (θ : ℝ) (P : BeurlingSystem) : Prop :=
     (∀ k, γ k = designGamma X₀ κ θ κ₀ (earlyOf P θ X₀ κ A u α γ xp a) xp k) ∧
     (∀ k, α k = amplitudeOf θ κ₀ (γ k) (xp k)) ∧
     (∀ k, Lemma48PiecesCount X₀ (heightScale θ κ₀ (xp k)) (earlyOf P θ X₀ κ A u α γ xp a k)) ∧
-    0 ≤ η ∧ η ≤ θ / 2 ∧
+    0 ≤ η ∧ η ≤ θ / 2 ∧ 0 ≤ ηG ∧ ηG ≤ 1 / 2 ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
-    (∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ K * x ^ η) ∧
+    (∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ K * x ^ ηG) ∧
     (∀ k, ∀ y ≥ a k, |lagOf P θ X₀ κ A u α γ xp y| ≤ y ^ η) ∧
-    AbsorbedHyp (thetaB θ) A u ∧
+    AbsorbedHyp (winH X₀) A u ∧
     (∀ n ∈ A, (X₀ : ℝ) ≤ u n) ∧
-    (∀ v ≥ (X₀ : ℝ), absorbedDensity (thetaB θ) A u v ≤ 0.1 / Real.log v) ∧
+    (∀ v ≥ (X₀ : ℝ), absorbedDensity (winH X₀) A u v ≤ 0.1 / Real.log v) ∧
     (∀ n ∈ A, ∃ r : ℝ, (X₀ : ℝ) - CaplLink.capH X₀ X₀ / 2 ≤ r ∧ r < absorbY X₀ n) ∧
     (∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →
       countA A x ≤ x * Real.exp (-sigmaStar (Real.log X₀) (Real.log x)))
@@ -135,8 +138,8 @@ lemma designRadius_le {X₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.lo
 `Theorem410InputsDec θ P` gives `Theorem410InputsAbs θ (zetaCont P 1)`. -/
 theorem Theorem410InputsDec.toAbs {θ : ℝ} {P : BeurlingSystem} (h : Theorem410InputsDec θ P) :
     Theorem410InputsAbs θ (P.zetaCont 1) := by
-  obtain ⟨X₀, κ, κ₀, η, K, xp, a, A, u, α, γ, hX, hXs, hθ1, hθ2, hκ, hκ1, hκ₀1, hκ₀2, hxp0,
-    hspk, hγ, hα, hpieces, hη0, hη, ha, hDK, hD, hA, huX, hcap, hAy, hbound⟩ := h
+  obtain ⟨X₀, κ, κ₀, η, ηG, K, xp, a, A, u, α, γ, hX, hXs, hθ1, hθ2, hκ, hκ1, hκ₀1, hκ₀2, hxp0,
+    hspk, hγ, hα, hpieces, hη0, hη, hηG0, hηG, ha, hDK, hD, hA, huX, hcap, hAy, hbound⟩ := h
   set D := lagOf P θ X₀ κ A u α γ xp with hDdef
   set Dlt := earlyOf P θ X₀ κ A u α γ xp a with hDltdef
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
@@ -182,18 +185,19 @@ theorem Theorem410InputsDec.toAbs {θ : ℝ} {P : BeurlingSystem} (h : Theorem41
       unfold amplitudeOf; rw [heightScale_eq]
     rw [e, abs_of_nonneg (div_nonneg (by linarith) hγ0.le), div_le_iff₀ hγ0]
     linarith [hm.1]
-  have hAu : ∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + u n ^ (thetaB θ) = n := fun n hn =>
+  have hAu : ∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + winH X₀ (u n) = n := fun n hn =>
     ⟨huX n hn, (hA.weight n hn).u_eq⟩
-  have hθ0 : 0 < θ := by linarith
-  have hη2 : η < 2 := by linarith
+  have hθ0 : 0 < θ := by
+    have := (designRadius_le hX0 hX (hxpos 0) (hlogk 0)).1; have := hθ1 0; linarith
+  have hη2 : ηG < 2 := by linarith
   refine ⟨X₀, κ, κ₀, η, xp, a, D, Dlt, A, u, hX, hθ1, hθ2, hκ, hκ1, hκ₀1, hκ₀2, hxp0,
     fun k => ?_, hpieces, hspk, hη0, hη, ha, hD, hA, hAy, hbound, fun k s hs => ?_⟩
   · -- `D̂_{<a_k}` is entire
-    refine differentiable_earlyNoise_of_integrableOn (M := max K (P.N X₀ + X₀) * a k ^ η)
-      (hak k) (lag_integrableOn_Ioc P hXs hκ0 hθ0 (by linarith) hAu hA.fin hcap hsp hαb hxpX hη0 hη2
-        hDK (a k)) (fun x hx => ?_)
-    refine (lag_abs_le P hη0 hDK hx.1).trans (mul_le_mul_of_nonneg_left
-      (Real.rpow_le_rpow (by linarith [hx.1]) hx.2 hη0) ?_)
+    refine differentiable_earlyNoise_of_integrableOn (M := max K (P.N X₀ + X₀) * a k ^ ηG)
+      (hak k) (lag_integrableOn_Ioc P hXs hκ0 hθ0 (by linarith) hX hAu hA.fin hcap hsp hαb hxpX
+        hηG0 hη2 hDK (a k)) (fun x hx => ?_)
+    refine (lag_abs_le P hηG0 hDK hx.1).trans (mul_le_mul_of_nonneg_left
+      (Real.rpow_le_rpow (by linarith [hx.1]) hx.2 hηG0) ?_)
     exact le_trans (add_nonneg (Nat.cast_nonneg _) hX0) (le_max_right _ _)
   · -- the decomposition (14) on the disc
     obtain ⟨-, hr⟩ := designRadius_le hX0 hX (hxpos k) (hlogk k)
@@ -215,8 +219,8 @@ theorem Theorem410InputsDec.toAbs {θ : ℝ} {P : BeurlingSystem} (h : Theorem41
       have := hΓ k
       have := (abs_le.mp (him.trans (hd.trans hr))).1
       linarith
-    have key := decomposition_14 P hXs hκ0 hθ0 (by linarith) hAu hA.fin hcap hsp hαb hxpX hη0 hDK
-      (s := s) (by linarith) (by linarith) hs1 (hak k)
+    have key := decomposition_14 P hXs hκ0 hθ0 (by linarith) hX hAu hA.fin hcap hsp hαb hxpX hηG0
+      hDK (s := s) (by linarith) (by linarith) (by linarith) hs1 (hak k)
     simp only [hγeq, hαeq]
     exact key
 
@@ -227,17 +231,16 @@ def TheoremAInputsDec (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21InputsAbs`, with the decomposition (14) of
 `ζ_P` and the entireness of `D̂_{<a_k}` derived. -/
 def Theorem21InputsDec : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
       ∀ ω ∈ G, TheoremAInputsDec θ X₀ (P ω)
 
 theorem theorem21InputsAbs_of_dec (h : Theorem21InputsDec) : Theorem21InputsAbs := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX θ hθ X₀ hev h1 h2
   exact ⟨Ω, m, μ, P, G, hμ, hG, fun ω hω => ⟨(hP ω hω).1, (hP ω hω).2.toAbs⟩⟩
 
 /-- The refined hypothesis `Theorem21InputsDec` implies Theorem 2.1. -/

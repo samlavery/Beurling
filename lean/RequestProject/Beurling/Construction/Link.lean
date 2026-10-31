@@ -412,21 +412,21 @@ theorem placed_infinite_of_growth (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1) (hX : 10
 end Infinite
 
 /-- The paper's target grows linearly, with the designed oscillation. -/
-theorem T_ge_of_formula {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem T_ge_of_formula {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {P : BeurlingSystem} {A : Set ℝ} {u : ℝ → ℝ} {a : ℕ → ℝ}
     {M : SlotModel X₀}
-    (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (thetaB θ) A u)
-      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (switchOn X₀)) x) {x : ℝ} (hx : (X₀ : ℝ) ≤ x) :
+    (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (winH X₀) A u)
+      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (switchOn (swS θ X₀))) x) {x : ℝ} (hx : (X₀ : ℝ) ≤ x) :
     7 / 10 * x - X₀ - 1 ≤ M.T x := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hX
   rw [hT x]
-  have hsp := switchOn_spacing (X₀ : ℝ)
-  have hα : ∀ k, |designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a k| ≤ 2 := by
+  have hsp := switchOn_spacing (swS θ (X₀ : ℝ))
+  have hα : ∀ k, |designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a k| ≤ 2 := by
     intro k
-    have hm := designedAlpha_mem P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a
+    have hm := designedAlpha_mem P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a
       (heightScale_switchOn_pos θ hX1.le) k
     rw [abs_of_nonneg (by linarith [hm.1])]
     exact hm.2
@@ -438,10 +438,10 @@ theorem T_ge_of_formula {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 /
     have hl : 10 ^ 8 ≤ Real.log v := hX.trans (Real.log_le_log (by linarith) hv)
     rw [div_le_div_iff₀ (by linarith) (by norm_num)]
     linarith
-  · exact osc_eq_zero_of_le hsp (by linarith : (0 : ℝ) < X₀) (switchOn_zero_ge _)
+  · exact osc_eq_zero_of_le hsp (by linarith : (0 : ℝ) < X₀) (switchOn_zero_ge_swS _ _)
 
 /-- The target of `PartIRestJ` grows linearly, with the designed oscillation. -/
-theorem partIRestJ_T_ge {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem partIRestJ_T_ge {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {P : BeurlingSystem} {A : Set ℝ} {u : ℝ → ℝ} {a : ℕ → ℝ}
     {M : SlotModel X₀} (hI : PartIRestJ θ X₀ P A u a M) {x : ℝ} (hx : (X₀ : ℝ) ≤ x) :
     7 / 10 * x - X₀ - 1 ≤ M.T x :=
@@ -449,11 +449,11 @@ theorem partIRestJ_T_ge {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 /
 
 /-- **Infinitely many primes are placed** in a slot model whose target is the paper's target and
 whose arrivals are the composites of the realised system. -/
-theorem placed_infinite_of_linked {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
+theorem placed_infinite_of_linked {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
     {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) (M : SlotModel X₀) {U : ℕ → ℝ}
     (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1) {a : ℕ → ℝ}
     (hI : PartIRestJ θ X₀ (realisedSystem M (capH X₀) U) (realisedA M (capH X₀) U)
-      (fun n => solveU (thetaB θ) n) a M)
+      (fun n => solveU (winH X₀) n) a M)
     (hlink : ArrivalsLinked M (capH X₀) U) : {k | placedAt M k}.Infinite := by
   have hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊ := by
     intro x hx
@@ -466,7 +466,7 @@ realised system.** `Theorem21InputsM` with the condition that the greedy rule pl
 many primes replaced by `ArrivalsLinked`: the arrivals of the slot model are the composites of
 `P(ω)` in the slots. -/
 def Theorem21InputsN : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -474,18 +474,17 @@ def Theorem21InputsN : Prop :=
       ∀ ω ∈ goodAll E, (∀ j, ω j ∈ Icc (0 : ℝ) 1) →
         ArrivalsLinked (M ω) (capH X₀) ω ∧
         PartIRestJ θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-          (fun n => solveU (thetaB θ) n) (constructionScale X₀) (M ω) ∧
+          (fun n => solveU (winH X₀) n) (constructionScale X₀ (swS θ X₀)) (M ω) ∧
         Theorem410RestM θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-          (fun n => solveU (thetaB θ) n) ∧
+          (fun n => solveU (winH X₀) n) ∧
         ∀ v ≥ (X₀ : ℝ), ClusterUpTo (realisedSystem (M ω) (capH X₀) ω) X₀
           (4 * v / Real.log v ^ 11) (capM1 X₀ v)
 
 /-- `Theorem21InputsN` implies `Theorem21InputsM`: infinitely many primes are placed. -/
 theorem theorem21InputsM_of_N (h : Theorem21InputsN) : Theorem21InputsM := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨M, ι, hι, E, time, htab, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨M, ι, hι, E, time, htab, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

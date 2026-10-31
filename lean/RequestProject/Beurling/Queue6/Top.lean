@@ -34,7 +34,7 @@ namespace Queue6
 /-- **Theorem 2.1, hypothesis with §6.1–§6.4 formalized**: the inputs of §6.3–§6.4 from other
 sections, for every admissible `θ` and every even `X₀ ≥ max(e^{10⁸}, X_Hux)`. -/
 def Theorem21InputsT : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → Nonempty (QueueInputs θ X₀)
 
 instance (D : Sec5Family) : Countable (ιF D) := by unfold ιF ι0; infer_instance
@@ -42,11 +42,10 @@ instance (D : Sec5Family) : Countable (ιF D) := by unfold ιF ι0; infer_instan
 /-- **`Theorem21InputsT` implies `Theorem21InputsS`**, given (84). -/
 theorem theorem21InputsS_of_T (hHB : ShortIntervalPNT) (h : Theorem21InputsT) :
     Theorem21InputsS := by
-  intro θ hθ
   obtain ⟨x₁, hx₁⟩ := hHB
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨max XHux x₁, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨Q⟩ := hX X₀ hev h1 ((le_max_left _ _).trans h2)
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨max XHux x₁, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨Q⟩ := hX θ hθ X₀ hev h1 ((le_max_left _ _).trans h2)
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

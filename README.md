@@ -162,11 +162,11 @@ Applied to the ordinary integers, a positive answer would give a zero-free half-
 (log* the iterated logarithm), whose zeta function has zeros ρ_k with Re ρ_k = 1 − (log log x_k + O(1))/log x_k → 1.
 The extension to θ ∈ [1/20, 1/4) and the single log log (in place of 3 log log) are later strengthenings, each checked by the AI
 agent that made it and one independent AI check (see [`FOLLOWUP-THETA.md`](FOLLOWUP-THETA.md) and
-[`FOLLOWUP-LANDAU.md`](FOLLOWUP-LANDAU.md)). Both are formalized in Lean: `BModel.theoremA_full` (Theorem A for
-θ ∈ [1/20, 1/2 − 10⁻⁴]) and `BModel.theoremA_ii_complete` (the zeros at 1·log log, tied to their heights), both from (84).
-The further extension to every θ ∈ (0, 1/20) (a θ-free absorption window and the explicit lag bound D_max = e^{O((log log x)²)};
-X₀ does not depend on θ, only the switch-on point x₁ does) is in the paper only: it has been checked by the AI agent that
-made it and one independent AI check, and is not formalized in Lean (see [`FOLLOWUP-S1.md`](FOLLOWUP-S1.md)).
+[`FOLLOWUP-LANDAU.md`](FOLLOWUP-LANDAU.md)). The further extension to every θ ∈ (0, 1/20) (a θ-free absorption window and
+the explicit lag bound D_max = e^{O((log log x)²)}; X₀ does not depend on θ, only the switch-on point x₁ does) has been
+checked by the AI agent that made it and one independent AI check (see [`FOLLOWUP-S1.md`](FOLLOWUP-S1.md)). All three are
+formalized in Lean: `BModel.theoremA_full` (Theorem A for θ ∈ (0, 1/2 − 10⁻⁴], with a threshold X_Hux independent of θ)
+and `BModel.theoremA_ii_complete` (the zeros at 1·log log, tied to their heights), both from (84).
 
 **Theorem A′ (informal).** There is a single discrete Beurling system with
 N(x) = x + O(exp(120(log log x)⁴/log log log x)), so N(x) = x + O(x^ε) for every ε > 0, whose zeta function has zeros with
@@ -198,12 +198,12 @@ theorem BModel.corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ
 - Lean/Mathlib v4.35.0.
 - The whole proof is formalized, including both strengthenings: Sections 2–7 and Appendix A, the construction built
   from the jitters, its measurability and probability budget, and the certificates. Also proved from (84), with the same
-  three axioms: `BModel.theoremA_full : Huxley84 → Theorem21` (Theorem A for θ ∈ [1/20, 1/2 − 10⁻⁴]) and
+  three axioms: `BModel.theoremA_full : Huxley84 → Theorem21` (Theorem A for θ ∈ (0, 1/2 − 10⁻⁴], one X_Hux for all θ) and
   `BModel.theoremA_ii_complete` (zeros with |(1 − Re ρ_k) log x_k − log log x_k| ≤ C and
   |log Im ρ_k − ((1−θ) log x_k − log log x_k)| ≤ C).
-- Lean's `Theorem21` is the pre-S1 form of Theorem A: θ ∈ [1/20, 1/2 − 10⁻⁴], with the error terms x^η and 2x^{θ_b}. It is
-  not the current paper form (every θ ∈ (0, 1/2 − 10⁻⁴], error terms D_max(x) + h(x)Λ⁻⁸; see
-  [`FOLLOWUP-S1.md`](FOLLOWUP-S1.md)) until the Lean is updated.
+- Lean's `Theorem21` is the S1 form of Theorem A: ∃ X_Hux ∀ θ ∈ (0, 1/2 − 10⁻⁴], with (i) stated as
+  |N(x) − x| ≤ C x^θ + 3 x^θ log* x + x^{η(θ)}, where C depends on θ and on the realisation. The paper's D_max(x) + h(x)Λ⁻⁸
+  are x^{o(1)} and are absorbed into C (see [`FOLLOWUP-S1.md`](FOLLOWUP-S1.md), Lean section).
 - The correspondence between the paper and the Lean statements has been checked by AI agents only.
 
 The formalization found four defects in the paper (corrections #102 and #104, constants in Lemma 5.7 and Theorem 5.24; #103, certificate

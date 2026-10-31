@@ -102,7 +102,7 @@ end R1
 /-- **Theorem 2.1, hypothesis, local form**: the second branch of (s2), and Proposition 5.38 for
 the margin density of the construction on `[X₀, b]`, a.s. on `Good(< b)`. -/
 def Theorem21InputsMOn : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
       S2SecondBranch θ X₀ ∧
       ∀ m a b, Adm X₀ m a b → ∀ᵐ ω ∂jitterMeasure,
@@ -110,10 +110,9 @@ def Theorem21InputsMOn : Prop :=
 
 /-- The global form implies the local one. -/
 theorem theorem21InputsMOn_of_M (h : Theorem21InputsM) : Theorem21InputsMOn := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨hS, hPM⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨hS, hPM⟩ := hX θ hθ X₀ hev h1 h2
   refine ⟨hS, fun m a b hadm => ?_⟩
   filter_upwards [hPM m a b hadm] with ω hω hG
   exact ⟨fun t ht _ => (hω hG).ge t ht, (hω hG).zero⟩
@@ -121,11 +120,10 @@ theorem theorem21InputsMOn_of_M (h : Theorem21InputsM) : Theorem21InputsMOn := b
 /-- `Theorem21InputsMOn` implies `Theorem21InputsZ`, given (84). -/
 theorem theorem21InputsZ_of_MOn (hHB : ShortIntervalPNT) (h : Theorem21InputsMOn) :
     Theorem21InputsZ := by
-  intro θ hθ
   obtain ⟨x₁, hx₁⟩ := hHB
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨max XHux x₁, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨hS, hPM⟩ := hX X₀ hev h1 ((le_max_left _ _).trans h2)
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨max XHux x₁, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨hS, hPM⟩ := hX θ hθ X₀ hev h1 ((le_max_left _ _).trans h2)
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

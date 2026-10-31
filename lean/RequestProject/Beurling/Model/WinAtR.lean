@@ -56,7 +56,7 @@ theorem hT_at {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt
   have hAeq : realisedA M (capH X₀) ω = absSet X₀ (DF θ X₀ ω) := by
     rw [realisedA_eq hok hnc, hDF]
   have hT := limModel_T_formula h0 hnc
-  have L : LinkedModel θ X₀ M ω (constructionScale X₀) :=
+  have L : LinkedModel θ X₀ M ω (constructionScale X₀ (swS θ X₀)) :=
     ⟨hc.hθ, hX, hU, hT, limModel_linked h0⟩
   have S := limModel_slotFacts h0 hev ht
   have hreg := jitterWidthRegular hX
@@ -74,29 +74,27 @@ theorem hT_at {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt
     linarith
   -- the lag
   have hlag : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
-      |(PR θ X₀ ω).N u - targetD θ X₀ (DF θ X₀ ω) u| ≤ u ^ lagExponent θ := by
+      |(PR θ X₀ ω).N u - targetD θ X₀ (DF θ X₀ ω) u| ≤ u ^ lagExponent (1 / 10000) := by
     intro u hu huz
     have hQ := queue_of_QE hc hQC h0 hu (hut u hu huz)
-    have hl := lag_local M hc.hθ.1 hc.hθ.2 hX (realisedSystem M (capH X₀) ω).N Real.log
+    have hl := lag_local M hX (realisedSystem M (capH X₀) ω).N Real.log
       (fun x hx => ⟨Real.log_nonneg (by linarith), le_rfl⟩)
       (fun x hx _ => landing_of_linked L S hreg hok hx)
       (fun x hx hearly => landingInit_of_linked L S hreg hok hx hearly) hu hQ
     rw [h0.limModel_T_eq u, ← hDF, ← hPR] at hl
     exact hl
   -- Lemma 3.4 for the capped absorbed density
-  have hAu := realisedU_spec hok hU hX hTlow (θ := θ) (by linarith [hc.hθ.1])
-    (by linarith [hc.hθ.2])
+  have hAu := realisedU_spec hok hU hX hTlow
   let R : GreedyRun X₀ := ⟨M, capH X₀, ω, hTlow⟩
   have C : AbsorbedCoupling (realisedSystem M (capH X₀) ω) R.M R.H R.U
       (realisedA M (capH X₀) ω) (realisedLatest M (capH X₀) ω) := realisedCoupling hok
-  have hb2 : 0 < thetaB θ := thetaB_pos (by linarith [hc.hθ.1])
-  have hW : AbsorbedWindowHyp (thetaB θ) X₀ (absSet X₀ (DF θ X₀ ω)) (uA θ) := by
+  have hW : AbsorbedWindowHyp (winH X₀) X₀ (absSet X₀ (DF θ X₀ ω)) (uA X₀) := by
     rw [← hAeq]
-    exact ⟨hb2, thetaB_le_one (by linarith [hc.hθ.2]), hX1.le, fun a ha => (hAu a ha).1,
+    exact ⟨winH_isWin hX, hX1.le, fun a ha => (hAu a ha).1,
       fun a ha => (hAu a ha).2, C.locFin⟩
   have hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
       |countA (absSet X₀ (DF θ X₀ ω)) u - ∫ v in (X₀ : ℝ)..u,
-        absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v| ≤ 2 * u ^ (thetaB θ) := by
+        absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) v| ≤ 2 * winH X₀ u := by
     intro u hu huz
     refine absorbed_target_error_cap_loc hW (by linarith) hu fun v hv hvu => ?_
     refine rhoA_le_L4 hc hev hb hbt hQC hE1 hNice hv ?_
@@ -104,7 +102,7 @@ theorem hT_at {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt
     linarith [hvu.trans huz, hzcb]
   exact theorem_5_24_data (DF θ X₀ ω) hc.hθ hX hev hc.hHB
     (countA (absSet X₀ (DF θ X₀ ω)))
-    (absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ)) hXm (Xm_le_X0 hc) hfl hlag hA
+    (absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀)) hXm (Xm_le_X0 hc) hfl hlag hA
     hzcX le_rfl
 
 set_option maxHeartbeats 2000000 in

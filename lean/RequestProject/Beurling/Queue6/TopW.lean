@@ -54,17 +54,16 @@ noncomputable def queueInputsV_of_W (hc : Cond θ X₀) (Q : QueueInputsW θ X�
 /-- **Theorem 2.1, hypothesis with §6 and Lemma 5.22 formalized** up to the variance inputs of
 Lemma 5.22, Corollary 5.40 and the Cover Bound. -/
 def Theorem21InputsW : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → Nonempty (QueueInputsW θ X₀)
 
 /-- `Theorem21InputsW` implies `Theorem21InputsV`, given (84). -/
 theorem theorem21InputsV_of_W (hHB : ShortIntervalPNT) (h : Theorem21InputsW) :
     Theorem21InputsV := by
-  intro θ hθ
   obtain ⟨x₁, hx₁⟩ := hHB
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨max XHux x₁, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨Q⟩ := hX X₀ hev h1 ((le_max_left _ _).trans h2)
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨max XHux x₁, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨Q⟩ := hX θ hθ X₀ hev h1 ((le_max_left _ _).trans h2)
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

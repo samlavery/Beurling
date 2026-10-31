@@ -263,17 +263,16 @@ theorem TheoremAInputs.conclusion {θ : ℝ} {P : BeurlingSystem} (hθ : 0 < θ)
 
 /-- Theorem 2.1, with part (ii) replaced by the inputs of Theorem 4.10 (see `TheoremAInputs`). -/
 def Theorem21Inputs : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
       ∀ ω ∈ G, TheoremAInputs θ (P ω)
 
 theorem theorem21_of_inputs (h : Theorem21Inputs) : Theorem21 := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hθ0 : 0 < θ := by linarith [hθ.1]
   exact ⟨Ω, m, μ, P, G, hμ, hG, fun ω hω => (hP ω hω).conclusion hθ0⟩
 

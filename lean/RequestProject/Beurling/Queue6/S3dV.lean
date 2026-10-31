@@ -127,12 +127,12 @@ theorem mertens_G0 {n : ℕ} {ω : JitterΩ} (hω : ω ∈ G0 θ X₀ D (tE1 X�
       exact_mod_cast h2
     exact cluster_of_G0 D hc hev hω h0 hSG hv hvt hm hmt
   have hT := limModel_T_formula h0 hnc
-  have L : LinkedModel θ X₀ M ω (constructionScale X₀) :=
+  have L : LinkedModel θ X₀ M ω (constructionScale X₀ (swS θ X₀)) :=
     ⟨hc.hθ, hX, hU, hT, limModel_linked h0⟩
   have S := limModel_slotFacts h0 hev ht
   have hreg := jitterWidthRegular hX
   have hmain := hbs_local hc.hθ hX M ω hU (limModel_placed_infinite h0)
-    (constructionScale X₀) hT Real.log
+    (constructionScale X₀ (swS θ X₀)) hT Real.log
     (fun x hx => ⟨Real.log_nonneg (by linarith), le_rfl⟩)
     (fun x hx _ => landing_of_linked L S hreg hok hx)
     (fun x hx hearly => landingInit_of_linked L S hreg hok hx hearly) hZX hQ hcl

@@ -109,6 +109,102 @@ theorem capH_conditions {X₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.
   · rw [max_eq_right h]; norm_num at hr ⊢; linarith
   · rw [max_eq_left h]; norm_num; positivity
 
+/-- **The standard regime** (`ℓ ≥ ℓ_std`): if `s(x) > s_H` and `4ℓ² - log 4 ≥ 7.5Λ`, then
+`log c = 4ℓ² - log 4`, `M̄₁ ≤ 2c = e^{4ℓ²}/2` and `H = H_std = e^{8ℓ²}`. -/
+theorem capH_eq_std {X₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) (hx : X₀ ≤ x)
+    (hs : sHroot < capS X₀ x)
+    (hl : 7.5 * Real.log X₀ + Real.log 4 ≤ 4 * Real.log (Real.log x) ^ 2) :
+    capM1 X₀ x ≤ Real.exp (4 * Real.log (Real.log x) ^ 2) / 2 ∧
+      capH X₀ x = Real.exp (8 * Real.log (Real.log x) ^ 2) := by
+  obtain ⟨h1, h2, h3⟩ := logs_of_ge hX0 hX hx
+  set ℓ := Real.log (Real.log x) with hℓ
+  have hl18 : 18 ≤ 2 * Real.log (Real.log X₀) + capS X₀ x := by
+    rw [ell_eq]
+    have : (18 : ℝ) ^ 2 ≤ ℓ ^ 2 := by
+      have h4 : (0 : ℝ) < Real.log 4 := Real.log_pos (by norm_num)
+      nlinarith
+    nlinarith
+  have hM := Mbar1_le (sH := sHroot) hl18
+  have hg : gam sHroot (capS X₀ x) ≤ 7.5 :=
+    gam_le_of_gt (by rw [gstar_sHroot]; unfold gTarget; norm_num) hs
+  have hΛ0 : 0 < Real.log X₀ := by linarith
+  have hlogc : logc sHroot (Real.log X₀) (capS X₀ x) = 4 * ℓ ^ 2 - Real.log 4 := by
+    unfold logc
+    rw [ell_eq, ← hℓ]
+    apply max_eq_left
+    nlinarith
+  have hc : Real.exp (logc sHroot (Real.log X₀) (capS X₀ x)) = Real.exp (4 * ℓ ^ 2) / 4 := by
+    rw [hlogc, Real.exp_sub, Real.exp_log (by norm_num)]
+  have hM1 : capM1 X₀ x ≤ Real.exp (4 * ℓ ^ 2) / 2 := by
+    unfold capM1; rw [hc] at hM; linarith
+  refine ⟨hM1, ?_⟩
+  have hM0 := capM1_pos hX0 hX hx
+  have hsq : capM1 X₀ x ^ 2 ≤ Real.exp (8 * ℓ ^ 2) := by
+    have e : Real.exp (8 * ℓ ^ 2) = Real.exp (4 * ℓ ^ 2) ^ 2 := by
+      rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+    rw [e]
+    have := Real.exp_pos (4 * ℓ ^ 2)
+    nlinarith
+  unfold capH
+  exact max_eq_left hsq
+
+/-- **`H = x^{o(1)}`** (for `ℓ ≥ ℓ_std`, `H = H_std = e^{8ℓ²}`; below, `H ≤ e^{8ℓ² + 10⁻⁶ L}`). -/
+theorem subPow_capH {X₀ : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) :
+    SubPow (capH X₀) X₀ := fun ε hε => by
+  set Λ := Real.log X₀ with hΛ
+  have h2 : Filter.Tendsto (fun L : ℝ => Real.log L ^ 2 / L) Filter.atTop (nhds 0) := by
+    have := Real.tendsto_pow_log_div_mul_add_atTop 1 0 2 one_ne_zero
+    simpa using this
+  obtain ⟨L₁, hL₁⟩ := (h2.eventually (ge_mem_nhds (show (0 : ℝ) < ε / 8 by positivity))).exists_forall_of_atTop
+  set ℓ₀ := 2 * Real.log Λ + 6 + 2 * Λ with hℓ₀
+  set L₂ := max (max L₁ (Real.exp ℓ₀)) Λ with hL₂
+  refine ⟨Real.exp (8 * Real.log L₂ ^ 2 + 1e-6 * L₂), fun x hx => ?_⟩
+  obtain ⟨hLx, hll, hl0⟩ := logs_of_ge hX0 hX hx
+  have hX1 : 1 < X₀ := by
+    by_contra hc; push_neg at hc; linarith [Real.log_nonpos hX0 hc]
+  have hx0 : 0 < x := by linarith
+  have hxε : 1 ≤ x ^ ε := Real.one_le_rpow (by linarith) hε.le
+  have hΛ0 : 0 < Λ := by linarith
+  have hlΛ : 0 ≤ Real.log Λ := Real.log_nonneg (by linarith)
+  rcases le_total (Real.log x) L₂ with hle | hge
+  · -- below `L₂`: `log H ≤ 8ℓ² + 10⁻⁶ L ≤ 8 (log L₂)² + 10⁻⁶ L₂`
+    obtain ⟨-, -, hr⟩ := capH_conditions hX0 hX hx
+    have hH0 : 0 < capH X₀ x := lt_of_lt_of_le (Real.exp_pos _) (capH_conditions hX0 hX hx).2.1
+    have hll2 : Real.log (Real.log x) ≤ Real.log L₂ := Real.log_le_log (by linarith) hle
+    have hsq : Real.log (Real.log x) ^ 2 ≤ Real.log L₂ ^ 2 :=
+      pow_le_pow_left₀ hl0.le hll2 2
+    have : capH X₀ x ≤ Real.exp (8 * Real.log L₂ ^ 2 + 1e-6 * L₂) := by
+      rw [← Real.exp_log hH0, Real.exp_le_exp]; nlinarith
+    have hC0 := Real.exp_pos (8 * Real.log L₂ ^ 2 + 1e-6 * L₂)
+    nlinarith
+  · -- above `L₂`: the standard regime, `H = e^{8ℓ²} ≤ e^{εL} = x^ε`
+    set L := Real.log x with hL
+    have hL1 : L₁ ≤ L := le_trans (le_trans (le_max_left _ _) (le_max_left _ _)) hge
+    have hLe : Real.exp ℓ₀ ≤ L := le_trans (le_trans (le_max_right _ _) (le_max_left _ _)) hge
+    have hℓ : ℓ₀ ≤ Real.log L := by
+      rw [Real.le_log_iff_exp_le (by linarith)]; exact hLe
+    have hs : sHroot < capS X₀ x := by
+      unfold capS; rw [← hL, ← hΛ]; linarith [sHroot_mem.2]
+    have hstd : 7.5 * Λ + Real.log 4 ≤ 4 * Real.log L ^ 2 := by
+      have h4 : Real.log 4 < 2 := by
+        have := Real.log_two_lt_d9
+        have e : Real.log 4 = 2 * Real.log 2 := by
+          rw [show (4 : ℝ) = 2 ^ 2 by norm_num, Real.log_pow]; norm_num
+        linarith
+      have : 2 * Λ ≤ Real.log L := by linarith
+      nlinarith
+    obtain ⟨-, hH⟩ := capH_eq_std hX0 hX hx hs hstd
+    rw [hH]
+    have hb := hL₁ L hL1
+    have hLp : 0 < L := by linarith
+    rw [div_le_iff₀ hLp] at hb
+    have h1 : Real.exp (8 * Real.log L ^ 2) ≤ x ^ ε := by
+      rw [Real.rpow_def_of_pos hx0, Real.exp_le_exp, ← hL]; nlinarith
+    have hC : 1 ≤ Real.exp (8 * Real.log L₂ ^ 2 + 1e-6 * L₂) := Real.one_le_exp (by
+      have : 0 ≤ L₂ := le_trans hΛ0.le (le_max_right _ _)
+      positivity)
+    nlinarith
+
 end CaplLink
 
 open CaplLink
@@ -119,12 +215,12 @@ conditions of Theorem 6.23(c) on `H` are no longer assumed (they are `capH_condi
 def PartIInputsCapl (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
   ∃ (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) (B : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
-    (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (thetaB θ) = a) ∧
+    (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + winH X₀ (u a) = a) ∧
     LocFin A ∧
-    (∀ v ≥ (X₀ : ℝ), absorbedDensity (thetaB θ) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
+    (∀ v ≥ (X₀ : ℝ), absorbedDensity (winH X₀) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
     (∀ x ≥ (X₀ : ℝ), B x ≤ 34 * capM1 X₀ x * Real.log x ^ 2) ∧
     (∀ x ≥ (X₀ : ℝ),
-      |P.N x - target X₀ κ (countA A) (absorbedDensityCap (thetaB θ) A u) (osc θ α γ xp) x| ≤
+      |P.N x - target X₀ κ (countA A) (absorbedDensityCap (winH X₀) A u) (osc θ α γ xp) x| ≤
         B x + 3 * capH X₀ x + 3)
 
 /-- Theorem 6.23(c) (`capH_conditions`) turns `PartIInputsCapl` into `PartIInputsConcrete`. -/
@@ -134,7 +230,8 @@ theorem PartIInputsCapl.toConcrete {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
   exact ⟨κ, A, u, α, γ, xp, B, capH X₀, capM1 X₀, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hB,
     fun x hx => (capH_conditions (Nat.cast_nonneg _) hX hx).1,
     fun x hx => (capH_conditions (Nat.cast_nonneg _) hX hx).2.1,
-    fun x hx => (capH_conditions (Nat.cast_nonneg _) hX hx).2.2, hD⟩
+    fun x hx => (capH_conditions (Nat.cast_nonneg _) hX hx).2.2,
+    subPow_capH (Nat.cast_nonneg _) hX, hD⟩
 
 /-- Refined inputs for one system: `PartIInputsCapl` and the inputs of Theorem 4.10. -/
 def TheoremAInputsCapl (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
@@ -143,17 +240,16 @@ def TheoremAInputsCapl (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis** with the jitter width `H = max(H_std, M̄₁²)` of
 Theorem 6.23 (whose condition (c) is now proved from the certificate `raise_max.py`). -/
 def Theorem21InputsCapl : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
       ∀ ω ∈ G, TheoremAInputsCapl θ X₀ (P ω)
 
 theorem theorem21InputsConcrete_of_capl (h : Theorem21InputsCapl) : Theorem21InputsConcrete := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

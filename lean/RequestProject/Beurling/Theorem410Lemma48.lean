@@ -106,13 +106,13 @@ def Theorem410InputsZB48 (θ : ℝ) (F : ℂ → ℂ) : Prop :=
     0 ≤ η ∧ η ≤ θ / 2 ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
     (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
-    AbsorbedHyp (thetaB θ) A u ∧ Monotone ς ∧
+    AbsorbedHyp (winH X₀) A u ∧ Monotone ς ∧
     (∀ x ≥ 1, countA A x ≤ x * Real.exp (-ς (Real.log x))) ∧
-    (∀ k, ∀ ℓ ∈ Set.Icc 0 (Real.log (γ k + 1) / (1 - thetaB θ)),
+    (∀ k, ∀ ℓ ∈ Set.Icc 0 (Real.log (γ k + 1) / (1 - 1 / 8)),
       designRadius (xp k) * ℓ + 2 * Real.log (2 + ℓ) + 5 ≤ ς ℓ) ∧
     (∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xp k)),
       F s = ZBcont X₀ κ s + (∑' j, oscHat θ (α j) (γ j) (xp j) s) +
-        (Dlt k s + lateNoise D (a k) s) + absorbedHat (thetaB θ) A u s)
+        (Dlt k s + lateNoise D (a k) s) + absorbedHat (winH X₀) A u s)
 
 /-- The two bounds at the chosen heights follow from Lemma 4.8, and the `1/16` requirement from
 the growth condition. -/
@@ -123,21 +123,21 @@ theorem Theorem410InputsZB48.toZB {θ : ℝ} {F : ℂ → ℂ} (h : Theorem410In
   have hgood : ∀ k, GoodHeight X₀ κ (Dlt k) (Γ k) (γ k) := fun k =>
     hrule k (exists_goodHeight (exp_100_le_of_log hX) hκ hκ1 (hΓ k) (hDd k) (hpieces k))
   have hB : ∀ k, ∀ τ : ℝ, |τ - γ k| ≤ 1 →
-      absorbedBound ς (designRadius (xp k)) (|τ| ^ (1 / (1 - thetaB θ))) ≤ 1 / 16 := by
+      absorbedBound ς (designRadius (xp k)) (|τ| ^ (8 / 7 : ℝ)) ≤ 1 / 16 := by
     intro k τ hτ
     have hγ2 := (hP k).γ_ge
     have hθ := (hP k).θ_le
     have hτ' := abs_le.mp hτ
     have hτ1 : 1 ≤ τ := by linarith
     rw [abs_of_pos (by linarith : (0 : ℝ) < τ)]
-    have hp : 0 < 1 - thetaB θ := by linarith [thetaB_le_quarter (show θ ≤ 1 / 2 by linarith)]
-    have hY : 1 ≤ τ ^ (1 / (1 - thetaB θ)) := Real.one_le_rpow hτ1 (by positivity)
+    have hY : 1 ≤ τ ^ (8 / 7 : ℝ) := Real.one_le_rpow hτ1 (by norm_num)
     have hδ := ((hP k).radius_bounds).1.le
     refine Absorbed.absorbedBound_le_of_growth hς hδ hY fun ℓ hℓ => hgrowth k ℓ ⟨hℓ.1, ?_⟩
     refine hℓ.2.trans ?_
-    rw [Real.log_rpow (by linarith), div_eq_mul_inv, one_mul, mul_comm]
-    apply mul_le_mul_of_nonneg_right _ (by positivity)
-    exact Real.log_le_log (by linarith) (by linarith)
+    rw [Real.log_rpow (by linarith)]
+    have := Real.log_le_log (by linarith) (show τ ≤ γ k + 1 by linarith)
+    have e : Real.log (γ k + 1) / (1 - 1 / 8) = 8 / 7 * Real.log (γ k + 1) := by ring
+    rw [e]; linarith
   refine ⟨X₀, κ, T, κ₀, η, α, γ, xp, a, D, Dlt, A, u, ς, hX, hκ, hκ1, hT, hP, hγT,
     fun k => (hgood k).2.1, hα, hsp, hγx, hη0, hη, ha, hD, hA, hς, hN, hB, hdec, ?_⟩
   intro k s hs
@@ -155,17 +155,16 @@ def TheoremAInputsZB48 (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 
 /-- **Theorem 2.1, refined hypothesis** with the heights chosen by Lemma 4.8. -/
 def Theorem21InputsZB48 : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
       ∀ ω ∈ G, TheoremAInputsZB48 θ X₀ (P ω)
 
 theorem theorem21InputsZB_of_ZB48 (h : Theorem21InputsZB48) : Theorem21InputsZB := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX θ hθ X₀ hev h1 h2
   exact ⟨Ω, m, μ, P, G, hμ, hG, fun ω hω => ⟨(hP ω hω).1, (hP ω hω).2.toZB⟩⟩
 
 /-- The refined hypothesis (heights chosen by Lemma 4.8) implies Theorem 2.1. -/

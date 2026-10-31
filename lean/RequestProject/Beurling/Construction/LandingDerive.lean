@@ -100,10 +100,10 @@ end Hyp
 /-- `PartIRestJ` without the landing data: the target formula and the queue window data. -/
 def PartIRestO (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (M : SlotModel X₀) : Prop :=
-  (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (thetaB θ) A u)
-      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (switchOn X₀)) x) ∧
+  (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (winH X₀) A u)
+      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (switchOn (swS θ X₀))) x) ∧
     M.QueueWindowData
 
 /-- **Theorem 2.1, hypothesis on the concrete construction, without the landing data.**
@@ -112,7 +112,7 @@ def PartIRestO (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : �
 of `P(ω)`, the slot facts `SlotFacts` (base case of Lemma 3.6, window count of placed slot starts)
 and the slow variation of `H` (`JitterWidthRegular`). -/
 def Theorem21InputsO : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → JitterWidthRegular X₀ ∧
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -120,24 +120,23 @@ def Theorem21InputsO : Prop :=
       ∀ ω ∈ goodAll E, (∀ j, ω j ∈ Icc (0 : ℝ) 1) →
         ArrivalsLinked (M ω) (capH X₀) ω ∧ SlotFacts (M ω) ω ∧
         PartIRestO θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-          (fun n => solveU (thetaB θ) n) (constructionScale X₀) (M ω) ∧
+          (fun n => solveU (winH X₀) n) (constructionScale X₀ (swS θ X₀)) (M ω) ∧
         Theorem410RestM θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-          (fun n => solveU (thetaB θ) n) ∧
+          (fun n => solveU (winH X₀) n) ∧
         ∀ v ≥ (X₀ : ℝ), ClusterUpTo (realisedSystem (M ω) (capH X₀) ω) X₀
           (4 * v / Real.log v ^ 11) (capM1 X₀ v)
 
 /-- `Theorem21InputsO` implies `Theorem21InputsN`: the landing data hold for the construction. -/
 theorem theorem21InputsN_of_O (h : Theorem21InputsO) : Theorem21InputsN := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨hreg, M, ι, hι, E, time, htab, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨hreg, M, ι, hι, E, time, htab, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this
   refine ⟨M, ι, hι, E, time, htab, fun ω hG hω => ?_⟩
   obtain ⟨hlink, hS, ⟨hT, hq⟩, hC, hcl⟩ := hP ω hG hω
-  have L : LinkedModel θ X₀ (M ω) ω (constructionScale X₀) := ⟨hθ, hlog, hω, hT, hlink⟩
+  have L : LinkedModel θ X₀ (M ω) ω (constructionScale X₀ (swS θ X₀)) := ⟨hθ, hlog, hω, hT, hlink⟩
   have hTlow : ∀ x : ℝ, x < X₀ → (M ω).T x = ⌊x⌋₊ := by
     intro x hx
     rw [hT x]

@@ -16,7 +16,7 @@ It suffices that `#{e ∈ I} ≤ 27.72 aM + 6.93 M^{1/4}`, `I = [α, β]`, `α =
 * `β < X₀⁻`: `N = ⌊·⌋` (`N_high`, `N_low`), `#I ≤ 2aM + 1.6`;
 * `α < X₀ ≤ β` or `X₀⁻ ≤ β < X₀`: `N(X₀) ≤ T(X₀) + D(X₀) = X₀ + D(X₀)` (Corollary 3.8), the
   part below `X₀` by `N_low`, the part above by `Ncount_le` (lag at both ends, `T_incr`, and the
-  absorbed count by windows of length `X₀^{θ/2}`, Lemma 6.26);
+  absorbed count by windows of length `h(X₀)`, Lemma 6.26);
 * `X₀ ≤ α`: `Ncount_le` on `[α, β]`.
 
 The lag terms are `≤ 4H + 5 ≤ 4.4 M^{1/8} + 5` (`H(x) ≤ x^{1/8}`), the absorbed count is
@@ -99,8 +99,6 @@ theorem shortRecip_win {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (h
   have hHX0 := capH_nonneg (X₀ : ℝ) X₀
   have hXme : Xm X₀ = X₀ - capH X₀ X₀ / 2 := rfl
   have hθ := hc.hθ
-  have hθ4 : thetaB θ ≤ 1 / 4 := thetaB_le_quarter (by linarith [hθ.2])
-  have hθ0 : 0 ≤ thetaB θ := (thetaB_pos (by linarith [hθ.1])).le
   have hM0 : 0 < M := by linarith
   have haM : 0 ≤ a * M := by positivity
   set β := M * (1 + a) with hβe
@@ -168,7 +166,7 @@ theorem shortRecip_win {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (h
     have : r ^ 2 * 1000 ≤ r ^ 2 * r ^ 6 := mul_le_mul_of_nonneg_left h6 (by positivity)
     have e : r ^ 2 * r ^ 6 = r ^ 8 := by ring
     linarith
-  -- `H(x) ≤ 1.1 r`, `x^{θ/2} ≤ 1.1 r²` for `x ≤ 1.03 M`
+  -- `H(x) ≤ 1.1 r`, `h(x) ≤ 1.1 r²` for `x ≤ 1.03 M`
   have h103 : (1.03 : ℝ) ^ (1 / 8 : ℝ) ≤ 1.1 := by
     calc (1.03 : ℝ) ^ (1 / 8 : ℝ) ≤ (1.03 : ℝ) ^ (1 : ℝ) :=
           Real.rpow_le_rpow_of_exponent_le (by norm_num) (by norm_num)
@@ -185,9 +183,10 @@ theorem shortRecip_win {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (h
     rw [Real.mul_rpow (by norm_num) hM0.le, ← hre] at h1
     have := mul_le_mul_of_nonneg_right h103 hr0.le
     linarith
-  have hpow : ∀ x : ℝ, 1 ≤ x → x ≤ 1.03 * M → x ^ (thetaB θ) ≤ 1.1 * r ^ 2 := by
+  have hpow : ∀ x : ℝ, 1 ≤ x → x ≤ 1.03 * M → winH X₀ x ≤ 1.1 * r ^ 2 := by
     intro x hx1 hx2
-    have h1 : x ^ (thetaB θ) ≤ x ^ (1 / 4 : ℝ) := Real.rpow_le_rpow_of_exponent_le hx1 hθ4
+    have h1 : winH X₀ x ≤ x ^ (1 / 4 : ℝ) := (winH_le_rpow _ (by linarith)).trans
+      (Real.rpow_le_rpow_of_exponent_le hx1 (by norm_num))
     have h2 : x ^ (1 / 4 : ℝ) ≤ (1.03 * M) ^ (1 / 4 : ℝ) :=
       Real.rpow_le_rpow (by linarith) hx2 (by norm_num)
     rw [Real.mul_rpow (by norm_num) hM0.le, hr2] at h2
@@ -220,7 +219,7 @@ theorem shortRecip_win {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (h
     intro a' d ha' had haM hdM hd2
     have ha'0 : 0 < a' := by linarith
     have hh := hpow a' (by linarith) (by linarith)
-    have hh0 : 0 < a' ^ (thetaB θ) := Real.rpow_pos_of_pos ha'0 _
+    have hh0 : 0 < winH X₀ a' := winH_pos _ _
     have h := Ncount_le D hc hev hG hN ha' had (hlogt d (by linarith) hdM) (by linarith)
     have hld := lagD_le hc (x := d) (by linarith) le_rfl
     have hla := lagD_le hc (x := a') ha' le_rfl
@@ -234,27 +233,28 @@ theorem shortRecip_win {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (h
       have : (4 : ℝ) ≤ (10 ^ 8) ^ 4 := by norm_num
       linarith
     have hL40 : 0 ≤ Real.log a' ^ (-4 : ℤ) := zpow_nonneg (by linarith) _
-    have hdh : (d + a' ^ (thetaB θ)) ^ (thetaB θ) ≤ 2 * a' ^ (thetaB θ) := by
-      have h1 : d + a' ^ (thetaB θ) ≤ 2 * a' := by linarith
-      calc (d + a' ^ (thetaB θ)) ^ (thetaB θ) ≤ (2 * a') ^ (thetaB θ) :=
-            Real.rpow_le_rpow (by linarith) h1 hθ0
-        _ = 2 ^ (thetaB θ) * a' ^ (thetaB θ) := Real.mul_rpow (by norm_num) ha'0.le
-        _ ≤ 2 * a' ^ (thetaB θ) := by
-            gcongr
-            calc (2 : ℝ) ^ (thetaB θ) ≤ 2 ^ (1 : ℝ) :=
-                  Real.rpow_le_rpow_of_exponent_le (by norm_num) (by linarith)
-              _ = 2 := Real.rpow_one 2
-    have hq0 : 0 ≤ (d - a') / a' ^ (thetaB θ) + 2 := by
-      have : 0 ≤ (d - a') / a' ^ (thetaB θ) := div_nonneg (by linarith) hh0.le
+    have hdh : winH X₀ (d + winH X₀ a') ≤ 2 * winH X₀ a' := by
+      have h1 : d + winH X₀ a' ≤ 2 * a' := by linarith
+      have e := winH_ratio hX ha'0 (show a' ≤ d + winH X₀ a' by linarith)
+      have h2 : ((d + winH X₀ a') / a') ^ (1 / 8 : ℝ) ≤ 2 := by
+        have h3 : 1 ≤ (d + winH X₀ a') / a' := by rw [le_div_iff₀ ha'0]; linarith
+        calc ((d + winH X₀ a') / a') ^ (1 / 8 : ℝ) ≤ ((d + winH X₀ a') / a') ^ (1 : ℝ) :=
+              Real.rpow_le_rpow_of_exponent_le h3 (by norm_num)
+          _ = (d + winH X₀ a') / a' := Real.rpow_one _
+          _ ≤ 2 := by rw [div_le_iff₀ ha'0]; linarith
+      have := mul_le_mul_of_nonneg_left h2 hh0.le
       linarith
-    have habs : ((d - a') / a' ^ (thetaB θ) + 2) *
-        ((d + a' ^ (thetaB θ)) ^ (thetaB θ) * Real.log a' ^ (-4 : ℤ)) ≤
+    have hq0 : 0 ≤ (d - a') / winH X₀ a' + 2 := by
+      have : 0 ≤ (d - a') / winH X₀ a' := div_nonneg (by linarith) hh0.le
+      linarith
+    have habs : ((d - a') / winH X₀ a' + 2) *
+        (winH X₀ (d + winH X₀ a') * Real.log a' ^ (-4 : ℤ)) ≤
           (d - a') / 2 + 1.1 * r ^ 2 := by
-      calc ((d - a') / a' ^ (thetaB θ) + 2) *
-            ((d + a' ^ (thetaB θ)) ^ (thetaB θ) * Real.log a' ^ (-4 : ℤ))
-          ≤ ((d - a') / a' ^ (thetaB θ) + 2) * (2 * a' ^ (thetaB θ) * (1 / 4)) :=
+      calc ((d - a') / winH X₀ a' + 2) *
+            (winH X₀ (d + winH X₀ a') * Real.log a' ^ (-4 : ℤ))
+          ≤ ((d - a') / winH X₀ a' + 2) * (2 * winH X₀ a' * (1 / 4)) :=
             mul_le_mul_of_nonneg_left (mul_le_mul hdh hL4 hL40 (by positivity)) hq0
-        _ = (d - a') / 2 + a' ^ (thetaB θ) := by field_simp; ring
+        _ = (d - a') / 2 + winH X₀ a' := by field_simp; ring
         _ ≤ (d - a') / 2 + 1.1 * r ^ 2 := by linarith
     unfold lagD at hld hla h
     linarith

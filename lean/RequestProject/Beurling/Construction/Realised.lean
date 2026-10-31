@@ -282,39 +282,47 @@ end Realised
 /-! ### `u_a` -/
 
 open Classical in
-/-- The solution `u ≥ 0` of `u + u^b = n` (`0` if there is none), for a real value `n`. -/
-noncomputable def solveU (b : ℝ) (n : ℝ) : ℝ :=
-  if h : ∃ u : ℝ, 0 ≤ u ∧ u + u ^ b = n then h.choose else 0
+/-- The solution `u ≥ 1` of `u + h(u) = n` (`0` if there is none), for a window `h` and a real
+value `n`. -/
+noncomputable def solveU (h : ℝ → ℝ) (n : ℝ) : ℝ :=
+  if hex : ∃ u : ℝ, 1 ≤ u ∧ u + h u = n then hex.choose else 0
 
-lemma solveU_nonneg (b n : ℝ) : 0 ≤ solveU b n := by
+lemma solveU_nonneg (h : ℝ → ℝ) (n : ℝ) : 0 ≤ solveU h n := by
   unfold solveU
-  split_ifs with h
-  · exact h.choose_spec.1
+  split_ifs with hex
+  · exact le_trans zero_le_one hex.choose_spec.1
   · exact le_rfl
 
-lemma solveU_spec {b : ℝ} (hb : 0 < b) {n : ℝ} (hn : 0 ≤ n) :
-    0 ≤ solveU b n ∧ solveU b n + solveU b n ^ b = n := by
-  have hex : ∃ u : ℝ, 0 ≤ u ∧ u + u ^ b = n := by
-    have hc : ContinuousOn (fun u : ℝ => u + u ^ b) (Icc 0 n) :=
-      (continuousOn_id.add (continuousOn_id.rpow_const fun _ _ => Or.inr hb.le))
-    have hivt := intermediate_value_Icc hn hc
-    have hmem : n ∈ Icc ((fun u : ℝ => u + u ^ b) 0) ((fun u : ℝ => u + u ^ b) n) := by
-      simp only [Real.zero_rpow hb.ne', add_zero]
-      exact ⟨hn, by linarith [Real.rpow_nonneg hn b]⟩
+/-- For a window `h` and `n ≥ 2`, `u + h(u) = n` has a solution `u ∈ [1, n]` (the intermediate
+value theorem on `[1, n]`, where `u + h(u)` is continuous), so `solveU h n ≥ 1` is a solution. -/
+lemma solveU_spec' {h : ℝ → ℝ} (hw : Absorbed.IsWin h) {n : ℝ} (hn : 2 ≤ n) :
+    1 ≤ solveU h n ∧ solveU h n + h (solveU h n) = n := by
+  have hex : ∃ u : ℝ, 1 ≤ u ∧ u + h u = n := by
+    have hc : ContinuousOn (fun u : ℝ => u + h u) (Icc 1 n) :=
+      continuousOn_id.add (hw.cont.mono fun u hu => lt_of_lt_of_le one_pos hu.1)
+    have hivt := intermediate_value_Icc (by linarith : (1 : ℝ) ≤ n) hc
+    have h1 : h 1 ≤ 1 := by
+      have := hw.le_rpow 1 one_pos; rwa [Real.one_rpow] at this
+    have hmem : n ∈ Icc ((fun u : ℝ => u + h u) 1) ((fun u : ℝ => u + h u) n) := by
+      have := hw.pos n (by linarith)
+      exact ⟨by simp only; linarith, by simp only; linarith⟩
     obtain ⟨u, hu, hu'⟩ := hivt hmem
     exact ⟨u, hu.1, hu'⟩
   unfold solveU
   rw [dif_pos hex]
   exact hex.choose_spec
 
-lemma le_solveU {b : ℝ} (hb0 : 0 < b) (hb1 : b ≤ 1) {X : ℝ} (hX : 1 ≤ X) {n : ℝ}
-    (hn : 2 * X < n) : X ≤ solveU b n := by
-  obtain ⟨h0, heq⟩ := solveU_spec hb0 (show 0 ≤ n by linarith)
+lemma solveU_spec {h : ℝ → ℝ} (hw : Absorbed.IsWin h) {n : ℝ} (hn : 2 ≤ n) :
+    0 ≤ solveU h n ∧ solveU h n + h (solveU h n) = n :=
+  ⟨solveU_nonneg h n, (solveU_spec' hw hn).2⟩
+
+lemma le_solveU {h : ℝ → ℝ} (hw : Absorbed.IsWin h) {X : ℝ} (hX : 1 ≤ X) {n : ℝ}
+    (hn : 2 * X < n) : X ≤ solveU h n := by
+  obtain ⟨h0, heq⟩ := solveU_spec' hw (show 2 ≤ n by linarith)
   by_contra hlt
   push_neg at hlt
-  have h1 : solveU b n ^ b ≤ X ^ b := Real.rpow_le_rpow h0 hlt.le hb0.le
-  have h2 : X ^ b ≤ X ^ (1 : ℝ) := Real.rpow_le_rpow_of_exponent_le hX hb1
-  rw [Real.rpow_one] at h2
+  have h1 : h (solveU h n) ≤ X :=
+    (hw.mono' (by linarith) hlt.le).trans (hw.le_self hX)
   linarith
 
 /-! ### The realised system is a Beurling system -/
@@ -423,17 +431,19 @@ theorem realisedA_large {X₀ : ℕ} {M : SlotModel X₀} {U : ℕ → ℝ} (h :
     nlinarith
   exact (Real.log_lt_log_iff (by linarith) (by linarith)).mp hl2
 
-/-- **`u_a` for the realised absorbed set**: `X₀ ≤ u_a` and `u_a + u_a^{θ/2} = a`, with
-`u_a = solveU (θ/2) a`, for `θ ∈ (0, 2]`. -/
+/-- **`u_a` for the realised absorbed set**: `X₀ ≤ u_a` and `u_a + h(u_a) = a`, with
+`u_a = solveU h a` for the window `h = winH X₀`. -/
 theorem realisedU_spec {X₀ : ℕ} {M : SlotModel X₀} {U : ℕ → ℝ} (h : RealisedOK M (capH X₀) U)
     (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1) (hX : 10 ^ 8 ≤ Real.log X₀)
-    (hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊) {θ : ℝ} (hθ0 : 0 < θ) (hθ1 : θ ≤ 2) :
+    (hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊) :
     ∀ n ∈ realisedA M (capH X₀) U,
-      (X₀ : ℝ) ≤ solveU (thetaB θ) n ∧ solveU (thetaB θ) n + solveU (thetaB θ) n ^ (thetaB θ) = n := by
+      (X₀ : ℝ) ≤ solveU (Absorbed.winH X₀) n ∧
+        solveU (Absorbed.winH X₀) n + Absorbed.winH X₀ (solveU (Absorbed.winH X₀) n) = n := by
   intro n hn
   have hX1 : (1 : ℝ) < X₀ := one_lt_of_logX (Nat.cast_nonneg _) hX
-  exact ⟨le_solveU (thetaB_pos hθ0) (thetaB_le_one hθ1) hX1.le (realisedA_large h hU hX hTlow hn).2,
-    (solveU_spec (thetaB_pos hθ0) (by linarith [(realisedA_large h hU hX hTlow hn).2])).2⟩
+  have hw := Absorbed.winH_isWin (X₀ := (X₀ : ℝ)) hX
+  exact ⟨le_solveU hw hX1.le (realisedA_large h hU hX hTlow hn).2,
+    (solveU_spec hw (by linarith [(realisedA_large h hU hX hTlow hn).2])).2⟩
 
 /-! ### The top-level hypothesis with the coupling constructed -/
 
@@ -441,10 +451,10 @@ theorem realisedU_spec {X₀ : ℕ} {M : SlotModel X₀} {U : ℕ → ℝ} (h : 
 `u_a + u_a^{θ/2} = a` (proved, `realisedU_spec`). -/
 def PartIRestJ (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (M : SlotModel X₀) : Prop :=
-  (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (thetaB θ) A u)
-      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
-        (switchOn X₀)) x) ∧
+  (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (winH X₀) A u)
+      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (switchOn (swS θ X₀))) x) ∧
     M.QueueWindowData ∧
     ∃ κp : ℝ → ℝ,
     (∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x) ∧
@@ -462,7 +472,7 @@ the hypotheses on them (`PartIRestJ`, `Theorem410RestSp`, `SparsityInputs`), the
 with their adaptedness and the per-scale bounds of Table 1, and the condition that the greedy rule
 places infinitely many primes. -/
 def Theorem21InputsJ : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -472,19 +482,18 @@ def Theorem21InputsJ : Prop :=
         {k | placedAt (M ω) k}.Infinite ∧
         ∃ a : ℕ → ℝ,
           PartIRestJ θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-            (fun n => solveU (thetaB θ) n) a (M ω) ∧
+            (fun n => solveU (winH X₀) n) a (M ω) ∧
           Theorem410RestSp θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-            (fun n => solveU (thetaB θ) n) a ∧
+            (fun n => solveU (winH X₀) n) a ∧
           SparsityInputs X₀ (realisedSystem (M ω) (capH X₀) ω)
 
 /-- **`Theorem21InputsJ` gives `Theorem21InputsSp`**: the system, the origin of its primes, the
 absorbed set, `u_a`, the latest-prime map and the coupling are the constructed ones
 (`realisedOK_of`, `realisedCoupling`, `realisedU_spec`). -/
 theorem theorem21InputsSp_of_J (h : Theorem21InputsJ) : Theorem21InputsSp := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨M, ι, hι, E, time, hE, htab, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨M, ι, hι, E, time, hE, htab, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this
@@ -496,9 +505,9 @@ theorem theorem21InputsSp_of_J (h : Theorem21InputsJ) : Theorem21InputsSp := by
     rw [hT x]
     simp only [target, if_pos hx]
   have hok := realisedOK_of (M ω) hω hlog hTlow hinf
-  refine ⟨realisedA (M ω) (capH X₀) ω, fun n => solveU (thetaB θ) n, a, M ω,
+  refine ⟨realisedA (M ω) (capH X₀) ω, fun n => solveU (winH X₀) n, a, M ω,
     realisedLatest (M ω) (capH X₀) ω,
-    ⟨realisedU_spec hok hω hlog hTlow (by linarith [hθ.1]) (by linarith [hθ.2]), hT, hq, κp, hκp,
+    ⟨realisedU_spec hok hω hlog hTlow, hT, hq, κp, hκp,
       hland, hinit⟩, hC, ⟨realisedCoupling hok⟩, hS⟩
 
 /-- Theorem 2.1 from `Theorem21InputsJ`. -/

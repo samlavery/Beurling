@@ -11,8 +11,8 @@ public import RequestProject.Beurling.Construction.RealisedPrimes
 
 Here the two inputs that `Theorem21InputsFix` takes about the absorbed set `A` are derived:
 
-* **Lemma 6.26** (`lemma626_construction`): `#(A ∩ [v, v + v^{θ/2}]) ≤ v^{θ/2} (log v)^{-4}` for
-  every `v ≥ X₀`;
+* **Lemma 6.26** (`lemma626_construction`): `#(A ∩ [v, v + h(v)]) ≤ h(v) (log v)^{-4}` for
+  every `v ≥ X₀`, `h = winH X₀` the θ-free absorption window;
 * **the Rankin bound for `A`** (`rankinA_construction`, proof of Lemma 4.4):
   `#(A ∩ [1, x]) ≤ x e^{-ς_*(log x)}` for `log x > (log X₀)²`;
 
@@ -117,24 +117,6 @@ lemma AbsorbedCoupling.smooth (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc
 
 end
 
-/-- `(log v)^{11} ≤ v^{θ_b}` for `v > 0`, `log v ≥ 10⁸`, `θ ≥ 1/20`. -/
-lemma log_pow_le_rpow {v θ : ℝ} (hv0 : 0 < v) (hv : 10 ^ 8 ≤ Real.log v) (hθ : 1 / 20 ≤ θ) :
-    Real.log v ^ 11 ≤ v ^ (thetaB θ) := by
-  set L := Real.log v with hL
-  have hv1 : 1 ≤ v := by
-    by_contra hc; push_neg at hc
-    have := Real.log_nonpos hv0.le hc.le; linarith
-  have h1 : v ^ (1 / 20 : ℝ) ≤ v ^ (thetaB θ) :=
-    Real.rpow_le_rpow_of_exponent_le hv1 (thetaB_ge hθ)
-  have h2 : v ^ (1 / 20 : ℝ) = Real.exp (L / 220) ^ 11 := by
-    rw [Real.rpow_def_of_pos hv0, ← Real.exp_nat_mul]; congr 1; push_cast; ring
-  have h3 : L ≤ Real.exp (L / 220) := by
-    have := Real.pow_div_factorial_le_exp (L / 220) (by positivity) 2
-    simp [Nat.factorial] at this
-    nlinarith
-  have h4 : L ^ 11 ≤ Real.exp (L / 220) ^ 11 := pow_le_pow_left₀ (by linarith) h3 11
-  linarith
-
 /-- No element of `A` in `[v, w]`: the local count vanishes. -/
 lemma localCountA_eq_zero {A : Set ℝ} {v w : ℝ} (_hw : 0 ≤ w)
     (h : ∀ n ∈ A, ¬ (v ≤ n ∧ (n : ℝ) ≤ w)) : Absorbed.localCountA A v w = 0 := by
@@ -149,32 +131,34 @@ lemma countA_eq_zero {A : Set ℝ} {x : ℝ} (_hx : 0 ≤ x) (h : ∀ n ∈ A, �
   suffices hE : A ∩ Set.Icc 1 x = ∅ by rw [hE]; simp
   exact Set.eq_empty_of_forall_notMem fun n ⟨hnA, hn⟩ => h n hnA hn.2
 
-/-- **Lemma 6.26 for the construction.** Let `log X₀ ≥ 10⁸`, `θ ∈ [1/20, 1/2]`, `R` a greedy run
+/-- **Lemma 6.26 for the construction.** Let `log X₀ ≥ 10⁸`, `R` a greedy run
 with jitter width `H = max(H_std, M̄₁²)` and jitters in `[0, 1]`, coupled with `A` and the
 latest-prime map (`AbsorbedCoupling`). Suppose the realised system satisfies (HBS) at every height
 (with `log X₀⁻ ≥ 100`, `X₀⁻ ≥ X₀/2 + 1`) and the cluster event holds at every `v ≥ X₀` (grid windows
 at dyadic heights `≤ 4v/(log v)^{11}` hold at most `M̄₁(v)` elements). Then for every `v ≥ X₀`,
-`#(A ∩ [v, v + v^{θ/2}]) ≤ v^{θ/2} (log v)^{-4}`. -/
+`#(A ∩ [v, v + h(v)]) ≤ h(v) (log v)^{-4}`, `h = winH X₀`. -/
 theorem lemma626_construction {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℝ}
-    {latest : ℝ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {θ X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
-    (hX : 10 ^ 8 ≤ Real.log X₀) (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2)
+    {latest : ℝ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
+    (hX : 10 ^ 8 ≤ Real.log X₀)
     (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc (0 : ℝ) 1)
     (hHBS : ∀ z, P.HBS X0m z η1 η2 ε1) (hX0m : 100 ≤ Real.log X0m)
     (hX0mX : (X₀ : ℝ) / 2 + 1 ≤ X0m)
     (hcl : ∀ v ≥ (X₀ : ℝ), ClusterUpTo P X₀ (4 * v / Real.log v ^ 11) (capM1 X₀ v)) :
     ∀ v ≥ (X₀ : ℝ),
-      (Absorbed.localCountA A v (v + v ^ (thetaB θ)) : ℝ) ≤ v ^ (thetaB θ) * Real.log v ^ (-4 : ℤ) := by
+      (Absorbed.localCountA A v (v + Absorbed.winH X₀ v) : ℝ) ≤
+        Absorbed.winH X₀ v * Real.log v ^ (-4 : ℤ) := by
   intro v hv
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hX
   obtain ⟨hv0, hL, hl, -⟩ := height_facts hX0 hX hv
-  set h := v ^ (thetaB θ) with hh
+  set h := Absorbed.winH X₀ v with hh
   set L := Real.log v with hLdef
   have hv1 : 1 < v := by linarith
-  have h1 : 1 ≤ h := Real.one_le_rpow hv1.le (thetaB_pos (by linarith)).le
+  have h1 : 1 ≤ h := Absorbed.winH_one_le hX hv1.le
   have hlt : h < v := by
-    have := Real.rpow_lt_rpow_of_exponent_lt hv1 (show thetaB θ < 1 from (thetaB_le_quarter (by linarith)).trans_lt (by norm_num))
-    rwa [Real.rpow_one] at this
+    have h2 := Absorbed.winH_le_rpow (X₀ : ℝ) hv0
+    have := Real.rpow_lt_rpow_of_exponent_lt hv1 (show (1 / 8 : ℝ) < 1 by norm_num)
+    rw [Real.rpow_one] at this; linarith
   by_cases hne : ∃ n ∈ A, v ≤ n ∧ (n : ℝ) ≤ v + h
   swap
   · push_neg at hne
@@ -185,7 +169,7 @@ theorem lemma626_construction {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X
   obtain ⟨n0, hn0, -, hn0v⟩ := hne
   have h2v : (X₀ : ℝ) ≤ 2 * v := by linarith
   have hy := C.two_y_gt hRH hU hX hn0 (x := 2 * v) (by linarith) h2v
-  obtain ⟨hus, hll, hη, hu01, hu0, h81⟩ := cond81_window hX0 hX hθ1 hθ2 hv (by linarith) le_rfl hy
+  obtain ⟨hus, hll, hη, hu01, hu0, h81⟩ := cond81_window hX0 hX hv (by linarith) le_rfl hy
   set y := absorbYAt X₀ (2 * v) with hydef
   have hy4 : 4 ≤ y := by
     have := exp_le_absorbYAt hX0 hX h2v
@@ -203,7 +187,7 @@ theorem lemma626_construction {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X
   · intro d hd hdh hdle
     have hfl : ∀ w, 1 ≤ w → w < X0m → P.N w = ⌊w⌋₊ :=
       fun w hw1 hw2 => (hHBS w).floor_eq w hw1 hw2 le_rfl
-    have hhL := log_pow_le_rpow hv0 hL hθ1
+    have hhL := log_pow_le_winH hX hv0 hL
     rw [← hh] at hhL
     have hL11 : 0 < L ^ 11 := by positivity
     have huZ : v + h ≤ h * (4 * v / L ^ 11) := by

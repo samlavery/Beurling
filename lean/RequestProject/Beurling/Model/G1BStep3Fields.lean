@@ -19,7 +19,7 @@ realised system on range (B) on `Good(< t)`, every Step 3–4 field of
 * `hoth` (`hoth_R`).
 
 Named inputs (paper statements, not proved here): `JumpCountR` (Step 3, second bullet, the count
-`#(𝒩 ∩ I) ≤ 4.01δN_* + 2H(N_*) + 2 + N_*^{θ/2}`) and `RprimeChangeR` (Step 3 "Resolvable `R'_j`"
+`#(𝒩 ∩ I) ≤ 4.01δN_* + 2H(N_*) + 2 + h(N_*)`) and `RprimeChangeR` (Step 3 "Resolvable `R'_j`"
 with Step 4 "Pointwise"; proved below `x₁` by `rprimeChange_of_lt`).
 -/
 
@@ -48,7 +48,7 @@ structure Step3Out (P : BeurlingSystem) (tw : ℕ → ℝ) (X0m : ℝ) (X0 : ℕ
   θ : ℝ
   hj0 : 0 ≤ j0
   hj1 : j0 ≤ 1
-  hjS : jS ≤ 4.1 * δ + 3 * HN / N + 2 * N ^ (thetaB θ - 1)
+  hjS : jS ≤ 4.1 * δ + 3 * HN / N + 2 * N ^ (1 / 8 - 1 : ℝ)
   hN : Real.exp (Real.log y / 2) ≤ N
   hHN0 : 0 ≤ HN
   hHN : HN ≤ N ^ (1 / 8 : ℝ)
@@ -180,7 +180,13 @@ noncomputable def step3_R {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t
   hj1 := jzX_le_one (θ := θ) hc
   hjS := by
     have hX1 := QueueMono.one_lt_of_logX (Nat.cast_nonneg (α := ℝ) X₀) hc.hX
-    exact hjS_R hc hev ω (by linarith) hyB hδ0 (delta_small hc hev hδ) hJ
+    have hy0 : 0 < y := by linarith
+    refine (hjS_R hc hev ω hy0 hyB hδ0 (delta_small hc hev hδ) hJ).trans ?_
+    have hN0 : 0 < y / (X₀ : ℝ) := div_pos hy0 (by linarith)
+    have : winH X₀ (y / X₀) / (y / X₀) ≤ (y / X₀) ^ (1 / 8 - 1 : ℝ) := by
+      rw [Real.rpow_sub hN0, Real.rpow_one]
+      exact div_le_div_of_nonneg_right (winH_le_rpow _ hN0) hN0.le
+    linarith
   hN := by
     have hX1 := QueueMono.one_lt_of_logX (Nat.cast_nonneg (α := ℝ) X₀) hc.hX
     exact (hN_R hc (by linarith) hyB).1

@@ -47,23 +47,24 @@ lemma switchOn_ge (X : ℝ) : ∀ k, switchOn X 0 ≤ switchOn X k
       linarith [Real.add_one_le_exp (switchOn X k)]
 
 lemma two_X0_lt_switchOn (hX : 10 ^ 8 ≤ Real.log X₀) :
-    2 * (X₀ : ℝ) < switchOn (X₀ : ℝ) 0 := by
+    2 * (X₀ : ℝ) < switchOn (swS θ X₀) 0 := by
   have hX0 : (0 : ℝ) < X₀ := by linarith [one_lt_of_log hX]
-  show 2 * (X₀ : ℝ) < Real.exp ((X₀ : ℝ) ^ 2)
-  have h3 : (3 : ℝ) ≤ X₀ := by
-    have := Real.add_one_le_exp (Real.log X₀); rw [Real.exp_log hX0] at this; linarith
-  have := Real.add_one_le_exp ((X₀ : ℝ) ^ 2)
-  nlinarith
+  have h1 : 2 * (X₀ : ℝ) < Real.exp ((X₀ : ℝ) ^ 2) := by
+    have h3 : (3 : ℝ) ≤ X₀ := by
+      have := Real.add_one_le_exp (Real.log X₀); rw [Real.exp_log hX0] at this; linarith
+    have := Real.add_one_le_exp ((X₀ : ℝ) ^ 2)
+    nlinarith
+  exact h1.trans_le (Real.exp_le_exp.mpr (pow_le_pow_left₀ hX0.le (le_swS θ _) 2))
 
 /-- `R = 0` on `(0, exp(X₀²))`, so `R' = 0` there. -/
 lemma deriv_osc_zero_low (α γ : ℕ → ℝ) {y : ℝ} (hy0 : 0 < y)
-    (hy : y < switchOn (X₀ : ℝ) 0) :
-    deriv (Oscillation.osc θ α γ (switchOn X₀)) y = 0 := by
-  have hev : Oscillation.osc θ α γ (switchOn X₀) =ᶠ[nhds y] fun _ => 0 := by
+    (hy : y < switchOn (swS θ X₀) 0) :
+    deriv (Oscillation.osc θ α γ (switchOn (swS θ X₀))) y = 0 := by
+  have hev : Oscillation.osc θ α γ (switchOn (swS θ X₀)) =ᶠ[nhds y] fun _ => 0 := by
     filter_upwards [Ioo_mem_nhds hy0 hy] with x hx
     unfold Oscillation.osc
-    have hxp : ∀ k, 0 < switchOn (X₀ : ℝ) k := fun k =>
-      lt_of_lt_of_le (Real.exp_pos _) (switchOn_ge (X₀ : ℝ) k)
+    have hxp : ∀ k, 0 < switchOn (swS θ X₀) k := fun k =>
+      lt_of_lt_of_le (Real.exp_pos _) (switchOn_ge _ k)
     refine (tsum_congr fun k => ?_).trans tsum_zero
     unfold Oscillation.oscTerm
     rw [Real.smoothTransition.zero_of_nonpos, mul_zero]
@@ -75,12 +76,10 @@ lemma deriv_osc_zero_low (α γ : ℕ → ℝ) {y : ℝ} (hy0 : 0 < y)
 /-- **`𝒜` is empty below `2X₀`**: the capped absorbed density vanishes on `[X₀, 2X₀)`. -/
 lemma absDenCap_zero_low (hc : Cond θ X₀) (ω : JitterΩ) {y : ℝ} (hy0 : (X₀ : ℝ) ≤ y)
     (hy : y < 2 * X₀) :
-    absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) y = 0 := by
+    absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) y = 0 := by
   have hX := hc.hX
   have hX0 : (0 : ℝ) < X₀ := by linarith [one_lt_of_log hX]
-  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hc.hθ.1])
-  have hb1 : thetaB θ ≤ 1 := (thetaB_le_quarter (by linarith [hc.hθ.2])).trans (by norm_num)
-  have hzero : absorbedDensity (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) y = 0 := by
+  have hzero : absorbedDensity (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) y = 0 := by
     unfold absorbedDensity
     refine (tsum_congr fun a => ?_).trans tsum_zero
     unfold absorbedBump
@@ -88,19 +87,14 @@ lemma absDenCap_zero_low (hc : Cond θ X₀) (ω : JitterΩ) {y : ℝ} (hy0 : (X
     · rw [Set.indicator_of_notMem]
       rintro ⟨h1, h2⟩
       obtain ⟨-, e, -, -, -, k, -, -, hk⟩ := ha
-      have ha0 : 0 ≤ a := by linarith
-      obtain ⟨hu0, hu⟩ := solveU_spec hb ha0
-      have hu1 : uA θ a = solveU (thetaB θ) a := rfl
+      have hX2 : (2 : ℝ) ≤ X₀ := by
+        have := Real.add_one_le_exp (Real.log X₀); rw [Real.exp_log hX0] at this; linarith
+      obtain ⟨hu0, hu⟩ := solveU_spec' (winH_isWin hX) (show 2 ≤ a by linarith)
+      have hu1 : uA X₀ a = solveU (winH X₀) a := rfl
       rw [← hu1] at hu0 hu
-      have hub : uA θ a ^ (thetaB θ) ≤ 2 * X₀ := by
-        rcases le_or_gt 1 (uA θ a) with h | h
-        · calc uA θ a ^ (thetaB θ) ≤ uA θ a ^ (1 : ℝ) :=
-                Real.rpow_le_rpow_of_exponent_le h hb1
-            _ = uA θ a := Real.rpow_one _
-            _ ≤ 2 * X₀ := by linarith
-        · have : uA θ a ^ (thetaB θ) ≤ 1 := Real.rpow_le_one hu0 h.le hb.le
-          have : (1 : ℝ) ≤ 2 * X₀ := by linarith [one_lt_of_log hX]
-          linarith
+      have hub : winH X₀ (uA X₀ a) ≤ 2 * X₀ := by
+        have := (winH_isWin hX).le_self hu0
+        linarith
       have ha4 : a ≤ 4 * X₀ := by linarith
       -- `y(a) < X₀⁻ ≤ v_k`
       have hvk : Xm X₀ ≤ (DF θ X₀ ω).v k := valF_ge_Xm hc k ω

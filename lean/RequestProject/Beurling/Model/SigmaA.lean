@@ -317,15 +317,15 @@ theorem TcR_abs_le (hev : Even X₀) (ω : JitterΩ) {Z η1 η2 ε ϑ : ℝ} {ε
       (BaseRange.rhoDet_le_one_add X₀ hκ0 ht0).trans (by linarith [inv_kappa_le hc hge])
     -- `ρ̄_𝒜`
     set D := DF θ X₀ ω
-    have hA1 : absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ) t ≤ 1 / 100 := by
+    have hA1 : absorbedDensityCap (winH X₀) (absSet X₀ D) (uA X₀) t ≤ 1 / 100 := by
       refine (min_le_right _ _).trans ?_
       rw [div_le_div_iff₀ (by linarith) (by norm_num)]; linarith
-    have hA0 : 0 ≤ absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ) t := by
+    have hA0 : 0 ≤ absorbedDensityCap (winH X₀) (absSet X₀ D) (uA X₀) t := by
       refine le_min (tsum_nonneg fun a => ?_) (div_nonneg (by norm_num) (by linarith))
       unfold absorbedBump
       split_ifs
-      · by_cases hm : t ∈ Icc (uA θ a) a
-        · rw [Set.indicator_of_mem hm]; exact (Real.rpow_pos_of_pos ht0 _).le
+      · by_cases hm : t ∈ Icc (uA X₀ a) a
+        · rw [Set.indicator_of_mem hm]; exact (inv_pos.mpr (winH_pos _ _)).le
         · rw [Set.indicator_of_notMem hm]
       · exact le_rfl
     -- `R'`
@@ -333,11 +333,11 @@ theorem TcR_abs_le (hev : Even X₀) (ω : JitterΩ) {Z η1 η2 ε ϑ : ℝ} {ε
     have hR1 : 0.02 / Real.log t ≤ 1 / 100 := by
       rw [div_le_div_iff₀ (by linarith) (by norm_num)]; linarith
     have hT1 : TpCont θ X₀ ω t = 1 - Target.rhoDet X₀ (kappaParam X₀) t -
-        absorbedDensityCap (thetaB θ) (absSet X₀ D) (uA θ) t +
-        deriv (Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀)) t := by
+        absorbedDensityCap (winH X₀) (absSet X₀ D) (uA X₀) t +
+        deriv (Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀))) t := by
       unfold TpCont; rw [if_pos hge]
     rw [hT1, hi]
-    have hR2 : |deriv (Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀)) t| ≤
+    have hR2 : |deriv (Oscillation.osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀))) t| ≤
         1 / 100 := hR.trans hR1
     have hR' := abs_le.mp hR2
     rw [abs_le]

@@ -12,7 +12,8 @@ weights `w_a` (Section 4.1, after (14)),
 
 Given a counting bound `#(A ∩ [1, x]) ≤ x e^{-ς(log x)}` with `ς` nondecreasing (the Rankin
 bound of Lemma 6.26, used in the proof of Lemma 4.4), the weight bounds (ii) and (iv) and partial
-summation give, for `1 - δ ≤ σ ≤ 2` and `|t| ≥ 2`, with `Y = |t|^{1/(1-b)}`:
+summation give, for `1 - δ ≤ σ ≤ 2` and `|t| ≥ 2`, with `Y = |t|^{8/7}` (the window satisfies
+`h(a)/a ≤ a^{-7/8}`):
 
   `|Ê_A(s)| ≤ 2.001 (Y^δ e^{-ς(log Y)} + ∫_1^Y v^{δ-1} e^{-ς(log v)} dv) + 5.4 Y^δ e^{-ς(log Y)}`.
 
@@ -450,23 +451,22 @@ lemma tail_summable {A : Set ℝ} (hA : LocFin A) (hA1 : ∀ a ∈ A, 1 < a) {ς
   exact ⟨summable_of_sum_le hnn (tail_partial_le hA hA1 hς hN hβ hY),
     Real.tsum_le_of_sum_le hnn (tail_partial_le hA hA1 hς hN hβ hY)⟩
 
-/-- The standing hypotheses on the absorbed set `A ⊆ ℝ` (a set of values of elements): every
-`a ∈ A` satisfies the hypotheses of the weight bounds, with `u a = u_a` (`u_a + u_a^b = a`,
-`a ≥ 10⁶`, `0 < b ≤ 1/4`), and `A` is locally finite. -/
-structure AbsorbedHyp (b : ℝ) (A : Set ℝ) (u : ℝ → ℝ) : Prop where
-  b_pos : 0 < b
-  b_le : b ≤ 1 / 4
-  weight : ∀ a ∈ A, Weights.WeightHyp b a (u a)
+/-- The standing hypotheses on the absorbed set `A ⊆ ℝ` (a set of values of elements) for a
+window `h` (`IsWin`): every `a ∈ A` satisfies the hypotheses of the weight bounds, with
+`u a = u_a` (`u_a + h(u_a) = a`, `a ≥ 10⁶`), and `A` is locally finite. -/
+structure AbsorbedHyp (h : ℝ → ℝ) (A : Set ℝ) (u : ℝ → ℝ) : Prop where
+  win : IsWin h
+  weight : ∀ a ∈ A, Weights.WeightHyp h a (u a)
   fin : LocFin A
 
 /-- The term `a^{-s} (1 - w_a(s))` of `Ê_A` (zero off `A`). -/
-noncomputable def absorbedTerm (b : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (s : ℂ) (a : ℝ) : ℂ :=
-  if a ∈ A then (a : ℂ) ^ (-s) * (1 - Weights.weight b a (u a) s) else 0
+noncomputable def absorbedTerm (h : ℝ → ℝ) (A : Set ℝ) (u : ℝ → ℝ) (s : ℂ) (a : ℝ) : ℂ :=
+  if a ∈ A then (a : ℂ) ^ (-s) * (1 - Weights.weight h a (u a) s) else 0
 
 /-- The absorbed part `Ê_A(s) = ∑_{a ∈ A} a^{-s} (1 - w_a(s))` (a sum over the real values
 `a ∈ A`). -/
-noncomputable def absorbedHat (b : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (s : ℂ) : ℂ :=
-  ∑' a : ℝ, absorbedTerm b A u s a
+noncomputable def absorbedHat (h : ℝ → ℝ) (A : Set ℝ) (u : ℝ → ℝ) (s : ℂ) : ℂ :=
+  ∑' a : ℝ, absorbedTerm h A u s a
 
 /-- The explicit bound of Lemma 4.4(a). -/
 noncomputable def absorbedBound (ς : ℝ → ℝ) (δ Y : ℝ) : ℝ :=
@@ -474,23 +474,23 @@ noncomputable def absorbedBound (ς : ℝ → ℝ) (δ Y : ℝ) : ℝ :=
     ∫ v in (1 : ℝ)..Y, v ^ (δ - 1) * Real.exp (-ς (Real.log v))) +
   5.4 * (Y ^ δ * Real.exp (-ς (Real.log Y)))
 
-lemma AbsorbedHyp.two_le {b : ℝ} {A : Set ℝ} {u : ℝ → ℝ} (h : AbsorbedHyp b A u) :
+lemma AbsorbedHyp.two_le {w : ℝ → ℝ} {A : Set ℝ} {u : ℝ → ℝ} (h : AbsorbedHyp w A u) :
     ∀ a ∈ A, 2 ≤ a := by
   intro a ha
   have := (h.weight a ha).a_ge
   linarith
 
-lemma AbsorbedHyp.one_lt {b : ℝ} {A : Set ℝ} {u : ℝ → ℝ} (h : AbsorbedHyp b A u) :
+lemma AbsorbedHyp.one_lt {w : ℝ → ℝ} {A : Set ℝ} {u : ℝ → ℝ} (h : AbsorbedHyp w A u) :
     ∀ a ∈ A, 1 < a := fun a ha => by linarith [h.two_le a ha]
 
-/-- The termwise majorant: `2.001 a^{δ-1}` for `a ≤ Y` (bound (ii)) and `2|t| a^{b+δ-2}` for
+/-- The termwise majorant: `2.001 a^{δ-1}` for `a ≤ Y` (bound (ii)) and `2|t| a^{1/8+δ-2}` for
 `a > Y` (bound (iv)). -/
-lemma norm_absorbedTerm_le {b : ℝ} {A : Set ℝ} {u : ℝ → ℝ} (h : AbsorbedHyp b A u)
+lemma norm_absorbedTerm_le {w : ℝ → ℝ} {A : Set ℝ} {u : ℝ → ℝ} (h : AbsorbedHyp w A u)
     {δ : ℝ} {s : ℂ} (hσ1 : 1 - δ ≤ s.re) (hσ2 : s.re ≤ 2) (hσ0 : 0 ≤ s.re)
     (ht : 2 ≤ |s.im|) (Y : ℝ) (n : ℝ) :
-    ‖absorbedTerm b A u s n‖ ≤
+    ‖absorbedTerm w A u s n‖ ≤
       (if n ∈ A ∧ n ≤ Y then 2.001 * n ^ (δ - 1) else 0) +
-        2 * |s.im| * (if n ∈ A ∧ Y < n then n ^ (-(2 - b - δ)) else 0) := by
+        2 * |s.im| * (if n ∈ A ∧ Y < n then n ^ (-(2 - 1 / 8 - δ)) else 0) := by
   unfold absorbedTerm
   by_cases hn : n ∈ A
   · have hw := h.weight n hn
@@ -504,10 +504,10 @@ lemma norm_absorbedTerm_le {b : ℝ} {A : Set ℝ} {u : ℝ → ℝ} (h : Absorb
     · rw [if_pos ⟨hn, hY⟩, if_neg (by intro h'; linarith [h'.2])]
       have hw1 := (hw.norm_weight_le hσ0 hσ2)
       have hε := hw.eps_le
-      have h1w : ‖1 - Weights.weight b n (u n) s‖ ≤ 2.001 := by
-        have := norm_sub_le (1 : ℂ) (Weights.weight b n (u n) s)
+      have h1w : ‖1 - Weights.weight w n (u n) s‖ ≤ 2.001 := by
+        have := norm_sub_le (1 : ℂ) (Weights.weight w n (u n) s)
         rw [norm_one] at this
-        have h2 : 1.02 * s.re * n ^ (b - 1) ≤ 0.001 := by
+        have h2 : 1.02 * s.re * (w n / n) ≤ 0.001 := by
           have := hw.eps_pos
           nlinarith
         linarith [hw1.1, hw1.2]
@@ -516,33 +516,32 @@ lemma norm_absorbedTerm_le {b : ℝ} {A : Set ℝ} {u : ℝ → ℝ} (h : Absorb
     · push_neg at hY
       rw [if_neg (by intro h'; linarith [h'.2]), if_pos ⟨hn, hY⟩, zero_add]
       have h1w := hw.norm_one_sub_weight_le' hσ0 hσ2 ht
-      calc n ^ (-s.re) * ‖1 - Weights.weight b n (u n) s‖ ≤
-            n ^ (δ - 1) * (2 * |s.im| * n ^ (b - 1)) :=
-            mul_le_mul hpow h1w (norm_nonneg _) (Real.rpow_nonneg hn0.le _)
-        _ = 2 * |s.im| * (n ^ (δ - 1) * n ^ (b - 1)) := by ring
-        _ = 2 * |s.im| * n ^ (-(2 - b - δ)) := by
+      have h1w' : ‖1 - Weights.weight w n (u n) s‖ ≤ 2 * |s.im| * n ^ ((1 / 8 : ℝ) - 1) :=
+        h1w.trans (mul_le_mul_of_nonneg_left hw.eps_le_rpow (by positivity))
+      calc n ^ (-s.re) * ‖1 - Weights.weight w n (u n) s‖ ≤
+            n ^ (δ - 1) * (2 * |s.im| * n ^ ((1 / 8 : ℝ) - 1)) :=
+            mul_le_mul hpow h1w' (norm_nonneg _) (Real.rpow_nonneg hn0.le _)
+        _ = 2 * |s.im| * (n ^ (δ - 1) * n ^ ((1 / 8 : ℝ) - 1)) := by ring
+        _ = 2 * |s.im| * n ^ (-(2 - 1 / 8 - δ)) := by
             rw [← Real.rpow_add hn0]; ring_nf
   · rw [if_neg hn, if_neg (by tauto), if_neg (by tauto)]; simp
 
 /-- **Lemma 4.4(a), analytic estimate.** For `1 - δ ≤ σ ≤ 2`, `|t| ≥ 2`, `0 ≤ δ ≤ 1/100`, and
-`Y = |t|^{1/(1-b)}`: the series `Ê_A(s)` converges absolutely and
+`Y = |t|^{8/7}`: the series `Ê_A(s)` converges absolutely and
 `|Ê_A(s)| ≤ absorbedBound ς δ Y`. -/
-theorem norm_absorbedHat_le {b : ℝ} {A : Set ℝ} {u : ℝ → ℝ} (h : AbsorbedHyp b A u)
+theorem norm_absorbedHat_le {w : ℝ → ℝ} {A : Set ℝ} {u : ℝ → ℝ} (h : AbsorbedHyp w A u)
     {ς : ℝ → ℝ} (hς : Monotone ς) (hN : ∀ x ≥ 1, countA A x ≤ x * Real.exp (-ς (Real.log x)))
     {δ : ℝ} (hδ0 : 0 ≤ δ) (hδ : δ ≤ 1 / 100) {s : ℂ} (hσ1 : 1 - δ ≤ s.re) (hσ2 : s.re ≤ 2)
     (ht : 2 ≤ |s.im|) :
-    Summable (fun n => ‖absorbedTerm b A u s n‖) ∧
-    ‖absorbedHat b A u s‖ ≤ absorbedBound ς δ (|s.im| ^ (1 / (1 - b))) := by
-  have hb0 := h.b_pos
-  have hb := h.b_le
-  set Y := |s.im| ^ (1 / (1 - b)) with hYdef
+    Summable (fun n => ‖absorbedTerm w A u s n‖) ∧
+    ‖absorbedHat w A u s‖ ≤ absorbedBound ς δ (|s.im| ^ (8 / 7 : ℝ)) := by
+  set Y := |s.im| ^ (8 / 7 : ℝ) with hYdef
   have hσ0 : 0 ≤ s.re := by linarith
   have ht0 : 0 < |s.im| := by linarith
-  have hY1 : 1 ≤ Y :=
-    Real.one_le_rpow (by linarith) (by rw [one_div]; apply inv_nonneg.mpr; linarith)
-  have hYt : Y ^ (1 - b) = |s.im| := by
-    rw [hYdef, ← Real.rpow_mul ht0.le, one_div, inv_mul_cancel₀ (by linarith), Real.rpow_one]
-  set β := 2 - b - δ with hβdef
+  have hY1 : 1 ≤ Y := Real.one_le_rpow (by linarith) (by norm_num)
+  have hYt : Y ^ (1 - 1 / 8 : ℝ) = |s.im| := by
+    rw [hYdef, ← Real.rpow_mul ht0.le]; norm_num
+  set β := 2 - 1 / 8 - δ with hβdef
   have hβ : 1 < β := by linarith
   -- the majorant
   set gH : ℝ → ℝ := fun n => if n ∈ A ∧ n ≤ Y then 2.001 * n ^ (δ - 1) else 0
@@ -562,7 +561,7 @@ theorem norm_absorbedHat_le {b : ℝ} {A : Set ℝ} {u : ℝ → ℝ} (h : Absor
   have hg : HasSum (fun n => gH n + 2 * |s.im| * gT n)
       (∑ k ∈ below h.fin Y, gH k + 2 * |s.im| * ∑' n, gT n) :=
     hgH.add (hTs.hasSum.mul_left _)
-  have hbound : ∀ n, ‖absorbedTerm b A u s n‖ ≤ gH n + 2 * |s.im| * gT n :=
+  have hbound : ∀ n, ‖absorbedTerm w A u s n‖ ≤ gH n + 2 * |s.im| * gT n :=
     norm_absorbedTerm_le h hσ1 hσ2 hσ0 ht Y
   refine ⟨Summable.of_nonneg_of_le (fun n => norm_nonneg _) hbound hg.summable, ?_⟩
   refine (tsum_of_norm_bounded hg hbound).trans ?_

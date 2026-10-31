@@ -32,7 +32,7 @@ variable {θ : ℝ} {X₀ : ℕ}
 
 /-- The fixed conditions of the construction. -/
 structure Cond (θ : ℝ) (X₀ : ℕ) : Prop where
-  hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)
+  hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)
   hX : 10 ^ 8 ≤ Real.log X₀
   hHB : ShortIntervalPNTFrom X₀
 

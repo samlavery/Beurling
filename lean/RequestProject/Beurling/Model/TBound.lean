@@ -16,7 +16,7 @@ Lemma 6.26"). Lemma 6.26 on `Good(<t)` is not among the events or results of the
 family (the formal Lemma 6.26, `Construction.lemma626_construction`, uses (HBS) for the realised
 system at every height). It is isolated here as the named hypothesis `Lemma626Good`.
 
-* `countA_le_of_windows` : covering `[X₀, x]` by the windows `[u, u + u^b]`, the window bound
+* `countA_le_of_windows` : covering `[X₀, x]` by the windows `[u, u + h(u)]`, the window bound
   `≤ u^b/4` gives `#(A ∩ [1, x]) ≤ (x + x^b)/4` when `A` has no element `≤ X₀`;
 * `T_le_three_of_lemma626` : `T(x) ≤ 3x` for `X₀ ≤ x ≤ t` on `Good(<t)` (`G0`);
 * `tbound_of_lemma626` : the field `tbound` of `Queue6.QueueInputs`.
@@ -36,27 +36,28 @@ variable {θ : ℝ} {X₀ : ℕ}
 def Lemma626Good (θ : ℝ) (X₀ : ℕ) (D : Sec5Family) : Prop :=
   ∀ (t : ℕ) (u : ℝ) (ω : JitterΩ), (X₀ : ℝ) ≤ u →
     9 * u / Real.log u ^ 11 + capH X₀ u ≤ t → ω ∈ G0 θ X₀ D t →
-      (localCountA (absSet X₀ (DF θ X₀ ω)) u (u + u ^ (thetaB θ)) : ℝ) ≤
-        u ^ (thetaB θ) / Real.log u ^ 4
+      (localCountA (absSet X₀ (DF θ X₀ ω)) u (u + winH X₀ u) : ℝ) ≤
+        winH X₀ u / Real.log u ^ 4
 
 /-- **The covering count.** If `A` is locally finite with no element in `[1, X]`, and every window
 `[u, u + u^b]` with `X ≤ u < x` holds at most `u^b/4` points of `A`, then
 `#(A ∩ [1, x]) ≤ (x + x^b - X)/4`. -/
-theorem countA_le_of_windows {A : Set ℝ} (hA : LocFin A) {X b x : ℝ} (hX : 1 ≤ X) (hb : 0 ≤ b)
+theorem countA_le_of_windows {A : Set ℝ} (hA : LocFin A) {X x : ℝ} {g : ℝ → ℝ} (hX : 1 ≤ X)
+    (hg1 : ∀ u, X ≤ u → 1 ≤ g u) (hgm : ∀ u v, X ≤ u → u ≤ v → g u ≤ g v)
     (hlow : A ∩ Icc 1 X = ∅)
-    (hwin : ∀ u, X ≤ u → u < x → (localCountA A u (u + u ^ b) : ℝ) ≤ u ^ b / 4)
+    (hwin : ∀ u, X ≤ u → u < x → (localCountA A u (u + g u) : ℝ) ≤ g u / 4)
     (hx : X ≤ x) :
-    countA A x ≤ (x + x ^ b - X) / 4 := by
-  set w : ℕ → ℝ := fun i => Nat.rec X (fun _ v => v + v ^ b) i with hw
+    countA A x ≤ (x + g x - X) / 4 := by
+  set w : ℕ → ℝ := fun i => Nat.rec X (fun _ v => v + g v) i with hw
   have hw0 : w 0 = X := rfl
-  have hws : ∀ i, w (i + 1) = w i + w i ^ b := fun i => rfl
+  have hws : ∀ i, w (i + 1) = w i + g (w i) := fun i => rfl
   have hwX : ∀ i : ℕ, X + i ≤ w i := by
     intro i
     induction i with
     | zero => simp [hw0]
     | succ i ih =>
       rw [hws]
-      have h1 : 1 ≤ w i ^ b := Real.one_le_rpow (by linarith) hb
+      have h1 : 1 ≤ g (w i) := hg1 _ (by linarith [ih])
       push_cast; linarith
   have key : ∀ i, (∀ j < i, w j < x) → ((A ∩ Icc 1 (w i)).ncard : ℝ) ≤ (w i - X) / 4 := by
     intro i
@@ -67,18 +68,18 @@ theorem countA_le_of_windows {A : Set ℝ} (hA : LocFin A) {X b x : ℝ} (hX : 1
       have hih := ih (fun j hj' => hj j (by omega))
       have hwi := hj i (by omega)
       have hsub : A ∩ Icc 1 (w (i + 1)) ⊆
-          (A ∩ Icc 1 (w i)) ∪ (A ∩ Icc (w i) (w i + w i ^ b)) := by
+          (A ∩ Icc 1 (w i)) ∪ (A ∩ Icc (w i) (w i + g (w i))) := by
         intro a ⟨ha, ha1, ha2⟩
         by_cases hai : a ≤ w i
         · exact Or.inl ⟨ha, ha1, hai⟩
         · push_neg at hai; exact Or.inr ⟨ha, hai.le, by rw [← hws]; exact ha2⟩
-      have hfin : ((A ∩ Icc 1 (w i)) ∪ (A ∩ Icc (w i) (w i + w i ^ b))).Finite :=
+      have hfin : ((A ∩ Icc 1 (w i)) ∪ (A ∩ Icc (w i) (w i + g (w i)))).Finite :=
         (hA.finite_Icc _ _).union (hA.finite_Icc _ _)
       have h1 := (Set.ncard_le_ncard hsub hfin).trans (Set.ncard_union_le _ _)
       have h2 := hwin (w i) (by linarith [hwX i]) hwi
       unfold localCountA at h2
       have h1' : ((A ∩ Icc 1 (w (i + 1))).ncard : ℝ) ≤
-          ((A ∩ Icc 1 (w i)).ncard : ℝ) + ((A ∩ Icc (w i) (w i + w i ^ b)).ncard : ℝ) := by
+          ((A ∩ Icc 1 (w i)).ncard : ℝ) + ((A ∩ Icc (w i) (w i + g (w i))).ncard : ℝ) := by
         exact_mod_cast h1
       rw [hws]; linarith
   have hex : ∃ i, x ≤ w i := by
@@ -96,14 +97,14 @@ theorem countA_le_of_windows {A : Set ℝ} (hA : LocFin A) {X b x : ℝ} (hX : 1
       (Set.Icc_subset_Icc le_rfl hKx)) (hA.finite_Icc _ _)
   rcases Nat.eq_zero_or_eq_succ_pred K with h0 | hs
   · rw [h0, hw0] at hc
-    have : 0 ≤ x ^ b := Real.rpow_nonneg (by linarith) b
+    have : 0 ≤ g x := by linarith [hg1 x hx]
     rw [h0, hw0] at hmono
     linarith
   · set k := K.pred
     have hk := hlt k (by omega)
-    have hwK : w K = w k + w k ^ b := by rw [hs]
-    have hwk0 : 0 ≤ w k := by linarith [hwX k]
-    have hp : w k ^ b ≤ x ^ b := Real.rpow_le_rpow hwk0 hk.le hb
+    have hwK : w K = w k + g (w k) := by rw [hs]
+    have hwk0 : X ≤ w k := by linarith [hwX k]
+    have hp : g (w k) ≤ g x := hgm _ _ hwk0 hk.le
     linarith
 
 /-- `Ψ(x, X₀) ≤ x` for `x ≥ 0`. -/
@@ -151,10 +152,9 @@ theorem T_le_three_of_lemma626 (hc : Cond θ X₀) {D : Sec5Family} (hL : Lemma6
     unfold countA at h0
     have h0' : (A ∩ Icc 1 (X₀ : ℝ)).ncard = 0 := by exact_mod_cast h0
     exact (Set.ncard_eq_zero (hAfin.finite_Icc _ _)).mp h0'
-  have hb0 : 0 ≤ thetaB θ := (thetaB_pos (by linarith [hc.hθ.1])).le
-  have hb1 : thetaB θ ≤ 1 := (thetaB_le_quarter (by linarith [hc.hθ.2])).trans (by norm_num)
+  have hw := winH_isWin (X₀ := (X₀ : ℝ)) hc.hX
   have hwin : ∀ u, (X₀ : ℝ) ≤ u → u < x →
-      (localCountA A u (u + u ^ (thetaB θ)) : ℝ) ≤ u ^ (thetaB θ) / 4 := by
+      (localCountA A u (u + winH X₀ u) : ℝ) ≤ winH X₀ u / 4 := by
     intro u hu hux
     obtain ⟨hLu, -, -⟩ := logs_of_ge hX0 hc.hX hu
     have h4 := four_capH_le hX0 hc.hX hu
@@ -168,16 +168,15 @@ theorem T_le_three_of_lemma626 (hc : Cond θ X₀) {D : Sec5Family} (hL : Lemma6
         rw [div_le_iff₀ (by linarith)]; nlinarith
       linarith
     have h := hL t u ω hu htu hω
-    have hp : 0 ≤ u ^ (thetaB θ) := Real.rpow_nonneg hu0.le _
+    have hp : 0 ≤ winH X₀ u := (winH_pos _ _).le
     have h44 : (4 : ℝ) ≤ Real.log u ^ 4 := by
       have : (10 ^ 8 : ℝ) ≤ Real.log u ^ 4 :=
         hLu.trans (le_self_pow₀ (by linarith) (by norm_num))
       linarith
     exact h.trans (div_le_div_of_nonneg_left hp (by norm_num) h44)
-  have hcnt := countA_le_of_windows hAfin hX1.le hb0 hlow hwin hx
-  have hxb : x ^ (thetaB θ) ≤ x := by
-    conv_rhs => rw [← Real.rpow_one x]
-    exact Real.rpow_le_rpow_of_exponent_le (by linarith) hb1
+  have hcnt := countA_le_of_windows hAfin hX1.le (fun u hu => hw.one_le u (by linarith))
+    (fun u v hu huv => hw.mono' (by linarith) huv) hlow hwin hx
+  have hxb : winH X₀ x ≤ x := hw.le_self (by linarith)
   -- the smooth count
   have hS := smoothCount_le_self X₀ (by linarith : (0 : ℝ) ≤ x)
   have hS0 : (0 : ℝ) ≤ Rankin.smoothCount X₀ (X₀ : ℝ) := Nat.cast_nonneg _

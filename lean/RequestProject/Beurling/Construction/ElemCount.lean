@@ -53,16 +53,16 @@ end Counts
 /-- The standing hypotheses: the target of `M` is the paper's target for the realised system, the
 arrivals are its composites, and the jitters lie in `[0, 1]`. -/
 structure LinkedModel (θ : ℝ) (X₀ : ℕ) (M : SlotModel X₀) (U : ℕ → ℝ) (a : ℕ → ℝ) : Prop where
-  hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)
+  hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)
   hX : 10 ^ 8 ≤ Real.log X₀
   hU : ∀ j, U j ∈ Icc (0 : ℝ) 1
   hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) U))
-      (absorbedDensityCap (thetaB θ) (realisedA M (capH X₀) U) (fun n => solveU (thetaB θ) n))
+      (absorbedDensityCap (winH X₀) (realisedA M (capH X₀) U) (fun n => solveU (winH X₀) n))
       (osc θ (designedAlpha (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a)
+          (realisedA M (capH X₀) U) (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a)
         (designedGamma (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (thetaB θ) n) (kappa0Param X₀) (switchOn X₀) a)
-        (switchOn X₀)) x
+          (realisedA M (capH X₀) U) (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        (switchOn (swS θ X₀))) x
   hlink : ArrivalsLinked M (capH X₀) U
 
 section Basic

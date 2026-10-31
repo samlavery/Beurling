@@ -14,7 +14,10 @@ full-measure event that every jitter lies in `[0, 1]`), the data of Part I and o
 **coupled**: the same `κ, A, u_a, α, γ, x⁺` and the same slot model enter both. As a consequence the
 following are derived instead of assumed:
 
-* the lag bound `|N - T| ≤ x^η` used in Theorem 4.10 (from the queue bound of Part I);
+* the lag bounds used in Theorem 4.10 (from the queue bound of Part I): `|N - T| ≤ D_max(x)`
+  (`lagMax`), hence `|N - T| ≤ K x^{η_G}` on `[X₀, ∞)` and, with the switch-on condition,
+  `|N - T| ≤ y^{θ/2}` beyond `a_k` (`D_max ≤ e^{8ℓ² + Λ + 2}` in the standard regime);
+* the radius condition `2δ_k ≤ θ` of Lemma 4.6 (from the switch-on condition);
 * the cap of (6) being inactive (from `ρ_A ≤ (log v)^{-4}`);
 * the windows `u_a ≥ X₀` (Part I);
 * `X₀` is `X₀`-smooth (`X₀` even, `≥ 4`);
@@ -36,16 +39,19 @@ open MeasureTheory ProbabilityTheory Set Complex Metric Remark12 Oscillation Abs
 
 namespace Construction
 
+lemma capH_nonneg' (X₀ x : ℝ) : 0 ≤ capH X₀ x :=
+  le_trans (Real.exp_pos _).le (le_max_left _ _)
+
 /-- **The inputs of Part I for given data** `κ, A, u, α, γ, x⁺` and slot model `M`: as
 `PartIInputsSlotModelInit`, with these data fixed. -/
 def PartIWith (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ)
     (α γ xp : ℕ → ℝ) (M : SlotModel X₀) : Prop :=
   0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
-    (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (thetaB θ) = a) ∧
+    (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + winH X₀ (u a) = a) ∧
     LocFin A ∧
-    (∀ v ≥ (X₀ : ℝ), absorbedDensity (thetaB θ) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
-    (∀ x, M.T x = target X₀ κ (countA A) (absorbedDensityCap (thetaB θ) A u) (osc θ α γ xp) x) ∧
+    (∀ v ≥ (X₀ : ℝ), absorbedDensity (winH X₀) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
+    (∀ x, M.T x = target X₀ κ (countA A) (absorbedDensityCap (winH X₀) A u) (osc θ α γ xp) x) ∧
     M.QueueWindowData ∧
     ∃ κp : ℝ → ℝ,
     (∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x) ∧
@@ -60,18 +66,22 @@ theorem PartIWith.toInit {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ}
   obtain ⟨hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hT, hq, κp, hκp, hland, hinit⟩ := h
   exact ⟨κ, A, u, α, γ, xp, κp, M, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hT, hq, hκp, hland, hinit⟩
 
-/-- **The lag bound (13) for the given data** (Proposition 4.1): `|N - T| ≤ x^η` on `[X₀, ∞)`. -/
+/-- **The lag bound (La) for the given data** (Proposition 4.1): `|N - T| ≤ D_max(x)` on
+`[X₀, ∞)`. -/
 theorem PartIWith.lag {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ} {A : Set ℝ}
-    {u : ℝ → ℝ} {α γ xp : ℕ → ℝ} {M : SlotModel X₀} (hθ1 : 1 / 20 ≤ θ)
-    (hθ2 : θ ≤ 1 / 2 - 1 / 10000) (hX : 10 ^ 8 ≤ Real.log X₀)
+    {u : ℝ → ℝ} {α γ xp : ℕ → ℝ} {M : SlotModel X₀} (hX : 10 ^ 8 ≤ Real.log X₀)
     (h : PartIWith θ X₀ P κ A u α γ xp M) :
-    ∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ x ^ lagExponent θ := by
+    ∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ lagMax X₀ x := by
   obtain ⟨hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hT, hq, κp, hκp, hland, hinit⟩ := h
   intro x hx
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have e : lagOf P θ X₀ κ A u α γ xp x = P.N x - M.T x := by
     rw [hT x]; rfl
   rw [e]
+  have hB0 := queueB_nonneg hX0 hX (le_refl (X₀ : ℝ))
+  have hBx := queueB_nonneg hX0 hX hx
+  have hH0 := capH_nonneg' (X₀ : ℝ) (X₀ : ℝ)
+  have hHx := capH_nonneg' (X₀ : ℝ) x
   rcases le_or_gt ((X₀ : ℝ) + 2 * capH X₀ x) x with hlate | hearly
   · have hLx : 0 < Real.log x := by
       have hX1 := one_lt_of_logX hX0 hX
@@ -82,11 +92,31 @@ theorem PartIWith.lag {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ} {A
     have e2 : -(capH X₀ x / 2 * (1 + κp x / Real.log x)) =
         -(capH X₀ x / 2) * (1 + κp x / Real.log x) := by ring
     rw [e2] at h12
-    have hB := queueB_nonneg hX0 hX hx
-    exact lag_rpow_of_queue (by linarith) hθ2 hX0 hX hx
-      (abs_lag_le_of_two_sided hLx (hκp x hx).1 (hκp x hx).2 hH hB le_rfl h12.1 h12.2)
-  · exact lag_rpow_initial hθ1 hθ2 hX0 hX hx (hκp X₀ le_rfl).1 (hκp X₀ le_rfl).2
-      ((hinit x hx hearly).abs_le M hX hq hx hearly)
+    have := abs_lag_le_of_two_sided hLx (hκp x hx).1 (hκp x hx).2 hH hBx le_rfl h12.1 h12.2
+    unfold lagMax; linarith
+  · have h1 := (hinit x hx hearly).abs_le M hX hq hx hearly
+    have hLX : 0 < Real.log X₀ := by linarith
+    have hk1 : κp X₀ / Real.log X₀ ≤ 1 := (div_le_one hLX).mpr (hκp X₀ le_rfl).2
+    have hk0 : 0 ≤ κp X₀ / Real.log X₀ := div_nonneg (hκp X₀ le_rfl).1 hLX.le
+    have : capH X₀ X₀ / 2 * (1 + κp X₀ / Real.log X₀) ≤ 3 * capH X₀ X₀ := by nlinarith
+    unfold lagMax; linarith
+
+/-- The global lag bound `D_max(x) ≤ K x^{η_G}` on `[X₀, ∞)`, `η_G = 1/20000`,
+`K = 1 + B(X₀) + 3H(X₀) + 5` (from `B(x) + 3H(x) + 3 ≤ x^{η_G}`, Proposition 4.1). -/
+theorem lagMax_le_rpow {X₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) (hx : X₀ ≤ x) :
+    lagMax X₀ x ≤ (1 + (queueB X₀ X₀ + 3 * capH X₀ X₀ + 5)) * x ^ (1 / 20000 : ℝ) := by
+  have hBx := queueB_nonneg hX0 hX hx
+  have hHx := capH_nonneg' X₀ x
+  have h := lag_rpow_of_queue (θ := 1 / 10000) (D := queueB X₀ x + 3 * capH X₀ x + 3)
+    (by norm_num) (by norm_num) hX0 hX hx (by rw [abs_of_nonneg (by positivity)])
+  have e : lagExponent (1 / 10000) = 1 / 20000 := by unfold lagExponent; norm_num
+  rw [e, abs_of_nonneg (by positivity)] at h
+  have hX1 := one_lt_of_logX hX0 hX
+  have hxη : 1 ≤ x ^ (1 / 20000 : ℝ) := Real.one_le_rpow (by linarith) (by norm_num)
+  have hC0 : 0 ≤ queueB X₀ X₀ + 3 * capH X₀ X₀ + 5 := by
+    have := queueB_nonneg hX0 hX (le_refl X₀); have := capH_nonneg' X₀ X₀; linarith
+  unfold lagMax
+  nlinarith
 
 /-- An even `X₀ ≥ 4` is `X₀`-smooth: its prime factors are at most `X₀ / 2`. -/
 lemma even_mem_smoothNumbers {X₀ : ℕ} (hev : Even X₀) (h4 : 4 ≤ X₀) :
@@ -115,7 +145,8 @@ lemma zpow_neg_four_le {v : ℝ} (hv : 10 ≤ Real.log v) :
 
 /-- **The inputs of Theorem 4.10, coupled with Part I.** For the data `κ, A, u, α, γ, x⁺` of
 Part I, the jittered primes `jit` and the latest-prime map `latest`: `A` is contained in the
-absorbed set (5); `κ ≥ X₀⁻¹`; `κ₀ ∈ [X₀⁻¹, 1/4]`; `log x⁺_0 ≥ X₀²`; the heights and amplitudes are
+absorbed set (5); `κ ≥ X₀⁻¹`; `κ₀ ∈ [X₀⁻¹, 1/4]`; `log x⁺_0 ≥ X₀²` and the switch-on condition
+`θ log y ≥ 16 (log log y)² + 2Λ + 10` for `log y ≥ log x⁺_0 - 1`; the heights and amplitudes are
 the designed ones (Lemma 4.8, Theorem 4.10); the pieces of `D̂_{<a_k}` (Lemma 4.8(ii)); the
 construction scales `a_k ≤ x⁺_k ≤ 1.001 a_k`; the weight hypotheses on `A`; and the Rankin bound
 for `A` (Lemma 6.26) above `log x = (log X₀)²`. -/
@@ -126,48 +157,93 @@ def Theorem410InputsCoupled (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (κ : �
     Real.exp (-Real.log X₀) ≤ κ ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧
     (X₀ : ℝ) ^ 2 ≤ Real.log (xp 0) ∧
+    (∀ y : ℝ, Real.log (xp 0) - 1 ≤ Real.log y →
+      16 * Real.log (Real.log y) ^ 2 + 2 * Real.log X₀ + 10 ≤ θ * Real.log y) ∧
     (∀ k, γ k = designGamma X₀ κ θ κ₀ (earlyOf P θ X₀ κ A u α γ xp a) xp k) ∧
     (∀ k, α k = amplitudeOf θ κ₀ (γ k) (xp k)) ∧
     (∀ k, Lemma48PiecesCount X₀ (heightScale θ κ₀ (xp k)) (earlyOf P θ X₀ κ A u α γ xp a k)) ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
-    AbsorbedHyp (thetaB θ) A u ∧
+    AbsorbedHyp (winH X₀) A u ∧
     (∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →
       countA A x ≤ x * Real.exp (-sigmaStar (Real.log X₀) (Real.log x)))
 
 /-- **Coupled inputs give the inputs of Theorem 4.10 with the decomposition derived**: the lag
-bound, the cap, `X₀`-smoothness, `u_a ≥ X₀` and the placement fact are derived. -/
+bounds, the radius condition `2δ_k ≤ θ`, the cap, `X₀`-smoothness, `u_a ≥ X₀` and the placement
+fact are derived. -/
 theorem Theorem410InputsCoupled.toDec {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ}
     {A : Set ℝ} {u : ℝ → ℝ} {α γ xp : ℕ → ℝ} {M : SlotModel X₀} {jit : Set ℝ}
-    {latest : ℝ → ℝ} (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
+    {latest : ℝ → ℝ} (hθ0 : 0 < θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
     (hX : 10 ^ 8 ≤ Real.log X₀) (hev : Even X₀)
     (hjit : ∀ r ∈ jit, (X₀ : ℝ) - capH X₀ X₀ / 2 ≤ r)
     (hI : PartIWith θ X₀ P κ A u α γ xp M)
     (h : Theorem410InputsCoupled θ X₀ P κ A u α γ xp jit latest) :
     Theorem410InputsDec θ P := by
-  have hlag := hI.lag hθ1 hθ2 hX
+  have hlag := hI.lag hX
   obtain ⟨-, hκ1, hsp, -, -, hAu, hAfin, hρ, -⟩ := hI
-  obtain ⟨κ₀, a, hArule, hκ, hκ₀1, hκ₀2, hxp0, hγ, hα, hpieces, ha, hA, hbound⟩ := h
+  obtain ⟨κ₀, a, hArule, hκ, hκ₀1, hκ₀2, hxp0, hsw, hγ, hα, hpieces, ha, hA, hbound⟩ := h
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hX
   have hlogX : Real.log X₀ ≤ X₀ - 1 := Real.log_le_sub_one_of_pos (by linarith)
   have h4 : 4 ≤ X₀ := by
     have : (4 : ℝ) ≤ X₀ := by linarith
     exact_mod_cast this
-  have hη0 : 0 ≤ lagExponent θ := by
-    unfold lagExponent; exact div_nonneg (le_min (by linarith) (by linarith)) (by norm_num)
-  have hη : lagExponent θ ≤ θ / 2 := by
-    unfold lagExponent; have := min_le_left θ (1 / 2 - θ); linarith
   have hxpos : ∀ k, 0 < xp k := fun k => lt_of_lt_of_le (ha k).1 (ha k).2.1
   have hlogk : ∀ k, (X₀ : ℝ) ^ 2 ≤ Real.log (xp k) := fun k =>
     hxp0.trans (Real.log_le_log (hxpos 0) (hsp.strictMono.monotone (Nat.zero_le k)))
+  have hlogk0 : ∀ k, Real.log (xp 0) ≤ Real.log (xp k) := fun k =>
+    Real.log_le_log (hxpos 0) (hsp.strictMono.monotone (Nat.zero_le k))
   have haX : ∀ k, (X₀ : ℝ) ≤ a k := fun k => by
     have h1 := Real.log_le_sub_one_of_pos (hxpos k)
     have h2 := hlogk k
     have h3 := (ha k).2.2
     nlinarith
-  refine ⟨X₀, κ, κ₀, lagExponent θ, 1, xp, a, A, u, α, γ, hX, even_mem_smoothNumbers hev h4,
-    hθ1, by linarith, hκ, hκ1, hκ₀1, hκ₀2, hxp0, hsp.exp_le, hγ, hα, hpieces, hη0, hη, ha,
-    fun x hx => by simpa using hlag x hx, fun k y hy => hlag y ((haX k).trans hy), hA,
+  -- beyond `a_k`: `log y ≥ log x⁺_0 - 1`
+  have hlogy : ∀ k, ∀ y ≥ a k, Real.log (xp 0) - 1 ≤ Real.log y := fun k y hy => by
+    have hak : 0 < a k := (ha k).1
+    have h1 : Real.log (xp k) - 1 ≤ Real.log (a k) := by
+      have h2 : xp k ≤ Real.exp 1 * a k := by
+        have := Real.add_one_le_exp (1 : ℝ)
+        have := (ha k).2.2
+        nlinarith
+      have h3 := Real.log_le_log (hxpos k) h2
+      rw [Real.log_mul (Real.exp_pos 1).ne' hak.ne', Real.log_exp] at h3
+      linarith
+    have := Real.log_le_log hak hy
+    linarith [hlogk0 k]
+  -- `ℓ ≥ 2Λ - 1` there
+  have hℓy : ∀ y : ℝ, Real.log (xp 0) - 1 ≤ Real.log y →
+      2 * Real.log X₀ - 1 ≤ Real.log (Real.log y) := fun y hy => by
+    have hX2 : (X₀ : ℝ) ^ 2 * Real.exp (-1) ≤ Real.log y := by
+      have h1 : Real.exp (-1) ≤ 1 / 2 := by
+        have := Real.exp_one_gt_d9
+        rw [Real.exp_neg, inv_le_comm₀ (Real.exp_pos 1) (by norm_num)]; norm_num; linarith
+      have h2 : (2 : ℝ) ≤ (X₀ : ℝ) ^ 2 / 2 := by nlinarith
+      nlinarith
+    have hpos : 0 < (X₀ : ℝ) ^ 2 * Real.exp (-1) := by positivity
+    have := Real.log_le_log hpos hX2
+    rw [Real.log_mul (by positivity) (Real.exp_pos _).ne', Real.log_exp, Real.log_pow] at this
+    push_cast at this; linarith
+  -- the radius condition `2δ_k ≤ θ`
+  have hδ : ∀ k, 2 * designRadius (xp k) ≤ θ := fun k => by
+    have hy := hsw (xp k) (by linarith [hlogk0 k])
+    have hL : 0 < Real.log (xp k) := by nlinarith [hlogk k]
+    have hℓ := hℓy (xp k) (by linarith [hlogk0 k])
+    unfold designRadius
+    rw [← mul_div_assoc, div_le_iff₀ hL]
+    nlinarith
+  -- the late lag bound `|D(y)| ≤ y^{θ/2}` for `y ≥ a_k`
+  have hlate : ∀ k, ∀ y ≥ a k, |lagOf P θ X₀ κ A u α γ xp y| ≤ y ^ (θ / 2) := fun k y hy => by
+    have hyX := (haX k).trans hy
+    have hly := hlogy k y hy
+    have hy0 : 0 < y := by linarith
+    refine (hlag y hyX).trans ((lagMax_le_std hX0 hX hyX (hℓy y hly)).trans ?_)
+    rw [Real.rpow_def_of_pos hy0, Real.exp_le_exp]
+    have := hsw y hly
+    nlinarith
+  refine ⟨X₀, κ, κ₀, θ / 2, 1 / 20000, 1 + (queueB X₀ X₀ + 3 * capH X₀ X₀ + 5), xp, a, A, u, α,
+    γ, hX, even_mem_smoothNumbers hev h4, hδ, by linarith, hκ, hκ1, hκ₀1, hκ₀2, hxp0,
+    hsp.exp_le, hγ, hα, hpieces, by linarith, le_rfl, by norm_num, by norm_num, ha,
+    fun x hx => (hlag x hx).trans (lagMax_le_rpow hX0 hX hx), hlate, hA,
     fun n hn => (hAu n hn).1, fun v hv => ?_, ?_, hbound⟩
   · have hlv : 10 ≤ Real.log v := by
       have := Real.log_le_log (by linarith) hv; linarith
@@ -186,7 +262,7 @@ theorem Theorem410InputsCoupled.toDec {θ : ℝ} {X₀ : ℕ} {P : BeurlingSyste
   with `M`, and the Theorem 4.10 inputs hold, coupled to the same data, with the jittered primes
   being those placed by the greedy rule from `M`, the width `H` and the jitters `ω`. -/
 def Theorem21InputsCon : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     MonotoneOn (fun v => v - capH X₀ v / 2) (Ici (X₀ : ℝ)) ∧
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
@@ -205,10 +281,9 @@ lemma capH_nonneg (X₀ x : ℝ) : 0 ≤ capH X₀ x :=
   le_trans (Real.exp_pos _).le (le_max_left _ _)
 
 theorem theorem21InputsDec_of_con (h : Theorem21InputsCon) : Theorem21InputsDec := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨hmono, P, ι, hι, E, time, hE, hsum, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨hmono, P, ι, hι, E, time, hE, hsum, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

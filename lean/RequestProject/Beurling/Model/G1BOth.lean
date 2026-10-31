@@ -42,7 +42,7 @@ def RprimeChangeR (ω : JitterΩ) (y δ : ℝ) : Prop :=
 /-- **Step 4 is void below `x₁`**: if `y < x₁ = e^{X₀²}`, then `R' = 0` on `[1, y]` and
 `RprimeChangeR` holds. -/
 theorem rprimeChange_of_lt (hc : Cond θ X₀) (ω : JitterΩ) {y δ : ℝ} (hy : (X₀ : ℝ) ≤ y)
-    (hyx : y < switchOn X₀ 0) (hδ0 : 0 ≤ δ) (hδ : δ ≤ 1 / 4) :
+    (hyx : y < switchOn (swS θ X₀) 0) (hδ0 : 0 ≤ δ) (hδ : δ ≤ 1 / 4) :
     RprimeChangeR θ X₀ ω y δ := by
   intro z hz
   have hX1 := QueueMono.one_lt_of_logX (Nat.cast_nonneg (α := ℝ) X₀) hc.hX
@@ -86,12 +86,12 @@ theorem sigR_bound {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ}
   have hLw0 : 0 < Real.log w := by
     linarith [Real.log_le_log (by linarith) hwX, hc.hX]
   have hK0 : 0 ≤ KAbsR θ X₀ ω (rhoT θ X₀ ω) w := KAbsR_nonneg ω (rhoT_nonneg ω) w
-  have hA0 : 0 ≤ absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) w := by
+  have hA0 : 0 ≤ absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) w := by
     refine le_min (tsum_nonneg fun a => ?_) (div_nonneg (by norm_num) hLw0.le)
     unfold absorbedBump
     split_ifs
-    · by_cases hm : w ∈ Icc (uA θ a) a
-      · rw [Set.indicator_of_mem hm]; exact (Real.rpow_pos_of_pos hw0 _).le
+    · by_cases hm : w ∈ Icc (uA X₀ a) a
+      · rw [Set.indicator_of_mem hm]; exact (inv_pos.mpr (winH_pos _ _)).le
       · rw [Set.indicator_of_notMem hm]
     · exact le_rfl
   have hXm0 := Xm_pos' hc
@@ -106,7 +106,7 @@ theorem sigR_bound {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ}
   · rw [abs_le]; constructor <;> linarith
   · have hK : KAbsR θ X₀ ω (rhoT θ X₀ ω) w = 0 :=
       KAbsR_eq_zero_of_small hc ω _ (by unfold Lstar at hsmall; linarith)
-    have hA : absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) w = 0 := by
+    have hA : absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) w = 0 := by
       unfold absorbedDensityCap
       rw [rhoA_eq_zero_of_small hc ω hsmall]
       exact min_eq_left (div_nonneg (by norm_num) hLw0.le)

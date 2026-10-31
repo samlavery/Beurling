@@ -157,41 +157,41 @@ end Counts
 
 /-! ### The absorbed density -/
 
-lemma solveU_neg {b n : ℝ} (hn : n < 0) : solveU b n = 0 := by
+lemma solveU_lt_two {w : ℝ → ℝ} (hw : IsWin w) {n : ℝ} (hn : n < 2) : solveU w n = 0 := by
   unfold solveU
   rw [dif_neg]
   rintro ⟨u, hu, hu'⟩
-  have := Real.rpow_nonneg hu b
+  have := hw.one_le u hu
   linarith
 
 /-- `u_a` is non-decreasing in `a`, hence measurable. -/
-lemma solveU_mono {b : ℝ} (hb : 0 < b) : Monotone (solveU b) := by
+lemma solveU_mono {w : ℝ → ℝ} (hw : IsWin w) : Monotone (solveU w) := by
   intro n n' hnn
-  rcases lt_or_ge n 0 with hn | hn
-  · rw [solveU_neg hn]; exact solveU_nonneg b n'
-  · obtain ⟨h0, h1⟩ := solveU_spec hb hn
-    obtain ⟨h0', h1'⟩ := solveU_spec hb (hn.trans hnn)
+  rcases lt_or_ge n 2 with hn | hn
+  · rw [solveU_lt_two hw hn]; exact solveU_nonneg w n'
+  · obtain ⟨h0, h1⟩ := solveU_spec' hw hn
+    obtain ⟨h0', h1'⟩ := solveU_spec' hw (hn.trans hnn)
     by_contra hlt
     push_neg at hlt
-    have := Real.rpow_le_rpow h0' hlt.le hb.le
+    have := hw.mono' (by linarith) hlt.le
     linarith
 
-lemma measurable_uA {θ : ℝ} (hθ : 0 < θ) : Measurable (uA θ) :=
-  (solveU_mono (thetaB_pos (by linarith))).measurable
+lemma measurable_uA (hX : 10 ^ 8 ≤ Real.log X₀) : Measurable (uA X₀) :=
+  (solveU_mono (winH_isWin (X₀ := (X₀ : ℝ)) hX)).measurable
 
-/-- The bump `1[u_a ≤ v ≤ a] v^{-b}` is jointly measurable. -/
-lemma measurable_bump {θ : ℝ} (hθ : 0 < θ) :
+/-- The bump `1[u_a ≤ v ≤ a] / h(v)` is jointly measurable. -/
+lemma measurable_bump (hX : 10 ^ 8 ≤ Real.log X₀) :
     Measurable (Function.uncurry fun a v : ℝ =>
-      (Icc (uA θ a) a).indicator (fun w => w ^ (-(thetaB θ))) v) := by
-  have hS : MeasurableSet {p : ℝ × ℝ | uA θ p.1 ≤ p.2 ∧ p.2 ≤ p.1} :=
-    (measurableSet_le ((measurable_uA hθ).comp measurable_fst) measurable_snd).inter
+      (Icc (uA X₀ a) a).indicator (fun w => (winH X₀ w)⁻¹) v) := by
+  have hS : MeasurableSet {p : ℝ × ℝ | uA X₀ p.1 ≤ p.2 ∧ p.2 ≤ p.1} :=
+    (measurableSet_le ((measurable_uA hX).comp measurable_fst) measurable_snd).inter
       (measurableSet_le measurable_snd measurable_fst)
   have : (Function.uncurry fun a v : ℝ =>
-      (Icc (uA θ a) a).indicator (fun w => w ^ (-(thetaB θ))) v) =
-      {p : ℝ × ℝ | uA θ p.1 ≤ p.2 ∧ p.2 ≤ p.1}.indicator fun p => p.2 ^ (-(thetaB θ)) := by
+      (Icc (uA X₀ a) a).indicator (fun w => (winH X₀ w)⁻¹) v) =
+      {p : ℝ × ℝ | uA X₀ p.1 ≤ p.2 ∧ p.2 ≤ p.1}.indicator fun p => (winH X₀ p.2)⁻¹ := by
     funext p; simp [Set.indicator, Function.uncurry]
   rw [this]
-  exact (measurable_snd.pow_const _).indicator hS
+  exact ((measurable_winH hX).comp measurable_snd).inv.indicator hS
 
 section Density
 
@@ -199,27 +199,30 @@ variable {D : Ω → PrimeData} (hD : DFam D) (hL : ∀ ω, LocFinD (D ω)) (hP 
 include hD hL hP
 
 /-- **The capped absorbed density `ρ̄_A(v)` is jointly measurable.** -/
-theorem measurable_rhoCap (hX : 10 ^ 8 ≤ Real.log X₀) {θ : ℝ} (hθ : 0 < θ) :
+theorem measurable_rhoCap (hX : 10 ^ 8 ≤ Real.log X₀) :
     Measurable fun p : Ω × ℝ =>
-      absorbedDensityCap (thetaB θ) (absSet X₀ (D p.1)) (uA θ) p.2 := by
+      absorbedDensityCap (winH X₀) (absSet X₀ (D p.1)) (uA X₀) p.2 := by
   classical
   unfold absorbedDensityCap absorbedDensity absorbedBump
   refine Measurable.min ?_ (measurable_const.div (Real.measurable_log.comp measurable_snd))
   simp_rw [absSet_eq_image]
   refine measurable_tsum_image (S := fun ω => {e | AbsQ X₀ (D ω) e}) (hD.absQ hX)
-    (fun e => hD.eval e) (measurable_bump hθ) (fun ω v => ?_)
-  refine (finite_le hL hP ω (v + v ^ (thetaB θ))).subset ?_
+    (fun e => hD.eval e) (measurable_bump hX) (fun ω v => ?_)
+  refine (finite_le hL hP ω (2 * v + 2)).subset ?_
   rintro e ⟨hq, hF⟩
   refine ⟨hq.2.1, ?_⟩
-  have hmem : v ∈ Icc (uA θ (eval (D ω) e)) (eval (D ω) e) := by
+  have hmem : v ∈ Icc (uA X₀ (eval (D ω) e)) (eval (D ω) e) := by
     by_contra hc
     exact hF (indicator_of_notMem hc _)
-  have hpos : 0 ≤ eval (D ω) e := le_trans zero_le_one (one_le_eval (hP ω).pos hq.2.1)
-  have hb : 0 < thetaB θ := thetaB_pos (by linarith)
-  obtain ⟨h0, h1⟩ := solveU_spec hb hpos
-  have hv0 : 0 ≤ v := h0.trans hmem.1
-  have := Real.rpow_le_rpow h0 hmem.1 hb.le
-  simp only [uA] at hmem
+  have hw := winH_isWin (X₀ := (X₀ : ℝ)) hX
+  have hv0 : 0 ≤ v := (solveU_nonneg _ _).trans hmem.1
+  rcases lt_or_ge (eval (D ω) e) 2 with h2 | h2
+  · linarith
+  obtain ⟨h0, h1⟩ := solveU_spec' hw h2
+  have hu : 1 ≤ uA X₀ (eval (D ω) e) := h0
+  have h3 : winH X₀ (uA X₀ (eval (D ω) e)) ≤ winH X₀ v := hw.mono' (by linarith) hmem.1
+  have h4 : winH X₀ v ≤ v := hw.le_self (by linarith [hmem.1])
+  simp only [uA] at hmem h3 hu
   linarith [hmem.1]
 
 end Density
@@ -290,7 +293,7 @@ lemma lt_abs_of_oscTerm_ne {θ α γ xp x : ℝ} (hxp : 0 < xp) (h : oscTerm θ 
 /-- **The oscillation is jointly measurable** in measurable amplitudes and heights. -/
 theorem measurable_osc_fam {θ : ℝ} (hX : 10 ^ 8 ≤ Real.log X₀) {α γ : Ω → ℕ → ℝ}
     (hα : ∀ j, Measurable fun ω => α ω j) (hγ : ∀ j, Measurable fun ω => γ ω j) :
-    Measurable fun p : Ω × ℝ => osc θ (α p.1) (γ p.1) (switchOn X₀) p.2 := by
+    Measurable fun p : Ω × ℝ => osc θ (α p.1) (γ p.1) (switchOn (swS θ X₀)) p.2 := by
   have hX1 : (1 : ℝ) ≤ X₀ := (one_lt_of_logX (Nat.cast_nonneg _) hX).le
   unfold osc
   refine measurable_tsum_of_finite_support (fun j => ?_) (fun p => ?_)
@@ -302,7 +305,7 @@ theorem measurable_osc_fam {θ : ℝ} (hX : 10 ^ 8 ≤ Real.log X₀) {α γ : �
       (Real.measurable_log.comp (measurable_snd.div_const _))
   · refine (Set.finite_lt_nat ⌈|p.2|⌉₊).subset fun j hj => ?_
     have h1 := lt_abs_of_oscTerm_ne (switchOn_pos _ j) hj
-    have h2 := nat_lt_switchOn hX1 j
+    have h2 := nat_lt_switchOn (hX1.trans (le_swS θ _)) j
     have h3 := Nat.le_ceil |p.2|
     simp only [mem_setOf_eq]
     exact_mod_cast (show (j : ℝ) < ⌈|p.2|⌉₊ by linarith)

@@ -149,7 +149,7 @@ structure G1ResModel (P : BeurlingSystem) (tw : ℕ → ℝ) (X0m : ℝ) (X₀ :
   θ : ℝ
   hj0 : 0 ≤ j0
   hj1 : j0 ≤ 1
-  hjS : jS ≤ 4.1 * δ + 3 * HN / N + 2 * N ^ (thetaB θ - 1)
+  hjS : jS ≤ 4.1 * δ + 3 * HN / N + 2 * N ^ (1 / 8 - 1 : ℝ)
   hN : Real.exp (Real.log y / 2) ≤ N
   hHN0 : 0 ≤ HN
   hHN : HN ≤ N ^ (1 / 8 : ℝ)

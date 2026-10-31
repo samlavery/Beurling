@@ -21,11 +21,11 @@ with the rigid error `E_rig(x) = Ψ(x, X₀) - Ψ(X₀, X₀) - ∫_{X₀}^x ρ_
 * `abs_rigidErr_le` : `|E_rig(x)| ≤ Ψ(2x, X₀)` for `0 < κ ≤ 1` (each rigid `d` carries ramp mass
   at most `1`, and only `d ≤ (1+κ)x` contribute);
 * `abs_rigidErr_le_rankin` : with Rankin's bound, `|E_rig(x)| ≤ (2x)^θ ∏_{p<X₀}(1 - p^{-θ})^{-1}`;
-* `target_error` : the target error (8) from the absorbed-part bound `|E_A(x)| ≤ 2 x^{θ/2}` of
+* `target_error` : the target error (8) from the absorbed-part bound `|E_A(x)| ≤ 2 h(x)` of
   Lemma 3.4 (which rests on Lemma 6.26);
 * `Theorem21InputsTarget`, `theorem21_of_target`, `corollary_2_2_of_target` : the refined
   hypothesis in which part (i) of Theorem 2.1 is reduced to the absorbed-part bound and the lag
-  bound (13) for this concrete target.
+  bound (La) for this concrete target.
 -/
 
 @[expose] public section
@@ -195,13 +195,13 @@ lemma target_sub_eq (X₀ : ℕ) (κ : ℝ) (cntA rhoA R : ℝ → ℝ) {x : ℝ
   ring
 
 /-- **The target error (8)**: if the oscillation vanishes at `X₀` and the absorbed error satisfies
-`|#(A ∩ [X₀,x]) - ∫_{X₀}^x ρ̄_A| ≤ 2 x^{θ/2}` (Lemma 3.4, absorbed part), then
-`|T(x) - x - R(x)| ≤ C x^θ + 2 x^{θ/2}` for `x ≥ X₀`, with `C = 2^θ ∏_{p<X₀}(1 - p^{-θ})^{-1}`. -/
-theorem target_error (X₀ : ℕ) {κ θ : ℝ} (cntA rhoA R : ℝ → ℝ) (hκ : 0 < κ) (hκ1 : κ ≤ 1)
+`|#(A ∩ [X₀,x]) - ∫_{X₀}^x ρ̄_A| ≤ E(x)` (Lemma 3.4, absorbed part: `E = 2h`), then
+`|T(x) - x - R(x)| ≤ C x^θ + E(x)` for `x ≥ X₀`, with `C = 2^θ ∏_{p<X₀}(1 - p^{-θ})^{-1}`. -/
+theorem target_error (X₀ : ℕ) {κ θ : ℝ} (cntA rhoA R E : ℝ → ℝ) (hκ : 0 < κ) (hκ1 : κ ≤ 1)
     (hX0 : 1 ≤ X₀) (hθ : 0 < θ) (hR0 : R X₀ = 0)
-    (hA : ∀ x ≥ (X₀ : ℝ), |cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u| ≤ 2 * x ^ (thetaB θ)) :
+    (hA : ∀ x ≥ (X₀ : ℝ), |cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u| ≤ E x) :
     ∀ x ≥ (X₀ : ℝ), |target X₀ κ cntA rhoA R x - x - R x| ≤
-      (2 ^ θ * rankinConst X₀ θ) * x ^ θ + 2 * x ^ (thetaB θ) := by
+      (2 ^ θ * rankinConst X₀ θ) * x ^ θ + E x := by
   intro x hx
   have hx0 : 0 ≤ x := le_trans (Nat.cast_nonneg _) hx
   rw [target_sub_eq X₀ κ cntA rhoA R hx, hR0, sub_zero]
@@ -210,7 +210,7 @@ theorem target_error (X₀ : ℕ) {κ θ : ℝ} (cntA rhoA R : ℝ → ℝ) (hκ
   have h2 := hA x hx
   calc |rigidErr X₀ κ x + (cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u)|
       ≤ |rigidErr X₀ κ x| + |cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u| := abs_add_le _ _
-    _ ≤ (2 ^ θ * rankinConst X₀ θ) * x ^ θ + 2 * x ^ (thetaB θ) := by nlinarith
+    _ ≤ (2 ^ θ * rankinConst X₀ θ) * x ^ θ + E x := by nlinarith
 
 lemma osc_eq_zero_of_le {θ : ℝ} {α γ xp : ℕ → ℝ} (h : Spacing xp) {x : ℝ} (hx : 0 < x)
     (hxp : x ≤ xp 0) : osc θ α γ xp x = 0 := by
@@ -228,48 +228,54 @@ absorbed count `cntA` and capped absorbed density `rhoA`, and oscillation `R = o
 (`|α_k| ≤ 2`, spacing, switched on above `X₀`):
 
 * the absorbed part of the target error (Lemma 3.4, resting on Lemma 6.26):
-  `|#(A ∩ [X₀, x]) - ∫_{X₀}^x ρ̄_A| ≤ 2 x^{θ/2}`;
-* the lag bound (13): `|N_P(x) - T(x)| ≤ x^η`,
+  `|#(A ∩ [X₀, x]) - ∫_{X₀}^x ρ̄_A| ≤ 2 h(x)`, `h = winH X₀` the absorption window;
+* the lag bound (La): `|N_P(x) - T(x)| ≤ D_max(x)` for a function `D_max = x^{o(1)}`,
 
 both for `x ≥ X₀`. -/
 def PartIInputsTarget (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
-  ∃ (κ : ℝ) (cntA rhoA : ℝ → ℝ) (α γ xp : ℕ → ℝ), 0 < κ ∧ κ ≤ 1 ∧ Spacing xp ∧
+  ∃ (κ : ℝ) (cntA rhoA : ℝ → ℝ) (α γ xp : ℕ → ℝ) (Dm : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧ Spacing xp ∧
     (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
-    (∀ x ≥ (X₀ : ℝ), |cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u| ≤ 2 * x ^ (thetaB θ)) ∧
-    (∀ x ≥ (X₀ : ℝ), |P.N x - target X₀ κ cntA rhoA (osc θ α γ xp) x| ≤ x ^ lagExponent θ)
+    (∀ x ≥ (X₀ : ℝ), |cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u| ≤ 2 * Absorbed.winH X₀ x) ∧
+    (∀ x ≥ (X₀ : ℝ), |P.N x - target X₀ κ cntA rhoA (osc θ α γ xp) x| ≤ Dm x) ∧
+    SubPow Dm X₀
 
 theorem PartIInputsTarget.partIInputs {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} (hθ : 0 < θ)
-    (hX0 : 1 ≤ X₀) (h : PartIInputsTarget θ X₀ P) : PartIInputs θ X₀ P := by
-  obtain ⟨κ, cntA, rhoA, α, γ, xp, hκ, hκ1, hsp, hα, hxp, hA, hD⟩ := h
+    (hX0 : 1 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) (h : PartIInputsTarget θ X₀ P) :
+    PartIInputs θ X₀ P := by
+  obtain ⟨κ, cntA, rhoA, α, γ, xp, Dm, hκ, hκ1, hsp, hα, hxp, hA, hD, hDm⟩ := h
   have hR0 : osc θ α γ xp X₀ = 0 :=
     osc_eq_zero_of_le hsp (by exact_mod_cast hX0) hxp
-  exact ⟨target X₀ κ cntA rhoA (osc θ α γ xp), α, γ, xp, 2 ^ θ * rankinConst X₀ θ, hsp, hα,
-    target_error X₀ cntA rhoA _ hκ hκ1 hX0 hθ hR0 hA, hD⟩
+  exact ⟨target X₀ κ cntA rhoA (osc θ α γ xp), α, γ, xp, 2 ^ θ * rankinConst X₀ θ,
+    fun x => 2 * Absorbed.winH X₀ x, Dm, hsp, hα,
+    target_error X₀ cntA rhoA _ _ hκ hκ1 hX0 hθ hR0 hA, hD,
+    (subPow_winH hX _ (by exact_mod_cast hX0)).const_mul 2 (by norm_num), hDm⟩
 
 /-- Refined inputs for one system, with the concrete target (6). -/
 def TheoremAInputsTarget (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
   PartIInputsTarget θ X₀ P ∧ ∃ a, θ < a ∧ a < 1 ∧ Theorem410Inputs θ (P.zetaCont 1) a
 
 /-- **Theorem 2.1, refined hypothesis with the concrete target**: as `Theorem21Inputs'`, but
-part (i) is reduced to the absorbed part of the target error and the lag bound (13) for the
+part (i) is reduced to the absorbed part of the target error and the lag bound (La) for the
 concrete target (6). -/
 def Theorem21InputsTarget : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
       ∀ ω ∈ G, TheoremAInputsTarget θ X₀ (P ω)
 
 theorem theorem21Inputs'_of_target (h : Theorem21InputsTarget) : Theorem21Inputs' := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hX0 : 1 ≤ X₀ := by
     have : (1 : ℝ) ≤ X₀ := le_trans (Real.one_le_exp (by norm_num)) h1
     exact_mod_cast this
+  have hX : 10 ^ 8 ≤ Real.log X₀ := by
+    have := Real.log_le_log (Real.exp_pos _) h1
+    rwa [Real.log_exp] at this
   exact ⟨Ω, m, μ, P, G, hμ, hG, fun ω hω =>
-    ⟨(hP ω hω).1.partIInputs (by linarith [hθ.1]) hX0, (hP ω hω).2⟩⟩
+    ⟨(hP ω hω).1.partIInputs hθ.1 hX0 hX, (hP ω hω).2⟩⟩
 
 /-- The refined hypothesis with the concrete target implies Theorem 2.1. -/
 theorem theorem21_of_target (h : Theorem21InputsTarget) : Theorem21 :=

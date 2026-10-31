@@ -33,7 +33,7 @@ variable (θ X₀) in
 /-- The `G`-term of Lemma 5.34, second bullet, at the centre `z`. -/
 noncomputable def Gsum (ω : JitterΩ) (nb : ℕ → ℝ) (z : ℝ) : ℝ :=
   ∑ i ∈ Finset.range (Jc X₀ z + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 *
-    (obG X₀ i + FrBv θ X₀ ω nb i)
+    (obG θ X₀ i + FrBv θ X₀ ω nb i)
 
 variable (hc : Cond θ X₀)
 include hc

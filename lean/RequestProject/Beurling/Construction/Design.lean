@@ -15,8 +15,10 @@ it is **proved** that the rule defines the heights by recursion: on `(1, a_k]` (
 `designedGamma_fixed` is the fixed-point condition.
 
 **The parameters of Section 2.2.** `κ = X₀^{-5/12 + 2ε_κ}` with `ε_κ = 0.01`, `κ₀ = X₀⁻¹`, and the
-switch-on points `x⁺_0 = exp(X₀²)`, `x⁺_{k+1} = exp(x⁺_k)` (the least admissible choice). Their
-required properties are proved (`kappaParam_*`, `switchOn_*`).
+switch-on points `x⁺_0 = exp(S²)`, `x⁺_{k+1} = exp(x⁺_k)` with the seed `S = max(X₀, 1000/θ)`
+(`swS`; `S = X₀` unless `θ < 1000/X₀`). Their required properties are proved (`kappaParam_*`,
+`switchOn_*`), including the switch-on condition `θ log y ≥ 16 (log log y)² + 2Λ + 10` for
+`log y ≥ log x⁺_0 - 1` (`switchOn_cond`; the paper asks `θ log x₁ ≥ 9 (log log x₁)²`).
 -/
 
 @[expose] public section
@@ -168,6 +170,23 @@ noncomputable def switchOn (X₀ : ℝ) : ℕ → ℝ
   | 0 => Real.exp (X₀ ^ 2)
   | k + 1 => Real.exp (switchOn X₀ k)
 
+/-- **The switch-on seed** `S = max(X₀, 1000/θ)`: the switch-on points are `switchOn S`, with
+`x⁺_0 = exp(S²)`. It depends on `θ` only for `θ < 1000/X₀`; `X₀` does not depend on `θ`. -/
+noncomputable def swS (θ X₀ : ℝ) : ℝ := max X₀ (1000 / θ)
+
+lemma le_swS (θ X₀ : ℝ) : X₀ ≤ swS θ X₀ := le_max_left _ _
+
+lemma log_le_log_swS {θ X₀ : ℝ} (hX0 : 0 < X₀) : Real.log X₀ ≤ Real.log (swS θ X₀) :=
+  Real.log_le_log hX0 (le_swS θ X₀)
+
+lemma logX_swS {θ X₀ : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) :
+    10 ^ 8 ≤ Real.log (swS θ X₀) := by
+  have hX1 : 0 < X₀ := by
+    rcases hX0.lt_or_eq with h | h
+    · exact h
+    · rw [← h, Real.log_zero] at hX; norm_num at hX
+  exact hX.trans (log_le_log_swS hX1)
+
 lemma kappaParam_pos {X₀ : ℝ} (hX : 0 < X₀) : 0 < kappaParam X₀ := Real.rpow_pos_of_pos hX _
 
 lemma kappaParam_le_one {X₀ : ℝ} (hX : 1 ≤ X₀) : kappaParam X₀ ≤ 1 :=
@@ -195,6 +214,9 @@ lemma switchOn_zero_ge (X₀ : ℝ) : X₀ ≤ switchOn X₀ 0 := by
   have := Real.add_one_le_exp (X₀ ^ 2)
   nlinarith [sq_nonneg (X₀ - 1 / 2)]
 
+lemma switchOn_zero_ge_swS (θ X₀ : ℝ) : X₀ ≤ switchOn (swS θ X₀) 0 :=
+  (le_swS θ X₀).trans (switchOn_zero_ge _)
+
 lemma log_switchOn_zero (X₀ : ℝ) : Real.log (switchOn X₀ 0) = X₀ ^ 2 := by
   show Real.log (Real.exp (X₀ ^ 2)) = X₀ ^ 2
   exact Real.log_exp _
@@ -206,6 +228,68 @@ lemma switchOn_gt_one (X₀ : ℝ) (k : ℕ) : 1 < switchOn X₀ (k + 1) := by
   show 1 < Real.exp (switchOn X₀ k)
   exact Real.one_lt_exp_iff.mpr (switchOn_pos X₀ k)
 
+/-- **The switch-on condition, strong form**: with the seed `S = max(X₀, 1000/θ)`, every `y`
+with `log y ≥ log x⁺_0 - 3 = S² - 3` has `16 ℓ² + 4 ℓ + 2 log X₀ + 10 ≤ θ log y`,
+`ℓ = log log y`. -/
+theorem switchOn_cond' {θ X₀ : ℝ} (hθ : 0 < θ) (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) :
+    ∀ y : ℝ, Real.log (switchOn (swS θ X₀) 0) - 3 ≤ Real.log y →
+      16 * Real.log (Real.log y) ^ 2 + 4 * Real.log (Real.log y) + 2 * Real.log X₀ + 10 ≤
+        θ * Real.log y := by
+  intro y hy
+  set S := swS θ X₀ with hS
+  rw [log_switchOn_zero] at hy
+  have hX1 : 1 < X₀ := by
+    by_contra hc; push_neg at hc; linarith [Real.log_nonpos hX0 hc]
+  have hlogX : Real.log X₀ ≤ X₀ - 1 := Real.log_le_sub_one_of_pos (by linarith)
+  have hX8 : (10 : ℝ) ^ 8 ≤ X₀ := by linarith
+  have hSX : X₀ ≤ S := le_swS θ X₀
+  have hθS : 1000 ≤ θ * S := by
+    have : 1000 / θ ≤ S := le_max_right _ _
+    rw [div_le_iff₀ hθ] at this; linarith
+  set L := Real.log y with hL
+  have hL0 : 0 < L := by nlinarith
+  set q := L ^ (1 / 4 : ℝ) with hq
+  have hq0 : 0 < q := Real.rpow_pos_of_pos hL0 _
+  have hq4 : q ^ 4 = L := by
+    rw [hq, ← Real.rpow_natCast, ← Real.rpow_mul hL0.le]; norm_num
+  have hlog := Real.log_le_rpow_div hL0.le (show (0 : ℝ) < 1 / 4 by norm_num)
+  rw [← hq] at hlog
+  -- `q² ≥ S/2`
+  have hq2 : S / 2 ≤ q ^ 2 := by
+    have h1 : (S / 2) ^ 2 ≤ (q ^ 2) ^ 2 := by
+      rw [← pow_mul]; norm_num; rw [hq4]; nlinarith
+    exact abs_le_of_sq_le_sq' h1 (by positivity) |>.2
+  have hq1 : 1 ≤ q := by nlinarith
+  -- `(log L)² ≤ 16 q²`, `log L ≤ 4 q ≤ 4 q²`
+  have h0 : 0 ≤ Real.log L := Real.log_nonneg (by nlinarith)
+  have hsq : Real.log L ^ 2 ≤ 16 * q ^ 2 := by nlinarith
+  have hlin : Real.log L ≤ 4 * q ^ 2 := by nlinarith
+  have hθL : θ * S / 2 * q ^ 2 ≤ θ * L := by
+    rw [← hq4]
+    have := mul_le_mul_of_nonneg_left hq2 (show 0 ≤ θ * q ^ 2 by positivity)
+    nlinarith
+  nlinarith
+
+/-- **The switch-on condition** (Theorem A: `θ log x₁ ≥ 9 (log log x₁)²`, here in the stronger
+form used by the late noise and step 6 of Lemma 4.6): with the seed `S = max(X₀, 1000/θ)`, every
+`y` with `log y ≥ log x⁺_0 - 1 = S² - 1` has `16 (log log y)² + 2 log X₀ + 10 ≤ θ log y`. -/
+theorem switchOn_cond {θ X₀ : ℝ} (hθ : 0 < θ) (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) :
+    ∀ y : ℝ, Real.log (switchOn (swS θ X₀) 0) - 1 ≤ Real.log y →
+      16 * Real.log (Real.log y) ^ 2 + 2 * Real.log X₀ + 10 ≤ θ * Real.log y := by
+  intro y hy
+  have h := switchOn_cond' hθ hX0 hX y (by linarith)
+  -- `log log y ≥ 0`
+  have hS := le_swS θ X₀
+  have hX1 : 1 < X₀ := by
+    by_contra hc; push_neg at hc; linarith [Real.log_nonpos hX0 hc]
+  rw [log_switchOn_zero] at hy
+  have hlogX : Real.log X₀ ≤ X₀ - 1 := Real.log_le_sub_one_of_pos (by linarith)
+  have hL : 1 ≤ Real.log y := by nlinarith
+  have := Real.log_nonneg hL
+  linarith
+
 end Construction
+
+export Construction (swS le_swS logX_swS switchOn_zero_ge_swS switchOn_cond switchOn_cond')
 
 end

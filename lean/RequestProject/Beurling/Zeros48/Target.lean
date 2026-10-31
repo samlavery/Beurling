@@ -174,23 +174,23 @@ lemma rhoDet_le (X₀ : ℕ) {κ u : ℝ} (hκ : 0 < κ) (hκ1 : κ ≤ 1) (hu :
 
 /-- `ρ̄_A` with the sum over `A` truncated to `n ≤ 2a`, valid on `[1, a]` (for `A` locally
 finite). -/
-noncomputable def rhoAF (b : ℝ) (A : Set ℝ) (hA : LocFin A) (u : ℝ → ℝ) (a v : ℝ) : ℝ :=
-  min (∑ n ∈ below hA (2 * a), absorbedBump b A u n v) (0.1 / Real.log v)
+noncomputable def rhoAF (w : ℝ → ℝ) (A : Set ℝ) (hA : LocFin A) (u : ℝ → ℝ) (a v : ℝ) : ℝ :=
+  min (∑ n ∈ below hA (2 * a), absorbedBump w A u n v) (0.1 / Real.log v)
 
-lemma measurable_rhoAF (b : ℝ) (A : Set ℝ) (hA : LocFin A) (u : ℝ → ℝ) (a : ℝ) :
-    Measurable (rhoAF b A hA u a) := by
+lemma measurable_rhoAF {w : ℝ → ℝ} (hwm : Measurable w) (A : Set ℝ) (hA : LocFin A)
+    (u : ℝ → ℝ) (a : ℝ) : Measurable (rhoAF w A hA u a) := by
   unfold rhoAF
   refine Measurable.min (Finset.measurable_sum _ fun n _ => ?_)
     (measurable_const.div Real.measurable_log)
   unfold absorbedBump
   split_ifs
-  · exact (measurable_id.pow_const _).indicator measurableSet_Icc
+  · exact hwm.inv.indicator measurableSet_Icc
   · exact measurable_const
 
-lemma absorbedDensityCap_eq_rhoAF {b : ℝ} (hb : 0 < b) (hb1 : b ≤ 1) {A : Set ℝ} (hA : LocFin A)
-    {u : ℝ → ℝ} (hu : ∀ n ∈ A, 0 ≤ u n ∧ u n + u n ^ b = n) {a v : ℝ} (hv : 1 ≤ v)
+lemma absorbedDensityCap_eq_rhoAF {w : ℝ → ℝ} (hw : IsWin w) {A : Set ℝ} (hA : LocFin A)
+    {u : ℝ → ℝ} (hu : ∀ n ∈ A, 1 ≤ u n ∧ u n + w (u n) = n) {a v : ℝ} (hv : 1 ≤ v)
     (hva : v ≤ a) :
-    absorbedDensityCap b A u v = rhoAF b A hA u a v := by
+    absorbedDensityCap w A u v = rhoAF w A hA u a v := by
   unfold absorbedDensityCap rhoAF absorbedDensity
   congr 1
   apply tsum_eq_sum
@@ -201,21 +201,19 @@ lemma absorbedDensityCap_eq_rhoAF {b : ℝ} (hb : 0 < b) (hb1 : b ≤ 1) {A : Se
   · rw [Set.indicator_of_notMem]
     rintro ⟨h1, h2⟩
     obtain ⟨hu0, hue⟩ := hu n hA'
-    have h3 : u n ^ b ≤ v ^ b := Real.rpow_le_rpow hu0 h1 hb.le
-    have h4 : v ^ b ≤ v := by
-      calc v ^ b ≤ v ^ (1 : ℝ) := Real.rpow_le_rpow_of_exponent_le hv hb1
-        _ = v := Real.rpow_one v
+    have h3 : w (u n) ≤ w v := hw.mono' (by linarith) h1
+    have h4 : w v ≤ v := hw.le_self hv
     exact hn ⟨hA', by linarith⟩
   · rfl
 
-lemma absorbedDensityCap_nonneg {b : ℝ} {A : Set ℝ} {u : ℝ → ℝ} {v : ℝ} (hv : 1 < v) :
-    0 ≤ absorbedDensityCap b A u v := by
+lemma absorbedDensityCap_nonneg {w : ℝ → ℝ} (hw : IsWin w) {A : Set ℝ} {u : ℝ → ℝ} {v : ℝ}
+    (hv : 1 < v) : 0 ≤ absorbedDensityCap w A u v := by
   unfold absorbedDensityCap absorbedDensity
-  refine le_min (tsum_nonneg fun n => absorbedBump_nonneg (X₀ := v) (by linarith) le_rfl) ?_
+  refine le_min (tsum_nonneg fun n => absorbedBump_nonneg (X₀ := v) hw (by linarith) le_rfl) ?_
   exact div_nonneg (by norm_num) (Real.log_nonneg hv.le)
 
-lemma absorbedDensityCap_le {b : ℝ} {A : Set ℝ} {u : ℝ → ℝ} (v : ℝ) :
-    absorbedDensityCap b A u v ≤ 0.1 / Real.log v := min_le_right _ _
+lemma absorbedDensityCap_le {w : ℝ → ℝ} {A : Set ℝ} {u : ℝ → ℝ} (v : ℝ) :
+    absorbedDensityCap w A u v ≤ 0.1 / Real.log v := min_le_right _ _
 
 end Zeros48
 

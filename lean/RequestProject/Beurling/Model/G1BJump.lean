@@ -9,11 +9,11 @@ public import RequestProject.Beurling.Model.G1BDec34
 at `X₀`"): only the levels `n ∈ [y/X₀ (1-2δ), y/X₀]` see the jump, and with `N_* = y/X₀`,
 `I = [N_*(1-2δ), N_*]`,
 
-  `#(𝒩 ∩ I) ≤ 4.01 δ N_* + 2H(N_*) + 2 + N_*^{θ/2}`
+  `#(𝒩 ∩ I) ≤ 4.01 δ N_* + 2H(N_*) + 2 + h(N_*)`
 
 (the lag bound at both ends of `I`, the target count `T(I) ≤ 2.0001|I| + 1 + #𝒜(I)` and Lemma 6.26
-on windows of length `u^{θ/2}`). This count is the named input `JumpCountR` (the displayed claim
-of the paper). From it (`hjS_R`): `jS ≤ 4.1δ + 3H(N_*)/N_* + 2N_*^{θ/2-1}`. The side conditions
+on windows of length `h(u)`). This count is the named input `JumpCountR` (the displayed claim
+of the paper). From it (`hjS_R`): `jS ≤ 4.1δ + 3H(N_*)/N_* + 2h(N_*)/N_*`. The side conditions
 `hN` (`e^{log y/2} ≤ N_*`) and `hHN` (`H(N_*) ≤ N_*^{1/8}`) hold on range (B) (`hN_R`, `hHN_R`).
 -/
 
@@ -29,11 +29,11 @@ variable {θ : ℝ} {X₀ : ℕ}
 open Classical in
 variable (θ X₀) in
 /-- **The jump count** (04f-bridge.tex, Proposition 5.35(B), Step 3, second bullet): with
-`N_* = y/X₀`, `#(𝒩 ∩ (N_*(1-2δ), N_*]) ≤ 4.01 δ N_* + 2H(N_*) + 2 + N_*^{θ/2}`. -/
+`N_* = y/X₀`, `#(𝒩 ∩ (N_*(1-2δ), N_*]) ≤ 4.01 δ N_* + 2H(N_*) + 2 + h(N_*)`. -/
 def JumpCountR (ω : JitterΩ) (y δ : ℝ) : Prop :=
   ((((PR θ X₀ ω).elems (y / X₀)).filter
       (fun e => y / X₀ * (1 - 2 * δ) < (PR θ X₀ ω).val e)).card : ℝ) ≤
-    4.01 * δ * (y / X₀) + 2 * Queue6.Hc X₀ (y / X₀) + 2 + (y / X₀) ^ (thetaB θ)
+    4.01 * δ * (y / X₀) + 2 * Queue6.Hc X₀ (y / X₀) + 2 + winH X₀ (y / X₀)
 
 /-- On range (B) (`log y > X₀^{1/100}`, `Λ ≥ 10⁸`): `2 log X₀ ≤ log y`. -/
 lemma two_logX_le {y : ℝ} (hX : 10 ^ 8 ≤ Real.log X₀) (hy0 : 0 < y)
@@ -77,12 +77,12 @@ theorem hHN_R {y : ℝ} (hy0 : 0 < y) (hyB : (X₀ : ℝ) ^ (1 / 100 : ℝ) < Re
 include hev in
 set_option maxHeartbeats 1000000 in
 /-- **The field `hjS`** (Step 3, second bullet), from the jump count `JumpCountR`:
-`jS ≤ 4.1δ + 3H(N_*)/N_* + 2N_*^{θ/2-1}`, `N_* = y/X₀`, for `0 < δ ≤ 1/1000`. -/
+`jS ≤ 4.1δ + 3H(N_*)/N_* + 2h(N_*)/N_*`, `N_* = y/X₀`, for `0 < δ ≤ 1/1000`. -/
 theorem hjS_R (ω : JitterΩ) {y δ : ℝ} (hy0 : 0 < y)
     (hyB : (X₀ : ℝ) ^ (1 / 100 : ℝ) < Real.log y) (hδ0 : 0 < δ) (hδ : δ ≤ 1 / 1000)
     (hJ : JumpCountR θ X₀ ω y δ) :
     jS θ X₀ ω y δ ≤ 4.1 * δ + 3 * Queue6.Hc X₀ (y / X₀) / (y / X₀) +
-      2 * (y / X₀) ^ (thetaB θ - 1) := by
+      2 * (winH X₀ (y / X₀) / (y / X₀)) := by
   classical
   set P := PR θ X₀ ω with hP
   set N := y / X₀ with hNdef
@@ -115,7 +115,7 @@ theorem hjS_R (ω : JitterΩ) {y δ : ℝ} (hy0 : 0 < y)
           · obtain ⟨-, he⟩ := Finset.mem_filter.mp he
             exact one_div_le_one_div_of_le hlow he.le
       _ = F.card * (1 / (N * (1 - 2 * δ))) := by rw [Finset.sum_const, nsmul_eq_mul]
-  have hcard : (F.card : ℝ) ≤ 4.01 * δ * N + 2 * Queue6.Hc X₀ N + 2 + N ^ (thetaB θ) := hJ
+  have hcard : (F.card : ℝ) ≤ 4.01 * δ * N + 2 * Queue6.Hc X₀ N + 2 + winH X₀ N := hJ
   -- numerics
   set H := Queue6.Hc X₀ N
   have hH3 : 3 ≤ H := by
@@ -129,21 +129,21 @@ theorem hjS_R (ω : JitterΩ) {y δ : ℝ} (hy0 : 0 < y)
       show Queue6.Hc X₀ N = _
       unfold Queue6.Hc; rw [max_eq_left hNX]
     rw [this]; nlinarith
-  have hpow : N ^ (thetaB θ) = N ^ (thetaB θ - 1) * N := by
-    rw [Real.rpow_sub hN0, Real.rpow_one, div_mul_cancel₀ _ hN0.ne']
-  have hp0 : 0 < N ^ (thetaB θ - 1) := Real.rpow_pos_of_pos hN0 _
+  have hp0 : 0 < winH X₀ N / N := div_pos (winH_pos _ _) hN0
   have hinv : 1 / (N * (1 - 2 * δ)) ≤ (1 + 4 * δ) / N := by
     rw [div_le_div_iff₀ hlow hN0]
     have : 0 ≤ 2 * δ - 8 * δ ^ 2 := by nlinarith
     nlinarith [mul_nonneg hN0.le this]
   calc jS θ X₀ ω y δ ≤ F.card * (1 / (N * (1 - 2 * δ))) := hsum
-    _ ≤ (4.01 * δ * N + 2 * H + 2 + N ^ (thetaB θ)) * ((1 + 4 * δ) / N) :=
-        mul_le_mul hcard hinv (by positivity) (by positivity)
-    _ ≤ 4.1 * δ + 3 * H / N + 2 * N ^ (thetaB θ - 1) := by
+    _ ≤ (4.01 * δ * N + 2 * H + 2 + winH X₀ N) * ((1 + 4 * δ) / N) :=
+        mul_le_mul hcard hinv (by positivity) (by have := winH_pos (X₀ : ℝ) N; linarith)
+    _ ≤ 4.1 * δ + 3 * H / N + 2 * (winH X₀ N / N) := by
+        set w := winH X₀ N / N with hw
+        have hpow : winH X₀ N = w * N := by rw [hw, div_mul_cancel₀ _ hN0.ne']
         rw [hpow]
-        have e : (4.01 * δ * N + 2 * H + 2 + N ^ (thetaB θ - 1) * N) * ((1 + 4 * δ) / N) =
+        have e : (4.01 * δ * N + 2 * H + 2 + w * N) * ((1 + 4 * δ) / N) =
             4.01 * δ * (1 + 4 * δ) + (2 * H + 2) * (1 + 4 * δ) / N +
-              N ^ (thetaB θ - 1) * (1 + 4 * δ) := by
+              w * (1 + 4 * δ) := by
           field_simp
           ring
         rw [e]

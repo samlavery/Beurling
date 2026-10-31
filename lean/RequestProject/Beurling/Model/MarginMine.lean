@@ -47,7 +47,7 @@ theorem hbs_low {ω : JitterΩ} (hN : ω ∈ NiceEv θ X₀) (h0 : Std θ X₀ �
   have hnc := noCoincidence_of_tieFree ht
   have hok := limModel_realisedOK h0
   have hT := limModel_T_formula h0 hnc
-  have L : LinkedModel θ X₀ M ω (constructionScale X₀) :=
+  have L : LinkedModel θ X₀ M ω (constructionScale X₀ (swS θ X₀)) :=
     ⟨hc.hθ, hX, hU, hT, limModel_linked h0⟩
   have S := limModel_slotFacts h0 hev ht
   have hreg := jitterWidthRegular hX
@@ -66,12 +66,12 @@ theorem hbs_low {ω : JitterΩ} (hN : ω ∈ NiceEv θ X₀) (h0 : Std θ X₀ �
     push_cast
     unfold queueBScale
     exact queueB_nonneg hX0 hX (le_dyadicScale (by linarith) (le_max_left _ _))
-  have hlag := lag_local M hc.hθ.1 hc.hθ.2 hX (realisedSystem M (capH X₀) ω).N Real.log
+  have hlag := lag_local M hX (realisedSystem M (capH X₀) ω).N Real.log
     (fun x hx => ⟨Real.log_nonneg (by linarith), le_rfl⟩)
     (fun x hx _ => landing_of_linked L S hreg hok hx)
     (fun x hx hearly => landingInit_of_linked L S hreg hok hx hearly) le_rfl hQ
   rw [hMdef, hTX] at hlag
-  have hNX0 : (realisedSystem M (capH X₀) ω).N X₀ ≤ X₀ + (X₀ : ℝ) ^ lagExponent θ := by
+  have hNX0 : (realisedSystem M (capH X₀) ω).N X₀ ≤ X₀ + (X₀ : ℝ) ^ lagExponent (1 / 10000) := by
     linarith [(abs_le.mp hlag).2]
   have h4H := four_capH_le hX0 hX (le_refl (X₀ : ℝ))
   have hH1 := capH_ge_one hX0 hX (le_refl (X₀ : ℝ))

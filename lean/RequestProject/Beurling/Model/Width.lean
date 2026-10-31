@@ -81,21 +81,22 @@ theorem floor_quasi_mono (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) {x s
 
 /-- The construction scale satisfies `a_k + 2H(a_k) ≤ x⁺_k + 3`. -/
 theorem scale_add_two_capH_le (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) (k : ℕ) :
-    constructionScale X₀ k + 2 * capH X₀ (constructionScale X₀ k) ≤ switchOn X₀ k + 3 := by
-  obtain ⟨hXa, ha0, -, hxa⟩ := constructionScale_spec hX0 hX k
-  set a := constructionScale X₀ k
+    constructionScale X₀ (swS θ X₀) k + 2 * capH X₀ (constructionScale X₀ (swS θ X₀) k) ≤ switchOn (swS θ X₀) k + 3 := by
+  obtain ⟨hXa, ha0, -, hxa⟩ := constructionScale_spec hX0 hX (le_swS θ _) k
+  set a := constructionScale X₀ (swS θ X₀) k
   have hX1 := one_lt_of_logX hX0 hX
   -- `a ≥ X₀ + 1`
-  have hX2 : X₀ ^ 2 + 1 ≤ switchOn X₀ k := by
-    have h0 : X₀ ^ 2 + 1 ≤ switchOn X₀ 0 := by
-      show X₀ ^ 2 + 1 ≤ Real.exp (X₀ ^ 2)
-      linarith [Real.add_one_le_exp (X₀ ^ 2)]
-    exact h0.trans (switchOn_mono X₀ (Nat.zero_le k))
+  have hX2 : X₀ ^ 2 + 1 ≤ switchOn (swS θ X₀) k := by
+    have h0 : X₀ ^ 2 + 1 ≤ switchOn (swS θ X₀) 0 := by
+      show X₀ ^ 2 + 1 ≤ Real.exp (swS θ X₀ ^ 2)
+      have : X₀ ^ 2 ≤ swS θ X₀ ^ 2 := pow_le_pow_left₀ hX0 (le_swS θ X₀) 2
+      linarith [Real.add_one_le_exp (swS θ X₀ ^ 2)]
+    exact h0.trans (switchOn_mono _ (Nat.zero_le k))
   have h3 : 3 * X₀ ≤ X₀ ^ 2 := by
     have : (3 : ℝ) ≤ X₀ := by have := two_pow_le_of_logX hX0 hX; linarith
     nlinarith
   have ha1 : X₀ ≤ a - 1 := by nlinarith
-  have h1 := add_two_capH_le_of_lt_constructionScale hX0 hX ha1 (by linarith)
+  have h1 := add_two_capH_le_of_lt_constructionScale hX0 hX (le_swS θ _) ha1 (by linarith)
   have h2 := capH_lip hX0 hX ha1 (by linarith : a - 1 ≤ a)
   linarith
 

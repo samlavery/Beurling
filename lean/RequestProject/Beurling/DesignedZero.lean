@@ -20,12 +20,13 @@ noncomputable def Mk (θ α γ x : ℝ) (s : ℂ) : ℂ :=
 /-- The radius `δ_k = 9 log log x_k / log x_k` of Lemma 4.6. -/
 noncomputable def designRadius (x : ℝ) : ℝ := 9 * Real.log (Real.log x) / Real.log x
 
-/-- The hypotheses of Lemma 4.6, in the parameter range of the paper: `θ ∈ [1/20, 1/2]`,
+/-- The hypotheses of Lemma 4.6, in the parameter range of the paper: `θ ≤ 1/2` and
+`θ ≥ 2δ_k` (step 6 of the proof: from the switch-on condition `θ log x_k ≥ 18 log log x_k`),
 `Λ = log X₀ ≥ 10`, `κ₀ ∈ [X₀⁻¹, 1/4]`, `log log x_k ≥ 2Λ`, `α_k γ_k = κ₀ x_k^{1-θ}/log x_k` (eq. (ampl), `κ'_k = κ₀`),
 and on the disc `|s - (1 + iγ_k)| ≤ δ_k`: `Z_B` is holomorphic, `1/2 ≤ |Z_B| ≤ Z_max = 2Λ` (the
 hypothesis of the lemma) and `|Z_B'| ≤ 4.01 Λ²` (from Lemma 4.2, step 3 of the proof). -/
 structure Lemma46Hyp (θ Λ κ₀ α γ x : ℝ) (ZB : ℂ → ℂ) : Prop where
-  θ_ge : 1 / 20 ≤ θ
+  θ_ge : 2 * designRadius x ≤ θ
   θ_le : θ ≤ 1 / 2
   Λ_ge : 10 ≤ Λ
   κ_ge : Real.exp (-Λ) ≤ κ₀
@@ -132,8 +133,21 @@ lemma re_im_bounds : |w.re - (1 - θ)| ≤ 1 / 10 ^ 6 ∧ |w.im| ≤ 1 / 10 ^ 6 
 lemma re_nonneg : 0 ≤ w.re := by
   have := (abs_le.mp (h.re_im_bounds hw).1).1; have := h.θ_le; linarith
 
+/-- `|w - (1 - θ)| ≤ δ_k` on the disc: `|Re w - (1 - θ)| ≤ δ_k` and `|Im w| ≤ δ_k`. -/
+lemma re_im_le_radius : |w.re - (1 - θ)| ≤ designRadius x ∧ |w.im| ≤ designRadius x := by
+  rw [mem_closedBall, dist_eq_norm] at hw
+  have h1 := Complex.abs_re_le_norm (w - cen θ)
+  have h2 := Complex.abs_im_le_norm (w - cen θ)
+  simp only [cen, Complex.sub_re, Complex.ofReal_re, Complex.sub_im, Complex.ofReal_im,
+    sub_zero] at h1 h2
+  exact ⟨h1.trans hw, h2.trans hw⟩
+
+/-- Step 6: `Re w ≤ 1 - θ + δ_k ≤ 1 - δ_k` (as `θ ≥ 2δ_k`). -/
+lemma re_le_one_sub : w.re ≤ 1 - designRadius x := by
+  have := (abs_le.mp (h.re_im_le_radius hw).1).2; have := h.θ_ge; linarith
+
 lemma re_le_one : w.re ≤ 1 := by
-  have := (abs_le.mp (h.re_im_bounds hw).1).2; have := h.θ_ge; linarith
+  have := h.re_le_one_sub hw; have := h.δ_pos; linarith
 
 lemma abs_im_le_one : |w.im| ≤ 1 := by
   have := (h.re_im_bounds hw).2; linarith
@@ -142,9 +156,10 @@ lemma norm_w_ge : 1 / 4 ≤ ‖w‖ := by
   have := (abs_le.mp (h.re_im_bounds hw).1).1; have := h.θ_le
   have := Complex.re_le_norm w; linarith
 
+/-- Step 6: `|w| ≤ Re w + |Im w| ≤ (1 - δ_k) + δ_k = 1`. -/
 lemma norm_w_le : ‖w‖ ≤ 1 := by
-  have := (abs_le.mp (h.re_im_bounds hw).1).2; have := h.θ_ge
-  have h2 := (h.re_im_bounds hw).2
+  have := h.re_le_one_sub hw
+  have h2 := (h.re_im_le_radius hw).2
   have := Complex.norm_le_abs_re_add_abs_im w
   rw [abs_of_nonneg (h.re_nonneg hw)] at this; linarith
 
@@ -170,7 +185,7 @@ lemma norm_s_ge : γ / 2 ≤ ‖sOf θ γ w‖ := by
 lemma norm_s_le : ‖sOf θ γ w‖ ≤ 2 * γ := by
   have h1 := (abs_le.mp (h.re_im_bounds hw).1).2
   have h2 := (abs_le.mp (h.re_im_bounds hw).2).2
-  have := h.γ_ge; have := h.θ_ge; have := h.θ_le
+  have := h.γ_ge; have := h.θ_le; have := h.δ_pos; have := h.θ_ge
   have h3 := Complex.norm_le_abs_re_add_abs_im (sOf θ γ w)
   have hre : (sOf θ γ w).re = w.re + θ := by simp [sOf]
   have him : (sOf θ γ w).im = w.im + γ := by simp [sOf]
