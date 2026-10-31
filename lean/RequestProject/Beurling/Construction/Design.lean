@@ -72,7 +72,7 @@ lemma earlyOf_congr (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A :
 
 /-! ## The recursive choice of the heights -/
 
-/-- The amplitudes `α_j = κ₀ (x⁺_j)^{1-θ} / ((log x⁺_j)³ γ_j)` for the heights `g`. -/
+/-- The amplitudes `α_j = κ₀ (x⁺_j)^{1-θ} / (γ_j log x⁺_j)` for the heights `g`. -/
 noncomputable def amplitudes (θ κ₀ : ℝ) (xp g : ℕ → ℝ) : ℕ → ℝ :=
   fun j => DesignedZero.amplitudeOf θ κ₀ (g j) (xp j)
 
@@ -141,12 +141,12 @@ lemma designedAlpha_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) 
   set Γ := DesignedZero.heightScale θ κ₀ (xp k) with hΓdef
   have hΓk := hΓ k
   have hγ : 0 < γ := lt_of_lt_of_le hΓk hm.1
-  have hL : Real.log (xp k) ^ 3 ≠ 0 := by
+  have hL : Real.log (xp k) ≠ 0 := by
     intro h0
     have : Γ = 0 := by rw [hΓdef]; unfold DesignedZero.heightScale; rw [h0]; simp
     linarith
   have e : designedAlpha P θ X₀ κ A u κ₀ xp a k = 2 * Γ / γ := by
-    show κ₀ * xp k ^ (1 - θ) / Real.log (xp k) ^ 3 / γ = 2 * Γ / γ
+    show κ₀ * xp k ^ (1 - θ) / Real.log (xp k) / γ = 2 * Γ / γ
     rw [hΓdef]; unfold DesignedZero.heightScale
     congr 1
     field_simp
@@ -160,8 +160,8 @@ lemma designedAlpha_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) 
 /-- `κ = X₀^{-5/12 + 2 ε_κ}` with `ε_κ = 0.01`. -/
 noncomputable def kappaParam (X₀ : ℝ) : ℝ := X₀ ^ (-5 / 12 + 2 * (0.01 : ℝ))
 
-/-- `κ₀ = 1/4`. -/
-noncomputable def kappa0Param : ℝ := 1 / 4
+/-- `κ₀ = X₀⁻¹` (eq. (ampl): the constant relative amplitude `κ'_k = κ₀ ∈ [X₀⁻¹, Λ⁻⁵]`). -/
+noncomputable def kappa0Param (X₀ : ℝ) : ℝ := 1 / X₀
 
 /-- The switch-on points `x⁺_0 = exp(X₀²)`, `x⁺_{k+1} = exp(x⁺_k)`. -/
 noncomputable def switchOn (X₀ : ℝ) : ℕ → ℝ
@@ -178,10 +178,13 @@ lemma kappaParam_ge {X₀ : ℝ} (hX : 1 ≤ X₀) : Real.exp (-Real.log X₀) �
   rw [Real.exp_neg, Real.exp_log hX0, kappaParam, ← Real.rpow_neg_one]
   exact Real.rpow_le_rpow_of_exponent_le hX (by norm_num)
 
-lemma kappa0Param_ge {X₀ : ℝ} (hX : 4 ≤ X₀) : Real.exp (-Real.log X₀) ≤ kappa0Param := by
-  rw [Real.exp_neg, Real.exp_log (by linarith), kappa0Param]
-  rw [inv_eq_one_div]
-  exact one_div_le_one_div_of_le (by norm_num) hX
+lemma kappa0Param_ge {X₀ : ℝ} (hX : 4 ≤ X₀) : Real.exp (-Real.log X₀) ≤ kappa0Param X₀ := by
+  rw [Real.exp_neg, Real.exp_log (by linarith), kappa0Param, inv_eq_one_div]
+
+lemma kappa0Param_pos {X₀ : ℝ} (hX : 0 < X₀) : 0 < kappa0Param X₀ := one_div_pos.mpr hX
+
+lemma kappa0Param_le {X₀ : ℝ} (hX : 4 ≤ X₀) : kappa0Param X₀ ≤ 1 / 4 :=
+  one_div_le_one_div_of_le (by norm_num) hX
 
 lemma switchOn_spacing (X₀ : ℝ) : Spacing (switchOn X₀) where
   one_le := Real.one_le_exp (sq_nonneg _)

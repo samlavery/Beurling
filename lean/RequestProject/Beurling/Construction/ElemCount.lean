@@ -59,9 +59,9 @@ structure LinkedModel (θ : ℝ) (X₀ : ℕ) (M : SlotModel X₀) (U : ℕ → 
   hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) U))
       (absorbedDensityCap (θ / 2) (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n))
       (osc θ (designedAlpha (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀) a)
+          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a)
         (designedGamma (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀) a)
+          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a)
         (switchOn X₀)) x
   hlink : ArrivalsLinked M (capH X₀) U
 

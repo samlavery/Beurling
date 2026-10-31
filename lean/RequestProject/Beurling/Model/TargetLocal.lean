@@ -168,7 +168,7 @@ theorem targetD_congr {θ : ℝ} (hθ : 0 < θ) {X₀ : ℕ} (hX : 10 ^ 8 ≤ Re
     NCount_eq_of_agree h hD hD' hx
   have ha : ∀ k, 0 < constructionScale X₀ k ∧ constructionScale X₀ k ≤ switchOn X₀ k :=
     fun k => ⟨(constructionScale_spec hX0 hX k).2.1, (constructionScale_spec hX0 hX k).2.2.1⟩
-  have hγ := designedGammaN_congr (κ := kappaParam X₀) (κ₀ := kappa0Param) hθ
+  have hγ := designedGammaN_congr (κ := kappaParam X₀) (κ₀ := (kappa0Param X₀)) hθ
     (switchOn_spacing _) hX1 (switchOn_zero_ge _) ha
     ((add_rpow_le_add_rpow hb hY0 hYz).trans hZ) hN hA
   unfold targetD

@@ -40,8 +40,8 @@ def PartIRest (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : �
     (∀ v ≥ (X₀ : ℝ),
       (localCountA A v (v + v ^ (θ / 2)) : ℝ) ≤ v ^ (θ / 2) * Real.log v ^ (-4 : ℤ)) ∧
     (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (θ / 2) A u)
-      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
-        (designedGamma P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
+      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
+        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
         (switchOn X₀)) x) ∧
     M.QueueWindowData ∧
     ∃ κp : ℝ → ℝ,
@@ -58,10 +58,10 @@ jittered primes `jit` and the latest-prime map `latest`); the pieces of `D̂_{<a
 def Theorem410Rest (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (jit : Set ℝ) (latest : ℝ → ℝ) : Prop :=
   A ⊆ absorbedRule (10 ^ 7) jit latest (absorbY X₀) ∧
-    (∀ k, Lemma48PiecesCount X₀ (heightScale θ kappa0Param (switchOn X₀ k))
+    (∀ k, Lemma48PiecesCount X₀ (heightScale θ (kappa0Param X₀) (switchOn X₀ k))
       (earlyOf P θ X₀ (kappaParam X₀) A u
-        (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
-        (designedGamma P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
+        (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
+        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
         (switchOn X₀) a k)) ∧
     (∀ k, 0 < a k ∧ a k ≤ switchOn X₀ k ∧ switchOn X₀ k ≤ (1 + 1 / 1000) * a k) ∧
     (∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →
@@ -99,7 +99,7 @@ theorem GreedyRun.jittered_ge_of_floor {X₀ : ℕ} (R : GreedyRun X₀)
 
 /-- `Γ_k > 0` for the switch-on points. -/
 lemma heightScale_switchOn_pos (θ : ℝ) {X₀ : ℝ} (hX : 1 ≤ X₀) (k : ℕ) :
-    0 < heightScale θ kappa0Param (switchOn X₀ k) := by
+    0 < heightScale θ (kappa0Param X₀) (switchOn X₀ k) := by
   have h1 : 1 < switchOn X₀ k := by
     cases k with
     | zero =>
@@ -108,6 +108,7 @@ lemma heightScale_switchOn_pos (θ : ℝ) {X₀ : ℝ} (hX : 1 ≤ X₀) (k : �
     | succ k => exact switchOn_gt_one X₀ k
   have hL := Real.log_pos h1
   unfold heightScale kappa0Param
+  have : 0 < X₀ := by linarith
   have := Real.rpow_pos_of_pos (by linarith : (0 : ℝ) < switchOn X₀ k) (1 - θ)
   positivity
 
@@ -164,8 +165,8 @@ theorem theorem21InputsDec_of_fixP (h : Theorem21InputsFixP) : Theorem21InputsDe
     obtain ⟨hArule, hpieces, ha, hbound⟩ := hC
     set κ := kappaParam (X₀ : ℝ) with hκdef
     set xp := switchOn (X₀ : ℝ) with hxpdef
-    set γ := designedGamma (P ω) θ X₀ κ A u kappa0Param xp a with hγdef
-    set α := designedAlpha (P ω) θ X₀ κ A u kappa0Param xp a with hαdef
+    set γ := designedGamma (P ω) θ X₀ κ A u (kappa0Param X₀) xp a with hγdef
+    set α := designedAlpha (P ω) θ X₀ κ A u (kappa0Param X₀) xp a with hαdef
     have hsp : Spacing xp := switchOn_spacing _
     have hxp0 : (X₀ : ℝ) ≤ xp 0 := switchOn_zero_ge _
     have hb : 0 < θ / 2 := by linarith [hθ.1]
@@ -173,7 +174,7 @@ theorem theorem21InputsDec_of_fixP (h : Theorem21InputsFixP) : Theorem21InputsDe
     have hPI : PartIWith θ X₀ (P ω) κ A u α γ xp M := by
       refine ⟨kappaParam_pos (by linarith), kappaParam_le_one hX1.le, hsp, fun k => ?_,
         hxp0, hAu, hAfin, hρ, hT, hq, κp, hκp, hland, hinit⟩
-      have hm := designedAlpha_mem (P ω) θ X₀ κ A u kappa0Param xp a
+      have hm := designedAlpha_mem (P ω) θ X₀ κ A u (kappa0Param X₀) xp a
         (heightScale_switchOn_pos θ hX1.le) k
       rw [abs_of_nonneg (by linarith [hm.1])]
       exact hm.2
@@ -187,8 +188,8 @@ theorem theorem21InputsDec_of_fixP (h : Theorem21InputsFixP) : Theorem21InputsDe
       · linarith [(hAu n hn).1]
     have hCo : Theorem410InputsCoupled θ X₀ (P ω) κ A u α γ xp
         (jitteredPrimesOf M (capH X₀) ω) latest := by
-      refine ⟨kappa0Param, a, hArule, kappaParam_ge hX1.le, kappa0Param_ge hX4,
-        by norm_num [kappa0Param], ?_, fun k => ?_, fun k => rfl, hpieces, ha, hAbs, hbound⟩
+      refine ⟨(kappa0Param X₀), a, hArule, kappaParam_ge hX1.le, kappa0Param_ge hX4,
+        kappa0Param_le hX4, ?_, fun k => ?_, fun k => rfl, hpieces, ha, hAbs, hbound⟩
       · rw [hxpdef, log_switchOn_zero]
       · exact designedGamma_fixed (P ω) hsp hX1n hxp0 (fun k => ⟨(ha k).1, (ha k).2.1⟩) k
     refine ⟨hPI.toInit, hCo.toDec hθ.1 hθ.2 hlog hev ?_ hPI⟩

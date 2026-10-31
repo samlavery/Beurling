@@ -14,8 +14,9 @@ public import RequestProject.Beurling.Model.G1BDet
   (`log_mul_sigS_le`).
 * **`R'`** (Step 3, "Resolvable `R'_j`, smooth change", and Step 4, "Pointwise", for the current
   oscillation if it is not resolvable): the named input `RprimeChangeR`, the bound of these two
-  steps as tallied in Step 5 (`≤ log⁻² x` from the resolvable `R'_j`, `≤ 2·10⁴ Λ² X₀⁻²` from the
-  pointwise bound of the current oscillation, at each of the two starts `y`, `z`). It holds
+  steps as tallied in Step 5 (`≤ log⁻² x` from the resolvable `R'_j`, `≤ 3000 κ₀` from the
+  pointwise bound (Corollary 5.9) of the current oscillation, `κ₀ = X₀⁻¹` the constant relative
+  amplitude of eq. (ampl)). It holds
   outright below `x₁ = e^{X₀²}` (`rprimeChange_of_lt`: `R' = 0` there; Step 4 is void).
 * `hoth_R` : **the field `hoth`**: `log y · othS ≤ 10⁻²⁷`.
 -/
@@ -32,11 +33,11 @@ variable {θ : ℝ} {X₀ : ℕ}
 variable (θ X₀) in
 /-- **The `R'` change of Steps 3–4** (04f-bridge.tex, Proposition 5.35(B), Step 3 "Resolvable
 `R'_j`, smooth change" and Step 4 "Pointwise"; sizes as in Step 5): for every `z ∈ J`,
-`log y · |∑_n c_n(y) (R'(max(z/n, X₀)) - R'(y/n))/n| ≤ 2 log⁻² y + 4·10⁴ Λ² X₀⁻²`. -/
+`log y · |∑_n c_n(y) (R'(max(z/n, X₀)) - R'(y/n))/n| ≤ 2 log⁻² y + 3000 κ₀`. -/
 def RprimeChangeR (ω : JitterΩ) (y δ : ℝ) : Prop :=
   ∀ z ∈ Icc (y * (1 - 2 * δ)) (y * (1 - δ)),
     Real.log y * |rhoSh (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) y (oscF θ X₀ ω (z / y))| ≤
-      2 / Real.log y ^ 2 + 4 * 10 ^ 4 * Real.log X₀ ^ 2 * (X₀ : ℝ) ^ (-2 : ℝ)
+      2 / Real.log y ^ 2 + 3000 * Construction.kappa0Param X₀
 
 /-- **Step 4 is void below `x₁`**: if `y < x₁ = e^{X₀²}`, then `R' = 0` on `[1, y]` and
 `RprimeChangeR` holds. -/
@@ -62,6 +63,7 @@ theorem rprimeChange_of_lt (hc : Cond θ X₀) (ω : JitterΩ) {y δ : ℝ} (hy 
       ring
     · ring
   rw [h0, abs_zero, mul_zero]
+  unfold Construction.kappa0Param
   positivity
 
 section

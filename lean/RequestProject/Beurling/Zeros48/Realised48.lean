@@ -25,23 +25,23 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) U))
       (absorbedDensityCap (θ / 2) (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n))
       (osc θ (designedAlpha (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀)
+          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀)
           (constructionScale X₀))
         (designedGamma (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀)
+          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀)
           (constructionScale X₀))
         (switchOn X₀)) x)
     (hlag : ∀ x ≥ (X₀ : ℝ),
       |(realisedSystem M (capH X₀) U).N x - M.T x| ≤ x ^ lagExponent θ)
     (k : ℕ) :
-    Lemma48PiecesCount X₀ (heightScale θ kappa0Param (switchOn X₀ k))
+    Lemma48PiecesCount X₀ (heightScale θ (kappa0Param X₀) (switchOn X₀ k))
       (earlyOf (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀) (realisedA M (capH X₀) U)
         (fun n => solveU (θ / 2) n)
         (designedAlpha (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀)
+          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀)
           (constructionScale X₀))
         (designedGamma (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀)
+          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀)
           (constructionScale X₀))
         (switchOn X₀) (constructionScale X₀) k) := by
   classical
@@ -50,8 +50,8 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
   set u : ℝ → ℝ := fun n => solveU (θ / 2) n with hu
   set κ := kappaParam (X₀ : ℝ) with hκdef
   set xp := switchOn (X₀ : ℝ) with hxpdef
-  set αd := designedAlpha P θ X₀ κ A u kappa0Param xp (constructionScale X₀) with hαd
-  set γd := designedGamma P θ X₀ κ A u kappa0Param xp (constructionScale X₀) with hγd
+  set αd := designedAlpha P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀) with hαd
+  set γd := designedGamma P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀) with hγd
   set R := osc θ αd γd xp with hR
   set rhoA := absorbedDensityCap (θ / 2) A u with hrhoA
   set ak := constructionScale (X₀ : ℝ) k with hak
@@ -106,8 +106,8 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
   have hcnt : ∀ x, 0 ≤ x → ((residualLe h x).card : ℝ) = D x + contPart X₀ κ rhoA R x :=
     fun x hx => by rw [hDeq x hx]; ring
   -- the oscillation
-  have hΓpos : ∀ j, 0 < heightScale θ kappa0Param (xp j) := fun j =>
-    heightScale_pos (by norm_num [kappa0Param]) (by
+  have hΓpos : ∀ j, 0 < heightScale θ (kappa0Param X₀) (xp j) := fun j =>
+    heightScale_pos (kappa0Param_pos (by linarith)) (by
       have := hsp.one_le_all j
       have h2 : xp 0 ≤ xp j := switchOn_mono _ (Nat.zero_le j)
       have h3 : (1 : ℝ) < xp 0 := by
@@ -115,10 +115,10 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
         exact Real.one_lt_exp_iff.mpr (by positivity)
       linarith)
   have hαb : ∀ j, |αd j| ≤ 2 := fun j => by
-    have := designedAlpha_mem P θ X₀ κ A u kappa0Param xp (constructionScale X₀) hΓpos j
+    have := designedAlpha_mem P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀) hΓpos j
     rw [abs_of_nonneg (by linarith [this.1])]; exact this.2
-  have hγb : ∀ j, |γd j| ≤ 2 * heightScale θ kappa0Param (xp j) := fun j => by
-    have := designedGamma_mem P θ X₀ κ A u kappa0Param xp (constructionScale X₀)
+  have hγb : ∀ j, |γd j| ≤ 2 * heightScale θ (kappa0Param X₀) (xp j) := fun j => by
+    have := designedGamma_mem P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀)
       (fun j => (hΓpos j).le) j
     rw [abs_of_nonneg (by linarith [this.1, hΓpos j])]; exact this.2
   set L := ∑ j ∈ Finset.range k, oscLip θ (αd j) (γd j) (xp j) with hLdef

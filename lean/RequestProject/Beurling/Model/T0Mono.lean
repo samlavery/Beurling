@@ -50,7 +50,7 @@ heights `γ`, the designed amplitudes and `x_k = switchOn X₀ k`. -/
 theorem T0_mono_designed {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) (hHB : ShortIntervalPNTFrom X₀) {γ : ℕ → ℝ}
     (hγ : DesignedRange θ X₀ γ) :
-    MonotoneOn (LocalPNT.T0 θ X₀ (amplitudes θ kappa0Param (switchOn X₀) γ) γ (switchOn X₀))
+    MonotoneOn (LocalPNT.T0 θ X₀ (amplitudes θ (kappa0Param X₀) (switchOn X₀) γ) γ (switchOn X₀))
       (Ici (X₀ : ℝ)) := by
   have hX1 : (1 : ℝ) < X₀ := QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hX
   intro x hx x' hx' hxx

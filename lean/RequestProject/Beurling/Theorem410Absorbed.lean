@@ -36,7 +36,7 @@ structure Lemma46HypPre (θ Λ κ₀ α γ x : ℝ) (ZB : ℂ → ℂ) : Prop wh
   loglog_ge : 2 * Λ ≤ Real.log (Real.log x)
   α_pos : 0 < α
   γ_ge : 2 ≤ γ
-  αγ_eq : α * γ = κ₀ * x ^ (1 - θ) / Real.log x ^ 3
+  αγ_eq : α * γ = κ₀ * x ^ (1 - θ) / Real.log x
   diff : ∀ s ∈ closedBall (1 + γ * I) (designRadius x), DifferentiableAt ℂ ZB s
   deriv_le : ∀ s ∈ closedBall (1 + γ * I) (designRadius x), ‖deriv ZB s‖ ≤ 4.01 * Λ ^ 2
   norm_le : ∀ s ∈ closedBall (1 + γ * I) (designRadius x), ‖ZB s‖ ≤ 2 * Λ

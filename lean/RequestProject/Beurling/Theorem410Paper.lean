@@ -205,7 +205,7 @@ lemma lateNoise_numeric (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) :
   rw [← div_eq_mul_inv, div_le_div_iff₀ hpos (by norm_num)]
   nlinarith
 
-/-- `γ ≥ 2 log x + 5`, from `α γ = κ₀ x^{1-θ}/log³ x`, `α ≤ 2`, `κ₀ ≥ e^{-Λ}`. -/
+/-- `γ ≥ 2 log x + 5`, from `α γ = κ₀ x^{1-θ}/log x`, `α ≤ 2`, `κ₀ ≥ e^{-Λ}`. -/
 lemma γ_ge_log (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) (hα : α ≤ 2) :
     2 * Real.log x + 5 ≤ γ := by
   have hL := h.L_ge_big
@@ -220,21 +220,26 @@ lemma γ_ge_log (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) (hα : α ≤ 2) :
   have hxθ : Real.exp (L / 2) ≤ x ^ (1 - θ) := by
     rw [h.rpow_eq_exp, Real.exp_le_exp, ← hLdef]
     have := h.θ_le; nlinarith
-  have hγ : γ = κ₀ * x ^ (1 - θ) / L ^ 3 / α := by
+  have hγ : γ = κ₀ * x ^ (1 - θ) / L / α := by
     rw [← h.αγ_eq]; field_simp [h.α_pos.ne']
   have hexp : (L / 2) ^ 6 / 720 ≤ Real.exp (L / 2) := by
     have := Real.pow_div_factorial_le_exp (L / 2) (by linarith) 6
     norm_num [Nat.factorial] at this ⊢; linarith
-  have hlow : Real.exp (L / 2) / (2 * L ^ 4) ≤ γ := by
+  have hlow2 : Real.exp (L / 2) / (2 * L ^ 2) ≤ γ := by
     rw [hγ, div_div, div_le_div_iff₀ (by positivity) (by have := h.α_pos; positivity)]
     have hα0 := h.α_pos
     have hκ0 : 0 ≤ κ₀ := le_trans (by positivity) hκ
-    have e1 : Real.exp (L / 2) * (L ^ 3 * α) ≤ Real.exp (L / 2) * (L ^ 3 * 2) := by gcongr
-    have e2 : Real.exp (L / 2) * (L ^ 3 * 2) = (1 / L) * Real.exp (L / 2) * (2 * L ^ 4) := by
+    have e1 : Real.exp (L / 2) * (L * α) ≤ Real.exp (L / 2) * (L * 2) := by gcongr
+    have e2 : Real.exp (L / 2) * (L * 2) = (1 / L) * Real.exp (L / 2) * (2 * L ^ 2) := by
       field_simp
-    have e3 : (1 / L) * Real.exp (L / 2) * (2 * L ^ 4) ≤ κ₀ * x ^ (1 - θ) * (2 * L ^ 4) := by
+    have e3 : (1 / L) * Real.exp (L / 2) * (2 * L ^ 2) ≤ κ₀ * x ^ (1 - θ) * (2 * L ^ 2) := by
       gcongr
     linarith
+  have hlow : Real.exp (L / 2) / (2 * L ^ 4) ≤ γ := by
+    refine le_trans ?_ hlow2
+    apply div_le_div_of_nonneg_left (Real.exp_pos _).le (by positivity)
+    have : 1 ≤ L := by linarith
+    nlinarith [pow_le_pow_right₀ this (show 2 ≤ 4 by norm_num)]
   refine le_trans ?_ hlow
   rw [le_div_iff₀ (by positivity)]
   have h6 : (2 * L + 5) * (2 * L ^ 4) ≤ (L / 2) ^ 6 / 720 := by
@@ -297,7 +302,7 @@ theorem Theorem410InputsPaper.circle {θ : ℝ} {F : ℂ → ℂ} (h : Theorem41
       | succ n ih =>
         have := Real.add_one_le_exp (xp n); have := hsp n; push_cast; linarith
     exact tendsto_atTop_mono hstep tendsto_natCast_atTop_atTop
-  refine ⟨Λ, κ₀, α, γ, xp, fun _ => ZB, htend, hH, fun k s₀ hz hdisc s hs => ?_⟩
+  refine ⟨Λ, κ₀, α, γ, xp, fun _ => ZB, htend, hH, hα, fun k s₀ hz hdisc s hs => ?_⟩
   have hk := hH k
   have hL := hk.L_pos
   have hδ := hk.δ_le

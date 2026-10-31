@@ -18,7 +18,7 @@ From these we prove, in Lean, the parts of the paper's argument that are pure lo
 elementary analysis:
 
 * `exists_realisation` : one realisation `ω ∈ G` exists (since `1 - 1.5/log X₀ > 0`);
-* `TheoremAConclusion.re_tendsto_one` : `Re ρ_k = 1 - (3 log log x_k + O(1)) / log x_k → 1`;
+* `TheoremAConclusion.re_tendsto_one` : `Re ρ_k = 1 - (log log x_k + O(1)) / log x_k → 1`;
 * `TheoremAConclusion.N_bound` : `N(x) = x + O(x^β)` for every `β > θ` (absorbing `log* x`);
 * `TheoremAConclusion.not_hasZeroFreeHalfPlane` : no zero-free half-plane (identity theorem);
 * `corollary_2_2` : the answer to Question Q is negative;
@@ -39,14 +39,17 @@ noncomputable def lagExponent (θ : ℝ) : ℝ := min θ (1 / 2 - θ) / 2
 (i) `|N_P(x) - x| ≤ C x^θ + 3 x^θ log* x + x^η` for all `x ≥ 1`;
 
 (ii) `ζ_P` continues analytically to a punctured half-plane `Re s > a` (`a < 1`) and has zeros
-`ρ_k` there with `Re ρ_k = 1 - (3 log log x_k + O(1)) / log x_k` along a sequence `x_k → ∞`. -/
+`ρ_k` there with `Re ρ_k = 1 - (log log x_k + O(1)) / log x_k` along a sequence `x_k → ∞`; the
+scale `x_k` is tied to the zero by `log Im ρ_k = (1 - θ) log x_k - log log x_k + O(1)` (the height
+`γ_k ≍ x_k^{1-θ}/log x_k` of eq. (ampl)), so that `1 - Re ρ_k ≍ (1-θ) log log γ_k / log γ_k`. -/
 def TheoremAConclusion (θ : ℝ) (P : BeurlingSystem) : Prop :=
   (∃ C : ℝ, ∀ x ≥ (1 : ℝ),
       |P.N x - x| ≤ C * x ^ θ + 3 * x ^ θ * (logStar x : ℝ) + x ^ lagExponent θ) ∧
   (∃ a < (1 : ℝ), ∃ F : ℂ → ℂ, P.IsZetaContinuation a F ∧
     ∃ (ρ : ℕ → ℂ) (xk : ℕ → ℝ) (C : ℝ), Tendsto xk atTop atTop ∧
       (∀ k, ρ k ∈ puncturedHalfPlane a ∧ F (ρ k) = 0) ∧
-      ∀ k, |(1 - (ρ k).re) * Real.log (xk k) - 3 * Real.log (Real.log (xk k))| ≤ C)
+      (∀ k, |(1 - (ρ k).re) * Real.log (xk k) - Real.log (Real.log (xk k))| ≤ C) ∧
+      ∀ k, |Real.log (ρ k).im - ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k)))| ≤ C)
 
 /-- **Theorem 2.1 (Theorem A)**, taken as a hypothesis. For every `θ ∈ [1/4, 1/2 - 10⁻⁴]`
 there is a threshold `X_Hux` such that for every even integer `X₀ ≥ max(e^{10^8}, X_Hux)` the
@@ -103,7 +106,7 @@ theorem re_tendsto_one (h : TheoremAConclusion θ P) :
     ∃ a < (1 : ℝ), ∃ F : ℂ → ℂ, P.IsZetaContinuation a F ∧ ∃ ρ : ℕ → ℂ,
       (∀ k, ρ k ∈ puncturedHalfPlane a ∧ F (ρ k) = 0) ∧
       Tendsto (fun k => (ρ k).re) atTop (𝓝 1) := by
-  obtain ⟨a, ha, F, hF, ρ, xk, C, hx, hz, hb⟩ := h.2
+  obtain ⟨a, ha, F, hF, ρ, xk, C, hx, hz, hb, -⟩ := h.2
   exact ⟨a, ha, F, hF, ρ, hz, tendsto_one_of_log_asymptotic _ xk C hx hb⟩
 
 /-- Theorem 2.1(i) gives `N_P(x) = x + O(x^β)` for every `β > θ`. -/

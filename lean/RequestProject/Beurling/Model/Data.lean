@@ -173,12 +173,12 @@ noncomputable def uA (θ : ℝ) : ℝ → ℝ := fun n => solveU (θ / 2) n
 
 /-- The heights `γ_k` of the data (Lemma 4.8, with `κ, κ₀, x⁺, a_k` of Section 2.2). -/
 noncomputable def gammaD (θ : ℝ) (X₀ : ℕ) (D : PrimeData) : ℕ → ℝ :=
-  designedGammaN (NCount X₀ D) θ X₀ (kappaParam X₀) (absSet X₀ D) (uA θ) kappa0Param
+  designedGammaN (NCount X₀ D) θ X₀ (kappaParam X₀) (absSet X₀ D) (uA θ) (kappa0Param X₀)
     (switchOn X₀) (constructionScale X₀)
 
 /-- The amplitudes `α_k` of the data. -/
 noncomputable def alphaD (θ : ℝ) (X₀ : ℕ) (D : PrimeData) : ℕ → ℝ :=
-  amplitudes θ kappa0Param (switchOn X₀) (gammaD θ X₀ D)
+  amplitudes θ (kappa0Param X₀) (switchOn X₀) (gammaD θ X₀ D)
 
 /-- **The target (6) of the data.** -/
 noncomputable def targetD (θ : ℝ) (X₀ : ℕ) (D : PrimeData) : ℝ → ℝ :=

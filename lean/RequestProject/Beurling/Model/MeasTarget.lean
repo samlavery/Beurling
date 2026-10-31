@@ -26,7 +26,7 @@ namespace BModel
 variable {Ω : Type*} [MeasurableSpace Ω] {θ : ℝ} {X₀ : ℕ}
 
 lemma measurable_amplitudes {g : Ω → ℕ → ℝ} (hg : ∀ j, Measurable fun ω => g ω j) (j : ℕ) :
-    Measurable fun ω => amplitudes θ kappa0Param (switchOn X₀) (g ω) j := by
+    Measurable fun ω => amplitudes θ (kappa0Param X₀) (switchOn X₀) (g ω) j := by
   unfold amplitudes amplitudeOf
   exact measurable_const.div (hg j)
 
@@ -40,19 +40,19 @@ include hθ hX hD hL hP
 /-- The lag `N - T` with measurable heights is jointly measurable. -/
 lemma measurable_lag_fam {g : Ω → ℕ → ℝ} (hg : ∀ j, Measurable fun ω => g ω j) :
     Measurable fun p : Ω × ℝ => lagN (NCount X₀ (D p.1)) θ X₀ (kappaParam X₀)
-      (absSet X₀ (D p.1)) (uA θ) (amplitudes θ kappa0Param (switchOn X₀) (g p.1)) (g p.1)
+      (absSet X₀ (D p.1)) (uA θ) (amplitudes θ (kappa0Param X₀) (switchOn X₀) (g p.1)) (g p.1)
       (switchOn X₀) p.2 := by
   unfold lagN
   refine (measurable_NCount hD hL hP).sub ?_
   rw [show (fun p : Ω × ℝ => targetOf θ X₀ (kappaParam X₀) (absSet X₀ (D p.1)) (uA θ)
-      (amplitudes θ kappa0Param (switchOn X₀) (g p.1)) (g p.1) (switchOn X₀) p.2) =
+      (amplitudes θ (kappa0Param X₀) (switchOn X₀) (g p.1)) (g p.1) (switchOn X₀) p.2) =
       fun p : Ω × ℝ => target X₀ (kappaParam X₀) (countA (absSet X₀ (D p.1)))
         (absorbedDensityCap (θ / 2) (absSet X₀ (D p.1)) (uA θ))
-        (osc θ (amplitudes θ kappa0Param (switchOn X₀) (g p.1)) (g p.1) (switchOn X₀)) p.2
+        (osc θ (amplitudes θ (kappa0Param X₀) (switchOn X₀) (g p.1)) (g p.1) (switchOn X₀)) p.2
       from rfl]
   exact measurable_target_fam X₀ _ (cnt := fun ω => countA (absSet X₀ (D ω)))
     (rho := fun ω => absorbedDensityCap (θ / 2) (absSet X₀ (D ω)) (uA θ))
-    (R := fun ω => osc θ (amplitudes θ kappa0Param (switchOn X₀) (g ω)) (g ω) (switchOn X₀))
+    (R := fun ω => osc θ (amplitudes θ (kappa0Param X₀) (switchOn X₀) (g ω)) (g ω) (switchOn X₀))
     (measurable_countA hD hL hP hX)
     (measurable_rhoCap hD hL hP hX (by linarith [hθ.1]))
     (measurable_osc_fam hX (measurable_amplitudes (θ := θ) (X₀ := X₀) hg) hg)
@@ -73,10 +73,10 @@ theorem measurable_gammaD (k : ℕ) : Measurable fun ω => gammaD θ X₀ (D ω)
     · simp only [hgdef, if_pos hi]; exact IH i hi
     · simp only [hgdef, if_neg hi]; exact measurable_const
   set F : Ω → ℂ → ℂ := fun ω => earlyN (NCount X₀ (D ω)) θ X₀ (kappaParam X₀)
-    (absSet X₀ (D ω)) (uA θ) (amplitudes θ kappa0Param (switchOn X₀) (g ω)) (g ω)
+    (absSet X₀ (D ω)) (uA θ) (amplitudes θ (kappa0Param X₀) (switchOn X₀) (g ω)) (g ω)
     (switchOn X₀) (constructionScale X₀) k with hF
   have hrec : (fun ω => gammaD θ X₀ (D ω) k) = fun ω =>
-      chooseHeight X₀ (kappaParam X₀) (F ω) (heightScale θ kappa0Param (switchOn X₀ k)) := by
+      chooseHeight X₀ (kappaParam X₀) (F ω) (heightScale θ (kappa0Param X₀) (switchOn X₀ k)) := by
     funext ω
     unfold gammaD
     rw [designedGammaN_rec]
@@ -96,7 +96,7 @@ theorem measurable_gammaD (k : ℕ) : Measurable fun ω => gammaD θ X₀ (D ω)
       refine earlyNoise_congr ha0 fun x hx hxa => ?_
       have := lagN_congr_lt (NCount X₀ (D ω)) (θ := θ) (κ := kappaParam X₀)
         (A := absSet X₀ (D ω)) (u := uA θ)
-        (α := amplitudes θ kappa0Param (switchOn X₀) (g ω)) (γ := g ω)
+        (α := amplitudes θ (kappa0Param X₀) (switchOn X₀) (g ω)) (γ := g ω)
         (α' := alphaD θ X₀ (D ω)) (γ' := gammaD θ X₀ (D ω)) (switchOn_spacing _) hX1n
         (switchOn_zero_ge _) (k := k) (fun i hi => by simp [amplitudes, alphaD, hgdef, hi])
         (fun i hi => by simp [hgdef, hi]) hx (hxa.trans hak)

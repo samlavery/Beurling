@@ -63,7 +63,7 @@ def PartIInputs (θ X₀ : ℝ) (P : BeurlingSystem) : Prop :=
 /-- Refined inputs for Theorem 2.1 for one system: the part (i) inputs (8), (13) and the inputs of
 Theorem 4.10 for the canonical continuation. -/
 def TheoremAInputs' (θ X₀ : ℝ) (P : BeurlingSystem) : Prop :=
-  PartIInputs θ X₀ P ∧ ∃ a, θ < a ∧ a < 1 ∧ Theorem410Inputs (P.zetaCont 1) a
+  PartIInputs θ X₀ P ∧ ∃ a, θ < a ∧ a < 1 ∧ Theorem410Inputs θ (P.zetaCont 1) a
 
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21Inputs`, but with part (i) replaced by the
 target error (8) and the lag bound (13) (for the concrete oscillation `R` of (1)). -/

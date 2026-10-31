@@ -139,7 +139,7 @@ end DesignedZero
 def Theorem410InputsDesigned (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (Λ κ₀ : ℝ) (α γ xk : ℕ → ℝ) (ZB : ℕ → ℂ → ℂ),
     Tendsto xk atTop atTop ∧
-    (∀ k, Lemma46Hyp θ Λ κ₀ (α k) (γ k) (xk k) (ZB k)) ∧
+    (∀ k, Lemma46Hyp θ Λ κ₀ (α k) (γ k) (xk k) (ZB k)) ∧ (∀ k, 1 ≤ α k ∧ α k ≤ 2) ∧
     ∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xk k)),
       ‖F s - (ZB k s + Mk θ (α k) (γ k) (xk k) s)‖ < 1 / 4
 
@@ -150,7 +150,7 @@ disc `|s - (1 + iγ_k)| ≤ δ_k` (as in the paper, where Lemma 4.7 is a bound o
 def Theorem410InputsCircle (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (Λ κ₀ : ℝ) (α γ xk : ℕ → ℝ) (ZB : ℕ → ℂ → ℂ),
     Tendsto xk atTop atTop ∧
-    (∀ k, Lemma46Hyp θ Λ κ₀ (α k) (γ k) (xk k) (ZB k)) ∧
+    (∀ k, Lemma46Hyp θ Λ κ₀ (α k) (γ k) (xk k) (ZB k)) ∧ (∀ k, 1 ≤ α k ∧ α k ≤ 2) ∧
     ∀ k (s₀ : ℂ), ZB k s₀ + Mk θ (α k) (γ k) (xk k) s₀ = 0 →
       ‖s₀ - (1 + γ k * I)‖ + 1 / Real.log (xk k) ≤ designRadius (xk k) →
       ∀ s ∈ sphere s₀ (1 / Real.log (xk k)),
@@ -159,8 +159,8 @@ def Theorem410InputsCircle (θ : ℝ) (F : ℂ → ℂ) : Prop :=
 /-- The disc form of the inputs implies the circle form. -/
 theorem Theorem410InputsDesigned.circle {θ : ℝ} {F : ℂ → ℂ} (h : Theorem410InputsDesigned θ F) :
     Theorem410InputsCircle θ F := by
-  obtain ⟨Λ, κ₀, α, γ, xk, ZB, hx, hH, hpert⟩ := h
-  refine ⟨Λ, κ₀, α, γ, xk, ZB, hx, hH, fun k s₀ _ hdisc s hs => hpert k s ?_⟩
+  obtain ⟨Λ, κ₀, α, γ, xk, ZB, hx, hH, hα, hpert⟩ := h
+  refine ⟨Λ, κ₀, α, γ, xk, ZB, hx, hH, hα, fun k s₀ _ hdisc s hs => hpert k s ?_⟩
   rw [mem_closedBall, dist_eq_norm]
   rw [mem_sphere, dist_eq_norm] at hs
   calc ‖s - (1 + γ k * I)‖ = ‖(s - s₀) + (s₀ - (1 + γ k * I))‖ := by ring_nf
@@ -171,8 +171,8 @@ theorem Theorem410InputsDesigned.circle {θ : ℝ} {F : ℂ → ℂ} (h : Theore
 `theorem_4_10` (zeros `s*_k` of `Z_B + M_k` with the stated real parts, and the Rouché
 inequality on the circles `|s - s*_k| = 1/log x_k`), on any half-plane `Re s > a`, `a ≤ 3/4`. -/
 theorem theorem410Inputs_of_circle {θ a : ℝ} {F : ℂ → ℂ} (ha : a ≤ 3 / 4)
-    (h : Theorem410InputsCircle θ F) : Theorem410Inputs F a := by
-  obtain ⟨Λ, κ₀, α, γ, xk, ZB, hx, hH, hpert⟩ := h
+    (h : Theorem410InputsCircle θ F) : Theorem410Inputs θ F a := by
+  obtain ⟨Λ, κ₀, α, γ, xk, ZB, hx, hH, hα, hpert⟩ := h
   choose sstar hzero hdisc hre hcirc using fun k => lemma_4_6 (hH k)
   have hsub : ∀ k, closedBall (sstar k) (1 / Real.log (xk k)) ⊆
       closedBall (1 + γ k * I) (designRadius (xk k)) := fun k s hs => by
@@ -180,18 +180,53 @@ theorem theorem410Inputs_of_circle {θ a : ℝ} {F : ℂ → ℂ} (ha : a ≤ 3 
     calc ‖s - (1 + γ k * I)‖ = ‖(s - sstar k) + (sstar k - (1 + γ k * I))‖ := by ring_nf
       _ ≤ ‖s - sstar k‖ + ‖sstar k - (1 + γ k * I)‖ := norm_add_le _ _
       _ ≤ designRadius (xk k) := by linarith [hdisc k]
+  -- the height: `|Im s*_k - γ_k| ≤ δ_k ≤ 10⁻⁶` and `log γ_k = log(α_kγ_k) - log α_k`
+  have him : ∀ k, |(sstar k).im - γ k| ≤ 1 / 10 ^ 6 := fun k => by
+    have h1 := Complex.abs_im_le_norm (sstar k - (1 + γ k * I))
+    simp only [Complex.sub_im, Complex.add_im, Complex.one_im, Complex.mul_im, Complex.ofReal_re,
+      Complex.I_im, Complex.ofReal_im, Complex.I_re] at h1
+    norm_num at h1
+    have h2 : 0 < 1 / Real.log (xk k) := by have := (hH k).L_pos; positivity
+    linarith [hdisc k, (hH k).δ_le]
+  have hheight : ∀ k, 2 ≤ (sstar k).im + 1 / 10 ^ 5 ∧
+      |Real.log (sstar k).im - ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k)))| ≤
+        Λ + 2 := fun k => by
+    have hk := hH k
+    have hγ2 := hk.γ_ge
+    have hi := abs_le.mp (him k)
+    have hs1 : 1 ≤ (sstar k).im := by linarith
+    refine ⟨by linarith, ?_⟩
+    have hl := abs_log_sub_log_le hs1 (by linarith : (1 : ℝ) ≤ γ k)
+    have hα0 := hk.α_pos
+    have hlogγ : Real.log (γ k) = Real.log (α k * γ k) - Real.log (α k) := by
+      rw [Real.log_mul hα0.ne' (by linarith)]; ring
+    rw [hk.log_αγ] at hlogγ
+    have hla0 : 0 ≤ Real.log (α k) := Real.log_nonneg (hα k).1
+    have hla1 : Real.log (α k) ≤ 1 := by
+      have := Real.log_le_sub_one_of_pos hα0; linarith [(hα k).2]
+    have hκ1 := hk.log_κ_ge
+    have hκ2 := hk.log_κ_le
+    have hΛ := hk.Λ_ge
+    have hl' := hl.trans (him k)
+    rw [abs_le] at hl' ⊢
+    constructor <;> linarith [hl'.1, hl'.2]
   refine ⟨sstar, xk, fun k s => ZB k s + Mk θ (α k) (γ k) (xk k) s, 2 * Λ + 4, hx,
     fun k => (hH k).one_lt_x, fun k => (hsub k).trans ((hH k).closedBall_subset ha),
-    fun k => ?_, hzero, fun k s hs => ?_, hre⟩
+    fun k => ?_, hzero, fun k s hs => ?_, hre, fun k => ?_, fun k => ?_⟩
   · intro s hs
     have hs' := hsub k hs
     exact (((hH k).diff s hs').add (differentiableAt_Mk (by linarith [(hH k).one_lt_x])
       ((hH k).w_ne_zero_of_mem hs'))).differentiableWithinAt
   · exact lt_of_lt_of_le (hpert k _ (hzero k) (hdisc k) s hs) (hcirc k s hs)
+  · have hγ2 := (hH k).γ_ge
+    have hi := abs_le.mp (him k)
+    exact ⟨by linarith, by linarith [(hH k).L_ge']⟩
+  · linarith [(hheight k).2, (hH k).Λ_ge, le_abs_self (Real.log (sstar k).im -
+      ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k))))]
 
 /-- **Theorem 4.10 inputs from Lemma 4.6** (disc form of the perturbation bound). -/
 theorem theorem410Inputs_of_designed {θ a : ℝ} {F : ℂ → ℂ} (ha : a ≤ 3 / 4)
-    (h : Theorem410InputsDesigned θ F) : Theorem410Inputs F a :=
+    (h : Theorem410InputsDesigned θ F) : Theorem410Inputs θ F a :=
   theorem410Inputs_of_circle ha h.circle
 
 open Target

@@ -22,7 +22,7 @@ lemma pow_five_div_le_exp {y : ℝ} (hy : 0 ≤ y) : y ^ 5 / 120 ≤ Real.exp y 
 /-- **The size conditions at one switch-on point** (the computation behind (20) in the proof of
 Lemma 4.8(ii)). For `X₀ ≥ 0` with `log X₀ ≥ 10⁸`, `θ ≤ 1/2`, `X₀⁻¹ ≤ κ ≤ 1`, `κ₀ ≥ X₀⁻¹` and
 `x > 0` with `log x ≥ X₀²`: `x > 1`, `log log x ≥ 2 log X₀`, and
-`e^{X₀²/3}/κ + 1/2 ≤ Γ(x) = κ₀ x^{1-θ}/(2 (log x)³)`. -/
+`e^{X₀²/3}/κ + 1/2 ≤ Γ(x) = κ₀ x^{1-θ}/(2 log x)`. -/
 theorem size_of_log_ge {X₀ θ κ κ₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hθ2 : θ ≤ 1 / 2) (hκ : Real.exp (-Real.log X₀) ≤ κ) (hκ1 : κ ≤ 1)
     (hκ₀ : Real.exp (-Real.log X₀) ≤ κ₀) (hx0 : 0 < x) (hx : X₀ ^ 2 ≤ Real.log x) :
@@ -84,7 +84,9 @@ theorem size_of_log_ge {X₀ θ κ κ₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 
     unfold heightScale
     rw [← hLdef, le_div_iff₀ (by positivity)]
     have hL30 : 0 < L ^ 3 := by positivity
-    calc (E + 1 / 2) * (2 * L ^ 3) ≤ 3 * L ^ 3 * E := by nlinarith
+    have hLL3 : L ≤ L ^ 3 := by nlinarith [mul_le_mul hLbig hLbig (by norm_num) hLpos.le]
+    calc (E + 1 / 2) * (2 * L) ≤ 3 * L * E := by nlinarith [mul_le_mul_of_nonneg_left hE1 hLpos.le]
+      _ ≤ 3 * L ^ 3 * E := by nlinarith [mul_le_mul_of_nonneg_right hLL3 (by linarith : (0:ℝ) ≤ E)]
       _ = (1 / X₀) * (3 * L ^ 3 * X₀ * E) := by field_simp
       _ ≤ κ₀ * x ^ (1 - θ) := by
         apply mul_le_mul hκ₀ (hprod.trans hxr) (by positivity)

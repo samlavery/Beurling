@@ -21,7 +21,7 @@ noncomputable def Mk (θ α γ x : ℝ) (s : ℂ) : ℂ :=
 noncomputable def designRadius (x : ℝ) : ℝ := 9 * Real.log (Real.log x) / Real.log x
 
 /-- The hypotheses of Lemma 4.6, in the parameter range of the paper: `θ ∈ [1/4, 1/2]`,
-`Λ = log X₀ ≥ 10`, `κ₀ ∈ [X₀⁻¹, 1/4]`, `log log x_k ≥ 2Λ`, `α_k γ_k = κ₀ x_k^{1-θ}/log³ x_k`,
+`Λ = log X₀ ≥ 10`, `κ₀ ∈ [X₀⁻¹, 1/4]`, `log log x_k ≥ 2Λ`, `α_k γ_k = κ₀ x_k^{1-θ}/log x_k` (eq. (ampl), `κ'_k = κ₀`),
 and on the disc `|s - (1 + iγ_k)| ≤ δ_k`: `Z_B` is holomorphic, `1/2 ≤ |Z_B| ≤ Z_max = 2Λ` (the
 hypothesis of the lemma) and `|Z_B'| ≤ 4.01 Λ²` (from Lemma 4.2, step 3 of the proof). -/
 structure Lemma46Hyp (θ Λ κ₀ α γ x : ℝ) (ZB : ℂ → ℂ) : Prop where
@@ -34,7 +34,7 @@ structure Lemma46Hyp (θ Λ κ₀ α γ x : ℝ) (ZB : ℂ → ℂ) : Prop where
   loglog_ge : 2 * Λ ≤ Real.log (Real.log x)
   α_pos : 0 < α
   γ_ge : 2 ≤ γ
-  αγ_eq : α * γ = κ₀ * x ^ (1 - θ) / Real.log x ^ 3
+  αγ_eq : α * γ = κ₀ * x ^ (1 - θ) / Real.log x
   diff : ∀ s ∈ closedBall (1 + γ * I) (designRadius x), DifferentiableAt ℂ ZB s
   deriv_le : ∀ s ∈ closedBall (1 + γ * I) (designRadius x), ‖deriv ZB s‖ ≤ 4.01 * Λ ^ 2
   norm_ge : ∀ s ∈ closedBall (1 + γ * I) (designRadius x), 1 / 2 ≤ ‖ZB s‖
@@ -88,12 +88,11 @@ lemma δ_le : designRadius x ≤ 1 / 10 ^ 6 := by
   nlinarith
 
 lemma log_αγ : Real.log (α * γ) =
-    Real.log κ₀ + (1 - θ) * Real.log x - 3 * Real.log (Real.log x) := by
+    Real.log κ₀ + (1 - θ) * Real.log x - Real.log (Real.log x) := by
   have hκ : 0 < κ₀ := lt_of_lt_of_le (Real.exp_pos _) h.κ_ge
   have hx : 0 < x := by linarith [h.one_lt_x]
   rw [h.αγ_eq, Real.log_div (by positivity) (by have := h.L_pos; positivity),
-    Real.log_mul hκ.ne' (by positivity), Real.log_rpow hx, Real.log_pow]
-  push_cast; ring
+    Real.log_mul hκ.ne' (by positivity), Real.log_rpow hx]
 
 end numerics
 
@@ -344,7 +343,7 @@ lemma norm_G : ‖Gfun θ α γ ZB w‖ =
   simp only [Complex.norm_ofNat]
   ring
 
-lemma logG_ge : Real.log κ₀ + (1 - θ) * Real.log x - 3 * Real.log (Real.log x) -
+lemma logG_ge : Real.log κ₀ + (1 - θ) * Real.log x - Real.log (Real.log x) -
     Real.log (48 * Λ) ≤ Real.log ‖Gfun θ α γ ZB w‖ := by
   have hαγ : 0 < α * γ := mul_pos h.α_pos (by linarith [h.γ_ge])
   have hΛ := h.Λ_ge
@@ -365,7 +364,7 @@ lemma logG_ge : Real.log κ₀ + (1 - θ) * Real.log x - 3 * Real.log (Real.log 
   exact Real.log_le_log (by positivity) hlow
 
 lemma logG_le : Real.log ‖Gfun θ α γ ZB w‖ ≤ Real.log κ₀ + (1 - θ) * Real.log x -
-    3 * Real.log (Real.log x) + Real.log 8 := by
+    Real.log (Real.log x) + Real.log 8 := by
   have hαγ : 0 < α * γ := mul_pos h.α_pos (by linarith [h.γ_ge])
   have hs := h.norm_s_le hw; have hp := h.norm_phi_le hw
   have hw0 := h.norm_w_ge hw
@@ -483,7 +482,7 @@ lemma Ffun_sub_cen (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) {w : ℂ}
   have h7 := h.ell_im hw
   have hLL := h.loglog_ge; have hΛ := h.Λ_ge
   have hRe : |Real.log ‖Gfun θ α γ ZB w‖ - (1 - θ) * Real.log x| ≤
-      3 * Real.log (Real.log x) + 2 * Λ + 3 := by
+      Real.log (Real.log x) + 2 * Λ + 3 := by
     rw [abs_le]; constructor <;> linarith
   refine (Complex.norm_le_abs_re_add_abs_im _).trans ?_
   rw [hre, him, abs_div, abs_div, abs_of_pos hL, ← add_div]
@@ -649,12 +648,12 @@ open Lemma46Hyp in
 /-- **Lemma 4.6 (A designed zero).** Under the hypotheses `Lemma46Hyp` (in particular
 `1/2 ≤ |Z_B| ≤ Z_max = 2Λ` on the disc `|s - (1 + iγ_k)| ≤ δ_k = 9 log log x_k / log x_k`),
 `Z_B + M_k` has a zero `s*` with
-`Re s* = 1 - (3 log log x_k + O_{X₀}(1)) / log x_k` (explicitly `|O_{X₀}(1)| ≤ 2Λ + 4`),
+`Re s* = 1 - (log log x_k + O_{X₀}(1)) / log x_k` (explicitly `|O_{X₀}(1)| ≤ 2Λ + 4`),
 the circle `|s - s*| = 1/log x_k` lies in the disc, and `|Z_B + M_k| ≥ 1/4` on it. -/
 theorem lemma_4_6 {θ Λ κ₀ α γ x : ℝ} {ZB : ℂ → ℂ} (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) :
     ∃ s₀ : ℂ, ZB s₀ + Mk θ α γ x s₀ = 0 ∧
       ‖s₀ - (1 + γ * I)‖ + 1 / Real.log x ≤ designRadius x ∧
-      |(1 - s₀.re) * Real.log x - 3 * Real.log (Real.log x)| ≤ 2 * Λ + 4 ∧
+      |(1 - s₀.re) * Real.log x - Real.log (Real.log x)| ≤ 2 * Λ + 4 ∧
       ∀ s ∈ sphere s₀ (1 / Real.log x), 1 / 4 ≤ ‖ZB s + Mk θ α γ x s‖ := by
   have hL := h.L_pos
   have hq : 17 * Λ ^ 2 / Real.log x < 1 := by
@@ -677,8 +676,8 @@ theorem lemma_4_6 {θ Λ κ₀ α γ x : ℝ} {ZB : ℂ → ℂ} (h : Lemma46Hyp
       conv_lhs => rw [← hfix]
       rw [Ffun_re, h.ell_re hw₀]
     rw [e1, e2]; ring
-  have e : (1 - (sOf θ γ w₀).re) * Real.log x - 3 * Real.log (Real.log x) =
-      (1 - θ) * Real.log x - Real.log ‖Gfun θ α γ ZB w₀‖ - 3 * Real.log (Real.log x) := by
+  have e : (1 - (sOf θ γ w₀).re) * Real.log x - Real.log (Real.log x) =
+      (1 - θ) * Real.log x - Real.log ‖Gfun θ α γ ZB w₀‖ - Real.log (Real.log x) := by
     rw [hre]; field_simp; ring
   rw [e]
   have h1 := h.logG_ge hw₀; have h2 := h.logG_le hw₀

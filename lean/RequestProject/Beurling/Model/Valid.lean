@@ -50,15 +50,15 @@ lemma alphaD_mem (hX : 10 ^ 8 ≤ Real.log X₀) (D : PrimeData) (k : ℕ) :
   have hX1 : (1 : ℝ) ≤ X₀ := (one_lt_of_logX (Nat.cast_nonneg _) hX).le
   have hm := gammaD_range (θ := θ) hX D k
   set γ := gammaD θ X₀ D k
-  set Γ := heightScale θ kappa0Param (switchOn X₀ k) with hΓdef
+  set Γ := heightScale θ (kappa0Param X₀) (switchOn X₀ k) with hΓdef
   have hΓk : 0 < Γ := heightScale_switchOn_pos θ hX1 k
   have hγ : 0 < γ := lt_of_lt_of_le hΓk hm.1
-  have hL : Real.log (switchOn X₀ k) ^ 3 ≠ 0 := by
+  have hL : Real.log (switchOn X₀ k) ≠ 0 := by
     intro h0
     have : Γ = 0 := by rw [hΓdef]; unfold heightScale; rw [h0]; simp
     linarith
   have e : alphaD θ X₀ D k = 2 * Γ / γ := by
-    show kappa0Param * switchOn X₀ k ^ (1 - θ) / Real.log (switchOn X₀ k) ^ 3 / γ = 2 * Γ / γ
+    show (kappa0Param X₀) * switchOn X₀ k ^ (1 - θ) / Real.log (switchOn X₀ k) / γ = 2 * Γ / γ
     rw [hΓdef]; unfold heightScale
     congr 1
     field_simp

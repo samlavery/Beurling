@@ -121,49 +121,100 @@ theorem rouche_exists_zero {f g : ℂ → ℂ} {c : ℂ} {r : ℝ} (hr : 0 < r)
 
 /-- **The inputs of Theorem 4.10** for a function `F` on the punctured half-plane `Re s > a`:
 along `x_k → ∞` there are points `s*_k` with
-`Re s*_k = 1 - (3 log log x_k + O(1))/log x_k` and comparison functions `Φ_k` (in the paper
+`Re s*_k = 1 - (log log x_k + O(1))/log x_k` and `log Im s*_k = (1-θ) log x_k - log log x_k + O(1)`
+(the height `γ_k ≍ x_k^{1-θ}/log x_k` of eq. (ampl)), and comparison functions `Φ_k` (in the paper
 `Z_B + M_k`), holomorphic on the closed discs `|s - s*_k| ≤ 1/log x_k` (which lie in the
 half-plane), with `Φ_k(s*_k) = 0` (Lemma 4.6) and `|F - Φ_k| < |Φ_k|` on the circles
 `|s - s*_k| = 1/log x_k` (the perturbation bound in the proof of Theorem 4.10). -/
-def Theorem410Inputs (F : ℂ → ℂ) (a : ℝ) : Prop :=
+def Theorem410Inputs (θ : ℝ) (F : ℂ → ℂ) (a : ℝ) : Prop :=
   ∃ (sstar : ℕ → ℂ) (xk : ℕ → ℝ) (Φ : ℕ → ℂ → ℂ) (C : ℝ),
     Tendsto xk atTop atTop ∧ (∀ k, 1 < xk k) ∧
     (∀ k, closedBall (sstar k) (1 / Real.log (xk k)) ⊆ puncturedHalfPlane a) ∧
     (∀ k, DifferentiableOn ℂ (Φ k) (closedBall (sstar k) (1 / Real.log (xk k)))) ∧
     (∀ k, Φ k (sstar k) = 0) ∧
     (∀ k, ∀ s ∈ sphere (sstar k) (1 / Real.log (xk k)), ‖F s - Φ k s‖ < ‖Φ k s‖) ∧
-    ∀ k, |(1 - (sstar k).re) * Real.log (xk k) - 3 * Real.log (Real.log (xk k))| ≤ C
+    (∀ k, |(1 - (sstar k).re) * Real.log (xk k) - Real.log (Real.log (xk k))| ≤ C) ∧
+    (∀ k, 3 / 2 ≤ (sstar k).im ∧ 2 ≤ Real.log (xk k)) ∧
+    ∀ k, |Real.log (sstar k).im -
+      ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k)))| ≤ C
+
+/-- `|log a - log b| ≤ |a - b|` for `a, b ≥ 1`. -/
+lemma abs_log_sub_log_le {a b : ℝ} (ha : 1 ≤ a) (hb : 1 ≤ b) :
+    |Real.log a - Real.log b| ≤ |a - b| := by
+  have ha0 : 0 < a := by linarith
+  have hb0 : 0 < b := by linarith
+  have h1 : Real.log a - Real.log b ≤ (a - b) / b := by
+    rw [← Real.log_div ha0.ne' hb0.ne']
+    have := Real.log_le_sub_one_of_pos (div_pos ha0 hb0)
+    rw [sub_div, div_self hb0.ne'] at *; linarith
+  have h2 : Real.log b - Real.log a ≤ (b - a) / a := by
+    rw [← Real.log_div hb0.ne' ha0.ne']
+    have := Real.log_le_sub_one_of_pos (div_pos hb0 ha0)
+    rw [sub_div, div_self ha0.ne'] at *; linarith
+  rw [abs_le]
+  constructor
+  · rcases le_total b a with h | h
+    · have : 0 ≤ Real.log a - Real.log b := by
+        have := Real.log_le_log hb0 h; linarith
+      linarith [abs_nonneg (a - b)]
+    · have : (b - a) / a ≤ b - a := div_le_self (by linarith) ha
+      rw [abs_of_nonpos (by linarith)]; linarith
+  · rcases le_total a b with h | h
+    · have : Real.log a - Real.log b ≤ 0 := by
+        have := Real.log_le_log ha0 h; linarith
+      linarith [abs_nonneg (a - b)]
+    · have : (a - b) / b ≤ a - b := div_le_self (by linarith) hb
+      rw [abs_of_nonneg (by linarith)]; linarith
 
 /-- **Theorem 4.10 (Zeros)**, deduced from its inputs by Rouché's theorem: `F` has zeros `ρ_k`
-with `|ρ_k - s*_k| < 1/log x_k`, hence `Re ρ_k = 1 - (3 log log x_k + O(1))/log x_k`. -/
-theorem theorem_4_10 {P : BeurlingSystem} {a : ℝ} {F : ℂ → ℂ} (hF : P.IsZetaContinuation a F)
-    (h : Theorem410Inputs F a) :
+with `|ρ_k - s*_k| < 1/log x_k`, hence `Re ρ_k = 1 - (log log x_k + O(1))/log x_k` and
+`log Im ρ_k = (1-θ) log x_k - log log x_k + O(1)`. -/
+theorem theorem_4_10 {P : BeurlingSystem} {θ a : ℝ} {F : ℂ → ℂ} (hF : P.IsZetaContinuation a F)
+    (h : Theorem410Inputs θ F a) :
     ∃ (ρ : ℕ → ℂ) (xk : ℕ → ℝ) (C : ℝ), Tendsto xk atTop atTop ∧
       (∀ k, ρ k ∈ puncturedHalfPlane a ∧ F (ρ k) = 0) ∧
-      ∀ k, |(1 - (ρ k).re) * Real.log (xk k) - 3 * Real.log (Real.log (xk k))| ≤ C := by
-  obtain ⟨sstar, xk, Φ, C, hx, hx1, hball, hΦ, hΦ0, hpert, hC⟩ := h
+      (∀ k, |(1 - (ρ k).re) * Real.log (xk k) - Real.log (Real.log (xk k))| ≤ C) ∧
+      ∀ k, |Real.log (ρ k).im - ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k)))| ≤ C := by
+  obtain ⟨sstar, xk, Φ, C, hx, hx1, hball, hΦ, hΦ0, hpert, hC, him2, hCim⟩ := h
   have hr : ∀ k, 0 < 1 / Real.log (xk k) := fun k => by
     have := Real.log_pos (hx1 k); positivity
   have hzero : ∀ k, ∃ z ∈ ball (sstar k) (1 / Real.log (xk k)), F z = 0 := fun k =>
     rouche_exists_zero (hr k) (hF.1.mono (hball k)) (hΦ k) (hpert k)
       (mem_ball_self (hr k)) (hΦ0 k)
   choose ρ hρ hρ0 using hzero
+  have hnear : ∀ k, ‖ρ k - sstar k‖ < 1 / Real.log (xk k) := fun k => mem_ball_iff_norm.mp (hρ k)
   refine ⟨ρ, xk, C + 1, hx, fun k => ⟨hball k (ball_subset_closedBall (hρ k)), hρ0 k⟩,
-    fun k => ?_⟩
-  have hlog : 0 < Real.log (xk k) := Real.log_pos (hx1 k)
-  have hd : |(ρ k).re - (sstar k).re| * Real.log (xk k) ≤ 1 := by
-    have h1 : |(ρ k).re - (sstar k).re| ≤ ‖ρ k - sstar k‖ := by
-      rw [← Complex.sub_re]; exact Complex.abs_re_le_norm _
-    have h2 : ‖ρ k - sstar k‖ < 1 / Real.log (xk k) := mem_ball_iff_norm.mp (hρ k)
-    rw [lt_div_iff₀ hlog] at h2
-    nlinarith [abs_nonneg ((ρ k).re - (sstar k).re)]
-  have e : (1 - (ρ k).re) * Real.log (xk k) - 3 * Real.log (Real.log (xk k)) =
-      ((1 - (sstar k).re) * Real.log (xk k) - 3 * Real.log (Real.log (xk k))) -
-        ((ρ k).re - (sstar k).re) * Real.log (xk k) := by ring
-  rw [e]
-  refine (abs_sub _ _).trans ?_
-  rw [abs_mul, abs_of_pos hlog]
-  linarith [hC k]
+    fun k => ?_, fun k => ?_⟩
+  · have hlog : 0 < Real.log (xk k) := Real.log_pos (hx1 k)
+    have hd : |(ρ k).re - (sstar k).re| * Real.log (xk k) ≤ 1 := by
+      have h1 : |(ρ k).re - (sstar k).re| ≤ ‖ρ k - sstar k‖ := by
+        rw [← Complex.sub_re]; exact Complex.abs_re_le_norm _
+      have h2 := hnear k
+      rw [lt_div_iff₀ hlog] at h2
+      nlinarith [abs_nonneg ((ρ k).re - (sstar k).re)]
+    have e : (1 - (ρ k).re) * Real.log (xk k) - Real.log (Real.log (xk k)) =
+        ((1 - (sstar k).re) * Real.log (xk k) - Real.log (Real.log (xk k))) -
+          ((ρ k).re - (sstar k).re) * Real.log (xk k) := by ring
+    rw [e]
+    refine (abs_sub _ _).trans ?_
+    rw [abs_mul, abs_of_pos hlog]
+    linarith [hC k]
+  · obtain ⟨hs2, hL1⟩ := him2 k
+    have hd : |(ρ k).im - (sstar k).im| ≤ 1 / 2 := by
+      have h1 : |(ρ k).im - (sstar k).im| ≤ ‖ρ k - sstar k‖ := by
+        rw [← Complex.sub_im]; exact Complex.abs_im_le_norm _
+      have h2 : 1 / Real.log (xk k) ≤ 1 / 2 :=
+        one_div_le_one_div_of_le (by norm_num) hL1
+      linarith [hnear k]
+    have hρ1 : 1 ≤ (ρ k).im := by linarith [(abs_le.mp hd).1]
+    have hl := abs_log_sub_log_le hρ1 (by linarith : (1 : ℝ) ≤ (sstar k).im)
+    have e : Real.log (ρ k).im - ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k))) =
+        (Real.log (ρ k).im - Real.log (sstar k).im) +
+          (Real.log (sstar k).im - ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k)))) := by
+      ring
+    rw [e]
+    refine (abs_add_le _ _).trans ?_
+    linarith [hCim k]
 
 /-- `N_P(x) = x + O(x^β)` for every `β > θ`, from part (i) of Theorem 2.1 alone. -/
 theorem N_bound_of_part_i {θ : ℝ} {P : BeurlingSystem} (hθ : 0 < θ)
@@ -199,7 +250,7 @@ punctured half-plane `Re s > a` with `θ < a < 1`. -/
 def TheoremAInputs (θ : ℝ) (P : BeurlingSystem) : Prop :=
   (∃ C : ℝ, ∀ x ≥ (1 : ℝ),
       |P.N x - x| ≤ C * x ^ θ + 3 * x ^ θ * (logStar x : ℝ) + x ^ lagExponent θ) ∧
-  ∃ a, θ < a ∧ a < 1 ∧ Theorem410Inputs (P.zetaCont 1) a
+  ∃ a, θ < a ∧ a < 1 ∧ Theorem410Inputs θ (P.zetaCont 1) a
 
 /-- From (i) and the inputs of Theorem 4.10, the conclusions (i), (ii) of Theorem 2.1 follow:
 the continuation is `zetaCont P 1`, and the zeros come from Rouché's theorem. -/

@@ -416,17 +416,17 @@ theorem T_ge_of_formula {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 
     (hX : 10 ^ 8 ≤ Real.log X₀) {P : BeurlingSystem} {A : Set ℝ} {u : ℝ → ℝ} {a : ℕ → ℝ}
     {M : SlotModel X₀}
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (θ / 2) A u)
-      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
-        (designedGamma P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
+      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
+        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
         (switchOn X₀)) x) {x : ℝ} (hx : (X₀ : ℝ) ≤ x) :
     7 / 10 * x - X₀ - 1 ≤ M.T x := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hX
   rw [hT x]
   have hsp := switchOn_spacing (X₀ : ℝ)
-  have hα : ∀ k, |designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a k| ≤ 2 := by
+  have hα : ∀ k, |designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a k| ≤ 2 := by
     intro k
-    have hm := designedAlpha_mem P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a
+    have hm := designedAlpha_mem P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a
       (heightScale_switchOn_pos θ hX1.le) k
     rw [abs_of_nonneg (by linarith [hm.1])]
     exact hm.2

@@ -101,8 +101,8 @@ end Hyp
 def PartIRestO (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (M : SlotModel X₀) : Prop :=
   (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (θ / 2) A u)
-      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
-        (designedGamma P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
+      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
+        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
         (switchOn X₀)) x) ∧
     M.QueueWindowData
 

@@ -15,10 +15,10 @@ In `Theorem410InputsCount` the following were hypotheses about free sequences `�
 
 Here the heights and the amplitudes are **defined**:
 
-* `Γ_k = heightScale θ κ₀ x⁺_k = κ₀ (x⁺_k)^{1-θ} / (2 (log x⁺_k)³)`;
+* `Γ_k = heightScale θ κ₀ x⁺_k = κ₀ (x⁺_k)^{1-θ} / (2 log x⁺_k)`;
 * `γ_k = chooseHeight X₀ κ D̂_{<a_k} Γ_k`, a good height in `[Γ_k, 2Γ_k]` if one exists, and `Γ_k`
   otherwise, so the choice rule holds by construction (`chooseHeight_rule`);
-* `α_k = amplitudeOf θ κ₀ γ_k x⁺_k = κ₀ (x⁺_k)^{1-θ} / ((log x⁺_k)³ γ_k)`, so `α_k γ_k` is the
+* `α_k = amplitudeOf θ κ₀ γ_k x⁺_k = κ₀ (x⁺_k)^{1-θ} / (γ_k log x⁺_k)`, so `α_k γ_k` is the
   value required by Lemma 4.6 and `1 ≤ α_k ≤ 2` because `γ_k ∈ [Γ_k, 2Γ_k]` (`amplitudeOf_mem`).
 
 The design parameters then follow from conditions on `κ₀` and the switch-on points `x⁺_k` alone
@@ -37,11 +37,12 @@ open Complex Metric Set Filter Topology MeasureTheory SmoothStep Oscillation Abs
 
 namespace DesignedZero
 
-/-- The base height `Γ(x) = κ₀ x^{1-θ} / (2 (log x)³)`: the heights are chosen in `[Γ, 2Γ]`. -/
-noncomputable def heightScale (θ κ₀ x : ℝ) : ℝ := κ₀ * x ^ (1 - θ) / (2 * Real.log x ^ 3)
+/-- The base height `Γ(x) = κ₀ x^{1-θ} / (2 log x)`: the heights are chosen in `[Γ, 2Γ]`. -/
+noncomputable def heightScale (θ κ₀ x : ℝ) : ℝ := κ₀ * x ^ (1 - θ) / (2 * Real.log x)
 
-/-- The amplitude `α = κ₀ x^{1-θ} / ((log x)³ γ)`, so that `α γ = κ₀ x^{1-θ}/(log x)³`. -/
-noncomputable def amplitudeOf (θ κ₀ γ x : ℝ) : ℝ := κ₀ * x ^ (1 - θ) / Real.log x ^ 3 / γ
+/-- The amplitude `α = κ₀ x^{1-θ} / (γ log x)`, so that `α γ = κ₀ x^{1-θ}/log x` (eq. (ampl),
+`κ'_k = κ₀`). -/
+noncomputable def amplitudeOf (θ κ₀ γ x : ℝ) : ℝ := κ₀ * x ^ (1 - θ) / Real.log x / γ
 
 open Classical in
 /-- **The choice rule for `γ_k`**: the least good height in `[Γ, 2Γ]` when one exists, `Γ`
@@ -75,14 +76,14 @@ theorem chooseHeight_mem (X₀ : ℕ) (κ : ℝ) (f : ℂ → ℂ) {Γ : ℝ} (h
   · exact ⟨le_rfl, by linarith⟩
 
 lemma heightScale_eq {θ κ₀ x : ℝ} :
-    2 * heightScale θ κ₀ x = κ₀ * x ^ (1 - θ) / Real.log x ^ 3 := by
-  unfold heightScale; rw [mul_comm 2 (Real.log x ^ 3), ← div_div]; ring
+    2 * heightScale θ κ₀ x = κ₀ * x ^ (1 - θ) / Real.log x := by
+  unfold heightScale; rw [mul_comm 2 (Real.log x), ← div_div]; ring
 
-/-- `1 ≤ α ≤ 2` and `α γ = κ₀ x^{1-θ}/(log x)³` for every `γ ∈ [Γ, 2Γ]`, `Γ > 0`. -/
+/-- `1 ≤ α ≤ 2` and `α γ = κ₀ x^{1-θ}/log x` for every `γ ∈ [Γ, 2Γ]`, `Γ > 0`. -/
 theorem amplitudeOf_mem {θ κ₀ γ x : ℝ} (hΓ : 0 < heightScale θ κ₀ x)
     (hγ : γ ∈ Icc (heightScale θ κ₀ x) (2 * heightScale θ κ₀ x)) :
     1 ≤ amplitudeOf θ κ₀ γ x ∧ amplitudeOf θ κ₀ γ x ≤ 2 ∧
-      amplitudeOf θ κ₀ γ x * γ = κ₀ * x ^ (1 - θ) / Real.log x ^ 3 := by
+      amplitudeOf θ κ₀ γ x * γ = κ₀ * x ^ (1 - θ) / Real.log x := by
   have hγ0 : 0 < γ := lt_of_lt_of_le hΓ hγ.1
   have hK := heightScale_eq (θ := θ) (κ₀ := κ₀) (x := x)
   unfold amplitudeOf
@@ -96,7 +97,6 @@ lemma two_heightScale_le {θ κ₀ x : ℝ} (hθ : 0 ≤ θ) (hκ0 : 0 ≤ κ₀
     (hx : 1 < x) (hL : 1 ≤ Real.log x) : 2 * heightScale θ κ₀ x ≤ x := by
   have hx1 : 1 ≤ x := hx.le
   rw [heightScale_eq]
-  have hL3 : 1 ≤ Real.log x ^ 3 := one_le_pow₀ hL
   have hxθ : x ^ (1 - θ) ≤ x := by
     calc x ^ (1 - θ) ≤ x ^ (1 : ℝ) := Real.rpow_le_rpow_of_exponent_le hx1 (by linarith)
       _ = x := Real.rpow_one x
@@ -195,7 +195,7 @@ noncomputable def designAlpha (X₀ : ℕ) (κ θ κ₀ : ℝ) (Dlt : ℕ → �
 
 /-- **The inputs of Theorem 4.10 with the heights, amplitudes and growth condition designed**: as
 `Theorem410InputsCount`, but `γ_k` is chosen by the rule of Lemma 4.8 in `[Γ_k, 2Γ_k]` with
-`Γ_k = κ₀ (x⁺_k)^{1-θ}/(2 (log x⁺_k)³)`, `α_k = κ₀ (x⁺_k)^{1-θ}/((log x⁺_k)³ γ_k)`, and the
+`Γ_k = κ₀ (x⁺_k)^{1-θ}/(2 log x⁺_k)`, `α_k = κ₀ (x⁺_k)^{1-θ}/(γ_k log x⁺_k)`, and the
 absorbed-set growth is the single condition `42 log(2 + ℓ) + 5 ≤ ς(ℓ)` for `ℓ ≥ 0`. The remaining
 conditions on the design are `θ ∈ [1/4, 1/2]`, `1/X₀ ≤ κ₀ ≤ 1/4`, `x⁺_k > 1`,
 `log log x⁺_k ≥ 2 log X₀`, `Γ_k ≥ T + 1/2`, `κ Γ_k ≥ e^{X₀²/3}`. -/

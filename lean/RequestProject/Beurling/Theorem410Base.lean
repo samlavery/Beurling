@@ -31,7 +31,7 @@ structure DesignParams (θ Λ κ₀ α γ x : ℝ) : Prop where
   loglog_ge : 2 * Λ ≤ Real.log (Real.log x)
   α_pos : 0 < α
   γ_ge : 2 ≤ γ
-  αγ_eq : α * γ = κ₀ * x ^ (1 - θ) / Real.log x ^ 3
+  αγ_eq : α * γ = κ₀ * x ^ (1 - θ) / Real.log x
 
 lemma DesignParams.radius_bounds {θ Λ κ₀ α γ x : ℝ} (h : DesignParams θ Λ κ₀ α γ x) :
     0 < designRadius x ∧ designRadius x ≤ 1 / 10 ^ 6 ∧ designRadius x * Λ ≤ 1 / 10 ^ 5 := by

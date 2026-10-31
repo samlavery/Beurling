@@ -188,15 +188,15 @@ lemma abs_oscD2_le {θ α γ xk x : ℝ} (hθ0 : 0 ≤ θ) (hθ1 : θ ≤ 1) (h�
 
 set_option maxHeartbeats 1000000 in
 /-- **The designed `R_k''`**: for `x⁺_k = switchOn X₀ k`, `γ_k ∈ [Γ_k, 2Γ_k]`,
-`α_k = κ₀ (x⁺_k)^{1-θ}/(L³ γ_k)`, `|R_k''(x)| ≤ 2⁻ᵏ x^{-1/4}/10¹⁴` (the bound
+`α_k = κ₀ (x⁺_k)^{1-θ}/(γ_k L)` (`κ₀ = X⁻¹`), `|R_k''(x)| ≤ 2⁻ᵏ x^{-1/4}/10¹⁴` (the bound
 `γ_k κ_k ≤ x_k^{1-θ}` of the `o_R` bullet of eq. (osc), with `log x⁺_k ≥ 2ᵏ X₀²`). -/
 theorem abs_oscD2_designed_le {θ : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2) {X : ℝ}
     (hX : 10 ^ 8 ≤ X) (k : ℕ) {γ : ℝ}
-    (hγ : γ ∈ Icc (DesignedZero.heightScale θ Construction.kappa0Param
+    (hγ : γ ∈ Icc (DesignedZero.heightScale θ (Construction.kappa0Param X)
       (Construction.switchOn X k))
-      (2 * DesignedZero.heightScale θ Construction.kappa0Param (Construction.switchOn X k)))
+      (2 * DesignedZero.heightScale θ (Construction.kappa0Param X) (Construction.switchOn X k)))
     {x : ℝ} (hx : 0 < x) :
-    |oscD2 θ (DesignedZero.amplitudeOf θ Construction.kappa0Param γ (Construction.switchOn X k))
+    |oscD2 θ (DesignedZero.amplitudeOf θ (Construction.kappa0Param X) γ (Construction.switchOn X k))
       γ (Construction.switchOn X k) x| ≤ (1 / 2) ^ k * x ^ (-(1 / 4 : ℝ)) / 10 ^ 14 := by
   set xk := Construction.switchOn X k with hxkdef
   have hxk : 0 < xk := Construction.switchOn_pos X k
@@ -211,11 +211,12 @@ theorem abs_oscD2_designed_le {θ : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 
   have hL0 : 0 < L := by linarith
   have hLxk : L ≤ xk := by
     have := Real.add_one_le_exp L; rw [hLdef, Real.exp_log hxk] at this; linarith
-  set Γ := DesignedZero.heightScale θ Construction.kappa0Param xk with hΓ
+  set Γ := DesignedZero.heightScale θ (Construction.kappa0Param X) xk with hΓ
+  have hX0 : 0 < X := by linarith
   have hΓ0 : 0 < Γ := by
     rw [hΓ]; unfold DesignedZero.heightScale Construction.kappa0Param; positivity
   have hγ0 : 0 < γ := lt_of_lt_of_le hΓ0 hγ.1
-  set α := DesignedZero.amplitudeOf θ Construction.kappa0Param γ xk with hα
+  set α := DesignedZero.amplitudeOf θ (Construction.kappa0Param X) γ xk with hα
   have hαγ : α * γ = 2 * Γ := by
     rw [hα, hΓ]; unfold DesignedZero.amplitudeOf DesignedZero.heightScale
     field_simp
@@ -225,7 +226,7 @@ theorem abs_oscD2_designed_le {θ : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 
     have : α * γ ≤ 2 * γ := by rw [hαγ]; nlinarith [hγ.1]
     nlinarith
   set G := 2 * Γ with hG
-  have hGe : G = xk ^ (1 - θ) / (4 * L ^ 3) := by
+  have hGe : G = xk ^ (1 - θ) / (X * L) := by
     rw [hG, hΓ]; unfold DesignedZero.heightScale Construction.kappa0Param; rw [← hLdef]
     field_simp
   have hγG : γ ≤ G := hγ.2
@@ -252,26 +253,30 @@ theorem abs_oscD2_designed_le {θ : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 
   have hG0 : 0 ≤ G := by positivity
   set m := x ^ (-θ) with hm
   have hm0 : 0 ≤ m := Real.rpow_nonneg hx.le _
-  -- `x^{θ-2} G² ≤ m / (16 L⁶)`
-  have e1 : x ^ (θ - 2) * G ^ 2 ≤ m / (16 * L ^ 6) := by
+  have hXL : L ≤ X * L := le_mul_of_one_le_left hL0.le (by linarith)
+  -- `x^{θ-2} G² ≤ m / L`
+  have e1 : x ^ (θ - 2) * G ^ 2 ≤ m / L := by
     rw [hGe]
     have : x ^ (θ - 2) * (x ^ (1 - θ)) ^ 2 = m := by
       rw [hm, ← Real.rpow_natCast, ← Real.rpow_mul hx.le, ← Real.rpow_add hx]; ring_nf
     have hsq : (xk ^ (1 - θ)) ^ 2 ≤ (x ^ (1 - θ)) ^ 2 := pow_le_pow_left₀ hq0 hpow 2
-    calc x ^ (θ - 2) * (xk ^ (1 - θ) / (4 * L ^ 3)) ^ 2 =
-          x ^ (θ - 2) * (xk ^ (1 - θ)) ^ 2 / (16 * L ^ 6) := by ring
-      _ ≤ x ^ (θ - 2) * (x ^ (1 - θ)) ^ 2 / (16 * L ^ 6) := by gcongr
-      _ = _ := by rw [this]
-  -- `x^{θ-2} G ≤ m / L³` (as `x^{θ-2} x^{1-θ} = x^{-1} ≤ x^{-θ}`)
+    have hXL2 : L ≤ (X * L) ^ 2 := by nlinarith
+    calc x ^ (θ - 2) * (xk ^ (1 - θ) / (X * L)) ^ 2 =
+          x ^ (θ - 2) * (xk ^ (1 - θ)) ^ 2 / (X * L) ^ 2 := by ring
+      _ ≤ x ^ (θ - 2) * (x ^ (1 - θ)) ^ 2 / (X * L) ^ 2 := by gcongr
+      _ = m / (X * L) ^ 2 := by rw [this]
+      _ ≤ m / L := div_le_div_of_nonneg_left hm0 hL0 hXL2
+  -- `x^{θ-2} G ≤ m / L` (as `x^{θ-2} x^{1-θ} = x^{-1} ≤ x^{-θ}`)
   have hinv : x ^ (-(1 : ℝ)) ≤ m := Real.rpow_le_rpow_of_exponent_le hx1 (by linarith)
-  have e2 : x ^ (θ - 2) * G ≤ m / (4 * L ^ 3) := by
+  have e2 : x ^ (θ - 2) * G ≤ m / L := by
     rw [hGe]
     have : x ^ (θ - 2) * x ^ (1 - θ) = x ^ (-(1 : ℝ)) := by
       rw [← Real.rpow_add hx]; ring_nf
-    calc x ^ (θ - 2) * (xk ^ (1 - θ) / (4 * L ^ 3)) =
-          x ^ (θ - 2) * xk ^ (1 - θ) / (4 * L ^ 3) := by ring
-      _ ≤ x ^ (θ - 2) * x ^ (1 - θ) / (4 * L ^ 3) := by gcongr
-      _ ≤ m / (4 * L ^ 3) := by rw [this]; gcongr
+    calc x ^ (θ - 2) * (xk ^ (1 - θ) / (X * L)) =
+          x ^ (θ - 2) * xk ^ (1 - θ) / (X * L) := by ring
+      _ ≤ x ^ (θ - 2) * x ^ (1 - θ) / (X * L) := by gcongr
+      _ ≤ m / (X * L) := by rw [this]; gcongr
+      _ ≤ m / L := div_le_div_of_nonneg_left hm0 hL0 hXL
   -- `x^{θ-2} ≤ m / L` (as `x^{2θ-2} ≤ x⁻¹ ≤ 1/x_k ≤ 1/L`)
   have e3 : x ^ (θ - 2) ≤ m / L := by
     have h1 : x ^ (θ - 2) = m * x ^ (2 * θ - 2) := by
@@ -286,10 +291,6 @@ theorem abs_oscD2_designed_le {θ : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 
   have hL6 : L ≤ L ^ 6 := le_self_pow₀ hL1 (by norm_num)
   have hL3' : L ≤ L ^ 3 := le_self_pow₀ hL1 (by norm_num)
   have hsum : x ^ (θ - 2) * (G ^ 2 + 6 * G + 30) ≤ 37 * m / L := by
-    have a1 : m / (16 * L ^ 6) ≤ m / L := by
-      apply div_le_div_of_nonneg_left hm0 hL0; nlinarith
-    have a2 : m / (4 * L ^ 3) ≤ m / L := by
-      apply div_le_div_of_nonneg_left hm0 hL0; nlinarith
     have : x ^ (θ - 2) * (G ^ 2 + 6 * G + 30) =
         x ^ (θ - 2) * G ^ 2 + 6 * (x ^ (θ - 2) * G) + 30 * x ^ (θ - 2) := by ring
     rw [this]
@@ -316,20 +317,20 @@ theorem abs_oscD2_designed_le {θ : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 
 for `0 < s ≤ t`. -/
 theorem oscD_sub_le {θ : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2) {X : ℝ} (hX : 10 ^ 8 ≤ X)
     (k : ℕ) {γ : ℝ}
-    (hγ : γ ∈ Icc (DesignedZero.heightScale θ Construction.kappa0Param
+    (hγ : γ ∈ Icc (DesignedZero.heightScale θ (Construction.kappa0Param X)
       (Construction.switchOn X k))
-      (2 * DesignedZero.heightScale θ Construction.kappa0Param (Construction.switchOn X k)))
+      (2 * DesignedZero.heightScale θ (Construction.kappa0Param X) (Construction.switchOn X k)))
     {s t : ℝ} (hs : 0 < s) (hst : s ≤ t) :
-    |oscD θ (DesignedZero.amplitudeOf θ Construction.kappa0Param γ (Construction.switchOn X k))
+    |oscD θ (DesignedZero.amplitudeOf θ (Construction.kappa0Param X) γ (Construction.switchOn X k))
         γ (Construction.switchOn X k) t -
-      oscD θ (DesignedZero.amplitudeOf θ Construction.kappa0Param γ (Construction.switchOn X k))
+      oscD θ (DesignedZero.amplitudeOf θ (Construction.kappa0Param X) γ (Construction.switchOn X k))
         γ (Construction.switchOn X k) s| ≤
       (t - s) * ((1 / 2) ^ k * s ^ (-(1 / 4 : ℝ)) / 10 ^ 14) := by
   have hxk := Construction.switchOn_pos X k
   have h := Convex.norm_image_sub_le_of_norm_hasDerivWithin_le
-    (f := oscD θ (DesignedZero.amplitudeOf θ Construction.kappa0Param γ
+    (f := oscD θ (DesignedZero.amplitudeOf θ (Construction.kappa0Param X) γ
       (Construction.switchOn X k)) γ (Construction.switchOn X k))
-    (f' := oscD2 θ (DesignedZero.amplitudeOf θ Construction.kappa0Param γ
+    (f' := oscD2 θ (DesignedZero.amplitudeOf θ (Construction.kappa0Param X) γ
       (Construction.switchOn X k)) γ (Construction.switchOn X k))
     (s := Icc s t) (C := (1 / 2) ^ k * s ^ (-(1 / 4 : ℝ)) / 10 ^ 14)
     (fun x hx => (hasDerivAt_oscD (lt_of_lt_of_le hs hx.1) hxk).hasDerivWithinAt)
@@ -363,9 +364,9 @@ lemma deriv_osc_eq_sum {θ : ℝ} (α γ : ℕ → ℝ) (X : ℝ) {K : ℕ} {y :
 theorem deriv_osc_sub_le {θ : ℝ} (hθ : θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) {s t : ℝ}
     (hs : (X₀ : ℝ) ≤ s) (hst : s ≤ t) :
-    |deriv (Oscillation.osc θ (Construction.amplitudes θ Construction.kappa0Param
+    |deriv (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
         (Construction.switchOn X₀) γ) γ (Construction.switchOn X₀)) t -
-      deriv (Oscillation.osc θ (Construction.amplitudes θ Construction.kappa0Param
+      deriv (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
         (Construction.switchOn X₀) γ) γ (Construction.switchOn X₀)) s| ≤
       (t - s) * s ^ (-(1 / 4 : ℝ)) := by
   set X : ℝ := (X₀ : ℝ) with hXdef
@@ -385,9 +386,9 @@ theorem deriv_osc_sub_le {θ : ℝ} (hθ : θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 -
   have hθ1 : 1 / 4 ≤ θ := hθ.1
   have hθ2 : θ ≤ 1 / 2 := by linarith [hθ.2]
   have hq : 0 ≤ s ^ (-(1 / 4 : ℝ)) := Real.rpow_nonneg hs0.le _
-  calc _ ≤ ∑ k ∈ Finset.range K, |oscD θ (Construction.amplitudes θ Construction.kappa0Param
+  calc _ ≤ ∑ k ∈ Finset.range K, |oscD θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
           (Construction.switchOn X) γ k) (γ k) (Construction.switchOn X k) t -
-        oscD θ (Construction.amplitudes θ Construction.kappa0Param
+        oscD θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
           (Construction.switchOn X) γ k) (γ k) (Construction.switchOn X k) s| :=
         Finset.abs_sum_le_sum_abs _ _
     _ ≤ ∑ k ∈ Finset.range K, (t - s) * ((1 / 2) ^ k * s ^ (-(1 / 4 : ℝ)) / 10 ^ 14) :=

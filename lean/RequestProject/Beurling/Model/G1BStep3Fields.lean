@@ -104,7 +104,7 @@ theorem hoth_R {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
   haveI : Nonempty (Icc (y * (1 - 2 * δ)) (y * (1 - δ))) :=
     ⟨⟨y * (1 - δ), Set.mem_Icc.mpr ⟨by nlinarith, le_rfl⟩⟩⟩
   -- the two suprema
-  set A := 2 / Real.log y ^ 2 + 4 * 10 ^ 4 * Λ ^ 2 * (X₀ : ℝ) ^ (-2 : ℝ) with hA
+  set A := 2 / Real.log y ^ 2 + 3000 * Construction.kappa0Param X₀ with hA
   have hosc : Real.log y * oscS θ X₀ ω y δ ≤ A := by
     rw [mul_comm, ← le_div_iff₀ hly0]
     unfold oscS
@@ -126,22 +126,16 @@ theorem hoth_R {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
     have : (10 : ℝ) ^ 62 ≤ Real.log y ^ 2 := by
       have := pow_le_pow_left₀ (by norm_num) hL31 2; norm_num at this ⊢; linarith
     nlinarith
-  have hA2 : 4 * 10 ^ 4 * Λ ^ 2 * (X₀ : ℝ) ^ (-2 : ℝ) ≤ 1 / 10 ^ 30 := by
-    have hX2 : (X₀ : ℝ) ^ (-2 : ℝ) = (Real.exp (2 * Λ))⁻¹ := by
-      rw [Real.rpow_def_of_pos hXp, ← Real.exp_neg]; congr 1; ring
-    rw [hX2]
-    have h8 := Real.pow_div_factorial_le_exp (x := 2 * Λ) (by positivity) 8
+  have hA2 : 3000 * Construction.kappa0Param X₀ ≤ 1 / 10 ^ 30 := by
+    unfold Construction.kappa0Param
+    have hX2 : (X₀ : ℝ) = Real.exp Λ := by rw [hΛ, Real.exp_log hXp]
+    have h8 := Real.pow_div_factorial_le_exp Λ (by linarith) 5
     norm_num [Nat.factorial] at h8
-    have hE := Real.exp_pos (2 * Λ)
-    rw [← div_eq_mul_inv, div_le_div_iff₀ hE (by norm_num)]
+    rw [← hX2] at h8
     have hΛ8 : (10 : ℝ) ^ 8 ≤ Λ := hX
-    have : 4 * 10 ^ 4 * Λ ^ 2 * 10 ^ 30 ≤ (2 * Λ) ^ 8 / 40320 := by
-      have h6 : ((10 : ℝ) ^ 8) ^ 6 ≤ Λ ^ 6 := pow_le_pow_left₀ (by norm_num) hΛ8 6
-      have hL2 : 0 ≤ Λ ^ 2 := sq_nonneg _
-      have e : (2 * Λ) ^ 8 / 40320 = 256 / 40320 * (Λ ^ 2 * Λ ^ 6) := by ring
-      rw [e]
-      nlinarith [mul_le_mul_of_nonneg_left h6 hL2]
-    linarith
+    have h40 : ((10 : ℝ) ^ 8) ^ 5 ≤ Λ ^ 5 := pow_le_pow_left₀ (by norm_num) hΛ8 5
+    rw [mul_one_div, div_le_div_iff₀ hXp (by norm_num)]
+    nlinarith
   unfold othS
   have : Real.log y * (oscS θ X₀ ω y δ + sigS θ X₀ ω y δ) =
       Real.log y * oscS θ X₀ ω y δ + Real.log y * sigS θ X₀ ω y δ := by ring

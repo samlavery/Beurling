@@ -77,10 +77,10 @@ lemma logStar_le_rpow {x δ : ℝ} (hx : 1 ≤ x) (hδ : 0 < δ) :
   have : x ^ δ / δ = 1 / δ * x ^ δ := by ring
   nlinarith
 
-/-- If `|(1 - r_k) log x_k - 3 log log x_k| ≤ C` along `x_k → ∞`, then `r_k → 1`. -/
+/-- If `|(1 - r_k) log x_k - log log x_k| ≤ C` along `x_k → ∞`, then `r_k → 1`. -/
 lemma tendsto_one_of_log_asymptotic (r : ℕ → ℝ) (xk : ℕ → ℝ) (C : ℝ)
     (hx : Tendsto xk atTop atTop)
-    (hb : ∀ k, |(1 - r k) * Real.log (xk k) - 3 * Real.log (Real.log (xk k))| ≤ C) :
+    (hb : ∀ k, |(1 - r k) * Real.log (xk k) - Real.log (Real.log (xk k))| ≤ C) :
     Tendsto r atTop (𝓝 1) := by
   have hy : Tendsto (fun k => Real.log (xk k)) atTop atTop := Real.tendsto_log_atTop.comp hx
   have hg : Tendsto (fun y : ℝ => (3 * Real.log y + |C|) / y) atTop (𝓝 0) := by
@@ -104,8 +104,8 @@ lemma tendsto_one_of_log_asymptotic (r : ℕ → ℝ) (xk : ℕ → ℝ) (C : �
   have e : |r k - 1| * Real.log (xk k) = |(1 - r k) * Real.log (xk k)| := by
     rw [abs_mul, abs_of_pos hpos, abs_sub_comm]
   rw [e]
-  have := abs_sub_abs_le_abs_sub ((1 - r k) * Real.log (xk k)) (3 * Real.log (Real.log (xk k)))
-  rw [abs_of_nonneg (by positivity : (0:ℝ) ≤ 3 * Real.log (Real.log (xk k)))] at this
+  have := abs_sub_abs_le_abs_sub ((1 - r k) * Real.log (xk k)) (Real.log (Real.log (xk k)))
+  rw [abs_of_nonneg (by positivity : (0:ℝ) ≤ Real.log (Real.log (xk k)))] at this
   have := le_abs_self C
   linarith
 

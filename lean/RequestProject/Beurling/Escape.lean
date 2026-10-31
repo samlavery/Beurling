@@ -224,7 +224,7 @@ theorem tendsto_abs_im (h : TheoremAConclusion θ P) (hθ : 0 < θ) (hθ1 : θ <
       (∀ k, ρ k ∈ puncturedHalfPlane a ∧ F (ρ k) = 0) ∧
       Tendsto (fun k => (ρ k).re) atTop (𝓝 1) ∧
       Tendsto (fun k => |(ρ k).im|) atTop atTop := by
-  obtain ⟨a, ha, F, hF, ρ, xk, C, hx, hz, hb⟩ := h.2
+  obtain ⟨a, ha, F, hF, ρ, xk, C, hx, hz, hb, -⟩ := h.2
   have hre := tendsto_one_of_log_asymptotic (fun k => (ρ k).re) xk C hx hb
   set β' : ℝ := (θ + 1) / 2
   have hβ' : β' < 1 := by simp only [β']; linarith
@@ -236,7 +236,7 @@ theorem tendsto_abs_im (h : TheoremAConclusion θ P) (hθ : 0 < θ) (hθ1 : θ <
     have hy : Tendsto (fun k => Real.log (xk k)) atTop atTop := Real.tendsto_log_atTop.comp hx
     have hyy : Tendsto (fun k => Real.log (Real.log (xk k))) atTop atTop :=
       Real.tendsto_log_atTop.comp hy
-    filter_upwards [hy.eventually_gt_atTop 0, hyy.eventually_gt_atTop (C / 3)] with k h1 h2
+    filter_upwards [hy.eventually_gt_atTop 0, hyy.eventually_gt_atTop C] with k h1 h2
     have := (abs_le.mp (hb k)).1
     by_contra hk
     push_neg at hk

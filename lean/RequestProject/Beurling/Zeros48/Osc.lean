@@ -110,10 +110,10 @@ lemma abs_oscPart_sub_le {θ : ℝ} {α γ xp : ℕ → ℝ} (hθ : θ ≤ 1) (h
   exact h
 
 /-- **The slopes of the designed oscillations sum to at most `1/100`**: for the switch-on points
-`x⁺_j` of Section 2.2, `|α_j| ≤ 2` and `|γ_j| ≤ 2Γ_j = (x⁺_j)^{1-θ}/(4 log³ x⁺_j)`. -/
+`x⁺_j` of Section 2.2, `|α_j| ≤ 2` and `|γ_j| ≤ 2Γ_j = (x⁺_j)^{1-θ}/(X₀ log x⁺_j)`. -/
 lemma sum_oscLip_switchOn_le {θ X₀ : ℝ} (hθ0 : 0 ≤ θ) (hθ : θ ≤ 1 / 2) (hX : 10 ≤ X₀)
     {α γ : ℕ → ℝ} (hα : ∀ j, |α j| ≤ 2)
-    (hγ : ∀ j, |γ j| ≤ 2 * DesignedZero.heightScale θ kappa0Param (switchOn X₀ j)) (k : ℕ) :
+    (hγ : ∀ j, |γ j| ≤ 2 * DesignedZero.heightScale θ (kappa0Param X₀) (switchOn X₀ j)) (k : ℕ) :
     ∑ j ∈ range k, oscLip θ (α j) (γ j) (switchOn X₀ j) ≤ 1 / 100 := by
   set x := switchOn X₀ with hxdef
   have hX2 : (100 : ℝ) ≤ X₀ ^ 2 := by nlinarith
@@ -142,24 +142,26 @@ lemma sum_oscLip_switchOn_le {θ X₀ : ℝ} (hθ0 : 0 ≤ θ) (hθ : θ ≤ 1 /
     have hLpos : 0 < L := by linarith
     set r := x j ^ (θ - 1) with hr
     have hr0 : 0 ≤ r := Real.rpow_nonneg hx0.le _
-    -- `r ≤ 8 / L²`
-    have hrle : r ≤ 8 / L ^ 2 := by
+    -- `r ≤ 48 / L³`
+    have hrle : r ≤ 48 / L ^ 3 := by
       have h1 : r ≤ x j ^ (-(1 / 2) : ℝ) := Real.rpow_le_rpow_of_exponent_le hx1 (by linarith)
       have h2 : x j ^ (-(1 / 2) : ℝ) = (Real.exp (L / 2))⁻¹ := by
         rw [Real.rpow_def_of_pos hx0, ← Real.exp_neg]; congr 1; rw [hL]; ring
-      have h3 := Real.quadratic_le_exp_of_nonneg (show 0 ≤ L / 2 by linarith)
-      have h4 : (Real.exp (L / 2))⁻¹ ≤ 8 / L ^ 2 := by
+      have h3 := Real.pow_div_factorial_le_exp (L / 2) (by linarith) 3
+      norm_num [Nat.factorial] at h3
+      have h4 : (Real.exp (L / 2))⁻¹ ≤ 48 / L ^ 3 := by
         rw [inv_le_comm₀ (Real.exp_pos _) (by positivity), inv_div]
         nlinarith
       linarith
-    -- `r |γ_j| ≤ 1 / (4 L³)`
-    have hrγ : r * |γ j| ≤ 1 / (4 * L ^ 3) := by
+    -- `r |γ_j| ≤ κ₀ / L = 1 / (X₀ L)`
+    have hrγ : r * |γ j| ≤ 1 / (X₀ * L) := by
       have hrx : r * x j ^ (1 - θ) = 1 := by
         rw [hr, ← Real.rpow_add hx0]; norm_num
       have := mul_le_mul_of_nonneg_left (hγ j) hr0
       refine this.trans (le_of_eq ?_)
       unfold DesignedZero.heightScale kappa0Param
       rw [← hL]
+      have : X₀ ≠ 0 := by linarith
       field_simp
       linear_combination hrx
     have hθa : |θ| = θ := abs_of_nonneg hθ0
@@ -171,32 +173,25 @@ lemma sum_oscLip_switchOn_le {θ X₀ : ℝ} (hθ0 : 0 ≤ θ) (hθ : θ ≤ 1 /
         gcongr
         exact hα j
       linarith
-    have hL2 : (10 ^ 4 : ℝ) * 4 ^ j ≤ L ^ 2 := by
-      have : (100 * 2 ^ j : ℝ) ^ 2 = 10 ^ 4 * 4 ^ j := by
-        rw [mul_pow, ← pow_mul, mul_comm j 2, pow_mul]; norm_num
-      rw [← this]
-      exact pow_le_pow_left₀ (by positivity) hLj 2
-    have h42 : ((1 : ℝ) / 2) ^ j * 4 ^ j ≥ 1 := by
-      rw [← mul_pow]; norm_num
-      exact one_le_pow₀ (by norm_num)
-    have hL3 : 1 / (4 * L ^ 3) ≤ 1 / (2 * L ^ 2) := by
-      apply one_div_le_one_div_of_le (by positivity)
-      have : L ^ 2 ≤ L ^ 3 := pow_le_pow_right₀ (by linarith) (by norm_num)
-      nlinarith [sq_nonneg L]
-    have hfin : 2 * r * (θ + 2) + 2 * (r * |γ j|) ≤ 41 / L ^ 2 := by
+    have hfin : 2 * r * (θ + 2) + 2 * (r * |γ j|) ≤ 23 / 100 / L := by
       have hθ2 : θ + 2 ≤ 5 / 2 := by linarith
-      have h5 : 2 * r * (θ + 2) ≤ 40 / L ^ 2 := by
-        calc 2 * r * (θ + 2) ≤ 2 * (8 / L ^ 2) * (5 / 2) := by gcongr
-          _ = 40 / L ^ 2 := by ring
-      have h6 : 2 * (r * |γ j|) ≤ 1 / L ^ 2 := by
-        calc 2 * (r * |γ j|) ≤ 2 * (1 / (2 * L ^ 2)) := by linarith
-          _ = 1 / L ^ 2 := by field_simp
-      calc 2 * r * (θ + 2) + 2 * (r * |γ j|) ≤ 40 / L ^ 2 + 1 / L ^ 2 := by linarith
-        _ = 41 / L ^ 2 := by ring
-    have hend : 41 / L ^ 2 ≤ 41 / 10 ^ 4 * (1 / 2) ^ j := by
-      rw [div_le_iff₀ (by positivity)]
+      have h5 : 2 * r * (θ + 2) ≤ 3 / 100 / L := by
+        calc 2 * r * (θ + 2) ≤ 2 * (48 / L ^ 3) * (5 / 2) := by gcongr
+          _ = 240 / L ^ 3 := by ring
+          _ ≤ 3 / 100 / L := by
+            rw [div_le_div_iff₀ (by positivity) hLpos]; nlinarith [sq_nonneg L]
+      have h6 : 2 * (r * |γ j|) ≤ 2 / 10 / L := by
+        calc 2 * (r * |γ j|) ≤ 2 * (1 / (X₀ * L)) := by linarith
+          _ ≤ 2 / 10 / L := by
+            rw [show 2 * (1 / (X₀ * L)) = 2 / X₀ / L by field_simp]
+            gcongr
+      calc 2 * r * (θ + 2) + 2 * (r * |γ j|) ≤ 3 / 100 / L + 2 / 10 / L := by linarith
+        _ = 23 / 100 / L := by ring
+    have hend : 23 / 100 / L ≤ 41 / 10 ^ 4 * (1 / 2) ^ j := by
+      rw [div_le_iff₀ hLpos]
+      have h42 : ((1 : ℝ) / 2) ^ j * 2 ^ j = 1 := by rw [← mul_pow]; norm_num
       have hp : (0 : ℝ) ≤ (1 / 2) ^ j := by positivity
-      nlinarith
+      nlinarith [mul_le_mul_of_nonneg_left hLj hp]
     linarith
   calc ∑ j ∈ range k, oscLip θ (α j) (γ j) (x j)
       ≤ ∑ j ∈ range k, 41 / 10 ^ 4 * (1 / 2 : ℝ) ^ j := sum_le_sum fun j _ => hterm j

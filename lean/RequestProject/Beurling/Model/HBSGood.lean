@@ -198,9 +198,9 @@ theorem hbs_local {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) ω))
       (absorbedDensityCap (θ / 2) (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n))
       (osc θ (designedAlpha (realisedSystem M (capH X₀) ω) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀) a)
+          (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a)
         (designedGamma (realisedSystem M (capH X₀) ω) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀) a)
+          (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a)
         (switchOn X₀)) x)
     (κp : ℝ → ℝ) (hκp : ∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x)
     (hland : ∀ x ≥ (X₀ : ℝ), (X₀ : ℝ) + 2 * capH X₀ x ≤ x →
@@ -314,17 +314,17 @@ theorem hbs_local {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)
       have hEA := absorbed_target_error_cap_loc hW (by linarith) hhigh hdens
       have hsp := switchOn_spacing (X₀ : ℝ)
       have hα : ∀ k, |designedAlpha P θ X₀ (kappaParam X₀) A (fun n => solveU (θ / 2) n)
-          kappa0Param (switchOn X₀) a k| ≤ 2 := by
+          (kappa0Param X₀) (switchOn X₀) a k| ≤ 2 := by
         intro k
         have hm := designedAlpha_mem P θ X₀ (kappaParam X₀) A (fun n => solveU (θ / 2) n)
-          kappa0Param (switchOn X₀) a (heightScale_switchOn_pos θ hX1.le) k
+          (kappa0Param X₀) (switchOn X₀) a (heightScale_switchOn_pos θ hX1.le) k
         rw [abs_of_nonneg (by linarith [hm.1])]
         exact hm.2
       have hR := abs_osc_le (θ := θ) (γ := designedGamma P θ X₀ (kappaParam X₀) A
-        (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀) a) hsp hα (x := v) (by linarith)
+        (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a) hsp hα (x := v) (by linarith)
       have hR0 := osc_eq_zero_of_le (θ := θ) (α := designedAlpha P θ X₀ (kappaParam X₀) A
-        (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀) a) (γ := designedGamma P θ X₀
-        (kappaParam X₀) A (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀) a) hsp
+        (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a) (γ := designedGamma P θ X₀
+        (kappaParam X₀) A (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a) hsp
         (by linarith : (0 : ℝ) < X₀) (switchOn_zero_ge _)
       have hl := hlag v hhigh hvZ
       rw [hT v] at hl
@@ -340,9 +340,9 @@ theorem lemma626_horizon {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) ω))
       (absorbedDensityCap (θ / 2) (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n))
       (osc θ (designedAlpha (realisedSystem M (capH X₀) ω) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀) a)
+          (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a)
         (designedGamma (realisedSystem M (capH X₀) ω) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀) a)
+          (realisedA M (capH X₀) ω) (fun n => solveU (θ / 2) n) (kappa0Param X₀) (switchOn X₀) a)
         (switchOn X₀)) x)
     (κp : ℝ → ℝ) (hκp : ∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x)
     (hland : ∀ x ≥ (X₀ : ℝ), (X₀ : ℝ) + 2 * capH X₀ x ≤ x →

@@ -47,22 +47,22 @@ theorem lemma48_numerics {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
     (hX0 : 0 < X₀) (hX : 10 ^ 8 ≤ Real.log X₀) (ha : X₀ ≤ a) (haxk : a ≤ xk)
     (hxk : xk ≤ (1 + 1 / 1000) * a) (hxk0 : X₀ ^ 2 ≤ Real.log xk) {c : ℝ} (hc0 : 0 < c)
     (hc : c ≤ 4 * X₀) {J : ℕ} (hJ : 2 ^ J * (X₀ + 1) ≤ 2 * a) :
-    1 ≤ DesignedZero.heightScale θ kappa0Param xk ∧
-    1 ≤ (Real.log a - Real.log X₀) * (DesignedZero.heightScale θ kappa0Param xk + 1 / 2) ∧
-    25 * Real.sqrt (DesignedZero.heightScale θ kappa0Param xk + 1 / 2) *
+    1 ≤ DesignedZero.heightScale θ (kappa0Param X₀) xk ∧
+    1 ≤ (Real.log a - Real.log X₀) * (DesignedZero.heightScale θ (kappa0Param X₀) xk + 1 / 2) ∧
+    25 * Real.sqrt (DesignedZero.heightScale θ (kappa0Param X₀) xk + 1 / 2) *
         (X₀ + 1) ^ (lagExponent θ / 2 - 1 / 4) +
       40 * (2 ^ J * (X₀ + 1)) ^ (lagExponent θ / 2 + 1 / 4) +
-      (Real.sqrt ((DesignedZero.heightScale θ kappa0Param xk + 1 / 2) / 2) *
+      (Real.sqrt ((DesignedZero.heightScale θ (kappa0Param X₀) xk + 1 / 2) / 2) *
           (((X₀ + 1) ^ lagExponent θ + 2) * (X₀ / 2) ^ (-(3 / 4 : ℝ))) +
         2 * Real.sqrt (1 + Real.log ((Real.log a - Real.log X₀) *
-          (DesignedZero.heightScale θ kappa0Param xk + 1 / 2))) * c *
+          (DesignedZero.heightScale θ (kappa0Param X₀) xk + 1 / 2))) * c *
           Real.exp (Real.log a / 4)) ≤
-      100 * X₀ ^ (-(3 / 16 : ℝ)) * Real.sqrt (DesignedZero.heightScale θ kappa0Param xk) := by
+      100 * X₀ ^ (-(3 / 16 : ℝ)) * Real.sqrt (DesignedZero.heightScale θ (kappa0Param X₀) xk) := by
   obtain ⟨hθ1, hθ2⟩ := hθ
   set ℓ := Real.log X₀ with hℓ
   set L := Real.log a with hLdef
   set Λ := Real.log xk with hΛdef
-  set G := DesignedZero.heightScale θ kappa0Param xk with hGdef
+  set G := DesignedZero.heightScale θ (kappa0Param X₀) xk with hGdef
   set η := lagExponent θ with hηdef
   set Y : ℝ := 2 ^ J * (X₀ + 1) with hYdef
   have hY0 : 0 < Y := by rw [hYdef]; positivity
@@ -98,16 +98,17 @@ theorem lemma48_numerics {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
   have hηle : η ≤ 1 / 8 := by linarith
   -- the height
   have hΛpos : 0 < Λ := by linarith
-  have hGeq : G = xk ^ (1 - θ) / (8 * Λ ^ 3) := by
-    rw [hGdef, hΛdef]; simp only [DesignedZero.heightScale, kappa0Param]; ring
+  have hGeq : G = xk ^ (1 - θ) / (2 * X₀ * Λ) := by
+    rw [hGdef, hΛdef]; simp only [DesignedZero.heightScale, kappa0Param]
+    field_simp
   have hxkθ : Real.exp ((1 - θ) * L) ≤ xk ^ (1 - θ) := by
     have := Real.rpow_le_rpow ha0.le haxk (by linarith : (0 : ℝ) ≤ 1 - θ)
     rw [Real.rpow_def_of_pos ha0, ← hLdef] at this
     rw [mul_comm]; exact this
-  have hΛ3 : Λ ^ 3 ≤ 8 * L ^ 3 := by
-    have := pow_le_pow_left₀ hΛpos.le (show Λ ≤ 2 * L by linarith) 3
-    have e : (2 * L) ^ 3 = 8 * L ^ 3 := by ring
-    linarith
+  have hΛ3 : 2 * X₀ * Λ ≤ 64 * L ^ 3 := by
+    have h1 : 2 * X₀ * Λ ≤ 2 * (2 * L) * (L + 1) :=
+      mul_le_mul (by linarith) hΛL hΛpos.le (by linarith)
+    nlinarith [mul_le_mul hL1 hL1 zero_le_one hL0]
   have hy0 : 0 ≤ xk ^ (1 - θ) := Real.rpow_nonneg hxk0'.le _
   have hGlow : Real.exp ((1 - θ) * L) ≤ 64 * L ^ 3 * G := by
     refine hxkθ.trans ?_
@@ -121,7 +122,7 @@ theorem lemma48_numerics {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
       have := Real.rpow_le_rpow_of_exponent_le hxk1 (show 1 - θ ≤ 1 by linarith)
       rwa [Real.rpow_one] at this
     have hΛ1 : (1 : ℝ) ≤ Λ := by linarith
-    have h2 : 1 ≤ 8 * Λ ^ 3 := by have := one_le_pow₀ (n := 3) hΛ1; linarith
+    have h2 : 1 ≤ 2 * X₀ * Λ := by nlinarith
     exact (div_le_self hy0 h2).trans h1
   have hkey := key_exp hL60
   -- the master bound `31.25 L⁴ e^y ≤ ρ² G` for `y + L/20000 ≤ (1-θ)L`

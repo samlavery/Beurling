@@ -40,8 +40,8 @@ def PartIRestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : 
     (M : SlotModel X₀) : Prop :=
   (∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + u n ^ (θ / 2) = n) ∧
     (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (θ / 2) A u)
-      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
-        (designedGamma P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
+      (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
+        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
         (switchOn X₀)) x) ∧
     M.QueueWindowData ∧
     ∃ κp : ℝ → ℝ,
@@ -55,10 +55,10 @@ def PartIRestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : 
 Rankin bound for `A`: the pieces of `D̂_{<a_k}` and the construction scales. -/
 def Theorem410RestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ)
     (a : ℕ → ℝ) : Prop :=
-  (∀ k, Lemma48PiecesCount X₀ (heightScale θ kappa0Param (switchOn X₀ k))
+  (∀ k, Lemma48PiecesCount X₀ (heightScale θ (kappa0Param X₀) (switchOn X₀ k))
       (earlyOf P θ X₀ (kappaParam X₀) A u
-        (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
-        (designedGamma P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
+        (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
+        (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn X₀) a)
         (switchOn X₀) a k)) ∧
     (∀ k, 0 < a k ∧ a k ≤ switchOn X₀ k ∧ switchOn X₀ k ≤ (1 + 1 / 1000) * a k)
 

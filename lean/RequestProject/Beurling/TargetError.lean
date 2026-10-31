@@ -248,7 +248,7 @@ theorem PartIInputsTarget.partIInputs {θ : ℝ} {X₀ : ℕ} {P : BeurlingSyste
 
 /-- Refined inputs for one system, with the concrete target (6). -/
 def TheoremAInputsTarget (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
-  PartIInputsTarget θ X₀ P ∧ ∃ a, θ < a ∧ a < 1 ∧ Theorem410Inputs (P.zetaCont 1) a
+  PartIInputsTarget θ X₀ P ∧ ∃ a, θ < a ∧ a < 1 ∧ Theorem410Inputs θ (P.zetaCont 1) a
 
 /-- **Theorem 2.1, refined hypothesis with the concrete target**: as `Theorem21Inputs'`, but
 part (i) is reduced to the absorbed part of the target error and the lag bound (13) for the
