@@ -115,7 +115,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 > predictable, whose repair raises a constant from 30.6 to 35.8 inside the same 10⁻¹³ budget (#110).
 >
 > Repairing these and re-checking the repairs, and three further independent AI checks (R6–R8 in `review/recheck/`),
-> turned up thirty-two more (the last twelve from an audit of the certificate code, R30, from the Lean formalization, and from a follow-up study). The most serious were:
+> turned up thirty-four more (the last fourteen from an audit of the certificate code, R30, from the Lean formalization, including that of S1, and from follow-up studies). The most serious were:
 > - a gap in the label sum of the Pivot-Integration Lemma (Appendix A): the carried Euler factors cancel only after
 >   integration, not pointwise as the argument needed. Its first repair (#48) covered one configuration type only. The
 >   repair now in the paper (#55) covers the summed form the paper uses; see above;
