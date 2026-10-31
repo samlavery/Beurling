@@ -2,7 +2,8 @@
 
 Status (2026-10-31): paper and certificates only. One AI agent (Claude) wrote it. The design was scoped
 (/tmp/rhscratch/ext/onezero.md, plan S1) and adversarially checked (/tmp/rhscratch/ext/onezero_check.md: "holds with fixes")
-by two earlier AI agents. **The text written here has had no independent check yet, and no human review.** Not formalized in
+by two earlier AI agents. **The text written here passed one independent AI check (every item, including Step 5 by hand with
+the inherited raised-range bounds, and all scripts reproduced); no human review.** Not formalized in
 Lean: the Lean development still proves Theorem A for θ ∈ [1/20, ½ − 10⁻⁴] with the window u^{θ_b}.
 
 Commits on followup-s1 (from development 37e7339): fe3cb23 (paper), ab8db31 (certificates, App. B, README, depcheck), and the
@@ -234,16 +235,15 @@ rankin_R.py is not affected by the window and was not rerun.
 
 ## Open points
 
-1. **No independent check of the written text.** The checker's three defects are fixed as described. Everything else follows
-   the scoping table, but each item was re-derived only by the writer.
-2. **Step 5 rests on two inherited raised-range bounds**, log 2y ≤ 3.01γΛ and log C_d + 4ℓ ≤ 1.01γΛ. They are in the existing
-   text and checked numerically by window_check (W1) with the precise y, but were not re-derived here.
+1. **One independent AI check only** (passed on every item); no human review.
+2. ~~Step 5 rests on two inherited raised-range bounds~~ Closed: the independent check re-derived log 2y ≤ 3.01γΛ and
+   log C_d + 4ℓ ≤ 1.01γΛ by hand.
 3. **Lean** is unchanged. It covers θ ∈ [1/20, θ₁] with u^{θ_b}. The scoping note estimates porting S1 at about 1–2 weeks
    (window function in place of thetaB/uA/targetD; LateNoise/LagTwoSided to D_max; TargetError).
 4. **Statement form.** Theorem A(i) now carries D_max(x) + h(x)Λ⁻⁸ explicitly. For θ < 1/8, h is not ≤ x^θ near
    L = 400Λ², so the clean form N = x + O(x^θ log*x) holds only with a constant depending on θ (and X₀); that constant is not
    computed.
 5. **Lemma ZA(b)** keeps its o(1). It is unused, as before.
-6. **CORRECTIONS-vs-v3.md** has no entry for S1. As with FOLLOWUP-THETA/LANDAU, the record is this file and the
-   "Follow-up S1" comments in the .tex files.
+6. **CORRECTIONS-vs-v3.md** entry #115 records S1 (strengthening, not an error). README notes that Lean's `Theorem21` is the
+   pre-S1 form.
 7. **S2** (per-zero θ_k and the switch-off, giving a [1,0]-system) is not attempted here.

@@ -19,7 +19,7 @@ $1-1.5/\log X_0>0$:
 \begin{enumerate}[label=(\roman*)]
 \item $|N_{\PP}(x)-x|\le C_{X_0}x^{\theta}+2x^{\theta}\log^*x+D_{\max}(x)+h(x)\Lambda^{-8}$ for all $x\ge1$, where $\log^*$ is the
 iterated logarithm, $C_{X_0}<\infty$, and $D_{\max}$ and $h$ are the lag bound \eqref{eq:La} and the absorption window of
-Section~\ref{sec:params}. Both are $x^{o(1)}$: $D_{\max}(x)\le x^{3\cdot10^{-5}}$ and $\log D_{\max}(x)\le8\ell^2+1.11$ for
+Section~\ref{sec:params}. Both are $x^{o(1)}$: $D_{\max}(x)\le x^{3\cdot10^{-5}}$ for $x\ge\Xm$ and $\log D_{\max}(x)\le8\ell^2+1.11$ for
 $\ell\ge\ell_{\mathrm{std}}$, while $h(x)\le x^{1/8}$ and $\log h(x)=\max(50\Lambda^2,27\Lambda\ell^2,120\ell^4/\log\ell)$ for
 $L\ge400\Lambda^2$. In particular $N_{\PP}(x)=x+O_{X_0,\theta}(x^{\theta}\log^*x)$;
 \item $\zeta_{\PP}$ has zeros $\rho_k$ $(k\ge1)$ with
@@ -109,7 +109,7 @@ $y<\Xm=X_0-H(X_0)/2$, which holds for $\ell\le2\log\Lambda+s_H$, $s_H=5.9745$ (T
 window $h$ & $\theta$-free: $h(u):=u^{1/8}$ for $\log u\le400\Lambda^2$, $\log h(u):=\max(50\Lambda^2,27\Lambda\ell^2,120\ell^4/\log\ell)$
 beyond; continuous, piecewise $C^1$, $b:=d\log h/d\log u\in[0,\tfrac18]$, so $h\uparrow$, $h(u)\le u^{1/8}$, $h(u)/u\downarrow$. \\
 cluster window & $\delta_1=2L^{-6}$. \\
-\eqref{eq:La} & $|D|\le D_{\max}(x):=B(x^+)+3H(x^+)+5$, $x^+:=\max(x,X_0)$, on $[\Xm,\infty)$; $D=0$ below. $D_{\max}\le x^{3\cdot10^{-5}}$,
+\eqref{eq:La} & $|D|\le D_{\max}(x):=B(x^+)+3H(x^+)+5$, $x^+:=\max(x,X_0)$, on $[\Xm,\infty)$; $D=0$ below. $D_{\max}\le x^{3\cdot10^{-5}}$ for $x\ge\Xm$,
 and $D_{\max}\le3.01e^{8\ell^2}$ for $\ell\ge\ell_{\mathrm{std}}$. \\
 amplitudes & $\kappa'_k=\kappa_0$, $\kappa_0\in[X_0^{-1},\Lambda^{-5}]$; $\Gamma_k=\kappa_0x_k^{1-\theta}/(2\log x_k)$;
 $\gamma_k\in[\Gamma_k,2\Gamma_k]$; $\alpha_k\in[1,2]$; $\kappa_+=0.8$. \\

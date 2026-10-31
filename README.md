@@ -165,8 +165,8 @@ agent that made it and one independent AI check (see [`FOLLOWUP-THETA.md`](FOLLO
 [`FOLLOWUP-LANDAU.md`](FOLLOWUP-LANDAU.md)). Both are formalized in Lean: `BModel.theoremA_full` (Theorem A for
 θ ∈ [1/20, 1/2 − 10⁻⁴]) and `BModel.theoremA_ii_complete` (the zeros at 1·log log, tied to their heights), both from (84).
 The further extension to every θ ∈ (0, 1/20) (a θ-free absorption window and the explicit lag bound D_max = e^{O((log log x)²)};
-X₀ does not depend on θ, only the switch-on point x₁ does) is in the paper only: it has been checked only by the AI agent that
-made it and is not formalized in Lean (see [`FOLLOWUP-S1.md`](FOLLOWUP-S1.md)).
+X₀ does not depend on θ, only the switch-on point x₁ does) is in the paper only: it has been checked by the AI agent that
+made it and one independent AI check, and is not formalized in Lean (see [`FOLLOWUP-S1.md`](FOLLOWUP-S1.md)).
 
 So the answer to Q is negative. Equivalently, there is a discrete [1, β]-system with β ≤ θ < 1/2. The result says nothing about the
 Riemann zeta function itself.
@@ -195,6 +195,9 @@ theorem BModel.corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ
   three axioms: `BModel.theoremA_full : Huxley84 → Theorem21` (Theorem A for θ ∈ [1/20, 1/2 − 10⁻⁴]) and
   `BModel.theoremA_ii_complete` (zeros with |(1 − Re ρ_k) log x_k − log log x_k| ≤ C and
   |log Im ρ_k − ((1−θ) log x_k − log log x_k)| ≤ C).
+- Lean's `Theorem21` is the pre-S1 form of Theorem A: θ ∈ [1/20, 1/2 − 10⁻⁴], with the error terms x^η and 2x^{θ_b}. It is
+  not the current paper form (every θ ∈ (0, 1/2 − 10⁻⁴], error terms D_max(x) + h(x)Λ⁻⁸; see
+  [`FOLLOWUP-S1.md`](FOLLOWUP-S1.md)) until the Lean is updated.
 - The correspondence between the paper and the Lean statements has been checked by AI agents only.
 
 The formalization found four defects in the paper (corrections #102 and #104, constants in Lemma 5.7 and Theorem 5.24; #103, certificate
