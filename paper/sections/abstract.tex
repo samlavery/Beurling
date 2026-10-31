@@ -4,6 +4,10 @@ $N(x)=x+O(x^{\theta}\log^*x)$, where $\theta\in(0,\tfrac12-10^{-4}]$ is fixed an
 zeta function $\zeta_{\PP}$ has zeros $\rho_k$ with $\operatorname{Re}\rho_k\to1$. In particular $\zeta_{\PP}$ is zero-free in no
 half-plane $\operatorname{Re}s>1-\eps$. Equivalently, there is a discrete $[1,\beta]$-system with $\beta\le\theta<\tfrac12$. So the
 hypothesis $N(x)=Ax+O(x^{\theta})$ with $\theta<\tfrac12$ does not by itself force a zero-free half-plane.
+% Follow-up S2 (FOLLOWUP-S2.md): Theorem A'.
+A variant with a separate exponent for each oscillation, and oscillations that switch off again, gives a single discrete system
+with $N(x)=x+O(\exp(120(\log\log x)^4/\log\log\log x))$, so $N(x)=x+O(x^{\eps})$ for every $\eps>0$, whose zeta function still has
+zeros with $\operatorname{Re}\rho_k\to1$: a discrete $[1,0]$-system.
 
 The system is built by a randomised greedy rule with feedback from the integer count. Generalized primes are placed one
 slot at a time, against a target, adapted to the construction, whose Mellin transform carries designed zeros, and a prime is

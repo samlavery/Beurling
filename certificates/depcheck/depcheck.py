@@ -32,6 +32,12 @@ dep('lem:designedzero..lem:goodheights', 'prop:La', '<')
 dep('thm:zeros', 'lem:designedzero..lem:goodheights,lem:ZB,prop:La,lem:ZA')
 dep('prop:La', 'cor:lag,thm:queue,lem:budget')
 dep('thm:A', 'lem:T1,prop:La,thm:zeros,lem:budget')
+# Follow-up S2 (FOLLOWUP-S2.md): Theorem A' for the system P' of Section sec:onezero. The transfer lemma reads the whole graph
+# above for P' (same nodes, same edges); only the new nodes are listed.
+dep('lem:onezero-transfer', 'lem:onezero-osc,lem:T1,eq:osc,prop:g1')
+dep('lem:onezero-zeros', 'lem:onezero-osc,lem:onezero-transfer,thm:zeros')
+dep('thm:Aprime', 'lem:onezero-osc,lem:onezero-transfer,lem:onezero-zeros,prop:La,lem:budget')
+dep('cor:onezero', 'thm:Aprime')
 
 # Section 4 (noise response)
 dep('lem:cm', 'eq:HBS'); dep('eq:HBS', 'thm:queue', '<')

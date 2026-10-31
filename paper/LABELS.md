@@ -180,3 +180,11 @@
 | rem:horizon | Remark (certified horizon, correction #73): on Good(<z) the queue bound, lag, (H_BS), Lemma cm, (LP-a), (La) hold only at heights ≤ ž := z − 12 log z − 3 | 05-queue.tex |
 | eq:phibounds | the cutoff φ(t) = ψ(t)/(ψ(t)+ψ(1−t)), ψ(t) = e^{−1/t}: φ′ = φ(1−φ)(t^{−2}+(1−t)^{−2}) ≥ 0, ‖φ′‖ ≤ 2, ‖φ″‖ ≤ 10 (correction #94) | 02-construction.tex |
 | rem:landau | the factor log log in the designed zeros; why it cannot be removed with absolute (Saias-type) response bounds | 03-zeros.tex |
+| thm:Aprime | Theorem A′: a single [1,0]-system, N = x + O(exp(120ℓ⁴/log ℓ)) (Follow-up S2) | 01-setup.tex |
+| cor:onezero | a discrete [1,0]-system exists (Follow-up S2) | 01-setup.tex |
+| sec:onezero | §8 A single [1,0]-system: per-zero exponents (Follow-up S2) | 07-onezero.tex |
+| sec:onezero-osc | §8.1 the modified oscillations R_k^♭; eq:thetak (θ_k, y_k, ψ_k), eq:Rkflat, eq:thetastar, eq:Rhatflat | 07-onezero.tex |
+| lem:onezero-osc | properties of R_k^♭ (support, size, R′, R″, transform) | 07-onezero.tex |
+| lem:onezero-transfer | Sections 3–7 and App. A for P′; eq:T1flat | 07-onezero.tex |
+| lem:onezero-zeros | Section 4 (zeros) for P′ | 07-onezero.tex |
+| rem:onezero-floors | the floors of the error terms of Theorem A′(i) | 07-onezero.tex |

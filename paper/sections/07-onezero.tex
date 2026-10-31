@@ -1,0 +1,253 @@
+% Follow-up S2 (FOLLOWUP-S2.md): a single [1,0]-system, from per-zero exponents and oscillations that switch off.
+% typography only: lets TeX loosen lines instead of overfilling them
+\begingroup\emergencystretch=2em
+\section{A single \texorpdfstring{$[1,0]$}{[1,0]}-system: per-zero exponents}\label{sec:onezero}
+
+In Theorem~\ref{thm:A} the integer error contains the term $2x^{\theta}\log^*x$, because every oscillation $R_k$ carries the same
+exponent $\theta$ and stays switched on. Nothing else in the proof needs a fixed power of $x$. The absorption window $h$ and the lag
+bound $D_{\max}$ do not depend on $\theta$ (Section~\ref{sec:params}, Proposition~\ref{prop:La}), and the rigid part of the target is
+at most $\Psi(2x,X_0)$ \eqref{eq:Erig}. The exponent enters the zero analysis only through the lower bound
+$\theta\log x_k\ge9(\log\log x_k)^2$, used in step~6 of Lemma~\ref{lem:designedzero} and in Lemma~\ref{lem:latenoise}, and through
+the sums of $o_R$ in \eqref{eq:osc}. Every other use of $\theta$ is an upper bound $\theta\le\theta_1$. It cancels in
+$\operatorname{Re}s^*=\theta+\operatorname{Re}w^*$. So each oscillation can be given its own exponent, just above the least admissible value,
+$\theta_k=9(\log\log x_k)^2/\log x_k$, and switched off once its zero has been planted. This section defines the modified target and
+proves Theorem~\ref{thm:Aprime}. Theorem~\ref{thm:A} and its proof are unchanged.
+
+\subsection{The modified oscillations}\label{sec:onezero-osc}
+Let $x_k$ be the switch-on points of Section~\ref{sec:params}, now subject only to $x_1\ge\exp(X_0^2)$ and $x_{k+1}\ge\exp(x_k)$, and
+let $x_k^+:=x_k+2H(x_k)$ as in Section~\ref{sec:target}. Put $L_k:=\log x_k^+$, $\ell_k:=\log L_k$ and
+\begin{equation}\label{eq:thetak}
+  \theta_k:=\frac{9\ell_k^2}{L_k},\qquad y_k:=(x_k^+)^2,\qquad \psi_k(t):=\phi\bigl(t-\log x_k^+\bigr)-\phi\bigl(t-\log y_k\bigr),
+\end{equation}
+with $\phi$ the smooth step of \eqref{eq:phibounds}. The oscillations, their sum, and the amplitude condition are
+\begin{equation}\label{eq:Rkflat}
+  R_k^\flat(x):=\alpha_kx^{\theta_k}\cos(\gamma_k\log x)\,\psi_k(\log x),\qquad R^\flat:=\sum_kR_k^\flat,\qquad
+  \alpha_k\gamma_k(x_k^+)^{\theta_k-1}=\frac{\kappa_0}{\log x_k^+},
+\end{equation}
+with $\kappa_0\in[X_0^{-1},\Lambda^{-5}]$ and $\alpha_k\in[1,2]$ as before. The height $\gamma_k\in[\Gamma_k^\flat,2\Gamma_k^\flat]$, with
+$\Gamma_k^\flat:=\kappa_0x_k^{1-\theta_k}/(2\log x_k)$, is chosen by the rule of Lemma~\ref{lem:goodheights}, read with $\Gamma_k^\flat$ in
+place of $\Gamma_k$. The target $T^\flat$ is \eqref{eq:target} with $R^\flat$ in place of $R$. Everything else is as in
+Sections~\ref{sec:setup} and~\ref{sec:construction}: $X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$, $\kappa$, $H$, $c$, $M_1$, $L_0$, $y$, $B$,
+the window $h$, the absorbed set, the slots, the hard greedy rule with box-centred jitter, and Definition~\ref{def:good} of the good
+event $\mathcal G$. Write $\PP'$ for the resulting random system. The parameters $\theta_k$ and $y_k$ are deterministic, so
+Lemma~\ref{lem:adapted} holds for $T^\flat$ with the same proof: $R^\flat$ on $[1,u]$ involves only the $R_k^\flat$ with $x_k^+<u$, and
+$\psi_k=0$ on $(-\infty,\log x_k^+]$.
+
+Since $9(\log L)^2/L$ decreases for $L\ge e^2$ and $L_k\ge X_0^2$,
+\begin{equation}\label{eq:thetastar}
+  \theta_k\le\theta_*:=36\Lambda^2X_0^{-2},\qquad \theta_kL_k=9\ell_k^2\ge18\ell_k,\qquad \ell_k\ge2\Lambda .
+\end{equation}
+The equality $\theta_kL_k=9\ell_k^2$ is the condition $\theta\log x_k\ge9(\log\log x_k)^2$ of Theorem~\ref{thm:A}, now at each switch-on
+point separately.
+
+\begin{lemma}[The modified oscillations]\label{lem:onezero-osc}
+For every $k$ and every $\omega$:
+\begin{enumerate}[label=(\alph*)]
+\item $0\le\psi_k\le1$, $\psi_k=0$ outside $(\log x_k^+,\log y_k+1)$, $\|\psi_k'\|_\infty\le2$ and $\|\psi_k''\|_\infty\le10$.
+\item $R_k^\flat$ vanishes outside $(x_k^+,ey_k)$. These intervals are pairwise disjoint, so at most one $R_k^\flat$ is non-zero at
+any $x$. On the $k$-th of them, $|R^\flat(x)|\le2x^{\theta_k}\le2.01\,e^{18(\log\log x)^2}$. For every $x\ge1$,
+$|R^\flat(x)|\le2x^{\theta_*}$, and $R^\flat=0$ on $[1,x_1^+]$.
+\item $|R_k^{\flat\prime}(x)|\le2\kappa_0(x/x_k^+)^{\theta_k-1}/\log x_k^+$, and $|R^{\flat\prime}(x)|\le4.01\kappa_0/\log x\le\kappa_+/\log x$.
+In particular \eqref{eq:G1} holds for $T^\flat$.
+\item $|R_k^{\flat\prime\prime}(w)|\le\alpha_k\gamma_k^2w^{\theta_k-2}(1+6/\gamma_k)$ for every $w>0$.
+\item $\widehat R_k^\flat(s):=\int x^{-s}R_k^{\flat\prime}(x)\,dx$ is entire, and, with $w=s-\theta_k-i\gamma_k$, $w'=s-\theta_k+i\gamma_k$
+and $\Phi$ as in \eqref{eq:Rhat},
+\begin{equation}\label{eq:Rhatflat}
+  \widehat R_k^\flat(s)=\frac{\alpha_ks}2\Bigl[\bigl((x_k^+)^{-w}-y_k^{-w}\bigr)\frac{\Phi(w)}w
+  +\bigl((x_k^+)^{-w'}-y_k^{-w'}\bigr)\frac{\Phi(w')}{w'}\Bigr].
+\end{equation}
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) $\phi$ is non-decreasing, so $\phi(t-\log x_k^+)\ge\phi(t-\log y_k)$, and both lie in $[0,1]$. The two terms of $\psi_k'$ are
+supported in $[\log x_k^+,\log x_k^++1]$ and $[\log y_k,\log y_k+1]$, which are disjoint because $\log y_k=2\log x_k^+$. So
+$\|\psi_k'\|_\infty=\|\phi'\|_\infty$ and $\|\psi_k''\|_\infty=\|\phi''\|_\infty$, and \eqref{eq:phibounds} applies.
+
+(b) The support follows from (a). For disjointness, $x_{k+1}^+>x_{k+1}\ge\exp(x_k)>e(x_k^+)^2=ey_k$. On $(x_k^+,ey_k)$,
+$|R^\flat|=|R_k^\flat|\le\alpha_kx^{\theta_k}\le2x^{\theta_k}$, and $\log x\le2L_k+1$, so $\theta_k\log x\le18\ell_k^2+\theta_k\le18(\log\log x)^2+10^{-9}$.
+The bound $2x^{\theta_*}$ follows from \eqref{eq:thetastar}.
+
+(c) As in the proof of Lemma~\ref{lem:G1}, $|R_k^{\flat\prime}(x)|\le\alpha_kx^{\theta_k-1}(\gamma_k+\theta_k+\|\psi_k'\|_\infty)\le
+2\alpha_k\gamma_kx^{\theta_k-1}$, since $\theta_k+2\le\Gamma_k^\flat\le\gamma_k$; and \eqref{eq:Rkflat} turns this into the first bound. At a
+point $x$ of the $k$-th interval, $\log x\le2\log x_k^++1$ and $(x/x_k^+)^{\theta_k-1}\le1$, so
+$|R^{\flat\prime}(x)|\le2\kappa_0(2+1/X_0^2)/\log x\le4.01\kappa_0/\log x$; elsewhere $R^{\flat\prime}=0$. As $\kappa_0\le\Lambda^{-5}$, this is at
+most $\kappa_+/\log x$. The other two inputs of \eqref{eq:G1}, the rigid and the absorbed part, do not involve $R$.
+
+(d) This is the computation of Step~3 of the proof of Proposition~\ref{prop:g1}(B), with $\psi_k$ in place of
+$\phi(\cdot-\log x_k^+)$; it uses only $0\le\psi_k\le1$, $\|\psi_k'\|_\infty\le2$, $\|\psi_k''\|_\infty\le10$ and $\gamma_k\ge13$.
+
+(e) $R_k^\flat$ is smooth with compact support in $(1,\infty)$, so $\widehat R_k^\flat(s)=s\int x^{-s-1}R_k^\flat(x)\,dx$ is entire. Write
+$\cos(\gamma_k\log x)=\frac12(x^{i\gamma_k}+x^{-i\gamma_k})$ and substitute $x=e^v$. For $\operatorname{Re}w>0$ and $a\in\R$, integration by
+parts gives $\int_\R e^{-wv}\phi(v-a)\,dv=e^{-wa}\Phi(w)/w$. With $a=\log x_k^+$ and $a=\log y_k$ this gives \eqref{eq:Rhatflat} for
+$\operatorname{Re}w,\operatorname{Re}w'>0$. Both sides are entire, since each bracket vanishes where its denominator does. So
+\eqref{eq:Rhatflat} holds everywhere.
+\end{proof}
+
+\subsection{Transfer of Sections~\ref{sec:construction}--\ref{sec:baserange}}
+\begin{lemma}[Transfer]\label{lem:onezero-transfer}
+For $\PP'$, every statement of Sections~\ref{sec:construction}, \ref{sec:noise}, \ref{sec:queue} and~\ref{sec:baserange} and of
+Appendix~\ref{app:rankfull} holds, with the same constants, when every statement about $R_k$ is read with $\theta_k$ in place of
+$\theta$, and $|R(x)|\le2x^{\theta}\log^*x$ is read as $|R^\flat(x)|\le2x^{\theta_*}$. The only statement that changes is \eqref{eq:T1},
+whose term $C_{X_0}x^\theta$ is replaced: for $\PP'$, \eqref{eq:T1} holds in the form
+\begin{equation}\label{eq:T1flat}
+  |T^\flat(x)-x-R^\flat(x)|\le\Psi(2x,X_0)+h(x)\Lambda^{-8}\qquad(x\ge X_0)
+\end{equation}
+on the same events. The $R$-parts of the sums of $o_R$ in \eqref{eq:osc} are again at most $e^{-\Lambda^2}$, with a different proof. In
+particular
+$\Prob(\mathcal G)\ge1-1.5/\log X_0$ for $\PP'$, and \eqref{eq:La} holds on $\mathcal G$ with the same $D_{\max}$.
+\end{lemma}
+
+\begin{proof}
+The oscillation enters Sections~\ref{sec:construction}--\ref{sec:baserange} and Appendix~\ref{app:rankfull} only in the following ways. A
+search of the source for $R$, $R'$, $R_k$, $\kappa_k$, $x_k$, $x_1$, $o_R$ and $\theta$ finds no other use. The rest of the
+construction ($H$, $c$, $M_1$, $y$, $h$, $\Abs$, $\rhodet$) and the probability budget do not involve $R$ or $\theta$.
+\begin{itemize}
+\item \emph{Positivity, slots and adaptedness.} Lemma~\ref{lem:G1}, the slot facts of \S\ref{sec:greedy}, Corollary~\ref{cor:lag}, the
+slot-length bound of Remark~\ref{rem:horizon}, and the excess in the definition of $\bar\mu(J)$ before Lemma~\ref{lem:landing} use
+$R$ only through $|R'|\le\kappa_+/\log x$ and $R'=0$ below $x_1^+$. Both hold by Lemma~\ref{lem:onezero-osc}(b),(c).
+Lemma~\ref{lem:adapted} holds as noted in \S\ref{sec:onezero-osc}.
+\item \emph{The target error.} \eqref{eq:Erig} and the absorbed part of \eqref{eq:T1} do not involve $R$ or $\theta$, and
+\eqref{eq:T1flat} is $|E|\le|E_{\mathrm{rig}}|+|E_{\Abs}|$ with $|E_{\mathrm{rig}}|\le\Psi(2x,X_0)$ by \eqref{eq:Erig}. Rankin's bound
+$C_{X_0}x^\theta$ is not used. Theorem~\ref{thm:A}(i) is its only reader, and it is replaced by Theorem~\ref{thm:Aprime}(i).
+\item \emph{The size of $R$.} The bound $|R|\le2u^\theta\log^*u$ is read in \S\ref{sec:noise-primes} (the error $\eps_1$ and $\eta_1$,
+$\eta_2$, where only $|R(u)|\le u^{1/2}$ for $u\ge x_1$ is used), in Steps~2 and~3 of the proof of Theorem~\ref{thm:lp} (where
+$y^{\theta-1}\log y\le X_0^{-0.49}$ is used), and in Step~1 of the proof of Lemma~\ref{lem:margin}(b) (where
+only $\theta\le\theta_1$ is used). Each holds with $2u^{\theta_*}$, as $\theta_*\le10^{-9}$.
+\item \emph{The derivative bound} \eqref{eq:Rkprime}. With $\theta_k$, $|R_k^{\flat\prime}(v)|\le\kappa_k(v/x_k)^{\theta_k-1}$ holds, up to the
+factor $1+2H(x_k)/x_k$ of Section~\ref{sec:target}, and exactly at $x_k^+$, by Lemma~\ref{lem:onezero-osc}(c). Its readers use
+$\theta$ only through upper bounds. In Step~4 of the proof of Proposition~\ref{prop:g1}(B) these are
+$r=2^{\theta_k-1}\le2^{-1/2}$ (Pointwise) and $1/(1-\theta_k)\le2$ with $|R_k^\flat(v)|\le\alpha_kv^{\theta_k}$ (Average; this uses
+$0\le\psi_k\le1$). In Step~3 they are $F_{\theta_j}\le F_{1/2}\le1.33$ and the second-derivative bound of
+Lemma~\ref{lem:onezero-osc}(d). The separation in Step~4 uses $\log\Gamma_j^\flat\ge(1-\theta_j)\log x_j-\Lambda-\log\log x_j-1$, and Step~5
+uses $1-\theta_j\ge\frac12$. Cells $[v_j,2v_j)$ beyond $ey_k$ contribute $0$ to the Pointwise sum, so its bound $526\kappa_0$ is not
+increased. The design facts before Proposition~\ref{prop:g1} hold with $\theta_k$ and $\Gamma_k^\flat$; the frequencies keep
+$\log\gamma_k\ge\frac12\log x_k$.
+\item \emph{The transform.} \eqref{eq:Rhatbound} and (LP-c) of Theorem~\ref{thm:lp} hold for $\widehat R^\flat$. On
+$\sigma\ge1-8/\Lambda$ we have $\operatorname{Re}w,\operatorname{Re}w'\ge0.4$, so $|y_k^{-w}|\le|(x_k^+)^{-w}|$, and \eqref{eq:Rhatflat}
+gives $|\widehat R_k^\flat(s)|\le10|s|(x_k^+)^{-0.4}$. Summed over $k$, this is $\le|s|e^{-0.39X_0^2}$.
+\item \emph{The oscillation $o_R$ of the source} (\S\ref{par:osc}). The windows of $o_u$ meet $[u,2u)$ and have length
+$2.04H(u)\le u/2$, so they lie in $[u/2,3u]$. Hence the part $o_{R,k}(u)$ of $R_k^\flat$ vanishes unless $u\ge x_k^+/3$, and then, by
+Lemma~\ref{lem:onezero-osc}(d), it is at most $2.04H(u)\cdot1.01\alpha_k\gamma_k^2(u/2)^{\theta_k-2}$. By \eqref{eq:Rkflat} and
+$\gamma_k\le2\Gamma_k^\flat\le\Lambda^{-5}(x_k^+)^{1-\theta_k}$, $\alpha_k\gamma_k^2\le\Lambda^{-10}(x_k^+)^{2-2\theta_k}$. With
+$(x_k^+/u)^{2-\theta_k}\le3x_k^+/u$ this gives
+\[
+  o_{R,k}(u)\le26\Lambda^{-10}H(u)(x_k^+)^{-\theta_k}\frac{x_k^+}u\le H(u)\,e^{-9\ell_k^2}\,\frac{x_k^+}u .
+\]
+Over dyadic $u$, the terms $\log^2(3u)H(u)x_k^+/u$ decrease at least by the ratio $0.51$, since $d\log H/d\log u\le4\cdot10^{-6}$. At the
+first $u\ge x_k^+/3$ we have $\log^2(3u)\le1.01L_k^2$ and $H(u)\le H(x_k^+)=e^{8\ell_k^2}$, as $\ell_k\ge2\Lambda>\ell_{\mathrm{std}}$. So
+\[
+  \sum_u\log^2(3u)\,o_{R,k}(u)\le\frac{3\cdot1.01}{0.49}L_k^2e^{-\ell_k^2}\le6.2\,e^{2\ell_k-\ell_k^2}\le e^{-\ell_k^2/2}.
+\]
+As $\ell_{k+1}\ge\log x_k\ge\ell_k+1$ and $\ell_1\ge2\Lambda$, the sum over $k$ is at most $2e^{-\ell_1^2/2}\le e^{-\Lambda^2}$. This bounds the
+$R$-parts of $\sum_u\log(2u)o_u$, $\sum_v(\log3v)^2o_v$ and $\sup_v\log v\cdot o_v$ by $e^{-\Lambda^2}$, as in the proof of
+\eqref{eq:osc}. It replaces the argument there, which uses a single exponent $\theta$ for all $k$.
+\end{itemize}
+With these inputs the proofs of Theorem~\ref{thm:queue}, Proposition~\ref{prop:La} and Lemma~\ref{lem:budget} go through verbatim,
+since they read the oscillation only through the items above.
+\end{proof}
+
+\subsection{The zeros}
+\begin{lemma}[Zeros of $\PP'$]\label{lem:onezero-zeros}
+Lemmas~\ref{lem:ZB}, \ref{lem:ZBlow}, \ref{lem:ZA}, \ref{lem:designedzero}, \ref{lem:latenoise}, \ref{lem:goodheights} and
+Theorem~\ref{thm:zeros} hold for $\PP'$, with $\theta_k$ in place of $\theta$ at the $k$-th zero and $\Gamma_k^\flat$ in place of $\Gamma_k$, and
+with $3e^{-0.49X_0^2}$ replaced by $7e^{-0.49X_0^2}$ in the perturbation bound of Theorem~\ref{thm:zeros}. On $\mathcal G$, therefore,
+$\zeta_{\PP'}$ has a zero $\rho_k$ with $|\rho_k-s_k^*|\le1/\log x_k$ for every $k$, where
+$\operatorname{Re}s_k^*=1-(\log\log x_k+O_{X_0}(1))/\log x_k$.
+\end{lemma}
+
+\begin{proof}
+We use the convention of Section~\ref{sec:zeros}: $x_k$ means $x_k^+$, and $a_k$ is the construction scale. Then $y_k=x_k^2$,
+$\theta_k\log x_k=9\ell_k^2$, and \eqref{eq:Rkflat} reads $\alpha_k\gamma_k=\kappa_0x_k^{1-\theta_k}/\log x_k$. Proposition~\ref{prop:La} and the
+decomposition \eqref{eq:zetadecomp} hold, with $\widehat R^\flat$ for $\widehat R$, by Lemma~\ref{lem:onezero-transfer}.
+\begin{itemize}
+\item \emph{Lemmas~\ref{lem:ZB}, \ref{lem:ZBlow}, \ref{lem:ZA}.} These do not involve $R$. They read $\theta$ only through
+$\kappa\Gamma_1\ge e^{0.49X_0^2}$, $|t|\le3\Gamma_k\le x_k^{1-\theta}$ and $\log(\Gamma_k/2)\ge\frac12\log x_k$. All three hold for
+$\Gamma_k^\flat$ and $\theta_k$, as $\theta_k\le\theta_*$.
+\item \emph{The bullets after \eqref{eq:Rhat}.} On $0.99\le\sigma\le2$, $|t-\gamma_k|\le1$ we have $\operatorname{Re}w,\operatorname{Re}w'\ge0.98$.
+In \eqref{eq:Rhatflat} each term with $y_j$ has the form of the term with $x_j$, with the smaller factor
+$|y_j^{-w}|\le|x_j^{-w}|$. So the bounds for $|E_k|$, $\sum_{j<k}|\widehat R_j|$ and $\sum_{j>k}|\widehat R_j|$ at most double, and
+their sum is at most $6e^{-0.49X_0^2}$. Write $M_k$ for the resonant term $\frac{\alpha_ks}2x_k^{-w}\Phi(w)/w$, as before. The remaining
+part of $\widehat R_k^\flat$ is $M_k^{\mathrm{off}}:=-\frac{\alpha_ks}2y_k^{-w}\Phi(w)/w=-x_k^{-w}M_k$.
+\item \emph{Lemma~\ref{lem:designedzero}} for $Z_B+M_k$, with $\theta_k$. Step~2 reads
+$\log|G|=(1-\theta_k)\log x_k-\log\log x_k+O_{X_0}(1)$. In step~6, $2\delta_k\le\theta_k$, since $\theta_k\log x_k=9\ell_k^2\ge18\ell_k$. So
+$\operatorname{Re}w\in[1-\theta_k-\delta_k,1-\theta_k+\delta_k]\subset[0.49,1-\delta_k]$ and $|w|\le1$, and the $O_{X_0}(1)$ term lies in the
+same interval $[\log\kappa_0-\log(2\Lambda)-1.7,\log\kappa_0+0.72]$. Steps~1, 3--5 do not involve $\theta$. Since
+$\operatorname{Re}s^*=\theta_k+\operatorname{Re}w^*$, the exponent cancels, and $\operatorname{Re}s^*=1-(\log\log x_k+O_{X_0}(1))/\log x_k$
+as before. On the Rouch\'e circle, steps~4 and~5 give $|M_k|\le|Z_B(s^*)|\,e\,(1+5/\log x_k)\le5.5\Lambda$, so
+$|M_k^{\mathrm{off}}|\le5.5\Lambda x_k^{-0.98}\le e^{-0.49X_0^2}$.
+\item \emph{Lemma~\ref{lem:latenoise}} with $\theta_k$. Its proof reads $\theta$ only through $x_k^{-\sigma}\le e\,x_k^{-\theta}/|G(w^*)|$
+(from $\operatorname{Re}s^*=\theta+\operatorname{Re}w^*$) and through the last step. Both hold with $\theta_k$, and
+$|\widehat D_{\ge a_k}|\le171\Lambda e^{8\ell_k^2-\theta_k\log x_k}=171\Lambda e^{-\ell_k^2}\le171\Lambda e^{-4\Lambda^2}$.
+This is where the exact form \eqref{eq:Dmaxstd} of the lag bound is needed.
+\item \emph{Lemma~\ref{lem:goodheights}} with $\Gamma_k^\flat$. The rule, its measurability and its information cutoff do not involve
+$\theta$. In (ii), \eqref{eq:Gammalow} holds with $\theta_k$, as $u^{1-\theta_k}/\log u$ increases. The $\bar\rho_{\Abs}$ and Dirichlet-sum parts
+use $a_k^{\theta_k-1/2}$ and $(\theta_k+\eta)/2-\frac14<0$. In the $R'$ part, $|\widehat R_j^\flat|\le4.02x_j^{-1/4}$ on $Q$, and the tail
+beyond $a_k$ vanishes, since $R_j^{\flat\prime}=0$ beyond $ey_j<a_k$ for $j<k$. So that part is at most $4.04e^{-X_0^2/4}$.
+\item \emph{Theorem~\ref{thm:zeros}.} Take $\alpha_k:=\kappa_0x_k^{1-\theta_k}/(\gamma_k\log x_k)\in[1,2]$. In Rouch\'e's theorem on the circle
+of Lemma~\ref{lem:designedzero}, $\zeta_{\PP'}$ is compared with $Z_B+M_k$. The perturbation is
+\[
+  |E_k|+\sum_{j\ne k}|\widehat R_j^\flat|+|M_k^{\mathrm{off}}|+|\widehat D_{<a_k}|+|\widehat D_{\ge a_k}|+|\widehat E_{\Abs}|
+  \le7e^{-0.49X_0^2}+\tfrac1{16}+171\Lambda e^{-4\Lambda^2}+e^{-10^{10}}<\tfrac14 .
+\]
+The hypotheses of Lemma~\ref{lem:designedzero} are checked as in the proof of Theorem~\ref{thm:zeros}.\qedhere
+\end{itemize}
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:Aprime}}
+\begin{proof}[Proof of Theorem~\ref{thm:Aprime}]
+\emph{(i)} By Lemma~\ref{lem:onezero-transfer}, on $\mathcal G$ we have $|D|\le D_{\max}$ by \eqref{eq:La}. For $x\ge X_0$,
+$N-x=D+(T^\flat-x-R^\flat)+R^\flat$, so \eqref{eq:T1flat} and Lemma~\ref{lem:onezero-osc}(b) give
+\[
+  |N_{\PP'}(x)-x|\le\Psi(2x,X_0)+D_{\max}(x)+h(x)\Lambda^{-8}+2.01e^{18\ell^2}\mathbf 1[x>x_1^+].
+\]
+Below $X_0$, $|N-x|\le|D|+1\le D_{\max}$, as in the proof of Theorem~\ref{thm:A}. An $X_0$-smooth integer $d\le y$ has
+$e_p\le\log y/\log p$ for each of its $\pi(X_0)$ prime exponents, so
+$\Psi(y,X_0)\le(1+\log y/\log2)^{\pi(X_0)}$, and $\Psi(2x,X_0)\le(2\log x)^{\pi(X_0)}=e^{\pi(X_0)(\ell+\log2)}$ for $\log x\ge4$. The other
+three terms are bounded in Section~\ref{sec:params} and Proposition~\ref{prop:La}. For $\ell\ge\ell_{\mathrm{std}}$ and $\log x\ge400\Lambda^2$,
+$D_{\max}\le3.01e^{8\ell^2}$ and $\log h=\max(50\Lambda^2,27\Lambda\ell^2,120\ell^4/\log\ell)$. Below these heights $D_{\max}\le65X_0^{15}$ and
+$h\le e^{50\Lambda^2}$. Each exponent $\pi(X_0)(\ell+\log2)$, $8\ell^2$, $27\Lambda\ell^2$ and $18\ell^2$ is at most
+$120\ell^4/\log\ell+C(X_0)$. This gives the bound with $\exp(120\ell^4/\log\ell)$. Since $\ell^4=o(\log x)$, it is $O_\eps(x^\eps)$ for
+every $\eps>0$.
+
+\emph{(ii)} The zeros are those of Lemma~\ref{lem:onezero-zeros}. By step~6 of Lemma~\ref{lem:designedzero},
+$|\rho_k-(1+i\gamma_k)|\le\delta_k\le\frac18$, so $|\operatorname{Im}\rho_k-\gamma_k|\le\frac18$. With $\gamma_k\in[\Gamma_k^\flat,2\Gamma_k^\flat]$ and
+$\log(1/\kappa_0)\in[5\log\Lambda,\Lambda]$,
+\[
+  \log\gamma_k=(1-\theta_k)\log x_k-\log\log x_k+O(\Lambda)=\log x_k-9(\log\log x_k)^2-\log\log x_k+O(\Lambda).
+\]
+Write $g:=\log|\operatorname{Im}\rho_k|=\log\gamma_k+O(1/\gamma_k)$. Then $\log x_k=g\,(1+O(\ell_k^2/\log x_k))$ and
+$\log\log x_k=\log g+O(\ell_k^2/\log x_k)$. So $1-\operatorname{Re}\rho_k=(\log\log x_k+O_{X_0}(1))/\log x_k=(\log g+O_{X_0}(1)+O(\ell_k^3/\log x_k))/g$.
+The term $\ell_k^3/\log x_k$ is at most $1$, since $\log x_k\ge e^{\ell_k}$ and $\ell_k\ge2\Lambda$. This is the height relation.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:onezero}]
+Fix $\omega\in\mathcal G$. As in the proof of Corollary~\ref{cor:notQ}, $\PP'(\omega)$ is a fixed discrete Beurling system. By
+Theorem~\ref{thm:Aprime}(i), $N(x)=x+O_\eps(x^\eps)$ for every $\eps>0$. The exponent $0$ is optimal: if $N(x)-x\to0$, then
+$N(x+\frac12)-N(x)\to\frac12$, which is impossible for an integer-valued $N$. By Theorem~\ref{thm:Aprime}(ii), $\zeta_{\PP'}$ has zeros with real parts tending
+to $1$. Remark~\ref{rem:equiv}, direction (b)$\Rightarrow$(a), applies with $\beta=\frac14$. It shows that $\psi_{\PP'}(x)-x$ is
+$O(x^{1-\eps'})$ for no $\eps'>0$. On the other hand $\psi_{\PP'}(x)\le N(x)\log x=O(x^{1+\eps})$. So $\psi$ has the optimal exponent
+$1$, and $\PP'(\omega)$ is a $[1,0]$-system. If $N(x)=Ax+O(x^\eps)$ for every $\eps>0$ forced a zero-free half-plane, it would do so for
+$\PP'(\omega)$, with $A=1$.
+\end{proof}
+
+\begin{remark}[The size of the error]\label{rem:onezero-floors}
+The terms of Theorem~\ref{thm:Aprime}(i) are floors of this method, not lower bounds for $N-x$.
+\begin{itemize}
+\item \emph{Absorption}, $h(x)\Lambda^{-8}$, with $\log h=120\ell^4/\log\ell$ eventually. It is the dominant term for large $x$. It comes
+from the
+divisor trick of Lemma~\ref{lem:lemmaP}: \eqref{eq:twelvetwo} needs $0.9u_0\log u_0\ge(16+o(1))\ell^2$ with
+$u_0=\log h/\log2y$ and $\log2y=(12+o(1))\ell^2$. With $\log h=K\ell^4/\log\ell$ the left side is $(0.15K+o(1))\ell^2$, so $K>320/3$
+is needed; at $K=120$ the ratio tends to $1.125$ (its minimum over all $\ell$ is $1.104$, Step~5 of the proof of
+Theorem~\ref{thm:caplw} and \texttt{window\_check.py}). A smaller floor would need a different count of $\Abs$ in short windows.
+\item \emph{The oscillations}, $2.01e^{18\ell^2}$. Late noise and $o_R$ need $x_k^{\theta_k}\ge e^{8\ell_k^2+O(\ell_k)}$, against the lag
+$D_{\max}\approx3e^{8\ell^2}$, and $\theta_k=9\ell_k^2/L_k$ is a convenient choice above this. A switch-off at $x_k^{1+\eps}$ instead of $x_k^2$ would give $e^{9(1+\eps)\ell^2}$.
+\item \emph{The lag}, $D_{\max}\le3.01e^{8\ell^2}$. Its size is the landing lag $H/2$, with $H\ge\bar M_1^2$ and
+$c=\frac14e^{4\ell^2}$. The queue part $B\le17L^2e^{4\ell^2}$ is smaller.
+\item \emph{The rigid part}, $\Psi(2x,X_0)\le(2\log x)^{\pi(X_0)}$. It is polylogarithmic, but with the huge exponent $\pi(X_0)$. It
+exceeds the absorption term up to $\ell^3\approx\pi(X_0)\log\ell/120$, that is, up to $\log\ell\approx\Lambda/3$ (at $\Lambda=10^8$,
+\texttt{s2\_check.py}), far beyond the first switch-on point. So the bound of Theorem~\ref{thm:Aprime}(i) is dominated by the rigid term below
+$\log\ell\approx\Lambda/3$ and by the absorption term beyond; the asymptotic form is not affected.
+\end{itemize}
+\end{remark}
+\par\endgroup

@@ -61,6 +61,43 @@ Part (ii) is Theorem~\ref{thm:zeros}, from \eqref{eq:La} and Lemma~\ref{lem:ZA}.
 Lemma~\ref{lem:budget}.
 \end{proof}
 
+% Follow-up S2 (FOLLOWUP-S2.md): Theorem A' and Corollary onezero; proved in Section sec:onezero.
+\subsection{A single system with integer error smaller than every power}
+For a single system the integer error can be made smaller than every power. For this the oscillations get per-zero exponents
+and are switched off again (Section~\ref{sec:onezero}).
+
+\begin{theorem}[Theorem A$'$]\label{thm:Aprime}
+Fix the parameters of Section~\ref{sec:params}, with the switch-on points subject only to $x_1\ge\exp(X_0^2)$ and $x_{k+1}\ge\exp(x_k)$. Let
+$\PP'$ be the random discrete Beurling system of Section~\ref{sec:construction} for the target with the oscillations $R_k^\flat$ of
+Section~\ref{sec:onezero}. These have the exponents $\theta_k:=9(\log\log x_k^+)^2/\log x_k^+$, with $x_k^+=x_k+2H(x_k)$, and are switched
+off at $y_k:=(x_k^+)^2$. Then on the event $\mathcal G=\{\tau=\infty\}$ of Definition~\ref{def:good}, which has probability at least
+$1-1.5/\log X_0$:
+\begin{enumerate}[label=(\roman*)]
+\item $|N_{\PP'}(x)-x|\le\Psi(2x,X_0)+D_{\max}(x)+h(x)\Lambda^{-8}+2.01e^{18\ell^2}$ for all $x\ge1$, where the last term is present only
+for $x>x_1^+$, and $D_{\max}$ and $h$ are as in Theorem~\ref{thm:A}. Here $\Psi(2x,X_0)\le(2\log x)^{\pi(X_0)}$ for $\log x\ge4$. Hence
+\[
+  N_{\PP'}(x)=x+O_{X_0}\Bigl(\exp\Bigl(\frac{120(\log\log x)^4}{\log\log\log x}\Bigr)\Bigr)\qquad(x\ge e^{e^e}),
+\]
+and in particular $N_{\PP'}(x)=x+O_\eps(x^\eps)$ for every $\eps>0$;
+\item $\zeta_{\PP'}$ has zeros $\rho_k$ $(k\ge1)$ with $\operatorname{Re}\rho_k=1-\bigl(\log\log x_k+O_{X_0}(1)\bigr)/\log x_k\to1$ and
+$|\operatorname{Im}\rho_k-\gamma_k|\le\frac18$, where $\log\gamma_k=\log x_k-9(\log\log x_k)^2+O(\log\log x_k)$. Equivalently,
+\[
+  1-\operatorname{Re}\rho_k=\frac{\log\log|\operatorname{Im}\rho_k|+O_{X_0}(1)}{\log|\operatorname{Im}\rho_k|}.
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{corollary}\label{cor:onezero}
+A discrete $[1,0]$-system exists: for $\omega\in\mathcal G$, $\PP'(\omega)$ has $N(x)=x+O_\eps(x^\eps)$ for every $\eps>0$, and
+$\psi(x)-x$ has no power saving. So the hypothesis $N_{\PP}(x)=Ax+O(x^{\eps})$ for every $\eps>0$ does not by itself force a
+zero-free half-plane $\operatorname{Re}s>1-\eps'$.
+\end{corollary}
+
+Both are proved in Section~\ref{sec:onezero}. The proof is that of Theorem~\ref{thm:A}, with $\theta_k$ in place of $\theta$ at the
+$k$-th oscillation. The exponent $120$ comes from the absorption window $h$. Its term dominates for large $x$; the other terms of (i) are
+$e^{O(\ell^2)}$ and $(\log x)^{\pi(X_0)}$, and the last is the largest until $\log\log\log x\approx\frac13\log X_0$
+(Remark~\ref{rem:onezero-floors}).
+
 \subsection{Parameters}\label{sec:params}
 All parameters are deterministic, and they are fixed here, before the construction starts. The jitter width $H$, the capacity
 threshold $c$ and the smooth majorants $\bar r_0$, $\bar M_1$ are functions of the height itself; the integers $r_0$, $M_1$ and the
@@ -126,13 +163,14 @@ the proof.
 \subsection{Logical structure}\label{sec:logic}
 The table lists the main results with their inputs. An input marked $\downarrow$ is used only at a strictly earlier time or a
 strictly smaller height; every other input is used at the same time. The same-time dependencies form an acyclic graph; this was
-checked mechanically on the full dependency graph (78 nodes, 198 edges, 28 of them $\downarrow$; Appendix~\ref{app:cert-dep}).
+checked mechanically on the full dependency graph (83 nodes, 211 edges, 28 of them $\downarrow$; Appendix~\ref{app:cert-dep}).
 % Logged correction 61: Lemma threshold-mass also reads the lag and Lemma P (two strictly-earlier edges added).
 % Logged correction 64: Lemma goodheights no longer uses Broucke--Debruyne or Lemma ZA (two edges and one node removed).
 % Logged correction 66: edges (H_BS) -> Lemma T1, (H_BS) -> lag and Prop g1 -> Lemma P added; Lemma P -> Lemma cm is strictly earlier.
 % Logged correction 66: Lemma P no longer uses the local count (the aside in its step (iv) is deleted); one edge removed.
 % Logged correction 67: Lemma adapted -> Theorem caplw(b),(c) added (log H(r) <= 3e-5 log r).
 % Follow-up S1 (FOLLOWUP-S1.md): Lemma T1 -> Theorem caplw(b),(c) added.
+% Follow-up S2 (FOLLOWUP-S2.md): five nodes for Theorem A' added (Section sec:onezero); 13 edges.
 The table is an abridgement of that graph. The
 time-ordering of the $\downarrow$ edges is Section~\ref{sec:noncirc}.
 \begin{center}\footnotesize
@@ -167,7 +205,8 @@ Proposition~\ref{prop:ecl}, Corollary~\ref{cor:increment} & Theorem~\ref{thm:R},
 Theorem~\ref{thm:caplw}(a) (capacity) & combinatorial covering lemmas, Rankin, Rosser--Schoenfeld & Proposition~\ref{prop:ecl} \\
 Theorem~\ref{thm:caplw}(b),(c) & none (definitions of the parameters) & \ref{eq:sF3p}, Lemmas~\ref{lem:landing}, \ref{lem:lemmaP}, \ref{lem:ZA}, Theorem~\ref{thm:queue} \\
 Lemmas~\ref{lem:lemmaP}, \ref{lem:rhoA} (absorption) & Theorem~\ref{thm:caplw}(b), Corollary~\ref{cor:increment}; Lemma~\ref{lem:cm}$\downarrow$, Proposition~\ref{prop:ecl}$\downarrow$ & \eqref{eq:target}, \eqref{eq:T1}, Lemma~\ref{lem:ZA}, \eqref{eq:osc}, Proposition~\ref{prop:true-kernels} \\
-Theorem~\ref{thm:R} (Appendix~\ref{app:rankfull}) & \ref{eq:sF1}--\ref{eq:sF4} & Proposition~\ref{prop:ecl} \\ \hline
+Theorem~\ref{thm:R} (Appendix~\ref{app:rankfull}) & \ref{eq:sF1}--\ref{eq:sF4} & Proposition~\ref{prop:ecl} \\
+Theorem~\ref{thm:Aprime} & Lemmas~\ref{lem:onezero-osc}--\ref{lem:onezero-zeros} (the rows above, read for $\PP'$), \eqref{eq:La}, Lemma~\ref{lem:budget} & Corollary~\ref{cor:onezero} \\ \hline
 \end{tabular}
 \end{center}
 The three loops of the proof close only through $\downarrow$ edges:

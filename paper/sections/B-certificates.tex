@@ -11,7 +11,7 @@ the integers (Section~\ref{app:cert-finite}), the small range of the $X_0$-band 
 numerical constants of Sections~\ref{sec:construction}, \ref{sec:noise} and~\ref{sec:baserange} (Section~\ref{app:cert-consts}), and the
 Rankin constants of Lemma~\ref{lem:rowweights} (\texttt{rankin\_R.py}, Section~\ref{app:cert-rankin}). The
 others are independent numerical cross-checks of statements proved in the text (Theorem~\ref{thm:caplw}, Lemma~\ref{lem:sc},
-Theorem~\ref{thm:svl}) or of the bookkeeping of Section~\ref{sec:logic}.
+Theorem~\ref{thm:svl}, the constants of Section~\ref{sec:onezero}) or of the bookkeeping of Section~\ref{sec:logic}.
 
 \subsection{The Beurling--Saias certificate (\texttt{bs-cert})}\label{app:cert-bs}
 \emph{What it certifies.} The proof of Theorem~\ref{thm:bs} (and of Lemma~\ref{lem:bs-profile}) reduces the induction step to an
@@ -423,6 +423,28 @@ python3 -I -B certificates/svl-stress/svl_stress.py        # 2-3 s, standard lib
 \end{verbatim}
 \endgroup
 
+% Follow-up S2 (FOLLOWUP-S2.md): constants of Section sec:onezero.
+\subsection{Theorem~\texorpdfstring{\ref{thm:Aprime}}{A'}: constants (\texttt{onezero})}\label{app:cert-onezero}
+\texttt{certificates/onezero/s2\_check.py} checks the elementary inequalities behind the constants of Section~\ref{sec:onezero}. It is a
+guard against slips in the text, not a step of the proof. Everything is computed in logarithms, since $\log x_k\ge X_0^2$ is not a
+floating-point number. For $\Lambda\in\{10^8,10^9,10^{10},10^{12},10^{16},10^{20},10^{30},10^{50},10^{70},10^{100}\}$ and $\ell_k$ on a geometric
+grid from $2\Lambda$ to $10^{300}$ it checks: \eqref{eq:thetastar}; $2\delta_k\le\theta_k$ and $\operatorname{Re}w\ge0.49$ (step~6 of
+Lemma~\ref{lem:designedzero}); the constant $2.01$ of Lemma~\ref{lem:onezero-osc}(b); the late-noise bound $171\Lambda e^{-\ell_k^2}\le
+171\Lambda e^{-4\Lambda^2}$; the $o_R$ constants $26$, $6.2$, the dyadic ratio $0.51$, $6.2e^{2\ell_k-\ell_k^2}\le e^{-\ell_k^2/2}$ and the sum over
+$k$; $4.01\kappa_0\le\kappa_+$; the transform bound; the off-term $M_k^{\mathrm{off}}$ and the Rouch\'e tally of
+Lemma~\ref{lem:onezero-zeros}; and the window floor $K>320/3$ of Remark~\ref{rem:onezero-floors}. At $\Lambda=10^8$ it compares the four terms
+of Theorem~\ref{thm:Aprime}(i) as functions of $\log\ell$ and locates the point where the absorption term overtakes the rigid term.
+Expected output (under a second, standard library only; the first two and the last line are shown, and the seven lines between
+them list, at sample values of $\log\ell$, the dominant term and the logarithm of the logarithm of each term):
+\begingroup\footnotesize
+\begin{verbatim}
+python3 -I -B certificates/onezero/s2_check.py
+Theorem A'(i) at Lambda = 1e8: absorption overtakes rigid at log ell = 3.33333e+07
+  (from ell^3 = pi(X_0) log ell/120: log ell = 3.33333e+07)
+TOTAL FAILURES: 0
+\end{verbatim}
+\endgroup
+
 \subsection{Non-circularity of the dependency graph (\texttt{depcheck})}\label{app:cert-dep}
 Section~\ref{sec:logic} asserts that the dependencies between the results of this paper used at the \emph{same} time form an acyclic
 graph, every loop closing only through an input used at a strictly earlier time or a strictly smaller height. The script
@@ -437,10 +459,11 @@ a cycle among the same-time edges.
 % Logged correction 66: the edge Lemma P -> local count is removed (the aside in step (iv) of Lemma P is deleted).
 % Logged correction 67: the edge Lemma adapted -> Theorem caplw(b),(c) is added.
 % Follow-up S1 (FOLLOWUP-S1.md): the edge Lemma T1 -> Theorem caplw(b),(c) is added (Abs is empty below log u = 392 Lambda^2).
+% Follow-up S2 (FOLLOWUP-S2.md): the nodes of Theorem A', its three lemmas and Corollary onezero are added.
 \begingroup\footnotesize
 \begin{verbatim}
 python3 -I -B certificates/depcheck/depcheck.py
-  same-time subgraph acyclic: True | nodes 78 | edges 198 | strictly-earlier edges 28
+  same-time subgraph acyclic: True | nodes 83 | edges 211 | strictly-earlier edges 28
 \end{verbatim}
 \endgroup
 The time-ordering of the strictly-earlier edges is argued in Section~\ref{sec:noncirc}; the script checks only the bookkeeping.

@@ -49,6 +49,24 @@ with the stated properties. Since Q quantifies over deterministic systems, one r
 already gives a negative answer to Q. The scale $X_0$ does not depend on $\theta$; only the first switch-on point $x_1$ of the
 oscillations does.
 
+% Follow-up S2 (FOLLOWUP-S2.md): Theorem A' (a single [1,0]-system).
+The same construction, with a separate exponent for each oscillation and oscillations that switch off again, gives a single
+system with integer error smaller than every power.
+
+\begin{theoremAp}[informal form; see Theorem~\ref{thm:Aprime}]
+There is a discrete Beurling system $\PP'$ with
+\[
+  N_{\PP'}(x)=x+O\Bigl(\exp\Bigl(\frac{120(\log\log x)^4}{\log\log\log x}\Bigr)\Bigr),
+\]
+so $N_{\PP'}(x)=x+O_\eps(x^\eps)$ for every $\eps>0$, whose zeta function has zeros $\rho_k$ with
+$1-\operatorname{Re}\rho_k=(\log\log|\operatorname{Im}\rho_k|+O(1))/\log|\operatorname{Im}\rho_k|\to0$. So $\PP'$ is a discrete
+$[1,0]$-system, and an integer error smaller than every power does not force a zero-free half-plane.
+\end{theoremAp}
+
+The $k$-th oscillation has amplitude $x^{\theta_k}$ with $\theta_k=9(\log\log x_k)^2/\log x_k\to0$, which is just enough to dominate
+the lag $e^{8(\log\log x)^2}$ at the scale where its zero is planted, and it is switched off at $x_k^2$. The exponent cancels in
+the location of the zero. For large $x$ the integer error is then dominated by the absorption window $h$ (Section~\ref{sec:params}).
+
 \begin{remark}[Q and ${[1,\beta]}$-systems]\label{rem:equiv}
 For a system with $N_{\PP}(x)=Ax+O(x^{\beta})$, $A>0$, $\beta<\tfrac12$, the following are equivalent:
 \begin{enumerate}[label=(\alph*)]
@@ -131,7 +149,9 @@ $\log\log$ cannot be removed (Remark~\ref{rem:landau}); that would seem to need 
 realised system.
 \item It gives no system with prime error $x^{\alpha}$, $\tfrac12<\alpha<1$, and integer error $O(x^{\theta})$, $\theta<\tfrac12$.
 Infinitely many designed zeros make the prime error $x^{1-o(1)}$.
-\item It gives no $[\alpha,\beta]$-system with $\alpha<1$ and $\beta<\tfrac12$: the greedy construction has $\alpha=1$.
+\item It gives no $[\alpha,\beta]$-system with $\alpha<1$ and $\beta<\tfrac12$: the greedy construction has $\alpha=1$. With
+$\alpha=1$, Theorem~\ref{thm:Aprime} reaches $\beta=0$; its integer error $\exp(O((\log\log x)^4/\log\log\log x))$ comes from the
+absorption step (Remark~\ref{rem:onezero-floors}).
 \item It prescribes no zero contour and gives no $\Omega$-result for $\psi_{\PP}$ (compare \cite[Thm.~1.6]{Broucke2025}).
 \item It says nothing about the Riemann zeta function.
 \end{itemize}
@@ -170,7 +190,7 @@ event fails is $\le1.5/\log X_0$.
 windows $[u,(1+\kappa)u]$. This makes the rational identity behind the margin exact, up to the error of the short-interval
 prime number theorem of Huxley and Heath-Brown, and it removes a family of edge effects.
 
-Section~\ref{sec:setup} states Theorem~\ref{thm:A} precisely, fixes all parameters, and records the logical structure, including
-why the induction is not circular. Appendix~\ref{app:cert} describes the computer-assisted parts, and Appendix~\ref{app:ai} is a
+Section~\ref{sec:setup} states Theorem~\ref{thm:A} and Theorem~\ref{thm:Aprime} precisely, fixes all parameters, and records the
+logical structure, including why the induction is not circular. Section~\ref{sec:onezero} proves Theorem~\ref{thm:Aprime}. Appendix~\ref{app:cert} describes the computer-assisted parts, and Appendix~\ref{app:ai} is a
 statement on the use of AI.
 \par\endgroup
