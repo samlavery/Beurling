@@ -372,15 +372,22 @@ $2C_N\log(2u)/\log x$ for $u\ge2X_0$, where there are no terminal levels.
   one $w$, and $\eta_{X_0}(v)\le1.01X_0/v$.
 \item For $v>X_0^2/2$, the window $I_v$ has length $\le2.1H(v)/X_0$ at height $v/X_0$. By the lag bound
   Corollary~\ref{cor:lag}, $|N-T|\le H$ at that height, and under the target \eqref{eq:target}, $T(I_v)\le2.0001|I_v|+1+\#\Abs(I_v)$ (as in Corollary~\ref{cor:localcount}(i));
-  by Lemma~\ref{lem:lemmaP}, $\#\Abs(I_v)\le2(v/X_0)^{\theta_b}$. Here $|I_v|\le2.1H(v)/X_0\le h(v/X_0)$ (with $L:=\log v\ge2\Lambda-1$ and
-  $\log H(v)\le8(\log L)^2+10^{-6}L$ by Theorem~\ref{thm:caplw}(c): if $8(\log L)^2\le\Lambda-1$ the left side is
-  $\le2.1e^{10^{-6}L-1}\le(v/X_0)^{\theta_b}$, and otherwise $L\ge e^{3535}$ and $8(\log L)^2+10^{-6}L\le\theta_b(L-\Lambda)$), so $I_v$ is covered
+  by Lemma~\ref{lem:lemmaP}, $\#\Abs(I_v)\le2h(v/X_0)$. Here $|I_v|\le2.1H(v)/X_0\le h(v/X_0)$, with $h$ the window of
+  Section~\ref{sec:params}. Indeed, put $L:=\log v\ge2\Lambda-1$; then $\log H(v)\le\max(8(\log L)^2,2\log c+2\log2)\le
+  \max(8(\log L)^2,15\Lambda+1.4)$, as $\bar M_1\le2c$ and $\log c\le\max(4(\log L)^2,7.5\Lambda)$. If $L\le113\Lambda+18$, then
+  $8(\log L)^2\le\Lambda-1$ and $\log c\le\max(4(\log L)^2,0.03\sqrt L)$ (Step~6 of the proof of Theorem~\ref{thm:caplw}), so
+  $\log H(v)\le\Lambda-1$ and the left side is $<1\le h$. Otherwise $\log h(v/X_0)\ge\min((L-\Lambda)/8,50\Lambda^2)\ge14\Lambda+2.2$, and
+  also $\log h(v/X_0)\ge8(\log L)^2$ (from $(L-\Lambda)/8$ if $L-\Lambda\le400\Lambda^2$, from $120\ell^4/\log\ell$ with
+  $\ell=\log(L-\Lambda)\ge\log L-0.01$ otherwise); and $\log(2.1H(v)/X_0)\le\max(8(\log L)^2,14\Lambda+2.15)$.
+% Follow-up S1 (FOLLOWUP-S1.md): the earlier argument used log H <= 8(log L)^2 + 1e-6 L and h = u^{theta_b}; with the new
+% window 1e-6 L exceeds log h for large L, so the true bound log H <= max(8(log L)^2, 15 Lambda + 1.4) is used.
+  So $I_v$ is covered
   by two windows $[u,u+h(u)]$ of Lemma~\ref{lem:lemmaP}; and $\Abs$ is empty at heights below $X_0$, where that lemma is not
   stated.
 % Logged correction 66: the window size and the range of Lemma lemmaP are made explicit here.
   So $I_v$ holds at most
-  $4.21H(v)/X_0+2H(v/X_0)+4+2(v/X_0)^{\theta_b}$ elements, and
-  $\eta_{X_0}(v)\le1.01\bigl(4.21H(v)+2X_0H(v/X_0)+4X_0+2X_0(v/X_0)^{\theta_b}\bigr)/v$.
+  $4.21H(v)/X_0+2H(v/X_0)+4+2h(v/X_0)$ elements, and
+  $\eta_{X_0}(v)\le1.01\bigl(4.21H(v)+2X_0H(v/X_0)+4X_0+2X_0h(v/X_0)\bigr)/v$.
 \item Since $\eta_{X_0}(v)=0$ for $v<2\Xm-1.1H(X_0)$, these give
   $\sum_{v\ \text{dyadic}}\log(2v)\sup_{[v,2v)}\eta_{X_0}\le1.52\log(2X_0)$ and $\sum_v\sup_{[v,2v)}\eta_{X_0}\le1.52$: the first
   bullet contributes $0.506\log(2X_0)$ from the block $[X_0,2X_0)$ and $1.01\sum_{j\ge1}2^{-j}(\log(2X_0)+j\log2)$ from the

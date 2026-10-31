@@ -67,10 +67,18 @@ the oscillation is read.
   $(-\infty,x/2+4.2H(x)]\subset(-\infty,x]$, on $\Good(<x)$; and R1$'$ reads it at windows within $1.01H(t)$ of the current height $t$. Moreover $o_{\Abs}$ vanishes unless
   $\log\log u>2\log\Lambda+5.97$ ($=42.8$ at $\Lambda=10^8$), since $\Abs$ is empty below that height.
 \item $o_R\le\sum_{k:\,x_k\le u}\gamma_k\kappa_kH(u)u^{-1}(x_k/u)^{1-\theta}\le H(u)u^{-\theta}$, since
-  $\gamma_k\kappa_k\le x_k^{1-\theta}$ and $u\ge x_1\ge\exp(X_0^2)$.
-\item Hence $\sum_u\log(2u)\,o_u\le4.2H(X_0)X_0^{-7/12}\log X_0+5e^{-2\cdot42.8}\le e^{-83}$, and
+  $\gamma_k\kappa_k\le x_k^{1-\theta}$ and $u\ge x_1/4\ge\exp(X_0^2/2)$; and $o_R=0$ for $u<x_1/4$, as $R\equiv0$ below $x_1$.
+% Follow-up S1 (FOLLOWUP-S1.md): for small theta the sums of o_R are bounded through theta log u >= 9 (log log u)^2 (u >= x_1)
+% and H = H_std there; for theta >= 1/20 they were immediate.
+  For dyadic $u\ge x_1/4$ put $f(u):=\theta\log u-8\ell_u^2-3\log\log(3u)$, $\ell_u:=\log\log u$. There $\ell_u\ge2\Lambda-1$,
+  $H(u)=\qHstd(u)$ and $\theta\log u\ge\theta\log x_1-1\ge9\ell_u^2-1$ (Section~\ref{sec:params}); so $f(u)\ge\ell_u^2-4\ell_u-1\ge3\Lambda^2$,
+  and $f$ grows by at least $\theta\log2/2$ from $u$ to $2u$ (as $(16\ell_u+4)/\log u\le\theta/2$). With $1/\theta\le\log x_1$ this gives
+  $\sum_{u\ge x_1/4}\log^2(3u)\,H(u)u^{-\theta}\le(4/\theta)e^{-f(u_1)}\le4\log x_1\cdot e^{-f(u_1)}\le e^{-\Lambda^2}$, where $u_1$ is the
+  least such $u$, since $\log\log x_1\le\ell_{u_1}+0.01$.
+\item Hence $\sum_u\log(2u)\,o_u\le4.2H(X_0)X_0^{-7/12}\log X_0+5e^{-2\cdot42.8}+e^{-\Lambda^2}\le e^{-83}$, and
   $E_{\mathrm{BR}}\le883e^{-83}+8.4C_NE_\theta\le e^{-76}$. Also $\sum_v(\log3v)^2o_v\le5.8e^{-42.8}\le e^{-41}$ and
-  $\sup_v\log v\cdot o_v\le4e^{-3\cdot42.8}\le e^{-120}$. All of these improve with $\Lambda$.
+  $\sup_v\log v\cdot o_v\le4e^{-3\cdot42.8}\le e^{-120}$; the $R$-parts of these two are $\le e^{-\Lambda^2}$ by the bound above. All
+  of these improve with $\Lambda$.
 \end{itemize}
 No triangular windows and no Lipschitz bound are needed.
 \end{proof}
@@ -134,7 +142,7 @@ factor $1+o(1)$ in the second, covered by $C_S'=10\ge9.82$.)
 \end{itemize}
 
 \paragraph{A squarefree average.} $F_\theta:=\sup_yy^{\theta-1}\sum_{n\in\NN,\,n\le y}\mu^2(n)n^{-\theta}\le1.33$ for $\theta\le\frac12$
-(in particular for $\theta\in[\theta_0,\theta_1]$):
+(in particular for every $\theta\in(0,\theta_1]$):
 \begin{itemize}
 \item $F_\theta\le F_{1/2}$, since $y^{\theta-1}n^{-\theta}=y^{-1}(y/n)^\theta$ increases with $\theta$;
 % Logged correction 54: 1.32964 (an upper bound) replaces 1.3296; the maximum is 1.3296349 (independent check R8, C2).
@@ -275,9 +283,9 @@ $\rhosh(x)-\rhosh(y)=\sum_n[c_n(x)T'(x/n)-c_n(y)T'(y/n)]/n$.
 % Logged correction 66: renamed from L_*, which clashes with L_* = 10^7 of eq:absorbed.
 $|N-T|\le H(N_*)$ at both ends of $I$, and under the target \eqref{eq:target},
   $T(I)\le2.0001|I|+1+\#\Abs(I)$ (as in Corollary~\ref{cor:localcount}(i)). Cover $I$ by $\lceil|I|/h(N_*(1-2\delta))\rceil$ consecutive windows $[u,u+h(u)]$,
-  $h(u)=u^{\theta_b}$; by Lemma~\ref{lem:lemmaP} each holds at most $h(u)L_u^{-4}$ absorbed elements, so
-  $\#\Abs(I)\le(2.01\,\delta N_*+N_*^{\theta_b})L_I^{-4}$. Hence $\#(\NN\cap I)\le4.01\,\delta N_*+2H(N_*)+2+N_*^{\theta_b}$, and
-  this part is at most $\jz\sum_{n\in\NN\cap I}1/n\le\jz\big(4.1\,\delta+3H(N_*)/N_*+2N_*^{\theta_b-1}\big)=o(1/\log x)$.
+  with $h$ the window of Section~\ref{sec:params}; by Lemma~\ref{lem:lemmaP} each holds at most $h(u)L_u^{-4}$ absorbed elements, so
+  $\#\Abs(I)\le(2.01\,\delta N_*+h(N_*))L_I^{-4}$. Hence $\#(\NN\cap I)\le4.01\,\delta N_*+2H(N_*)+2+h(N_*)$, and
+  this part is at most $\jz\sum_{n\in\NN\cap I}1/n\le\jz\big(4.1\,\delta+3H(N_*)/N_*+2h(N_*)/N_*\big)=o(1/\log x)$, as $h(N_*)\le N_*^{1/8}$.
 % Logged correction 14 (CORRECTIONS-vs-v3.md): v3 omits #A(I) here (same omission as correction 4); with T(I) <= 2|I|+2+#A(I)
 % the constant 2.1 delta becomes 4.1 delta (noted under #14).
 % Logged correction 93 (CORRECTIONS-vs-v3.md): for y in J the level points x/n and y/n differ by up to 2 delta x/n, not

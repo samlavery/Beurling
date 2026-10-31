@@ -225,7 +225,7 @@ $\mathrm{MA}[\mathbb P](q)\log q\ge(1-(\log q)^{-3})(1-\kappa/\log q)\ge1-10^{-2
 \emph{Step 1: the element count.} Put $\Delta:=N_{\NN}-\lfloor\cdot\rfloor$. Then $\Delta=0$ on $[1,\Xm)$, and on $\Good(<u)$, for
 $t\le\sqrt u$ (the only heights used in Step~3, and below the certified horizon of $\Good(<u)$, Remark~\ref{rem:horizon}),
 \[
-  |\Delta(t)|\le\delta(t):=2\kappa t+2t^{\theta}\log^*t+2t^{\theta_b}+B(t)+3H(t)+6.
+  |\Delta(t)|\le\delta(t):=2\kappa t+2t^{\theta}\log^*t+h(t)\Lambda^{-8}+B(t)+3H(t)+6.
 \]
 The pieces are: $|D|\le B+3H+3$ (\eqref{eq:lag} and the count in the proof of Proposition~\ref{prop:La});
 $|E|\le|E_0|+\max\bigl((\kappa/2)\Psi(t,X_0),\,\Psi([t,(1+\kappa)t],X_0)\bigr)\le2\kappa t+2$ (\eqref{eq:Erig}; Lemma~\ref{lem:blin}(4),(5): the drift and
@@ -239,7 +239,7 @@ $dh:=\log\cdot d\Delta-d\psi*d\Delta$, and
   h(t)=\Delta(t)\log t-\int_1^t\Delta(v)\frac{dv}v-\int\Delta(t/a)\,d\psi(a).
 \]
 So $|h(t)|\le5\kappa t\log t$: the $\kappa$-part of $\delta$ gives $4\kappa t\log t+2\kappa t$, and the rest of $\delta$ gives
-$\le\kappa t\,X_0^{-0.1}$, using $(B+3H+3)(s)\le s^{3\cdot10^{-5}}$ (proof of Proposition~\ref{prop:La}) and $\theta\le\tfrac12-10^{-4}$.
+$\le\kappa t\,X_0^{-0.1}$, using $(B+3H+3)(s)\le s^{3\cdot10^{-5}}$ (Proposition~\ref{prop:La}), $h(s)\le s^{1/8}$ and $\theta\le\tfrac12-10^{-4}$.
 Invert with the M\"obius measure $\mu_{\NN}$ of $\NN$, using $|\mu_{\NN}|\le dN_{\NN}$ and $\sum_{v\in\NN,\,v\le s}1/v\le\log s+1$ on $\Good$.
 This gives
 \[

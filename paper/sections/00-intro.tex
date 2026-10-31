@@ -31,7 +31,7 @@ The answer to Q is equivalent to the existence question for $[1,\beta]$-systems 
 
 \subsection{The result}
 \begin{theoremA}[informal form; see Theorem~\ref{thm:A}]
-Let $\theta\in[\tfrac1{20},\tfrac12-10^{-4}]$. There is a discrete Beurling system $\PP$ with
+Let $\theta\in(0,\tfrac12-10^{-4}]$. There is a discrete Beurling system $\PP$ with
 \[
   N_{\PP}(x)=x+O(x^{\theta}\log^*x),
 \]
@@ -46,7 +46,8 @@ the answer to Q is negative, and $\PP$ is a discrete $[1,\beta]$-system with $\b
 The system is random, and Theorem~\ref{thm:A} holds on an event of probability at least $1-1.5/\log X_0>0$, where $X_0$ is the
 scale at which the construction starts (Section~\ref{sec:setup}). Every realisation in that event is a fixed discrete system
 with the stated properties. Since Q quantifies over deterministic systems, one realisation suffices. The value $\theta=\tfrac14$
-already gives a negative answer to Q.
+already gives a negative answer to Q. The scale $X_0$ does not depend on $\theta$; only the first switch-on point $x_1$ of the
+oscillations does.
 
 \begin{remark}[Q and ${[1,\beta]}$-systems]\label{rem:equiv}
 For a system with $N_{\PP}(x)=Ax+O(x^{\beta})$, $A>0$, $\beta<\tfrac12$, the following are equivalent:
@@ -147,7 +148,7 @@ the prime lands uniformly in a
 box of width $H(s_j)$ around the slot start. So $N_{\PP}-T$ is controlled by the queue length. Bounding the queue is the whole
 difficulty.
 
-\emph{Zeros} (Section~\ref{sec:zeros}). If $|N_{\PP}-T|\le x^{\eta}$ (property \eqref{eq:La}), a Rouch\'e argument places a zero
+\emph{Zeros} (Section~\ref{sec:zeros}). If $|N_{\PP}-T|\le D_{\max}(x)=e^{O((\log\log x)^2)}$ (property \eqref{eq:La}), a Rouch\'e argument places a zero
 of $\zeta_{\PP}$ near each designed point. The heights $\gamma_k$ are chosen from the system below $x_k$, so the target stays
 adapted to the construction.
 
