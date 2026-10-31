@@ -222,13 +222,11 @@ theorem rhoA_le_QE {t : ℕ} {ω : JitterΩ} (hQC : ω ∈ QC (okQ θ X₀) (tq 
     (fun x hx _ => landing_of_linked L S hreg hok hx)
     (fun x hx hearly => landingInit_of_linked L S hreg hok hx hearly) hZX hQ hcl u hu h2y hclu
   have hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊ := h0.limModel_low
-  have hAu := realisedU_spec hok hU hX hTlow (θ := θ) (by linarith [hc.hθ.1])
-    (by linarith [hc.hθ.2])
+  have hAu := realisedU_spec hok hU hX hTlow
   let R : GreedyRun X₀ := ⟨M, capH X₀, ω, hTlow⟩
   have C : AbsorbedCoupling (realisedSystem M (capH X₀) ω) R.M R.H R.U
       (realisedA M (capH X₀) ω) (realisedLatest M (capH X₀) ω) := realisedCoupling hok
-  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hc.hθ.1])
-  have hd := absorbedDensity_le_of_localCount hb (by linarith) hAu C.locFin hu hmain
+  have hd := absorbedDensity_le_of_localCount (winH_isWin hX) (by linarith) hAu C.locFin hu hmain
   have hA : realisedA M (capH X₀) ω = absSet X₀ (DF θ X₀ ω) := by
     rw [realisedA_eq hok hnc]
     unfold DF

@@ -89,9 +89,9 @@ theorem hsmall_11 (hX : 10 ^ 8 ≤ Real.log X₀) (ω : JitterΩ) (nb : ℕ → 
     (hS : ∀ t, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ b → 0 ≤ SK θ X₀ ω nb t ∧ SK θ X₀ ω nb t ≤ Sb)
     (hG : ∀ t, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ b →
       0 ≤ ∑ i ∈ Finset.range (Jc X₀ t + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 *
-        (obG X₀ i + FrBv θ X₀ ω nb i) ∧
+        (obG θ X₀ i + FrBv θ X₀ ω nb i) ∧
       ∑ i ∈ Finset.range (Jc X₀ t + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 *
-        (obG X₀ i + FrBv θ X₀ ω nb i) ≤ Gb)
+        (obG θ X₀ i + FrBv θ X₀ ω nb i) ≤ Gb)
     (hEV : ∀ t, (X₀ : ℝ) ^ (1.01 : ℝ) ≤ t → t ≤ b →
       6.5 * (RML7.canonP X₀ epsH ES jP).ES + VX (PR θ X₀ ω) (RML7.canonP X₀ epsH ES jP) t ≤ a5)
     (hsum : 1612 * Sb + 56564 * Gb + a4 + a5 ≤ 0.0099) :
@@ -101,7 +101,7 @@ theorem hsmall_11 (hX : 10 ^ 8 ≤ Real.log X₀) (ω : JitterΩ) (nb : ℕ → 
       ((fun x => KR.RML6K.aK (CNt X₀) (SK θ X₀ ω nb x) (Queue6.Hc X₀) x) t +
         (fun x => 35.8 * CNt X₀ * 10 * ∑ i ∈ Finset.range (Jc X₀ x + 1), Real.log (3 *
           (Xm X₀ * 2 ^ i)) ^ 2 *
-            (obG X₀ i + FrBv θ X₀ ω nb i)) t + 6 * Real.log t / Queue6.Hc X₀ t) +
+            (obG θ X₀ i + FrBv θ X₀ ω nb i)) t + 6 * Real.log t / Queue6.Hc X₀ t) +
               (fun _ => EBRc) t + (fun x => jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω)
                 (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀) (NKc X₀) x) t +
       54 * (sηB X₀) + 6 * Real.log t / Queue6.Hc X₀ t + 6.5 * (RML7.canonP X₀ epsH ES jP).ES + VX

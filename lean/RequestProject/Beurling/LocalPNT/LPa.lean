@@ -5,8 +5,8 @@ public import RequestProject.Beurling.LocalPNT.Extension
 /-!
 # (LP-a) from the lag bound (13) below the certified horizon, and (LP-c)
 
-* `lpa_of_lag`: if the lag bound (13) `|N - T| ≤ u^η`, `η = lagExponent θ`, and the absorbed
-  part of the target error (Lemma 3.4) `|#A(u) - ∫_{X₀}^u ρ̄_A| ≤ 2u^{θ/2}` hold at the heights
+* `lpa_of_lag`: if the lag bound `|N - T| ≤ u^η`, `η = 1/20000` (from (La)), and the absorbed
+  part of the target error (Lemma 3.4) `|#A(u) - ∫_{X₀}^u ρ̄_A| ≤ 2h(u)` hold at the heights
   `X₀ ≤ u ≤ ž`, and `N = ⌊·⌋` below `X₀⁻` with `X₀ - X₀⁻ ≤ X₀^{1/4}`, then (LP-a) holds for every
   `y ≤ ž`, with `D₀(u) = u^{θ'}`. On `Good(<z)` the construction provides these at heights
   `≤ ž = z - 12 log z - 3` (Remark `horizon`); on the good event `G` at all heights
@@ -29,20 +29,20 @@ lemma target_sub_T0 {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ → ℝ} (cntA rhoA 
   unfold T0 Target.target
   split_ifs <;> simp; ring
 
-/-- `2u^a + 4u^b + 6 X₀^{1/40} + 2 ≤ u^{θ'}` when `a, b ≤ θ`, `θ' ≥ θ + 0.01`, `θ ≥ 1/20` and
-`u ≥ X₀ / 2`. -/
+/-- `2u^a + 4u^b + 6 X₀^{1/40} + 2 ≤ u^{θ'}` when `a, b ≤ 1/4`, `θ' ≥ 0.26` and `u ≥ X₀ / 2`
+(`D₀ ≤ u^{3·10⁻⁵} + u^{1/8} ≤ u^{0.26}`). -/
 lemma two_pow_le_thetaPrime {θ : ℝ} {X₀ : ℕ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
-    (hX : 10 ^ 8 ≤ Real.log X₀) {u a b : ℝ} (hu : (X₀ : ℝ) / 2 ≤ u) (ha : a ≤ θ)
-    (hb : b ≤ θ) :
+    (hX : 10 ^ 8 ≤ Real.log X₀) {u a b : ℝ} (hu : (X₀ : ℝ) / 2 ≤ u) (ha : a ≤ 1 / 4)
+    (hb : b ≤ 1 / 4) :
     2 * u ^ a + 4 * u ^ b + 6 * (X₀ : ℝ) ^ (1 / 40 : ℝ) + 2 ≤ u ^ thetaPrime θ X₀ := by
   have hX0 := logX_pos_aux hX
   have hu0 : 0 < u := lt_of_lt_of_le (by positivity) hu
   have hu1 : 1 ≤ u := by
     have := rpow_ge_of_half hX hu (show (0 : ℝ) ≤ 1 by norm_num)
     rw [Real.rpow_one] at this; nlinarith [hX]
-  have htp := (thetaPrime_bounds hθ hX).1
-  have h1 : u ^ a ≤ u ^ θ := Real.rpow_le_rpow_of_exponent_le hu1 ha
-  have h2 : u ^ b ≤ u ^ θ := Real.rpow_le_rpow_of_exponent_le hu1 hb
+  have htp := thetaPrime_ge θ X₀
+  have h1 : u ^ a ≤ u ^ (1 / 4 : ℝ) := Real.rpow_le_rpow_of_exponent_le hu1 ha
+  have h2 : u ^ b ≤ u ^ (1 / 4 : ℝ) := Real.rpow_le_rpow_of_exponent_le hu1 hb
   have h3 : (X₀ : ℝ) ^ (1 / 40 : ℝ) ≤ (2 * u) ^ (1 / 40 : ℝ) :=
     Real.rpow_le_rpow hX0.le (by linarith) (by norm_num)
   have h4 : (2 * u) ^ (1 / 40 : ℝ) ≤ 2 * u ^ (1 / 40 : ℝ) := by
@@ -51,13 +51,15 @@ lemma two_pow_le_thetaPrime {θ : ℝ} {X₀ : ℕ} (hθ : θ ∈ Ioc (0 : ℝ) 
       Real.rpow_le_rpow_of_exponent_le (by norm_num) (by norm_num)
     rw [Real.rpow_one] at this
     exact mul_le_mul_of_nonneg_right this (by positivity)
-  have h4' : u ^ (1 / 40 : ℝ) ≤ u ^ θ := Real.rpow_le_rpow_of_exponent_le hu1 (by linarith [hθ.1])
+  have h4' : u ^ (1 / 40 : ℝ) ≤ u ^ (1 / 4 : ℝ) :=
+    Real.rpow_le_rpow_of_exponent_le hu1 (by norm_num)
   have h5 : 20 ≤ u ^ (0.01 : ℝ) := by
     have := rpow_ge_of_half hX hu (show (0 : ℝ) ≤ 0.01 by norm_num); nlinarith
-  have h6 : u ^ (θ + 0.01) = u ^ θ * u ^ (0.01 : ℝ) := Real.rpow_add hu0 _ _
-  have h7 : u ^ (θ + 0.01) ≤ u ^ thetaPrime θ X₀ := Real.rpow_le_rpow_of_exponent_le hu1 htp
-  have h8 : 1 ≤ u ^ θ := Real.one_le_rpow hu1 (by linarith [hθ.1])
-  have h9 : 20 * u ^ θ ≤ u ^ θ * u ^ (0.01 : ℝ) := by nlinarith
+  have h6 : u ^ (1 / 4 + 0.01 : ℝ) = u ^ (1 / 4 : ℝ) * u ^ (0.01 : ℝ) := Real.rpow_add hu0 _ _
+  have h7 : u ^ (1 / 4 + 0.01 : ℝ) ≤ u ^ thetaPrime θ X₀ :=
+    Real.rpow_le_rpow_of_exponent_le hu1 (by linarith)
+  have h8 : 1 ≤ u ^ (1 / 4 : ℝ) := Real.one_le_rpow hu1 (by norm_num)
+  have h9 : 20 * u ^ (1 / 4 : ℝ) ≤ u ^ (1 / 4 : ℝ) * u ^ (0.01 : ℝ) := by nlinarith
   have ha0 : 0 ≤ u ^ a := by positivity
   have hb0 : 0 ≤ u ^ b := by positivity
   linarith
@@ -69,20 +71,20 @@ theorem lpa_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ 
     (cntA rhoA : ℝ → ℝ) (hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 40 : ℝ) ≤ Xm) (hXmX : Xm ≤ X₀)
     (hfl : ∀ u, u < Xm → P.N u = ⌊u⌋₊)
     (hlag : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
-      |P.N u - Target.target X₀ (kap X₀) cntA rhoA (osc θ α γ xp) u| ≤ u ^ lagExponent θ)
-    (hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc → |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| ≤ 2 * u ^ (thetaB θ))
+      |P.N u - Target.target X₀ (kap X₀) cntA rhoA (osc θ α γ xp) u| ≤ u ^ lagExponent (1 / 10000))
+    (hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc → |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| ≤ 2 * winH X₀ u)
     (hz : (X₀ : ℝ) ≤ zc) :
     (∀ u, u < Xm → P.N u = T0 θ X₀ α γ xp u) ∧
     ∀ u, Xm ≤ u → u ≤ zc → |P.N u - T0 θ X₀ α γ xp u| ≤ u ^ thetaPrime θ X₀ := by
   have hX0 := logX_pos_aux hX
   have hX1 := one_le_X_aux hX
-  have hlagE : lagExponent θ ≤ θ := by
-    unfold lagExponent; have := min_le_left θ (1 / 2 - θ); linarith [hθ.1]
-  have hlag0 : 0 ≤ lagExponent θ := by
-    unfold lagExponent; apply div_nonneg _ (by norm_num)
-    exact le_min (by linarith [hθ.1]) (by linarith [hθ.2])
-  have hb0 : 0 ≤ thetaB θ := thetaB_nonneg (by linarith [hθ.1])
-  have hb1 : thetaB θ ≤ 1 := thetaB_le_one (by linarith [hθ.2])
+  have hlagv : lagExponent (1 / 10000) = 1 / 20000 := by unfold lagExponent; norm_num
+  have hlagE : lagExponent (1 / 10000) ≤ 1 / 4 := by rw [hlagv]; norm_num
+  have hlag0 : 0 ≤ lagExponent (1 / 10000) := by rw [hlagv]; norm_num
+  have hb0 : (0 : ℝ) ≤ 1 / 8 := by norm_num
+  have hb1 : (1 / 8 : ℝ) ≤ 1 := by norm_num
+  -- the window: `h(u) ≤ u^{1/8}`
+  have hwin : ∀ u : ℝ, 0 < u → winH X₀ u ≤ u ^ (1 / 8 : ℝ) := fun u hu => winH_le_rpow _ hu
   have hX4 : (X₀ : ℝ) ^ (1 / 4 : ℝ) ≤ (X₀ : ℝ) / 2 := by
     have : (X₀ : ℝ) ^ (1 / 4 : ℝ) * (X₀ : ℝ) ^ (3 / 4 : ℝ) = X₀ := by
       rw [← Real.rpow_add hX0]; norm_num
@@ -97,11 +99,11 @@ theorem lpa_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ 
   have hT0low : ∀ u : ℝ, u < X₀ → T0 θ X₀ α γ xp u = ⌊u⌋₊ := fun u hu => LPHyp.T0_low hu
   refine ⟨fun u hu => by rw [hfl u hu, hT0low u (lt_of_lt_of_le hu hXmX)], ?_⟩
   intro u h1 h2
-  have hub := two_pow_le_thetaPrime hθ hX (u := u) (a := lagExponent θ) (b := thetaB θ)
-    (by linarith) hlagE (thetaB_le_self θ)
+  have hub := two_pow_le_thetaPrime hθ hX (u := u) (a := lagExponent (1 / 10000)) (b := 1 / 8)
+    (by linarith) hlagE (by norm_num)
   have hu0 : 0 < u := by linarith
-  have hpa : 0 ≤ u ^ lagExponent θ := by positivity
-  have hpb : 0 ≤ u ^ (thetaB θ) := by positivity
+  have hpa : 0 ≤ u ^ lagExponent (1 / 10000) := by positivity
+  have hpb : 0 ≤ u ^ (1 / 8 : ℝ) := by positivity
   rcases lt_or_ge u X₀ with hlow | hhigh
   · -- `N(u) - ⌊u⌋` on `[X₀⁻, X₀)`: squeeze with `N(Xm - 1/2) = ⌊Xm - 1/2⌋` and `N(X₀)`
     rw [hT0low u hlow]
@@ -135,10 +137,11 @@ theorem lpa_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ 
     have e1 := abs_le.mp hNX
     have e2 := abs_le.mp hAX
     have hXq : 0 ≤ (X₀ : ℝ) ^ (1 / 40 : ℝ) := by positivity
-    have hup : P.N u - ⌊u⌋₊ ≤ (X₀ : ℝ) ^ (1 / 40 : ℝ) + 2 * u ^ lagExponent θ +
-        4 * u ^ (thetaB θ) + 2 := by
-      have : P.N X₀ ≤ X₀ + cntA X₀ + (X₀ : ℝ) ^ lagExponent θ := by linarith [e1.2]
-      have : cntA X₀ ≤ 2 * (X₀ : ℝ) ^ (thetaB θ) := e2.2
+    have hup : P.N u - ⌊u⌋₊ ≤ (X₀ : ℝ) ^ (1 / 40 : ℝ) + 2 * u ^ lagExponent (1 / 10000) +
+        4 * u ^ (1 / 8 : ℝ) + 2 := by
+      have : P.N X₀ ≤ X₀ + cntA X₀ + (X₀ : ℝ) ^ lagExponent (1 / 10000) := by linarith [e1.2]
+      have : cntA X₀ ≤ 2 * (X₀ : ℝ) ^ (1 / 8 : ℝ) := e2.2.trans (by
+        have := hwin X₀ hX0; linarith)
       linarith
     have hlo : -((X₀ : ℝ) ^ (1 / 40 : ℝ) + 2) ≤ P.N u - ⌊u⌋₊ := by
       rw [hw] at hA1
@@ -154,7 +157,8 @@ theorem lpa_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ 
     rw [this]
     calc _ ≤ |P.N u - Target.target X₀ (kap X₀) cntA rhoA (osc θ α γ xp) u| +
           |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| := abs_add_le _ _
-      _ ≤ u ^ lagExponent θ + 2 * u ^ (thetaB θ) := add_le_add e1 e2
+      _ ≤ u ^ lagExponent (1 / 10000) + 2 * u ^ (1 / 8 : ℝ) :=
+          add_le_add e1 (e2.trans (by have := hwin u hu0; linarith))
       _ ≤ u ^ thetaPrime θ X₀ := by
           have : 0 ≤ (X₀ : ℝ) ^ (1 / 40 : ℝ) := by positivity
           linarith
@@ -168,8 +172,8 @@ theorem lpHyp_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ xp : �
     (cntA rhoA : ℝ → ℝ) (hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 40 : ℝ) ≤ Xm) (hXmX : Xm ≤ X₀)
     (hfl : ∀ u, u < Xm → P.N u = ⌊u⌋₊)
     (hlag : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
-      |P.N u - Target.target X₀ (kap X₀) cntA rhoA (osc θ α γ xp) u| ≤ u ^ lagExponent θ)
-    (hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc → |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| ≤ 2 * u ^ (thetaB θ))
+      |P.N u - Target.target X₀ (kap X₀) cntA rhoA (osc θ α γ xp) u| ≤ u ^ lagExponent (1 / 10000))
+    (hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc → |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| ≤ 2 * winH X₀ u)
     (hy : (X₀ : ℝ) ≤ y) (hyz : y ≤ zc) :
     LPHyp P θ X₀ α γ xp Xm y (fun u => u ^ thetaPrime θ X₀) := by
   obtain ⟨hlo, hhi⟩ := lpa_of_lag hθ hX cntA rhoA hXm hXmX hfl hlag hA (hy.trans hyz)

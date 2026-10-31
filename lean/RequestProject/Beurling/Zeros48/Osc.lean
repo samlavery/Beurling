@@ -121,7 +121,11 @@ lemma sum_oscLip_switchOn_le {θ X₀ : ℝ} (hθ0 : 0 ≤ θ) (hθ : θ ≤ 1 /
   have hlog : ∀ j, 100 * 2 ^ j ≤ Real.log (x j) := by
     intro j
     induction j with
-    | zero => rw [hxdef, log_switchOn_zero]; simpa using hX2
+    | zero =>
+      rw [hxdef, log_switchOn_zero]
+      have h1 := le_swS θ X₀
+      have : X₀ ^ 2 ≤ swS θ X₀ ^ 2 := pow_le_pow_left₀ (by linarith) h1 2
+      simp only [pow_zero, mul_one]; linarith
     | succ j ih =>
       have e : Real.log (x (j + 1)) = x j := by
         rw [hxdef]; show Real.log (Real.exp (switchOn (swS θ X₀) j)) = _; rw [Real.log_exp]

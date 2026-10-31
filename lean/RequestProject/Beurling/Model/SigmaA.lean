@@ -325,7 +325,7 @@ theorem TcR_abs_le (hev : Even X₀) (ω : JitterΩ) {Z η1 η2 ε ϑ : ℝ} {ε
       unfold absorbedBump
       split_ifs
       · by_cases hm : t ∈ Icc (uA X₀ a) a
-        · rw [Set.indicator_of_mem hm]; exact (Real.rpow_pos_of_pos ht0 _).le
+        · rw [Set.indicator_of_mem hm]; exact (inv_pos.mpr (winH_pos _ _)).le
         · rw [Set.indicator_of_notMem hm]
       · exact le_rfl
     -- `R'`

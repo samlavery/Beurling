@@ -196,11 +196,11 @@ theorem sum_FrBv_le {ω : JitterΩ} {Z η1 η2 εH θH : ℝ} {ε1 : ℝ → ℝ
           exact le_trans (Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_subset_range.mpr
             (by omega)) fun i _ _ => mul_nonneg (sq_nonneg _) (he0 i)) hE'
       _ = 4 / 10 ^ 70 := by ring
-  have hB := sum_oscG_sharp hX N
+  have hB := sum_oscG_sharp hc.hθ hX N
   have hH := sum_sixH_le hX N
   have hn := Queue6.sum_nbQ_le hc (N + 1)
   have e : ∑ i ∈ range (N + 1), Lb X₀ i ^ 2 * FrBv θ X₀ ω (nbQ X₀) i =
-      ∑ i ∈ range (N + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG X₀ i +
+      ∑ i ∈ range (N + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG θ X₀ i +
       ∑ i ∈ range (N + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 *
         (6 / Queue6.Hc X₀ (Xm X₀ * 2 ^ i)) +
       ∑ i ∈ range (N + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * nbQ X₀ i +
@@ -222,7 +222,7 @@ theorem Gsum_le {ω : JitterΩ} {Z η1 η2 εH θH : ℝ} {ε1 : ℝ → ℝ}
     (hZ0 : 2500 ≤ Z) (z : ℝ) (hZ : 18 * (Xm X₀ * 2 ^ (Jc X₀ z + 2)) ≤ Z ^ 2) :
     Gsum θ X₀ ω (nbQ X₀) z ≤ Real.exp (-41) + 2 / 10 ^ 22 := by
   have hF := sum_FrBv_le hc hT hZ0 (Jc X₀ z) hZ
-  have hB := sum_oscG_sharp hc.hX (Jc X₀ z)
+  have hB := sum_oscG_sharp hc.hθ hc.hX (Jc X₀ z)
   have he := exp_neg41_ge'
   unfold Gsum
   simp only [mul_add, Finset.sum_add_distrib]

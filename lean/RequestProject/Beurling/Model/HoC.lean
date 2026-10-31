@@ -82,11 +82,13 @@ theorem ho_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt 
       have t1 : (5 * (hi - lo) + 3) / (kappaParam X₀ * lo) ≤
           (10 * (2.04 * Queue6.Hc X₀ (2 * lo)) + 6) / (kappaParam X₀ * lo) :=
         div_le_div_of_nonneg_right (by linarith) (by positivity)
-      have t2 : (hi - lo) * lo ^ (-(1 / 20 : ℝ)) ≤
-          2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 20 : ℝ)) :=
-        mul_le_mul hd2 (Real.rpow_le_rpow_of_nonpos (by linarith) (by linarith) (by norm_num))
-          (Real.rpow_nonneg hlo0.le _) (by
-            have := (KR.WidthReal.Hc_pos hX (X₀ := X₀) (2 * lo)).le; positivity)
+      have hH0 := (KR.WidthReal.Hc_pos hX (X₀ := X₀) (2 * lo)).le
+      have hmax : max t' (X₀ : ℝ) ≤ 2 * lo := max_le (by linarith) (by linarith)
+      have hhi4 : hi ≤ 4 * lo := by linarith
+      have hU0 := oscModU_nonneg θ X₀ hlo0
+      have t2 : (hi - lo) * oscMod θ X₀ lo hi ≤ 2.04 * Queue6.Hc X₀ (2 * lo) * oscModU θ X₀ lo :=
+        mul_le_mul hd2 (oscMod_le_U hc.hθ.1 X₀ hlo0 (by linarith) hhi4)
+          (oscMod_nonneg θ X₀ hlo0.le) (by linarith)
       have hLlo : 10 ^ 8 ≤ Real.log lo := hX.trans (Real.log_le_log hXp hlo)
       have hl2 : Real.log t' ≤ Real.log (2 * lo) := Real.log_le_log ht0 (by linarith)
       have hl2' : Real.log (2 * lo) ≤ 2 * Real.log lo := by
@@ -116,24 +118,35 @@ theorem ho_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt 
             show (4 : ℝ) = 2 ^ 2 by norm_num, Real.log_pow] at hq
           have h2 := Real.log_two_lt_d9; push_cast at hq; linarith
         · exact h0)]
+      set A := (10 * (2.04 * Queue6.Hc X₀ (2 * lo)) + 6) / (kappaParam X₀ * lo) with hAdef
+      set B := 2.04 * Queue6.Hc X₀ (2 * lo) * oscModU θ X₀ lo with hBdef
       have hS : |TcR θ X₀ ω (jzX X₀) lo - TcR θ X₀ ω (jzX X₀) hi| ≤
-          ((10 * (2.04 * Queue6.Hc X₀ (2 * lo)) + 6) / (kappaParam X₀ * lo) +
-            2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 20 : ℝ))) +
-          2 * (Real.log lo ^ 4)⁻¹ := by linarith
-      have hpos : 0 ≤ ((10 * (2.04 * Queue6.Hc X₀ (2 * lo)) + 6) / (kappaParam X₀ * lo) +
-            2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 20 : ℝ))) := by
-        have := (KR.WidthReal.Hc_pos hX (X₀ := X₀) (2 * lo)).le
-        have : 0 ≤ (lo / 2) ^ (-(1 / 20 : ℝ)) := Real.rpow_nonneg (by linarith) _
-        positivity
+          A + B + 2 * (Real.log lo ^ 4)⁻¹ := by linarith
+      have hA0 : 0 ≤ A := by positivity
+      have hB0 : 0 ≤ B := mul_nonneg (by linarith) hU0
+      have hq0 : 0 ≤ 2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 20 : ℝ)) :=
+        mul_nonneg (by linarith) (Real.rpow_nonneg (by linarith) _)
+      have hl20 : 0 ≤ Real.log (2 * lo) := by linarith
+      have hnA : Real.log (2 * lo) * A ≤ 1 / 10 ^ 43 := by
+        have : Real.log (2 * lo) * A ≤ Real.log (2 * lo) * (A + 2.04 * Queue6.Hc X₀ (2 * lo) *
+            (lo / 2) ^ (-(1 / 20 : ℝ))) := mul_le_mul_of_nonneg_left (by linarith) hl20
+        linarith
+      have hnB : Real.log (2 * lo) * B ≤ 1 / 10 ^ 80 := by
+        have g := sum_oscModU_le hc.hθ hX (c := lo) (by linarith) 1
+        simp only [Finset.sum_range_one, pow_zero, mul_one] at g
+        have h4 : Real.log (2 * lo) ≤ Real.log (4 * lo) ^ 2 := by
+          have h1 : Real.log (2 * lo) ≤ Real.log (4 * lo) := Real.log_le_log (by linarith)
+            (by linarith)
+          have h2 : 1 ≤ Real.log (4 * lo) := by
+            have := Real.log_le_log hlo0 (show lo ≤ 4 * lo by linarith); linarith
+          nlinarith
+        exact (mul_le_mul_of_nonneg_right h4 hB0).trans g
       calc Real.log t' * |TcR θ X₀ ω (jzX X₀) lo - TcR θ X₀ ω (jzX X₀) hi|
-          ≤ Real.log (2 * lo) * (((10 * (2.04 * Queue6.Hc X₀ (2 * lo)) + 6) /
-              (kappaParam X₀ * lo) + 2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 20 : ℝ))) +
-              2 * (Real.log lo ^ 4)⁻¹) :=
-            mul_le_mul hl2 hS (abs_nonneg _) (by linarith)
-        _ = Real.log (2 * lo) * ((10 * (2.04 * Queue6.Hc X₀ (2 * lo)) + 6) /
-              (kappaParam X₀ * lo) + 2.04 * Queue6.Hc X₀ (2 * lo) * (lo / 2) ^ (-(1 / 20 : ℝ))) +
+          ≤ Real.log (2 * lo) * (A + B + 2 * (Real.log lo ^ 4)⁻¹) :=
+            mul_le_mul hl2 hS (abs_nonneg _) hl20
+        _ = Real.log (2 * lo) * A + Real.log (2 * lo) * B +
             Real.log (2 * lo) * (2 * (Real.log lo ^ 4)⁻¹) := by ring
-        _ ≤ 1 / 10 ^ 43 + 4 / 10 ^ 24 := by linarith
+        _ ≤ 1 / 10 ^ 43 + 1 / 10 ^ 80 + 4 / 10 ^ 24 := by linarith
         _ ≤ 1 / 10 ^ 20 := by norm_num
     -- ranges of the clamped points
     have hcX : (X₀ : ℝ) ≤ c := le_max_right _ _

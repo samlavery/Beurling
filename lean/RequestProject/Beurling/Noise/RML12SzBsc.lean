@@ -6,7 +6,7 @@ public import RequestProject.Beurling.Model.OscBlockG
 # A sharper form of eq. (osc), second display (round 12)
 
 `BModel.sum_oscG_le` (Model) gives `∑_j (log 3v_j)² o_j ≤ e^{-41}`. Its proof actually gives
-`≤ 73·10⁻⁴³ + 2.0001/(δ M)` with `M = L_* - 4 log 2 ≥ 3.928·10¹⁸`; the `G`-term of Lemma 5.34
+`≤ 73·10⁻⁴³ + 10⁻⁸⁰ + 2.0001/(δ M)` with `M = L_* - 4 log 2 ≥ 3.928·10¹⁸`; the `G`-term of Lemma 5.34
 (`Gsum`) contains `o_j` twice (once as `o_j`, once inside `F̄_r(j)`), so the sharper constant
 `7.4·10⁻¹⁹ ≤ e^{-41}/2` is needed: `sum_oscG_sharp` is the same proof with the final
 constants tightened.
@@ -19,12 +19,13 @@ open Set Real MeasureTheory Construction CaplLink Queue6 KR KR.Chain KR.TcLoc KR
 
 namespace BModel.RML12
 
-variable {X₀ : ℕ}
+variable {θ : ℝ} {X₀ : ℕ}
 
 set_option maxHeartbeats 2000000 in
 /-- **eq. (osc), second display, sharp**: `∑_{j ≤ J} (log 3v_j)² o_j ≤ 7.4·10⁻¹⁹`. -/
-theorem sum_oscG_sharp (hX : 10 ^ 8 ≤ Real.log X₀) (J : ℕ) :
-    ∑ i ∈ Finset.range (J + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG X₀ i ≤
+theorem sum_oscG_sharp (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+    (J : ℕ) :
+    ∑ i ∈ Finset.range (J + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG θ X₀ i ≤
       74 / 10 ^ 20 := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hXge := KR.WidthReal.X0_ge hX (X₀ := X₀)
@@ -56,9 +57,11 @@ theorem sum_oscG_sharp (hX : 10 ^ 8 ≤ Real.log X₀) (J : ℕ) :
   have hM0 : 3.928 * 10 ^ 18 ≤ M := by linarith
   have hMp : 0 < M := by linarith
   set φ : ℕ → ℝ := fun i => psi1 M (Λ + i * δ - δ) with hφ
+  set ρ : ℕ → ℝ := fun i => Real.log (4 * (Xm X₀ * 2 ^ i)) ^ 2 *
+    (2.04 * Queue6.Hc X₀ (2 * (Xm X₀ * 2 ^ i)) * oscModU θ X₀ (Xm X₀ * 2 ^ i)) with hρ
   -- split each term
-  have hsplit : ∀ i : ℕ, Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG X₀ i ≤
-      (Xm X₀ * 2 ^ i) ^ (-(1 / 50 : ℝ)) + 2.0001 / δ * (φ i - φ (i + 1)) := by
+  have hsplit : ∀ i : ℕ, Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG θ X₀ i ≤
+      (Xm X₀ * 2 ^ i) ^ (-(1 / 50 : ℝ)) + ρ i + 2.0001 / δ * (φ i - φ (i + 1)) := by
     intro i
     obtain ⟨e1, e2, e3⟩ := logs_blk hX i
     set u := Xm X₀ * 2 ^ i with hu
@@ -97,13 +100,31 @@ theorem sum_oscG_sharp (hX : 10 ^ 8 ≤ Real.log X₀) (J : ℕ) :
     unfold obG Bsc
     rw [← hu]
     have e : Real.log (3 * u) ^ 2 * ((10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) /
-        (kappaParam X₀ * u) + 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ)) +
+        (kappaParam X₀ * u) + 2.04 * Queue6.Hc X₀ (2 * u) * oscModU θ X₀ u +
         2 * (if Lstar X₀ < Real.log (4 * u) then (Real.log (u / 2) ^ 4)⁻¹ else 0)) =
         Real.log (3 * u) ^ 2 * ((10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) /
-        (kappaParam X₀ * u) + 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ))) +
+        (kappaParam X₀ * u)) +
+        Real.log (3 * u) ^ 2 * (2.04 * Queue6.Hc X₀ (2 * u) * oscModU θ X₀ u) +
         Real.log (3 * u) ^ 2 * (2 * (if Lstar X₀ < Real.log (4 * u) then
           (Real.log (u / 2) ^ 4)⁻¹ else 0)) := by ring
     rw [e]
+    have hu0 : 0 < u := by linarith
+    have hH0 := (KR.WidthReal.Hc_pos hX (X₀ := X₀) (2 * u)).le
+    have hq0 : 0 ≤ 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ)) :=
+      mul_nonneg (by linarith) (Real.rpow_nonneg (by linarith) _)
+    have hsq0 : 0 ≤ Real.log (3 * u) ^ 2 := sq_nonneg _
+    have hA' : Real.log (3 * u) ^ 2 * ((10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) /
+        (kappaParam X₀ * u)) ≤ (Xm X₀ * 2 ^ i) ^ (-(1 / 50 : ℝ)) := by
+      rw [← hu]
+      refine le_trans ?_ hn
+      exact mul_le_mul_of_nonneg_left (by linarith) hsq0
+    have hB : Real.log (3 * u) ^ 2 * (2.04 * Queue6.Hc X₀ (2 * u) * oscModU θ X₀ u) ≤ ρ i := by
+      simp only [hρ, ← hu]
+      have hU0 := oscModU_nonneg θ X₀ hu0
+      have h34 : Real.log (3 * u) ^ 2 ≤ Real.log (4 * u) ^ 2 := by
+        have h3 : 0 ≤ Real.log (3 * u) := Real.log_nonneg (by linarith)
+        exact pow_le_pow_left₀ h3 (Real.log_le_log (by linarith) (by linarith)) 2
+      exact mul_le_mul_of_nonneg_right h34 (mul_nonneg (by linarith) hU0)
     linarith
   have hφ0 : ∀ i, 0 ≤ φ i := fun i => psi1_nonneg hMp _
   have hT := tele_le (f := fun i => 2.0001 / δ * (φ i - φ (i + 1))) (C := 2.0001 / δ)
@@ -119,13 +140,17 @@ theorem sum_oscG_sharp (hX : 10 ^ 8 ≤ Real.log X₀) (J : ℕ) :
       _ ≤ 7347 / 10 ^ 22 := by
           rw [← div_eq_mul_inv, div_div, div_le_div_iff₀ (by positivity) (by norm_num)]
           nlinarith
-  calc ∑ i ∈ Finset.range (J + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG X₀ i
-      ≤ ∑ i ∈ Finset.range (J + 1), ((Xm X₀ * 2 ^ i) ^ (-(1 / 50 : ℝ)) +
+  calc ∑ i ∈ Finset.range (J + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG θ X₀ i
+      ≤ ∑ i ∈ Finset.range (J + 1), ((Xm X₀ * 2 ^ i) ^ (-(1 / 50 : ℝ)) + ρ i +
           2.0001 / δ * (φ i - φ (i + 1))) := Finset.sum_le_sum fun i _ => hsplit i
     _ = ∑ i ∈ Finset.range (J + 1), (Xm X₀ * 2 ^ i) ^ (-(1 / 50 : ℝ)) +
-          ∑ i ∈ Finset.range (J + 1), 2.0001 / δ * (φ i - φ (i + 1)) :=
-        Finset.sum_add_distrib
-    _ ≤ 73 * (1 / 10 ^ 43) + 7347 / 10 ^ 22 := by nlinarith
+          ∑ i ∈ Finset.range (J + 1), ρ i +
+          ∑ i ∈ Finset.range (J + 1), 2.0001 / δ * (φ i - φ (i + 1)) := by
+        rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
+    _ ≤ 73 * (1 / 10 ^ 43) + 1 / 10 ^ 80 + 7347 / 10 ^ 22 := by
+        have g3 := sum_oscModU_le hθ hX (c := Xm X₀) (by linarith) (J + 1)
+        simp only [hρ]
+        nlinarith
     _ ≤ 74 / 10 ^ 20 := by norm_num
 
 end BModel.RML12

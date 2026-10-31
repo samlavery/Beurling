@@ -51,7 +51,7 @@ lemma TpCont_abs_le (ω : JitterΩ) (t : ℝ) : |TpCont θ X₀ ω t| ≤ 2 := b
       unfold absorbedBump
       split_ifs
       · by_cases hm : t ∈ Icc (uA X₀ a) a
-        · rw [Set.indicator_of_mem hm]; exact (Real.rpow_pos_of_pos ht0 _).le
+        · rw [Set.indicator_of_mem hm]; exact (inv_pos.mpr (winH_pos _ _)).le
         · rw [Set.indicator_of_notMem hm]
       · exact le_rfl
     have hR := abs_deriv_osc_le hc.hθ hc.hX (gammaD_range (θ := θ) hc.hX D) hge

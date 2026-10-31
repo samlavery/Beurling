@@ -15,7 +15,7 @@ public import RequestProject.Beurling.Main
   `𝒩 = ℕ`: it holds at most one `w`, and `η_{X₀}(v) ≤ 1.01 X₀/v` (`etaX0_le_mid`); it is
   empty for `v < X₀` (`etaX0_eq_zero_low`), and at most `1/2` (as `w ≥ 2`);
 * for `v > X₀²/2` the window holds at most
-  `4.21 H(v)/X₀ + 2H(v/X₀) + 4 + 2(v/X₀)^{θ/2}` elements (the lag bound of Corollary 3.8, the
+  `4.21 H(v)/X₀ + 2H(v/X₀) + 4 + 2(v/X₀)^{1/8}` elements (the lag bound of Corollary 3.8, the
   target (6) and Lemma 6.26 / Lemma P for the absorbed set; the named input `count` below),
   so `η_{X₀}(v) ≤ 1.01(4 + 8.21 v^{1/4}) X₀/v` (`etaX0_le_high`);
 * hence `∑_{v dyadic} log(2v) sup_{[v,2v)} η_{X₀} ≤ 1.52 log(2X₀)` (`etaX0Sum_of`).
@@ -59,9 +59,9 @@ structure Hyp (P : BeurlingSystem) (H : ℝ → ℝ) (X0m X0 Z η1 η2 : ℝ) (�
   hθ1 : θo ≤ 1 / 2
   /-- **the window count of step (iii), second bullet** (Corollary 3.8, target (6),
   Lemma 6.26): for `X₀²/2 < y ≤ Y` the window holds at most
-  `4.21 H(y)/X₀ + 2H(y/X₀) + 4 + 2(y/X₀)^{θ_b}` elements (localized to the heights `≤ Y`) -/
+  `4.21 H(y)/X₀ + 2H(y/X₀) + 4 + 2(y/X₀)^{1/8}` elements (localized to the heights `≤ Y`) -/
   count : ∀ y, X0 ^ 2 / 2 < y → y ≤ Y →
-    ((Win P H X0m y).card : ℝ) ≤ 4.21 * H y / X0 + 2 * H (y / X0) + 4 + 2 * (y / X0) ^ (thetaB θo)
+    ((Win P H X0m y).card : ℝ) ≤ 4.21 * H y / X0 + 2 * H (y / X0) + 4 + 2 * (y / X0) ^ (1 / 8 : ℝ)
 
 /-! ## Numerical facts for `t = X₀^{1/8} ≥ 10¹²` -/
 
@@ -393,12 +393,12 @@ theorem etaX0_le_high {y : ℝ} (hy2 : X0 ^ 2 / 2 < y) (hyY : y ≤ Y) :
     have hq1 : y / X0 ≤ y := div_le_self hy0.le hX1
     have := le_r8_of_pow8 (hy.hH0 _) ((hy.hHg (y / X0) hq).trans (max_le hq1 (by linarith)))
     exact this.trans hrr
-  have hC : (y / X0) ^ (thetaB θo) ≤ r8 y ^ 2 := by
+  have hC : (y / X0) ^ (1 / 8 : ℝ) ≤ r8 y ^ 2 := by
     have hq1 : 1 ≤ y / X0 := by
       rw [le_div_iff₀ hX0p]; linarith
     have hq2 : y / X0 ≤ y := div_le_self hy0.le hX1
-    calc (y / X0) ^ (thetaB θo) ≤ (y / X0) ^ (1 / 4 : ℝ) :=
-          Real.rpow_le_rpow_of_exponent_le hq1 (thetaB_le_quarter hy.hθ1)
+    calc (y / X0) ^ (1 / 8 : ℝ) ≤ (y / X0) ^ (1 / 4 : ℝ) :=
+          Real.rpow_le_rpow_of_exponent_le hq1 (by norm_num)
       _ ≤ y ^ (1 / 4 : ℝ) := Real.rpow_le_rpow (by linarith) hq2 (by norm_num)
       _ = r8 y ^ 2 := (sqrt_sqrt_eq_rpow hy0.le).symm
   have hcard : ((Win P H X0m y).card : ℝ) ≤ 4 + 8.21 * r8 y ^ 2 := by linarith

@@ -97,8 +97,8 @@ theorem theorem_5_24_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ 
     (cntA rhoA : ℝ → ℝ) (hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 40 : ℝ) ≤ Xm) (hXmX : Xm ≤ X₀)
     (hfl : ∀ u, u < Xm → P.N u = ⌊u⌋₊)
     (hlag : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
-      |P.N u - Target.target X₀ (kap X₀) cntA rhoA (osc θ α γ xp) u| ≤ u ^ lagExponent θ)
-    (hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc → |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| ≤ 2 * u ^ (thetaB θ))
+      |P.N u - Target.target X₀ (kap X₀) cntA rhoA (osc θ α γ xp) u| ≤ u ^ lagExponent (1 / 10000))
+    (hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc → |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| ≤ 2 * winH X₀ u)
     (hy : (X₀ : ℝ) ≤ y) (hyz : y ≤ zc) :
     Theorem524Concl P X₀ y :=
   (lpHyp_of_lag hθ hX hev hα h0 hsp hmono cntA rhoA hXm hXmX hfl hlag hA hy hyz).theorem_5_24

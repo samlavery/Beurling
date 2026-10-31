@@ -147,7 +147,7 @@ lemma oscWin_le {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (h
     (h2 : u / 2 ≤ max q X₀) (h3 : max r X₀ ≤ 4 * u) (h4 : max q X₀ ≤ 4 * u)
     (h5 : max r X₀ ≤ 2 * (b + Queue6.Hc X₀ b)) (h6 : max q X₀ ≤ 2 * (b + Queue6.Hc X₀ b))
     (h7 : |q - r| ≤ 2.04 * Queue6.Hc X₀ (2 * u)) :
-    |TcR θ X₀ ω (jzX X₀) q - TcR θ X₀ ω (jzX X₀) r| ≤ Bsc X₀ u := by
+    |TcR θ X₀ ω (jzX X₀) q - TcR θ X₀ ω (jzX X₀) r| ≤ Bsc θ X₀ u := by
   rw [TcR_eq_max hc ω q, TcR_eq_max hc ω r]
   have hd : |max q (X₀ : ℝ) - max r X₀| ≤ 2.04 * Queue6.Hc X₀ (2 * u) :=
     (abs_max_sub_max_le_abs _ _ _).trans h7
@@ -164,7 +164,7 @@ variable (θ X₀) in
 /-- **`F̄_r` on the block `i`**: `o + 6/H + ν̄ + 2 · (s_η of the neighbouring blocks)`
 (`lem:predictable`: `F̄_r(v) = o_v + 6/H(v) + ν̄(v) + 54 sup_{[v,2v)} η`). -/
 noncomputable def FrBv (ω : JitterΩ) (nb : ℕ → ℝ) (i : ℕ) : ℝ :=
-  Bsc X₀ (Xm X₀ * 2 ^ i) + 6 / Queue6.Hc X₀ (Xm X₀ * 2 ^ i) + nb i +
+  Bsc θ X₀ (Xm X₀ * 2 ^ i) + 6 / Queue6.Hc X₀ (Xm X₀ * 2 ^ i) + nb i +
     2 * ((if i = 0 then 0 else etaS θ X₀ ω (i - 1)) + etaS θ X₀ ω i + etaS θ X₀ ω (i + 1))
 
 section Pt2
@@ -281,7 +281,7 @@ theorem Fr_pt {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt
       · have := hO.low r h; linarith
   -- the oscillation part
   have hosc : |Margin.Bavg (Queue6.Hc X₀ r) (TcLd θ X₀ ω : ℝ → ℝ) r -
-      (TcLd θ X₀ ω : ℝ → ℝ) r| ≤ Bsc X₀ v := by
+      (TcLd θ X₀ ω : ℝ → ℝ) r| ≤ Bsc θ X₀ v := by
     refine abs_Bavg_sub_le hHr ((TcLd θ X₀ ω).2 _ _) fun q hq1 hq2 => ?_
     rw [TcLd_coe hc hev ω]
     obtain ⟨a1, a2, a3, -, -⟩ := hW q hq1 hq2

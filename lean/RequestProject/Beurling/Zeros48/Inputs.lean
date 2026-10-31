@@ -45,7 +45,7 @@ theorem theorem410RestM_of_inputs {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 
     placed_infinite_of_growth hω hlog hTlow (fun x hx => T_ge_of_formula hθ hlog hT hx) hlink
   have hok := realisedOK_of M hω hlog hTlow hinf
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
-  have hlag := lag_of_slotData hθ.1 hθ.2 hlog M (realisedSystem M (capH X₀) ω).N hq Real.log
+  have hlag := lag_of_slotData hlog M (realisedSystem M (capH X₀) ω).N hq Real.log
     (fun x hx => ⟨Real.log_nonneg (by linarith [one_lt_of_logX hX0 hlog]), le_rfl⟩)
     (fun x hx _ => landing_of_linked L hS hreg hok hx)
     (fun x hx hearly => landingInit_of_linked L hS hreg hok hx hearly)

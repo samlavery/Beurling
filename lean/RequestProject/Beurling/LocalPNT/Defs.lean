@@ -72,9 +72,10 @@ noncomputable abbrev kap (X₀ : ℕ) : ℝ := Construction.kappaParam X₀
 noncomputable def T0 (θ : ℝ) (X₀ : ℕ) (α γ xp : ℕ → ℝ) : ℝ → ℝ :=
   Target.target X₀ (kap X₀) (fun _ => 0) (fun _ => 0) (osc θ α γ xp)
 
-/-- `θ' = max(θ + 0.01, 8 (log log X₀)²/log X₀ + 0.005)`. -/
-noncomputable def thetaPrime (θ : ℝ) (X₀ : ℕ) : ℝ :=
-  max (θ + 0.01) (8 * Real.log (Real.log X₀) ^ 2 / Real.log X₀ + 0.005)
+/-- `θ' = max(θ + 0.01, 0.26)` (the paper's θ-free `θ' = 0.26`, enlarged to `θ + 0.01` for
+`θ > 0.25`; every use needs `θ' ≤ 0.51`, `D₀ ≤ u^{θ'}` and, in the smoothing step,
+`θ' ≥ θ + 0.01`). -/
+noncomputable def thetaPrime (θ : ℝ) (_X₀ : ℕ) : ℝ := max (θ + 0.01) 0.26
 
 /-- The lag against the `A`-free target, `D = N - T₀`. -/
 noncomputable def lag0 (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (α γ xp : ℕ → ℝ) (u : ℝ) : ℝ :=

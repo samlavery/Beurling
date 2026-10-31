@@ -7,13 +7,13 @@ public import RequestProject.Beurling.Queue6.CountI
 
 For `X₀ ≤ a ≤ d` and `ω ∈ Good(< t) ∩ NiceEv` with `t` above `d + H`:
 
-`N(d) - N(a) ≤ 2.00005 (d - a) + 1 + ((d - a)/h + 2) (d + h)^{θ/2} (log a)^{-4} + D(d) + D(a)`
-(`Ncount_le`), `h = a^{θ/2}`, `D(v) = B(v) + B(X₀) + H(v) + H(X₀) + 5`:
+`N(d) - N(a) ≤ 2.00005 (d - a) + 1 + ((d - a)/h + 2) h(d + h) (log a)^{-4} + D(d) + D(a)`
+(`Ncount_le`), `h = h(a)` the absorption window, `D(v) = B(v) + B(X₀) + H(v) + H(X₀) + 5`:
 
 * `|N - T| ≤ D` at both ends (Corollary 3.8, `lag_G0`);
 * `T(d) - T(a) ≤ 2.00005 (d - a) + 1 + #(𝒜 ∩ [a, d])` (`T_incr`);
-* `[a, d]` is covered by `⌈(d - a)/h⌉ + 1` windows `[w, w + h]`, `h ≤ w^{θ/2}`, each holding at most
-  `w^{θ/2} (log w)^{-4}` absorbed elements (Lemma 6.26, `LC_G0`).
+* `[a, d]` is covered by `⌈(d - a)/h⌉ + 1` windows `[w, w + h]`, `h ≤ h(w)`, each holding at most
+  `h(w) (log w)^{-4}` absorbed elements (Lemma 6.26, `LC_G0`).
 -/
 
 @[expose] public section
@@ -35,18 +35,16 @@ set_option maxHeartbeats 1600000 in
 /-- **The integer count of a window `(a, d]`** on `Good(< t) ∩ NiceEv`. -/
 theorem Ncount_le {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (hN : ω ∈ NiceEv θ X₀)
     {a d : ℝ} (ha : (X₀ : ℝ) ≤ a) (had : a ≤ d) (ht1 : d + 26 * Real.log d + 2 < t)
-    (ht2 : 2 * (d + a ^ (thetaB θ)) + 2 * X₀ + 4 ≤ t) :
+    (ht2 : 2 * (d + winH X₀ a) + 2 * X₀ + 4 ≤ t) :
     (PR θ X₀ ω).N d - (PR θ X₀ ω).N a ≤
-      2.00005 * (d - a) + 1 + ((d - a) / a ^ (thetaB θ) + 2) *
-        ((d + a ^ (thetaB θ)) ^ (thetaB θ) * Real.log a ^ (-4 : ℤ)) + lagD X₀ d + lagD X₀ a := by
+      2.00005 * (d - a) + 1 + ((d - a) / winH X₀ a + 2) *
+        (winH X₀ (d + winH X₀ a) * Real.log a ^ (-4 : ℤ)) + lagD X₀ d + lagD X₀ a := by
   classical
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hc.hX
   have ha0 : 0 < a := by linarith
-  have hθ := hc.hθ
-  have hθ0 : 0 ≤ thetaB θ := (thetaB_pos (by linarith [hθ.1])).le
-  set h := a ^ (thetaB θ) with hhdef
-  have hh0 : 0 < h := Real.rpow_pos_of_pos ha0 _
+  set h := winH X₀ a with hhdef
+  have hh0 : 0 < h := winH_pos _ _
   -- the lag at both ends
   have hla := lag_G0 D hc hev hG hN ha (by
     have : Real.log a ≤ Real.log d := Real.log_le_log ha0 had
@@ -60,7 +58,7 @@ theorem Ncount_le {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (hN : �
   have hU : ∀ j, Ucl ω j ∈ Icc (0 : ℝ) 1 := fun j => clamp01_mem _
   have hAfin := absSet_locFin (X₀ := X₀) (locFinD_DM hc.hX hU (Mcl θ X₀ ω))
   set n := ⌈(d - a) / h⌉₊ + 1
-  set Mw := (d + h) ^ (thetaB θ) * Real.log a ^ (-4 : ℤ)
+  set Mw := winH X₀ (d + h) * Real.log a ^ (-4 : ℤ)
   have hcov := count_le_of_cover (S := A ∩ Icc a d) n
     (fun i => A ∩ Icc (a + i * h) (a + i * h + h))
     (fun i => (hAfin (a + i * h + h)).subset fun y hy => ⟨hy.1, hy.2.2⟩)
@@ -81,17 +79,17 @@ theorem Ncount_le {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (hN : �
           exact this
         linarith
       have hw0 : 0 < w := by linarith
-      have hwθ : h ≤ w ^ (thetaB θ) := Real.rpow_le_rpow ha0.le hw hθ0
+      have hwθ : h ≤ winH X₀ w := winH_mono hc.hX ha0 hw
       have hLC := LC_G0 D hc hev hG hN (x := w) (x' := w + h) (ha.trans hw) (by linarith)
         (by linarith)
-      have hLC' : ((A ∩ Icc w (w + h)).ncard : ℝ) ≤ w ^ (thetaB θ) * Real.log w ^ (-4 : ℤ) :=
+      have hLC' : ((A ∩ Icc w (w + h)).ncard : ℝ) ≤ winH X₀ w * Real.log w ^ (-4 : ℤ) :=
         hLC
       refine hLC'.trans ?_
       have hlw : Real.log a ≤ Real.log w := Real.log_le_log ha0 hw
       have hla0 : 0 < Real.log a := by
         have := (logs_of_ge hX0 hc.hX ha).1; linarith
-      apply mul_le_mul (Real.rpow_le_rpow hw0.le hwd hθ0) _
-        (zpow_nonneg (by linarith) _) (Real.rpow_nonneg (by linarith) _)
+      apply mul_le_mul (winH_mono hc.hX hw0 hwd) _
+        (zpow_nonneg (by linarith) _) (winH_pos _ _).le
       rw [zpow_neg, zpow_neg, zpow_ofNat, zpow_ofNat]
       exact inv_anti₀ (by positivity) (pow_le_pow_left₀ hla0.le hlw 4))
     (fun y hy => by
@@ -118,7 +116,7 @@ theorem Ncount_le {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (hN : �
     push_cast; linarith
   have hMw0 : 0 ≤ Mw := by
     have : 0 < Real.log a := by have := (logs_of_ge hX0 hc.hX ha).1; linarith
-    exact mul_nonneg (Real.rpow_nonneg (by linarith) _) (zpow_nonneg this.le _)
+    exact mul_nonneg (winH_pos _ _).le (zpow_nonneg this.le _)
   have hloc : (localCountA A a d : ℝ) ≤ ((d - a) / h + 2) * Mw := by
     unfold localCountA
     exact hcov.trans (mul_le_mul_of_nonneg_right hn hMw0)

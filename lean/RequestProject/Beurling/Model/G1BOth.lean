@@ -91,7 +91,7 @@ theorem sigR_bound {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ}
     unfold absorbedBump
     split_ifs
     · by_cases hm : w ∈ Icc (uA X₀ a) a
-      · rw [Set.indicator_of_mem hm]; exact (Real.rpow_pos_of_pos hw0 _).le
+      · rw [Set.indicator_of_mem hm]; exact (inv_pos.mpr (winH_pos _ _)).le
       · rw [Set.indicator_of_notMem hm]
     · exact le_rfl
   have hXm0 := Xm_pos' hc

@@ -559,6 +559,9 @@ lemma winH_continuousOn (hX : 10 ^ 8 ≤ Real.log X₀) : ContinuousOn (winH X�
   exact (Real.continuous_exp.continuousAt.comp ((continuous_winLog hX).continuousAt.comp
     (Real.continuousAt_log hu0))).continuousWithinAt
 
+lemma measurable_winH (hX : 10 ^ 8 ≤ Real.log X₀) : Measurable (winH X₀) :=
+  Real.measurable_exp.comp ((continuous_winLog hX).measurable.comp Real.measurable_log)
+
 /-- **The window is a window**: `winH X₀` has the properties `IsWin` (for `log X₀ ≥ 10⁸`). -/
 theorem winH_isWin (hX : 10 ^ 8 ≤ Real.log X₀) : IsWin (winH X₀) where
   pos _ _ := winH_pos _ _
@@ -675,6 +678,6 @@ end H
 
 end Absorbed
 
-export Absorbed (winH winH_isWin winH_pos winH_le_rpow winH_one_le)
+export Absorbed (winH winH_isWin winH_pos winH_le_rpow winH_one_le measurable_winH)
 
 end

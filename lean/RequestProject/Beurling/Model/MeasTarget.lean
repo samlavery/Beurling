@@ -54,7 +54,7 @@ lemma measurable_lag_fam {g : Ω → ℕ → ℝ} (hg : ∀ j, Measurable fun ω
     (rho := fun ω => absorbedDensityCap (winH X₀) (absSet X₀ (D ω)) (uA X₀))
     (R := fun ω => osc θ (amplitudes θ (kappa0Param X₀) (switchOn (swS θ X₀)) (g ω)) (g ω) (switchOn (swS θ X₀)))
     (measurable_countA hD hL hP hX)
-    (measurable_rhoCap hD hL hP hX (by linarith [hθ.1]))
+    (measurable_rhoCap hD hL hP hX)
     (measurable_osc_fam hX (measurable_amplitudes (θ := θ) (X₀ := X₀) hg) hg)
 
 include hHB in
@@ -82,9 +82,9 @@ theorem measurable_gammaD (k : ℕ) : Measurable fun ω => gammaD θ X₀ (D ω)
     rw [designedGammaN_rec]
     rfl
   rw [hrec]
-  obtain ⟨-, ha0, hak, -⟩ := constructionScale_spec hX0 hX k
+  obtain ⟨-, ha0, hak, -⟩ := constructionScale_spec hX0 hX (le_swS θ _) k
   have ha1 : 1 ≤ constructionScale X₀ (swS θ X₀) k := by
-    linarith [(constructionScale_spec hX0 hX k).1]
+    linarith [(constructionScale_spec hX0 hX (le_swS θ _) k).1]
   refine measurable_chooseHeight X₀ hκ (heightScale_switchOn_pos θ hX1 k)
     (fun s => ?_) (fun ω => ?_)
   · exact measurable_earlyNoise (measurable_lag_fam hθ hX hD hL hP hg) _ s
@@ -134,7 +134,7 @@ theorem measurable_targetD :
     measurable_amplitudes (θ := θ) (X₀ := X₀) hγ
   have hR := measurable_osc_fam (θ := θ) hX hα hγ
   have hc := measurable_countA hD hL hP hX
-  have hr := measurable_rhoCap hD hL hP hX (by linarith [hθ.1] : 0 < θ)
+  have hr := measurable_rhoCap hD hL hP hX
   have h := measurable_target_fam (cnt := fun ω => countA (absSet X₀ (D ω)))
     (rho := fun ω => absorbedDensityCap (winH X₀) (absSet X₀ (D ω)) (uA X₀))
     (R := fun ω => osc θ (alphaD θ X₀ (D ω)) (gammaD θ X₀ (D ω)) (switchOn (swS θ X₀)))

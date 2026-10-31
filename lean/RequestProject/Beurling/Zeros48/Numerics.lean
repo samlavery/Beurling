@@ -50,10 +50,10 @@ theorem lemma48_numerics {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
     1 ≤ DesignedZero.heightScale θ (kappa0Param X₀) xk ∧
     1 ≤ (Real.log a - Real.log X₀) * (DesignedZero.heightScale θ (kappa0Param X₀) xk + 1 / 2) ∧
     25 * Real.sqrt (DesignedZero.heightScale θ (kappa0Param X₀) xk + 1 / 2) *
-        (X₀ + 1) ^ (lagExponent θ / 2 - 1 / 4) +
-      40 * (2 ^ J * (X₀ + 1)) ^ (lagExponent θ / 2 + 1 / 4) +
+        (X₀ + 1) ^ (lagExponent (1 / 10000) / 2 - 1 / 4) +
+      40 * (2 ^ J * (X₀ + 1)) ^ (lagExponent (1 / 10000) / 2 + 1 / 4) +
       (Real.sqrt ((DesignedZero.heightScale θ (kappa0Param X₀) xk + 1 / 2) / 2) *
-          (((X₀ + 1) ^ lagExponent θ + 2) * (X₀ / 2) ^ (-(3 / 4 : ℝ))) +
+          (((X₀ + 1) ^ lagExponent (1 / 10000) + 2) * (X₀ / 2) ^ (-(3 / 4 : ℝ))) +
         2 * Real.sqrt (1 + Real.log ((Real.log a - Real.log X₀) *
           (DesignedZero.heightScale θ (kappa0Param X₀) xk + 1 / 2))) * c *
           Real.exp (Real.log a / 4)) ≤
@@ -63,7 +63,7 @@ theorem lemma48_numerics {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
   set L := Real.log a with hLdef
   set Λ := Real.log xk with hΛdef
   set G := DesignedZero.heightScale θ (kappa0Param X₀) xk with hGdef
-  set η := lagExponent θ with hηdef
+  set η := lagExponent (1 / 10000) with hηdef
   set Y : ℝ := 2 ^ J * (X₀ + 1) with hYdef
   have hY0 : 0 < Y := by rw [hYdef]; positivity
   clear_value ℓ L Λ G η Y
@@ -89,17 +89,10 @@ theorem lemma48_numerics {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
   have h3X : 3 * X₀ ≤ X₀ ^ 2 := by rw [sq]; exact mul_le_mul_of_nonneg_right (by linarith) hX0.le
   have hX2L : X₀ ≤ 2 * L := by linarith
   -- the exponent
-  have hη0 : 0 ≤ η := by
-    simp only [hηdef, lagExponent]
-    exact div_nonneg (le_min (by linarith) (by linarith)) (by norm_num)
-  have hη8 : η ≤ (1 / 2 - θ) / 2 := by
-    simp only [hηdef, lagExponent]
-    exact div_le_div_of_nonneg_right (min_le_right _ _) (by norm_num)
-  have hηle : η ≤ 1 / 8 := by
-    have h1 : η ≤ θ / 2 := by
-      simp only [hηdef, lagExponent]
-      exact div_le_div_of_nonneg_right (min_le_left _ _) (by norm_num)
-    linarith
+  have hηv : η = 1 / 20000 := by simp only [hηdef, lagExponent]; norm_num
+  have hη0 : 0 ≤ η := by rw [hηv]; norm_num
+  have hη8 : η ≤ (1 / 2 - θ) / 2 := by rw [hηv]; linarith
+  have hηle : η ≤ 1 / 8 := by rw [hηv]; norm_num
   -- the height
   have hΛpos : 0 < Λ := by linarith
   have hGeq : G = xk ^ (1 - θ) / (2 * X₀ * Λ) := by

@@ -512,7 +512,7 @@ theorem NCount_X₀_le {t : ℕ} {ω : JitterΩ} (hQC : ω ∈ QC (okQ θ X₀) 
     ⟨hc.hθ, hX, hU, hT, limModel_linked h0⟩
   have S := limModel_slotFacts h0 hev ht
   have hreg := jitterWidthRegular hX
-  have hlag := lag_local M hc.hθ.1 hc.hθ.2 hX (realisedSystem M (capH X₀) ω).N Real.log
+  have hlag := lag_local M hX (realisedSystem M (capH X₀) ω).N Real.log
     (fun x hx => ⟨Real.log_nonneg (by linarith), le_rfl⟩)
     (fun x hx _ => landing_of_linked L S hreg hok hx)
     (fun x hx hearly => landingInit_of_linked L S hreg hok hx hearly) le_rfl

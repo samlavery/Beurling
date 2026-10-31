@@ -543,7 +543,6 @@ theorem integral_TpCont (ω : JitterΩ) {a b : ℝ} (hab : a ≤ b) (hb : (X₀ 
   have hX1 := one_lt_of_logX hX0 hX
   have hX1n : 1 ≤ X₀ := by exact_mod_cast hX1.le
   obtain ⟨hκ0, -⟩ := kappa_facts hX
-  have hb2 : 0 < thetaB θ := thetaB_pos (by linarith [hc.hθ.1])
   set D := DF θ X₀ ω
   have hD : LocFinD D := locFinD_DM hX (fun j => clamp01_mem (ω j)) _
   have hA := absSet_locFin (X₀ := X₀) hD
@@ -558,12 +557,12 @@ theorem integral_TpCont (ω : JitterΩ) {a b : ℝ} (hab : a ≤ b) (hb : (X₀ 
     (intervalIntegrable_rhoDet X₀ hκ0 hX1n hb).mono_set (by
       rw [uIcc_of_le ha'b, uIcc_of_le hb]; exact Icc_subset_Icc hXa' le_rfl)
   have hρA : IntervalIntegrable (absorbedDensityCap (winH X₀) (absSet X₀ D) (uA X₀)) volume a' b :=
-    (intervalIntegrable_absorbedDensityCap _ hA hb2 hX1 hb).mono_set (by
+    (intervalIntegrable_absorbedDensityCap _ hA (winH_isWin hX) (measurable_winH hX) hX1 hb).mono_set (by
       rw [uIcc_of_le ha'b, uIcc_of_le hb]; exact Icc_subset_Icc hXa' le_rfl)
   have hγ := gammaD_range (θ := θ) hX D
   have hdR : ∀ x ∈ uIcc a' b, DifferentiableAt ℝ R x := fun x hx => by
     rw [uIcc_of_le ha'b] at hx
-    exact (hasDerivAt_osc _ _ hX1.le (by linarith [hx.1])).differentiableAt
+    exact (hasDerivAt_osc _ _ (hX1.le.trans (le_swS θ _)) (by linarith [hx.1])).differentiableAt
   have hRint : IntervalIntegrable (deriv R) volume a' b := by
     refine (intervalIntegrable_const (c := (1 : ℝ))).mono_fun'
       (measurable_deriv R).aestronglyMeasurable ?_
@@ -629,7 +628,7 @@ theorem integral_TpCont (ω : JitterΩ) {a b : ℝ} (hab : a ≤ b) (hb : (X₀ 
   unfold contD
   rw [show uA X₀ = (fun n => solveU (winH X₀) n) from rfl]
   rw [contPart_sub (fun y hy => intervalIntegrable_rhoDet X₀ hκ0 hX1n hy)
-    (fun y hy => intervalIntegrable_absorbedDensityCap _ hA hb2 hX1 hy) hXa' ha'b]
+    (fun y hy => intervalIntegrable_absorbedDensityCap _ hA (winH_isWin hX) (measurable_winH hX) hX1 hy) hXa' ha'b]
 
 end Tp
 

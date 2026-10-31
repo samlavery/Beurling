@@ -3,7 +3,7 @@ module
 public import RequestProject.Beurling.Model.Wire3
 public import RequestProject.Beurling.Model.SigmaResp
 public import RequestProject.Beurling.Model.RhoDetOsc
-public import RequestProject.Beurling.Model.OscD2
+public import RequestProject.Beurling.Model.OscR
 
 /-!
 # eq. (osc), first display: `∑_u log(2u) o_u ≤ e^{-83}` (the field `hosc`)
@@ -15,13 +15,14 @@ three parts of `T_c = (ρ_det(X₀) - ρ_det) - ρ̄_𝒜 + R' + K_𝒜 ρ̃` on
 
 * `o_det ≤ (5 d + 3)/(κ s)` for windows `[s, s + d]` (`rhoDet_kappa_sub_le`; the linear window
   of length `κu` and the unit spacing of the rigid set, second bullet);
-* `o_R ≤ d s^{-1/20}` (`deriv_osc_sub_le`, from `|ϕ'| ≤ 2`, `|ϕ''| ≤ 10`; fourth bullet);
+* `o_R ≤ d · oscMod` (`deriv_osc_sub_le`, from `|ϕ'| ≤ 2`, `|ϕ''| ≤ 10`; fourth bullet): `0` below
+  the switch-on `x⁺_0`, `≤ d (u/2)^{-θ}/10¹³` beyond (`oscModU`);
 * the `𝒜`-part `≤ 2 L⁻⁴`, and `0` unless `log u > L_*` (`rhoCap_le_L4`, `KAbsR_le_L4`,
   `rhoA_eq_zero_of_small`, `KAbsR_eq_zero_of_small`; third bullet, Lemma 6.27(c)).
 
-Summing over the dyadic scales `u = X₀ 2ᵏ/4`: the first two parts give `≤ ∑ u^{-1/10}`, and the
-third the telescoping bound `2.02 δ⁻¹ (L_* - 4δ)⁻²` (`δ = log 2`), in all `≤ e^{-83}`
-(`hosc_c`).
+Summing over the dyadic scales `u = X₀ 2ᵏ/4`: the rigid part gives `≤ ∑ u^{-1/40}`, the `R`-part
+`≤ 10⁻⁸⁰` (`sum_oscModU_le`, from the switch-on condition), and the third the telescoping bound
+`2.02 δ⁻¹ (L_* - 4δ)⁻²` (`δ = log 2`), in all `≤ e^{-83}` (`hosc_c`).
 -/
 
 @[expose] public section
@@ -207,7 +208,7 @@ lemma absParts {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
     unfold absorbedBump
     split_ifs
     · by_cases hm : v ∈ Icc (uA X₀ a) a
-      · rw [Set.indicator_of_mem hm]; exact (Real.rpow_pos_of_pos hv0 _).le
+      · rw [Set.indicator_of_mem hm]; exact (inv_pos.mpr (winH_pos _ _)).le
       · rw [Set.indicator_of_notMem hm]
     · exact le_rfl
   · unfold absorbedDensityCap
@@ -230,7 +231,7 @@ lemma Tc_pair_le {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (
       (1 / 1000) (hbsEps X₀) epsH (epsH / 10))
     {s u : ℝ} (hs : (X₀ : ℝ) ≤ s) (hsu : s ≤ u) (hu2 : u ≤ 2 * (b + Queue6.Hc X₀ b)) :
     |TcR θ X₀ ω (jzX X₀) s - TcR θ X₀ ω (jzX X₀) u| ≤
-      (5 * (u - s) + 3) / (kappaParam X₀ * s) + (u - s) * s ^ (-(1 / 20 : ℝ)) +
+      (5 * (u - s) + 3) / (kappaParam X₀ * s) + (u - s) * oscMod θ X₀ s u +
         2 * (if Lstar X₀ < Real.log u then (Real.log s ^ 4)⁻¹ else 0) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1' := QueueMono.one_lt_of_logX hX0 hc.hX
@@ -239,7 +240,7 @@ lemma Tc_pair_le {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (
   rw [TcR_split hc ω hs, TcR_split hc ω hu]
   have hdet := rhoDet_kappa_sub_le hc.hX hs hsu
   have hR := deriv_osc_sub_le hc.hθ hc.hX (gammaD_range (θ := θ) hc.hX (DF θ X₀ ω)) hs hsu
-  have hR' : |Rd θ X₀ ω s - Rd θ X₀ ω u| ≤ (u - s) * s ^ (-(1 / 20 : ℝ)) := by
+  have hR' : |Rd θ X₀ ω s - Rd θ X₀ ω u| ≤ (u - s) * oscMod θ X₀ s u := by
     rw [abs_sub_comm]; exact hR
   obtain ⟨⟨hK0s, hKs, hKs0⟩, ⟨hA0s, hAs, hAs0⟩⟩ :=
     absParts hc hev hb hbt hQC hE1 hN hT hs (hsu.trans hu2)
@@ -279,13 +280,13 @@ end Pair
 
 /-! ### The bound at one scale -/
 
-variable (X₀) in
+variable (θ X₀) in
 /-- **The bound of `o_u`** at the scale `u`: `W = 2.04 H(2u)` bounds the window length,
-`(10W + 6)/(κu)` the rigid part, `W (u/2)^{-1/20}` the oscillation part, and
+`(10W + 6)/(κu)` the rigid part, `W · oscModU θ X₀ u` the oscillation part, and
 `2 · 1[log 4u > L_*] (log(u/2))⁻⁴` the `𝒜`-part. -/
 noncomputable def Bsc (u : ℝ) : ℝ :=
   (10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) / (kappaParam X₀ * u) +
-    2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ)) +
+    2.04 * Queue6.Hc X₀ (2 * u) * oscModU θ X₀ u +
       2 * (if Lstar X₀ < Real.log (4 * u) then (Real.log (u / 2) ^ 4)⁻¹ else 0)
 
 section Scale
@@ -294,7 +295,7 @@ variable (hc : Cond θ X₀) (hev : Even X₀)
 include hc hev
 
 omit hev in
-lemma Bsc_nonneg {u : ℝ} (hu : 0 < u) : 0 ≤ Bsc X₀ u := by
+lemma Bsc_nonneg {u : ℝ} (hu : 0 < u) : 0 ≤ Bsc θ X₀ u := by
   have hκ := (kappa_facts hc.hX).1
   have hH := KR.WidthReal.Hc_pos hc.hX (X₀ := X₀) (2 * u)
   unfold Bsc
@@ -302,7 +303,7 @@ lemma Bsc_nonneg {u : ℝ} (hu : 0 < u) : 0 ≤ Bsc X₀ u := by
     split_ifs
     · exact inv_nonneg.mpr (by positivity)
     · exact le_rfl
-  have h2 : 0 ≤ (u / 2) ^ (-(1 / 20 : ℝ)) := Real.rpow_nonneg (by linarith) _
+  have h2 : 0 ≤ oscModU θ X₀ u := oscModU_nonneg θ X₀ hu
   have : 0 ≤ (10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) / (kappaParam X₀ * u) := by positivity
   positivity
 
@@ -317,7 +318,7 @@ theorem oscR_le_Bsc {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ
     {y : ℝ} (hyX : (X₀ : ℝ) ≤ y) (hyb : y ≤ b + Queue6.Hc X₀ b) {u : ℝ} (hu4 : (X₀ : ℝ) ≤ 4 * u)
     (huy : u ≤ y) :
     KR.Chain.oscR (Queue6.Hc X₀) (clampT (oscHt (Queue6.Hc X₀) y) (TcR θ X₀ ω (jzX X₀))) u ≤
-      Bsc X₀ u := by
+      Bsc θ X₀ u := by
   have hX := hc.hX
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1' := QueueMono.one_lt_of_logX hX0 hX
@@ -372,7 +373,7 @@ theorem oscR_le_Bsc {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ
   have hcX : (X₀ : ℝ) ≤ c := le_max_right _ _
   -- the pair bound at `lo ≤ hi`
   have key : ∀ s v : ℝ, (X₀ : ℝ) ≤ s → s ≤ v → u / 2 ≤ s → v ≤ 4 * u →
-      v ≤ 2 * (b + H b) → v - s ≤ 2.04 * H (2 * u) → |Tc s - Tc v| ≤ Bsc X₀ u := by
+      v ≤ 2 * (b + H b) → v - s ≤ 2.04 * H (2 * u) → |Tc s - Tc v| ≤ Bsc θ X₀ u := by
     intro s v hs hsv hs2 hv4 hvb hvs
     have hP := Tc_pair_le hc hev hb hbt hQC hE1 hN hT hs hsv hvb
     refine hP.trans ?_
@@ -389,9 +390,8 @@ theorem oscR_le_Bsc {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ
         mul_le_mul_of_nonneg_right (by linarith) (by positivity)
       have e2 := mul_le_mul_of_nonneg_left hks (show 0 ≤ 10 * (2.04 * H (2 * u)) + 6 by linarith)
       nlinarith
-    have t2 : (v - s) * s ^ (-(1 / 20 : ℝ)) ≤ 2.04 * H (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ)) :=
-      mul_le_mul hvs (Real.rpow_le_rpow_of_nonpos (by linarith) hs2 (by norm_num))
-        (Real.rpow_nonneg hs0.le _) hW0
+    have t2 : (v - s) * oscMod θ X₀ s v ≤ 2.04 * H (2 * u) * oscModU θ X₀ u :=
+      mul_le_mul hvs (oscMod_le_U hc.hθ.1 X₀ hu0 hs2 hv4) (oscMod_nonneg θ X₀ hs0.le) hW0
     have t3 : (if Lstar X₀ < Real.log v then (Real.log s ^ 4)⁻¹ else 0) ≤
         (if Lstar X₀ < Real.log (4 * u) then (Real.log (u / 2) ^ 4)⁻¹ else 0) := by
       split_ifs with h1 h2
@@ -578,6 +578,49 @@ lemma X0_quarter_rpow_le (hX : 10 ^ 8 ≤ Real.log X₀) :
   rw [Real.exp_neg, one_div]
   exact inv_anti₀ (by positivity) h100
 
+/-- **The split of one scale**: `log(2u) B(u) ≤ u^{-1/40} + ρ(u) + 𝒜-part`, with
+`ρ(u) = (log 4u)² · 2.04 H(2u) · oscModU θ X₀ u` (summed in `sum_oscModU_le`). -/
+lemma log_mul_Bsc_le (hX : 10 ^ 8 ≤ Real.log X₀) {u : ℝ} (hu4 : (X₀ : ℝ) ≤ 4 * u) :
+    Real.log (2 * u) * Bsc θ X₀ u ≤ u ^ (-(1 / 40 : ℝ)) +
+      Real.log (4 * u) ^ 2 * (2.04 * Queue6.Hc X₀ (2 * u) * oscModU θ X₀ u) +
+      2 * (if Lstar X₀ < Real.log (4 * u) then
+        Real.log (2 * u) * (Real.log (u / 2) ^ 4)⁻¹ else 0) := by
+  have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
+  have hXge := KR.WidthReal.X0_ge hX (X₀ := X₀)
+  have hu0 : 0 < u := by linarith
+  have hn := nonA_le hX hu4
+  have hH0 := (KR.WidthReal.Hc_pos hX (X₀ := X₀) (2 * u)).le
+  have hq0 : 0 ≤ (u / 2) ^ (-(1 / 20 : ℝ)) := Real.rpow_nonneg (by linarith) _
+  have hR0 : 0 ≤ 2.04 * Queue6.Hc X₀ (2 * u) * oscModU θ X₀ u := by
+    have := oscModU_nonneg θ X₀ hu0; positivity
+  have hl2 : 0 ≤ Real.log (2 * u) := Real.log_nonneg (by linarith)
+  have hl4 : 1 ≤ Real.log (4 * u) := by
+    rw [Real.le_log_iff_exp_le (by positivity)]
+    have := Real.exp_one_lt_d9; linarith
+  have hl24 : Real.log (2 * u) ≤ Real.log (4 * u) ^ 2 := by
+    have h1 : Real.log (2 * u) ≤ Real.log (4 * u) := Real.log_le_log (by positivity) (by linarith)
+    nlinarith
+  unfold Bsc
+  have e : Real.log (2 * u) * ((10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) / (kappaParam X₀ * u) +
+      2.04 * Queue6.Hc X₀ (2 * u) * oscModU θ X₀ u +
+      2 * (if Lstar X₀ < Real.log (4 * u) then (Real.log (u / 2) ^ 4)⁻¹ else 0)) =
+      Real.log (2 * u) * ((10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) / (kappaParam X₀ * u)) +
+      Real.log (2 * u) * (2.04 * Queue6.Hc X₀ (2 * u) * oscModU θ X₀ u) +
+      2 * (if Lstar X₀ < Real.log (4 * u) then
+        Real.log (2 * u) * (Real.log (u / 2) ^ 4)⁻¹ else 0) := by
+    split_ifs <;> ring
+  rw [e]
+  have h1 : Real.log (2 * u) * ((10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) / (kappaParam X₀ * u)) ≤
+      u ^ (-(1 / 40 : ℝ)) := by
+    refine le_trans ?_ hn
+    apply mul_le_mul_of_nonneg_left _ hl2
+    have : 0 ≤ 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ)) := by positivity
+    linarith
+  have h2 : Real.log (2 * u) * (2.04 * Queue6.Hc X₀ (2 * u) * oscModU θ X₀ u) ≤
+      Real.log (4 * u) ^ 2 * (2.04 * Queue6.Hc X₀ (2 * u) * oscModU θ X₀ u) :=
+    mul_le_mul_of_nonneg_right hl24 hR0
+  linarith
+
 section Sum
 
 variable (hc : Cond θ X₀) (hev : Even X₀)
@@ -620,7 +663,7 @@ theorem hosc_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
     linarith [hW.2]
   set N := (NKc X₀ y).1
   set f : ℕ → ℝ := fun k => (X₀ : ℝ) * 2 ^ k / 4 with hf
-  set F : ℝ → ℝ := fun u => Real.log (2 * u) * Bsc X₀ u with hF
+  set F : ℝ → ℝ := fun u => Real.log (2 * u) * Bsc θ X₀ u with hF
   have hf4 : ∀ k : ℕ, (X₀ : ℝ) ≤ 4 * f k := by
     intro k; simp only [hf]
     have : (1 : ℝ) ≤ 2 ^ k := one_le_pow₀ (by norm_num)
@@ -683,34 +726,32 @@ theorem hosc_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
     refine ⟨by rw [e1, hl], ?_, ?_⟩
     · rw [e2, Real.log_mul (by positivity) (by positivity), hl, Real.log_pow]; push_cast; ring
     · rw [e3, Real.log_mul (by positivity) (by positivity), hl, Real.log_pow]; push_cast; ring
-  have hsplit : ∀ k : ℕ, F (f k) ≤ (((X₀ : ℝ) / 4) * 2 ^ k) ^ (-(1 / 40 : ℝ)) +
+  set ρ : ℕ → ℝ := fun k => Real.log (4 * ((X₀ : ℝ) / 4 * 2 ^ k)) ^ 2 *
+    (2.04 * Queue6.Hc X₀ (2 * ((X₀ : ℝ) / 4 * 2 ^ k)) * oscModU θ X₀ ((X₀ : ℝ) / 4 * 2 ^ k))
+    with hρ
+  have hsplit : ∀ k : ℕ, F (f k) ≤ (((X₀ : ℝ) / 4) * 2 ^ k) ^ (-(1 / 40 : ℝ)) + ρ k +
       2 * (if Lstar X₀ < (Λ' + k * δ) + 3 * δ then
         ((Λ' + k * δ) + 2 * δ) * ((Λ' + k * δ) ^ 4)⁻¹ else 0) := by
     intro k
     obtain ⟨e1, e2, e3⟩ := hlogs k
-    have hn := nonA_le hX (hf4 k)
+    have hn := log_mul_Bsc_le hX (θ := θ) (hf4 k)
     have ef : f k = (X₀ : ℝ) / 4 * 2 ^ k := by simp only [hf]; ring
     simp only [hF]
-    unfold Bsc
-    rw [e3, e1]
-    have e : Real.log (2 * f k) * ((10 * (2.04 * Queue6.Hc X₀ (2 * f k)) + 6) /
-        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 20 : ℝ)) +
-        2 * (if Lstar X₀ < Λ' + k * δ + 3 * δ then ((Λ' + k * δ) ^ 4)⁻¹ else 0)) =
-        Real.log (2 * f k) * ((10 * (2.04 * Queue6.Hc X₀ (2 * f k)) + 6) /
-        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 20 : ℝ))) +
-        2 * (if Lstar X₀ < Λ' + k * δ + 3 * δ then
-          Real.log (2 * f k) * ((Λ' + k * δ) ^ 4)⁻¹ else 0) := by
-      split_ifs <;> ring
-    rw [e]
-    rw [e2] at hn ⊢
+    rw [e3, e1, e2] at hn
     rw [← ef]
-    linarith
+    simp only [hρ, ← ef]
+    rw [e2, e3]
+    refine hn.trans (le_of_eq ?_)
+    split_ifs <;> ring
   have h3 : ∑ k ∈ Finset.range N, F (f k) ≤ 59 * ((X₀ : ℝ) / 4) ^ (-(1 / 40 : ℝ)) +
-      2 * (1.01 / δ * ((Lstar X₀ - 4 * δ) ^ 2)⁻¹) := by
+      1 / 10 ^ 80 + 2 * (1.01 / δ * ((Lstar X₀ - 4 * δ) ^ 2)⁻¹) := by
     refine (Finset.sum_le_sum fun k _ => hsplit k).trans ?_
-    rw [Finset.sum_add_distrib, ← Finset.mul_sum]
+    rw [Finset.sum_add_distrib, Finset.sum_add_distrib, ← Finset.mul_sum]
     have g1 := sum_geom_tenth (show (0 : ℝ) < X₀ / 4 by linarith) N
     have g2 := sum_term_le3 (L := Lstar X₀) (by linarith) hδ7 (by linarith) hΛ'1 N
+    have g3 := sum_oscModU_le hc.hθ hX (c := (X₀ : ℝ) / 4)
+      (by have := KR.WidthReal.X0_ge hX (X₀ := X₀); linarith) N
+    simp only [hρ]
     linarith
   -- numerics
   have hq := X0_quarter_rpow_le hX
@@ -754,7 +795,7 @@ theorem hosc_c2 {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (h
     linarith [hW.2]
   set N := (NKc X₀ y).1
   set f : ℕ → ℝ := fun k => (X₀ : ℝ) * 2 ^ k / 4 with hf
-  set F : ℝ → ℝ := fun u => Real.log (2 * u) * Bsc X₀ u with hF
+  set F : ℝ → ℝ := fun u => Real.log (2 * u) * Bsc θ X₀ u with hF
   have hf4 : ∀ k : ℕ, (X₀ : ℝ) ≤ 4 * f k := by
     intro k; simp only [hf]
     have : (1 : ℝ) ≤ 2 ^ k := one_le_pow₀ (by norm_num)
@@ -817,34 +858,32 @@ theorem hosc_c2 {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (h
     refine ⟨by rw [e1, hl], ?_, ?_⟩
     · rw [e2, Real.log_mul (by positivity) (by positivity), hl, Real.log_pow]; push_cast; ring
     · rw [e3, Real.log_mul (by positivity) (by positivity), hl, Real.log_pow]; push_cast; ring
-  have hsplit : ∀ k : ℕ, F (f k) ≤ (((X₀ : ℝ) / 4) * 2 ^ k) ^ (-(1 / 40 : ℝ)) +
+  set ρ : ℕ → ℝ := fun k => Real.log (4 * ((X₀ : ℝ) / 4 * 2 ^ k)) ^ 2 *
+    (2.04 * Queue6.Hc X₀ (2 * ((X₀ : ℝ) / 4 * 2 ^ k)) * oscModU θ X₀ ((X₀ : ℝ) / 4 * 2 ^ k))
+    with hρ
+  have hsplit : ∀ k : ℕ, F (f k) ≤ (((X₀ : ℝ) / 4) * 2 ^ k) ^ (-(1 / 40 : ℝ)) + ρ k +
       2 * (if Lstar X₀ < (Λ' + k * δ) + 3 * δ then
         ((Λ' + k * δ) + 2 * δ) * ((Λ' + k * δ) ^ 4)⁻¹ else 0) := by
     intro k
     obtain ⟨e1, e2, e3⟩ := hlogs k
-    have hn := nonA_le hX (hf4 k)
+    have hn := log_mul_Bsc_le hX (θ := θ) (hf4 k)
     have ef : f k = (X₀ : ℝ) / 4 * 2 ^ k := by simp only [hf]; ring
     simp only [hF]
-    unfold Bsc
-    rw [e3, e1]
-    have e : Real.log (2 * f k) * ((10 * (2.04 * Queue6.Hc X₀ (2 * f k)) + 6) /
-        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 20 : ℝ)) +
-        2 * (if Lstar X₀ < Λ' + k * δ + 3 * δ then ((Λ' + k * δ) ^ 4)⁻¹ else 0)) =
-        Real.log (2 * f k) * ((10 * (2.04 * Queue6.Hc X₀ (2 * f k)) + 6) /
-        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 20 : ℝ))) +
-        2 * (if Lstar X₀ < Λ' + k * δ + 3 * δ then
-          Real.log (2 * f k) * ((Λ' + k * δ) ^ 4)⁻¹ else 0) := by
-      split_ifs <;> ring
-    rw [e]
-    rw [e2] at hn ⊢
+    rw [e3, e1, e2] at hn
     rw [← ef]
-    linarith
+    simp only [hρ, ← ef]
+    rw [e2, e3]
+    refine hn.trans (le_of_eq ?_)
+    split_ifs <;> ring
   have h3 : ∑ k ∈ Finset.range N, F (f k) ≤ 59 * ((X₀ : ℝ) / 4) ^ (-(1 / 40 : ℝ)) +
-      2 * (1.01 / δ * ((Lstar X₀ - 4 * δ) ^ 2)⁻¹) := by
+      1 / 10 ^ 80 + 2 * (1.01 / δ * ((Lstar X₀ - 4 * δ) ^ 2)⁻¹) := by
     refine (Finset.sum_le_sum fun k _ => hsplit k).trans ?_
-    rw [Finset.sum_add_distrib, ← Finset.mul_sum]
+    rw [Finset.sum_add_distrib, Finset.sum_add_distrib, ← Finset.mul_sum]
     have g1 := sum_geom_tenth (show (0 : ℝ) < X₀ / 4 by linarith) N
     have g2 := sum_term_le3 (L := Lstar X₀) (by linarith) hδ7 (by linarith) hΛ'1 N
+    have g3 := sum_oscModU_le hc.hθ hX (c := (X₀ : ℝ) / 4)
+      (by have := KR.WidthReal.X0_ge hX (X₀ := X₀); linarith) N
+    simp only [hρ]
     linarith
   -- numerics
   have hq := X0_quarter_rpow_le hX

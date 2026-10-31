@@ -89,8 +89,6 @@ lemma KAbsR_eq_zero_of_small (ω : JitterΩ) (g : ℝ → ℝ) {t : ℝ}
 /-- `ρ_𝒜(t) = 0` for `log t ≤ L_* = Λ² e^{s_H} - 1`. -/
 lemma rhoA_eq_zero_of_small (ω : JitterΩ) {t : ℝ} (ht : Real.log t ≤ Lstar X₀) :
     absorbedDensity (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) t = 0 := by
-  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hc.hθ.1])
-  have hb1 : thetaB θ ≤ 1 := (thetaB_le_quarter (by linarith [hc.hθ.2])).trans (by norm_num)
   unfold absorbedDensity
   refine (tsum_congr fun a => ?_).trans tsum_zero
   unfold absorbedBump
@@ -103,19 +101,16 @@ lemma rhoA_eq_zero_of_small (ω : JitterΩ) {t : ℝ} (ht : Real.log t ≤ Lstar
     have hX1 := QueueMono.one_lt_of_logX hX0 hc.hX
     have ha1 : 1 ≤ a := by
       rw [← hev]; exact one_le_evalD hc hlive
-    obtain ⟨hu0, hu⟩ := solveU_spec hb (show 0 ≤ a by linarith)
     have hU : uA X₀ a = solveU (winH X₀) a := rfl
     rw [hU] at h1
     have hhalf : a / 2 ≤ solveU (winH X₀) a := by
-      rcases le_or_gt 1 (solveU (winH X₀) a) with hu1 | hu1
-      · have : solveU (winH X₀) a ^ (thetaB θ) ≤ solveU (winH X₀) a :=
-          Real.rpow_le_self_of_one_le hu1 hb1
+      rcases le_or_gt 2 a with ha2 | ha2
+      · obtain ⟨hu1, hu⟩ := solveU_spec' (winH_isWin hc.hX) ha2
+        have := (winH_isWin hc.hX).le_self hu1
         linarith
       · exfalso
-        have : solveU (winH X₀) a ^ (thetaB θ) ≤ 1 := Real.rpow_le_one hu0 hu1.le hb.le
-        -- then `a ≤ 2`, contradicting `log a > Λ² e^{s_H}`
-        have ha2 : a ≤ 2 := by linarith
-        have : Real.log a ≤ Real.log 2 := Real.log_le_log (by linarith) ha2
+        -- `a < 2` contradicts `log a > Λ² e^{s_H}`
+        have : Real.log a ≤ Real.log 2 := Real.log_le_log (by linarith) ha2.le
         have := Real.log_two_lt_d9
         have : 1 ≤ Real.log X₀ ^ 2 * Real.exp sHroot := by
           have h1 : (1 : ℝ) ≤ Real.log X₀ ^ 2 := by nlinarith [hc.hX]
@@ -432,7 +427,7 @@ lemma fA_bound {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
     unfold absorbedBump
     split_ifs
     · by_cases hm : u ∈ Icc (uA X₀ a) a
-      · rw [Set.indicator_of_mem hm]; exact (Real.rpow_pos_of_pos hu0 _).le
+      · rw [Set.indicator_of_mem hm]; exact (inv_pos.mpr (winH_pos _ _)).le
       · rw [Set.indicator_of_notMem hm]
     · exact le_rfl
   have hXm0 := Xm_pos' hc
@@ -524,7 +519,8 @@ theorem sigmaAResp_R {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : �
   -- the heights read lie below `x₁`
   have hsw : ∀ u : ℝ, 0 < u → u ≤ 2 * y → u < switchOn (swS θ X₀) 0 := by
     intro u hu0 hu
-    show u < Real.exp ((X₀ : ℝ) ^ 2)
+    refine lt_of_lt_of_le ?_ (Real.exp_le_exp.mpr (pow_le_pow_left₀ (Nat.cast_nonneg _)
+      (le_swS θ _) 2) : Real.exp ((X₀ : ℝ) ^ 2) ≤ switchOn (swS θ X₀) 0)
     have h1 : Real.log u ≤ Real.log 2 + Real.log y := by
       rw [← Real.log_mul (by norm_num) hy0.ne']; exact Real.log_le_log hu0 hu
     have h2 : (X₀ : ℝ) ^ (1 / 100 : ℝ) ≤ X₀ := by

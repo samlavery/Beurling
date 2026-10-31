@@ -32,7 +32,7 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
           (constructionScale X₀ (swS θ X₀)))
         (switchOn (swS θ X₀))) x)
     (hlag : ∀ x ≥ (X₀ : ℝ),
-      |(realisedSystem M (capH X₀) U).N x - M.T x| ≤ x ^ lagExponent θ)
+      |(realisedSystem M (capH X₀) U).N x - M.T x| ≤ x ^ lagExponent (1 / 10000))
     (k : ℕ) :
     Lemma48PiecesCount X₀ (heightScale θ (kappa0Param X₀) (switchOn (swS θ X₀) k))
       (earlyOf (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀) (realisedA M (capH X₀) U)
@@ -56,7 +56,7 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
   set rhoA := absorbedDensityCap (winH X₀) A u with hrhoA
   set ak := constructionScale X₀ (swS θ X₀) k with hak
   set xk := xp k with hxk
-  set η := lagExponent θ with hη
+  set η := lagExponent (1 / 10000) with hη
   set D := lagOf P θ X₀ κ A u αd γd xp with hD
   -- numerical facts
   have hθ1 := hθ.1
@@ -65,7 +65,7 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
   have hX1 : (1 : ℝ) < X₀ := one_lt_of_logX hX0 hX
   have h16 := two_pow_le_of_logX hX0 hX
   have hX10 : (10 : ℝ) ≤ X₀ := le_trans (by norm_num) h16
-  obtain ⟨hXa, ha0, haxk, hxka⟩ := constructionScale_spec hX0 hX k
+  obtain ⟨hXa, ha0, haxk, hxka⟩ := constructionScale_spec hX0 hX (le_swS θ _) k
   have hκ0 : 0 < κ := kappaParam_pos (by linarith)
   have hκ1 : κ ≤ 1 := kappaParam_le_one hX1.le
   have hκge : 1 / (X₀ : ℝ) ≤ κ := by
@@ -74,23 +74,20 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
   have hsp : Spacing xp := switchOn_spacing _
   have hxp0 : ∀ j, 0 < xp j := fun j => by linarith [hsp.one_le_all j]
   have hx0k : xp 0 ≤ xk := switchOn_mono _ (Nat.zero_le k)
+  have hSX : (X₀ : ℝ) ^ 2 ≤ swS θ (X₀ : ℝ) ^ 2 :=
+    pow_le_pow_left₀ hX0 (le_swS θ _) 2
   have hxk0 : (X₀ : ℝ) ^ 2 ≤ Real.log xk := by
-    rw [← log_switchOn_zero (X₀ : ℝ)]
-    exact Real.log_le_log (Real.exp_pos _) hx0k
+    have h1 : Real.log (xp 0) ≤ Real.log xk := Real.log_le_log (hxp0 0) hx0k
+    have h0 : Real.log (xp 0) = swS θ (X₀ : ℝ) ^ 2 := log_switchOn_zero _
+    linarith
   have hX1a : (X₀ : ℝ) + 1 ≤ ak := by
     have h1 : 1 + (X₀ : ℝ) ^ 2 ≤ xk := by
-      have := Real.add_one_le_exp ((X₀ : ℝ) ^ 2)
-      have : xp 0 = Real.exp ((X₀ : ℝ) ^ 2) := rfl
+      have := Real.add_one_le_exp (swS θ (X₀ : ℝ) ^ 2)
+      have : xp 0 = Real.exp (swS θ (X₀ : ℝ) ^ 2) := rfl
       linarith
     nlinarith
-  have hη0 : 0 ≤ η := by
-    simp only [hη, lagExponent]
-    exact div_nonneg (le_min (by linarith) (by linarith)) (by norm_num)
-  have hη8 : η ≤ 1 / 8 := by
-    simp only [hη, lagExponent]
-    have := min_le_right θ (1 / 2 - θ)
-    have := min_le_left θ (1 / 2 - θ)
-    linarith
+  have hη0 : 0 ≤ η := by simp only [hη, lagExponent]; norm_num
+  have hη8 : η ≤ 1 / 8 := by simp only [hη, lagExponent]; norm_num
   -- the target below `X₀`, the absorbed set lies above `X₀`
   have hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊ := by
     intro x hx
@@ -112,8 +109,8 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
       have := hsp.one_le_all j
       have h2 : xp 0 ≤ xp j := switchOn_mono _ (Nat.zero_le j)
       have h3 : (1 : ℝ) < xp 0 := by
-        show 1 < Real.exp ((X₀ : ℝ) ^ 2)
-        exact Real.one_lt_exp_iff.mpr (by positivity)
+        show 1 < Real.exp (swS θ (X₀ : ℝ) ^ 2)
+        exact Real.one_lt_exp_iff.mpr (by nlinarith)
       linarith)
   have hαb : ∀ j, |αd j| ≤ 2 := fun j => by
     have := designedAlpha_mem P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀ (swS θ X₀)) hΓpos j
@@ -128,16 +125,17 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
   have hL0 : 0 ≤ L := Finset.sum_nonneg fun j _ => oscLip_nonneg (hxp0 j)
   -- the hypotheses on `ρ̄_A` and `R` on `[X₀, a_k]`
   have hAfin : LocFin A := realisedA_locFin M (capH X₀) U
-  set ρAF := rhoAF (thetaB θ) A hAfin u ak with hρAF
+  have hw := winH_isWin (X₀ := (X₀ : ℝ)) hX
+  set ρAF := rhoAF (winH X₀) A hAfin u ak with hρAF
   have hc : ContHyp X₀ ak rhoA R ρAF (oscPart θ αd γd xp k) (oscDeriv θ αd γd xp k) L := by
-    refine ⟨fun v hv => ?_, measurable_rhoAF _ _ _ _ _, fun v hv => ?_, fun v hv => ?_,
+    refine ⟨fun v hv => ?_, measurable_rhoAF (measurable_winH hX) _ _ _ _, fun v hv => ?_,
+      fun v hv => ?_,
       fun x hx => ?_, measurable_oscDeriv _ _ _ _ _, fun x hx => ?_,
       fun u' hu' v hv huv => ?_, fun u' hu' v hv huv => ?_⟩
-    · exact absorbedDensityCap_eq_rhoAF (thetaB_pos (by linarith)) (thetaB_le_one (by linarith))
-        hAfin (fun n hn => solveU_spec (thetaB_pos (by linarith)) (by linarith [hAlarge n hn]))
-        (by linarith [hv.1])
+    · exact absorbedDensityCap_eq_rhoAF hw
+        hAfin (fun n hn => solveU_spec' hw (by linarith [hAlarge n hn])) (by linarith [hv.1])
         hv.2
-    · exact absorbedDensityCap_nonneg (by linarith [hv.1])
+    · exact absorbedDensityCap_nonneg hw (by linarith [hv.1])
     · refine (absorbedDensityCap_le v).trans ?_
       have : (10 : ℝ) ^ 8 ≤ Real.log v :=
         hX.trans (Real.log_le_log (by linarith) hv.1)
@@ -196,7 +194,7 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
     with hgF
   set c : ℝ := 3 / κ + 3 with hcdef
   have hgFm : Measurable gF :=
-    ((measurable_const.sub (measurable_rhoDetF _ _ _)).sub (measurable_rhoAF _ _ _ _ _)).add
+    ((measurable_const.sub (measurable_rhoDetF _ _ _)).sub (measurable_rhoAF (measurable_winH hX) _ _ _ _)).add
       (measurable_oscDeriv _ _ _ _ _)
   have hgFb : ∀ t ∈ Icc (X₀ : ℝ) ak, |gF t| ≤ c := by
     intro t ht

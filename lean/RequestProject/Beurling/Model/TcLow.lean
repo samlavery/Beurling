@@ -67,8 +67,6 @@ lemma rhoCap_X0 (ω : JitterΩ) :
     absorbedDensityCap (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) X₀ = 0 := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := QueueMono.one_lt_of_logX hX0 hc.hX
-  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hc.hθ.1])
-  have hb1 : thetaB θ ≤ 1 := (thetaB_le_quarter (by linarith [hc.hθ.2])).trans (by norm_num)
   have hρ : absorbedDensity (winH X₀) (absSet X₀ (DF θ X₀ ω)) (uA X₀) X₀ = 0 := by
     unfold absorbedDensity
     refine (tsum_congr fun a => ?_).trans tsum_zero
@@ -77,11 +75,9 @@ lemma rhoCap_X0 (ω : JitterΩ) :
     · obtain ⟨hla, hXa⟩ := absSet_large hc ω ha
       refine Set.indicator_of_notMem ?_ _
       rintro ⟨h1, h2⟩
-      have ha0 : 0 ≤ a := by linarith
-      obtain ⟨hu0, hu⟩ := solveU_spec hb ha0
       have hU : uA X₀ a = solveU (winH X₀) a := rfl
       rw [hU] at h1
-      -- `a ≤ 2u` (as `u^b ≤ max(u, 1)`), so `u ≥ a/2 > X₀`
+      -- `a ≤ 2u` (as `h(u) ≤ u`), so `u ≥ a/2 > X₀`
       have hbig : 4 * (X₀ : ℝ) < a := by
         have : (X₀ : ℝ) ^ 2 < a := by
           have hlog : Real.log ((X₀ : ℝ) ^ 2) < Real.log a := by
@@ -90,13 +86,9 @@ lemma rhoCap_X0 (ω : JitterΩ) :
             linarith
           exact (Real.log_lt_log_iff (by positivity) (by linarith)).mp hlog
         nlinarith [X₀_ge_two_pow hc.hX]
-      rcases le_or_gt 1 (solveU (winH X₀) a) with hu1 | hu1
-      · have : solveU (winH X₀) a ^ (thetaB θ) ≤ solveU (winH X₀) a :=
-          Real.rpow_le_self_of_one_le hu1 hb1
-        linarith
-      · have : solveU (winH X₀) a ^ (thetaB θ) ≤ 1 :=
-          Real.rpow_le_one hu0 hu1.le hb.le
-        linarith
+      obtain ⟨hu1, hu⟩ := solveU_spec' (winH_isWin hc.hX) (show 2 ≤ a by linarith)
+      have := (winH_isWin hc.hX).le_self hu1
+      linarith
     · rfl
   unfold absorbedDensityCap
   rw [hρ]
@@ -108,9 +100,10 @@ omit hc in
 lemma deriv_osc_X0 (hX1 : 1 < (X₀ : ℝ)) (α γ : ℕ → ℝ) :
     deriv (Oscillation.osc θ α γ (switchOn (swS θ X₀))) X₀ = 0 := by
   have hlt : (X₀ : ℝ) < switchOn (swS θ X₀) 0 := by
-    show (X₀ : ℝ) < Real.exp ((X₀ : ℝ) ^ 2)
-    have := Real.add_one_le_exp ((X₀ : ℝ) ^ 2)
-    nlinarith
+    have h1 : (X₀ : ℝ) < Real.exp ((X₀ : ℝ) ^ 2) := by
+      have := Real.add_one_le_exp ((X₀ : ℝ) ^ 2)
+      nlinarith
+    exact h1.trans_le (Real.exp_le_exp.mpr (pow_le_pow_left₀ (by linarith) (le_swS θ _) 2))
   have hev : Oscillation.osc θ α γ (switchOn (swS θ X₀)) =ᶠ[nhds (X₀ : ℝ)] fun _ => 0 := by
     have hmem : Ioo (0 : ℝ) (switchOn (swS θ X₀) 0) ∈ nhds (X₀ : ℝ) :=
       Ioo_mem_nhds (by linarith) hlt

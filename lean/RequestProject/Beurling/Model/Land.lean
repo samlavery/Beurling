@@ -69,19 +69,20 @@ lemma contD_upper_below (D : PrimeData) (hD : LocFinD D) {x x' : ℝ} (hx : (X�
   have hX := h.hX
   have hX1 : (1 : ℝ) < X₀ := QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hX
   have hX1n : 1 ≤ X₀ := by exact_mod_cast hX1.le
-  have hb : 0 < thetaB θ := thetaB_pos (by linarith [h.hθ.1])
+  have hb := winH_isWin (X₀ := (X₀ : ℝ)) hX
+  have hbm := measurable_winH (X₀ := (X₀ : ℝ)) hX
   obtain ⟨hκ0, -⟩ := kappa_facts hX
   have hA := absSet_locFin (X₀ := X₀) hD
   unfold contD
   rw [show uA X₀ = (fun n => solveU (winH X₀) n) from rfl]
   rw [contPart_sub (fun y hy => intervalIntegrable_rhoDet X₀ hκ0 hX1n hy)
-    (fun y hy => intervalIntegrable_absorbedDensityCap _ hA hb hX1 hy) hx hxx]
+    (fun y hy => intervalIntegrable_absorbedDensityCap _ hA hb hbm hX1 hy) hx hxx]
   have h1 : 0 ≤ ∫ u in x..x', Target.rhoDet X₀ (kappaParam X₀) u :=
     intervalIntegral.integral_nonneg hxx fun u hu => rhoDet_nonneg X₀ hκ0 (by linarith [hu.1])
   have h2 : 0 ≤ ∫ u in x..x', absorbedDensityCap (winH X₀) (absSet X₀ D)
       (fun n => solveU (winH X₀) n) u :=
     intervalIntegral.integral_nonneg hxx fun u hu =>
-      (absorbedDensityCap_mem _ (by linarith [hu.1]) _).1
+      (absorbedDensityCap_mem _ hb (by linarith [hu.1]) _).1
   have hsp := switchOn_spacing (swS θ (X₀ : ℝ))
   have hR1 : osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀)) x' = 0 :=
     Target.osc_eq_zero_of_le hsp (by linarith) hx1
@@ -410,9 +411,12 @@ theorem cand_card_le {m i j : ℕ} (hJ : Queue6.AdmJ X₀ m i j) (S : Finset ℕ
     -- the height is beyond `x₁`, so `H = H_std` on `[5P, 8P]`
     have hb5 : b ≤ 5 * P := by rw [hb, hhi]; linarith
     have hlogb : (X₀ : ℝ) ^ 2 < Real.log (5 * P) := by
-      have h1 : Real.exp ((X₀ : ℝ) ^ 2) < 5 * P := lt_of_lt_of_le hb1 hb5
+      have h1 : Real.exp (swS θ (X₀ : ℝ) ^ 2) < 5 * P := lt_of_lt_of_le hb1 hb5
       have := Real.log_lt_log (Real.exp_pos _) h1
-      rwa [Real.log_exp] at this
+      rw [Real.log_exp] at this
+      have : (X₀ : ℝ) ^ 2 ≤ swS θ (X₀ : ℝ) ^ 2 :=
+        pow_le_pow_left₀ (Nat.cast_nonneg _) (le_swS θ _) 2
+      linarith
     have hll : Real.log (X₀ : ℝ) ≤ Real.log (Real.log (5 * P)) := by
       have h2 : (X₀ : ℝ) ≤ (X₀ : ℝ) ^ 2 := by nlinarith
       exact Real.log_le_log (by linarith) (by linarith)

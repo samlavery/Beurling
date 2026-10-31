@@ -33,7 +33,7 @@ lemma smoothCount_mono (X₀ : ℕ) {x x' : ℝ} (h : x ≤ x') :
     exact ⟨hd.1.trans (Nat.floor_mono h), hd.2⟩
 
 /-- On `[X₀, ∞)` the continuous part with `ρ̄_A = 0` is that with the empty absorbed set. -/
-lemma contPart_zero_eq {X₀ : ℕ} (hX1 : (1 : ℝ) < X₀) (κ b : ℝ) (u R : ℝ → ℝ) {x : ℝ}
+lemma contPart_zero_eq {X₀ : ℕ} (hX1 : (1 : ℝ) < X₀) (κ : ℝ) (b u R : ℝ → ℝ) {x : ℝ}
     (hx : (X₀ : ℝ) ≤ x) :
     contPart X₀ κ (fun _ => 0) R x = contPart X₀ κ (absorbedDensityCap b ∅ u) R x := by
   unfold contPart
@@ -82,11 +82,12 @@ theorem theorem_5_24_data {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} (D : Prim
     (hfl : ∀ u, u < Xm → P.N u = ⌊u⌋₊)
     (hlag : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
       |P.N u - Target.target X₀ (LocalPNT.kap X₀) cntA rhoA
-        (osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀))) u| ≤ u ^ lagExponent θ)
-    (hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc → |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| ≤ 2 * u ^ (thetaB θ))
+        (osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn (swS θ X₀))) u| ≤ u ^ lagExponent (1 / 10000))
+    (hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc → |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| ≤ 2 * winH X₀ u)
     (hy : (X₀ : ℝ) ≤ y) (hyz : y ≤ zc) :
     LocalPNT.Theorem524Concl P X₀ y :=
-  LocalPNT.theorem_5_24_of_lag hθ hX hev (fun k => abs_alphaD_le hX D k) le_rfl
+  LocalPNT.theorem_5_24_of_lag hθ hX hev (fun k => abs_alphaD_le hX D k)
+    (Real.exp_le_exp.mpr (pow_le_pow_left₀ (Nat.cast_nonneg _) (le_swS θ _) 2))
     (switchOn_spacing _).exp_le (T0_mono_designed hθ hX hHB (gammaD_range hX D)) cntA rhoA
     hXm hXmX hfl hlag hA hy hyz
 

@@ -137,7 +137,7 @@ structure RestMargin (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) (nb : ℕ
       ((fun x => KR.RML6K.aK (CNt X₀) (SK θ X₀ ω nb x) (Queue6.Hc X₀) x) t +
         (fun x => 35.8 * CNt X₀ * 10 * ∑ i ∈ Finset.range (Jc X₀ x + 1), Real.log (3 *
           (Xm X₀ * 2 ^ i)) ^ 2 *
-            (obG X₀ i + FrBv θ X₀ ω nb i)) t + 6 * Real.log t / Queue6.Hc X₀ t) +
+            (obG θ X₀ i + FrBv θ X₀ ω nb i)) t + 6 * Real.log t / Queue6.Hc X₀ t) +
               (fun _ => EBRc) t + (fun x => jXdef (PR θ X₀ ω) (Queue6.Hc X₀) (twR θ X₀ ω)
                 (Xm X₀) X₀ (epsH / 10) lamH (jzX X₀) (NKc X₀) x) t +
       54 * (sηB X₀) + 6 * Real.log t / Queue6.Hc X₀ t + 6.5 * (RML7.canonP X₀ epsH ES jP).ES + VX
@@ -237,7 +237,7 @@ noncomputable def realMarginLoc_of (hc : Cond θ X₀) (hev : Even X₀) {ω : J
   hTLBd := hTLBd_c hc hev ω
   a := fun x => KR.RML6K.aK (CNt X₀) (SK θ X₀ ω Rs.nb x) (Queue6.Hc X₀) x
   bb := fun x => 35.8 * CNt X₀ * 10 * ∑ i ∈ Finset.range (Jc X₀ x + 1), Real.log (3 *
-    (Xm X₀ * 2 ^ i)) ^ 2 * (obG X₀ i + FrBv θ X₀ ω Rs.nb i)
+    (Xm X₀ * 2 ^ i)) ^ 2 * (obG θ X₀ i + FrBv θ X₀ ω Rs.nb i)
   hK := hK_c hc hev hb (tnpR hc hev hbs hN.2.1 hX1) (Queue6.x0sHyp_G0
     (e3Family θ X₀) hc hev hG hN hbt hbs (Zc_facts hc hb).1 le_rfl (by linarith [hc.hθ.2]))
       (SK θ X₀ ω Rs.nb) (fun _ _ u => GK θ X₀ ω Rs.nb u) (hFr_c hc hev hb hbt hG.1

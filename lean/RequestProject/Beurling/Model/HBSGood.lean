@@ -78,8 +78,7 @@ theorem LandingInit.abs_le_loc (hX : 10 ^ 8 ≤ Real.log X₀) {N W x : ℝ}
 
 /-- **The lag bound at one height** (Corollary 3.8 / Proposition 4.1, `lag_of_slotData`), from
 the landing data at `x` and the queue bound at the slot of `x` only. -/
-theorem lag_local {θ : ℝ} (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
-    (hX : 10 ^ 8 ≤ Real.log X₀) (N : ℝ → ℝ) (κp : ℝ → ℝ)
+theorem lag_local (hX : 10 ^ 8 ≤ Real.log X₀) (N : ℝ → ℝ) (κp : ℝ → ℝ)
     (hκp : ∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x)
     (hland : ∀ x ≥ (X₀ : ℝ), (X₀ : ℝ) + 2 * capH X₀ x ≤ x →
       M.Landing (N x) (capH X₀ x / 2 * (1 + κp x / Real.log x)) x)
@@ -87,7 +86,7 @@ theorem lag_local {θ : ℝ} (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 1
       M.LandingInit (N x) (capH X₀ X₀ / 2 * (1 + κp X₀ / Real.log X₀)) x)
     {x : ℝ} (hx : (X₀ : ℝ) ≤ x)
     (hQ : (M.queue (M.slotIdx x) : ℝ) ≤ queueBScale X₀ (M.slot (M.slotIdx x))) :
-    |N x - M.T x| ≤ x ^ lagExponent θ := by
+    |N x - M.T x| ≤ x ^ lagExponent (1 / 10000) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   rcases le_or_gt ((X₀ : ℝ) + 2 * capH X₀ x) x with hlate | hearly
   · have hLx : 0 < Real.log x := by
@@ -101,9 +100,9 @@ theorem lag_local {θ : ℝ} (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 1
         -(capH X₀ x / 2) * (1 + κp x / Real.log x) := by ring
     rw [e] at h12
     have hB0 := queueB_nonneg hX0 hX hx
-    exact lag_rpow_of_queue (by linarith) hθ2 hX0 hX hx
+    exact lag_rpow_of_queue (by norm_num) (by norm_num) hX0 hX hx
       (abs_lag_le_of_two_sided hLx (hκp x hx).1 (hκp x hx).2 hH hB0 le_rfl h12.1 h12.2)
-  · exact lag_rpow_initial hθ1 hθ2 hX0 hX hx (hκp X₀ le_rfl).1 (hκp X₀ le_rfl).2
+  · exact lag_rpow_initial (by norm_num) (by norm_num) hX0 hX hx (hκp X₀ le_rfl).1 (hκp X₀ le_rfl).2
       (LandingInit.abs_le_loc M hX hx hearly hQ (hinit x hx hearly))
 
 end Lag
@@ -116,7 +115,7 @@ open BSCert.Capl AbsorbEmpty
 `Construction.lemma626_local`, with the cluster event `ClusterUpTo P X₀ (4v/log¹¹ v) M̄₁(v)` at
 `v` only (Lemma 6.26 depends on Proposition 6.11 at the height `v` and (HBS) up to `2y(2v)`). -/
 theorem lemma626_at {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℝ}
-    {latest : ℝ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {θ X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
+    {latest : ℝ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
     (hX : 10 ^ 8 ≤ Real.log X₀)
     (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc (0 : ℝ) 1)
     (hX0m : 100 ≤ Real.log X0m) (hX0mX : (X₀ : ℝ) / 2 + 1 ≤ X0m)
@@ -244,10 +243,11 @@ theorem hbs_local {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
     linarith
   have hfl : ∀ w, 1 ≤ w → w < X0m → P.N w = ⌊w⌋₊ :=
     fun w hw1 hw2 => realised_floor_eq hok hω hX hTlow hw1 hw2
-  have hlag : ∀ x, (X₀ : ℝ) ≤ x → x ≤ Z → |P.N x - M.T x| ≤ x ^ lagExponent θ :=
-    fun x hx hxZ => lag_local M hθ.1 hθ.2 hX P.N κp hκp hland hinit hx (hQ x hx hxZ)
-  have hAu := realisedU_spec hok hω hX hTlow (θ := θ) (by linarith [hθ.1]) (by linarith [hθ.2])
-  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
+  have hlag : ∀ x, (X₀ : ℝ) ≤ x → x ≤ Z → |P.N x - M.T x| ≤ x ^ lagExponent (1 / 10000) :=
+    fun x hx hxZ => lag_local M hX P.N κp hκp hland hinit hx (hQ x hx hxZ)
+  have hAu := realisedU_spec hok hω hX hTlow
+  have hb := winH_isWin (X₀ := (X₀ : ℝ)) hX
+  have hbm := measurable_winH (X₀ := (X₀ : ℝ)) hX
   -- (HBS) up to `z` from the error bound up to `z`
   have hHBS_of : ∀ z, (∀ v, X0m ≤ v → v ≤ z → |P.N v - ⌊v⌋₊| ≤ hbsEps X₀ v * v) →
       P.HBS X0m z (1 / 1000) (1 / 1000) (hbsEps X₀) := by
@@ -275,7 +275,7 @@ theorem hbs_local {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
       linarith)
     simp only [target, lt_irrefl, if_false, sub_self, intervalIntegral.integral_same, hcA]
     ring
-  have hNX0 : P.N X₀ ≤ X₀ + (X₀ : ℝ) ^ lagExponent θ := by
+  have hNX0 : P.N X₀ ≤ X₀ + (X₀ : ℝ) ^ lagExponent (1 / 10000) := by
     have := hlag X₀ le_rfl hZ
     rw [hTX0] at this
     linarith [(abs_le.mp this).2]
@@ -307,12 +307,11 @@ theorem hbs_local {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
           · have h1 : 2 * absorbYAt X₀ (2 * u) ≤ v := by
               rcases two_absorbYAt_two_le hX0 hX hu with hy | hy <;> linarith
             linarith
-        have hloc := lemma626_at C hX hθ.1 (by linarith [hθ.2]) rfl hω hX0mlog hX0m2 hfl hu
+        have hloc := lemma626_at C hX rfl hω hX0mlog hX0m2 hfl hu
           (hcl u hu (huv.trans hvZ)) hHBSu
         exact absorbedDensity_le_of_localCount hb (by linarith) hAu C.locFin hu hloc
-      have hW : AbsorbedWindowHyp (thetaB θ) X₀ A (fun n => solveU (winH X₀) n) :=
-        ⟨hb, thetaB_le_one (by linarith [hθ.2]), hX1.le, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2,
-          C.locFin⟩
+      have hW : AbsorbedWindowHyp (winH X₀) X₀ A (fun n => solveU (winH X₀) n) :=
+        ⟨hb, hX1.le, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, C.locFin⟩
       have hEA := absorbed_target_error_cap_loc hW (by linarith) hhigh hdens
       have hsp := switchOn_spacing (swS θ (X₀ : ℝ))
       have hα : ∀ k, |designedAlpha P θ X₀ (kappaParam X₀) A (fun n => solveU (winH X₀) n)
@@ -359,8 +358,8 @@ theorem lemma626_horizon {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
       (4 * v / Real.log v ^ 11) (capM1 X₀ v)) :
     ∀ u, (X₀ : ℝ) ≤ u → 2 * absorbYAt X₀ (2 * u) ≤ Z →
       ClusterUpTo (realisedSystem M (capH X₀) ω) X₀ (4 * u / Real.log u ^ 11) (capM1 X₀ u) →
-      (Absorbed.localCountA (realisedA M (capH X₀) ω) u (u + u ^ (thetaB θ)) : ℝ) ≤
-        u ^ (thetaB θ) * Real.log u ^ (-4 : ℤ) := by
+      (Absorbed.localCountA (realisedA M (capH X₀) ω) u (u + Absorbed.winH X₀ u) : ℝ) ≤
+        Absorbed.winH X₀ u * Real.log u ^ (-4 : ℤ) := by
   set P := realisedSystem M (capH X₀) ω with hP
   set A := realisedA M (capH X₀) ω with hAdef
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
@@ -388,10 +387,11 @@ theorem lemma626_horizon {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
     linarith
   have hfl : ∀ w, 1 ≤ w → w < X0m → P.N w = ⌊w⌋₊ :=
     fun w hw1 hw2 => realised_floor_eq hok hω hX hTlow hw1 hw2
-  have hlag : ∀ x, (X₀ : ℝ) ≤ x → x ≤ Z → |P.N x - M.T x| ≤ x ^ lagExponent θ :=
-    fun x hx hxZ => lag_local M hθ.1 hθ.2 hX P.N κp hκp hland hinit hx (hQ x hx hxZ)
-  have hAu := realisedU_spec hok hω hX hTlow (θ := θ) (by linarith [hθ.1]) (by linarith [hθ.2])
-  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
+  have hlag : ∀ x, (X₀ : ℝ) ≤ x → x ≤ Z → |P.N x - M.T x| ≤ x ^ lagExponent (1 / 10000) :=
+    fun x hx hxZ => lag_local M hX P.N κp hκp hland hinit hx (hQ x hx hxZ)
+  have hAu := realisedU_spec hok hω hX hTlow
+  have hb := winH_isWin (X₀ := (X₀ : ℝ)) hX
+  have hbm := measurable_winH (X₀ := (X₀ : ℝ)) hX
   -- (HBS) up to `z` from the error bound up to `z`
   have hHBS_of : ∀ z, (∀ v, X0m ≤ v → v ≤ z → |P.N v - ⌊v⌋₊| ≤ hbsEps X₀ v * v) →
       P.HBS X0m z (1 / 1000) (1 / 1000) (hbsEps X₀) := by
@@ -415,7 +415,7 @@ theorem lemma626_horizon {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
   intro u hu huZ hclu
   have hHBSu : P.HBS X0m (2 * absorbYAt X₀ (2 * u)) (1 / 1000) (1 / 1000) (hbsEps X₀) :=
     hHBS_of _ (fun w hw1 hw2 => hmain w hw1 (hw2.trans huZ))
-  exact lemma626_at C hX hθ.1 (by linarith [hθ.2]) rfl hω hX0mlog hX0m2 hfl hu hclu hHBSu
+  exact lemma626_at C hX rfl hω hX0mlog hX0m2 hfl hu hclu hHBSu
 
 end HBS
 

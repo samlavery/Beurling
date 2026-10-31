@@ -229,21 +229,21 @@ lemma intervalIntegrable_rhoDet (X₀ : ℕ) {κ x : ℝ} (hκ : 0 < κ) (hX0 : 
 
 section Absorbed
 
-variable {b : ℝ} (A : Set ℝ)
+variable {w : ℝ → ℝ} (A : Set ℝ)
 
-lemma measurable_absorbedBump (b : ℝ) (u : ℝ → ℝ) (a : ℝ) :
-    Measurable (Absorbed.absorbedBump b A u a) := by
+lemma measurable_absorbedBump (hwm : Measurable w) (u : ℝ → ℝ) (a : ℝ) :
+    Measurable (Absorbed.absorbedBump w A u a) := by
   unfold Absorbed.absorbedBump
   split_ifs
-  · exact (measurable_id.pow_const _).indicator measurableSet_Icc
+  · exact hwm.inv.indicator measurableSet_Icc
   · exact measurable_const
 
-/-- On `[0, x]` only the `a ≤ x + x^b` contribute to `ρ_A` (as `u_a + u_a^b = a`). -/
-lemma absorbedDensity_eq_sum (hA : Absorbed.LocFin A) (hb : 0 < b) {x v : ℝ} (hv0 : 0 ≤ v)
-    (hvx : v ≤ x) :
-    Absorbed.absorbedDensity b A (fun n => Construction.solveU b n) v =
-      ∑ a ∈ Absorbed.below hA (x + x ^ b),
-        Absorbed.absorbedBump b A (fun n => Construction.solveU b n) a v := by
+/-- On `[0, x]` only the `a ≤ 2x + 2` contribute to `ρ_A` (as `u_a + h(u_a) = a` for `a ≥ 2`). -/
+lemma absorbedDensity_eq_sum (hA : Absorbed.LocFin A) (hw : Absorbed.IsWin w) {x v : ℝ}
+    (hv0 : 0 ≤ v) (hvx : v ≤ x) :
+    Absorbed.absorbedDensity w A (fun n => Construction.solveU w n) v =
+      ∑ a ∈ Absorbed.below hA (2 * x + 2),
+        Absorbed.absorbedBump w A (fun n => Construction.solveU w n) a v := by
   unfold Absorbed.absorbedDensity
   apply tsum_eq_sum
   intro a ha
@@ -254,53 +254,54 @@ lemma absorbedDensity_eq_sum (hA : Absorbed.LocFin A) (hb : 0 < b) {x v : ℝ} (
     apply ha
     rw [Absorbed.mem_below]
     refine ⟨hA', ?_⟩
-    have ha0 : 0 ≤ a := le_trans hv0 hmem.2
-    obtain ⟨h0, heq⟩ := Construction.solveU_spec hb ha0
-    have h1 : Construction.solveU b a ^ b ≤ v ^ b := Real.rpow_le_rpow h0 hmem.1 hb.le
-    have h2 : v ^ b ≤ x ^ b := Real.rpow_le_rpow hv0 hvx hb.le
+    rcases lt_or_ge a 2 with ha2 | ha2
+    · linarith
+    obtain ⟨h0, heq⟩ := Construction.solveU_spec' hw ha2
+    have h1 : w (Construction.solveU w a) ≤ w v := hw.mono' (by linarith) hmem.1
+    have h2 : w v ≤ v := hw.le_self (by linarith [hmem.1])
     linarith [hmem.1]
   · rfl
 
-lemma absorbedDensity_nonneg {v : ℝ} (hv : 0 ≤ v) (u : ℝ → ℝ) :
-    0 ≤ Absorbed.absorbedDensity b A u v := by
+lemma absorbedDensity_nonneg (hw : Absorbed.IsWin w) {v : ℝ} (hv : 0 < v) (u : ℝ → ℝ) :
+    0 ≤ Absorbed.absorbedDensity w A u v := by
   unfold Absorbed.absorbedDensity
   refine tsum_nonneg fun a => ?_
   unfold Absorbed.absorbedBump
   split_ifs
-  · exact Set.indicator_apply_nonneg (fun _ => Real.rpow_nonneg hv _)
+  · exact Set.indicator_apply_nonneg (fun _ => inv_nonneg.mpr (hw.pos v hv).le)
   · exact le_rfl
 
 /-- `0 ≤ ρ̄_A(v) ≤ 0.1/log v` for `v ≥ 1`. -/
-lemma absorbedDensityCap_mem {v : ℝ} (hv : 1 ≤ v) (u : ℝ → ℝ) :
-    0 ≤ Absorbed.absorbedDensityCap b A u v ∧
-      Absorbed.absorbedDensityCap b A u v ≤ 0.1 / Real.log v := by
+lemma absorbedDensityCap_mem (hw : Absorbed.IsWin w) {v : ℝ} (hv : 1 ≤ v) (u : ℝ → ℝ) :
+    0 ≤ Absorbed.absorbedDensityCap w A u v ∧
+      Absorbed.absorbedDensityCap w A u v ≤ 0.1 / Real.log v := by
   unfold Absorbed.absorbedDensityCap
-  exact ⟨le_min (absorbedDensity_nonneg A (by linarith) u)
+  exact ⟨le_min (absorbedDensity_nonneg A hw (by linarith) u)
     (div_nonneg (by norm_num) (Real.log_nonneg hv)), min_le_right _ _⟩
 
 /-- `ρ̄_A` is interval integrable on `[X, x]`, `X > 1`, for every locally finite `A`. -/
-lemma intervalIntegrable_absorbedDensityCap (hA : Absorbed.LocFin A) (hb : 0 < b) {X x : ℝ}
-    (hX : 1 < X) (hXx : X ≤ x) :
-    IntervalIntegrable (Absorbed.absorbedDensityCap b A (fun n => Construction.solveU b n))
+lemma intervalIntegrable_absorbedDensityCap (hA : Absorbed.LocFin A) (hw : Absorbed.IsWin w)
+    (hwm : Measurable w) {X x : ℝ} (hX : 1 < X) (hXx : X ≤ x) :
+    IntervalIntegrable (Absorbed.absorbedDensityCap w A (fun n => Construction.solveU w n))
       volume X x := by
   rw [intervalIntegrable_iff_integrableOn_Ioc_of_le hXx]
-  set g : ℝ → ℝ := fun v => min (∑ a ∈ Absorbed.below hA (x + x ^ b),
-    Absorbed.absorbedBump b A (fun n => Construction.solveU b n) a v) (0.1 / Real.log v) with hg
+  set g : ℝ → ℝ := fun v => min (∑ a ∈ Absorbed.below hA (2 * x + 2),
+    Absorbed.absorbedBump w A (fun n => Construction.solveU w n) a v) (0.1 / Real.log v) with hg
   have hgm : Measurable g :=
-    (Finset.measurable_sum _ fun a _ => measurable_absorbedBump A b _ a).min
+    (Finset.measurable_sum _ fun a _ => measurable_absorbedBump A hwm _ a).min
       (measurable_const.div Real.measurable_log)
-  have heq : EqOn (Absorbed.absorbedDensityCap b A (fun n => Construction.solveU b n)) g
+  have heq : EqOn (Absorbed.absorbedDensityCap w A (fun n => Construction.solveU w n)) g
       (Ioc X x) := by
     intro v hv
     simp only [hg, Absorbed.absorbedDensityCap]
-    rw [absorbedDensity_eq_sum A hA hb (by linarith [hv.1]) hv.2]
+    rw [absorbedDensity_eq_sum A hA hw (by linarith [hv.1]) hv.2]
   refine IntegrableOn.congr_fun ?_ heq.symm measurableSet_Ioc
   refine ⟨hgm.aestronglyMeasurable, HasFiniteIntegral.restrict_of_bounded (C := 0.1 / Real.log X)
     measure_Ioc_lt_top ?_⟩
   refine (ae_restrict_iff' measurableSet_Ioc).mpr (Eventually.of_forall fun v hv => ?_)
   have hv1 : 1 ≤ v := by linarith [hv.1]
   rw [← heq hv]
-  obtain ⟨h0, h1⟩ := absorbedDensityCap_mem A hv1 (b := b) (fun n => Construction.solveU b n)
+  obtain ⟨h0, h1⟩ := absorbedDensityCap_mem A hw hv1 (fun n => Construction.solveU w n)
   rw [Real.norm_eq_abs, abs_of_nonneg h0]
   refine h1.trans ?_
   have hlX : 0 < Real.log X := Real.log_pos hX
@@ -471,6 +472,14 @@ lemma log_switchOn_ge (X : ℝ) (k : ℕ) :
     rw [pow_succ]
     linarith
 
+/-- `log x⁺_k ≥ 2^k X²` for a seed `S ≥ X ≥ 0`. -/
+lemma log_switchOn_ge_of {X S : ℝ} (hX0 : 0 ≤ X) (hXS : X ≤ S) (k : ℕ) :
+    2 ^ k * X ^ 2 ≤ Real.log (Construction.switchOn S k) := by
+  have h := log_switchOn_ge S k
+  have : X ^ 2 ≤ S ^ 2 := pow_le_pow_left₀ hX0 hXS 2
+  have h2 : (0 : ℝ) ≤ 2 ^ k := by positivity
+  nlinarith
+
 lemma nat_lt_switchOn {X : ℝ} (hX : 1 ≤ X) (k : ℕ) : (k : ℝ) < Construction.switchOn X k := by
   have h1 := log_switchOn_ge X k
   have h2 : (k : ℝ) < 2 ^ k := by exact_mod_cast Nat.lt_two_pow_self
@@ -481,23 +490,23 @@ lemma nat_lt_switchOn {X : ℝ} (hX : 1 ≤ X) (k : ℕ) : (k : ℝ) < Construct
 
 /-- **Lemma G1 for the designed oscillations** (eq. (ampl) with `κ₀ = X⁻¹`): for `x ≥ x_k`,
 `|R_k'(x)| ≤ 2 κ₀ (x_k/x)^{1/2}/L_k`, `x_k = switchOn X k`, `L_k = log x_k`. -/
-lemma abs_deriv_oscTerm_designed {θ X : ℝ} (hθ0 : 0 ≤ θ) (hθ2 : θ ≤ 1 / 2) (hX : 10 ≤ X)
-    (k : ℕ) {γ x : ℝ}
+lemma abs_deriv_oscTerm_designed {θ X S : ℝ} (hθ0 : 0 ≤ θ) (hθ2 : θ ≤ 1 / 2) (hX : 10 ≤ X)
+    (hXS : X ≤ S) (k : ℕ) {γ x : ℝ}
     (hγ : γ ∈ Icc (DesignedZero.heightScale θ (Construction.kappa0Param X)
-        (Construction.switchOn X k))
-      (2 * DesignedZero.heightScale θ (Construction.kappa0Param X) (Construction.switchOn X k)))
-    (hx : Construction.switchOn X k ≤ x) :
+        (Construction.switchOn S k))
+      (2 * DesignedZero.heightScale θ (Construction.kappa0Param X) (Construction.switchOn S k)))
+    (hx : Construction.switchOn S k ≤ x) :
     |deriv (Oscillation.oscTerm θ (DesignedZero.amplitudeOf θ (Construction.kappa0Param X) γ
-      (Construction.switchOn X k)) γ (Construction.switchOn X k)) x| ≤
-      2 * Real.sqrt (Construction.switchOn X k / x) /
-        (X * Real.log (Construction.switchOn X k)) := by
-  set xk := Construction.switchOn X k with hxkdef
+      (Construction.switchOn S k)) γ (Construction.switchOn S k)) x| ≤
+      2 * Real.sqrt (Construction.switchOn S k / x) /
+        (X * Real.log (Construction.switchOn S k)) := by
+  set xk := Construction.switchOn S k with hxkdef
   set L := Real.log xk with hLdef
-  have hLk : 2 ^ k * X ^ 2 ≤ L := log_switchOn_ge X k
+  have hLk : 2 ^ k * X ^ 2 ≤ L := log_switchOn_ge_of (by linarith) hXS k
   have hX2 : X ^ 2 ≤ L :=
     le_trans (le_mul_of_one_le_left (by positivity) (one_le_pow₀ (by norm_num))) hLk
   have hL : 100 ≤ L := by nlinarith
-  have hxk0 : 0 < xk := Construction.switchOn_pos X k
+  have hxk0 : 0 < xk := Construction.switchOn_pos S k
   have hxk1 : 1 < xk := by
     rw [← Real.exp_log hxk0, ← hLdef]; exact Real.one_lt_exp_iff.mpr (by linarith)
   have hX0 : 0 < X := by linarith
@@ -561,41 +570,43 @@ theorem abs_deriv_osc_le {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
     |deriv (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
         (Construction.switchOn (swS θ X₀)) γ) γ (Construction.switchOn (swS θ X₀))) x| ≤ 0.02 / Real.log x := by
   set X : ℝ := (X₀ : ℝ) with hXdef
+  set S : ℝ := swS θ X with hSdef
   have hX1 : 1 < X := QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hX
+  have hXS : X ≤ S := le_swS θ X
   have hx0 : 0 < x := by linarith
   have hℓ : 10 ^ 8 ≤ Real.log x := hX.trans (Real.log_le_log (by linarith) hx)
   have hℓ0 : 0 < Real.log x := by linarith
   have hX2 : (10 : ℝ) ^ 8 ≤ X := by
     have := Real.add_one_le_exp (Real.log X); rw [Real.exp_log (by linarith)] at this; linarith
-  rw [(hasDerivAt_osc _ γ hX1.le hx0).deriv]
-  set α := Construction.amplitudes θ (Construction.kappa0Param X₀) (Construction.switchOn X) γ
+  rw [(hasDerivAt_osc _ γ (hX1.le.trans hXS) hx0).deriv]
+  set α := Construction.amplitudes θ (Construction.kappa0Param X₀) (Construction.switchOn S) γ
   set ℓ := Real.log x with hℓdef
-  set W : ℕ → ℝ := fun k => if Construction.switchOn X k < x ∧ x < Construction.switchOn X (k + 1)
+  set W : ℕ → ℝ := fun k => if Construction.switchOn S k < x ∧ x < Construction.switchOn S (k + 1)
     then 4 / (X * ℓ) else 0 with hW
-  have hterm : ∀ k, |deriv (Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn X k)) x| ≤
+  have hterm : ∀ k, |deriv (Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn S k)) x| ≤
       W k + 64 / (X ^ 5 * ℓ) * (1 / 4) ^ k := by
     intro k
-    have hxk := Construction.switchOn_pos X k
-    have hLk := log_switchOn_ge X k
+    have hxk := Construction.switchOn_pos S k
+    have hLk := log_switchOn_ge_of (by linarith) hXS k
     have hX4 : (0 : ℝ) < X ^ 4 := by positivity
     have hW0 : 0 ≤ W k := by simp only [hW]; split_ifs <;> positivity
     have hg0 : 0 ≤ 64 / (X ^ 5 * ℓ) * (1 / 4 : ℝ) ^ k := by positivity
-    rcases le_or_gt x (Construction.switchOn X k) with h | h
+    rcases le_or_gt x (Construction.switchOn S k) with h | h
     · rw [deriv_oscTerm_of_le hx0 h, abs_zero]; positivity
-    · set xk := Construction.switchOn X k with hxkdef
+    · set xk := Construction.switchOn S k with hxkdef
       set L := Real.log xk with hLdef
       have h2k : (1 : ℝ) ≤ 2 ^ k := one_le_pow₀ (by norm_num)
       have hL1 : 1 ≤ L := by nlinarith
       have hL0 : 0 < L := by linarith
       have hb : |deriv (Oscillation.oscTerm θ (α k) (γ k) xk) x| ≤
           2 * Real.sqrt (xk / x) / (X * L) :=
-        abs_deriv_oscTerm_designed (by linarith [hθ.1]) (by linarith [hθ.2]) (by linarith) k
+        abs_deriv_oscTerm_designed (by linarith [hθ.1]) (by linarith [hθ.2]) (by linarith) hXS k
           (hγ k) h.le
       have hs0 := Real.sqrt_nonneg (xk / x)
       have hb' : |deriv (Oscillation.oscTerm θ (α k) (γ k) xk) x| ≤
           2 / (X * L * ℓ) * (Real.sqrt (xk / x) * ℓ) := by
         refine hb.trans (le_of_eq ?_); field_simp
-      rcases lt_or_ge x (Construction.switchOn X (k + 1)) with h1 | h1
+      rcases lt_or_ge x (Construction.switchOn S (k + 1)) with h1 | h1
       · have hw : W k = 4 / (X * ℓ) := by simp only [hW]; rw [if_pos ⟨h, h1⟩]
         have hE := sqrt_div_mul_log_le hxk hL1 h.le
         have : 2 / (X * L * ℓ) * (Real.sqrt (xk / x) * ℓ) ≤ 2 / (X * L * ℓ) * (2 * L) :=
@@ -627,11 +638,11 @@ theorem abs_deriv_osc_le {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
             nlinarith [mul_le_mul_of_nonneg_left hL1 (show 0 ≤ X * ℓ * xk by positivity)]
           nlinarith
         linarith
-  have hsW := sum_window_le X x (4 / (X * ℓ)) (by positivity) (⌈x⌉₊ + 1)
+  have hsW := sum_window_le S x (4 / (X * ℓ)) (by positivity) (⌈x⌉₊ + 1)
   calc |∑ k ∈ Finset.range (⌈x⌉₊ + 1),
-        deriv (Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn X k)) x|
+        deriv (Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn S k)) x|
       ≤ ∑ k ∈ Finset.range (⌈x⌉₊ + 1),
-        |deriv (Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn X k)) x| :=
+        |deriv (Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn S k)) x| :=
         Finset.abs_sum_le_sum_abs _ _
     _ ≤ ∑ k ∈ Finset.range (⌈x⌉₊ + 1), (W k + 64 / (X ^ 5 * ℓ) * (1 / 4) ^ k) :=
         Finset.sum_le_sum fun k _ => hterm k
@@ -664,7 +675,7 @@ theorem osc_lipschitz {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)
   have h := Convex.norm_image_sub_le_of_norm_deriv_le (𝕜 := ℝ) (s := Ici (X₀ : ℝ))
     (f := Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
         (Construction.switchOn (swS θ X₀)) γ) γ (Construction.switchOn (swS θ X₀))) (C := 0.01)
-    (fun y hy => (hasDerivAt_osc _ γ hX1.le (by linarith [mem_Ici.mp hy])).differentiableAt)
+    (fun y hy => (hasDerivAt_osc _ γ (hX1.le.trans (le_swS θ _)) (by linarith [mem_Ici.mp hy])).differentiableAt)
     (fun y hy => by
       have hy' : (X₀ : ℝ) ≤ y := hy
       have hl : 10 ^ 8 ≤ Real.log y := hX.trans (Real.log_le_log (by linarith) hy')
@@ -703,16 +714,16 @@ theorem contPart_upper {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000
           (Construction.switchOn (swS θ X₀)) γ) γ (Construction.switchOn (swS θ X₀))) x ≤ 1.01 * (x' - x) := by
   have hX1 : (1 : ℝ) < X₀ := QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hX
   have hX1n : 1 ≤ X₀ := by exact_mod_cast hX1.le
-  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
+  have hw := winH_isWin (X₀ := (X₀ : ℝ)) hX
   obtain ⟨hκ0, -⟩ := kappa_facts hX
   rw [contPart_sub (fun y hy => intervalIntegrable_rhoDet X₀ hκ0 hX1n hy)
-    (fun y hy => intervalIntegrable_absorbedDensityCap A hA hb hX1 hy) hx hxx]
+    (fun y hy => intervalIntegrable_absorbedDensityCap A hA hw (measurable_winH hX) hX1 hy) hx hxx]
   have h1 : 0 ≤ ∫ u in x..x', Target.rhoDet X₀ (Construction.kappaParam X₀) u :=
     intervalIntegral.integral_nonneg hxx fun u hu => rhoDet_nonneg X₀ hκ0 (by linarith [hu.1])
   have h2 : 0 ≤ ∫ u in x..x',
       Absorbed.absorbedDensityCap (winH X₀) A (fun n => Construction.solveU (winH X₀) n) u :=
     intervalIntegral.integral_nonneg hxx fun u hu =>
-      (absorbedDensityCap_mem A (by linarith [hu.1]) _).1
+      (absorbedDensityCap_mem A hw (by linarith [hu.1]) _).1
   have h3 := osc_lipschitz hθ hX hγ hx (hx.trans hxx)
   rw [abs_of_nonneg (by linarith : (0 : ℝ) ≤ x' - x)] at h3
   have h4 := (abs_le.mp h3).2
@@ -745,16 +756,17 @@ theorem contPart_continuousOn {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 
           (Construction.switchOn (swS θ X₀)) γ) γ (Construction.switchOn (swS θ X₀)))) (Ici (X₀ : ℝ)) := by
   have hX1 : (1 : ℝ) < X₀ := QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hX
   have hX1n : 1 ≤ X₀ := by exact_mod_cast hX1.le
-  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
+  have hb := winH_isWin (X₀ := (X₀ : ℝ)) hX
+  have hbm := measurable_winH (X₀ := (X₀ : ℝ)) hX
   obtain ⟨hκ0, -⟩ := kappa_facts hX
   have hR : ContinuousOn (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
       (Construction.switchOn (swS θ X₀)) γ) γ (Construction.switchOn (swS θ X₀))) (Ici (X₀ : ℝ)) := fun y hy =>
-    (hasDerivAt_osc _ γ hX1.le (by linarith [mem_Ici.mp hy])).continuousAt.continuousWithinAt
+    (hasDerivAt_osc _ γ (hX1.le.trans (le_swS θ _)) (by linarith [mem_Ici.mp hy])).continuousAt.continuousWithinAt
   unfold contPart
   refine (((continuousOn_id.sub continuousOn_const).sub
     (continuousOn_primitive_Ici fun y hy => intervalIntegrable_rhoDet X₀ hκ0 hX1n hy)).sub
     (continuousOn_primitive_Ici fun y hy =>
-      intervalIntegrable_absorbedDensityCap A hA hb hX1 hy)).add (hR.sub continuousOn_const)
+      intervalIntegrable_absorbedDensityCap A hA hb hbm hX1 hy)).add (hR.sub continuousOn_const)
 
 /-- The comparison function `c(u) = 1/log(max(u, X))`, continuous for `X > 1`. -/
 lemma continuous_invLogMax {X : ℝ} (hX : 1 < X) :
@@ -782,7 +794,8 @@ theorem contPart_lower {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000
           (Construction.switchOn (swS θ X₀)) γ) γ (Construction.switchOn (swS θ X₀))) x := by
   have hX1 : (1 : ℝ) < (X₀ : ℝ) := QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hX
   have hX1n : 1 ≤ X₀ := by exact_mod_cast hX1.le
-  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
+  have hb := winH_isWin (X₀ := (X₀ : ℝ)) hX
+  have hbm := measurable_winH (X₀ := (X₀ : ℝ)) hX
   obtain ⟨hκ0, -⟩ := kappa_facts hX
   set κ := Construction.kappaParam (X₀ : ℝ) with hκ
   set ρA := Absorbed.absorbedDensityCap (winH X₀) A (fun n => Construction.solveU (winH X₀) n)
@@ -795,7 +808,7 @@ theorem contPart_lower {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000
   have hd : ∀ y, (X₀ : ℝ) ≤ y → IntervalIntegrable (Target.rhoDet X₀ κ) volume (X₀ : ℝ) y :=
     fun y hy => intervalIntegrable_rhoDet X₀ hκ0 hX1n hy
   have ha : ∀ y, (X₀ : ℝ) ≤ y → IntervalIntegrable ρA volume (X₀ : ℝ) y :=
-    fun y hy => intervalIntegrable_absorbedDensityCap A hA hb hX1 hy
+    fun y hy => intervalIntegrable_absorbedDensityCap A hA hb hbm hX1 hy
   rw [contPart_sub hd ha hx hxx]
   have hx'X : (X₀ : ℝ) ≤ x' := hx.trans hxx
   -- integrability on `[x, x']`
@@ -809,7 +822,7 @@ theorem contPart_lower {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000
     have hXu : (X₀ : ℝ) ≤ u := hx.trans hu.1
     have hl : 10 ^ 8 ≤ Real.log u := hX.trans (Real.log_le_log (by linarith) hXu)
     have h1 := rhoDet_le hX hHB hXu
-    have h2 := (absorbedDensityCap_mem A (b := thetaB θ) (v := u) (by linarith)
+    have h2 := (absorbedDensityCap_mem A (winH_isWin (X₀ := (X₀ : ℝ)) hX) (v := u) (by linarith)
       (fun n => Construction.solveU (winH X₀) n)).2
     have h3 := Positivity.inv_kappa_mul_le (by linarith) hX hXu
     have e : ((X₀ : ℝ) : ℝ) ^ (-(5 / 12 - 1 / 50 : ℝ)) = κ := by
@@ -834,12 +847,12 @@ theorem contPart_lower {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000
     have hder : ∀ u, (X₀ : ℝ) < u → HasDerivAt (fun u => R u + 0.02 * ∫ t in (X₀ : ℝ)..u, c t)
         (deriv R u + 0.02 * c u) u := by
       intro u hu
-      exact (hasDerivAt_osc _ γ hX1.le (by linarith)).differentiableAt.hasDerivAt.add
+      exact (hasDerivAt_osc _ γ (hX1.le.trans (le_swS θ _)) (by linarith)).differentiableAt.hasDerivAt.add
         ((hcc.integral_hasStrictDerivAt (X₀ : ℝ) u).hasDerivAt.const_mul 0.02)
     refine monotoneOn_of_deriv_nonneg (convex_Ici (X₀ : ℝ)) ?_ ?_ ?_
     · intro u hu
       refine ContinuousAt.continuousWithinAt ?_
-      exact ((hasDerivAt_osc _ γ hX1.le (by linarith [mem_Ici.mp hu])).continuousAt).add
+      exact ((hasDerivAt_osc _ γ (hX1.le.trans (le_swS θ _)) (by linarith [mem_Ici.mp hu])).continuousAt).add
         ((hcc.integral_hasStrictDerivAt (X₀ : ℝ) u).hasDerivAt.continuousAt.const_mul 0.02)
     · rw [interior_Ici]
       exact fun u hu => (hder u hu).differentiableAt.differentiableWithinAt

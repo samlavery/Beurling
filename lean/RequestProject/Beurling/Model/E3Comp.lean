@@ -259,18 +259,17 @@ section Count
 variable (hc : Cond θ X₀) (hev : Even X₀)
 
 include hc in
-/-- `x^{λ(θ)} ≤ 10⁻⁴ x` for `x ≥ X₀`. -/
-lemma rpow_lag_le {x : ℝ} (hx : (X₀ : ℝ) ≤ x) : x ^ lagExponent θ ≤ x / 10000 := by
+/-- `x^{λ(10⁻⁴)} ≤ 10⁻⁴ x` for `x ≥ X₀`. -/
+lemma rpow_lag_le {x : ℝ} (hx : (X₀ : ℝ) ≤ x) : x ^ lagExponent (1 / 10000) ≤ x / 10000 := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hc.hX
   have hx1 : 1 ≤ x := by linarith
   have hθ := hc.hθ
-  have hl : lagExponent θ ≤ 1 / 4 := by
+  have hl : lagExponent (1 / 10000) ≤ 1 / 4 := by
     unfold lagExponent
-    have := min_le_left θ (1 / 2 - θ)
-    have := min_le_right θ (1 / 2 - θ)
-    linarith [hθ.1, hθ.2]
-  have h1 : x ^ lagExponent θ ≤ x ^ (1 / 4 : ℝ) := Real.rpow_le_rpow_of_exponent_le hx1 hl
+    have := min_le_left (1 / 10000 : ℝ) (1 / 2 - 1 / 10000)
+    linarith
+  have h1 : x ^ lagExponent (1 / 10000) ≤ x ^ (1 / 4 : ℝ) := Real.rpow_le_rpow_of_exponent_le hx1 hl
   have hxb : 10 ^ 8 ≤ x := by
     have h1 : Real.exp (10 ^ 8) ≤ x := by
       rw [← Real.exp_log (by linarith : 0 < x)]
@@ -319,7 +318,7 @@ theorem NCount_le_high {t : ℕ} {ω : JitterΩ} (hQC : ω ∈ QC (okQ θ X₀) 
     ⟨hc.hθ, hX, hU, hT, limModel_linked h0⟩
   have S := limModel_slotFacts h0 hev ht
   have hreg := jitterWidthRegular hX
-  have hlag := lag_local M hc.hθ.1 hc.hθ.2 hX (realisedSystem M (capH X₀) ω).N Real.log
+  have hlag := lag_local M hX (realisedSystem M (capH X₀) ω).N Real.log
     (fun x hx => ⟨Real.log_nonneg (by linarith), le_rfl⟩)
     (fun x hx _ => landing_of_linked L S hreg hok hx)
     (fun x hx hearly => landingInit_of_linked L S hreg hok hx hearly) hv
