@@ -48,7 +48,7 @@ theorem part_i_of_target_error {θ C₀ X₀ : ℝ} (P : BeurlingSystem) (T E₁
     ∃ C : ℝ, ∀ x ≥ (1 : ℝ),
       |P.N x - x| ≤ C * x ^ θ + 3 * x ^ θ * (logStar x : ℝ) + x ^ lagExponent θ := by
   refine theorem21_part_i_of_bounds P.N T (osc θ α γ xp) E₁ E₂ hθ hX₀ hE
-    (fun x hx => abs_osc_le hsp hα (by linarith)) hD h₁ h₂ ⟨P.N X₀, fun x _ hx => ?_⟩
+    (fun x hx => abs_osc_le hθ.ne' hsp hα (by linarith)) hD h₁ h₂ ⟨P.N X₀, fun x _ hx => ?_⟩
   rw [abs_of_nonneg (P.N_nonneg x)]
   exact P.N_mono hx.le
 

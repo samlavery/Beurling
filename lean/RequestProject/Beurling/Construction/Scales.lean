@@ -35,10 +35,6 @@ def scaleSet (X₀ S : ℝ) (k : ℕ) : Set ℝ :=
 `a + 2H(a) ≤ x_k`. -/
 noncomputable def constructionScale (X₀ S : ℝ) (k : ℕ) : ℝ := sSup (scaleSet X₀ S k)
 
-lemma switchOn_mono (X₀ : ℝ) : Monotone (switchOn X₀) := by
-  refine monotone_nat_of_le_succ fun k => ?_
-  show switchOn X₀ k ≤ Real.exp (switchOn X₀ k)
-  linarith [Real.add_one_le_exp (switchOn X₀ k)]
 
 lemma two_pow_le_of_logX {X₀ : ℝ} (hX0' : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) :
     (2 : ℝ) ^ (16 : ℕ) ≤ X₀ := by
@@ -131,7 +127,7 @@ theorem lt_add_two_capH_of_constructionScale_lt {X₀ S : ℝ} (hX0' : 0 ≤ X�
 
 /-- `Theorem410RestSp` with the scales fixed to `a_k`, without the (proved) scale condition. -/
 def Theorem410RestM (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) : Prop :=
-  ∀ k, Lemma48PiecesCount X₀ (DesignedZero.heightScale θ (kappa0Param X₀) (switchOn (swS θ X₀) k))
+  ∀ k, Lemma48PiecesCount X₀ (DesignedZero.heightScale (thK θ (switchOn (swS θ X₀) k)) (kappa0Param X₀) (switchOn (swS θ X₀) k))
       (earlyOf P θ X₀ (kappaParam X₀) A u
         (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀))
           (constructionScale X₀ (swS θ X₀)))

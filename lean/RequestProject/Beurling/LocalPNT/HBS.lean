@@ -134,7 +134,7 @@ lemma hbs_err {v : ℝ} (h1 : Xm ≤ v) (h2 : v ≤ y) :
     have hr1 := abs_rigidErr_le_fine X₀ hκ0 hX1n hhigh
     have hr2 := Target.abs_rigidErr_le X₀ hκ0 hκ1 hX1n hhigh
     have hrig := le_min hr1 hr2
-    have hR := abs_osc_le h.spacing h.alpha_le hv1 (θ := θ) (γ := γ)
+    have hR := abs_osc_le h.theta_mem.1.ne' h.spacing h.alpha_le hv1 (θ := θ) (γ := γ)
     have hls := logStar_le_rpow hv1 (show (0 : ℝ) < 0.05 by norm_num)
     have hbig := rpow_ge_of_half hX (v := v) (by linarith [h.X0_pos])
       (show (0 : ℝ) ≤ 0.05 by norm_num)

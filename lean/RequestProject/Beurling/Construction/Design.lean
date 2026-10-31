@@ -39,7 +39,8 @@ lemma osc_congr_lt {θ : ℝ} {α γ α' γ' xp : ℕ → ℝ} (hsp : Spacing xp
   rcases lt_or_ge j k with h | h
   · rw [hα j h, hγ j h]
   · have : x ≤ xp j := hxk.trans (hsp.strictMono.monotone h)
-    rw [oscTerm_eq_zero_of_le hx this, oscTerm_eq_zero_of_le hx this]
+    rw [oscK_eq_zero_of_le hx this,
+      oscK_eq_zero_of_le hx this]
 
 /-- On `(0, x⁺_k]` the lag only reads `α_j, γ_j` for `j < k`. -/
 lemma lagOf_congr_lt (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℝ} {u : ℝ → ℝ}
@@ -76,7 +77,7 @@ lemma earlyOf_congr (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A :
 
 /-- The amplitudes `α_j = κ₀ (x⁺_j)^{1-θ} / (γ_j log x⁺_j)` for the heights `g`. -/
 noncomputable def amplitudes (θ κ₀ : ℝ) (xp g : ℕ → ℝ) : ℕ → ℝ :=
-  fun j => DesignedZero.amplitudeOf θ κ₀ (g j) (xp j)
+  fun j => DesignedZero.amplitudeOf (thK θ (xp j)) κ₀ (g j) (xp j)
 
 /-- One step of the rule of Lemma 4.8: the height chosen at `k` when the heights so far are `g`
 (and the amplitudes are determined by them). -/
@@ -121,10 +122,10 @@ theorem designedGamma_fixed (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : �
 
 /-- The designed heights lie in `[Γ_k, 2Γ_k]`. -/
 lemma designedGamma_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
-    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) (hΓ : ∀ k, 0 ≤ DesignedZero.heightScale θ κ₀ (xp k))
+    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) (hΓ : ∀ k, 0 ≤ DesignedZero.heightScale (thK θ (xp k)) κ₀ (xp k))
     (k : ℕ) :
     designedGamma P θ X₀ κ A u κ₀ xp a k ∈
-      Icc (DesignedZero.heightScale θ κ₀ (xp k)) (2 * DesignedZero.heightScale θ κ₀ (xp k)) := by
+      Icc (DesignedZero.heightScale (thK θ (xp k)) κ₀ (xp k)) (2 * DesignedZero.heightScale (thK θ (xp k)) κ₀ (xp k)) := by
   have hrec : designedGamma P θ X₀ κ A u κ₀ xp a k = stepGamma P θ X₀ κ A u κ₀ xp a
       (fun j => if h : j < k then designedGamma P θ X₀ κ A u κ₀ xp a j else 0) k := by
     unfold designedGamma
@@ -136,11 +137,11 @@ lemma designedGamma_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) 
 /-- The designed amplitudes satisfy `1 ≤ α_k ≤ 2` (as `α_k γ_k = 2 Γ_k` and `γ_k ∈ [Γ_k, 2Γ_k]`),
 when `Γ_k > 0`. -/
 lemma designedAlpha_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
-    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) (hΓ : ∀ k, 0 < DesignedZero.heightScale θ κ₀ (xp k))
+    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) (hΓ : ∀ k, 0 < DesignedZero.heightScale (thK θ (xp k)) κ₀ (xp k))
     (k : ℕ) : designedAlpha P θ X₀ κ A u κ₀ xp a k ∈ Icc (1 : ℝ) 2 := by
   have hm := designedGamma_mem P θ X₀ κ A u κ₀ xp a (fun k => (hΓ k).le) k
   set γ := designedGamma P θ X₀ κ A u κ₀ xp a k
-  set Γ := DesignedZero.heightScale θ κ₀ (xp k) with hΓdef
+  set Γ := DesignedZero.heightScale (thK θ (xp k)) κ₀ (xp k) with hΓdef
   have hΓk := hΓ k
   have hγ : 0 < γ := lt_of_lt_of_le hΓk hm.1
   have hL : Real.log (xp k) ≠ 0 := by
@@ -148,7 +149,7 @@ lemma designedAlpha_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) 
     have : Γ = 0 := by rw [hΓdef]; unfold DesignedZero.heightScale; rw [h0]; simp
     linarith
   have e : designedAlpha P θ X₀ κ A u κ₀ xp a k = 2 * Γ / γ := by
-    show κ₀ * xp k ^ (1 - θ) / Real.log (xp k) / γ = 2 * Γ / γ
+    show κ₀ * xp k ^ (1 - thK θ (xp k)) / Real.log (xp k) / γ = 2 * Γ / γ
     rw [hΓdef]; unfold DesignedZero.heightScale
     congr 1
     field_simp
@@ -228,6 +229,71 @@ lemma switchOn_gt_one (X₀ : ℝ) (k : ℕ) : 1 < switchOn X₀ (k + 1) := by
   show 1 < Real.exp (switchOn X₀ k)
   exact Real.one_lt_exp_iff.mpr (switchOn_pos X₀ k)
 
+/-- A crude upper exponent of the oscillations of the design `θ`: `θ` itself for `θ ≠ 0`, and
+`1/100` for the design `θ = 0` (`thK_switchOn_le`). -/
+noncomputable def thU (θ : ℝ) : ℝ := if θ = 0 then 1 / 100 else θ
+
+lemma thU_of_ne {θ : ℝ} (hθ : θ ≠ 0) : thU θ = θ := by simp [thU, hθ]
+
+lemma thU_nonneg {θ : ℝ} (hθ : 0 ≤ θ) : 0 ≤ thU θ := by
+  unfold thU; split_ifs <;> linarith
+
+lemma thU_le {θ c : ℝ} (hθ : θ ≤ c) (hc : 1 / 100 ≤ c) : thU θ ≤ c := by
+  unfold thU; split_ifs <;> linarith
+
+lemma switchOn_mono (S : ℝ) : Monotone (switchOn S) :=
+  (switchOn_spacing S).strictMono.monotone
+
+/-- `log log x⁺_k ≥ 2 log S` for the switch-on points `x⁺_k = switchOn S k`, `S ≥ 1`. -/
+lemma loglog_switchOn_ge {S : ℝ} (hS : 1 ≤ S) (k : ℕ) :
+    2 * Real.log S ≤ Real.log (Real.log (switchOn S k)) := by
+  have h0 : Real.log (switchOn S 0) ≤ Real.log (switchOn S k) :=
+    Real.log_le_log (switchOn_pos S 0) (switchOn_mono S (Nat.zero_le k))
+  rw [log_switchOn_zero] at h0
+  have hS2 : 0 < S ^ 2 := by positivity
+  have := Real.log_le_log hS2 h0
+  rw [Real.log_pow] at this; push_cast at this; linarith
+
+/-- The per-zero exponents of the design `θ` at the switch-on points are at most `thU θ`. -/
+lemma thK_switchOn_le (θ : ℝ) {S : ℝ} (hS1 : 1 ≤ S) (hS : 10 ≤ Real.log S) (k : ℕ) :
+    thK θ (switchOn S k) ≤ thU θ := by
+  by_cases hθ : θ = 0
+  · subst hθ
+    have hx1 : 1 < switchOn S k := by
+      cases k with
+      | zero =>
+        show 1 < Real.exp (S ^ 2)
+        exact Real.one_lt_exp_iff.mpr (by nlinarith)
+      | succ k => exact switchOn_gt_one _ k
+    simpa [thU] using thK_zero_le hx1 (by linarith [loglog_switchOn_ge hS1 k])
+  · rw [thK_of_ne hθ, thU_of_ne hθ]
+
+lemma thK_swS_le (θ : ℝ) {X₀ : ℝ} (hX1 : 1 ≤ X₀) (hX : 10 ≤ Real.log X₀) (k : ℕ) :
+    thK θ (switchOn (swS θ X₀) k) ≤ thU θ :=
+  thK_switchOn_le θ (hX1.trans (le_swS θ X₀))
+    (hX.trans (Real.log_le_log (by linarith) (le_swS θ X₀))) k
+
+/-- The per-zero exponents of an admissible design lie in `(0, 1/2 - 10⁻⁴]`. -/
+lemma thK_swS_mem {θ X₀ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX1 : 1 ≤ X₀)
+    (hX : 10 ≤ Real.log X₀) (k : ℕ) :
+    thK θ (switchOn (swS θ X₀) k) ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000) := by
+  refine ⟨?_, (thK_swS_le θ hX1 hX k).trans (thU_le hθ.2 (by norm_num))⟩
+  by_cases h0 : θ = 0
+  · subst h0
+    rw [thK_zero]
+    have hS1 : 1 ≤ swS 0 X₀ := hX1.trans (le_swS 0 X₀)
+    have hℓ := loglog_switchOn_ge hS1 k
+    have hS : 10 ≤ Real.log (swS 0 X₀) := hX.trans (Real.log_le_log (by linarith) (le_swS 0 X₀))
+    have hL : 0 < Real.log (switchOn (swS 0 X₀) k) := by
+      have h0 : Real.log (switchOn (swS 0 X₀) 0) ≤ Real.log (switchOn (swS 0 X₀) k) :=
+        Real.log_le_log (switchOn_pos _ 0) (switchOn_mono _ (Nat.zero_le k))
+      rw [log_switchOn_zero] at h0
+      nlinarith
+    have : 0 < Real.log (Real.log (switchOn (swS 0 X₀) k)) := by linarith
+    positivity
+  · rw [thK_of_ne h0]
+    exact lt_of_le_of_ne hθ.1 (Ne.symm h0)
+
 /-- **The switch-on condition, strong form**: with the seed `S = max(X₀, 1000/θ)`, every `y`
 with `log y ≥ log x⁺_0 - 3 = S² - 3` has `16 ℓ² + 4 ℓ + 2 log X₀ + 10 ≤ θ log y`,
 `ℓ = log log y`. -/
@@ -290,6 +356,7 @@ theorem switchOn_cond {θ X₀ : ℝ} (hθ : 0 < θ) (hX0 : 0 ≤ X₀) (hX : 10
 
 end Construction
 
-export Construction (swS le_swS logX_swS switchOn_zero_ge_swS switchOn_cond switchOn_cond')
+export Construction (swS le_swS logX_swS switchOn_zero_ge_swS switchOn_cond switchOn_cond' thU
+  thU_of_ne thU_nonneg thU_le thK_switchOn_le thK_swS_le thK_swS_mem)
 
 end

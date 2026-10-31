@@ -49,7 +49,7 @@ lemma abs_T0_sub_le {x : ℝ} (hx : (X₀ : ℝ) ≤ x) :
   have hκ0 := kappa_pos_aux hX
   have hX1n : 1 ≤ X₀ := by exact_mod_cast h.one_le_X0
   have hr1 := abs_rigidErr_le_fine X₀ hκ0 hX1n hx
-  have hR := abs_osc_le h.spacing h.alpha_le hx1 (θ := θ) (γ := γ)
+  have hR := abs_osc_le h.theta_mem.1.ne' h.spacing h.alpha_le hx1 (θ := θ) (γ := γ)
   have hls := logStar_le_rpow hx1 (show (0 : ℝ) < 0.05 by norm_num)
   have hθ2 := h.theta_mem.2
   have p4 : x ^ θ * (logStar x : ℝ) ≤ 21 * x ^ (0.55 : ℝ) := by

@@ -36,6 +36,12 @@ structure Cond (θ : ℝ) (X₀ : ℕ) : Prop where
   hX : 10 ^ 8 ≤ Real.log X₀
   hHB : ShortIntervalPNTFrom X₀
 
+/-- The per-zero exponents of the construction lie in `(0, 1/2 - 10⁻⁴]`. -/
+lemma Cond.thK_mem (hc : Cond θ X₀) (k : ℕ) :
+    thK θ (switchOn (swS θ X₀) k) ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000) :=
+  thK_swS_mem ⟨hc.hθ.1.le, hc.hθ.2⟩
+    (QueueMono.one_lt_of_logX (Nat.cast_nonneg _) hc.hX).le (by linarith [hc.hX]) k
+
 /-- The clamped jitters. -/
 def Ucl (ω : JitterΩ) : ℕ → ℝ := fun j => clamp01 (ω j)
 

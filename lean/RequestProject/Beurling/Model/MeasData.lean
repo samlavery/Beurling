@@ -276,12 +276,8 @@ lemma measurable_smoothCount (X₀ : ℕ) : Measurable fun x : ℝ => (Rankin.sm
   exact (measurable_from_nat (f := fun n : ℕ => ((Nat.smoothNumbersUpTo n X₀).card : ℝ))).comp
     Nat.measurable_floor
 
-/-- A switched-on oscillation term at `x` has `x⁺_j < |x|`. -/
-lemma lt_abs_of_oscTerm_ne {θ α γ xp x : ℝ} (hxp : 0 < xp) (h : oscTerm θ α γ xp x ≠ 0) :
-    xp < |x| := by
-  by_contra hc
-  push_neg at hc
-  apply h
+lemma oscTerm_eq_zero_of_abs_le {θ α γ xp x : ℝ} (hxp : 0 < xp) (hc : |x| ≤ xp) :
+    oscTerm θ α γ xp x = 0 := by
   unfold oscTerm
   have : Real.log (x / xp) ≤ 0 := by
     rw [← Real.log_abs, abs_div, abs_of_pos hxp]
@@ -290,6 +286,30 @@ lemma lt_abs_of_oscTerm_ne {θ α γ xp x : ℝ} (hxp : 0 < xp) (h : oscTerm θ 
     · rw [← h0]; simp
   rw [Real.smoothTransition.zero_of_nonpos this, mul_zero]
 
+/-- A switched-on oscillation term at `x` has `x⁺_j < |x|`. -/
+lemma lt_abs_of_oscTerm_ne {θ α γ xp x : ℝ} (hxp : 0 < xp) (h : oscK θ α γ xp x ≠ 0) :
+    xp < |x| := by
+  by_contra hc
+  push_neg at hc
+  apply h
+  unfold oscK
+  split_ifs
+  · have hy : xp ≤ xp * max xp 1 := le_mul_of_one_le_right hxp.le (le_max_right _ _)
+    simp only [oscTermS]
+    rw [oscTerm_eq_zero_of_abs_le hxp hc,
+      oscTerm_eq_zero_of_abs_le (lt_of_lt_of_le hxp hy) (hc.trans hy), sub_zero]
+  · exact oscTerm_eq_zero_of_abs_le hxp hc
+
+lemma measurable_oscTerm_fam {α γ : Ω → ℕ → ℝ} (hα : ∀ j, Measurable fun ω => α ω j)
+    (hγ : ∀ j, Measurable fun ω => γ ω j) (t y : ℝ) (j : ℕ) :
+    Measurable fun p : Ω × ℝ => oscTerm t (α p.1 j) (γ p.1 j) y p.2 := by
+  unfold oscTerm
+  refine ((((hα j).comp measurable_fst).mul (measurable_snd.pow_const t)).mul
+    (Real.measurable_cos.comp (((hγ j).comp measurable_fst).mul
+      (Real.measurable_log.comp measurable_snd)))).mul ?_
+  exact Real.smoothTransition.continuous.measurable.comp
+    (Real.measurable_log.comp (measurable_snd.div_const _))
+
 /-- **The oscillation is jointly measurable** in measurable amplitudes and heights. -/
 theorem measurable_osc_fam {θ : ℝ} (hX : 10 ^ 8 ≤ Real.log X₀) {α γ : Ω → ℕ → ℝ}
     (hα : ∀ j, Measurable fun ω => α ω j) (hγ : ∀ j, Measurable fun ω => γ ω j) :
@@ -297,12 +317,11 @@ theorem measurable_osc_fam {θ : ℝ} (hX : 10 ^ 8 ≤ Real.log X₀) {α γ : �
   have hX1 : (1 : ℝ) ≤ X₀ := (one_lt_of_logX (Nat.cast_nonneg _) hX).le
   unfold osc
   refine measurable_tsum_of_finite_support (fun j => ?_) (fun p => ?_)
-  · unfold oscTerm
-    refine ((((hα j).comp measurable_fst).mul (measurable_snd.pow_const θ)).mul
-      (Real.measurable_cos.comp (((hγ j).comp measurable_fst).mul
-        (Real.measurable_log.comp measurable_snd)))).mul ?_
-    exact Real.smoothTransition.continuous.measurable.comp
-      (Real.measurable_log.comp (measurable_snd.div_const _))
+  · unfold oscK
+    split_ifs
+    · simp only [oscTermS]
+      exact (measurable_oscTerm_fam hα hγ _ _ j).sub (measurable_oscTerm_fam hα hγ _ _ j)
+    · exact measurable_oscTerm_fam hα hγ _ _ j
   · refine (Set.finite_lt_nat ⌈|p.2|⌉₊).subset fun j hj => ?_
     have h1 := lt_abs_of_oscTerm_ne (switchOn_pos _ j) hj
     have h2 := nat_lt_switchOn (hX1.trans (le_swS θ _)) j

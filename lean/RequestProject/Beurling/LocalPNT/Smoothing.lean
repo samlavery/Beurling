@@ -83,8 +83,8 @@ theorem N_sub_le {v' v : ℝ} (hv' : (X₀ : ℝ) ≤ v') (hv : v' ≤ v) (hvy :
         (hii _ _ hv' hv)).symm
     rw [hsplit]
     linarith
-  have hR1 := abs_osc_le h.spacing h.alpha_le (le_trans hv1 hv) (θ := θ) (γ := γ)
-  have hR2 := abs_osc_le h.spacing h.alpha_le hv1 (θ := θ) (γ := γ)
+  have hR1 := abs_osc_le h.theta_mem.1.ne' h.spacing h.alpha_le (le_trans hv1 hv) (θ := θ) (γ := γ)
+  have hR2 := abs_osc_le h.theta_mem.1.ne' h.spacing h.alpha_le hv1 (θ := θ) (γ := γ)
   have htp := (thetaPrime_bounds h.theta_mem hX).1
   have hθ := h.theta_mem
   have hvv : 1 ≤ v := by linarith

@@ -80,7 +80,7 @@ lemma osc_congr_of {θ : ℝ} {α γ α' γ' xp : ℕ → ℝ} {z : ℝ}
   by_cases hj : xp j < x
   · rw [(h j (lt_of_lt_of_le hj hxz)).1, (h j (lt_of_lt_of_le hj hxz)).2]
   · push_neg at hj
-    rw [oscTerm_eq_zero_of_le hx hj, oscTerm_eq_zero_of_le hx hj]
+    rw [oscK_eq_zero_of_le hx hj, oscK_eq_zero_of_le hx hj]
 
 /-- **Locality of the target**: at heights `x ≤ z` the target only reads `A` on `[0, Z]`
 (`z + h(z) ≤ Z`) and the oscillation parameters with `x⁺_j < z`. -/

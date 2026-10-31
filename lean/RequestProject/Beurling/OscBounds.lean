@@ -23,6 +23,27 @@ namespace DesignedZero
 noncomputable def oscHat (θ α γ xk : ℝ) (s : ℂ) : ℂ :=
   s * ∫ x in Ioi (1 : ℝ), (oscTerm θ α γ xk x : ℂ) * (x : ℂ) ^ (-s - 1)
 
+/-- The transform `R̂_k(s) = s ∫_1^∞ R_k(x) x^{-s-1} dx` of the `k`-th oscillation of the design
+`θ` (`oscK`). -/
+noncomputable def oscHatK (θ α γ xk : ℝ) (s : ℂ) : ℂ :=
+  s * ∫ x in Ioi (1 : ℝ), (oscK θ α γ xk x : ℂ) * (x : ℂ) ^ (-s - 1)
+
+lemma oscHatK_of_ne {θ : ℝ} (hθ : θ ≠ 0) (α γ xk : ℝ) (s : ℂ) :
+    oscHatK θ α γ xk s = oscHat θ α γ xk s := by
+  simp [oscHatK, oscHat, oscK_of_ne hθ]
+
+/-- The transform of a switched-off oscillation is the difference of the transforms of the
+oscillations switched on at `x⁺` and at `(x⁺)²`. -/
+lemma oscHatK_zero {α γ xk : ℝ} {s : ℂ} (hs : thK 0 xk < s.re) :
+    oscHatK 0 α γ xk s =
+      oscHat (thK 0 xk) α γ xk s - oscHat (thK 0 xk) α γ (xk * max xk 1) s := by
+  unfold oscHatK oscHat
+  rw [← mul_sub, ← integral_sub (integrableOn_oscTerm hs) (integrableOn_oscTerm hs)]
+  congr 1
+  refine setIntegral_congr_fun measurableSet_Ioi fun x _ => ?_
+  simp only [oscK_zero, oscTermS]
+  push_cast; ring
+
 /-- The conjugate term `E_k(s) = (α s/2) (x⁺)^{-w'} Φ(w')/w'`, `w' = s - θ + iγ`, of (17). -/
 noncomputable def Ek (θ α γ x : ℝ) (s : ℂ) : ℂ :=
   α * s / 2 * ((x : ℂ) ^ (-(s - θ + γ * I)) * phiTransform (s - θ + γ * I) / (s - θ + γ * I))
@@ -113,6 +134,26 @@ theorem norm_oscHat_le_of_re {θ α γ xk : ℝ} (hxk : 1 ≤ xk) (hα : |α| �
         · exact hinv w hwn
         · exact hinv w' hw'n
     _ = 5 * ‖s‖ * xk ^ (-(2 / 5 : ℝ)) := by ring
+
+/-- `|R̂_k(s)| ≤ 2 |s| (x⁺)^{θ-σ}/(σ - θ)` for `σ > θ` and `|α| ≤ 2`. -/
+theorem norm_oscHat_le_margin {θ α γ xk : ℝ} (hxk : 1 ≤ xk) (hα : |α| ≤ 2) {s : ℂ}
+    (hs : θ < s.re) :
+    ‖oscHat θ α γ xk s‖ ≤ 2 * ‖s‖ * xk ^ (θ - s.re) / (s.re - θ) := by
+  have h := norm_mellin_oscTerm_le (α := α) (γ := γ) hxk hs
+  have hX := Real.rpow_nonneg (show (0 : ℝ) ≤ xk by linarith) (θ - s.re)
+  have hd : 0 < s.re - θ := by linarith
+  have hw : s.re - θ ≤ ‖s - θ - γ * I‖ := le_trans (by simp) (Complex.re_le_norm _)
+  have hw' : s.re - θ ≤ ‖s - θ + γ * I‖ := le_trans (by simp) (Complex.re_le_norm _)
+  have h1 : xk ^ (θ - s.re) / ‖s - θ - γ * I‖ ≤ xk ^ (θ - s.re) / (s.re - θ) :=
+    div_le_div_of_nonneg_left hX hd hw
+  have h2 : xk ^ (θ - s.re) / ‖s - θ + γ * I‖ ≤ xk ^ (θ - s.re) / (s.re - θ) :=
+    div_le_div_of_nonneg_left hX hd hw'
+  unfold oscHat
+  refine h.trans ?_
+  calc |α| * ‖s‖ / 2 * (xk ^ (θ - s.re) / ‖s - θ - γ * I‖ + xk ^ (θ - s.re) / ‖s - θ + γ * I‖)
+      ≤ 2 * ‖s‖ / 2 * (xk ^ (θ - s.re) / (s.re - θ) + xk ^ (θ - s.re) / (s.re - θ)) := by
+        gcongr
+    _ = _ := by ring
 
 /-- `x_{k+1}^{-2/5} ≤ x_k^{-2/5}/2` when `x_{k+1} ≥ e^{x_k}` and `x_k ≥ 20`. -/
 lemma rpow_neg_two_fifths_succ_le {a b : ℝ} (ha : 20 ≤ a) (hb : Real.exp a ≤ b) :

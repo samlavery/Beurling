@@ -111,6 +111,37 @@ lemma tendsto_one_of_log_asymptotic (r : ℕ → ℝ) (xk : ℕ → ℝ) (C : �
 
 /-! ### Uniqueness of the continuation of `ζ_P` -/
 
+/-- **The per-zero exponent of the design `θ`** at the switch-on point `x⁺`: `θ` itself for
+`θ ≠ 0` (Theorem A), and `θ_k = 9 ℓ_k² / L_k` (`L_k = log x⁺_k`, `ℓ_k = log L_k`, eq. (thetak) of
+§8) for the design `θ = 0` of Theorem A′ (the "exponent `0⁺`", a `[1,0]`-system). -/
+noncomputable def thK (θ xp : ℝ) : ℝ :=
+  if θ = 0 then 9 * Real.log (Real.log xp) ^ 2 / Real.log xp else θ
+
+lemma thK_of_ne {θ : ℝ} (hθ : θ ≠ 0) (xp : ℝ) : thK θ xp = θ := by simp [thK, hθ]
+
+lemma thK_zero (xp : ℝ) : thK 0 xp = 9 * Real.log (Real.log xp) ^ 2 / Real.log xp := by
+  simp [thK]
+
+/-- For `log log x ≥ 20`, the per-zero exponent of the design `0` is `≤ 1/100`
+(`9ℓ²/e^ℓ ≤ 1/100` for `ℓ ≥ 20`). -/
+lemma thK_zero_le {x : ℝ} (hx : 1 < x) (hℓ : 20 ≤ Real.log (Real.log x)) :
+    thK 0 x ≤ 1 / 100 := by
+  rw [thK_zero]
+  have hL : 0 < Real.log x := Real.log_pos hx
+  set ℓ := Real.log (Real.log x) with hℓdef
+  have hLe : Real.log x = Real.exp ℓ := (Real.exp_log hL).symm
+  have hexp := Real.pow_div_factorial_le_exp ℓ (by linarith) 8
+  norm_num [Nat.factorial] at hexp
+  rw [div_le_div_iff₀ hL (by norm_num), hLe]
+  have h2 : (400 : ℝ) ≤ ℓ ^ 2 := by nlinarith
+  have h6 : (36288000 : ℝ) ≤ ℓ ^ 6 := by
+    have : (64000000 : ℝ) ≤ ℓ ^ 6 := by
+      have := pow_le_pow_left₀ (by norm_num) h2 3
+      rw [← pow_mul] at this; norm_num at this; linarith
+    linarith
+  have hp : 0 ≤ ℓ ^ 2 := sq_nonneg _
+  nlinarith [mul_le_mul_of_nonneg_left h6 hp]
+
 namespace BeurlingSystem
 
 lemma isOpen_puncturedHalfPlane (a : ℝ) : IsOpen (puncturedHalfPlane a) :=

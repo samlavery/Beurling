@@ -2,6 +2,7 @@ module
 
 public import RequestProject.Beurling.Construction.Greedy
 public import RequestProject.Beurling.Decomp.Theorem410Dec
+public import RequestProject.Beurling.OneZero.Numerics
 
 /-!
 # Theorem 2.1 / Corollary 2.2 from the construction of Section 3
@@ -157,11 +158,11 @@ def Theorem410InputsCoupled (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (κ : �
     Real.exp (-Real.log X₀) ≤ κ ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧
     (X₀ : ℝ) ^ 2 ≤ Real.log (xp 0) ∧
-    (∀ y : ℝ, Real.log (xp 0) - 1 ≤ Real.log y →
+    (θ ≠ 0 → ∀ y : ℝ, Real.log (xp 0) - 1 ≤ Real.log y →
       16 * Real.log (Real.log y) ^ 2 + 2 * Real.log X₀ + 10 ≤ θ * Real.log y) ∧
     (∀ k, γ k = designGamma X₀ κ θ κ₀ (earlyOf P θ X₀ κ A u α γ xp a) xp k) ∧
-    (∀ k, α k = amplitudeOf θ κ₀ (γ k) (xp k)) ∧
-    (∀ k, Lemma48PiecesCount X₀ (heightScale θ κ₀ (xp k)) (earlyOf P θ X₀ κ A u α γ xp a k)) ∧
+    (∀ k, α k = amplitudeOf (thK θ (xp k)) κ₀ (γ k) (xp k)) ∧
+    (∀ k, Lemma48PiecesCount X₀ (heightScale (thK θ (xp k)) κ₀ (xp k)) (earlyOf P θ X₀ κ A u α γ xp a k)) ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
     AbsorbedHyp (winH X₀) A u ∧
     (∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →
@@ -172,7 +173,7 @@ bounds, the radius condition `2δ_k ≤ θ`, the cap, `X₀`-smoothness, `u_a �
 fact are derived. -/
 theorem Theorem410InputsCoupled.toDec {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem} {κ : ℝ}
     {A : Set ℝ} {u : ℝ → ℝ} {α γ xp : ℕ → ℝ} {M : SlotModel X₀} {jit : Set ℝ}
-    {latest : ℝ → ℝ} (hθ0 : 0 < θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
+    {latest : ℝ → ℝ} (hθ0 : 0 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
     (hX : 10 ^ 8 ≤ Real.log X₀) (hev : Even X₀)
     (hjit : ∀ r ∈ jit, (X₀ : ℝ) - capH X₀ X₀ / 2 ≤ r)
     (hI : PartIWith θ X₀ P κ A u α γ xp M)
@@ -223,28 +224,89 @@ theorem Theorem410InputsCoupled.toDec {θ : ℝ} {X₀ : ℕ} {P : BeurlingSyste
     have := Real.log_le_log hpos hX2
     rw [Real.log_mul (by positivity) (Real.exp_pos _).ne', Real.log_exp, Real.log_pow] at this
     push_cast at this; linarith
-  -- the radius condition `2δ_k ≤ θ`
-  have hδ : ∀ k, 2 * designRadius (xp k) ≤ θ := fun k => by
-    have hy := hsw (xp k) (by linarith [hlogk0 k])
+  have hℓk : ∀ k, 2 * Real.log X₀ ≤ Real.log (Real.log (xp k)) := fun k => by
+    have hpos : 0 < (X₀ : ℝ) ^ 2 := by positivity
+    have := Real.log_le_log hpos (hlogk k)
+    rw [Real.log_pow] at this; push_cast at this; linarith
+  have hxk1 : ∀ k, 1 < xp k := fun k => by
+    have := Real.add_one_le_exp (Real.log (xp k))
+    rw [Real.exp_log (hxpos k)] at this; nlinarith [hlogk k]
+  have hΛ10 : (10 : ℝ) ≤ Real.log X₀ := by linarith
+  -- the per-zero facts: `2δ_k ≤ θ_k ≤ 1/2`, and the late-lag exponent `η_k`
+  set η : ℕ → ℝ := fun k => if θ = 0 then
+    17 * Real.log (Real.log (xp k)) ^ 2 / (2 * Real.log (xp k)) else θ / 2 with hηdef
+  have hdes : ∀ k, 2 * designRadius (xp k) ≤ thK θ (xp k) ∧ thK θ (xp k) ≤ 1 / 2 ∧
+      (0 ≤ η k ∧ η k ≤ 1 / 4 ∧
+        150 * Real.log X₀ * xp k ^ (η k - thK θ (xp k)) ≤ 1 / 100) ∧
+      ∀ y ≥ a k, |lagOf P θ X₀ κ A u α γ xp y| ≤ y ^ η k := fun k => by
     have hL : 0 < Real.log (xp k) := by nlinarith [hlogk k]
-    have hℓ := hℓy (xp k) (by linarith [hlogk0 k])
-    unfold designRadius
-    rw [← mul_div_assoc, div_le_iff₀ hL]
-    nlinarith
-  -- the late lag bound `|D(y)| ≤ y^{θ/2}` for `y ≥ a_k`
-  have hlate : ∀ k, ∀ y ≥ a k, |lagOf P θ X₀ κ A u α γ xp y| ≤ y ^ (θ / 2) := fun k y hy => by
-    have hyX := (haX k).trans hy
-    have hly := hlogy k y hy
-    have hy0 : 0 < y := by linarith
-    refine (hlag y hyX).trans ((lagMax_le_std hX0 hX hyX (hℓy y hly)).trans ?_)
-    rw [Real.rpow_def_of_pos hy0, Real.exp_le_exp]
-    have := hsw y hly
-    nlinarith
-  refine ⟨X₀, κ, κ₀, θ / 2, 1 / 20000, 1 + (queueB X₀ X₀ + 3 * capH X₀ X₀ + 5), xp, a, A, u, α,
-    γ, hX, even_mem_smoothNumbers hev h4, hδ, by linarith, hκ, hκ1, hκ₀1, hκ₀2, hxp0,
-    hsp.exp_le, hγ, hα, hpieces, by linarith, le_rfl, by norm_num, by norm_num, ha,
-    fun x hx => (hlag x hx).trans (lagMax_le_rpow hX0 hX hx), hlate, hA,
-    fun n hn => (hAu n hn).1, fun v hv => ?_, ?_, hbound⟩
+    have hℓ := hℓk k
+    by_cases hθ : θ = 0
+    · subst hθ
+      have ht := thK_zero (xp k)
+      have hη : η k = 17 * Real.log (Real.log (xp k)) ^ 2 / (2 * Real.log (xp k)) := by
+        simp [hηdef]
+      have hsmall := thK_zero_le (hxk1 k) (by linarith)
+      refine ⟨?_, by linarith, ⟨?_, ?_, ?_⟩, fun y hy => ?_⟩
+      · rw [ht]; unfold designRadius
+        rw [← mul_div_assoc, div_le_div_iff_of_pos_right hL]; nlinarith
+      · rw [hη]; positivity
+      · have : η k ≤ thK 0 (xp k) := by
+          rw [hη, ht, div_le_div_iff₀ (by positivity) hL]
+          nlinarith [sq_nonneg (Real.log (Real.log (xp k)))]
+        linarith
+      · have he : η k - thK 0 (xp k) =
+            -(Real.log (Real.log (xp k)) ^ 2 / (2 * Real.log (xp k))) := by
+          rw [hη, ht]; field_simp; ring
+        rw [he]
+        refine OneZero.late_numeric hΛ10 (hxk1 k) hℓ ?_
+        rw [div_mul_eq_mul_div, le_div_iff₀ (by positivity)]
+        have h18 : 18 ≤ Real.log (Real.log (xp k)) := by linarith
+        have := mul_nonneg (mul_nonneg (sub_nonneg.mpr h18) hL.le)
+          (show 0 ≤ Real.log (Real.log (xp k)) by linarith)
+        nlinarith
+      · have hyX := (haX k).trans hy
+        have hly := hlogy k y hy
+        have hy0 : 0 < y := by linarith
+        have hlyk : Real.log (xp k) - 1 ≤ Real.log y := by
+          have hak : 0 < a k := (ha k).1
+          have h2 : xp k ≤ Real.exp 1 * a k := by
+            have := Real.add_one_le_exp (1 : ℝ)
+            have := (ha k).2.2
+            nlinarith
+          have h3 := Real.log_le_log (hxpos k) h2
+          rw [Real.log_mul (Real.exp_pos 1).ne' hak.ne', Real.log_exp] at h3
+          have := Real.log_le_log hak hy
+          linarith
+        refine (hlag y hyX).trans ((lagMax_le_std hX0 hX hyX (hℓy y hly)).trans ?_)
+        rw [Real.rpow_def_of_pos hy0, Real.exp_le_exp, hη, mul_comm (Real.log y)]
+        exact OneZero.late_lag_exp hΛ10 (by nlinarith [hlogk k]) hℓ hlyk
+    · rw [thK_of_ne hθ]
+      have hη : η k = θ / 2 := by simp [hηdef, hθ]
+      have hy := hsw hθ (xp k) (by linarith [hlogk0 k])
+      have hδk : 2 * designRadius (xp k) ≤ θ := by
+        unfold designRadius
+        rw [← mul_div_assoc, div_le_iff₀ hL]
+        nlinarith
+      refine ⟨hδk, by linarith, ⟨by rw [hη]; linarith, by rw [hη]; linarith, ?_⟩,
+        fun y hy => ?_⟩
+      · rw [hη, show θ / 2 - θ = -(θ / 2) by ring]
+        refine OneZero.late_numeric hΛ10 (hxk1 k) hℓ ?_
+        unfold designRadius at hδk
+        rw [← mul_div_assoc, div_le_iff₀ hL] at hδk
+        nlinarith
+      · have hyX := (haX k).trans hy
+        have hly := hlogy k y hy
+        have hy0 : 0 < y := by linarith
+        refine (hlag y hyX).trans ((lagMax_le_std hX0 hX hyX (hℓy y hly)).trans ?_)
+        rw [hη, Real.rpow_def_of_pos hy0, Real.exp_le_exp]
+        have := hsw hθ y hly
+        nlinarith
+  refine ⟨X₀, κ, κ₀, 1 / 20000, 1 + (queueB X₀ X₀ + 3 * capH X₀ X₀ + 5), η, xp, a, A, u, α,
+    γ, hX, even_mem_smoothNumbers hev h4, fun k => (hdes k).1, fun k => (hdes k).2.1, hκ, hκ1,
+    hκ₀1, hκ₀2, hxp0, hsp.exp_le, hγ, hα, hpieces, fun k => (hdes k).2.2.1, by norm_num,
+    by norm_num, ha, fun x hx => (hlag x hx).trans (lagMax_le_rpow hX0 hX hx),
+    fun k => (hdes k).2.2.2, hA, fun n hn => (hAu n hn).1, fun v hv => ?_, ?_, hbound⟩
   · have hlv : 10 ≤ Real.log v := by
       have := Real.log_le_log (by linarith) hv; linarith
     exact (hρ v hv).trans (zpow_neg_four_le hlv)
@@ -297,7 +359,7 @@ theorem theorem21InputsDec_of_con (h : Theorem21InputsCon) : Theorem21InputsDec 
     exact goodAll_prob_ge jitterFiltration hE (by positivity) hsum
   · rintro ω ⟨hG, hSω⟩
     obtain ⟨κ, A, u, α, γ, xp, M, latest, hI, hC⟩ := hP ω hG hSω
-    refine ⟨hI.toInit, hC.toDec hθ.1 hθ.2 hlog hev ?_ hI⟩
+    refine ⟨hI.toInit, hC.toDec hθ.1.le hθ.2 hlog hev ?_ hI⟩
     -- the placement of the jittered primes
     have hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊ := by
       intro x hx

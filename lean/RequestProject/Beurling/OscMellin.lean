@@ -201,6 +201,42 @@ theorem mellin_oscTerm {θ α γ xk : ℝ} (hxk : 1 ≤ xk) {s : ℂ} (hs : θ <
     integral_Ioi_cpow_smooth hw're hxk0]
   ring
 
+/-- The integrand `R_k(x) x^{-s-1}` is integrable on `(1, ∞)` for `Re s > θ`. -/
+theorem integrableOn_oscTerm {θ α γ xk : ℝ} {s : ℂ} (hs : θ < s.re) :
+    IntegrableOn (fun x : ℝ => (oscTerm θ α γ xk x : ℂ) * (x : ℂ) ^ (-s - 1)) (Ioi 1) := by
+  have hmeas : Measurable (oscTerm θ α γ xk) := by
+    unfold oscTerm
+    have hs' : Continuous Real.smoothTransition := Real.smoothTransition.continuous
+    refine Measurable.mul (Measurable.mul (Measurable.mul measurable_const
+      (measurable_id.pow_const θ)) (Real.measurable_cos.comp
+        (measurable_const.mul Real.measurable_log))) ?_
+    exact hs'.measurable.comp (Real.measurable_log.comp (measurable_id.div_const xk))
+  refine Integrable.mono' ((integrableOn_Ioi_rpow_of_lt (show θ - s.re - 1 < -1 by linarith)
+    one_pos).const_mul |α|) ?_ ?_
+  · exact ((Complex.measurable_ofReal.comp hmeas).mul
+      ((Complex.measurable_ofReal).pow_const _)).aestronglyMeasurable
+  · refine (ae_restrict_mem measurableSet_Ioi).mono fun x hx => ?_
+    have hx0 : (0 : ℝ) < x := lt_trans one_pos hx
+    rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, Complex.norm_cpow_eq_rpow_re_of_pos hx0]
+    have hre : (-s - 1).re = -s.re - 1 := by simp
+    rw [hre]
+    have hb : |oscTerm θ α γ xk x| ≤ |α| * x ^ θ := by
+      unfold oscTerm
+      rw [abs_mul, abs_mul, abs_mul, abs_of_nonneg (Real.rpow_nonneg hx0.le θ),
+        abs_of_nonneg (Real.smoothTransition.nonneg _)]
+      have h1 := Real.abs_cos_le_one (γ * Real.log x)
+      have h2 := Real.smoothTransition.le_one (Real.log (x / xk))
+      have h3 := Real.smoothTransition.nonneg (Real.log (x / xk))
+      have h4 := Real.rpow_nonneg hx0.le θ
+      calc |α| * x ^ θ * |Real.cos (γ * Real.log x)| * Real.smoothTransition (Real.log (x / xk))
+          ≤ |α| * x ^ θ * 1 * 1 := by gcongr
+        _ = _ := by ring
+    have hxs : 0 ≤ x ^ (-s.re - 1) := Real.rpow_nonneg hx0.le _
+    calc |oscTerm θ α γ xk x| * x ^ (-s.re - 1) ≤ |α| * x ^ θ * x ^ (-s.re - 1) :=
+          mul_le_mul_of_nonneg_right hb hxs
+      _ = |α| * x ^ (θ - s.re - 1) := by
+          rw [mul_assoc, ← Real.rpow_add hx0]; ring_nf
+
 /-- **The size of `R̂_k`** (Section 4.2): with `|Φ| ≤ 1` on `Re w ≥ 0`, for `Re s > θ`, `x⁺ ≥ 1`,
 `|s ∫_1^∞ R_k(x) x^{-s-1} dx| ≤ (|α| |s|/2) (x⁺)^{θ-σ} (1/|w| + 1/|w'|)`. -/
 theorem norm_mellin_oscTerm_le {θ α γ xk : ℝ} (hxk : 1 ≤ xk) {s : ℂ} (hs : θ < s.re) :
@@ -311,6 +347,51 @@ theorem abs_deriv_oscTerm_le {θ α γ xk x : ℝ} (hx : 0 < x) (hxk : 0 < xk) :
   calc |θ * c * p - γ * sn * p + c * d| ≤ |θ * c * p - γ * sn * p| + |c * d| := abs_add_le _ _
     _ ≤ |θ * c * p| + |γ * sn * p| + |c * d| := by gcongr; exact abs_sub _ _
     _ ≤ |θ| + |γ| + 2 := by linarith
+
+/-- The `k`-th oscillation of the design is differentiable on `(0, ∞)`. -/
+lemma hasDerivAt_oscK (θ α γ : ℝ) {xk x : ℝ} (hxk : 0 < xk) (hx : 0 < x) :
+    HasDerivAt (oscK θ α γ xk) (deriv (oscK θ α γ xk) x) x := by
+  have hd : ∀ y, 0 < y → DifferentiableAt ℝ (fun z => oscTerm (thK 0 xk) α γ y z) x :=
+    fun y hy => (hasDerivAt_oscTerm hx hy).differentiableAt
+  unfold oscK
+  split_ifs with hθ
+  · have hy : 0 < xk * max xk 1 := mul_pos hxk (lt_of_lt_of_le one_pos (le_max_right _ _))
+    simp only [oscTermS]
+    exact ((hd xk hxk).sub (hd _ hy)).hasDerivAt
+  · exact (hasDerivAt_oscTerm hx hxk).differentiableAt.hasDerivAt
+
+/-- For the design `θ = 0`, `R_k' ` is the difference of the slopes of the oscillations switched
+on at `x⁺` and at the switch-off point. -/
+lemma deriv_oscK_zero {α γ xk x : ℝ} (hxk : 0 < xk) (hx : 0 < x) :
+    deriv (oscK 0 α γ xk) x = deriv (oscTerm (thK 0 xk) α γ xk) x -
+      deriv (oscTerm (thK 0 xk) α γ (xk * max xk 1)) x := by
+  have hy : 0 < xk * max xk 1 := mul_pos hxk (lt_of_lt_of_le one_pos (le_max_right _ _))
+  have e : oscK 0 α γ xk = fun z => oscTerm (thK 0 xk) α γ xk z -
+      oscTerm (thK 0 xk) α γ (xk * max xk 1) z := by
+    funext z; simp [oscK, oscTermS]
+  rw [e, deriv_fun_sub (hasDerivAt_oscTerm hx hxk).differentiableAt
+    (hasDerivAt_oscTerm hx hy).differentiableAt]
+
+/-- **The slope bound for every design**: `|R_k'(x)| ≤ 2 |α| x^{θ_k - 1} (|θ_k| + |γ| + 2)`. -/
+theorem abs_deriv_oscK_le {θ α γ xk x : ℝ} (hx : 0 < x) (hxk : 0 < xk) :
+    |deriv (oscK θ α γ xk) x| ≤
+      2 * (|α| * x ^ (thK θ xk - 1) * (|thK θ xk| + |γ| + 2)) := by
+  have hB0 : 0 ≤ |α| * x ^ (thK θ xk - 1) * (|thK θ xk| + |γ| + 2) := by
+    have := Real.rpow_nonneg hx.le (thK θ xk - 1); positivity
+  by_cases hθ : θ = 0
+  · subst hθ
+    have hy : 0 < xk * max xk 1 := mul_pos hxk (lt_of_lt_of_le one_pos (le_max_right _ _))
+    rw [deriv_oscK_zero hxk hx]
+    have h1 := abs_deriv_oscTerm_le (θ := thK 0 xk) (α := α) (γ := γ) hx hxk
+    have h2 := abs_deriv_oscTerm_le (θ := thK 0 xk) (α := α) (γ := γ) hx hy
+    calc _ ≤ _ := abs_sub _ _
+      _ ≤ _ := add_le_add h1 h2
+      _ = _ := by ring
+  · have e : oscK θ α γ xk = oscTerm θ α γ xk := by funext z; exact oscK_of_ne hθ _ _ _ _
+    rw [e, thK_of_ne hθ]
+    have := abs_deriv_oscTerm_le (θ := θ) (α := α) (γ := γ) hx hxk
+    rw [thK_of_ne hθ] at hB0
+    linarith
 
 end Oscillation
 

@@ -430,8 +430,10 @@ theorem T_ge_of_formula {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 1000
       (heightScale_switchOn_pos θ hX1.le) k
     rw [abs_of_nonneg (by linarith [hm.1])]
     exact hm.2
-  refine target_ge_linear hX (by linarith [hθ.2]) (fun x => ?_) (fun v hv => ?_)
-    (fun v hv => abs_osc_le hsp hα (by linarith)) ?_ hx
+  refine target_ge_linear hX (thU_le (by linarith [hθ.2]) (by norm_num)) (fun x => ?_)
+    (fun v hv => ?_)
+    (fun v hv => abs_osc_le_of hsp hα (fun k => thK_swS_le θ hX1.le (by linarith) k)
+      (by linarith)) ?_ hx
   · unfold countA; positivity
   · unfold absorbedDensityCap
     refine (min_le_right _ _).trans ?_

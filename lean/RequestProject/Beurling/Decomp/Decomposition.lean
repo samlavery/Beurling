@@ -62,14 +62,14 @@ lemma targetOf_eq {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℝ} {u : ℝ → 
 
 /-- The transform integrand of the lag is integrable on `(1, ∞)`. -/
 lemma lag_integrableOn (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.smoothNumbers)
-    {κ θ : ℝ} (hκ : 0 < κ) (hθ0 : 0 < θ) (hθ2 : θ ≤ 2) (hXw : 10 ^ 8 ≤ Real.log X₀)
+    {κ θ t : ℝ} (hκ : 0 < κ) (hXw : 10 ^ 8 ≤ Real.log X₀)
     {A : Set ℝ} {u : ℝ → ℝ}
     (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + winH X₀ (u a) = a) (hAfin : LocFin A)
     (hcap : ∀ v ≥ (X₀ : ℝ), absorbedDensity (winH X₀) A u v ≤ 0.1 / Real.log v)
     {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : ℝ} (hα : ∀ k, |α k| ≤ C) (hxp : (X₀ : ℝ) ≤ xp 0)
-    {η K : ℝ} (hη : 0 ≤ η)
+    (ht : ∀ k, thK θ (xp k) ≤ t) {η K : ℝ} (hη : 0 ≤ η)
     (hD : ∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ K * x ^ η)
-    {s : ℂ} (hsθ : θ < s.re) (hsη : η < s.re) (hs8 : (1 / 8 : ℝ) < s.re) (hs1 : s ≠ 1) :
+    {s : ℂ} (hsθ : t < s.re) (hsη : η < s.re) (hs8 : (1 / 8 : ℝ) < s.re) (hs1 : s ≠ 1) :
     IntegrableOn (fun x : ℝ => (lagOf P θ X₀ κ A u α γ xp x : ℂ) * (x : ℂ) ^ (-s - 1))
       (Ioi 1) := by
   have hX1 : 1 ≤ X₀ := Nat.pos_of_ne_zero (Nat.ne_zero_of_mem_smoothNumbers hXs)
@@ -81,7 +81,7 @@ lemma lag_integrableOn (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.sm
     ⟨winH_isWin hXw, hX1', fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
   obtain ⟨hiB, -⟩ := mellin_baseErr hXs hκ hs0 hs1
   obtain ⟨hiA, -⟩ := mellin_absE hW hcap (s := s) hs8
-  obtain ⟨hiR, -⟩ := mellin_osc (θ := θ) (γ := γ) hsp hα hsθ
+  obtain ⟨hiR, -⟩ := mellin_osc_of (θ := θ) (γ := γ) hsp hα ht hsθ
   -- the pointwise split `N - x = (T_base - x) + E_A + R + D`
   have hsplit : ∀ x : ℝ, 0 < x → P.N x - 1 * x =
       baseErr X₀ κ x + E x + osc θ α γ xp x + D x := by
@@ -143,16 +143,16 @@ lemma lag_integrableOn (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.sm
 
 /-- **The decomposition (14).** -/
 theorem decomposition_14 (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.smoothNumbers)
-    {κ θ : ℝ} (hκ : 0 < κ) (hθ0 : 0 < θ) (hθ2 : θ ≤ 2) (hXw : 10 ^ 8 ≤ Real.log X₀)
+    {κ θ t : ℝ} (hκ : 0 < κ) (hXw : 10 ^ 8 ≤ Real.log X₀)
     {A : Set ℝ} {u : ℝ → ℝ}
     (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + winH X₀ (u a) = a) (hAfin : LocFin A)
     (hcap : ∀ v ≥ (X₀ : ℝ), absorbedDensity (winH X₀) A u v ≤ 0.1 / Real.log v)
     {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : ℝ} (hα : ∀ k, |α k| ≤ C) (hxp : (X₀ : ℝ) ≤ xp 0)
-    {η K : ℝ} (hη : 0 ≤ η)
+    (ht : ∀ k, thK θ (xp k) ≤ t) {η K : ℝ} (hη : 0 ≤ η)
     (hD : ∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ K * x ^ η)
-    {s : ℂ} (hsθ : θ < s.re) (hsη : η < s.re) (hs8 : (1 / 8 : ℝ) < s.re) (hs1 : s ≠ 1)
+    {s : ℂ} (hsθ : t < s.re) (hsη : η < s.re) (hs8 : (1 / 8 : ℝ) < s.re) (hs1 : s ≠ 1)
     {a : ℝ} (ha : 1 ≤ a) :
-    P.zetaCont 1 s = ZBcont X₀ κ s + (∑' j, oscHat θ (α j) (γ j) (xp j) s) +
+    P.zetaCont 1 s = ZBcont X₀ κ s + (∑' j, oscHatK θ (α j) (γ j) (xp j) s) +
       (earlyNoise (lagOf P θ X₀ κ A u α γ xp) a s + lateNoise (lagOf P θ X₀ κ A u α γ xp) a s) +
       absorbedHat (winH X₀) A u s := by
   have hX1 : 1 ≤ X₀ := Nat.pos_of_ne_zero (Nat.ne_zero_of_mem_smoothNumbers hXs)
@@ -164,7 +164,7 @@ theorem decomposition_14 (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.
     ⟨winH_isWin hXw, hX1', fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
   obtain ⟨hiB, heB⟩ := mellin_baseErr hXs hκ hs0 hs1
   obtain ⟨hiA, heA⟩ := mellin_absE hW hcap (s := s) hs8
-  obtain ⟨hiR, heR⟩ := mellin_osc (θ := θ) (γ := γ) hsp hα hsθ
+  obtain ⟨hiR, heR⟩ := mellin_osc_of (θ := θ) (γ := γ) hsp hα ht hsθ
   -- the pointwise split `N - x = (T_base - x) + E_A + R + D`
   have hsplit : ∀ x : ℝ, 0 < x → P.N x - 1 * x =
       baseErr X₀ κ x + E x + osc θ α γ xp x + D x := by
@@ -172,7 +172,7 @@ theorem decomposition_14 (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.
     simp only [hDdef, hEdef, lagOf]
     rw [targetOf_eq hsp hX1 hxp hx]
     ring
-  have hiD := lag_integrableOn P hXs hκ hθ0 hθ2 hXw hAu hAfin hcap hsp hα hxp hη hD hsθ hsη hs8
+  have hiD := lag_integrableOn P hXs hκ hXw hAu hAfin hcap hsp hα hxp ht hη hD hsθ hsη hs8
     hs1
   have heD := mellin_split (s := s) ha hiD
   -- assemble

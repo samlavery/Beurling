@@ -66,11 +66,7 @@ lemma deriv_osc_zero_low (α γ : ℕ → ℝ) {y : ℝ} (hy0 : 0 < y)
     have hxp : ∀ k, 0 < switchOn (swS θ X₀) k := fun k =>
       lt_of_lt_of_le (Real.exp_pos _) (switchOn_ge _ k)
     refine (tsum_congr fun k => ?_).trans tsum_zero
-    unfold Oscillation.oscTerm
-    rw [Real.smoothTransition.zero_of_nonpos, mul_zero]
-    apply Real.log_nonpos (div_pos hx.1 (hxp k)).le
-    rw [div_le_one (hxp k)]
-    exact (hx.2.le.trans (switchOn_ge _ k))
+    exact Oscillation.oscK_eq_zero_of_le hx.1 (hx.2.le.trans (switchOn_ge _ k))
   rw [hev.deriv_eq]; simp
 
 /-- **`𝒜` is empty below `2X₀`**: the capped absorbed density vanishes on `[X₀, 2X₀)`. -/

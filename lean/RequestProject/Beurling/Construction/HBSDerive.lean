@@ -256,7 +256,8 @@ theorem sparsityInputs_of_cluster {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 
         rw [abs_of_nonneg (by linarith [hm.1])]
         exact hm.2
       have hR := abs_osc_le (θ := θ) (γ := designedGamma P θ X₀ (kappaParam X₀) A
-        (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a) hsp hα (x := v) (by linarith)
+        (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a) hθ.1.ne' hsp hα (x := v)
+        (by linarith)
       have hR0 := osc_eq_zero_of_le (θ := θ) (α := designedAlpha P θ X₀ (kappaParam X₀) A
         (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a) (γ := designedGamma P θ X₀
         (kappaParam X₀) A (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a) hsp

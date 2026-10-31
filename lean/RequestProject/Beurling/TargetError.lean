@@ -215,8 +215,8 @@ theorem target_error (X₀ : ℕ) {κ θ : ℝ} (cntA rhoA R E : ℝ → ℝ) (h
 lemma osc_eq_zero_of_le {θ : ℝ} {α γ xp : ℕ → ℝ} (h : Spacing xp) {x : ℝ} (hx : 0 < x)
     (hxp : x ≤ xp 0) : osc θ α γ xp x = 0 := by
   unfold osc
-  rw [show (fun k => oscTerm θ (α k) (γ k) (xp k) x) = fun _ => 0 from funext fun k =>
-    oscTerm_eq_zero_of_le hx (hxp.trans (h.strictMono.monotone (Nat.zero_le k)))]
+  rw [show (fun k => oscK θ (α k) (γ k) (xp k) x) = fun _ => 0 from funext fun k =>
+    oscK_eq_zero_of_le hx (hxp.trans (h.strictMono.monotone (Nat.zero_le k)))]
   exact tsum_zero
 
 end Target

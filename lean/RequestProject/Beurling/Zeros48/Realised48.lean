@@ -34,7 +34,7 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
     (hlag : ∀ x ≥ (X₀ : ℝ),
       |(realisedSystem M (capH X₀) U).N x - M.T x| ≤ x ^ lagExponent (1 / 10000))
     (k : ℕ) :
-    Lemma48PiecesCount X₀ (heightScale θ (kappa0Param X₀) (switchOn (swS θ X₀) k))
+    Lemma48PiecesCount X₀ (heightScale (thK θ (switchOn (swS θ X₀) k)) (kappa0Param X₀) (switchOn (swS θ X₀) k))
       (earlyOf (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀) (realisedA M (capH X₀) U)
         (fun n => solveU (winH X₀) n)
         (designedAlpha (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
@@ -104,7 +104,7 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
   have hcnt : ∀ x, 0 ≤ x → ((residualLe h x).card : ℝ) = D x + contPart X₀ κ rhoA R x :=
     fun x hx => by rw [hDeq x hx]; ring
   -- the oscillation
-  have hΓpos : ∀ j, 0 < heightScale θ (kappa0Param X₀) (xp j) := fun j =>
+  have hΓpos : ∀ j, 0 < heightScale (thK θ (xp j)) (kappa0Param X₀) (xp j) := fun j =>
     heightScale_pos (kappa0Param_pos (by linarith)) (by
       have := hsp.one_le_all j
       have h2 : xp 0 ≤ xp j := switchOn_mono _ (Nat.zero_le j)
@@ -115,14 +115,18 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
   have hαb : ∀ j, |αd j| ≤ 2 := fun j => by
     have := designedAlpha_mem P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀ (swS θ X₀)) hΓpos j
     rw [abs_of_nonneg (by linarith [this.1])]; exact this.2
-  have hγb : ∀ j, |γd j| ≤ 2 * heightScale θ (kappa0Param X₀) (xp j) := fun j => by
+  have hγb : ∀ j, |γd j| ≤ 2 * heightScale (thK θ (xp j)) (kappa0Param X₀) (xp j) := fun j => by
     have := designedGamma_mem P θ X₀ κ A u (kappa0Param X₀) xp (constructionScale X₀ (swS θ X₀))
       (fun j => (hΓpos j).le) j
     rw [abs_of_nonneg (by linarith [this.1, hΓpos j])]; exact this.2
-  set L := ∑ j ∈ Finset.range k, oscLip θ (αd j) (γd j) (xp j) with hLdef
+  set L := ∑ j ∈ Finset.range k, oscLipK θ (αd j) (γd j) (xp j) with hLdef
   have hL : L ≤ 1 / 100 :=
-    sum_oscLip_switchOn_le (by linarith) (by linarith) hX10 hαb hγb k
-  have hL0 : 0 ≤ L := Finset.sum_nonneg fun j _ => oscLip_nonneg (hxp0 j)
+    sum_oscLip_switchOn_le (by linarith) (by linarith) hX0 hX hαb hγb k
+  have hL0 : 0 ≤ L := Finset.sum_nonneg fun j _ => by
+    unfold oscLipK; have := oscLip_nonneg (θ := thK θ (xp j)) (α := αd j) (γ := γd j) (hxp0 j)
+    linarith
+  have hth1 : ∀ j, thK θ (xp j) ≤ 1 := fun j =>
+    (thK_swS_le θ hX1.le (by linarith) j).trans (thU_le (by linarith) (by norm_num))
   -- the hypotheses on `ρ̄_A` and `R` on `[X₀, a_k]`
   have hAfin : LocFin A := realisedA_locFin M (capH X₀) U
   have hw := winH_isWin (X₀ := (X₀ : ℝ)) hX
@@ -141,9 +145,9 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
         hX.trans (Real.log_le_log (by linarith) hv.1)
       rw [div_le_one (by linarith)]; linarith
     · exact osc_eq_oscPart hsp (by linarith [hx.1]) (hx.2.trans haxk)
-    · exact abs_oscDeriv_le (by linarith) hxp0 k (by linarith [hx.1])
-    · exact oscPart_sub_eq_integral (by linarith) hxp0 k (by linarith [hu'.1]) huv
-    · exact (le_abs_self _).trans (abs_oscPart_sub_le (by linarith) hxp0 k
+    · exact abs_oscDeriv_le hth1 hxp0 k (by linarith [hx.1])
+    · exact oscPart_sub_eq_integral hth1 hxp0 k (by linarith [hu'.1]) huv
+    · exact (le_abs_self _).trans (abs_oscPart_sub_le hth1 hxp0 k
         (by linarith [hu'.1]) huv)
   -- the residual elements lie above `X₀/2`
   have hres : ∀ e ∈ residual h, (X₀ : ℝ) / 2 ≤ P.val e := fun e he => by
@@ -223,7 +227,8 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
       ((ae_restrict_mem measurableSet_Ioc).mono fun t ht => by
         rw [Real.norm_eq_abs]; exact hgFb t ⟨ht.1.le, ht.2⟩)
   set Mb : ℝ := (X ^ η + 2) * ((X₀ : ℝ) / 2) ^ (-(3 / 4 : ℝ)) with hMb
-  obtain ⟨-, hβα, hnum⟩ := lemma48_numerics hθ (X₀ := (X₀ : ℝ)) (a := ak) (xk := xk)
+  obtain ⟨-, hβα, hnum⟩ := lemma48_numerics
+    (thK_swS_mem ⟨hθ.1.le, hθ.2⟩ hX1.le (by linarith) k) (X₀ := (X₀ : ℝ)) (a := ak) (xk := xk)
     (by linarith) hX hXa haxk hxka hxk0 hc0 hc4 hJ2
   have hcP : ∀ x : ℝ, 1 < x → x < X₀ → contPart X₀ κ rhoA R x = 0 := fun x _ hx => by
     simp only [contPart, if_pos hx]

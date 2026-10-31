@@ -53,20 +53,33 @@ lemma abs_oscTerm_le {θ α γ xp x : ℝ} (hx : 0 < x) :
   · push_neg at h
     rw [oscTerm_eq_zero_of_le hx h.le, abs_zero]
 
+lemma measurable_oscK (θ α γ xp : ℝ) : Measurable (oscK θ α γ xp) := by
+  unfold oscK
+  split_ifs
+  · exact (measurable_oscTerm _ _ _ _).sub (measurable_oscTerm _ _ _ _)
+  · exact measurable_oscTerm _ _ _ _
+
+lemma abs_oscK_le_ite {θ α γ xp x : ℝ} (hxp : 1 ≤ xp) (hx : 0 < x) :
+    |oscK θ α γ xp x| ≤ if xp ≤ x then |α| * x ^ thK θ xp else 0 := by
+  split_ifs with h
+  · exact abs_oscK_le hxp hx
+  · push_neg at h
+    rw [oscK_eq_zero_of_le hx h.le, abs_zero]
+
 /-- **The transform of the oscillation**: for `θ < σ`, `|α_k| ≤ C` and switch-on points with
 `x⁺_{k+1} ≥ exp(x⁺_k)`, `s ∫_1^∞ R(x) x^{-s-1} dx = ∑_k R̂_k(s)` (with the integrand integrable). -/
-theorem mellin_osc {θ : ℝ} {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : ℝ}
-    (hα : ∀ k, |α k| ≤ C) {s : ℂ} (hs : θ < s.re) :
+theorem mellin_osc_of {θ t : ℝ} {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : ℝ}
+    (hα : ∀ k, |α k| ≤ C) (ht : ∀ k, thK θ (xp k) ≤ t) {s : ℂ} (hs : t < s.re) :
     IntegrableOn (fun x : ℝ => (osc θ α γ xp x : ℂ) * (x : ℂ) ^ (-s - 1)) (Ioi 1) ∧
-      s * tailMellin (osc θ α γ xp) s = ∑' k, oscHat θ (α k) (γ k) (xp k) s := by
+      s * tailMellin (osc θ α γ xp) s = ∑' k, oscHatK θ (α k) (γ k) (xp k) s := by
   set σ := s.re
-  set δ := σ - θ with hδ
+  set δ := σ - t with hδ
   have hδ0 : 0 < δ := by rw [hδ]; linarith
   have hC : 0 ≤ C := le_trans (abs_nonneg _) (hα 0)
   set f : ℕ → ℝ → ℂ := fun k x =>
-    (oscTerm θ (α k) (γ k) (xp k) x : ℂ) * (x : ℂ) ^ (-s - 1) with hf
+    (oscK θ (α k) (γ k) (xp k) x : ℂ) * (x : ℂ) ^ (-s - 1) with hf
   have hfm : ∀ k, AEStronglyMeasurable (f k) (volume.restrict (Ioi 1)) := fun k =>
-    ((Complex.measurable_ofReal.comp (measurable_oscTerm _ _ _ _)).mul
+    ((Complex.measurable_ofReal.comp (measurable_oscK _ _ _ _)).mul
       ((Complex.measurable_ofReal).pow_const _)).aestronglyMeasurable
   -- pointwise bound
   have hfb : ∀ k, ∀ x ∈ Ioi (1 : ℝ),
@@ -77,15 +90,19 @@ theorem mellin_osc {θ : ℝ} {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : �
       Complex.norm_cpow_eq_rpow_re_of_pos hx0]
     have hre : (-s - 1).re = -σ - 1 := by simp [σ]
     rw [hre]
-    have hb := abs_oscTerm_le (θ := θ) (α := α k) (γ := γ k) (xp := xp k) hx0
+    have hb := abs_oscK_le_ite (θ := θ) (α := α k) (γ := γ k) (hsp.one_le_all k) hx0
     have hxs : 0 ≤ x ^ (-σ - 1) := Real.rpow_nonneg hx0.le _
     split_ifs at hb ⊢ with h
-    · calc |oscTerm θ (α k) (γ k) (xp k) x| * x ^ (-σ - 1) ≤ |α k| * x ^ θ * x ^ (-σ - 1) :=
-            mul_le_mul_of_nonneg_right hb hxs
-        _ ≤ C * x ^ θ * x ^ (-σ - 1) := by gcongr; exact hα k
+    · have hx1 : 1 ≤ x := le_of_lt hx
+      calc |oscK θ (α k) (γ k) (xp k) x| * x ^ (-σ - 1)
+          ≤ |α k| * x ^ thK θ (xp k) * x ^ (-σ - 1) := mul_le_mul_of_nonneg_right hb hxs
+        _ ≤ C * x ^ t * x ^ (-σ - 1) := by
+            gcongr
+            · exact hα k
+            · exact ht k
         _ = C * x ^ (-δ - 1) := by
             rw [mul_assoc, ← Real.rpow_add hx0]; congr 2; rw [hδ]; ring
-    · have : |oscTerm θ (α k) (γ k) (xp k) x| = 0 := le_antisymm hb (abs_nonneg _)
+    · have : |oscK θ (α k) (γ k) (xp k) x| = 0 := le_antisymm hb (abs_nonneg _)
       rw [this]; simp
   -- summable bound for the integrals of the norms
   have hlin : ∀ k, ∫⁻ x in Ioi (1 : ℝ), ‖f k x‖ₑ ≤
@@ -142,6 +159,15 @@ theorem mellin_osc {θ : ℝ} {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : �
   unfold tailMellin
   rw [heq, integral_tsum hfm hfin, ← tsum_mul_left]
   rfl
+
+/-- **The transform of the oscillation** (`θ ≠ 0`): `s ∫_1^∞ R(x) x^{-s-1} dx = ∑_k R̂_k(s)`. -/
+theorem mellin_osc {θ : ℝ} (hθ : θ ≠ 0) {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : ℝ}
+    (hα : ∀ k, |α k| ≤ C) {s : ℂ} (hs : θ < s.re) :
+    IntegrableOn (fun x : ℝ => (osc θ α γ xp x : ℂ) * (x : ℂ) ^ (-s - 1)) (Ioi 1) ∧
+      s * tailMellin (osc θ α γ xp) s = ∑' k, oscHat θ (α k) (γ k) (xp k) s := by
+  obtain ⟨h1, h2⟩ := mellin_osc_of hsp hα (fun k => (thK_of_ne hθ (xp k)).le) hs
+  refine ⟨h1, h2.trans ?_⟩
+  simp [oscHatK_of_ne hθ]
 
 end Decomp
 

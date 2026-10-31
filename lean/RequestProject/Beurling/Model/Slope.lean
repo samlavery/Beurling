@@ -53,8 +53,10 @@ theorem target_eq_split {X₀ : ℕ} {κ : ℝ} {cntA rhoA R : ℝ → ℝ} {x :
 /-- The heights lie in the designed range `[Γ_k, 2Γ_k]` (Lemma 4.8). -/
 def DesignedRange (θ : ℝ) (X₀ : ℕ) (γ : ℕ → ℝ) : Prop :=
   ∀ k, γ k ∈ Set.Icc
-    (DesignedZero.heightScale θ (Construction.kappa0Param X₀) (Construction.switchOn (swS θ X₀) k))
-    (2 * DesignedZero.heightScale θ (Construction.kappa0Param X₀) (Construction.switchOn (swS θ X₀) k))
+    (DesignedZero.heightScale (thK θ (Construction.switchOn (swS θ X₀) k))
+      (Construction.kappa0Param X₀) (Construction.switchOn (swS θ X₀) k))
+    (2 * DesignedZero.heightScale (thK θ (Construction.switchOn (swS θ X₀) k))
+      (Construction.kappa0Param X₀) (Construction.switchOn (swS θ X₀) k))
 
 /-! ### The rigid part -/
 
@@ -342,8 +344,8 @@ lemma deriv_oscTerm_of_le {θ α γ xk x : ℝ} (hx : 0 < x) (hxk : x ≤ xk) :
 lemma abs_deriv_oscTerm_le_sqrt {θ κ₀ γ xk x : ℝ} (hθ0 : 0 ≤ θ) (hθ2 : θ ≤ 1 / 2)
     (hκ : 0 < κ₀) (hxk : 1 < xk)
     (hγ : γ ∈ Icc (DesignedZero.heightScale θ κ₀ xk) (2 * DesignedZero.heightScale θ κ₀ xk))
-    (hx : xk ≤ x) :
-    |deriv (Oscillation.oscTerm θ (DesignedZero.amplitudeOf θ κ₀ γ xk) γ xk) x| ≤
+    (hx : xk ≤ x) {y : ℝ} (hy : 0 < y) :
+    |deriv (Oscillation.oscTerm θ (DesignedZero.amplitudeOf θ κ₀ γ xk) γ y) x| ≤
       Real.sqrt (xk / x) * (κ₀ / Real.log xk + 5 * xk ^ (-(1 / 2 : ℝ))) := by
   have hxk0 : 0 < xk := by linarith
   have hx0 : 0 < x := by linarith
@@ -355,7 +357,7 @@ lemma abs_deriv_oscTerm_le_sqrt {θ κ₀ γ xk x : ℝ} (hθ0 : 0 ≤ θ) (hθ2
   obtain ⟨hα1, hα2, hαγ⟩ := DesignedZero.amplitudeOf_mem hΓ0 hγ
   set α := DesignedZero.amplitudeOf θ κ₀ γ xk with hα
   have hα0 : 0 < α := by linarith
-  have hb := Oscillation.abs_deriv_oscTerm_le (θ := θ) (α := α) (γ := γ) hx0 hxk0
+  have hb := Oscillation.abs_deriv_oscTerm_le (θ := θ) (α := α) (γ := γ) hx0 hy
   rw [abs_of_pos hα0, abs_of_nonneg hθ0, abs_of_pos hγ0] at hb
   have hr : x ^ (θ - 1) * xk ^ (1 - θ) = (xk / x) ^ (1 - θ) := by
     rw [Real.div_rpow hxk0.le hx0.le, show θ - 1 = -(1 - θ) by ring, Real.rpow_neg hx0.le]
@@ -495,9 +497,9 @@ lemma abs_deriv_oscTerm_designed {θ X S : ℝ} (hθ0 : 0 ≤ θ) (hθ2 : θ ≤
     (hγ : γ ∈ Icc (DesignedZero.heightScale θ (Construction.kappa0Param X)
         (Construction.switchOn S k))
       (2 * DesignedZero.heightScale θ (Construction.kappa0Param X) (Construction.switchOn S k)))
-    (hx : Construction.switchOn S k ≤ x) :
+    (hx : Construction.switchOn S k ≤ x) {y : ℝ} (hy : 0 < y) :
     |deriv (Oscillation.oscTerm θ (DesignedZero.amplitudeOf θ (Construction.kappa0Param X) γ
-      (Construction.switchOn S k)) γ (Construction.switchOn S k)) x| ≤
+      (Construction.switchOn S k)) γ y) x| ≤
       2 * Real.sqrt (Construction.switchOn S k / x) /
         (X * Real.log (Construction.switchOn S k)) := by
   set xk := Construction.switchOn S k with hxkdef
@@ -510,7 +512,7 @@ lemma abs_deriv_oscTerm_designed {θ X S : ℝ} (hθ0 : 0 ≤ θ) (hθ2 : θ ≤
   have hxk1 : 1 < xk := by
     rw [← Real.exp_log hxk0, ← hLdef]; exact Real.one_lt_exp_iff.mpr (by linarith)
   have hX0 : 0 < X := by linarith
-  have h := abs_deriv_oscTerm_le_sqrt hθ0 hθ2 (Construction.kappa0Param_pos hX0) hxk1 hγ hx
+  have h := abs_deriv_oscTerm_le_sqrt hθ0 hθ2 (Construction.kappa0Param_pos hX0) hxk1 hγ hx hy
   have he : 5 * xk ^ (-(1 / 2 : ℝ)) ≤ 1 / (X * L) := by
     have h1 : xk ^ (-(1 / 2 : ℝ)) = (Real.exp (L / 2))⁻¹ := by
       rw [Real.rpow_def_of_pos hxk0, ← Real.exp_neg]; congr 1; rw [hLdef]; ring
@@ -528,23 +530,83 @@ lemma abs_deriv_oscTerm_designed {θ X S : ℝ} (hθ0 : 0 ≤ θ) (hθ2 : θ ≤
     field_simp; ring]
   gcongr
 
+/-- `R_k' = 0` on `(0, x⁺_k]`, for every design. -/
+lemma deriv_oscK_of_le {θ α γ xk x : ℝ} (hx : 0 < x) (hxk : x ≤ xk) :
+    deriv (Oscillation.oscK θ α γ xk) x = 0 := by
+  have hxk0 : 0 < xk := lt_of_lt_of_le hx hxk
+  unfold Oscillation.oscK
+  split_ifs with hθ
+  · have hy : xk ≤ xk * max xk 1 := le_mul_of_one_le_right hxk0.le (le_max_right _ _)
+    have hy0 : 0 < xk * max xk 1 := lt_of_lt_of_le hxk0 hy
+    simp only [Oscillation.oscTermS]
+    rw [deriv_fun_sub (Oscillation.hasDerivAt_oscTerm hx hxk0).differentiableAt
+      (Oscillation.hasDerivAt_oscTerm hx hy0).differentiableAt, deriv_oscTerm_of_le hx hxk,
+      deriv_oscTerm_of_le hx (hxk.trans hy), sub_zero]
+  · exact deriv_oscTerm_of_le hx hxk
+
+/-- **The slope of one designed oscillation, for every design**: for `x ≥ x_k`,
+`|R_k'(x)| ≤ 4 κ₀ (x_k/x)^{1/2}/L_k` (the switched-off oscillation of the design `θ = 0` is a
+difference of two oscillations, each with the bound `2 κ₀ (x_k/x)^{1/2}/L_k`). -/
+lemma abs_deriv_oscK_designed {θ X S : ℝ} (hθ0 : 0 ≤ θ) (hX : 10 ≤ X) (hXS : X ≤ S) (k : ℕ)
+    (ht0 : 0 ≤ thK θ (Construction.switchOn S k)) (ht2 : thK θ (Construction.switchOn S k) ≤ 1 / 2)
+    {γ x : ℝ}
+    (hγ : γ ∈ Icc (DesignedZero.heightScale (thK θ (Construction.switchOn S k))
+        (Construction.kappa0Param X) (Construction.switchOn S k))
+      (2 * DesignedZero.heightScale (thK θ (Construction.switchOn S k))
+        (Construction.kappa0Param X) (Construction.switchOn S k)))
+    (hx : Construction.switchOn S k ≤ x) :
+    |deriv (Oscillation.oscK θ (DesignedZero.amplitudeOf (thK θ (Construction.switchOn S k))
+      (Construction.kappa0Param X) γ (Construction.switchOn S k)) γ (Construction.switchOn S k)) x| ≤
+      4 * Real.sqrt (Construction.switchOn S k / x) /
+        (X * Real.log (Construction.switchOn S k)) := by
+  set xk := Construction.switchOn S k with hxkdef
+  have hxk0 : 0 < xk := Construction.switchOn_pos S k
+  have hx0 : 0 < x := lt_of_lt_of_le hxk0 hx
+  have hpos : 0 ≤ 2 * Real.sqrt (xk / x) / (X * Real.log xk) := by
+    have hL : 0 ≤ Real.log xk := by
+      have := log_switchOn_ge_of (show (0 : ℝ) ≤ X by linarith) hXS k
+      rw [← hxkdef] at this
+      have : (0 : ℝ) ≤ 2 ^ k * X ^ 2 := by positivity
+      linarith
+    have : 0 ≤ X := by linarith
+    positivity
+  have hb := fun y (hy : 0 < y) => abs_deriv_oscTerm_designed ht0 ht2 hX hXS k hγ hx hy
+  simp only [← hxkdef] at hb
+  unfold Oscillation.oscK
+  split_ifs with hθ
+  · have hy : 0 < xk * max xk 1 := mul_pos hxk0 (lt_of_lt_of_le one_pos (le_max_right _ _))
+    simp only [Oscillation.oscTermS]
+    rw [deriv_fun_sub (Oscillation.hasDerivAt_oscTerm hx0 hxk0).differentiableAt
+      (Oscillation.hasDerivAt_oscTerm hx0 hy).differentiableAt]
+    subst hθ
+    have h1 := hb xk hxk0
+    have h2 := hb _ hy
+    calc _ ≤ _ := abs_sub _ _
+      _ ≤ _ := add_le_add h1 h2
+      _ = _ := by ring
+  · have h1 := hb xk hxk0
+    rw [thK_of_ne hθ] at h1 ⊢
+    have e : 4 * Real.sqrt (xk / x) / (X * Real.log xk) =
+        2 * (2 * Real.sqrt (xk / x) / (X * Real.log xk)) := by ring
+    rw [e]; linarith
+
 /-- On `(0, x⁺_K]` the oscillation is the finite sum of its first `K` terms. -/
 lemma osc_eq_finsum {θ : ℝ} (α γ : ℕ → ℝ) (X : ℝ) {K : ℕ} {y : ℝ} (hy : 0 < y)
     (hyK : y ≤ Construction.switchOn X K) :
     Oscillation.osc θ α γ (Construction.switchOn X) y =
-      ∑ k ∈ Finset.range K, Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn X k) y := by
+      ∑ k ∈ Finset.range K, Oscillation.oscK θ (α k) (γ k) (Construction.switchOn X k) y := by
   unfold Oscillation.osc
   apply tsum_eq_sum
   intro k hk
   rw [Finset.mem_range, not_lt] at hk
-  exact Oscillation.oscTerm_eq_zero_of_le hy (hyK.trans (Construction.switchOn_mono X hk))
+  exact Oscillation.oscK_eq_zero_of_le hy (hyK.trans (Construction.switchOn_mono X hk))
 
 /-- The oscillation is differentiable on `(0, ∞)`, its derivative being the (locally finite) sum
 of the derivatives of the `R_k`. -/
 lemma hasDerivAt_osc {θ : ℝ} (α γ : ℕ → ℝ) {X : ℝ} (hX : 1 ≤ X) {x : ℝ} (hx : 0 < x) :
     HasDerivAt (Oscillation.osc θ α γ (Construction.switchOn X))
       (∑ k ∈ Finset.range (⌈x⌉₊ + 1),
-        deriv (Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn X k)) x) x := by
+        deriv (Oscillation.oscK θ (α k) (γ k) (Construction.switchOn X k)) x) x := by
   set K := ⌈x⌉₊ + 1
   have hxK : x < Construction.switchOn X K := by
     have := nat_lt_switchOn hX K
@@ -552,12 +614,11 @@ lemma hasDerivAt_osc {θ : ℝ} (α γ : ℕ → ℝ) {X : ℝ} (hX : 1 ≤ X) {
     push_cast [K] at *
     linarith
   have hsum : HasDerivAt (fun y => ∑ k ∈ Finset.range K,
-      Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn X k) y)
+      Oscillation.oscK θ (α k) (γ k) (Construction.switchOn X k) y)
       (∑ k ∈ Finset.range K,
-        deriv (Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn X k)) x) x :=
+        deriv (Oscillation.oscK θ (α k) (γ k) (Construction.switchOn X k)) x) x :=
     HasDerivAt.fun_sum fun k _ =>
-      (Oscillation.hasDerivAt_oscTerm hx (Construction.switchOn_pos X k)).differentiableAt
-        |>.hasDerivAt
+      Oscillation.hasDerivAt_oscK θ _ _ (Construction.switchOn_pos X k) hx
   refine hsum.congr_of_eventuallyEq ?_
   filter_upwards [Ioo_mem_nhds hx hxK] with y hy
   exact osc_eq_finsum α γ X hy.1 hy.2.le
@@ -582,36 +643,44 @@ theorem abs_deriv_osc_le {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
   set α := Construction.amplitudes θ (Construction.kappa0Param X₀) (Construction.switchOn S) γ
   set ℓ := Real.log x with hℓdef
   set W : ℕ → ℝ := fun k => if Construction.switchOn S k < x ∧ x < Construction.switchOn S (k + 1)
-    then 4 / (X * ℓ) else 0 with hW
-  have hterm : ∀ k, |deriv (Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn S k)) x| ≤
-      W k + 64 / (X ^ 5 * ℓ) * (1 / 4) ^ k := by
+    then 8 / (X * ℓ) else 0 with hW
+  have hterm : ∀ k, |deriv (Oscillation.oscK θ (α k) (γ k) (Construction.switchOn S k)) x| ≤
+      W k + 128 / (X ^ 5 * ℓ) * (1 / 4) ^ k := by
     intro k
     have hxk := Construction.switchOn_pos S k
     have hLk := log_switchOn_ge_of (by linarith) hXS k
     have hX4 : (0 : ℝ) < X ^ 4 := by positivity
     have hW0 : 0 ≤ W k := by simp only [hW]; split_ifs <;> positivity
-    have hg0 : 0 ≤ 64 / (X ^ 5 * ℓ) * (1 / 4 : ℝ) ^ k := by positivity
+    have hg0 : 0 ≤ 128 / (X ^ 5 * ℓ) * (1 / 4 : ℝ) ^ k := by positivity
     rcases le_or_gt x (Construction.switchOn S k) with h | h
-    · rw [deriv_oscTerm_of_le hx0 h, abs_zero]; positivity
+    · rw [deriv_oscK_of_le hx0 h, abs_zero]; positivity
     · set xk := Construction.switchOn S k with hxkdef
       set L := Real.log xk with hLdef
       have h2k : (1 : ℝ) ≤ 2 ^ k := one_le_pow₀ (by norm_num)
       have hL1 : 1 ≤ L := by nlinarith
       have hL0 : 0 < L := by linarith
-      have hb : |deriv (Oscillation.oscTerm θ (α k) (γ k) xk) x| ≤
-          2 * Real.sqrt (xk / x) / (X * L) :=
-        abs_deriv_oscTerm_designed (by linarith [hθ.1]) (by linarith [hθ.2]) (by linarith) hXS k
-          (hγ k) h.le
+      have ht0 : 0 ≤ thK θ xk := by
+        unfold thK; split_ifs
+        · have : 0 ≤ Real.log (Real.log xk) := by
+            have := log_switchOn_ge_of (by linarith) hXS k
+            exact Real.log_nonneg (by nlinarith)
+          positivity
+        · linarith [hθ.1]
+      have ht2 : thK θ xk ≤ 1 / 2 :=
+        (thK_swS_le θ hX1.le (by linarith) k).trans (thU_le (by linarith [hθ.2]) (by norm_num))
+      have hb : |deriv (Oscillation.oscK θ (α k) (γ k) xk) x| ≤
+          4 * Real.sqrt (xk / x) / (X * L) :=
+        abs_deriv_oscK_designed (by linarith [hθ.1]) (by linarith) hXS k ht0 ht2 (hγ k) h.le
       have hs0 := Real.sqrt_nonneg (xk / x)
-      have hb' : |deriv (Oscillation.oscTerm θ (α k) (γ k) xk) x| ≤
-          2 / (X * L * ℓ) * (Real.sqrt (xk / x) * ℓ) := by
+      have hb' : |deriv (Oscillation.oscK θ (α k) (γ k) xk) x| ≤
+          4 / (X * L * ℓ) * (Real.sqrt (xk / x) * ℓ) := by
         refine hb.trans (le_of_eq ?_); field_simp
       rcases lt_or_ge x (Construction.switchOn S (k + 1)) with h1 | h1
-      · have hw : W k = 4 / (X * ℓ) := by simp only [hW]; rw [if_pos ⟨h, h1⟩]
+      · have hw : W k = 8 / (X * ℓ) := by simp only [hW]; rw [if_pos ⟨h, h1⟩]
         have hE := sqrt_div_mul_log_le hxk hL1 h.le
-        have : 2 / (X * L * ℓ) * (Real.sqrt (xk / x) * ℓ) ≤ 2 / (X * L * ℓ) * (2 * L) :=
+        have : 4 / (X * L * ℓ) * (Real.sqrt (xk / x) * ℓ) ≤ 4 / (X * L * ℓ) * (2 * L) :=
           mul_le_mul_of_nonneg_left hE (by positivity)
-        have e : 2 / (X * L * ℓ) * (2 * L) = 4 / (X * ℓ) := by field_simp; ring
+        have e : 4 / (X * L * ℓ) * (2 * L) = 8 / (X * ℓ) := by field_simp; ring
         linarith
       · have hE := sqrt_div_mul_log_le_of_exp hxk h1
         have hxL : L ^ 2 ≤ xk := by
@@ -627,9 +696,9 @@ theorem abs_deriv_osc_le {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
                 rw [mul_pow, ← pow_mul, ← pow_mul, show (4 : ℝ) = 2 ^ 2 by norm_num, ← pow_mul,
                   mul_comm 2 k]
             _ ≤ _ := this
-        have h3 : 2 / (X * L * ℓ) * (Real.sqrt (xk / x) * ℓ) ≤ 2 / (X * L * ℓ) * (32 / xk) :=
+        have h3 : 4 / (X * L * ℓ) * (Real.sqrt (xk / x) * ℓ) ≤ 4 / (X * L * ℓ) * (32 / xk) :=
           mul_le_mul_of_nonneg_left hE (by positivity)
-        have h4 : 2 / (X * L * ℓ) * (32 / xk) ≤ 64 / (X ^ 5 * ℓ) * (1 / 4) ^ k := by
+        have h4 : 4 / (X * L * ℓ) * (32 / xk) ≤ 128 / (X ^ 5 * ℓ) * (1 / 4) ^ k := by
           rw [one_div_pow, div_mul_div_comm, div_mul_div_comm, div_le_div_iff₀ (by positivity)
             (by positivity)]
           have hLx : 4 ^ k * X ^ 4 ≤ xk := hsq.trans hxL
@@ -638,28 +707,28 @@ theorem abs_deriv_osc_le {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
             nlinarith [mul_le_mul_of_nonneg_left hL1 (show 0 ≤ X * ℓ * xk by positivity)]
           nlinarith
         linarith
-  have hsW := sum_window_le S x (4 / (X * ℓ)) (by positivity) (⌈x⌉₊ + 1)
+  have hsW := sum_window_le S x (8 / (X * ℓ)) (by positivity) (⌈x⌉₊ + 1)
   calc |∑ k ∈ Finset.range (⌈x⌉₊ + 1),
-        deriv (Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn S k)) x|
+        deriv (Oscillation.oscK θ (α k) (γ k) (Construction.switchOn S k)) x|
       ≤ ∑ k ∈ Finset.range (⌈x⌉₊ + 1),
-        |deriv (Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn S k)) x| :=
+        |deriv (Oscillation.oscK θ (α k) (γ k) (Construction.switchOn S k)) x| :=
         Finset.abs_sum_le_sum_abs _ _
-    _ ≤ ∑ k ∈ Finset.range (⌈x⌉₊ + 1), (W k + 64 / (X ^ 5 * ℓ) * (1 / 4) ^ k) :=
+    _ ≤ ∑ k ∈ Finset.range (⌈x⌉₊ + 1), (W k + 128 / (X ^ 5 * ℓ) * (1 / 4) ^ k) :=
         Finset.sum_le_sum fun k _ => hterm k
     _ = ∑ k ∈ Finset.range (⌈x⌉₊ + 1), W k +
-        64 / (X ^ 5 * ℓ) * ∑ k ∈ Finset.range (⌈x⌉₊ + 1), (1 / 4 : ℝ) ^ k := by
+        128 / (X ^ 5 * ℓ) * ∑ k ∈ Finset.range (⌈x⌉₊ + 1), (1 / 4 : ℝ) ^ k := by
         rw [Finset.sum_add_distrib, Finset.mul_sum]
-    _ ≤ 4 / (X * ℓ) + 64 / (X ^ 5 * ℓ) * (4 / 3) :=
+    _ ≤ 8 / (X * ℓ) + 128 / (X ^ 5 * ℓ) * (4 / 3) :=
         add_le_add hsW (mul_le_mul_of_nonneg_left (Construction.sum_inv_four_pow_le _)
           (by positivity))
     _ ≤ 0.02 / ℓ := by
         have hX5 : X ≤ X ^ 5 := le_self_pow₀ (by linarith) (by norm_num)
-        have e : 4 / (X * ℓ) + 64 / (X ^ 5 * ℓ) * (4 / 3) = (4 / X + 256 / 3 / X ^ 5) / ℓ := by
+        have e : 8 / (X * ℓ) + 128 / (X ^ 5 * ℓ) * (4 / 3) = (8 / X + 512 / 3 / X ^ 5) / ℓ := by
           field_simp; ring
         rw [e]
         apply div_le_div_of_nonneg_right _ hℓ0.le
-        have h1 : 4 / X ≤ 0.01 := by rw [div_le_iff₀ (by linarith)]; linarith
-        have h2 : 256 / 3 / X ^ 5 ≤ 0.01 := by
+        have h1 : 8 / X ≤ 0.01 := by rw [div_le_iff₀ (by linarith)]; linarith
+        have h2 : 512 / 3 / X ^ 5 ≤ 0.01 := by
           rw [div_le_iff₀ (by positivity)]; linarith
         linarith
 

@@ -63,13 +63,12 @@ set_option maxHeartbeats 1000000 in
 /-- **Lemma 4.7 (Late noise).** On the Rouché circle `|s - s*| = 1/log x_k` of Lemma 4.6, if
 `α_k ≥ 1`, `η ≤ θ/2`, `a_k ≤ x_k ≤ (1 + 10⁻³) a_k`, and `|D(y)| ≤ y^η` for `y ≥ a_k` (the lag
 bound (13)), then `|D̂_{≥a_k}(s)| ≤ 150 Λ x_k^{η-θ}/α_k ≤ 165 Λ x_k^{-θ/2}`. -/
-theorem lemma_4_7 (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) (hα : 1 ≤ α) {D : ℝ → ℝ} {η a : ℝ}
-    (hη0 : 0 ≤ η) (hη : η ≤ θ / 2) (ha : 0 < a) (hax : a ≤ x) (hxa : x ≤ (1 + 1 / 1000) * a)
+theorem lemma_4_7' (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) (hα : 1 ≤ α) {D : ℝ → ℝ} {η a : ℝ}
+    (hη0 : 0 ≤ η) (hη : η ≤ 1 / 4) (ha : 0 < a) (hax : a ≤ x) (hxa : x ≤ (1 + 1 / 1000) * a)
     (hD : ∀ y ≥ a, |D y| ≤ y ^ η) {s₀ : ℂ} (hz : ZB s₀ + Mk θ α γ x s₀ = 0)
     (hs₀ : ‖s₀ - (1 + γ * I)‖ + 1 / Real.log x ≤ designRadius x) :
     ∀ s ∈ sphere s₀ (1 / Real.log x),
-      ‖lateNoise D a s‖ ≤ 150 * Λ * x ^ (η - θ) / α ∧
-      ‖lateNoise D a s‖ ≤ 165 * Λ * x ^ (-(θ / 2)) := by
+      ‖lateNoise D a s‖ ≤ 150 * Λ * x ^ (η - θ) / α := by
   intro s hs
   have hL := h.L_pos
   have hL4 := h.L_ge'
@@ -210,6 +209,24 @@ theorem lemma_4_7 (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) (hα : 1 ≤ α) {D : 
             ring
           rw [e1, e2]
           exact mul_le_mul_of_nonneg_right (by norm_num) this
+  exact hmain
+
+set_option maxHeartbeats 1000000 in
+/-- **Lemma 4.7 (Late noise).** On the Rouché circle `|s - s*| = 1/log x_k` of Lemma 4.6, if
+`α_k ≥ 1`, `η ≤ θ/2`, `a_k ≤ x_k ≤ (1 + 10⁻³) a_k`, and `|D(y)| ≤ y^η` for `y ≥ a_k` (the lag
+bound (13)), then `|D̂_{≥a_k}(s)| ≤ 150 Λ x_k^{η-θ}/α_k ≤ 165 Λ x_k^{-θ/2}`. -/
+theorem lemma_4_7 (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) (hα : 1 ≤ α) {D : ℝ → ℝ} {η a : ℝ}
+    (hη0 : 0 ≤ η) (hη : η ≤ θ / 2) (ha : 0 < a) (hax : a ≤ x) (hxa : x ≤ (1 + 1 / 1000) * a)
+    (hD : ∀ y ≥ a, |D y| ≤ y ^ η) {s₀ : ℂ} (hz : ZB s₀ + Mk θ α γ x s₀ = 0)
+    (hs₀ : ‖s₀ - (1 + γ * I)‖ + 1 / Real.log x ≤ designRadius x) :
+    ∀ s ∈ sphere s₀ (1 / Real.log x),
+      ‖lateNoise D a s‖ ≤ 150 * Λ * x ^ (η - θ) / α ∧
+      ‖lateNoise D a s‖ ≤ 165 * Λ * x ^ (-(θ / 2)) := by
+  intro s hs
+  have hθ2 := h.θ_le
+  have hΛ := h.Λ_ge
+  have hx0 : 0 < x := by linarith [h.one_lt_x]
+  have hmain := h.lemma_4_7' hα hη0 (by linarith) ha hax hxa hD hz hs₀ s hs
   refine ⟨hmain, hmain.trans ?_⟩
   have h1 : x ^ (η - θ) ≤ x ^ (-(θ / 2)) :=
     Real.rpow_le_rpow_of_exponent_le h.one_lt_x.le (by linarith)

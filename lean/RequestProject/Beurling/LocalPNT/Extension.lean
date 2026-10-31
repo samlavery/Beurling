@@ -354,7 +354,7 @@ theorem zetaSharp_eq {s : ℂ} (hs : 1 < s.re) :
   have hX1 : 1 ≤ X₀ := by exact_mod_cast h.one_le_X0
   have hκ : 0 < kap X₀ := kappa_pos_aux h.logX
   obtain ⟨hiB, heB⟩ := mellin_baseErr h.smooth_X0 hκ hs0 hs1
-  obtain ⟨hiR, heR⟩ := mellin_osc (θ := θ) (γ := γ) h.spacing (C := 2) h.alpha_le
+  obtain ⟨hiR, heR⟩ := mellin_osc h.theta_mem.1.ne' (θ := θ) (γ := γ) h.spacing (C := 2) h.alpha_le
     (show θ < s.re by linarith [h.theta_mem.2])
   have hlt : (-s).re < -1 := by simp; linarith
   have hiX : IntegrableOn (fun x : ℝ => (x : ℂ) ^ (-s)) (Ioi 1) :=

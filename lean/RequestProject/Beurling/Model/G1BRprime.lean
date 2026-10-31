@@ -161,6 +161,21 @@ noncomputable def βo (y : ℝ) (j k : ℕ) : ℝ :=
       (Real.sqrt (switchOn (swS θ X₀) k) * Real.log y ^ 4)
   else 0
 
+variable (θ X₀) in
+/-- The pointwise bound of the switched-off part (design `θ = 0`, switched on at
+`y_k = x_k max(x_k, 1)`) of `R_k'` on the block `j`: as `βk`, with the indicator `y_k < 2^{j+1}X₀`. -/
+noncomputable def βkB (j k : ℕ) : ℝ :=
+  if switchOn (swS θ X₀) k * max (switchOn (swS θ X₀) k) 1 < 2 * (2 ^ j * (X₀ : ℝ)) then
+    2 * Real.sqrt (2 * switchOn (swS θ X₀) k / (2 ^ j * X₀)) /
+      ((X₀ : ℝ) * Real.log (switchOn (swS θ X₀) k))
+  else 0
+
+variable (θ) in
+/-- `1` for the design `θ = 0` (which has a switched-off part), `0` otherwise. -/
+noncomputable def offI : ℝ := if θ = 0 then 1 else 0
+
+lemma offI_mem : 0 ≤ offI θ ∧ offI θ ≤ 1 := by unfold offI; split_ifs <;> norm_num
+
 variable (X₀) in
 /-- The number of oscillations that can be active on the block `j`. -/
 noncomputable def Kb (j : ℕ) : ℕ := ⌈2 * (2 ^ j * (X₀ : ℝ))⌉₊ + 1
@@ -172,15 +187,24 @@ lemma βk_nonneg (j k : ℕ) : 0 ≤ βk θ X₀ j k := by
     exact div_nonneg (by positivity) (by positivity)
   · exact le_rfl
 
+lemma βkB_nonneg (j k : ℕ) : 0 ≤ βkB θ X₀ j k := by
+  unfold βkB; split_ifs
+  · have h := log_switchOn_ge_of (Nat.cast_nonneg _) (le_swS θ (X₀ : ℝ)) k
+    have : 0 ≤ Real.log (switchOn (swS θ X₀) k) := le_trans (by positivity) h
+    exact div_nonneg (by positivity) (by positivity)
+  · exact le_rfl
+
 lemma βo_nonneg (y : ℝ) (j k : ℕ) : 0 ≤ βo θ X₀ y j k := by
   unfold βo; split_ifs
   · exact div_nonneg (by positivity) (by positivity)
   · exact le_rfl
 
 /-- `Γ_k ≥ 1` for the designed heights. -/
-lemma one_le_heightScale_switchOn {θ X S : ℝ} (hθ : θ ≤ 1 / 2) (hX : 10 ≤ X) (hXS : X ≤ S)
-    (k : ℕ) : 1 ≤ DesignedZero.heightScale θ (kappa0Param X) (switchOn S k) := by
+lemma one_le_heightScale_switchOn {θ X S : ℝ} (hX : 10 ≤ X) (hXS : X ≤ S) (k : ℕ)
+    (hθ : thK θ (switchOn S k) ≤ 1 / 2) :
+    1 ≤ DesignedZero.heightScale (thK θ (switchOn S k)) (kappa0Param X) (switchOn S k) := by
   set xk := switchOn S k
+  set θ := thK θ xk with hθdef
   set L := Real.log xk with hLdef
   have hLk : 2 ^ k * X ^ 2 ≤ L := log_switchOn_ge_of (by linarith) hXS k
   have hX2 : X ^ 2 ≤ L :=
@@ -211,29 +235,61 @@ variable (hc : Cond θ X₀)
 include hc
 
 /-- **The pointwise bound** (Step 4, Lemma G1): `|R_k'(w)| ≤ β_k(j)` on
-`[2^{j-1}X₀, 2^{j+1}X₀]`. -/
-lemma abs_oscD_le_βk (ω : JitterΩ) (j k : ℕ) {w : ℝ} (hw1 : 2 ^ j * (X₀ : ℝ) / 2 ≤ w)
-    (hw2 : w ≤ 2 * (2 ^ j * X₀)) :
-    |oscD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k) w| ≤
-      βk θ X₀ j k := by
+`[2^{j-1}X₀, 2^{j+1}X₀]`, for the oscillation with the designed amplitude switched on at any
+`y ≥ x_k`. -/
+lemma abs_oscD_le_βk (ω : JitterΩ) (j k : ℕ) {yS : ℝ} (hyS : switchOn (swS θ X₀) k ≤ yS)
+    {w : ℝ} (hw1 : 2 ^ j * (X₀ : ℝ) / 2 ≤ w) (hw2 : w ≤ 2 * (2 ^ j * X₀)) :
+    |oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k)
+      yS w| ≤ βk θ X₀ j k := by
   have hX := hc.hX
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := QueueMono.one_lt_of_logX hX0 hX
   have hX65 := KR.WidthReal.X0_ge hX (X₀ := X₀)
   have hw0 : 0 < w := lt_of_lt_of_le (by positivity) hw1
   have hxk := switchOn_pos (swS θ X₀) k
-  rcases le_or_gt w (switchOn (swS θ X₀) k) with h | h
-  · rw [oscD_eq_zero_of_le' hw0 hxk h, abs_zero]; exact βk_nonneg j k
-  · have hb : |deriv (Oscillation.oscTerm θ (alphaD θ X₀ (DF θ X₀ ω) k)
-        (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k)) w| ≤
-        2 * Real.sqrt (switchOn (swS θ X₀) k / w) /
-          ((X₀ : ℝ) * Real.log (switchOn (swS θ X₀) k)) :=
-      abs_deriv_oscTerm_designed (by linarith [hc.hθ.1]) (by linarith [hc.hθ.2]) (by linarith)
-        (le_swS θ _) k
-        (gammaD_range (θ := θ) hX (DF θ X₀ ω) k) h.le
-    rw [deriv_oscTerm_eq hw0 hxk] at hb
+  have hyS0 : 0 < yS := lt_of_lt_of_le hxk hyS
+  have ht := hc.thK_mem k
+  rcases le_or_gt w yS with h | h
+  · rw [oscD_eq_zero_of_le' hw0 hyS0 h, abs_zero]; exact βk_nonneg j k
+  · have h' : switchOn (swS θ X₀) k < w := lt_of_le_of_lt hyS h
+    have hb := abs_deriv_oscTerm_designed ht.1.le (by linarith [ht.2]) (by linarith)
+        (le_swS θ _) k (gammaD_range (θ := θ) hX (DF θ X₀ ω) k) h'.le hyS0
+    rw [deriv_oscTerm_eq hw0 hyS0] at hb
     refine hb.trans ?_
     unfold βk
+    rw [if_pos (lt_of_lt_of_le h' hw2)]
+    have hLk := log_switchOn_ge_of (Nat.cast_nonneg _) (le_swS θ (X₀ : ℝ)) k
+    have hL : 0 < Real.log (switchOn (swS θ X₀) k) := lt_of_lt_of_le (by positivity) hLk
+    apply div_le_div_of_nonneg_right _ (by positivity)
+    apply mul_le_mul_of_nonneg_left _ (by norm_num)
+    apply Real.sqrt_le_sqrt
+    rw [div_le_div_iff₀ hw0 (by positivity)]
+    nlinarith
+
+/-- **The pointwise bound of the switched-off part**: `|R_{k,off}'(w)| ≤ βkB_k(j)` on
+`[2^{j-1}X₀, 2^{j+1}X₀]`. -/
+lemma abs_oscD_le_βkB (ω : JitterΩ) (j k : ℕ) {w : ℝ} (hw1 : 2 ^ j * (X₀ : ℝ) / 2 ≤ w)
+    (hw2 : w ≤ 2 * (2 ^ j * X₀)) :
+    |oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k)
+      (switchOn (swS θ X₀) k * max (switchOn (swS θ X₀) k) 1) w| ≤ βkB θ X₀ j k := by
+  have hX := hc.hX
+  have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
+  have hX1 := QueueMono.one_lt_of_logX hX0 hX
+  have hX65 := KR.WidthReal.X0_ge hX (X₀ := X₀)
+  have hw0 : 0 < w := lt_of_lt_of_le (by positivity) hw1
+  have hxk := switchOn_pos (swS θ X₀) k
+  have hyS : switchOn (swS θ X₀) k ≤ switchOn (swS θ X₀) k * max (switchOn (swS θ X₀) k) 1 :=
+    le_mul_of_one_le_right hxk.le (le_max_right _ _)
+  have hyS0 := lt_of_lt_of_le hxk hyS
+  have ht := hc.thK_mem k
+  rcases le_or_gt w (switchOn (swS θ X₀) k * max (switchOn (swS θ X₀) k) 1) with h | h
+  · rw [oscD_eq_zero_of_le' hw0 hyS0 h, abs_zero]; exact βkB_nonneg j k
+  · have h' : switchOn (swS θ X₀) k < w := lt_of_le_of_lt hyS h
+    have hb := abs_deriv_oscTerm_designed ht.1.le (by linarith [ht.2]) (by linarith)
+        (le_swS θ _) k (gammaD_range (θ := θ) hX (DF θ X₀ ω) k) h'.le hyS0
+    rw [deriv_oscTerm_eq hw0 hyS0] at hb
+    refine hb.trans ?_
+    unfold βkB
     rw [if_pos (lt_of_lt_of_le h hw2)]
     have hLk := log_switchOn_ge_of (Nat.cast_nonneg _) (le_swS θ (X₀ : ℝ)) k
     have hL : 0 < Real.log (switchOn (swS θ X₀) k) := lt_of_lt_of_le (by positivity) hLk
@@ -246,13 +302,15 @@ lemma abs_oscD_le_βk (ω : JitterΩ) (j k : ℕ) {w : ℝ} (hw1 : 2 ^ j * (X₀
 /-- **The smooth change of a resolvable `R_k'`** (Step 3): for `u ∈ [2ʲX₀, 2^{j+1}X₀]`,
 `1/2 ≤ r ≤ 1`, `1 - r ≤ 2δ` and `δ γ_k² ≤ log⁻⁴ y`,
 `|R_k'(max(ru, X₀)) - R_k'(u)| ≤ βo_k(j)`. -/
-lemma abs_oscD_sub_le_βo (ω : JitterΩ) {y δ r : ℝ} (j k : ℕ)
+lemma abs_oscD_sub_le_βo (ω : JitterΩ) {y δ r : ℝ} (j k : ℕ) {yS : ℝ}
+    (hyS : switchOn (swS θ X₀) k ≤ yS)
     (hres : δ * gammaD θ X₀ (DF θ X₀ ω) k ^ 2 ≤ 1 / Real.log y ^ 4) (hr0 : 1 / 2 ≤ r)
     (hr1 : r ≤ 1) (hrδ : 1 - r ≤ 2 * δ) {u : ℝ} (hu1 : 2 ^ j * (X₀ : ℝ) ≤ u)
     (hu2 : u ≤ 2 * (2 ^ j * X₀)) :
-    |oscD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k)
-        (max (r * u) X₀) -
-      oscD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k) u| ≤
+    |oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k)
+        (gammaD θ X₀ (DF θ X₀ ω) k) yS (max (r * u) X₀) -
+      oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k)
+        (gammaD θ X₀ (DF θ X₀ ω) k) yS u| ≤
       βo θ X₀ y j k := by
   have hX := hc.hX
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
@@ -268,21 +326,24 @@ lemma abs_oscD_sub_le_βo (ω : JitterΩ) {y δ r : ℝ} (j k : ℕ)
   set xk := switchOn (swS θ X₀) k with hxkdef
   set g := gammaD θ X₀ (DF θ X₀ ω) k with hg
   set α := alphaD θ X₀ (DF θ X₀ ω) k with hα
-  rcases le_or_gt u xk with h | h
-  · rw [oscD_eq_zero_of_le' hw0 hxk (hm2.trans h), oscD_eq_zero_of_le' hu0 hxk h, sub_zero,
+  set t := thK θ xk with htdef
+  have hyS0 : 0 < yS := lt_of_lt_of_le hxk hyS
+  rcases le_or_gt u yS with h | h
+  · rw [oscD_eq_zero_of_le' hw0 hyS0 (hm2.trans h), oscD_eq_zero_of_le' hu0 hyS0 h, sub_zero,
       abs_zero]
     exact βo_nonneg y j k
+  replace h : xk < u := lt_of_le_of_lt hyS h
   have hγr := gammaD_range (θ := θ) hX (DF θ X₀ ω) k
-  have hγ1 : 1 ≤ g := le_trans (one_le_heightScale_switchOn (by linarith [hc.hθ.2])
-    (by linarith) (le_swS θ _) k) hγr.1
+  have hγ1 : 1 ≤ g := le_trans (one_le_heightScale_switchOn (by linarith) (le_swS θ _) k
+    (by linarith [(hc.thK_mem k).2])) hγr.1
   have hαm := alphaD_mem (θ := θ) hX (DF θ X₀ ω) k
   set v := 2 ^ j * (X₀ : ℝ) with hv
   have hv0 : 0 < v := by positivity
-  have hθ0 : 0 ≤ θ := by linarith [hc.hθ.1]
-  have hθ1 : θ ≤ 1 / 2 := by linarith [hc.hθ.2]
+  have hθ0 : 0 ≤ t := (hc.thK_mem k).1.le
+  have hθ1 : t ≤ 1 / 2 := by linarith [(hc.thK_mem k).2]
   -- the bound of `R_k''` on `[w₁, u]`
-  set C := 44 * g ^ 2 * (v / 2) ^ (θ - 2) with hC
-  have hd2 : ∀ x ∈ Icc w₁ u, ‖oscD2 θ α g xk x‖ ≤ C := by
+  set C := 44 * g ^ 2 * (v / 2) ^ (t - 2) with hC
+  have hd2 : ∀ x ∈ Icc w₁ u, ‖oscD2 t α g yS x‖ ≤ C := by
     intro x hx
     have hx0 : 0 < x := lt_of_lt_of_le hw0 hx.1
     have hxv : v / 2 ≤ x := by
@@ -290,17 +351,17 @@ lemma abs_oscD_sub_le_βo (ω : JitterΩ) {y δ r : ℝ} (j k : ℕ)
       nlinarith [hx.1]
     rw [Real.norm_eq_abs]
     refine (abs_oscD2_le hθ0 (by linarith) (by linarith) hx0).trans ?_
-    have hp : x ^ (θ - 2) ≤ (v / 2) ^ (θ - 2) :=
+    have hp : x ^ (t - 2) ≤ (v / 2) ^ (t - 2) :=
       Real.rpow_le_rpow_of_nonpos (by positivity) hxv (by linarith)
     have hq : g ^ 2 + 6 * g + 15 ≤ 22 * g ^ 2 := by nlinarith
     rw [abs_of_nonneg (by linarith [hαm.1])]
-    calc α * x ^ (θ - 2) * (g ^ 2 + 6 * g + 15) ≤ 2 * (v / 2) ^ (θ - 2) * (22 * g ^ 2) := by
+    calc α * x ^ (t - 2) * (g ^ 2 + 6 * g + 15) ≤ 2 * (v / 2) ^ (t - 2) * (22 * g ^ 2) := by
           gcongr
           · exact hαm.2
       _ = C := by rw [hC]; ring
   have hmvt := Convex.norm_image_sub_le_of_norm_hasDerivWithin_le
-    (f := oscD θ α g xk) (f' := oscD2 θ α g xk) (s := Icc w₁ u) (C := C)
-    (fun x hx => (hasDerivAt_oscD (lt_of_lt_of_le hw0 hx.1) hxk).hasDerivWithinAt) hd2
+    (f := oscD t α g yS) (f' := oscD2 t α g yS) (s := Icc w₁ u) (C := C)
+    (fun x hx => (hasDerivAt_oscD (lt_of_lt_of_le hw0 hx.1) hyS0).hasDerivWithinAt) hd2
     (convex_Icc w₁ u) (left_mem_Icc.mpr hm2) (right_mem_Icc.mpr hm2)
   rw [Real.norm_eq_abs, Real.norm_eq_abs, abs_of_nonneg (by linarith : (0 : ℝ) ≤ u - w₁)] at hmvt
   rw [abs_sub_comm]
@@ -311,8 +372,8 @@ lemma abs_oscD_sub_le_βo (ω : JitterΩ) {y δ r : ℝ} (j k : ℕ)
     have hδ0 : 0 ≤ δ := by nlinarith
     nlinarith
   have hC0 : 0 ≤ C := by positivity
-  have hpow : (v / 2) ^ (θ - 2) * v = 2 * (v / 2) ^ (θ - 1) := by
-    rw [show θ - 1 = (θ - 2) + 1 by ring, Real.rpow_add (by positivity), Real.rpow_one]; ring
+  have hpow : (v / 2) ^ (t - 2) * v = 2 * (v / 2) ^ (t - 1) := by
+    rw [show t - 1 = (t - 2) + 1 by ring, Real.rpow_add (by positivity), Real.rpow_one]; ring
   have hlog : 0 < Real.log y ^ 4 ∨ Real.log y ^ 4 = 0 := by
     rcases (show (0:ℝ) ≤ Real.log y ^ 4 by positivity).lt_or_eq with h4 | h4
     · exact Or.inl h4
@@ -324,9 +385,9 @@ lemma abs_oscD_sub_le_βo (ω : JitterΩ) {y δ r : ℝ} (j k : ℕ)
       ← Real.sqrt_eq_rpow, Real.sqrt_div' _ (by norm_num : (0 : ℝ) ≤ 2)]
     have : Real.sqrt xk ≠ 0 := (Real.sqrt_pos.mpr hxk).ne'
     field_simp
-  have hq : (v / 2) ^ (θ - 1) ≤ (v / 2) ^ (-(1 / 2 : ℝ)) :=
+  have hq : (v / 2) ^ (t - 1) ≤ (v / 2) ^ (-(1 / 2 : ℝ)) :=
     Real.rpow_le_rpow_of_exponent_le (by linarith) (by linarith)
-  have hq0 : 0 ≤ (v / 2) ^ (θ - 1) := Real.rpow_nonneg (by positivity) _
+  have hq0 : 0 ≤ (v / 2) ^ (t - 1) := Real.rpow_nonneg (by positivity) _
   rcases hlog with h4 | h4
   · have hδg : δ * g ^ 2 * Real.log y ^ 4 ≤ 1 := by
       have := mul_le_mul_of_nonneg_right hres h4.le
@@ -336,9 +397,9 @@ lemma abs_oscD_sub_le_βo (ω : JitterΩ) {y δ r : ℝ} (j k : ℕ)
       le_div_iff₀ h4]
     calc C * (u - w₁) * Real.log y ^ 4 ≤ 4 * δ * v * C * Real.log y ^ 4 := by
           rw [mul_comm C]; gcongr
-      _ = 352 * (δ * g ^ 2 * Real.log y ^ 4) * (v / 2) ^ (θ - 1) := by
-          rw [hC, show 4 * δ * v * (44 * g ^ 2 * (v / 2) ^ (θ - 2)) * Real.log y ^ 4 =
-            176 * (δ * g ^ 2 * Real.log y ^ 4) * ((v / 2) ^ (θ - 2) * v) by ring, hpow]; ring
+      _ = 352 * (δ * g ^ 2 * Real.log y ^ 4) * (v / 2) ^ (t - 1) := by
+          rw [hC, show 4 * δ * v * (44 * g ^ 2 * (v / 2) ^ (t - 2)) * Real.log y ^ 4 =
+            176 * (δ * g ^ 2 * Real.log y ^ 4) * ((v / 2) ^ (t - 2) * v) by ring, hpow]; ring
       _ ≤ 352 * 1 * (v / 2) ^ (-(1 / 2 : ℝ)) := by gcongr
       _ = _ := by ring
   · -- `log y = 0`: then `δ γ² ≤ 0`, so `δ ≤ 0` and `u = w₁`
@@ -354,7 +415,7 @@ lemma abs_oscD_sub_le_βo (ω : JitterΩ) {y δ r : ℝ} (j k : ℕ)
 /-- `R'` at `w` is the finite sum of the `R_k'(w)`, `k < K_j`, for `w ≤ 2^{j+1}X₀`. -/
 lemma RpR_eq_sum (ω : JitterΩ) (j : ℕ) {w : ℝ} (hw0 : 0 < w) (hw2 : w ≤ 2 * (2 ^ j * X₀)) :
     RpR θ X₀ ω w = ∑ k ∈ Finset.range (Kb X₀ j),
-      oscD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k) w := by
+      RkD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k) w := by
   have hX := hc.hX
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := QueueMono.one_lt_of_logX hX0 hX
@@ -365,7 +426,7 @@ lemma RpR_eq_sum (ω : JitterΩ) (j : ℕ) {w : ℝ} (hw0 : 0 < w) (hw2 : w ≤ 
       unfold Kb; push_cast; ring
     linarith
   unfold RpR
-  exact deriv_osc_eq_sum _ _ _ hw0 hwK
+  exact deriv_osc_eq_sum _ _ _ (hX1.le.trans (le_swS θ _)) hw0 hwK
 
 /-- `Γ(y) ≥ log 2y` once `log y ≥ X₀⁵`: the old heights are resolvable. -/
 lemma log_two_mul_le_GammaRes {y : ℝ} (hy0 : 0 < y) (hy : (X₀ : ℝ) ^ 5 ≤ Real.log y) :
@@ -432,7 +493,7 @@ lemma gammaD_res_of_old (ω : JitterΩ) {y : ℝ} {k : ℕ} (hk : switchOn (swS 
     rw [← Real.exp_log hxk]; exact Real.one_lt_exp_iff.mpr (by linarith)
   have hγ := gammaD_range (θ := θ) hX (DF θ X₀ ω) k
   have h1 : gammaD θ X₀ (DF θ X₀ ω) k ≤ switchOn (swS θ X₀) k :=
-    hγ.2.trans (DesignedZero.two_heightScale_le (by linarith [hc.hθ.1])
+    hγ.2.trans (DesignedZero.two_heightScale_le (hc.thK_mem k).1.le
       (kappa0Param_pos (by linarith)).le (kappa0Param_le (by linarith)) hxk1 hL1)
   have hy0 : 0 < 2 * y := lt_of_lt_of_le (switchOn_pos _ _) hk.le
   have h2 : switchOn (swS θ X₀) k < Real.log (2 * y) := by
@@ -510,8 +571,17 @@ theorem rprimeChange_all (ω : JitterΩ) {b : ℝ} (hb : (X₀ : ℝ) ≤ b)
     simp only [ht]; split_ifs
     · exact βo_nonneg y j k
     · have := βk_nonneg (θ := θ) (X₀ := X₀) j k; linarith
-  set bj : ℕ → ℝ := fun j => ∑ k ∈ Finset.range (Kb X₀ j), t j k with hbj
-  have hb0 : ∀ j, 0 ≤ bj j := fun j => Finset.sum_nonneg fun k _ => ht0 j k
+  -- the switched-off parts (design `θ = 0`)
+  set tB : ℕ → ℕ → ℝ := fun j k =>
+    if switchOn (swS θ X₀) (k + 1) < 2 * y then offI θ * βo θ X₀ y j k
+    else offI θ * (2 * βkB θ X₀ j k) with htB
+  have htB0 : ∀ j k, 0 ≤ tB j k := fun j k => by
+    have := (offI_mem (θ := θ)).1
+    simp only [htB]; split_ifs
+    · exact mul_nonneg this (βo_nonneg y j k)
+    · have := βkB_nonneg (θ := θ) (X₀ := X₀) j k; positivity
+  set bj : ℕ → ℝ := fun j => ∑ k ∈ Finset.range (Kb X₀ j), (t j k + tB j k) with hbj
+  have hb0 : ∀ j, 0 ≤ bj j := fun j => Finset.sum_nonneg fun k _ => add_nonneg (ht0 j k) (htB0 j k)
   have hg0 : ∀ u : ℝ, u < X₀ → oscF θ X₀ ω r u = 0 := fun u hu => by
     unfold oscF; rw [if_neg (not_le.mpr hu)]
   have hblk : ∀ (j : ℕ) (u : ℝ), 2 ^ j * (X₀ : ℝ) ≤ u → u ≤ 2 * (2 ^ j * X₀) →
@@ -525,14 +595,61 @@ theorem rprimeChange_all (ω : JitterΩ) {b : ℝ} (hb : (X₀ : ℝ) ≤ b)
     rw [if_pos huX, RpR_eq_sum hc ω j (by linarith) (hm2.trans h2), RpR_eq_sum hc ω j hu0 h2,
       ← Finset.sum_sub_distrib]
     refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun k _ => ?_)
-    simp only [ht]
+    have hxk0 := switchOn_pos (swS θ X₀) k
+    have hyS : switchOn (swS θ X₀) k ≤ switchOn (swS θ X₀) k * max (switchOn (swS θ X₀) k) 1 :=
+      le_mul_of_one_le_right hxk0.le (le_max_right _ _)
+    have hRk : ∀ w, RkD θ (alphaD θ X₀ (DF θ X₀ ω) k) (gammaD θ X₀ (DF θ X₀ ω) k)
+        (switchOn (swS θ X₀) k) w =
+        oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k)
+          (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k) w - offI θ *
+        oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k)
+          (gammaD θ X₀ (DF θ X₀ ω) k)
+          (switchOn (swS θ X₀) k * max (switchOn (swS θ X₀) k) 1) w := fun w => by
+      unfold RkD offI; split_ifs <;> ring
+    rw [hRk, hRk]
+    have hoff := (offI_mem (θ := θ))
+    simp only [ht, htB]
     split_ifs with hk
-    · exact abs_oscD_sub_le_βo hc ω j k (hres k (gammaD_res_of_old hc ω hk)) hr0 hr1 hrδ h1 h2
-    · have hA := abs_oscD_le_βk hc ω j k (w := max (r * u) X₀)
+    · have hA := abs_oscD_sub_le_βo hc ω j k le_rfl (hres k (gammaD_res_of_old hc ω hk)) hr0 hr1
+        hrδ h1 h2
+      have hB := abs_oscD_sub_le_βo hc ω j k hyS (hres k (gammaD_res_of_old hc ω hk)) hr0 hr1
+        hrδ h1 h2
+      set A1 := oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k)
+        (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k) (max (r * u) X₀)
+      set A2 := oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k)
+        (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k) u
+      set B1 := oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k)
+        (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k * max (switchOn (swS θ X₀) k) 1)
+        (max (r * u) X₀)
+      set B2 := oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k)
+        (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k * max (switchOn (swS θ X₀) k) 1) u
+      have e : A1 - offI θ * B1 - (A2 - offI θ * B2) = (A1 - A2) - offI θ * (B1 - B2) := by ring
+      rw [e]
+      calc _ ≤ |A1 - A2| + |offI θ * (B1 - B2)| := abs_sub _ _
+        _ = |A1 - A2| + offI θ * |B1 - B2| := by rw [abs_mul, abs_of_nonneg hoff.1]
+        _ ≤ _ := add_le_add hA (mul_le_mul_of_nonneg_left hB hoff.1)
+    · have hA := abs_oscD_le_βk hc ω j k le_rfl (w := max (r * u) X₀)
         (le_trans (by nlinarith) (le_max_left _ _)) (hm2.trans h2)
-      have hB := abs_oscD_le_βk hc ω j k (w := u) (by linarith) h2
-      calc _ ≤ _ := abs_sub _ _
-        _ ≤ 2 * βk θ X₀ j k := by linarith
+      have hA' := abs_oscD_le_βk hc ω j k le_rfl (w := u) (by linarith) h2
+      have hB := abs_oscD_le_βkB hc ω j k (w := max (r * u) X₀)
+        (le_trans (by nlinarith) (le_max_left _ _)) (hm2.trans h2)
+      have hB' := abs_oscD_le_βkB hc ω j k (w := u) (by linarith) h2
+      set A1 := oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k)
+        (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k) (max (r * u) X₀)
+      set A2 := oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k)
+        (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k) u
+      set B1 := oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k)
+        (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k * max (switchOn (swS θ X₀) k) 1)
+        (max (r * u) X₀)
+      set B2 := oscD (thK θ (switchOn (swS θ X₀) k)) (alphaD θ X₀ (DF θ X₀ ω) k)
+        (gammaD θ X₀ (DF θ X₀ ω) k) (switchOn (swS θ X₀) k * max (switchOn (swS θ X₀) k) 1) u
+      have e : A1 - offI θ * B1 - (A2 - offI θ * B2) = (A1 - A2) - offI θ * (B1 - B2) := by ring
+      rw [e]
+      have hAA : |A1 - A2| ≤ 2 * βk θ X₀ j k := (abs_sub _ _).trans (by linarith)
+      have hBB : |B1 - B2| ≤ 2 * βkB θ X₀ j k := (abs_sub _ _).trans (by linarith)
+      calc _ ≤ |A1 - A2| + |offI θ * (B1 - B2)| := abs_sub _ _
+        _ = |A1 - A2| + offI θ * |B1 - B2| := by rw [abs_mul, abs_of_nonneg hoff.1]
+        _ ≤ _ := add_le_add hAA (mul_le_mul_of_nonneg_left hBB hoff.1)
   obtain ⟨J, hJ⟩ : ∃ J : ℕ, y < 2 ^ J * X₀ := by
     obtain ⟨J, hJ⟩ := pow_unbounded_of_one_lt (y / X₀) (by norm_num : (1 : ℝ) < 2)
     exact ⟨J, by rw [div_lt_iff₀ hXp] at hJ; linarith⟩
@@ -550,7 +667,7 @@ theorem rprimeChange_all (ω : JitterΩ) {b : ℝ} (hb : (X₀ : ℝ) ≤ b)
     have := Real.log_le_log hXp (show (X₀ : ℝ) ≤ 2 * X₀ by linarith); linarith
   set F := (Finset.range J).filter (fun j => 2 ^ j * (X₀ : ℝ) ≤ y) with hF
   have hS2 : ∑ j ∈ F, Real.log (2 * (2 ^ j * X₀)) * bj j ≤
-      ∑ k ∈ Finset.range (Kb X₀ J), ∑ j ∈ F, Real.log (2 * (2 ^ j * X₀)) * t j k := by
+      ∑ k ∈ Finset.range (Kb X₀ J), ∑ j ∈ F, Real.log (2 * (2 ^ j * X₀)) * (t j k + tB j k) := by
     rw [Finset.sum_comm]
     refine Finset.sum_le_sum fun j hj => ?_
     simp only [hbj]
@@ -563,7 +680,10 @@ theorem rprimeChange_all (ω : JitterΩ) {b : ℝ} (hb : (X₀ : ℝ) ≤ b)
       have := Nat.ceil_mono (show 2 * (2 ^ j * (X₀ : ℝ)) ≤ 2 * (2 ^ J * X₀) by nlinarith)
       omega
     exact Finset.sum_le_sum_of_subset_of_nonneg hsub
-      fun k _ _ => mul_nonneg (hlw j) (ht0 j k)
+      fun k _ _ => mul_nonneg (hlw j) (add_nonneg (ht0 j k) (htB0 j k))
+  have hFJ' : ∀ f : ℕ → ℝ, (∀ j, 0 ≤ f j) → ∑ j ∈ F, f j ≤ ∑ j ∈ Finset.range J, f j :=
+    fun f hf => Finset.sum_le_sum_of_subset_of_nonneg (Finset.filter_subset _ _)
+      fun j _ _ => hf j
   -- one oscillation
   set W : ℕ → ℝ := fun k => if switchOn (swS θ X₀) k < 2 * y ∧ 2 * y ≤ switchOn (swS θ X₀) (k + 1)
     then 28.9 / (X₀ : ℝ) else 0 with hW
@@ -687,11 +807,114 @@ theorem rprimeChange_all (ω : JitterΩ) {b : ℝ} (hb : (X₀ : ℝ) ≤ b)
             rw [if_neg (by linarith)]
         rw [hz, zero_mul]
         positivity
-  have hS3 : ∑ k ∈ Finset.range (Kb X₀ J), ∑ j ∈ F, Real.log (2 * (2 ^ j * X₀)) * t j k ≤
-      28.9 / (X₀ : ℝ) + 2.8 * 10 ^ 6 / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4) := by
-    refine (Finset.sum_le_sum fun k _ => hk k).trans ?_
+  -- the switched-off parts (design `θ = 0`)
+  set WB : ℕ → ℝ := fun k => if switchOn (swS θ X₀) k < 2 * y ∧
+    2 * y ≤ switchOn (swS θ X₀) (k + 1) then 0.1 / (X₀ : ℝ) else 0 with hWB
+  have hkB : ∀ k : ℕ, ∑ j ∈ F, Real.log (2 * (2 ^ j * X₀)) * tB j k ≤
+      offI θ * (WB k + 2.1 * 10 ^ 6 * (1 / 4) ^ k / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4)) := by
+    intro k
+    have hoff := offI_mem (θ := θ)
+    have hg0 : 0 ≤ 2.1 * 10 ^ 6 * (1 / 4 : ℝ) ^ k / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4) := by
+      positivity
+    by_cases hold : switchOn (swS θ X₀) (k + 1) < 2 * y
+    · have e : ∀ j, Real.log (2 * (2 ^ j * X₀)) * tB j k =
+          offI θ * (Real.log (2 * (2 ^ j * X₀)) * t j k) := by
+        intro j; simp only [htB, ht, if_pos hold]; ring
+      simp_rw [e]; rw [← Finset.mul_sum]
+      have hWB0 : WB k = 0 := by
+        simp only [hWB]; rw [if_neg (fun h => absurd h.2 (not_le.mpr hold))]
+      have hW0 : W k = 0 := by
+        simp only [hW]; rw [if_neg (fun h => absurd h.2 (not_le.mpr hold))]
+      have := hk k
+      rw [hW0, zero_add] at this
+      rw [hWB0, zero_add]
+      exact mul_le_mul_of_nonneg_left this hoff.1
+    · push_neg at hold
+      have e : ∀ j, Real.log (2 * (2 ^ j * X₀)) * tB j k =
+          offI θ * (2 * (Real.log (2 * (2 ^ j * X₀)) * βkB θ X₀ j k)) := by
+        intro j; simp only [htB, if_neg (not_lt.mpr hold)]; ring
+      simp_rw [e]; rw [← Finset.mul_sum]
+      refine mul_le_mul_of_nonneg_left ?_ hoff.1
+      refine le_trans ?_ (le_add_of_nonneg_right hg0)
+      set xk := switchOn (swS θ X₀) k with hxk
+      set L := Real.log xk with hL
+      have hLk := log_switchOn_ge_of (Nat.cast_nonneg _) (le_swS θ (X₀ : ℝ)) k
+      have hxk0 := switchOn_pos (swS θ X₀) k
+      have h2k : (1 : ℝ) ≤ 2 ^ k := one_le_pow₀ (by norm_num)
+      have hL1 : 10000 ≤ L := by nlinarith
+      have hL0 : 0 < L := by linarith
+      have hxL : xk = Real.exp L := (Real.exp_log hxk0).symm
+      have hxk1 : 1 ≤ xk := by rw [hxL]; exact Real.one_le_exp (by linarith)
+      have hyk : xk * max xk 1 = xk ^ 2 := by rw [max_eq_left hxk1]; ring
+      have hxbig : 10 ^ 8 ≤ xk := by
+        have := Real.quadratic_le_exp_of_nonneg hL0.le
+        rw [← hxL] at this; nlinarith
+      by_cases hcur : xk < 2 * y
+      · have hWB' : WB k = 0.1 / (X₀ : ℝ) := by simp only [hWB]; rw [if_pos ⟨hcur, hold⟩]
+        rw [hWB']
+        have h2y : 2 * (X₀ : ℝ) ≤ xk ^ 2 := by
+          have hXL : (X₀ : ℝ) ^ 2 ≤ L := le_trans (le_mul_of_one_le_left (by positivity) h2k) hLk
+          have hLx : L ≤ xk := by
+            have := Real.add_one_le_exp L; rw [← hxL] at this; linarith
+          nlinarith
+        have htele := tele_sum hXp hlX h2y J
+        have hsx0 : 0 < Real.sqrt xk := Real.sqrt_pos.mpr hxk0
+        have e2 : ∀ j, 2 * (Real.log (2 * (2 ^ j * X₀)) * βkB θ X₀ j k) =
+            (if xk ^ 2 < 2 * (2 ^ j * X₀) then
+              Real.log (2 * (2 ^ j * X₀)) * Real.sqrt (2 * xk ^ 2 / (2 ^ j * X₀)) else 0) *
+              (4 / ((X₀ : ℝ) * L * Real.sqrt xk)) := by
+          intro j
+          unfold βkB
+          rw [← hxk, hyk]
+          split_ifs
+          · have hv : (0 : ℝ) < 2 ^ j * X₀ := by positivity
+            have hsq : Real.sqrt (2 * xk ^ 2 / (2 ^ j * X₀)) =
+                Real.sqrt (2 * xk / (2 ^ j * X₀)) * Real.sqrt xk := by
+              rw [← Real.sqrt_mul (by positivity)]; congr 1; field_simp
+            rw [hsq, ← hL]; field_simp; ring
+          · ring
+        simp_rw [e2]
+        rw [← Finset.sum_mul]
+        have h1 : ∑ j ∈ F, (if xk ^ 2 < 2 * (2 ^ j * X₀) then
+            Real.log (2 * (2 ^ j * X₀)) * Real.sqrt (2 * xk ^ 2 / (2 ^ j * X₀)) else 0) ≤
+            7.2 * Real.log (2 * xk ^ 2) := by
+          refine (hFJ' _ fun j => ?_).trans htele
+          split_ifs
+          · exact mul_nonneg (hlw j) (Real.sqrt_nonneg _)
+          · exact le_rfl
+        have hl2 : Real.log (2 * xk ^ 2) ≤ 3 * L := by
+          rw [Real.log_mul (by norm_num) (by positivity), Real.log_pow]
+          push_cast; linarith [Real.log_two_lt_d9]
+        have hsx : 1000 ≤ Real.sqrt xk := by
+          rw [Real.le_sqrt (by norm_num) hxk0.le]; linarith
+        calc _ ≤ 7.2 * Real.log (2 * xk ^ 2) * (4 / ((X₀ : ℝ) * L * Real.sqrt xk)) :=
+              mul_le_mul_of_nonneg_right h1 (by positivity)
+          _ ≤ 7.2 * (3 * L) * (4 / ((X₀ : ℝ) * L * Real.sqrt xk)) := by gcongr
+          _ = 86.4 / ((X₀ : ℝ) * Real.sqrt xk) := by field_simp; ring
+          _ ≤ 0.1 / (X₀ : ℝ) := by
+              rw [div_le_div_iff₀ (by positivity) hXp]; nlinarith
+      · push_neg at hcur
+        have hWB' : WB k = 0 := by
+          simp only [hWB]; rw [if_neg (fun h => absurd h.1 (not_lt.mpr hcur))]
+        rw [hWB']
+        apply le_of_eq
+        refine Finset.sum_eq_zero fun j hj => ?_
+        have := (Finset.mem_filter.mp hj).2
+        unfold βkB
+        rw [if_neg (by rw [← hxk, hyk]; nlinarith)]
+        ring
+  have hS3 : ∑ k ∈ Finset.range (Kb X₀ J), ∑ j ∈ F,
+      Real.log (2 * (2 ^ j * X₀)) * (t j k + tB j k) ≤
+      29 / (X₀ : ℝ) + 5.6 * 10 ^ 6 / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4) := by
+    have hsplit : ∀ k, ∑ j ∈ F, Real.log (2 * (2 ^ j * X₀)) * (t j k + tB j k) =
+        ∑ j ∈ F, Real.log (2 * (2 ^ j * X₀)) * t j k +
+          ∑ j ∈ F, Real.log (2 * (2 ^ j * X₀)) * tB j k := fun k => by
+      rw [← Finset.sum_add_distrib]; refine Finset.sum_congr rfl fun j _ => ?_; ring
+    simp_rw [hsplit]
     rw [Finset.sum_add_distrib]
+    have hoff := offI_mem (θ := θ)
     have h1 := sum_window_le' (swS θ (X₀ : ℝ)) (2 * y) (28.9 / (X₀ : ℝ)) (by positivity) (Kb X₀ J)
+    have h1B := sum_window_le' (swS θ (X₀ : ℝ)) (2 * y) (0.1 / (X₀ : ℝ)) (by positivity) (Kb X₀ J)
     have h2 : ∑ k ∈ Finset.range (Kb X₀ J),
         2.1 * 10 ^ 6 * (1 / 4 : ℝ) ^ k / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4) ≤
         2.8 * 10 ^ 6 / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4) := by
@@ -699,27 +922,50 @@ theorem rprimeChange_all (ω : JitterΩ) {b : ℝ} (hb : (X₀ : ℝ) ≤ b)
       apply div_le_div_of_nonneg_right _ (by positivity)
       have := Construction.sum_inv_four_pow_le (Kb X₀ J)
       nlinarith
-    exact add_le_add h1 h2
+    have hA : ∑ k ∈ Finset.range (Kb X₀ J), ∑ j ∈ F, Real.log (2 * (2 ^ j * X₀)) * t j k ≤
+        28.9 / (X₀ : ℝ) + 2.8 * 10 ^ 6 / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4) := by
+      refine (Finset.sum_le_sum fun k _ => hk k).trans ?_
+      rw [Finset.sum_add_distrib]
+      exact add_le_add h1 h2
+    have hB : ∑ k ∈ Finset.range (Kb X₀ J), ∑ j ∈ F, Real.log (2 * (2 ^ j * X₀)) * tB j k ≤
+        0.1 / (X₀ : ℝ) + 2.8 * 10 ^ 6 / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4) := by
+      refine (Finset.sum_le_sum fun k _ => hkB k).trans ?_
+      have hle : ∀ k, offI θ * (WB k + 2.1 * 10 ^ 6 * (1 / 4) ^ k /
+          ((X₀ : ℝ) ^ 6 * Real.log y ^ 4)) ≤
+          WB k + 2.1 * 10 ^ 6 * (1 / 4) ^ k / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4) := fun k => by
+        have hWB0 : 0 ≤ WB k := by simp only [hWB]; split_ifs <;> positivity
+        have : 0 ≤ 2.1 * 10 ^ 6 * (1 / 4 : ℝ) ^ k / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4) := by
+          positivity
+        nlinarith
+      refine (Finset.sum_le_sum fun k _ => hle k).trans ?_
+      rw [Finset.sum_add_distrib]
+      exact add_le_add h1B h2
+    have e1 : (29 : ℝ) / X₀ = 28.9 / X₀ + 0.1 / X₀ := by ring
+    have e2 : (5.6 * 10 ^ 6 : ℝ) / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4) =
+        2.8 * 10 ^ 6 / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4) +
+          2.8 * 10 ^ 6 / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4) := by ring
+    rw [e1, e2]
+    linarith
   have hCS := BeurlingSystem.CS_le
   have hS0 : 0 ≤ ∑ j ∈ F, Real.log (2 * (2 ^ j * X₀)) * bj j :=
     Finset.sum_nonneg fun j _ => mul_nonneg (hlw j) (hb0 j)
   have hly : (10 : ℝ) ^ 8 ≤ Real.log y := hX.trans (Real.log_le_log hXp hy)
-  have hfin : 77 * (28.9 / (X₀ : ℝ) + 2.8 * 10 ^ 6 / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4)) ≤
+  have hfin : 77 * (29 / (X₀ : ℝ) + 5.6 * 10 ^ 6 / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4)) ≤
       2 / Real.log y ^ 2 + 3000 * kappa0Param X₀ := by
     unfold kappa0Param
     have hX6 : (1 : ℝ) ≤ (X₀ : ℝ) ^ 6 := one_le_pow₀ (by linarith)
     have hly2 : 0 < Real.log y ^ 2 := by positivity
-    have h1 : 77 * (2.8 * 10 ^ 6 / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4)) ≤ 2 / Real.log y ^ 2 := by
+    have h1 : 77 * (5.6 * 10 ^ 6 / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4)) ≤ 2 / Real.log y ^ 2 := by
       rw [mul_div_assoc', div_le_div_iff₀ (by positivity) hly2]
       have : (10 : ℝ) ^ 16 ≤ Real.log y ^ 2 := by nlinarith
       nlinarith [mul_le_mul_of_nonneg_right hX6 (show (0 : ℝ) ≤ Real.log y ^ 4 by positivity)]
-    have h2 : 77 * (28.9 / (X₀ : ℝ)) ≤ 3000 * (1 / (X₀ : ℝ)) := by
+    have h2 : 77 * (29 / (X₀ : ℝ)) ≤ 3000 * (1 / (X₀ : ℝ)) := by
       rw [mul_div_assoc', mul_one_div, div_le_div_iff_of_pos_right hXp]; norm_num
     linarith
   calc Real.log y * |rhoSh (PR θ X₀ ω) (twR θ X₀ ω) (Xm X₀) y (oscF θ X₀ ω (z / y))|
       ≤ _ := hR
     _ ≤ 77 * ∑ j ∈ F, Real.log (2 * (2 ^ j * X₀)) * bj j := mul_le_mul_of_nonneg_right hCS hS0
-    _ ≤ 77 * (28.9 / (X₀ : ℝ) + 2.8 * 10 ^ 6 / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4)) := by
+    _ ≤ 77 * (29 / (X₀ : ℝ) + 5.6 * 10 ^ 6 / ((X₀ : ℝ) ^ 6 * Real.log y ^ 4)) := by
         linarith
     _ ≤ _ := hfin
 

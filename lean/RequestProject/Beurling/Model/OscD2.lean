@@ -50,6 +50,27 @@ lemma deriv_oscTerm_eq {θ α γ xk x : ℝ} (hx : 0 < x) (hxk : 0 < xk) :
     deriv (Oscillation.oscTerm θ α γ xk) x = oscD θ α γ xk x :=
   (Oscillation.hasDerivAt_oscTerm hx hxk).deriv
 
+/-- The explicit `R_k'` of the `k`-th oscillation of the design `θ`: `oscD` with the per-zero
+exponent, minus (for the design `θ = 0`) the slope of the part switched on at the switch-off
+point `x⁺ max(x⁺, 1)`. -/
+noncomputable def RkD (θ α γ xk x : ℝ) : ℝ :=
+  oscD (thK θ xk) α γ xk x - if θ = 0 then oscD (thK θ xk) α γ (xk * max xk 1) x else 0
+
+lemma deriv_oscK_eq {θ α γ xk x : ℝ} (hx : 0 < x) (hxk : 0 < xk) :
+    deriv (Oscillation.oscK θ α γ xk) x = RkD θ α γ xk x := by
+  have hy : 0 < xk * max xk 1 := mul_pos hxk (lt_of_lt_of_le one_pos (le_max_right _ _))
+  unfold RkD
+  by_cases hθ : θ = 0
+  · subst hθ
+    rw [Oscillation.deriv_oscK_zero hxk hx, deriv_oscTerm_eq hx hxk, deriv_oscTerm_eq hx hy,
+      if_pos rfl]
+  · have e : Oscillation.oscK θ α γ xk = Oscillation.oscTerm θ α γ xk := by
+      funext z; exact Oscillation.oscK_of_ne hθ _ _ _ _
+    rw [e, deriv_oscTerm_eq hx hxk, if_neg hθ, thK_of_ne hθ, sub_zero]
+
+lemma RkD_of_ne {θ α γ xk x : ℝ} (hθ : θ ≠ 0) : RkD θ α γ xk x = oscD θ α γ xk x := by
+  simp [RkD, hθ, thK_of_ne hθ]
+
 lemma differentiable_deriv_smoothTransition : Differentiable ℝ (deriv Real.smoothTransition) :=
   ((Real.smoothTransition.contDiff (n := 2)).iterate_deriv' 1 1).differentiable (by norm_num)
 
@@ -348,15 +369,16 @@ theorem oscD_sub_le {θ : ℝ} (hθ1 : 0 ≤ θ) (hθ2 : θ ≤ 1 / 2) {X S : �
   linarith
 
 /-- `R'` as the finite sum `∑_{k<K} R_k'` on `(0, x⁺_K)`. -/
-lemma deriv_osc_eq_sum {θ : ℝ} (α γ : ℕ → ℝ) (X : ℝ) {K : ℕ} {y : ℝ} (hy : 0 < y)
-    (hyK : y < Construction.switchOn X K) :
+lemma deriv_osc_eq_sum {θ : ℝ} (α γ : ℕ → ℝ) (X : ℝ) (hX : 1 ≤ X) {K : ℕ} {y : ℝ}
+    (hy : 0 < y) (hyK : y < Construction.switchOn X K) :
     deriv (Oscillation.osc θ α γ (Construction.switchOn X)) y =
-      ∑ k ∈ Finset.range K, oscD θ (α k) (γ k) (Construction.switchOn X k) y := by
+      ∑ k ∈ Finset.range K, RkD θ (α k) (γ k) (Construction.switchOn X k) y := by
   have hsum : HasDerivAt (fun z => ∑ k ∈ Finset.range K,
-      Oscillation.oscTerm θ (α k) (γ k) (Construction.switchOn X k) z)
-      (∑ k ∈ Finset.range K, oscD θ (α k) (γ k) (Construction.switchOn X k) y) y :=
-    HasDerivAt.fun_sum fun k _ =>
-      Oscillation.hasDerivAt_oscTerm hy (Construction.switchOn_pos X k)
+      Oscillation.oscK θ (α k) (γ k) (Construction.switchOn X k) z)
+      (∑ k ∈ Finset.range K, RkD θ (α k) (γ k) (Construction.switchOn X k) y) y :=
+    HasDerivAt.fun_sum fun k _ => by
+      rw [← deriv_oscK_eq hy (Construction.switchOn_pos X k)]
+      exact Oscillation.hasDerivAt_oscK θ _ _ (Construction.switchOn_pos X k) hy
   refine (hsum.congr_of_eventuallyEq ?_).deriv
   filter_upwards [Ioo_mem_nhds hy hyK] with z hz
   exact osc_eq_finsum α γ X hz.1 hz.2.le
@@ -383,11 +405,9 @@ lemma deriv_osc_eq_zero_of_le {θ : ℝ} (α γ : ℕ → ℝ) (S : ℝ) (hS : 1
     have : y ≤ (⌈y⌉₊ : ℝ) := Nat.le_ceil y
     push_cast [K] at *
     linarith
-  rw [deriv_osc_eq_sum _ _ S hy hyK]
+  rw [(hasDerivAt_osc α γ hS hy).deriv]
   refine Finset.sum_eq_zero fun k _ => ?_
-  have hxk := Construction.switchOn_pos S k
-  rw [← deriv_oscTerm_eq hy hxk]
-  exact deriv_oscTerm_of_le hy (hyx.trans (Construction.switchOn_mono S (Nat.zero_le k)))
+  exact deriv_oscK_of_le hy (hyx.trans (Construction.switchOn_mono S (Nat.zero_le k)))
 
 /-- **The `R'` modulus** (§5, eq. (osc), the `o_R` bullet): for `X₀ ≤ s ≤ t`,
 `|R'(t) - R'(s)| ≤ (t - s) · oscMod θ X₀ s t`, from `|R''(x)| ≤ ∑_k 2⁻ᵏ x^{-θ}/10¹⁴` beyond
@@ -409,6 +429,7 @@ theorem deriv_osc_sub_le {θ : ℝ} (hθ : θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 /
   have hS1 : 1 ≤ S := by linarith
   have hθ1 : 0 ≤ θ := hθ.1.le
   have hθ2 : θ ≤ 1 / 2 := by linarith [hθ.2]
+  have hθne : θ ≠ 0 := hθ.1.ne'
   set α := Construction.amplitudes θ (Construction.kappa0Param X₀) (Construction.switchOn S) γ
   set R' := deriv (Oscillation.osc θ α γ (Construction.switchOn S)) with hR'
   set x0 := Construction.switchOn S 0 with hx0
@@ -423,14 +444,18 @@ theorem deriv_osc_sub_le {θ : ℝ} (hθ : θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 /
       push_cast [K] at *
       linarith
     have hsK : s < Construction.switchOn S K := lt_of_le_of_lt hst htK
-    rw [hR', deriv_osc_eq_sum _ _ S ht0 htK, deriv_osc_eq_sum _ _ S hs0 hsK,
+    rw [hR', deriv_osc_eq_sum _ _ S hS1 ht0 htK, deriv_osc_eq_sum _ _ S hS1 hs0 hsK,
       ← Finset.sum_sub_distrib]
+    simp only [RkD_of_ne hθne]
     have hq : 0 ≤ s ^ (-θ) := Real.rpow_nonneg hs0.le _
     calc _ ≤ ∑ k ∈ Finset.range K, |oscD θ (α k) (γ k) (Construction.switchOn S k) t -
           oscD θ (α k) (γ k) (Construction.switchOn S k) s| :=
           Finset.abs_sum_le_sum_abs _ _
       _ ≤ ∑ k ∈ Finset.range K, (t - s) * ((1 / 2) ^ k * s ^ (-θ) / 10 ^ 14) :=
-          Finset.sum_le_sum fun k _ => oscD_sub_le hθ1 hθ2 hX2 hXS k (hγ k) hs0 hst
+          Finset.sum_le_sum fun k _ => by
+            have hk := oscD_sub_le hθ1 hθ2 hX2 hXS k
+              (by simpa [thK_of_ne hθne] using hγ k) hs0 hst
+            simpa [α, Construction.amplitudes, thK_of_ne hθne] using hk
       _ = (t - s) * s ^ (-θ) / 10 ^ 14 * ∑ k ∈ Finset.range K, (1 / 2 : ℝ) ^ k := by
           rw [Finset.mul_sum]; refine Finset.sum_congr rfl fun k _ => ?_; ring
       _ ≤ (t - s) * s ^ (-θ) / 10 ^ 14 * 2 :=
