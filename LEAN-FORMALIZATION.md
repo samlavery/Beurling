@@ -8,7 +8,7 @@ theorem BModel.corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ
 ```
 
 (`lean/RequestProject/Beurling/Model/MarginComplete.lean`). There is no `sorry` and no custom axiom. The trust base is
-Lean's kernel, Mathlib, (84), and the compiler evaluation behind the `native_decide` certificates (see *Trust base*).
+Lean's kernel, Mathlib and (84) (see *Trust base*); the numerical certificates are kernel-checked.
 All checking of the correspondence between the paper and the Lean statements has been done by AI agents; independent
 human review is pending.
 
@@ -22,7 +22,7 @@ human review is pending.
 - The archive also bundled a copy of the paper and of the certificate scripts. They are omitted here: the PDF is the
   repository's `beurling-paper.pdf` at 9ac0624, and every script is byte-identical to its copy under `certificates/`.
 
-**Building.** Lean `v4.28.0`, Mathlib `v4.28.0`:
+**Building.** Lean `v4.35.0`, Mathlib `v4.35.0`:
 
 ```
 cd lean
@@ -34,8 +34,8 @@ lake build
   all 776 project modules compiled from source, 40 minutes wall-clock on 10 cores, no errors.
 - `lakefile.toml` passes `--tstack=262144` to Lean. Without it, the `native_decide` checks in
   `BSCert/Consts/MarginCert.lean` hit Lean's interpreter recursion limit with the default 8 MB thread stack on macOS.
-- `#print axioms BModel.corollary_2_2_complete` gives `propext`, `Classical.choice`, `Quot.sound`,
-  `Lean.ofReduceBool` and `Lean.trustCompiler`.
+- `#print axioms BModel.corollary_2_2_complete` gives `propext`, `Classical.choice` and `Quot.sound` only
+  (since 0b6beb3; on v4.35.0 since 5eeb48f, full build of 10144 jobs green).
 - The 758 files in its import closure contain no `sorry`, `admit`, `axiom`, `implemented_by`, `extern`, `unsafe`,
   `opaque`, `debug.skipKernelTC`, `#exit`, or custom `syntax`/`macro`/`elab`.
 
@@ -60,8 +60,11 @@ lake build
 
 - **Kernel and Mathlib**, as for any Lean proof.
 - **(84)**, as the hypothesis `Huxley84` (above).
-- **`native_decide`** (`Lean.ofReduceBool`, `Lean.trustCompiler`). These certificates are evaluated by compiled code
-  and trusted through the compiler, not re-checked by the small kernel. They are finite numerical checks:
+- **Numerical certificates, kernel-checked.** Until 2026-10-30 these used `native_decide` (`Lean.ofReduceBool`,
+  `Lean.trustCompiler`). They are now proved by `decide +kernel` on fixed-point interval arithmetic (`BSCert/FX`), with
+  adaptive covers and reductions described in `lean/KERNEL-CERT-NOTES.md`; generators are in `lean/scripts/`. The
+  files that still contain `native_decide` (`CMCertSharp`, `RankinCert75`, `SmallCertExtra`) are outside the proof's
+  import closure. The certificates were, before the change:
   - `BSCert/Z2Chunks/C00–C31`: the 32 band covers of region Z2 (bs-cert);
   - `BSCert/AuxCert`, `RankinCert`, `EiCert`, `Capl*`: one-variable covers and exp/log/Ei point bounds;
   - `BSCert/Consts/{ZetaCert, MarginCert, PhiCert}`: the constants of Appendix B (ζ, A(s), Ein(2), I₂, I₃, ‖ϕ''‖);

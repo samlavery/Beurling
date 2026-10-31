@@ -129,7 +129,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   (#74); R14 found that grid windows near 2z stick out of the range that Theorem R assumes (#75). The check of #76
 >   found that the existence of the slot offset ϑ_s was unproved, and that a tie made a slot empty (#77).
 >
-> These are entries #31–#112 of `CORRECTIONS-vs-v3.md`. All are repaired.
+> These are entries #31–#112 of `CORRECTIONS-vs-v3.md` (#113–#114 record two later strengthenings, not errors). All are repaired.
 > - **The repairs of #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72** were checked by a fresh AI checker in
 >   twenty-two passes (`review/recheck/R4.md`). #65 and #66 were checked by the R11 checker (`review/recheck/R11-absorption.md` §§12–13);
 >   #68, #69 and #70 by independent checks R12 and R13; #73–#77 by independent checks R16, R17 and R18; #78 by R19; #79–#82 by R20; #83–#85 by R21; #86 and #87 by R22; #88 and #89 by R23; #90 by R24; #91 by R25; #92 by R26; #93 by R27; #95 and #96 by R28; #97–#100 by R29; #94 by R31; #101 came from the certificate audit R30; #102–#110 came from the Lean formalization, whose kernel-checked results are their check (#103 also by re-running consts.py); #111 and #112 came from scoping studies of follow-up problems.
@@ -184,11 +184,13 @@ theorem BModel.corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ
 - `Huxley84` is (84): relative error ≤ (log q)⁻³ for primes in every interval I ⊂ [q, 2q] with |I| ≥ (2q)^{7/12},
   for large q. It follows from Heath-Brown's short-interval prime number theorem with the de la Vallée Poussin error
   term, which are not in Mathlib.
-- `#print axioms` gives `propext`, `Classical.choice`, `Quot.sound`, `Lean.ofReduceBool` and `Lean.trustCompiler`.
-  The last two come from `native_decide`: the finite numerical certificates of Appendix B are evaluated by compiled
-  code rather than re-checked by the kernel.
-- The whole proof is formalized, for θ ∈ [1/4, 1/2 − 10⁻⁴] (the extension to θ < 1/4 is not): Sections 2–7 and Appendix A, the construction built from the jitters, its
-  measurability and probability budget, and the certificates.
+- `#print axioms` gives only `propext`, `Classical.choice` and `Quot.sound`. The finite numerical certificates of
+  Appendix B are checked by Lean's kernel (`decide +kernel`); there is no `native_decide` in the proof.
+- Lean/Mathlib v4.35.0.
+- The whole proof is formalized for the construction with θ ∈ [1/4, 1/2 − 10⁻⁴] and the decaying amplitude
+  κ′_k = κ₀/log²x_k (zeros at 3 log log): Sections 2–7 and Appendix A, the construction built from the jitters, its
+  measurability and probability budget, and the certificates. The two later strengthenings (θ < 1/4, constant
+  amplitude) are being formalized.
 - The correspondence between the paper and the Lean statements has been checked by AI agents only.
 
 The formalization found four defects in the paper (corrections #102 and #104, constants in Lemma 5.7 and Theorem 5.24; #103, certificate
@@ -203,7 +205,7 @@ defects in the Aristotle model
 | `paper/` | the paper (LaTeX). `main.tex` inputs the files in `paper/sections/`. |
 | `certificates/` | the computer-assisted parts and numerical cross-checks (Python 3), described in Appendix B of the paper |
 | `review/` | the AI referee reports written while the proof was developed (two component referees and one end-to-end referee; they refer to working notes that are not included here), the AI consistency check of the paper (`paper-check.md`, `subchecks/`), and the re-check after the fixes (`paper-recheck.md`, `recheck/`) |
-| `lean/` | the Lean 4 project (Lean/Mathlib v4.28.0), started by Aristotle: Corollary 2.2 proved from (84) alone (`BModel.corollary_2_2_complete`), with the certificates of Appendix B |
+| `lean/` | the Lean 4 project (Lean/Mathlib v4.35.0), started by Aristotle: Corollary 2.2 proved from (84) alone (`BModel.corollary_2_2_complete`), with the certificates of Appendix B |
 | `LEAN-FORMALIZATION.md` | the Lean formalization: final statement, trust base, defects found, and the progress log |
 | `CORRECTIONS-vs-v3.md` | every deviation of the paper from the refereed draft ("v3"), with justification |
 | `PAPER-SPEC.md`, `paper/LABELS.md`, `review/PAPER-CHECK-BRIEF.md`, `review/RECHECK-BRIEF.md` | process documents: the instructions given to the AI agents that wrote and checked the paper |
