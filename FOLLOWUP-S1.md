@@ -46,8 +46,10 @@ Hence N = x + O_{X₀,θ}(x^θ log*x). Statement (ii), the zeros with Re ρ_k = 
      is respected: the crude form is not enough for the late noise or for o_R. These now read eq:Dmaxstd.
 3. **Switch-on**: θ log x₁ ≥ 9(log log x₁)² (01-setup params "switch-on", Theorem A statement).
 4. **θ' := 0.26** in the local PNT (04e). It was max(θ + 0.01, 8(log log X₀)²/log X₀ + 0.005).
+   **Superseded by correction #118: θ' := max(θ + 0.01, 0.26)** (see *Paper fixes from the Lean* below).
    - D₀ := B + 3H + 4 + h(u)Λ⁻⁸ ≤ u^{3·10⁻⁵} + u^{1/8} ≤ u^{0.26}.
-   - Every other use of θ' needs only θ' ≤ 0.51 (σ − θ' ≥ 0.48, v^{θ'−1}).
+   - Every other use of θ' needs only θ' ≤ 0.51 (σ − θ' ≥ 0.48, v^{θ'−1}), except the smoothing error of Step 9 when the
+     increment of R is bounded through |R| ≤ 2u^θ log*u, which needs θ' ≥ θ + 0.01.
 
 ## Where each change is made (paper/sections)
 
@@ -274,3 +276,49 @@ Where the Lean differs from the S1 text, or the text left something unspecified:
 - **o_R.** The R′ modulus is the explicit max(s, x₁)^{−θ}/10¹³ (`oscMod`). Summed over dyadic scales it is ≤ 10⁻⁸⁰ by the
   switch-on condition (`sum_oscModU_le`). This replaces the old (u/2)^{−1/20} term in o_j and B(u).
 - **Lag exponent.** Inside §5/§6 the θ-free lag exponent λ(10⁻⁴) = 1/20000 replaces λ(θ).
+
+## Paper fixes from the Lean (branch paper-s1fix, from development 81a422e, 2026-10-31)
+
+Each item of the list above, classified as (a) an error in the paper (fixed and logged), (b) an under-specification (step
+added), or (c) a different but valid Lean route (no paper change). Not yet independently checked.
+
+- **Switch-on (c).** The paper's θ log x₁ ≥ 9(log log x₁)² suffices with the paper's own arguments, which read the exact
+  D_max ≤ 3.01e^{8ℓ²} (eq:Dmaxstd), not a power of x: late noise 171Λe^{8ℓ_k² − θL_k} ≤ 171Λe^{−ℓ_k²} (03-zeros, Lemma
+  latenoise); designed zero step 6, 2δ_k ≤ θ from 9ℓ² ≥ 18ℓ; o_R, f(u) ≥ ℓ² − 4ℓ − 1 and (16ℓ + 4)/L ≤ θ/2 from 9ℓ² − 1 ≥ 32ℓ + 8.
+  The Lean's 16ℓ² + 4ℓ + 2Λ + 10 ≤ θ log y comes from its late-noise lemma, which uses |D(y)| ≤ y^{θ/2}. No change.
+- **θ′ (b), logged as #118.** Step 9's smoothing error was justified only by "using dΠ ≤ dN". Through T₀ = u + E_rig + R
+  and |R| ≤ 2u^θ log*u (the Lean route) it needs θ′ ≥ θ + 0.01, which θ′ = 0.26 violates for θ > 0.25. (Through dT₀ and
+  |R′| ≤ κ₊/log u it holds with θ′ = 0.26 too.) Now θ′ := max(θ + 0.01, 0.26) ∈ [0.26, 0.51) (01-setup params row;
+  paper/sections/04e-lp.tex notation item), and Step 9 spells out N(v) − N(v′) ≤ 2(v − v′) + 2.01v^{θ′}, giving
+  ≤ 4.02/T + 2.02v^{θ′−1} + 1/T ≤ 6/T + 3v^{θ′−1} (04e-lp.tex, after the smoothing display). Every other use is θ′ ≤ 0.51:
+  D₀ ≤ u^{0.26} ≤ u^{θ′}; Step 1 and the Step 7 growth bullet (σ ≥ 1 − 8/Λ ≥ 0.99, so σ − θ′ ≥ 0.48 and
+  |D̂♯| ≤ 2.1|z|X₀^{−0.48} + 1); v^{θ′−1} ≤ v^{−0.49} in (i). §6's remark σ = (1+θ′)/2 is heuristic. S2: Lemma onezero-transfer
+  now lists Step 9 under "the size of R" and reads θ′ = max(θ_max + 0.01, 0.26) = 0.26 (07-onezero.tex).
+- **T1 bound (c).** The paper's Σ(1 − M_a) ≤ ∫h′ρ_Abs ≤ (392Λ²)⁻⁴h(x) is valid; the Lean's ε·h(x) + (1/8)∫ρh/v is another route.
+- **Lemma ZA (c).** Y/h(Y) = |t| (paper) and h ≤ a^{1/8}, Y = |t|^{8/7} (Lean) both work; ZA(a) is unchanged.
+- **Constants (c).** The Lean's lagMax = B(x) + 3H(x) + B(X₀) + 3H(X₀) + 5 is ≥ the paper's D_max(x) = B(x⁺) + 3H(x⁺) + 5
+  (proved in Prop La from the two ranges x ≥ X₀ + 2H and [X₀⁻, X₀ + 2H], with B, H non-decreasing); no change.
+- **solveU (c).** u ↦ u + h(u) is continuous and increasing on (0, ∞) onto (0, ∞) (h = u^{1/8} for log u ≤ 400Λ², which
+  includes u < 1), so u_a exists for every a > 0; the elements of 𝒜 are ≥ X₀ anyway. The Lean's u ≥ 1, n ≥ 2 are domain
+  conventions. No change.
+- **Window count, step (iii) (c, with a clarification).** The paper (04k, terminal levels) already has the last term 2h(v/X₀)
+  ≤ 2(v/X₀)^{1/8} (since #115), not (v/X₀)^{θ/2}, and proves |I_v| ≤ 2.1H(v)/X₀ ≤ h(v/X₀) by log H ≤ max(8(log L)², 15Λ + 1.4)
+  (margin ≥ 1.125Λ, W3). Added (paper/sections/04k-kernels.tex, "So I_v is covered by two windows"): the two windows start at
+  the left end u ≥ 0.99v/X₀ of I_v, and h(u) ≥ 0.99^{1/8}h(v/X₀) ≥ ½|I_v| since b ≤ 1/8. The Lean's e^{(L−0.02)/20} and
+  27Λ(log log u)² route (win_len_h) is another valid argument.
+- **o_R (a), logged as #117.** The bullet bounded o_R by Σ_{k: x_k ≤ u}, which omits R_k on the windows of [u, 2u) that reach
+  past x_k⁺ > u (they reach up to 3u); for k = 1 the displayed bound is 0 there while o_R > 0. The conclusion o_R ≤ H(u)u^{−θ}
+  was true. Now derived window by window (paper/sections/04f-bridge.tex, eq:osc proof, the o_R item): on [s, t] ⊂ [u/2, 3u],
+  |R_k″(w)| ≤ 1.01Λ⁻¹⁰max(s, x_k⁺)^{−θ}(x_k⁺/max(s, x_k⁺))^{2−2θ} (the Lean's modulus max(s, x₁)^{−θ}), at most one k with
+  x_k⁺ ∈ (u/2, 3u], so o_R ≤ 2.04·2.03√2Λ⁻¹⁰H(u)u^{−θ} ≤ H(u)u^{−θ}, and o_R = 0 unless 3u > x₁⁺. The dyadic sum
+  Σ_{u ≥ x₁/4} log²(3u)H(u)u^{−θ} ≤ 4 log x₁·e^{−f(u₁)} ≤ e^{−Λ²} and its use in eq:osc are unchanged. S2 already argued
+  window by window (07-onezero, o_{R,k}); no change there.
+- **Lag exponent / jump count (c).** The paper uses η := 3·10⁻⁵ (D_max ≤ x^{3·10⁻⁵}, Prop La) in Lemma goodheights (ii):
+  a window of length 2 holds ≤ 2D_max + 2.02 ≤ K(N) = 2(2N+2)^η + 5 elements, and (θ + η)/2 − ¼ ≤ −3.5·10⁻⁵; in §6,
+  (B + 3H + 3)(s) ≤ s^{3·10⁻⁵}. These are θ-free. The Lean's λ(10⁻⁴) = 1/20000 is a weaker valid exponent
+  ((θ + η)/2 − ¼ ≤ −2.5·10⁻⁵ exactly at θ = ½ − 10⁻⁴). No change.
+
+Bookkeeping: CORRECTIONS-vs-v3.md #117, #118; README, C-ai-statement and review/paper-recheck.md now count one hundred and
+fourteen corrections (entries 31–112, 117, 118; #113–#116 are strengthenings); C-ai-statement's Lean sentence now says the
+formalization covers every θ ∈ (0, ½ − 10⁻⁴]. Build: 0 undefined references; the same 14 overfull boxes as 81a422e; comments
+whole-line only.

@@ -382,7 +382,10 @@ $2C_N\log(2u)/\log x$ for $u\ge2X_0$, where there are no terminal levels.
 % Follow-up S1 (FOLLOWUP-S1.md): the earlier argument used log H <= 8(log L)^2 + 1e-6 L and h = u^{theta_b}; with the new
 % window 1e-6 L exceeds log h for large L, so the true bound log H <= max(8(log L)^2, 15 Lambda + 1.4) is used.
   So $I_v$ is covered
-  by two windows $[u,u+h(u)]$ of Lemma~\ref{lem:lemmaP}; and $\Abs$ is empty at heights below $X_0$, where that lemma is not
+  by two windows $[u,u+h(u)]$ of Lemma~\ref{lem:lemmaP}, the first starting at the left end $u\ge0.99v/X_0$ of $I_v$: since
+  $b\le\frac18$, $h(u)\ge0.99^{1/8}h(v/X_0)\ge\frac12|I_v|$, and $h$ is non-decreasing. Also
+% Lean S1 (FOLLOWUP-S1.md): the left end of I_v is below v/X_0; the two windows start there (Lean: win_len_h, h(0.99u)).
+ $\Abs$ is empty at heights below $X_0$, where that lemma is not
   stated.
 % Logged correction 66: the window size and the range of Lemma lemmaP are made explicit here.
   So $I_v$ holds at most

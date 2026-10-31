@@ -129,10 +129,10 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   (#74); R14 found that grid windows near 2z stick out of the range that Theorem R assumes (#75). The check of #76
 >   found that the existence of the slot offset ϑ_s was unproved, and that a tie made a slot empty (#77).
 >
-> These are entries #31–#112 of `CORRECTIONS-vs-v3.md` (#113–#114 record two later strengthenings, not errors). All are repaired.
+> These are entries #31–#112, #117 and #118 of `CORRECTIONS-vs-v3.md` (#113–#116 record four later strengthenings, not errors). All are repaired.
 > - **The repairs of #31–#47, #49–#53, #56–#59, #61–#64, #67, #71 and #72** were checked by a fresh AI checker in
 >   twenty-two passes (`review/recheck/R4.md`). #65 and #66 were checked by the R11 checker (`review/recheck/R11-absorption.md` §§12–13);
->   #68, #69 and #70 by independent checks R12 and R13; #73–#77 by independent checks R16, R17 and R18; #78 by R19; #79–#82 by R20; #83–#85 by R21; #86 and #87 by R22; #88 and #89 by R23; #90 by R24; #91 by R25; #92 by R26; #93 by R27; #95 and #96 by R28; #97–#100 by R29; #94 by R31; #101 came from the certificate audit R30; #102–#110 came from the Lean formalization, whose kernel-checked results are their check (#103 also by re-running consts.py); #111 and #112 came from scoping studies of follow-up problems.
+>   #68, #69 and #70 by independent checks R12 and R13; #73–#77 by independent checks R16, R17 and R18; #78 by R19; #79–#82 by R20; #83–#85 by R21; #86 and #87 by R22; #88 and #89 by R23; #90 by R24; #91 by R25; #92 by R26; #93 by R27; #95 and #96 by R28; #97–#100 by R29; #94 by R31; #101 came from the certificate audit R30; #102–#110 came from the Lean formalization, whose kernel-checked results are their check (#103 also by re-running consts.py); #111 and #112 came from scoping studies of follow-up problems; #117 and #118 came from the Lean formalization of S1 and are not yet independently checked.
 > - **The certificate fixes of #54** were checked by the R8 checker (`review/recheck/R8-cert-repro.md` §9).
 > - **The repair of #60** was checked by the R10 checker (`review/recheck/R10-lp-transfer.md`, re-check of #60).
 >   The passes ended with nothing blocking or fixable.
@@ -145,7 +145,7 @@ Samuel Lavery (sam.lavery@gmail.com)
 >   `review/recheck/R11-absorption.md`. End-to-end checks of Appendix A and of the base-range section are in
 >   `review/recheck/R14-appA-e2e.md` and `review/recheck/R15-sec6-e2e.md`.
 >
-> None of the one hundred and twelve logged corrections changes a conclusion of the paper. But these
+> None of the one hundred and fourteen logged corrections changes a conclusion of the paper. But these
 > findings show that the AI checks are no substitute for expert review.
 
 ## The result
@@ -207,7 +207,8 @@ theorem BModel.corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ
 - The correspondence between the paper and the Lean statements has been checked by AI agents only.
 
 The formalization found four defects in the paper (corrections #102 and #104, constants in Lemma 5.7 and Theorem 5.24; #103, certificate
-coverage of two constants; #105, the definition of X_Hux), prompted a check that tightened the quantifier of Lemma 3.4 (#106), found that (s2), Lemma 6.27(b) and the bridge's oscillation term needed event qualifiers (#107–#109), led to a constant fix in Lemma predictable (#110), and found two
+coverage of two constants; #105, the definition of X_Hux), prompted a check that tightened the quantifier of Lemma 3.4 (#106), found that (s2), Lemma 6.27(b) and the bridge's oscillation term needed event qualifiers (#107–#109), led to a constant fix in Lemma predictable (#110), found that the o_R bound of eq. (osc) omitted windows reaching past a switch-on point (#117) and that
+the smoothing step of Theorem lp needed θ′ ≥ θ + 0.01 (#118), and found two
 defects in the Aristotle model
 (the height rule and the absorbed set), all fixed. The details, and the trust base, are in [`LEAN-FORMALIZATION.md`](LEAN-FORMALIZATION.md).
 

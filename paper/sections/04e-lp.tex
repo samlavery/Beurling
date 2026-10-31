@@ -111,8 +111,11 @@ Since $\log H\ge8(\log\log x)^2\ge16\log\log x$ and $H(x)/\delta\ge1$, this is a
   $\hat T_0(s)=s/(s-1)+\hat R(s)+\hat E(s)$ (Lemma~\ref{lem:ZBlow}), where $\hat R=\sum_k\hat R_k$ is the transform of the
   designed oscillation \eqref{eq:Rhat}.
 % Follow-up S1 (FOLLOWUP-S1.md): theta' was max(theta + 0.01, 8(loglog X_0)^2/log X_0 + 0.005), to dominate u^{theta_b}; the
-% absorbed part is now <= h(u) Lambda^{-8} <= u^{1/8} for every theta, and theta' is fixed.
-\item $\theta':=0.26$ is a fixed exponent (only $\theta'<1$ and $\theta'\le0.51$ are needed), and $\Lambda=\log X_0$.
+% absorbed part is now <= h(u) Lambda^{-8} <= u^{1/8} for every theta.
+% Lean S1 (FOLLOWUP-S1.md): theta' := max(theta + 0.01, 0.26) (was 0.26), as in the Lean (LocalPNT.thetaPrime); the
+% smoothing error of Step 9 bounds the increment of R by |R| <= 2u^theta log*u, which needs theta' >= theta + 0.01.
+\item $\theta':=\max(\theta+0.01,0.26)$, so $0.26\le\theta'<0.51$ and $\theta'\ge\theta+0.01$ (these are the only properties
+  used), and $\Lambda=\log X_0$.
 \end{itemize}
 
 \begin{theorem}[local prime number theorem]\label{thm:lp}
@@ -432,9 +435,14 @@ side of (i) for $w\le y$.
   \end{itemize}
   The smoothing error is
   \[
-    |\Phi^\sharp(v)-\Phi^h(v)|\le\int_{(ve^{-2/T},v]}\frac{d\Pi+d\Pi_0}u\le\frac6T+3v^{\theta'-1},
+    |\Phi^\sharp(v)-\Phi^h(v)|\le\int_{(v',v]}\frac{d\Pi+d\Pi_0}u\le\frac6T+3v^{\theta'-1},\qquad v':=ve^{-2/T}.
   \]
-  using $d\Pi\le dN$.
+% Lean S1 (FOLLOWUP-S1.md): the increment of N over (v',v] is now spelled out (was "using dPi <= dN").
+  Indeed $d\Pi\le dN$, and $v'\ge0.6v\ge X_0$. On $[X_0,y]$, $N=u+E_{\mathrm{rig}}+R+D$ (Lemma~\ref{lem:T1}, $D=N-T_0$).
+  Over $(v',v]$, $E_{\mathrm{rig}}$ increases by at most the number $v-v'+1$ of integers there, $|R|\le2u^\theta\log^*u$ and
+  $|D|\le u^{\theta'}$ (LP-a). As $\theta'\ge\theta+0.01$ and $\log v\ge10^{21}$, $4v^\theta\log v+1\le0.01v^{\theta'}$. Hence
+  $N(v)-N(v')\le2(v-v')+2.01v^{\theta'}$, and $\int_{(v',v]}dN/u\le2(e^{2/T}-1)+2.01v^{\theta'}/v'\le4.02/T+2.02v^{\theta'-1}$.
+  The density of $\Pi_0$ is at most $1/\log u$, which adds at most $2/(T\log v')\le1/T$.
 \item The heights used lie below $T_v$ once $\log v\ge1.1\cdot10^4\Lambda^2(\log\log v)^2$; here we apply the argument with
   $y':=v$ in place of $y$, which is allowed since (LP-a) holds on $[1,v]$; and $y'=v$ satisfies \eqref{eq:lp-yrange}.
   For $\log v\ge(1000+4\log\Lambda)^2$ the offset in

@@ -66,8 +66,20 @@ the oscillation is read.
   Lemma~\ref{lem:predictable} read $o_u$ only over windows meeting heights $\le x/2+2.1H(x)$, which lie in
   $(-\infty,x/2+4.2H(x)]\subset(-\infty,x]$, on $\Good(<x)$; and R1$'$ reads it at windows within $1.01H(t)$ of the current height $t$. Moreover $o_{\Abs}$ vanishes unless
   $\log\log u>2\log\Lambda+5.97$ ($=42.8$ at $\Lambda=10^8$), since $\Abs$ is empty below that height.
-\item $o_R\le\sum_{k:\,x_k\le u}\gamma_k\kappa_kH(u)u^{-1}(x_k/u)^{1-\theta}\le H(u)u^{-\theta}$, since
-  $\gamma_k\kappa_k\le x_k^{1-\theta}$ and $u\ge x_1/4\ge\exp(X_0^2/2)$; and $o_R=0$ for $u<x_1/4$, as $R\equiv0$ below $x_1$.
+% Lean S1 (FOLLOWUP-S1.md): o_R was bounded by a sum over k with x_k <= u, which misses the windows of [u,2u) that reach past
+% x_k^+ > u; the bound is now derived window by window from R'', with the modulus max(s, x_k^+)^{-theta} (Lean: oscMod).
+\item The $R$-part $o_R$ of $o_u$. The windows of $o_u$ have length $2.04H(u)\le u/2$ and meet $[u,2u)$, so they lie in $[u/2,3u]$. On a
+  window $[s,t]$ the oscillation of $R'=\sum_kR_k'$ is at most $2.04H(u)\sup_{[s,t]}|R''|$, and $R_k''=0$ on $[1,x_k^+]$. For
+  $w\ge x_k^+$, $|R_k''(w)|\le1.01\alpha_k\gamma_k^2w^{\theta-2}$ (as in the proof of Proposition~\ref{prop:g1} for range (B),
+  item \emph{resolvable $R_j'$}), and $\alpha_k\gamma_k^2\le\Lambda^{-10}(x_k^+)^{2-2\theta}$ by \eqref{eq:ampl} at $x_k^+$ and
+  $\gamma_k\le2\Gamma_k\le\Lambda^{-5}(x_k^+)^{1-\theta}$. So, on $[s,t]$,
+  \[
+    |R_k''(w)|\le1.01\Lambda^{-10}(x_k^+)^{2-2\theta}\max(s,x_k^+)^{\theta-2}\le1.01\Lambda^{-10}\max(s,x_k^+)^{-\theta}\Bigl(\frac{x_k^+}{\max(s,x_k^+)}\Bigr)^{2-2\theta}.
+  \]
+  Only the $k$ with $x_k^+\le3u$ contribute. With $s\ge u/2$, at most one of them has $x_k^+>u/2$, and its term is
+  $\le1.01\Lambda^{-10}(u/2)^{-\theta}$; the others sum to $\le1.02\Lambda^{-10}(u/2)^{-\theta}$, by the spacing $x_{k+1}\ge\exp(x_k)$. As
+  $2^\theta\le\sqrt2$, this gives $o_R\le2.04H(u)\cdot2.03\sqrt2\,\Lambda^{-10}u^{-\theta}\le H(u)u^{-\theta}$. And $o_R=0$ unless
+  $3u>x_1^+$; in particular $o_R=0$ for $u<x_1/4$.
 % Follow-up S1 (FOLLOWUP-S1.md): for small theta the sums of o_R are bounded through theta log u >= 9 (log log u)^2 (u >= x_1)
 % and H = H_std there; for theta >= 1/20 they were immediate.
   For dyadic $u\ge x_1/4$ put $f(u):=\theta\log u-8\ell_u^2-3\log\log(3u)$, $\ell_u:=\log\log u$. There $\ell_u\ge2\Lambda-1$,

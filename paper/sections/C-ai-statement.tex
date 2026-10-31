@@ -17,11 +17,11 @@ $u^{\theta_b}$ by the $\theta$-free absorption window $h$ of Section~\ref{sec:pa
 Theorem~\ref{thm:caplw} and the script \texttt{window\_check.py} of Appendix~\ref{app:cert-capl}), states the lag bound
 \eqref{eq:La} in the explicit form $D_{\max}=e^{O((\log\log x)^2)}$, and adds the condition $\theta\log x_1\ge9(\log\log x_1)^2$ on the
 switch-on point. Its design was scoped and adversarially checked by two AI agents before the text was written; the text itself has been
-checked by the AI agent that wrote it and one independent AI check (file \texttt{FOLLOWUP-S1.md}), and it is not formalized in Lean. Likewise, the constant amplitude $\kappa'_k=\kappa_0$ that improves
+checked by the AI agent that wrote it and one independent AI check (file \texttt{FOLLOWUP-S1.md}). Likewise, the constant amplitude $\kappa'_k=\kappa_0$ that improves
 the zero location from $3\log\log x_k$ to $\log\log x_k$ (Remark~\ref{rem:landau}) was made after that review and has been checked
-by the AI agent that made it and one independent AI check (file \texttt{FOLLOWUP-LANDAU.md}). Both strengthenings are
-formalized in Lean (the theorems \texttt{BModel.theoremA\_full} and \texttt{BModel.theoremA\_ii\_complete}), for
-$\theta\in[\tfrac1{20},\tfrac12-10^{-4}]$ with the window $u^{\theta_b}$. Theorem~\ref{thm:Aprime}, a single $[1,0]$-system obtained with per-zero exponents $\theta_k$
+by the AI agent that made it and one independent AI check (file \texttt{FOLLOWUP-LANDAU.md}). All three strengthenings are
+formalized in Lean (the theorems \texttt{BModel.theoremA\_full} and \texttt{BModel.theoremA\_ii\_complete}), for every
+$\theta\in(0,\tfrac12-10^{-4}]$ with the window $h$; that formalization led to corrections \#117 and \#118. Theorem~\ref{thm:Aprime}, a single $[1,0]$-system obtained with per-zero exponents $\theta_k$
 and oscillations that switch off again (Section~\ref{sec:onezero}), was added after the extension to every $\theta$. Its design was
 scoped and adversarially checked by the same two AI agents; the text has been checked by the AI agent that made it and one
 independent AI check (file \texttt{FOLLOWUP-S2.md}), and it is not yet formalized in Lean.
@@ -30,11 +30,11 @@ independent AI check (file \texttt{FOLLOWUP-S2.md}), and it is not yet formalize
 \emph{Corrections found while writing.} Turning the refereed working draft into this paper, a final AI consistency check of
 the paper against that draft (report \texttt{review/paper-check.md}), and reports received after that check surfaced slips in the
 refereed draft (in constants, missing
-terms, statements broader than their proofs, and individual proof steps). The paper corrects one hundred and twelve of them; each is logged,
+terms, statements broader than their proofs, and individual proof steps). The paper corrects one hundred and fourteen of them; each is logged,
 with its justification, in the file \texttt{CORRECTIONS-vs-v3.md} of the repository, which lists every deviation of this paper
-from the refereed draft. None of them changes any conclusion. Entries 31--112 of the log were reported after the AI checks were complete (fifty of them
-by a reader of the first public version) or were found while repairing or re-checking those; their repairs have been checked only
-by targeted AI re-checks, whose reports \texttt{R4.md}, \texttt{R5-pil-repair.md}, \texttt{R7-margin-var.md},
+from the refereed draft. None of them changes any conclusion. Entries 31--112, 117 and 118 of the log were reported after the AI checks were complete (fifty of them
+by a reader of the first public version) or were found while repairing or re-checking those, or by the Lean formalization; their repairs have been checked only
+by targeted AI re-checks (the repairs of 117 and 118 not yet), whose reports \texttt{R4.md}, \texttt{R5-pil-repair.md}, \texttt{R7-margin-var.md},
 \texttt{R8-cert-repro.md}, \texttt{R9-cond-check-55.md}, \texttt{R9b-pil-o3b-55.md}, \texttt{R10-lp-transfer.md}, \texttt{R11-absorption.md}, \texttt{R12-explicit-68.md}, \texttt{R13-explicit-69.md}, \texttt{R14-appA-e2e.md}, \texttt{R15-sec6-e2e.md}, \texttt{R16-check-74-75.md}, \texttt{R17-check-73-76.md}, \texttt{R18-check-77.md}, \texttt{R19-check-78.md}, \texttt{R20-check-79-82.md}, \texttt{R21-check-83-85.md}, \texttt{R22-check-86-87.md}, \texttt{R23-check-88-89.md}, \texttt{R24-check-90.md}, \texttt{R25-check-91.md}, \texttt{R26-check-92.md}, \texttt{R27-check-93.md}, \texttt{R28-check-95-96.md}, \texttt{R29-check-97-100.md}, \texttt{R30-audit-bscert.md} and \texttt{R31-check-94.md} are in the directory
 \texttt{review/recheck/}. Two of them (\texttt{R14}, \texttt{R15}) re-derived Appendix~\ref{app:rankfull} and
 Section~\ref{sec:baserange} end to end and found no blocking defect; their fixable and cosmetic findings are among the entries.
