@@ -466,7 +466,7 @@ realised system.** `Theorem21InputsM` with the condition that the greedy rule pl
 many primes replaced by `ArrivalsLinked`: the arrivals of the slot model are the composites of
 `P(ω)` in the slots. -/
 def Theorem21InputsN : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -482,10 +482,9 @@ def Theorem21InputsN : Prop :=
 
 /-- `Theorem21InputsN` implies `Theorem21InputsM`: infinitely many primes are placed. -/
 theorem theorem21InputsM_of_N (h : Theorem21InputsN) : Theorem21InputsM := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨M, ι, hι, E, time, htab, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨M, ι, hι, E, time, htab, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

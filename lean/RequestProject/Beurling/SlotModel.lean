@@ -284,7 +284,7 @@ def TheoremAInputsSlotModel (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop 
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21InputsSplit`, with the slot data coming
 from the slot model of Section 3.4 and without the top-level queue bound. -/
 def Theorem21InputsSlotModel : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
@@ -292,10 +292,9 @@ def Theorem21InputsSlotModel : Prop :=
 
 theorem theorem21InputsSplit_of_slotModel (h : Theorem21InputsSlotModel) :
     Theorem21InputsSplit := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

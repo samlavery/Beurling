@@ -171,7 +171,7 @@ theorem lagMax_le_std {X₀ y : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.lo
   rw [hE]; linarith
 
 /-- **Proposition 4.1, numerical part, with the explicit `B` and `H`.** For `log X₀ ≥ 10⁸`,
-`x ≥ X₀`, `θ ∈ [1/20, 1/2 - 10⁻⁴]`: if `|D| ≤ B(x) + 3H(x) + 3` then `|D| ≤ x^η`. -/
+`x ≥ X₀`, `θ ∈ [10⁻⁴, 1/2 - 10⁻⁴]`: if `|D| ≤ B(x) + 3H(x) + 3` then `|D| ≤ x^η`. -/
 theorem lag_rpow_of_queue {θ X₀ x D : ℝ} (hθ1 : 1 / 10000 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
     (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) (hx : X₀ ≤ x)
     (hD : |D| ≤ queueB X₀ x + 3 * capH X₀ x + 3) : |D| ≤ x ^ lagExponent θ := by
@@ -313,17 +313,16 @@ def TheoremAInputsSplit (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21InputsSlots`, with the slot data of
 Corollary 3.8 only for `x ≥ X₀ + 2H(x)` and the paper's weaker bound on the initial range. -/
 def Theorem21InputsSplit : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
       ∀ ω ∈ G, TheoremAInputsSplit θ X₀ (P ω)
 
 theorem theorem21InputsZB48_of_split (h : Theorem21InputsSplit) : Theorem21InputsZB48 := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

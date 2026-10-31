@@ -51,25 +51,24 @@ def OthersInputsH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) : Prop :=
 /-- **Theorem 2.1, hypothesis**: for `X₀` beyond some threshold, a.s. on `Good(< b)` for every
 admissible window `[a, b)`, the open inputs `OthersInputsH`. -/
 def Theorem21InputsH : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ X : ℝ, ∀ X₀ : ℕ, Even X₀ → X ≤ X₀ →
+  ∃ X : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ → X ≤ X₀ →
     ∀ m a b, Adm X₀ m a b → ∀ᵐ ω ∂jitterMeasure,
       ω ∈ G0 θ X₀ (e3Family θ X₀) (tE2 b) → OthersInputsH θ X₀ ω b
 
 /-- `Theorem21InputsH` implies `Theorem21InputsZ`, given eq. (84). -/
 theorem theorem21InputsZ_hux (h84 : BaseRange.Huxley84) (h : Theorem21InputsH) :
     Theorem21InputsZ := by
-  intro θ hθ
   obtain ⟨x₁, hx₁⟩ := BaseRange.shortIntervalPNT_of_huxley h84
   obtain ⟨XH, -, hXH⟩ := BaseRange.huxley_threshold h84
-  obtain ⟨X, hX⟩ := h θ hθ
-  refine ⟨max (max (max X XH) x₁) (Real.exp (10 ^ 8 + 1)), fun X₀ hev h1 h2 => ?_⟩
+  obtain ⟨X, hX⟩ := h
+  refine ⟨max (max (max X XH) x₁) (Real.exp (10 ^ 8 + 1)), fun θ hθ X₀ hev h1 h2 => ?_⟩
   have h2a : X ≤ X₀ := (le_max_left _ _).trans ((le_max_left _ _).trans
     ((le_max_left _ _).trans h2))
   have h2h : XH ≤ X₀ := (le_max_right _ _).trans ((le_max_left _ _).trans
     ((le_max_left _ _).trans h2))
   have h2b : x₁ ≤ X₀ := (le_max_right _ _).trans ((le_max_left _ _).trans h2)
   have h2c : Real.exp (10 ^ 8 + 1) ≤ X₀ := (le_max_right _ _).trans h2
-  have hRest := hX X₀ hev h2a
+  have hRest := hX θ hθ X₀ hev h2a
   have hlog1 : 10 ^ 8 + 1 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h2c
     rwa [Real.log_exp] at this

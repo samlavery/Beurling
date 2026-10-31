@@ -73,7 +73,7 @@ heights designed.** As `Theorem21InputsCon`, without the monotonicity of `v - H(
 the parameter conditions of Section 2.2 and without the fixed-point condition on `γ_k, α_k`; the
 density bound `ρ_A ≤ (log v)^{-4}` is replaced by Lemma 6.26. -/
 def Theorem21InputsFix : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -117,7 +117,7 @@ lemma heightScale_switchOn_pos (θ : ℝ) {X₀ : ℝ} (hX : 1 ≤ X₀) (k : �
 /-- `Theorem21InputsFix` with the probability budget stated as its conclusion
 `P(G) ≥ 1 - 1.5/log X₀` (for the good event `G = ⋂ E`). -/
 def Theorem21InputsFixP : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (E : ι → Set JitterΩ),
       ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ jitterMeasure (goodAll E) ∧
@@ -128,10 +128,9 @@ def Theorem21InputsFixP : Prop :=
 
 /-- `Theorem21InputsFix` gives `Theorem21InputsFixP` (the union bound). -/
 theorem theorem21InputsFixP_of_fix (h : Theorem21InputsFix) : Theorem21InputsFixP := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨P, ι, hι, E, time, hE, hsum, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨P, ι, hι, E, time, hE, hsum, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this
@@ -141,10 +140,9 @@ theorem theorem21InputsFixP_of_fix (h : Theorem21InputsFix) : Theorem21InputsFix
 
 /-- **`Theorem21InputsFixP` gives the hypothesis `Theorem21InputsDec`** (and hence Theorem 2.1). -/
 theorem theorem21InputsDec_of_fixP (h : Theorem21InputsFixP) : Theorem21InputsDec := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨P, ι, E, hprob, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨P, ι, E, hprob, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

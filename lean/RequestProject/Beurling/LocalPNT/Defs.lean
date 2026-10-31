@@ -152,7 +152,7 @@ noncomputable def relBound (Λ v η : ℝ) : ℝ :=
 /-- **The hypotheses of Theorem 5.24** for a Beurling system `P`, the target data
 `θ, X₀, α_k, γ_k, x_k` (`T₀ = T0 θ X₀ α γ xp`), `X₀⁻ = Xm` and the height `y`.
 
-* The design: `θ ∈ [1/20, 1/2 - 10⁻⁴]`, `log X₀ ≥ 10⁸`, `X₀` even, `|α_k| ≤ 2`,
+* The design: `θ ∈ (0, 1/2 - 10⁻⁴]`, `log X₀ ≥ 10⁸`, `X₀` even, `|α_k| ≤ 2`,
   `x_0 ≥ exp(X₀²)` and `x_{k+1} ≥ exp(x_k)`; `X₀/2 ≤ X₀⁻ ≤ X₀` and `y ≥ X₀`.
 * `T₀` is non-decreasing on `[X₀, ∞)`: Lemma 3.3 (positivity margin (7)) for the `A`-free
   target, whose slope is `T'_cont + ρ̄_A ≥ T'_cont > 0` and whose jumps are the rigid ones.

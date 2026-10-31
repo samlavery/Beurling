@@ -73,7 +73,7 @@ bound for `A`.** As `Theorem21InputsFix`, with those two inputs replaced by the 
 with the construction, (HBS) and the cluster event, and with the probability budget replaced by
 the per-scale bounds of Table 1. -/
 def Theorem21InputsSp : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -90,10 +90,9 @@ def Theorem21InputsSp : Prop :=
 Lemma 6.10 follows from the per-scale bounds of Table 1 by first failure and summation
 (`goodAll_prob_ge_table`). -/
 theorem theorem21InputsFixP_of_sp (h : Theorem21InputsSp) : Theorem21InputsFixP := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨P, ι, hι, E, time, hE, ⟨scale, htab⟩, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨P, ι, hι, E, time, hE, ⟨scale, htab⟩, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

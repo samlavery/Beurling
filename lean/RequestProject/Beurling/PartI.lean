@@ -69,17 +69,16 @@ def TheoremAInputs' (θ X₀ : ℝ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21Inputs`, but with part (i) replaced by the
 target error (8) and the lag bound (La) (for the concrete oscillation `R` of (1)). -/
 def Theorem21Inputs' : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
       ∀ ω ∈ G, TheoremAInputs' θ X₀ (P ω)
 
 theorem theorem21Inputs_of_inputs' (h : Theorem21Inputs') : Theorem21Inputs := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX θ hθ X₀ hev h1 h2
   refine ⟨Ω, m, μ, P, G, hμ, hG, fun ω hω => ?_⟩
   obtain ⟨⟨T, α, γ, xp, C₀, E₁, E₂, hsp, hα, hE, hD, h₁, h₂⟩, h410⟩ := hP ω hω
   have hX1 : (1 : ℝ) < X₀ := lt_of_lt_of_le (by rw [Real.one_lt_exp_iff]; norm_num) h1

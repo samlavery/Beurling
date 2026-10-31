@@ -36,41 +36,6 @@ open Complex Filter Topology MeasureTheory BeurlingSystem
 /-- The lag exponent `η := min(θ, 1/2 - θ) / 2` of (13). -/
 noncomputable def lagExponent (θ : ℝ) : ℝ := min θ (1 / 2 - θ) / 2
 
-/-- The absorption-window exponent `θ_b := min(θ, max(θ/2, 1/8))` (window `h(u) = u^{θ_b}`).
-It is `θ/2` for `θ ≥ 1/4`, `1/8` on `[1/8, 1/4]` and `θ` below `1/8`. -/
-noncomputable def thetaB (θ : ℝ) : ℝ := min θ (max (θ / 2) (1 / 8))
-
-lemma thetaB_le_self (θ : ℝ) : thetaB θ ≤ θ := min_le_left _ _
-
-lemma half_le_thetaB {θ : ℝ} (hθ : 0 ≤ θ) : θ / 2 ≤ thetaB θ :=
-  le_min (by linarith) (le_max_left _ _)
-
-lemma thetaB_ge {θ : ℝ} (hθ : 1 / 20 ≤ θ) : 1 / 20 ≤ thetaB θ :=
-  le_min hθ (le_trans (by norm_num) (le_max_right _ _))
-
-lemma thetaB_pos {θ : ℝ} (hθ : 0 < θ) : 0 < thetaB θ :=
-  lt_min hθ (lt_of_lt_of_le (by norm_num) (le_max_right _ _))
-
-lemma thetaB_nonneg {θ : ℝ} (hθ : 0 ≤ θ) : 0 ≤ thetaB θ :=
-  le_min hθ (le_trans (by norm_num) (le_max_right _ _))
-
-lemma thetaB_le_quarter {θ : ℝ} (hθ : θ ≤ 1 / 2) : thetaB θ ≤ 1 / 4 :=
-  (min_le_right _ _).trans (max_le (by linarith) (by norm_num))
-
-lemma thetaB_lt_quarter {θ : ℝ} (hθ : θ < 1 / 2) : thetaB θ < 1 / 4 :=
-  lt_of_le_of_lt (min_le_right _ _) (max_lt (by linarith) (by norm_num))
-
-lemma thetaB_le_one {θ : ℝ} (hθ : θ ≤ 2) : thetaB θ ≤ 1 :=
-  (min_le_right _ _).trans (max_le (by linarith) (by norm_num))
-
-lemma thetaB_mono {θ θ' : ℝ} (h : θ ≤ θ') : thetaB θ ≤ thetaB θ' :=
-  min_le_min h (max_le_max (by linarith) le_rfl)
-
-lemma thetaB_eq_half {θ : ℝ} (hθ : 1 / 4 ≤ θ) : thetaB θ = θ / 2 := by
-  unfold thetaB
-  rw [max_eq_left (show (1 / 8 : ℝ) ≤ θ / 2 by linarith),
-    min_eq_right (show θ / 2 ≤ θ by linarith)]
-
 /-- `E = x^{o(1)}` on `[X, ∞)`: for every `ε > 0` there is `C` with `E(x) ≤ C x^ε` for `x ≥ X`.
 (The absorption window `h` and the lag bound `D_max` of the paper are `x^{o(1)}`.) -/
 def SubPow (E : ℝ → ℝ) (X : ℝ) : Prop := ∀ ε > (0 : ℝ), ∃ C : ℝ, ∀ x ≥ X, E x ≤ C * x ^ ε
@@ -159,12 +124,13 @@ def TheoremAConclusion (θ : ℝ) (P : BeurlingSystem) : Prop :=
       (∀ k, |(1 - (ρ k).re) * Real.log (xk k) - Real.log (Real.log (xk k))| ≤ C) ∧
       ∀ k, |Real.log (ρ k).im - ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k)))| ≤ C)
 
-/-- **Theorem 2.1 (Theorem A)**, taken as a hypothesis. For every `θ ∈ (0, 1/2 - 10⁻⁴]`
-there is a threshold `X_Hux` such that for every even integer `X₀ ≥ max(e^{10^8}, X_Hux)` the
+/-- **Theorem 2.1 (Theorem A)**, taken as a hypothesis. There is a threshold `X_Hux`,
+independent of `θ`, such that for every `θ ∈ (0, 1/2 - 10⁻⁴]` and every even integer
+`X₀ ≥ max(e^{10^8}, X_Hux)` the
 random system `P` of Section 3 (on some probability space) satisfies the conclusions (i), (ii)
 on an event `G` of probability at least `1 - 1.5 / log X₀`. -/
 def Theorem21 : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
@@ -184,7 +150,7 @@ def Remark12_ba : Prop :=
 theorem exists_realisation (h : Theorem21) {θ : ℝ}
     (hθ : θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) :
     ∃ P : BeurlingSystem, TheoremAConclusion θ P := by
-  obtain ⟨XHux, hX⟩ := h θ hθ
+  obtain ⟨XHux, hX⟩ := h
   set n : ℕ := ⌈max (Real.exp (10 ^ 8)) XHux⌉₊
   have hn : max (Real.exp (10 ^ 8)) XHux ≤ ((2 * n : ℕ) : ℝ) := by
     have := Nat.le_ceil (max (Real.exp (10 ^ 8)) XHux)
@@ -192,7 +158,7 @@ theorem exists_realisation (h : Theorem21) {θ : ℝ}
     push_cast; linarith
   have h1 : Real.exp (10 ^ 8) ≤ ((2 * n : ℕ) : ℝ) := (le_max_left _ _).trans hn
   obtain ⟨Ω, _, μ, P, G, -, hG, hP⟩ :=
-    hX (2 * n) (even_two_mul n) h1 ((le_max_right _ _).trans hn)
+    hX θ hθ (2 * n) (even_two_mul n) h1 ((le_max_right _ _).trans hn)
   have hlog : (10 : ℝ) ^ 8 ≤ Real.log ((2 * n : ℕ) : ℝ) := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

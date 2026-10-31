@@ -21,7 +21,7 @@ open Set MeasureTheory Construction Target Absorbed Decomp Oscillation CaplLink 
 namespace Zeros48
 
 /-- **`Theorem410RestM` from the other conjuncts of `Theorem21InputsP`.** For
-`θ ∈ [1/20, 1/2 - 10⁻⁴]`, `X₀` even with `X₀ ≥ e^{10⁸}`, jitters in `[0, 1]`, the arrival link,
+`θ ∈ (0, 1/2 - 10⁻⁴]`, `X₀` even with `X₀ ≥ e^{10⁸}`, jitters in `[0, 1]`, the arrival link,
 the slot facts and the Part I data (target formula (6), queue window data) give the pieces of
 Lemma 4.8(ii) at every scale. -/
 theorem theorem410RestM_of_inputs {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
@@ -63,7 +63,7 @@ namespace Construction
 /-- **Theorem 2.1, hypothesis on the concrete construction**: `Theorem21InputsP` without the
 conjunct `Theorem410RestM` (Lemma 4.8(ii), now derived: `Zeros48.theorem410RestM_of_inputs`). -/
 def Theorem21InputsR : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -77,10 +77,9 @@ def Theorem21InputsR : Prop :=
 
 /-- `Theorem21InputsR` implies `Theorem21InputsP`. -/
 theorem theorem21InputsP_of_R (h : Theorem21InputsR) : Theorem21InputsP := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨M, ι, hι, E, time, htab, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨M, ι, hι, E, time, htab, hP⟩ := hX θ hθ X₀ hev h1 h2
   refine ⟨M, ι, hι, E, time, htab, fun ω hG hω => ?_⟩
   obtain ⟨hlink, hS, hI, hcl⟩ := hP ω hG hω
   exact ⟨hlink, hS, hI, Zeros48.theorem410RestM_of_inputs hθ hev h1 hω hlink hS hI, hcl⟩

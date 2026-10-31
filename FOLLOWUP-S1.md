@@ -3,8 +3,9 @@
 Status (2026-10-31): paper and certificates only. One AI agent (Claude) wrote it. The design was scoped
 (/tmp/rhscratch/ext/onezero.md, plan S1) and adversarially checked (/tmp/rhscratch/ext/onezero_check.md: "holds with fixes")
 by two earlier AI agents. **The text written here passed one independent AI check (every item, including Step 5 by hand with
-the inherited raised-range bounds, and all scripts reproduced); no human review.** Not formalized in
-Lean: the Lean development still proves Theorem A for θ ∈ [1/20, ½ − 10⁻⁴] with the window u^{θ_b}.
+the inherited raised-range bounds, and all scripts reproduced); no human review.** Formalized in Lean
+(branch lean-s1, 2026-10-31): `BModel.theoremA_full : Huxley84 → Theorem21` with Theorem21 = ∃ X_Hux ∀ θ ∈ (0, ½ − 10⁻⁴]
+(see *Lean* below).
 
 Commits on followup-s1 (from development 37e7339): fe3cb23 (paper), ab8db31 (certificates, App. B, README, depcheck), and the
 commit that adds this file.
@@ -238,8 +239,7 @@ rankin_R.py is not affected by the window and was not rerun.
 1. **One independent AI check only** (passed on every item); no human review.
 2. ~~Step 5 rests on two inherited raised-range bounds~~ Closed: the independent check re-derived log 2y ≤ 3.01γΛ and
    log C_d + 4ℓ ≤ 1.01γΛ by hand.
-3. **Lean** is unchanged. It covers θ ∈ [1/20, θ₁] with u^{θ_b}. The scoping note estimates porting S1 at about 1–2 weeks
-   (window function in place of thetaB/uA/targetD; LateNoise/LagTwoSided to D_max; TargetError).
+3. **Lean**: ported (branch lean-s1). See *Lean* below.
 4. **Statement form.** Theorem A(i) now carries D_max(x) + h(x)Λ⁻⁸ explicitly. For θ < 1/8, h is not ≤ x^θ near
    L = 400Λ², so the clean form N = x + O(x^θ log*x) holds only with a constant depending on θ (and X₀); that constant is not
    computed.
@@ -247,3 +247,30 @@ rankin_R.py is not affected by the window and was not rerun.
 6. **CORRECTIONS-vs-v3.md** entry #115 records S1 (strengthening, not an error). README notes that Lean's `Theorem21` is the
    pre-S1 form.
 7. **S2** (per-zero θ_k and the switch-off, giving a [1,0]-system) is not attempted here.
+
+## Lean (branch lean-s1, 2026-10-31)
+
+`lake build` is green. `#print axioms` of `BModel.corollary_2_2_complete`, `BModel.theoremA_full` and
+`BModel.theoremA_ii_complete` gives [propext, Classical.choice, Quot.sound]. Statements:
+
+- `Theorem21 := ∃ XHux, ∀ θ ∈ Ioc 0 (1/2 − 1/10000), ∀ X₀ even, e^{10⁸} ≤ X₀ → XHux ≤ X₀ → …`. The threshold is
+  max(x₁, XH, e^{10⁸+1}) from (84), so it does not depend on θ.
+- (i) is |N(x) − x| ≤ C x^θ + 3 x^θ log* x + x^{η(θ)}, with C depending on θ and ω (see point 4). In Lean the lag
+  D_max = `LagSplit.lagMax` and the window h = `Absorbed.winH X₀` are `SubPow` (x^{o(1)}) and are absorbed into C.
+- `theoremA_ii_complete` is stated in the same uniform form.
+
+Where the Lean differs from the S1 text, or the text left something unspecified:
+- **Switch-on.** The seed is S = max(X₀, 1000/θ) and x_k = switchOn S k. The condition used is
+  16ℓ² + 4ℓ + 2Λ + 10 ≤ θ log y for log y ≥ log x₁ − 3 (`Construction.switchOn_cond'`), not the text's 9(log log)².
+- **Smoothing exponent.** θ′ = max(θ + 0.01, 0.26) (`LocalPNT.thetaPrime`). The smoothing step needs θ′ ≥ θ + 0.01.
+- **T1 bound.** The absorbed target error |#A − ∫ρ̄_A| ≤ 2h(x) comes from ε·h(x) + (1/8)∫ρ h/v
+  (`absorbed_target_error_cap`), not from the text's argument.
+- **Lemma ZA.** Lemma ZA keeps h ≤ a^{1/8} (Y = |t|^{8/7}) in place of Y/h(Y) = |t|. The decomposition is proved on Re s > 1/8.
+- **Constants.** D_max is written with B(X₀) + 3H(X₀) + 5 (`lagMax`).
+- **Inversion.** `solveU` (u + h(u) = n) needs u ≥ 1 and n ≥ 2.
+- **Window count (step (iii)).** The last term is 2(y/X₀)^{1/8} in place of 2(y/X₀)^{θ/2}. The window length
+  2.04H(y)/X₀ + ½ is ≤ h(0.99 y/X₀): below log u = 400Λ² by e^{(L−0.02)/20}, beyond by log H(y) ≤ 8(log log y)² + 15Λ + 2
+  ≤ 27Λ(log log u)² (`Queue6.win_len_h`).
+- **o_R.** The R′ modulus is the explicit max(s, x₁)^{−θ}/10¹³ (`oscMod`). Summed over dyadic scales it is ≤ 10⁻⁸⁰ by the
+  switch-on condition (`sum_oscModU_le`). This replaces the old (u/2)^{−1/20} term in o_j and B(u).
+- **Lag exponent.** Inside §5/§6 the θ-free lag exponent λ(10⁻⁴) = 1/20000 replaces λ(θ).

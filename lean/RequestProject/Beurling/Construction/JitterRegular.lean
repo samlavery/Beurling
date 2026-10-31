@@ -384,7 +384,7 @@ theorem jitterWidthRegular {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) : Jitter
 /-- **Theorem 2.1, hypothesis on the concrete construction**: `Theorem21InputsO` without the
 conjunct `JitterWidthRegular X₀`, which is now a theorem (`jitterWidthRegular`). -/
 def Theorem21InputsP : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -400,9 +400,8 @@ def Theorem21InputsP : Prop :=
 
 /-- `Theorem21InputsP` implies `Theorem21InputsO`. -/
 theorem theorem21InputsO_of_P (h : Theorem21InputsP) : Theorem21InputsO := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ⟨?_, hX X₀ hev h1 h2⟩⟩
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ⟨?_, hX θ hθ X₀ hev h1 h2⟩⟩
   apply jitterWidthRegular
   have := Real.log_le_log (Real.exp_pos _) h1
   rwa [Real.log_exp] at this

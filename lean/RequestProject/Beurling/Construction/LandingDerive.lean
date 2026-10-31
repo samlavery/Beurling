@@ -112,7 +112,7 @@ def PartIRestO (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : �
 of `P(ω)`, the slot facts `SlotFacts` (base case of Lemma 3.6, window count of placed slot starts)
 and the slow variation of `H` (`JitterWidthRegular`). -/
 def Theorem21InputsO : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → JitterWidthRegular X₀ ∧
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -128,10 +128,9 @@ def Theorem21InputsO : Prop :=
 
 /-- `Theorem21InputsO` implies `Theorem21InputsN`: the landing data hold for the construction. -/
 theorem theorem21InputsN_of_O (h : Theorem21InputsO) : Theorem21InputsN := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨hreg, M, ι, hι, E, time, htab, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨hreg, M, ι, hι, E, time, htab, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

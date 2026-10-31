@@ -22,7 +22,7 @@ namespace BModel
 
 /-- **Theorem 2.1, hypothesis with the slot model constructed and Lemma 4.8(ii) derived.** -/
 def Theorem21InputsS : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ) (time : ι → ℕ),
       (∃ scale : ι → ℕ, TableBudget jitterMeasure X₀ E time scale) ∧
@@ -36,12 +36,11 @@ null event is added to the failure events, and off it `Theorem410RestM` is
 `Zeros48.theorem410RestM_of_inputs` for the constructed model. -/
 theorem theorem21InputsQ_of_S (hHB : ShortIntervalPNT) (hnull : TiesNull)
     (h : Theorem21InputsS) : Theorem21InputsQ := by
-  intro θ hθ
   obtain ⟨x₁, hx₁⟩ := hHB
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨max XHux x₁, fun X₀ hev h1 h2 => ?_⟩
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨max XHux x₁, fun θ hθ X₀ hev h1 h2 => ?_⟩
   obtain ⟨ι, hι, E, time, ⟨scale, htab⟩, hP⟩ :=
-    hX X₀ hev h1 ((le_max_left _ _).trans h2)
+    hX θ hθ X₀ hev h1 ((le_max_left _ _).trans h2)
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

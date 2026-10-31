@@ -243,7 +243,7 @@ theorem TheoremAInputsDesigned.target {θ : ℝ} {X₀ : ℕ} {P : BeurlingSyste
 /-- **Theorem 2.1, refined hypothesis (Lemma 4.6 discharged)**: as `Theorem21InputsTarget`, but
 part (ii) is reduced to the hypotheses of Lemma 4.6 and the perturbation bound `< 1/4`. -/
 def Theorem21InputsDesigned : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
@@ -251,10 +251,9 @@ def Theorem21InputsDesigned : Prop :=
 
 theorem theorem21InputsTarget_of_designed (h : Theorem21InputsDesigned) :
     Theorem21InputsTarget := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX θ hθ X₀ hev h1 h2
   exact ⟨Ω, m, μ, P, G, hμ, hG, fun ω hω => (hP ω hω).target (by linarith [hθ.2])⟩
 
 /-- The refined hypothesis (Lemma 4.6 discharged) implies Theorem 2.1. -/

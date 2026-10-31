@@ -99,7 +99,7 @@ end Constructed
 (`constructedModel θ X₀`), and without the conjuncts `ArrivalsLinked`, `SlotFacts` and the target
 formula of `PartIRestO`, which are proved. -/
 def Theorem21InputsQ : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ) (time : ι → ℕ),
       (∃ scale : ι → ℕ, TableBudget jitterMeasure X₀ E time scale) ∧
@@ -150,12 +150,11 @@ Heath-Brown short-interval prime number theorem in Huxley's range) and the nulli
 (`TiesNull`, §3.4). -/
 theorem theorem21InputsP_of_Q (hHB : ShortIntervalPNT) (hnull : TiesNull)
     (h : Theorem21InputsQ) : Theorem21InputsP := by
-  intro θ hθ
   obtain ⟨x₁, hx₁⟩ := hHB
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨max XHux x₁, fun X₀ hev h1 h2 => ?_⟩
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨max XHux x₁, fun θ hθ X₀ hev h1 h2 => ?_⟩
   obtain ⟨ι, hι, E, time, ⟨scale, htab⟩, hP⟩ :=
-    hX X₀ hev h1 ((le_max_left _ _).trans h2)
+    hX θ hθ X₀ hev h1 ((le_max_left _ _).trans h2)
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

@@ -55,15 +55,14 @@ noncomputable def queueInputsX_of_Y (hX : 1 < (X₀ : ℝ)) (Q : QueueInputsY θ
 
 /-- **Theorem 2.1, hypothesis with §6 formalized and Corollary 5.40 plugged in.** -/
 def Theorem21InputsY : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → Nonempty (QueueInputsY θ X₀)
 
 /-- `Theorem21InputsY` implies `Theorem21InputsX`. -/
 theorem theorem21InputsX_of_Y (h : Theorem21InputsY) : Theorem21InputsX := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨Q⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨Q⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

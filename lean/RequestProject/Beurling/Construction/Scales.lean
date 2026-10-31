@@ -143,7 +143,7 @@ def Theorem410RestM (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (
 `a_k` fixed.** `Theorem21InputsL` with `a := constructionScale X₀ (swS θ X₀)` and without the scale
 condition `0 < a_k ≤ x_k ≤ 1.001 a_k` (proved, `constructionScale_spec`). -/
 def Theorem21InputsM : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -159,10 +159,9 @@ def Theorem21InputsM : Prop :=
 
 /-- `Theorem21InputsM` implies `Theorem21InputsL`, with the scales `a_k`. -/
 theorem theorem21InputsL_of_M (h : Theorem21InputsM) : Theorem21InputsL := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨M, ι, hι, E, time, htab, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨M, ι, hι, E, time, htab, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

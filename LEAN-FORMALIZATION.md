@@ -1,6 +1,6 @@
 # Lean formalization: status, trust base and defects
 
-**Summary.** The Lean 4 project in [`lean/`](lean/) proves Theorem A for θ ∈ [1/20, 1/2 − 10⁻⁴] with zeros at
+**Summary.** The Lean 4 project in [`lean/`](lean/) proves Theorem A for θ ∈ (0, 1/2 − 10⁻⁴] (one threshold X_Hux for all θ; follow-up S1) with zeros at
 1·log log (`BModel.theoremA_full`, `BModel.theoremA_ii_complete`), and Corollary 2.2 (the answer to Question Q is negative) from a
 single hypothesis, eq. (84), a short-interval prime number theorem for the rational primes:
 

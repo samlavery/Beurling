@@ -472,7 +472,7 @@ the hypotheses on them (`PartIRestJ`, `Theorem410RestSp`, `SparsityInputs`), the
 with their adaptedness and the per-scale bounds of Table 1, and the condition that the greedy rule
 places infinitely many primes. -/
 def Theorem21InputsJ : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -491,10 +491,9 @@ def Theorem21InputsJ : Prop :=
 absorbed set, `u_a`, the latest-prime map and the coupling are the constructed ones
 (`realisedOK_of`, `realisedCoupling`, `realisedU_spec`). -/
 theorem theorem21InputsSp_of_J (h : Theorem21InputsJ) : Theorem21InputsSp := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨M, ι, hι, E, time, hE, htab, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨M, ι, hι, E, time, hE, htab, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this

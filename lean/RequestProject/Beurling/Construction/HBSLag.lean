@@ -19,8 +19,8 @@ open MeasureTheory Set Real CaplLink QueueBound LagSplit SlotModel InitialRange 
 
 namespace Construction
 
-/-- **The lag bound from the slot data**: for `log X₀ ≥ 10⁸`, `θ ∈ [1/20, 1/2 - 10⁻⁴]`, the queue data
-and the landing data give `|N(x) - T(x)| ≤ x^η` for every `x ≥ X₀`. -/
+/-- **The lag bound from the slot data**: for `log X₀ ≥ 10⁸`, the queue data and the landing data
+give `|N(x) - T(x)| ≤ x^{η₀}`, `η₀ = λ(10⁻⁴) = 1/20000` (independent of `θ`), for every `x ≥ X₀`. -/
 theorem lag_of_slotData {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) (M : SlotModel X₀) (N : ℝ → ℝ) (hq : M.QueueWindowData)
     (κp : ℝ → ℝ) (hκp : ∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x)

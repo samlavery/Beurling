@@ -262,7 +262,7 @@ theorem Theorem410InputsCoupled.toDec {θ : ℝ} {X₀ : ℕ} {P : BeurlingSyste
   with `M`, and the Theorem 4.10 inputs hold, coupled to the same data, with the jittered primes
   being those placed by the greedy rule from `M`, the width `H` and the jitters `ω`. -/
 def Theorem21InputsCon : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     MonotoneOn (fun v => v - capH X₀ v / 2) (Ici (X₀ : ℝ)) ∧
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
@@ -281,10 +281,9 @@ lemma capH_nonneg (X₀ x : ℝ) : 0 ≤ capH X₀ x :=
   le_trans (Real.exp_pos _).le (le_max_left _ _)
 
 theorem theorem21InputsDec_of_con (h : Theorem21InputsCon) : Theorem21InputsDec := by
-  intro θ hθ
-  obtain ⟨XHux, hX⟩ := h θ hθ
-  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
-  obtain ⟨hmono, P, ι, hι, E, time, hE, hsum, hP⟩ := hX X₀ hev h1 h2
+  obtain ⟨XHux, hX⟩ := h
+  refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
+  obtain ⟨hmono, P, ι, hι, E, time, hE, hsum, hP⟩ := hX θ hθ X₀ hev h1 h2
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this
