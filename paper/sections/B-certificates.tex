@@ -271,7 +271,9 @@ condition~\eqref{eq:twelvetwo} of Lemma~\ref{lem:lemmaP} with the exact absorpti
 nothing in the proof depends on them. They use only the Python standard library and each takes a few seconds.
 \begin{itemize}
 \item \texttt{capl\_model.py}: the shared model (high-degree-row criterion of Step~2, Dickman-row criterion, and the criterion
-\eqref{eq:twelvetwo} of Lemma~\ref{lem:lemmaP} including $u_0\ge100$), in log space. It prints nothing.
+\eqref{eq:twelvetwo} of Lemma~\ref{lem:lemmaP} including $u_0\ge100$), in log space. It prints nothing. The window exponent is
+$\theta_b=\tfrac1{20}$, the worst case (the criterion is monotone in $\theta_b$); the environment variable \texttt{CAPL\_THETA\_B}
+overrides it. The outputs below are the same at $\theta_b=\tfrac18$, except where stated.
 \item \texttt{analytic\_capl.py}: computes $s_H=5.9745$ (the root of $\gamma_*(s_H)=\tfrac13-10^{-5}$); checks that $G(\Lambda,s)$
 decreases in $\Lambda$ for $\Lambda$ from $10^8$ to $10^{40}$ at sample values of $s$; and evaluates the precise criteria with
 $c=\max(\tfrac14H_{\mathrm{std}}^{1/2},X_0^{\gamma(s)})$ on the grid $\Lambda\in\{10^8,10^9,10^{10},10^{12},10^{16},10^{20}\}$,
@@ -281,10 +283,13 @@ $4842$, $5072$, $5302$, $5763$, $6684$, $7605$ points with $0$ failures ($35\,26
 $\log_{10}\Lambda$ uniform in $[8,30]$ and $s\in[-\log\Lambda,60]$. Expected output (the second line is wrapped here):
 \begingroup\footnotesize
 \begin{verbatim}
+theta_b = 0.05
 s_H = 5.974538031693934
 Step1 violations: 0  Step2 violations: 0 (min lhs/rhs 1.6938)
     Dickman violations: 0 (min ratio 1.1897)  Step5 violations: 0
+    (min lhs/rhs 1.4113)  u0 >= 2Lam violations: 0 (min u0/Lam 2.3653)
 \end{verbatim}
+At $\theta_b=\tfrac18$ the last line reads \texttt{(min lhs/rhs 3.6949) ... (min u0/Lam 5.9133)}.
 \endgroup
 \item \texttt{cert\_capl.py}: an earlier cell-by-cell check at $\Lambda=10^8$ only, with a piecewise-linear ramp of maximum $5.95$ in
 place of $\gamma$, covering $\ell\in[\log\Lambda,2\cdot10^4]$ with cells of width $0.002$ up to $\ell=60$ and $0.05$ beyond; each cell is
@@ -296,6 +301,11 @@ cells 20790 on [18.421, 60]: failures 0; max slope dlogH/dL = 2.94e-06
 cells 398801 on [60, 2e4]: failures 0; max slope = 0.00e+00
 \end{verbatim}
 \endgroup
+\item \texttt{theta\_ramp.py}: Step~5 of the proof of Theorem~\ref{thm:caplw} and hypothesis $(*)$ of Lemma~\ref{lem:lemmaP}(v) on
+the raised range, at the chosen $\theta_b$: the analytic inequality of Step~5 on $s\in[s_H,s_H+30]$ at step $10^{-5}$, the constants of
+its tangent-line proof, and the minimum of $u_0/\Lambda$ with the precise $y$, for $\Lambda\in\{10^8,10^{10},10^{12},10^{20}\}$.
+Expected output at $\theta_b=\tfrac1{20}$ (abridged): min lhs/rhs $=1.3624$ at $t=1$, OK; tangent check OK; min $u_0/\Lambda=2.3732$
+at $s=6.928$ for each $\Lambda$, OK. At $\theta_b=\tfrac18$: $3.5678$ and $5.9330$.
 \item \texttt{needs.py}: a diagnostic that prints, at sample $\ell$, the least $\log c$ needed by the precise criteria and the largest
 allowed by Lemma~\ref{lem:lemmaP}. It checks nothing.
 \item \texttt{raise\_max.py}: the value $1.3\cdot10^{-8}$ quoted in Remark~\ref{rem:caplw-numerics}. It computes the
@@ -343,6 +353,7 @@ ALL OK
 \begin{verbatim}
 python3 -I -B certificates/capl-cert/analytic_capl.py
 python3 -I -B certificates/capl-cert/caplw_check_independent.py
+python3 -I -B certificates/capl-cert/theta_ramp.py
 python3 -I -B certificates/capl-cert/cert_capl.py
 python3 -I -B certificates/capl-cert/needs.py
 python3 -I -B certificates/capl-cert/raise_max.py

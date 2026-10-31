@@ -134,7 +134,7 @@ factor $1+o(1)$ in the second, covered by $C_S'=10\ge9.82$.)
 \end{itemize}
 
 \paragraph{A squarefree average.} $F_\theta:=\sup_yy^{\theta-1}\sum_{n\in\NN,\,n\le y}\mu^2(n)n^{-\theta}\le1.33$ for $\theta\le\frac12$
-(in particular for $\theta\in[\frac14,\theta_1]$):
+(in particular for $\theta\in[\theta_0,\theta_1]$):
 \begin{itemize}
 \item $F_\theta\le F_{1/2}$, since $y^{\theta-1}n^{-\theta}=y^{-1}(y/n)^\theta$ increases with $\theta$;
 % Logged correction 54: 1.32964 (an upper bound) replaces 1.3296; the maximum is 1.3296349 (independent check R8, C2).
@@ -275,9 +275,9 @@ $\rhosh(x)-\rhosh(y)=\sum_n[c_n(x)T'(x/n)-c_n(y)T'(y/n)]/n$.
 % Logged correction 66: renamed from L_*, which clashes with L_* = 10^7 of eq:absorbed.
 $|N-T|\le H(N_*)$ at both ends of $I$, and under the target \eqref{eq:target},
   $T(I)\le2.0001|I|+1+\#\Abs(I)$ (as in Corollary~\ref{cor:localcount}(i)). Cover $I$ by $\lceil|I|/h(N_*(1-2\delta))\rceil$ consecutive windows $[u,u+h(u)]$,
-  $h(u)=u^{\theta/2}$; by Lemma~\ref{lem:lemmaP} each holds at most $h(u)L_u^{-4}$ absorbed elements, so
-  $\#\Abs(I)\le(2.01\,\delta N_*+N_*^{\theta/2})L_I^{-4}$. Hence $\#(\NN\cap I)\le4.01\,\delta N_*+2H(N_*)+2+N_*^{\theta/2}$, and
-  this part is at most $\jz\sum_{n\in\NN\cap I}1/n\le\jz\big(4.1\,\delta+3H(N_*)/N_*+2N_*^{\theta/2-1}\big)=o(1/\log x)$.
+  $h(u)=u^{\theta_b}$; by Lemma~\ref{lem:lemmaP} each holds at most $h(u)L_u^{-4}$ absorbed elements, so
+  $\#\Abs(I)\le(2.01\,\delta N_*+N_*^{\theta_b})L_I^{-4}$. Hence $\#(\NN\cap I)\le4.01\,\delta N_*+2H(N_*)+2+N_*^{\theta_b}$, and
+  this part is at most $\jz\sum_{n\in\NN\cap I}1/n\le\jz\big(4.1\,\delta+3H(N_*)/N_*+2N_*^{\theta_b-1}\big)=o(1/\log x)$.
 % Logged correction 14 (CORRECTIONS-vs-v3.md): v3 omits #A(I) here (same omission as correction 4); with T(I) <= 2|I|+2+#A(I)
 % the constant 2.1 delta becomes 4.1 delta (noted under #14).
 % Logged correction 93 (CORRECTIONS-vs-v3.md): for y in J the level points x/n and y/n differ by up to 2 delta x/n, not

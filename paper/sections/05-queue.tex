@@ -1207,8 +1207,9 @@ w_y\le z^{-1}\sum_{(M,d)}\Big(\frac{2z+1}{Md}\Big)^{3/4}\le2z^{-1/4}\prod_{j\le\
 
 \begin{theorem}[High-capacity configurations at every scale; the capacity parameter]\label{thm:caplw}
 % v3: Theorem 4.17 (CapL-w at every scale, uniformly in Lambda >= 10^8)
-Let $\Lambda=\log X_0\ge10^8$ be arbitrary (Section~\ref{sec:params}), and let $\theta\in[\tfrac14,\theta_1]$ with
-$\theta_1=\tfrac12-10^{-4}$, as in Section~\ref{sec:setup}, so that $\theta_b=\theta/2\ge\tfrac18$. For a height $z\ge X_0$
+Let $\Lambda=\log X_0\ge10^8$ be arbitrary (Section~\ref{sec:params}), and let $\theta\in[\theta_0,\theta_1]$ with
+$\theta_0=\tfrac1{20}$ and $\theta_1=\tfrac12-10^{-4}$, as in Section~\ref{sec:setup}, so that $\theta_b\in[\tfrac1{20},\tfrac14)$
+(Section~\ref{sec:params}). For a height $z\ge X_0$
 (not necessarily dyadic) put $\ell:=\log\log z$ and $s:=\ell-2\log\Lambda$, so that $L=\Lambda^2e^s$. Define
 \begin{align*}
 A(\Lambda,s)&:=\log\big(2\Lambda^3e^{2s}/(2\log\Lambda+s)\big)=\log\big(2L^2/(\ell\Lambda)\big),&
@@ -1333,14 +1334,22 @@ So (a) holds at every scale, including the scales $L\ge X_0^2$ of the zeros.
   $\log c=4\ell^2-\log4$, it is at most $12\ell^2+9\ell+7\le\Lambda$.
 \item \emph{$s\ge s_H$ with $\log c=\gamma\Lambda\le7.5\Lambda$.} Here $\log2y\le3.01\gamma\Lambda$ and
   $\log C_d+4\ell\le1.01\gamma\Lambda$. With $u_0\ge\theta_b\Lambda e^s/(3.01\gamma)$, condition \eqref{eq:twelvetwo} follows from
-  $e^s\log(\theta_b\Lambda e^s/(3.01\gamma))\ge107.6\gamma^2$. The left side is increasing in $\Lambda$ and $s$. At
-  $\Lambda=10^8$ and $s=s_H+t$ it is at least $393.28e^t(19.19+t)\ge7547$, against $107.6\gamma^2\le107.6\cdot7.5^2=6052.5$, since
-  $\gamma\le7.5$ everywhere. Also $u_0\ge100$.
+  $e^s\log(\theta_b\Lambda e^s/(3.01\gamma))\ge13.45\gamma^2/\theta_b$ (as $4.02\cdot3.01/0.9\le13.45$). The left side is increasing in
+  $\Lambda$, $s$ and $\theta_b$, and the right side decreases in $\theta_b$; so it suffices to take $\Lambda=10^8$ and $\theta_b=\tfrac1{20}$.
+  For $s\ge s_H+1$ we have $\gamma=7.5$, so it suffices to take $s=s_H+t$ with $t\in[0,1]$. There, with $\gamma\le7.5$ in the logarithm
+  and $e^{s_H}\ge393.28$, the left side is at least $393.28e^t(c+t)$ with $c:=\log(10^8\cdot393.28/22.575)-\log20\ge18.28$, and the claim
+  reads $\phi(t):=e^{t/2}(c+t)^{1/2}\ge k\gamma(s_H+t)$ with $k:=(13.45\cdot20/393.28)^{1/2}\le0.8271$. Writing $g:=(c+t)^{1/2}\ge1$, we
+  have $\phi''=e^{t/2}(g/4+1/(2g)-1/(4g^3))>0$, so $\phi$ lies above its tangent at $t=1$, which is at least $7.2393+3.8075(t-1)$
+  (take $c=18.28$; $\phi$ increases with $c$). The function $k\gamma(s_H+t)$ is linear in $t$, at most $0.2757$ at $t=0$ and $6.2033$
+  at $t=1$; the tangent is $3.4318$ and $7.2393$ there. So the claim holds on $[0,1]$, and the ratio of its two sides is at least
+  $(7.2393/6.2033)^2\ge1.36$ (about $3.57$ at $\theta_b=\tfrac18$). Also $u_0\ge100$.
+% Follow-up theta (FOLLOWUP-THETA.md): 107.6 = 13.45/theta_b at theta_b = 1/8; the ramp is now checked for every theta_b >= 1/20
+% by the tangent-line argument above (cross-check: certificates/capl-cert/theta_ramp.py, min ratio 1.3624 at t = 1).
 % Logged correction 72 (CORRECTIONS-vs-v3.md): v3 bounds the ramp by 107.6(0.334+7.17t)^2 <= 6053, which fails at t = 1
 % (6058.96); the linear form overestimates gamma there, and gamma <= 7.5 gives 6052.5. The factors are now
 % 393.28 (e^{s_H} = 393.286) and 19.19 (the log factor is 19.1989 at theta_b = 1/8, Lambda = 1e8, gamma = 7.5).
 \item \emph{Standard regime, $\ell\ge\ell_{\mathrm{std}}$.} Here $\log2y\le12.1\ell^2$, the right side is at most
-  $16.3\ell^2$, and $u_0\ge e^\ell/(97\ell^2)$. So \eqref{eq:twelvetwo} holds with an enormous margin.
+  $16.3\ell^2$, and $u_0\ge\theta_be^\ell/(12.1\ell^2)\ge e^\ell/(242\ell^2)$. So \eqref{eq:twelvetwo} holds with an enormous margin.
 \end{itemize}
 
 \emph{Step 6 (proof of (c)).}
@@ -1398,7 +1407,7 @@ So (a) holds at every scale, including the scales $L\ge X_0^2$ of the zeros.
 % v3: §4.6, numerical cross-check after Theorem 4.17
 The proof of Theorem~\ref{thm:caplw} is analytic. As an independent check, the precise criteria behind Steps 2--5 were evaluated
 numerically with $c$ as above: $D^*$ from $\binom{m+k}k$, the exact $j$, Lemma~\ref{lem:rowweights}(b) and (d), and
-\eqref{eq:twelvetwo} with the exact $y$. On the grid $\Lambda\in\{10^8,10^9,10^{10},10^{12},10^{16},10^{20}\}$,
+\eqref{eq:twelvetwo} with the exact $y$, at the worst case $\theta_b=\tfrac1{20}$ (and at $\theta_b=\tfrac18$). On the grid $\Lambda\in\{10^8,10^9,10^{10},10^{12},10^{16},10^{20}\}$,
 $s\in[-\log\Lambda,30]$ with step $0.01$ (about $35\,000$ points), there are no failures. An earlier cell-by-cell check at
 $\Lambda=10^8$ alone, with a knot-based ramp, also passes: $419\,591$ cells, each checked at its worst corners with the degree
 cap $D$ evaluated at the top of the cell, and no failures. The maximum of $(\log H-\log\qHstd)/L$ over
@@ -1427,8 +1436,8 @@ Recall from Section~\ref{sec:construction} the absorption set
 with $L_*=10^7$ and $y(n):=y(x)=H(x)L_0(x)L(x)^6$, where $x$ is the dyadic scale with $n\in[x,2x)$; that is, $y$ is frozen
 per scale, as in Section~\ref{sec:queue-conv}.
 % Logged correction 32: one reading of y(n) fixed (frozen per scale).
-Put $\theta_b:=\theta/2$
-(so $\theta_b=\tfrac18$ for $\theta=\tfrac14$), $h(u):=u^{\theta_b}$ and $\rho_{\Abs}(u):=\#(\Abs\cap[u,u+h])/h$. The target $T$
+Recall $\theta_b=\min(\theta,\max(\theta/2,\tfrac18))\in[\tfrac1{20},\tfrac14)$ (Section~\ref{sec:params}; $\theta_b=\tfrac18$ for
+$\theta\in[\tfrac18,\tfrac14]$), $h(u):=u^{\theta_b}$ and $\rho_{\Abs}(u):=\#(\Abs\cap[u,u+h])/h$. The target $T$
 gets a unit jump at each $n\in\Abs$, and $T'$ gets $-\rho_{\Abs}$ (see \eqref{eq:target}). Membership is decided when $r$ is
 decided, at slot approximately $r<y(n)\le n^{0.01}$ (Remark~\ref{rem:caplw-sizes}), so $T$ is adapted.
 
@@ -1449,8 +1458,8 @@ which $\Abs$ meets $[u,2u]$, by Theorem~\ref{thm:caplw}(b). That theorem is prov
 non-dyadic $u$, with $y$ the supremum over the two scales meeting $[u,2u]$, the quantities in \eqref{eq:twelvetwo} differ from
 their values at the dyadic scale of $u$ by relative factors at most $1+10^{-5}$ (Lemma~\ref{lem:raisedy} for $y$ on the ramp, and
 Theorem~\ref{thm:caplw}(c) for $M_1$, $H$ and, through $L_0$, for $y$ in the standard regime), and $L$ by at most $\log2$. Step 5 of the proof of Theorem~\ref{thm:caplw} has
-far more room than this: on the raised range the ratio of its two sides is at least $3.5$ (at $t=1$ on the ramp, and
-larger elsewhere), and in the standard regime the margin is larger still.
+far more room than this: on the raised range the ratio of its two sides is at least $1.36$ (at $t=1$ on the ramp with
+$\theta_b=\tfrac1{20}$, and larger elsewhere), and in the standard regime the margin is larger still.
 % Logged correction 66: caplw(b) is proved at dyadic z; the passage to non-dyadic u and two-scale y is made explicit.
 \end{lemma}
 
@@ -1474,7 +1483,9 @@ $2y$-smooth elements of $\NN$ and $I_d:=[u/d,(u+h)/d]$ has length less than $1$.
 of $\NN$, a rational integer, since $|I_d|<1$. The rest of $I_d$ is covered by at most $L^6/4+5$ grid windows, at the
 dyadic height $z$ of its left end, at $2z$, and at $z/2$ if $z\ge X_0$, since grid windows belong to the height of their left end (as in
 the proof of Corollary~\ref{cor:increment}); these heights are at most $2\max I_d\le2u^{1-\theta_b}+2\le2u/L^{11}$, as
-$u^{\theta_b}\ge e^{L/8}\ge2L^{11}$. Let $x'$ be the dyadic scale of $u$. The event E1 at scale $x'$, namely $\qEcl^{(x')}$, has time
+$u^{\theta_b}=e^{\theta_bL}\ge2L^{11}$: by \eqref{eq:twelvetwo},
+$\theta_bL=u_0\log2y\ge100\log y\ge500\log(L-1)\ge11\log L+\log2$, as $y\ge L_0\ge L_x^5$ with $L_x\ge L-1$ the logarithm of the dyadic
+scale of $u$. Let $x'$ be the dyadic scale of $u$. The event E1 at scale $x'$, namely $\qEcl^{(x')}$, has time
 $8x'/L_{x'}^{11}+H(x')\le8.0001u/L^{11}+H(u)<t_u$, so $\Good(<t_u)\subset\qEcl^{(x')}$; and it covers every height up to
 $4x'/L_{x'}^{11}\ge2u/L^{11}$, hence all these heights. On it each of these windows holds at most $M_1(2z)\le M_1(u)$
 elements, so $N(I_d)\le1+(L^6/4+5)M_1(u)\le C_d$. Lemma~\ref{lem:cm} at heights $\le2y$, used in (v), also holds on $\Good(<t_u)$, as
@@ -1520,11 +1531,13 @@ Then
 \end{itemize}
 In step (vi), $Y=2yh$, so $u_*=1+u_0$. Wherever $\Abs$ meets $[u,2u]$, $(*)$ holds there:
 \begin{itemize}
-\item $u_*\ge u_0\ge2\Lambda$, by Step 5 of the proof of Theorem~\ref{thm:caplw} ($u_0\ge\theta_b\Lambda e^s/(3.01\gamma)\ge5\Lambda$
-  on the raised range, and $u_0\ge e^\ell/(97\ell^2)$ beyond it);
+\item $u_*\ge u_0\ge2\Lambda$, by Step 5 of the proof of Theorem~\ref{thm:caplw} ($u_0\ge\theta_b\Lambda e^s/(3.01\gamma)\ge47.3\theta_b\Lambda\ge2.36\Lambda$
+  on the raised range, and $u_0\ge e^\ell/(242\ell^2)$ beyond it). Indeed, on the ramp $\gamma(s_H+t)=\gamma'(1+t-t^*)$ with
+  $\gamma':=7.5-\gamma_*(s_H)$ and $t^*:=1-\gamma_*(s_H)/\gamma'=0.95349\ldots$, and $e^t\ge e^{t^*}(1+t-t^*)$, so
+  $e^s/(3.01\gamma)\ge e^{s_H+t^*}/(3.01\gamma')\ge47.3$; for $s\ge s_H+1$, $e^s/(3.01\cdot7.5)\ge393.28e/22.575\ge47.3$;
 \item the same step gives $\log2y\le\max(22.6\Lambda,12.1\ell^2)$, so $\log\log2y\le1.79u_*$;
 \item $\log2y\ge\max(\Lambda-1,7.9\ell^2)\ge\ell\sqrt{7.9(\Lambda-1)}$, since $y\ge\Xm$ (as $\Abs\ne\emptyset$) and $y\ge H\ge\qHstd$;
-  and $u_*\le1+L/8\le L$. So $\eta\le\ell/\log2y\le(7.9(\Lambda-1))^{-1/2}\le10^{-4}$.
+  and $u_*\le1+\theta_bL\le L$. So $\eta\le\ell/\log2y\le(7.9(\Lambda-1))^{-1/2}\le10^{-4}$.
 \end{itemize}
 
 (vi) So $\#(\Abs\cap[u,u+h])\le C_d\Psi_{\NN}(2yh,2y)\le C_d\cdot2yh\cdot\exp(-0.9u_0\log u_0)\le hL^{-4}$, by (v) with

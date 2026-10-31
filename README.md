@@ -158,8 +158,12 @@ zeta function.
 
 Applied to the ordinary integers, a positive answer would give a zero-free half-plane for the Riemann zeta function.
 
-**Theorem A (informal).** Let θ ∈ [1/4, 1/2 − 10⁻⁴]. There is a discrete Beurling system with N(x) = x + O(x^θ log* x)
+**Theorem A (informal).** Let θ ∈ [1/20, 1/2 − 10⁻⁴]. There is a discrete Beurling system with N(x) = x + O(x^θ log* x)
 (log* the iterated logarithm), whose zeta function has zeros ρ_k with Re ρ_k = 1 − (log log x_k + O(1))/log x_k → 1.
+The extension to θ < 1/4 and the single log log (in place of 3 log log) are later strengthenings, each checked by the AI
+agent that made it and one independent AI check (see [`FOLLOWUP-THETA.md`](FOLLOWUP-THETA.md) and
+[`FOLLOWUP-LANDAU.md`](FOLLOWUP-LANDAU.md)). They are not formalized in Lean, whose Theorem A covers θ ∈ [1/4, 1/2 − 10⁻⁴]
+with 3 log log (`lean/RequestProject/Beurling/Main.lean`); Corollary 2.2, the Lean theorem, is unaffected.
 
 So the answer to Q is negative. Equivalently, there is a discrete [1, β]-system with β ≤ θ < 1/2. The result says nothing about the
 Riemann zeta function itself.
@@ -183,7 +187,7 @@ theorem BModel.corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ
 - `#print axioms` gives `propext`, `Classical.choice`, `Quot.sound`, `Lean.ofReduceBool` and `Lean.trustCompiler`.
   The last two come from `native_decide`: the finite numerical certificates of Appendix B are evaluated by compiled
   code rather than re-checked by the kernel.
-- The whole proof is formalized: Sections 2–7 and Appendix A, the construction built from the jitters, its
+- The whole proof is formalized, for θ ∈ [1/4, 1/2 − 10⁻⁴] (the extension to θ < 1/4 is not): Sections 2–7 and Appendix A, the construction built from the jitters, its
   measurability and probability budget, and the certificates.
 - The correspondence between the paper and the Lean statements has been checked by AI agents only.
 

@@ -2,13 +2,15 @@
 \section{Statement, parameters and logical structure}\label{sec:setup}
 
 Throughout, $L:=\log x$ and $\ell:=\log\log x$ at the scale $x$ under discussion, and $\Lambda:=\log X_0$. The exponent
-$\theta\in[\tfrac14,\theta_1]$, $\theta_1:=\tfrac12-10^{-4}$, is fixed. Numerical values are quoted for $\theta=\tfrac14$, which is the
-worst case for the absorption estimates of Section~\ref{sec:queue}.
+$\theta\in[\theta_0,\theta_1]$, $\theta_0:=\tfrac1{20}$, $\theta_1:=\tfrac12-10^{-4}$, is fixed. Numerical values are quoted for
+$\theta=\tfrac14$ unless stated otherwise. The absorption estimates of Section~\ref{sec:queue} depend on $\theta$ only through the
+window exponent $\theta_b\ge\tfrac1{20}$ of Section~\ref{sec:params}, and are carried out for its worst case $\theta_b=\tfrac1{20}$, that
+is, $\theta=\tfrac1{20}$.
 
 \subsection{The main theorem}
 \begin{theorem}[Theorem A]\label{thm:A}
 % v3: Theorem A (§0.1)
-Fix $\theta\in[\tfrac14,\theta_1]$, $\theta_1:=\tfrac12-10^{-4}$, and the parameters of Section~\ref{sec:params}; in particular
+Fix $\theta\in[\theta_0,\theta_1]$, $\theta_0:=\tfrac1{20}$, $\theta_1:=\tfrac12-10^{-4}$, and the parameters of Section~\ref{sec:params}; in particular
 $X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$ is an even integer, where $X_{\mathrm{Hux}}$ is defined in \eqref{eq:huxley}. Let $\PP$ be the random discrete
 Beurling system of Section~\ref{sec:construction}: the hard greedy rule with box-centred jitter, for the target $T$ of
 \eqref{eq:target}. Then on the event $\mathcal G=\{\tau=\infty\}$ of Definition~\ref{def:good}, which has probability at least
@@ -39,7 +41,8 @@ no power saving, so $\PP(\omega)$ is a $[1,\beta]$-system with $\beta\le\theta<\
 \end{proof}
 
 \begin{proof}[Proof of Theorem~\ref{thm:A}, assuming the results of Sections~\ref{sec:construction}--\ref{sec:baserange}]
-Part (i) follows from the target error \eqref{eq:T1}, the property \eqref{eq:La} and $|R|\le2x^{\theta}\log^*x$. Property
+Part (i) follows from the target error \eqref{eq:T1}, the property \eqref{eq:La} and $|R|\le2x^{\theta}\log^*x$, since
+$2x^{\theta_b}\le2x^{\theta}\le x^{\theta}\log^*x$ for $x\ge X_0$ (as $\theta_b\le\theta$ and $\log^*x\ge2$). Property
 \eqref{eq:La} follows from the two-sided lag \eqref{eq:lag} and the queue bound, Theorem~\ref{thm:queue}, on $\mathcal G$. The queue
 bound needs two inputs.
 \begin{itemize}
@@ -61,8 +64,11 @@ quantities $L_0$, $y$, $B$ are frozen per scale.
 \begin{tabular}{@{}p{2.1cm}p{12.4cm}@{}}
 \hline
 parameter & value \\ \hline
-$\theta$, $\theta'$ & $\theta\in[\tfrac14,\theta_1]$, $\theta_1:=\tfrac12-10^{-4}$, fixed ($\theta=\tfrac14$ suffices for Corollary~\ref{cor:notQ});
-the local prime number theorem uses the exponent $\theta':=\theta+0.01$. \\
+$\theta$, $\theta_b$, $\theta'$ & $\theta\in[\theta_0,\theta_1]$, $\theta_0:=\tfrac1{20}$, $\theta_1:=\tfrac12-10^{-4}$, fixed ($\theta=\tfrac14$ suffices for
+Corollary~\ref{cor:notQ}). The absorption window has exponent $\theta_b:=\min(\theta,\max(\theta/2,\tfrac18))$: so $\theta_b=\theta/2$ for
+$\theta\ge\tfrac14$, $\theta_b=\tfrac18$ for $\theta\in[\tfrac18,\tfrac14]$ and $\theta_b=\theta$ for $\theta\le\tfrac18$; always
+$\theta/2\le\theta_b\le\theta$ and $\tfrac1{20}\le\theta_b<\tfrac14$. The local prime number theorem uses the exponent $\theta':=\max(\theta+0.01,\,8(\log\log X_0)^2/\log X_0+0.005)$, which is
+$\theta+0.01$ here. \\
 $X_0$ & $X_0\ge\max(e^{10^8},X_{\mathrm{Hux}})$, an even integer (for instance the least one): the single regime for the whole
 proof. It is even so that the jump of $T$ at $X_0$ is the jump of $\lfloor x\rfloor$ at the rigid integer $X_0$ (Section~\ref{sec:target}). $X_{\mathrm{Hux}}$ is defined in
 \eqref{eq:huxley}, depends on no parameter, and gives $\mathrm{MA}[\mathbb P](q)\log q\ge0.99$ for every $q\ge X_0$
@@ -97,7 +103,7 @@ $L_0$, $K_0$, $q_{\min}$, $B$ & $L_0=\max(L^5,48M_1L^3/c'^2)$, a real size bound
 $K_0=\lfloor L_0\rfloor$ (slot counts); $q_{\min}=L_0L^6$; queue bound $B(x)\le5M_1L^2/c'$ \eqref{eq:queueB};
 $K_{\mathrm{loc}}=2B(4P)+7\lambda_P/3+23$. \\
 absorption & $L_*=10^7$ (inactive, since $\log X_0\ge10^8$); $y(n):=y(x)=H(x)L_0(x)(\log x)^6$ for $n\in[x,2x)$, $x$ dyadic (frozen per scale), with $y\le X_0^{22.6}L^9$ for $\ell\le\ell_{\mathrm{std}}$ and $\log2y\le12.1\ell^2$ beyond; $\Abs=\emptyset$ wherever
-$y<\Xm=X_0-H(X_0)/2$, which holds for $\ell\le2\log\Lambda+s_H$, $s_H=5.9745$ (Theorem~\ref{thm:caplw}(b)); $h(u)=u^{\theta/2}$;
+$y<\Xm=X_0-H(X_0)/2$, which holds for $\ell\le2\log\Lambda+s_H$, $s_H=5.9745$ (Theorem~\ref{thm:caplw}(b)); $h(u)=u^{\theta_b}$;
 Lemma~\ref{lem:lemmaP} uses $\sup_{[u,2u]}y$. \\
 cluster window & $\delta_1=2L^{-6}$. \\
 \eqref{eq:La} & $|D|\le x^{\eta}$ with $\eta=\min(\theta,\tfrac12-\theta)/2$, for all $x\ge\Xm$; $D=0$ below $\Xm$. \\
