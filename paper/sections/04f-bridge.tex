@@ -127,9 +127,10 @@ factor $1+o(1)$ in the second, covered by $C_S'=10\ge9.82$.)
 \paragraph{Design facts used} (\S\ref{sec:construction}).
 \begin{itemize}
 \item $R=\sum_kR_k$, with $R_k\equiv0$ on $[1,x_k+2H(x_k)]$, $x_1\ge\exp(X_0^2)$, $x_{k+1}\ge\exp(x_k)$, and
-  $\gamma_k\in[\Gamma_k,2\Gamma_k]$ with $\Gamma_k=\kappa_0x_k^{1-\theta}/(2\log^3x_k)$; so $\log\gamma_k\asymp(1-\theta)\log x_k$.
-\item \eqref{eq:Rkprime}: $|R_k'(v)|\le\kappa_k(v/x_k)^{\theta-1}$ with $\kappa_k=2\kappa_k'/\log x_k$, $\kappa_k'=\kappa_0/\log^2x_k$,
-  $\kappa_0\le\frac14$.
+  $\gamma_k\in[\Gamma_k,2\Gamma_k]$ with $\Gamma_k=\kappa_0x_k^{1-\theta}/(2\log x_k)$; so $\log\gamma_k\asymp(1-\theta)\log x_k$.
+\item \eqref{eq:Rkprime}: $|R_k'(v)|\le\kappa_k(v/x_k)^{\theta-1}$ with $\kappa_k=2\kappa_k'/\log x_k$, $\kappa_k'=\kappa_0$,
+  $\kappa_0\le\Lambda^{-5}$; exactly, $|R_k'(v)|\le2\kappa_0(v/x_k^+)^{\theta-1}/\log x_k^+$ for every $\omega$, by \eqref{eq:Rk}
+  and \eqref{eq:ampl} at $x_k^+$ (as in the proof of Lemma~\ref{lem:G1}).
 \end{itemize}
 
 \paragraph{A squarefree average.} $F_\theta:=\sup_yy^{\theta-1}\sum_{n\in\NN,\,n\le y}\mu^2(n)n^{-\theta}\le1.33$ for $\theta\le\frac12$
@@ -308,7 +309,7 @@ $|N-T|\le H(N_*)$ at both ends of $I$, and under the target \eqref{eq:target},
     |R_j''(w)|\le\alpha_jw^{\theta-2}\bigl(\gamma_j^2+(1+2\|\phi'\|_\infty)\gamma_j+\theta(1-\theta)+\|\phi'\|_\infty+\|\phi''\|_\infty\bigr)
     \le\alpha_j\gamma_j^2w^{\theta-2}\Bigl(1+\frac6{\gamma_j}\Bigr),
   \]
-  by \eqref{eq:phibounds} and $\gamma_j\ge\Gamma_1\ge13$ (indeed $\Gamma_1\ge X_0^{-1}x_1^{1/2}/(2\log^3x_1)\ge e^{X_0^2/3}$, as in the proof of Lemma~\ref{lem:G1}). At a level with $|v-v'|\le2\delta v$, the points $w$ between $v$ and
+  by \eqref{eq:phibounds} and $\gamma_j\ge\Gamma_1\ge13$ (indeed $\Gamma_1\ge X_0^{-1}x_1^{1/2}/(2\log x_1)\ge e^{X_0^2/3}$, as in the proof of Lemma~\ref{lem:G1}). At a level with $|v-v'|\le2\delta v$, the points $w$ between $v$ and
   $v'$ have $w\ge(1-2\delta)v$, and $2\alpha_j\gamma_jv^{\theta-1}\le(1+\epsilon_j)\kappa_j(v/x_j)^{\theta-1}$ by \eqref{eq:ampl}, with
   $\epsilon_j:=2H(x_j)/x_j$ (Section~\ref{sec:target}); so
   \[
@@ -330,7 +331,7 @@ $[X_{\mathrm{sw}},x_1)$, since $\log X_{\mathrm{sw}}=X_0^{0.01}<X_0^2\le\log x_1
 $[1,x]$ for $j>k$. Put $\rho^{(k)}_{\mathrm{osc}}(y):=\sum_nc_n(y)R_k'(y/n)/n$.
 \begin{itemize}
 \item \emph{Separation.} If $\gamma_k$ is not resolvable, then $\gamma_k>\Gamma(x)$. Every $j<k$ is resolvable (and no $\gamma_j$ with $j>k$ is, as
-  $\log\gamma_j\ge\log\Gamma_j\ge(1-\theta)\log x_j-\Lambda-3\log\log x_j-1>c_{\mathrm{LP}}\sqrt{\log x}/4$ for $x_j>x$), and
+  $\log\gamma_j\ge\log\Gamma_j\ge(1-\theta)\log x_j-\Lambda-\log\log x_j-1>c_{\mathrm{LP}}\sqrt{\log x}/4$ for $x_j>x$), and
   $\gamma_*\le\max(1,\gamma_{k-1})\le\log x$ (for $k\ge2$, $\gamma_{k-1}\le x_{k-1}\le\log x$ as $x_k\ge\exp(x_{k-1})$; for $k=1$ there is
   no resolvable $\gamma_j$, and $\gamma_*=1$). So
   $\gamma_k\delta\ge\Gamma(x)\min(\log^{-6}x,X_0^{-1/2})\ge e^{c_{\mathrm{LP}}\sqrt{\log x}/5}$, since, for
@@ -348,19 +349,21 @@ $[1,x]$ for $j>k$. Put $\rho^{(k)}_{\mathrm{osc}}(y):=\sum_nc_n(y)R_k'(y/n)/n$.
   $|R_k(v)|\le\alpha_kv^\theta$ by \eqref{eq:Rk}. So, with
   Lemma~\ref{lem:lemmaM}, the $J$-average is at most $4\kappa_k(\log x+B_1)/((1-\theta)\gamma_k\delta)$, plus the threshold
   part $\le\kappa_k\cdot R(2\delta)$, where $R(\cdot)$ is the bound of Lemma~\ref{lem:threshold-mass}. Both are $o(1/\log x)$.
-\item \emph{Pointwise.} $|c_n|\le\mu^2(n)$, and $R_k'(x/n)\ne0$ forces $n\le x/x_k$. So
+% Follow-up landau (FOLLOWUP-LANDAU.md): the crude weight sum mu^2(n) n^{-theta} (bound kappa_k F_theta, which needed
+% kappa'_k log x_k -> 0 on x_k^2 < x < exp(C' log^2 x_k)) is replaced by the Saias weights; the bound holds at every x >= x_k.
+\item \emph{Pointwise.} $|\rho^{(k)}_{\mathrm{osc}}(x)|\le\sum_e|c_e(x)||R_k'(x/e)|/e$, and only the levels $x/e\ge x_k^+$
+  contribute, as $R_k'=0$ on $[1,x_k^+]$. Group them by the cells $[v_j,2v_j)$, $v_j:=2^{j-1}x_k^+$ $(j\ge1)$, with $v_j\le x$.
+  Corollary~\ref{cor:saias} at the start $x$ applies to each ($v_j\ge x_k^+\ge\Xm/2$), and gives
+  $\log x\cdot|\rho^{(k)}_{\mathrm{osc}}(x)|\le C_S\sum_{j\ge1}\log(2v_j)\sup_{[v_j,2v_j)}|R_k'|$. By the bound
+  $|R_k'(v)|\le2\kappa_0(v/x_k^+)^{\theta-1}/\log x_k^+$ (Design facts above),
+  $\sup_{[v_j,2v_j)}|R_k'|\le2\kappa_0r^{j-1}/\log x_k^+$ with $r:=2^{\theta-1}\le2^{-1/2}$, and $\log(2v_j)=\log x_k^+ + j\log2$. So
   \[
-    |\rho^{(k)}_{\mathrm{osc}}(x)|\le\kappa_k(x/x_k)^{\theta-1}\sum_{n\le x/x_k}\mu^2(n)n^{-\theta}\le\kappa_kF_\theta.
+    \log x\cdot|\rho^{(k)}_{\mathrm{osc}}(x)|\le\frac{2C_S\kappa_0}{\log x_k^+}\sum_{j\ge1}r^{j-1}\bigl(\log x_k^++j\log2\bigr)
+    =2C_S\kappa_0\Bigl(\frac1{1-r}+\frac{\log2}{(1-r)^2\log x_k^+}\Bigr)\le526\,\kappa_0,
   \]
-  \begin{itemize}
-  \item For $x\le x_k^2$: $\kappa_kF_\theta\log x\le4\kappa_k'F_\theta=4\kappa_0F_\theta/\log^2x_k=o(1)$.
-  \item For $x_k^2<x<\exp(C'\log^2x_k)$, with $C':=(4(1-\theta)/c_{\mathrm{LP}})^2$:
-    \[
-      \kappa_kF_\theta\log x\le2\kappa_k'F_\theta C'\log x_k=2\kappa_0F_\theta C'/\log x_k=o(1),
-    \]
-    since $\log x_k\ge X_0^2$ and $C'\asymp\Lambda^2$.
-  \end{itemize}
-\item For $x\ge\exp(C'\log^2x_k)$, $\gamma_k\le x_k^{1-\theta}$ is resolvable, and Step~3 covers it.
+  as $1/(1-2^{-1/2})\le3.4143$, $\log2/(1-2^{-1/2})^2\le8.1$, $\log x_k^+\ge X_0^2$ and $C_S\le77$. This holds at every $x\ge x_k$,
+  so no case distinction in $x$ is needed. As $\kappa_0\le\Lambda^{-5}$, it is at most $526\Lambda^{-5}$.
+\item If $\gamma_k$ is resolvable at $x$, Step~3 covers it, as for the old oscillations.
 \end{itemize}
 
 \emph{Step 5.} Combining Steps 1--4,
@@ -379,10 +382,12 @@ $1/\delta\le x^{0.02}$, $\delta\le\log^{-4}x$, $\log(1/\delta)\le0.6\sqrt{\log x
   $\rhodet$ (the bound of Step~3, at displacement $2\delta$, is $\le C_S[7\Lambda^4X_0^{-1/12}+90\Lambda^{4.7}e^{-\Lambda/12}]\le X_0^{-0.08}$);
   $\le\log^{-2}x$ from the resolvable $R_j'$ (namely $\le4\sum_j\kappa_j\log^{-3}x$, as $1-\theta\ge\frac12$); and $\le4C_S\sum_{L_v>391\Lambda^2}\log(2v)L_v^{-4}\le1.5\cdot10^{-3}\Lambda^{-4}$
   from $\sigma_{\Abs}$.
-\item Step~4: $\le e^{-c_{\mathrm{LP}}\sqrt{\log x}/6}+40\log^{-1.5}x$ from the average, and $\le2\cdot10^4\Lambda^2X_0^{-2}$ from the
-  pointwise bounds (with $\kappa_0\le\frac14$, $F_\theta\le1.33$ and $C'\le(171\Lambda)^2$).
+% Follow-up landau (FOLLOWUP-LANDAU.md): the pointwise item was <= 2e4 Lambda^2 X_0^{-2} (crude weight, decaying amplitude).
+\item Step~4: $\le e^{-c_{\mathrm{LP}}\sqrt{\log x}/6}+40\log^{-1.5}x$ from the average, and $\le526\kappa_0\le526\Lambda^{-5}$ from
+  the pointwise bound (Saias weights, $C_S\le77$, $\kappa_0\le\Lambda^{-5}$).
 \end{itemize}
-In total $o(1)\le1.5\cdot10^{-3}\Lambda^{-4}+e^{-0.01\Lambda}\le1.6\cdot10^{-3}\Lambda^{-4}$, for every $\Lambda\ge10^8$.
+In total $o(1)\le1.5\cdot10^{-3}\Lambda^{-4}+526\Lambda^{-5}+e^{-0.01\Lambda}\le1.6\cdot10^{-3}\Lambda^{-4}$, for every
+$\Lambda\ge10^8$, as $526\Lambda^{-5}\le5.3\cdot10^{-6}\Lambda^{-4}$.
 \end{proof}
 
 \begin{remark}

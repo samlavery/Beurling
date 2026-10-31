@@ -61,7 +61,7 @@ unit has no prime factor; $0$ precedes every decision time).
   $\gamma_k\in[\Gamma_k,2\Gamma_k]$, and $x_{k+1}\ge\exp(x_k)$.
 % Logged correction 76 (R17, C76-4): eq:ampl is exact at x_k^+, and holds at x_k up to the factor of Section sec:target.
 \item The amplitude condition \eqref{eq:ampl} reads $\alpha_k\gamma_kx_k^{\theta-1}=\kappa_k'/\log x_k$, with
-  $\kappa_k'=\kappa_0/\log^2x_k$ and $\kappa_0\le\frac14$. (Exactly so with $x_k^+$ in place of $x_k$; with $x_k$, up to the factor
+  $\kappa_k'=\kappa_0\le\Lambda^{-5}$. (Exactly so with $x_k^+$ in place of $x_k$; with $x_k$, up to the factor
   $1+2H(x_k)/x_k$ of Section~\ref{sec:target}.) Hence
   \begin{equation}\label{eq:Rkprime}
     |R_k'(v)|\le\kappa_k\,(v/x_k)^{\theta-1},\qquad \kappa_k:=2\kappa_k'/\log x_k.
@@ -189,7 +189,8 @@ $[1,Y']$:
   (Lemma~\ref{lem:lemmaM}) at a start $y$;
 \item for $\zeta_{\NN}(1.8)$, $A_0$, $A_1$, the largest $m$ summed, since every factor of $m$ is at most $m$, so
   $\sum_{m\le Y'}\Hord(m)m^{-s}\le1/(2-\sum_{m\le Y'}m^{-s})$; the sums used run over levels $m\le2y/\Xm$ from a start $y$;
-\item $Y'=x/x_k$ for $F_\theta$, which is used only in Step~4 of the proof of Proposition~\ref{prop:g1}.
+% Follow-up landau (FOLLOWUP-LANDAU.md): F_theta is no longer used in Step 4; its one use is Step 3 (resolvable R_j').
+\item $Y'=x/x_j$ for $F_\theta$, which is used only in Step~3 of the proof of Proposition~\ref{prop:g1}(B), for the resolvable $R_j'$.
 \end{itemize}
 In every use on a good event $\Good(<z)$ the start is $y\le z+H(z)$, so these $Y'$ are at most $0.9z$, except for the harmonic sum
 of $B_1$ in \ref{eq:sF3p} on $\Good(<s)$, which stops at $Y\le\max(s/2,\,s-H(s/2))$. In all cases $Y'\le\check z$, and
