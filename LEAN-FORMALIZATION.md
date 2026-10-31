@@ -1,6 +1,7 @@
 # Lean formalization: status, trust base and defects
 
-**Summary.** The Lean 4 project in [`lean/`](lean/) proves Corollary 2.2 (the answer to Question Q is negative) from a
+**Summary.** The Lean 4 project in [`lean/`](lean/) proves Theorem A for θ ∈ [1/20, 1/2 − 10⁻⁴] with zeros at
+1·log log (`BModel.theoremA_full`, `BModel.theoremA_ii_complete`), and Corollary 2.2 (the answer to Question Q is negative) from a
 single hypothesis, eq. (84), a short-interval prime number theorem for the rational primes:
 
 ```lean
@@ -426,6 +427,14 @@ Nothing in the proof. Open items are review, not formalization:
     the oscillation of T_c alone (04a l.83), and the jump enters as a separate base term (04g Step 3; V_{X₀} in Step 5).
     Fixed in 61806ca: the jump is a separate source term of the chain (`MarginRecSuper.super_J`), the oscillation input
     is that of T_c, and `ho` is proved (`Model/HoC.ho_c`). The emptiness proof was removed once it no longer applied.
+
+- **Vacuous part (ii) of Theorem A (fixed 2026-10-31).** `TheoremAConclusion` stated the zero location
+  1 − (c log log x_k + O(1))/log x_k for an existentially chosen sequence x_k, so it could not tell c = 1 from c = 3:
+  x_k can be fitted to any zeros with Re ρ_k → 1. A conjunct |log Im ρ_k − ((1−θ) log x_k − log log x_k)| ≤ C now ties
+  x_k to the zero's height. Corollary 2.2 used only Re ρ_k → 1 and was unaffected.
+- **Over-specialised oscillation bound (fixed 2026-10-31).** `Model/OscD2.lean` stated |R_k''| ≤ … x^{−1/4}, a
+  specialisation of the paper's x^{−θ} (04f-bridge.tex:69) valid only for θ ≥ 1/4. Replaced by x^{−1/20} for the
+  θ ≥ 1/20 range; all downstream sums still close. The paper is correct as written.
 
 ## Status
 

@@ -162,8 +162,8 @@ Applied to the ordinary integers, a positive answer would give a zero-free half-
 (log* the iterated logarithm), whose zeta function has zeros ρ_k with Re ρ_k = 1 − (log log x_k + O(1))/log x_k → 1.
 The extension to θ < 1/4 and the single log log (in place of 3 log log) are later strengthenings, each checked by the AI
 agent that made it and one independent AI check (see [`FOLLOWUP-THETA.md`](FOLLOWUP-THETA.md) and
-[`FOLLOWUP-LANDAU.md`](FOLLOWUP-LANDAU.md)). They are not formalized in Lean, whose Theorem A covers θ ∈ [1/4, 1/2 − 10⁻⁴]
-with 3 log log (`lean/RequestProject/Beurling/Main.lean`); Corollary 2.2, the Lean theorem, is unaffected.
+[`FOLLOWUP-LANDAU.md`](FOLLOWUP-LANDAU.md)). Both are formalized in Lean: `BModel.theoremA_full` (Theorem A for
+θ ∈ [1/20, 1/2 − 10⁻⁴]) and `BModel.theoremA_ii_complete` (the zeros at 1·log log, tied to their heights), both from (84).
 
 So the answer to Q is negative. Equivalently, there is a discrete [1, β]-system with β ≤ θ < 1/2. The result says nothing about the
 Riemann zeta function itself.
@@ -187,10 +187,11 @@ theorem BModel.corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ
 - `#print axioms` gives only `propext`, `Classical.choice` and `Quot.sound`. The finite numerical certificates of
   Appendix B are checked by Lean's kernel (`decide +kernel`); there is no `native_decide` in the proof.
 - Lean/Mathlib v4.35.0.
-- The whole proof is formalized for the construction with θ ∈ [1/4, 1/2 − 10⁻⁴] and the decaying amplitude
-  κ′_k = κ₀/log²x_k (zeros at 3 log log): Sections 2–7 and Appendix A, the construction built from the jitters, its
-  measurability and probability budget, and the certificates. The two later strengthenings (θ < 1/4, constant
-  amplitude) are being formalized.
+- The whole proof is formalized, including both strengthenings: Sections 2–7 and Appendix A, the construction built
+  from the jitters, its measurability and probability budget, and the certificates. Also proved from (84), with the same
+  three axioms: `BModel.theoremA_full : Huxley84 → Theorem21` (Theorem A for θ ∈ [1/20, 1/2 − 10⁻⁴]) and
+  `BModel.theoremA_ii_complete` (zeros with |(1 − Re ρ_k) log x_k − log log x_k| ≤ C and
+  |log Im ρ_k − ((1−θ) log x_k − log log x_k)| ≤ C).
 - The correspondence between the paper and the Lean statements has been checked by AI agents only.
 
 The formalization found four defects in the paper (corrections #102 and #104, constants in Lemma 5.7 and Theorem 5.24; #103, certificate
