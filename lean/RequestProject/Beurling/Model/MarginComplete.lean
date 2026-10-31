@@ -11,6 +11,7 @@ public import RequestProject.Beurling.Noise.RML15Eta
 `E_S = 0.0014`): `so = 10⁻²⁰` (`ho_c`, the oscillation of `T_c`), `sη = s_η` (`RML15.hη_canon`),
 `so + 2 s_η ≤ 0.0013` (`RML15.hsize_of`). So `Theorem21InputsH` holds given (84)
 (`theorem21InputsH_proved`), and `corollary_2_2_complete : Huxley84 → ¬ QuestionQ`.
+`theoremA_full : Huxley84 → Theorem21` is Theorem A for every `θ ∈ [1/20, 1/2 - 10⁻⁴]`.
 -/
 
 @[expose] public section
@@ -72,6 +73,17 @@ theorem theorem21InputsH_proved (h84 : BaseRange.Huxley84) : Theorem21InputsH :=
 /-- **Corollary 2.2** from eq. (84) (Heath-Brown's short-interval theorem, `Huxley84`) alone. -/
 theorem corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ :=
   corollary_2_2_hux h84 (theorem21InputsH_proved h84)
+
+/-- **Theorem A (Theorem 2.1) for every `θ ∈ [1/20, 1/2 - 10⁻⁴]`**, from eq. (84) alone:
+for each such `θ` there is `X_Hux` such that for every even `X₀ ≥ max(e^{10⁸}, X_Hux)` the random
+system of Section 3 satisfies (i) `|N(x) - x| ≤ C x^θ + 3 x^θ log* x + x^η` and (ii) the designed
+zeros `Re ρ_k = 1 - (3 log log x_k + O(1))/log x_k` on an event of probability
+`≥ 1 - 1.5/log X₀` (`Theorem21`, `TheoremAConclusion`). The absorption window is
+`h(u) = u^{θ_b}`, `θ_b = min(θ, max(θ/2, 1/8))` (`thetaB`). -/
+theorem theoremA_full (h84 : BaseRange.Huxley84) : Theorem21 :=
+  Queue6.theorem21_of_X (BaseRange.shortIntervalPNT_of_huxley h84)
+    (Queue6.theorem21InputsX_of_Y (Queue6.theorem21InputsY_of_Z
+      (theorem21InputsZ_hux h84 (theorem21InputsH_proved h84))))
 
 end BModel
 

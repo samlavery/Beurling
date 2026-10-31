@@ -38,8 +38,8 @@ namespace Construction
 /-- `PartIRest` without Lemma 6.26. -/
 def PartIRestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (M : SlotModel X₀) : Prop :=
-  (∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + u n ^ (θ / 2) = n) ∧
-    (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (θ / 2) A u)
+  (∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + u n ^ (thetaB θ) = n) ∧
+    (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (thetaB θ) A u)
       (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
         (designedGamma P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
         (switchOn X₀)) x) ∧
@@ -73,7 +73,7 @@ bound for `A`.** As `Theorem21InputsFix`, with those two inputs replaced by the 
 with the construction, (HBS) and the cluster event, and with the probability budget replaced by
 the per-scale bounds of Table 1. -/
 def Theorem21InputsSp : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),

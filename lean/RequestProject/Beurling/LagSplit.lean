@@ -35,8 +35,8 @@ open Real MeasureTheory DesignedZero Target Oscillation Absorbed CaplLink QueueB
 namespace LagSplit
 
 /-- **Proposition 4.1, numerical part, with the explicit `B` and `H`.** For `log X₀ ≥ 10⁸`,
-`x ≥ X₀`, `θ ∈ [1/4, 1/2 - 10⁻⁴]`: if `|D| ≤ B(x) + 3H(x) + 3` then `|D| ≤ x^η`. -/
-theorem lag_rpow_of_queue {θ X₀ x D : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
+`x ≥ X₀`, `θ ∈ [1/20, 1/2 - 10⁻⁴]`: if `|D| ≤ B(x) + 3H(x) + 3` then `|D| ≤ x^η`. -/
+theorem lag_rpow_of_queue {θ X₀ x D : ℝ} (hθ1 : 1 / 10000 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
     (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) (hx : X₀ ≤ x)
     (hD : |D| ≤ queueB X₀ x + 3 * capH X₀ x + 3) : |D| ≤ x ^ lagExponent θ := by
   obtain ⟨hM, hstd, hraise⟩ := capH_conditions hX0 hX hx
@@ -61,7 +61,7 @@ theorem lag_rpow_of_queue {θ X₀ x D : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ �
 
 /-- **Proposition 4.1 on the initial range.** For `log X₀ ≥ 10⁸`, `x ≥ X₀` and
 `0 ≤ κ₊ ≤ log X₀`, the bound `|D| ≤ B(X₀) + (H(X₀)/2)(1 + κ₊/log X₀) + 5` implies `|D| ≤ x^η`. -/
-theorem lag_rpow_initial {θ X₀ x D κ : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
+theorem lag_rpow_initial {θ X₀ x D κ : ℝ} (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000)
     (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) (hx : X₀ ≤ x) (hκ0 : 0 ≤ κ)
     (hκ : κ ≤ Real.log X₀)
     (hD : |D| ≤ queueB X₀ X₀ + capH X₀ X₀ / 2 * (1 + κ / Real.log X₀) + 5) :
@@ -78,7 +78,7 @@ theorem lag_rpow_initial {θ X₀ x D κ : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ
     · rw [← h, Real.log_zero] at hX; norm_num at hX
   have hη : 0 ≤ lagExponent θ := by
     have := lagExponent_ge (θ := θ) (by linarith) hθ2; linarith
-  exact (lag_rpow_of_queue hθ1 hθ2 hX0 hX le_rfl hD').trans
+  exact (lag_rpow_of_queue (by linarith) hθ2 hX0 hX le_rfl hD').trans
     (Real.rpow_le_rpow hX0'.le hx hη)
 
 /-- **The accounting of Corollary 3.8 on the initial range** (proof of Proposition 4.1, with
@@ -115,22 +115,22 @@ only for `x ≥ X₀ + 2H(x)`, where the paper states (12). On the initial range
 def PartIInputsSlotsSplit (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
   ∃ (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) (Qmax κp : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
-    (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) ∧
+    (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (thetaB θ) = a) ∧
     LocFin A ∧
-    (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
+    (∀ v ≥ (X₀ : ℝ), absorbedDensity (thetaB θ) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
     (∀ x ≥ (X₀ : ℝ), 0 ≤ Qmax x ∧ Qmax x ≤ queueB X₀ x) ∧
     (∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x) ∧
     (∀ x ≥ (X₀ : ℝ), (X₀ : ℝ) + 2 * capH X₀ x ≤ x → SlotData (P.N x)
-      (target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A u) (osc θ α γ xp) x) (Qmax x)
+      (target X₀ κ (countA A) (absorbedDensityCap (thetaB θ) A u) (osc θ α γ xp) x) (Qmax x)
       (capH X₀ x / 2 * (1 + κp x / Real.log x)) x) ∧
     (∀ x ≥ (X₀ : ℝ), x < (X₀ : ℝ) + 2 * capH X₀ x →
-      |P.N x - target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A u) (osc θ α γ xp) x| ≤
+      |P.N x - target X₀ κ (countA A) (absorbedDensityCap (thetaB θ) A u) (osc θ α γ xp) x| ≤
         queueB X₀ X₀ + capH X₀ X₀ / 2 * (1 + κp X₀ / Real.log X₀) + 5)
 
 /-- **Proposition 4.1 (the lag bound (13)) with the paper's split**: the split inputs give
 `|N_P(x) - T(x)| ≤ x^η` for every `x ≥ X₀`, hence `PartIInputsTarget`. -/
 theorem PartIInputsSlotsSplit.toTarget {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
-    (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000) (hX : 10 ^ 8 ≤ Real.log X₀)
+    (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000) (hX : 10 ^ 8 ≤ Real.log X₀)
     (h : PartIInputsSlotsSplit θ X₀ P) : PartIInputsTarget θ X₀ P := by
   obtain ⟨κ, A, u, α, γ, xp, Qmax, κp, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hQ, hκp, hslot,
     hinit⟩ := h
@@ -138,9 +138,9 @@ theorem PartIInputsSlotsSplit.toTarget {θ : ℝ} {X₀ : ℕ} {P : BeurlingSyst
     by_contra hc; push_neg at hc
     have : Real.log X₀ ≤ 0 := Real.log_nonpos (Nat.cast_nonneg _) hc.le
     linarith
-  have hW : AbsorbedWindowHyp (θ / 2) X₀ A u :=
-    ⟨by linarith, by linarith, hX1, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
-  refine ⟨κ, countA A, absorbedDensityCap (θ / 2) A u, α, γ, xp, hκ, hκ1, hsp, hα, hxp,
+  have hW : AbsorbedWindowHyp (thetaB θ) X₀ A u :=
+    ⟨thetaB_pos (by linarith), thetaB_le_one (by linarith), hX1, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
+  refine ⟨κ, countA A, absorbedDensityCap (thetaB θ) A u, α, γ, xp, hκ, hκ1, hsp, hα, hxp,
     fun x hx => absorbed_target_error_cap hW (by linarith) hρ hx, fun x hx => ?_⟩
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   rcases le_or_gt ((X₀ : ℝ) + 2 * capH X₀ x) x with hlate | hearly
@@ -153,7 +153,7 @@ theorem PartIInputsSlotsSplit.toTarget {θ : ℝ} {X₀ : ℕ} {P : BeurlingSyst
     have e : -(capH X₀ x / 2 * (1 + κp x / Real.log x)) =
         -(capH X₀ x / 2) * (1 + κp x / Real.log x) := by ring
     rw [e] at h12
-    exact lag_rpow_of_queue hθ1 hθ2 hX0 hX hx
+    exact lag_rpow_of_queue (by linarith) hθ2 hX0 hX hx
       (abs_lag_le_of_two_sided hLx (hκp x hx).1 (hκp x hx).2 hH
         ((hQ x hx).1.trans (hQ x hx).2) (hQ x hx).2 h12.1 h12.2)
   · -- initial range: the bound of the proof of Proposition 4.1
@@ -167,7 +167,7 @@ def TheoremAInputsSplit (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21InputsSlots`, with the slot data of
 Corollary 3.8 only for `x ≥ X₀ + 2H(x)` and the paper's weaker bound on the initial range. -/
 def Theorem21InputsSplit : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

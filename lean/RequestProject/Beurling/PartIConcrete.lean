@@ -29,20 +29,20 @@ with `cntA = #(A ∩ [1, x])` and `rhoA = ρ̄_A` for an absorbed set `A` with w
 def PartIInputsConcrete (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
   ∃ (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) (B H M₁ : ℝ → ℝ), 0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
-    (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) ∧
+    (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (thetaB θ) = a) ∧
     LocFin A ∧
-    (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
+    (∀ v ≥ (X₀ : ℝ), absorbedDensity (thetaB θ) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
     (∀ x ≥ (X₀ : ℝ), B x ≤ 34 * M₁ x * Real.log x ^ 2) ∧
     (∀ x ≥ (X₀ : ℝ), M₁ x ^ 2 ≤ H x) ∧
     (∀ x ≥ (X₀ : ℝ), Real.exp (8 * Real.log (Real.log x) ^ 2) ≤ H x) ∧
     (∀ x ≥ (X₀ : ℝ), Real.log (H x) - 8 * Real.log (Real.log x) ^ 2 ≤ 1e-6 * Real.log x) ∧
     (∀ x ≥ (X₀ : ℝ),
-      |P.N x - target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A u) (osc θ α γ xp) x| ≤
+      |P.N x - target X₀ κ (countA A) (absorbedDensityCap (thetaB θ) A u) (osc θ α γ xp) x| ≤
         B x + 3 * H x + 3)
 
 /-- Lemma 3.4 (absorbed part) turns `PartIInputsConcrete` into `PartIInputsQueue`. -/
 theorem PartIInputsConcrete.toQueue {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
-    (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2) (hX : 3 ≤ Real.log X₀)
+    (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2) (hX : 3 ≤ Real.log X₀)
     (h : PartIInputsConcrete θ X₀ P) : PartIInputsQueue θ X₀ P := by
   obtain ⟨κ, A, u, α, γ, xp, B, H, M₁, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hB, hM, hstd,
     hraise, hD⟩ := h
@@ -50,9 +50,9 @@ theorem PartIInputsConcrete.toQueue {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
     by_contra hc; push_neg at hc
     have : Real.log X₀ ≤ 0 := Real.log_nonpos (Nat.cast_nonneg _) hc.le
     linarith
-  have hW : AbsorbedWindowHyp (θ / 2) X₀ A u :=
-    ⟨by linarith, by linarith, hX1, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
-  exact ⟨κ, countA A, absorbedDensityCap (θ / 2) A u, α, γ, xp, B, H, M₁, hκ, hκ1, hsp, hα, hxp,
+  have hW : AbsorbedWindowHyp (thetaB θ) X₀ A u :=
+    ⟨thetaB_pos (by linarith), thetaB_le_one (by linarith), hX1, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
+  exact ⟨κ, countA A, absorbedDensityCap (thetaB θ) A u, α, γ, xp, B, H, M₁, hκ, hκ1, hsp, hα, hxp,
     fun x hx => absorbed_target_error_cap hW hX hρ hx, hB, hM, hstd, hraise, hD⟩
 
 /-- Refined inputs for one system: `PartIInputsConcrete` and the inputs of Theorem 4.10 with the
@@ -63,7 +63,7 @@ def TheoremAInputsConcrete (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :
 /-- **Theorem 2.1, refined hypothesis** with the lag bound replaced by its inputs in
 Proposition 4.1 and the absorbed part of the target error replaced by the inputs of Lemma 3.4. -/
 def Theorem21InputsConcrete : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

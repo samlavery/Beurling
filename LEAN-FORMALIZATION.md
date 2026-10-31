@@ -71,6 +71,29 @@ lake build
     KRHordCert, MarginVarCert}`: π(N) ≤ 2N/log N for N ≤ 1000 and point evaluations for Lemma 5.7 and §5.
   Each mirrors a script under `certificates/`, which reproduces it independently (see `lean/BSCERT_NOTES.md`).
 
+## Theorem A for θ ∈ [1/20, 1/2 − 10⁻⁴] (branch lean-theta, 2026-10-30)
+
+`BModel.theoremA_full : BaseRange.Huxley84 → Theorem21` (`Model/MarginComplete.lean`) states Theorem A for every
+θ ∈ [1/20, 1/2 − 10⁻⁴] (`Main.Theorem21` now quantifies over `Set.Icc (1/20) (1/2 − 1/10000)`, as do `Model.Stage.Cond`
+and every `Theorem21Inputs*`). `#print axioms` gives `propext`, `Classical.choice`, `Quot.sound`, the same as for the
+unchanged `corollary_2_2_complete`. This is the formalization of FOLLOWUP-THETA.md. The Lean changes:
+- `thetaB θ := min θ (max (θ/2) (1/8))` (`Main.lean`, with its basic bounds) replaces θ/2 wherever θ/2 is the
+  absorption-window exponent (`uA`, `targetD`, the T1 bound 2x^{θ_b}, Lemma ZA's |τ|^{1/(1−θ_b)}, Lemma P / 6.26). The
+  late-noise and lag hypotheses `η ≤ θ/2` are kept, and late noise is now 165Λx^{−θ/2} (`LateNoise`, `Theorem410Paper`).
+- `Construction/Cond81.cond81_core` (caplw Step 5 / (12.2), (∗)) is reproved for θ_b ≥ 1/20 with the new `ramp_facts`:
+  122γ(s) ≤ e^s and 15γ(s)² ≤ e^s for s > s_H. These follow from e^s ≥ 393(1 + t + t²/2) with t = s − 5.9745,
+  γ ≤ min(7.5, 0.33334 + 7.1667t). The standard regime uses u₀ ≥ ℓ⁴/176000.
+- The places that relied on θ ≥ 1/4 elsewhere:
+  - window length e^{(L−0.02)/20}, with H ≤ e^{K/50}/10 (`Queue6/WinCount`);
+  - X₀-band count exponent thetaB θo (`KRTrueX0`);
+  - (LP-a) with X₀ − X₀⁻ ≤ X₀^{1/40} (`InitialRange.capH_le_rpow40`) and θ' ≥ θ + 0.01 (`LocalPNT/LPa`);
+  - the R'' / o_R modulus s^{−1/20} instead of s^{−1/4} (`OscD2`). Its consumers are `OscBound.nonA_le`
+    (u^{−1/40}, via `capH_le_rpow400`), `OscBlockG.nonA3_le` (u^{−1/50}) and the geometric constants 59 and 73;
+  - `Main.theorem21_part_i_of_bounds`, where 2x^{θ_b} ≤ 2x^θ is absorbed into Cx^θ.
+- `lag_rpow_of_queue` needs only θ ≥ 10⁻⁴.
+
+Checked only by the Lean kernel and the AI agent that wrote it; no human review.
+
 ## What is proved (progress log)
 
 This section is the log of the formalization rounds. Items marked open or named there were closed later; the

@@ -322,8 +322,8 @@ variable (D : Sec5Family) (hc : Cond θ X₀) (hev : Even X₀)
 include hc hev in
 /-- **Lemma 6.26 on `Good(< t)`** for a window `[x, x']`, `x' ≤ x + x^{θ/2}`, `2x + 2X₀ + 4 ≤ t`. -/
 theorem LC_G0 {t : ℕ} {ω : JitterΩ} (hω : ω ∈ G0 θ X₀ D t) (hN : ω ∈ NiceEv θ X₀) {x x' : ℝ}
-    (hx : (X₀ : ℝ) ≤ x) (hxx : x' ≤ x + x ^ (θ / 2)) (ht : 2 * x + 2 * X₀ + 4 ≤ t) :
-    (localCountA (absSet X₀ (DF θ X₀ ω)) x x' : ℝ) ≤ x ^ (θ / 2) * Real.log x ^ (-4 : ℤ) := by
+    (hx : (X₀ : ℝ) ≤ x) (hxx : x' ≤ x + x ^ (thetaB θ)) (ht : 2 * x + 2 * X₀ + 4 ≤ t) :
+    (localCountA (absSet X₀ (DF θ X₀ ω)) x x' : ℝ) ≤ x ^ (thetaB θ) * Real.log x ^ (-4 : ℤ) := by
   classical
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hc.hX
@@ -359,10 +359,10 @@ theorem LC_G0 {t : ℕ} {ω : JitterΩ} (hω : ω ∈ G0 θ X₀ D t) (hN : ω �
   have hA := absSet_locFin (X₀ := X₀) (locFinD_DM hc.hX hU (Mcl θ X₀ ω))
   unfold localCountA
   have hsub : absSet X₀ (DF θ X₀ ω) ∩ Icc x x' ⊆
-      absSet X₀ (DF θ X₀ ω) ∩ Icc x (x + x ^ (θ / 2)) :=
+      absSet X₀ (DF θ X₀ ω) ∩ Icc x (x + x ^ (thetaB θ)) :=
     Set.inter_subset_inter_right _ (Set.Icc_subset_Icc le_rfl hxx)
-  have hfin : (absSet X₀ (DF θ X₀ ω) ∩ Icc x (x + x ^ (θ / 2))).Finite :=
-    (hA (x + x ^ (θ / 2))).subset fun a ha => ⟨ha.1, ha.2.2⟩
+  have hfin : (absSet X₀ (DF θ X₀ ω) ∩ Icc x (x + x ^ (thetaB θ))).Finite :=
+    (hA (x + x ^ (thetaB θ))).subset fun a ha => ⟨ha.1, ha.2.2⟩
   exact_mod_cast Set.ncard_le_ncard hsub hfin
 
 include hc in
@@ -521,35 +521,60 @@ lemma win_geom {X0 Xm Hy y u : ℝ} (hX0 : 10 ^ 8 ≤ X0) (hXmlo : 0.99 * X0 ≤
       div_le_div_of_nonneg_right (by linarith) hXmp.le
     linarith
 
-/-- `2.04 H/X₀⁻ + 1/2 ≤ e^{(L - 0.02)/8}` for `H ≤ e^{(2L+1)/40}/10`. -/
+/-- `max(e^{8 (log K)²}, 4 e^{2√K}) ≤ e^{K/50}/10` for `K ≥ 10⁸`. -/
+lemma capBound_le100 {K : ℝ} (hK : 10 ^ 8 ≤ K) :
+    max (Real.exp (8 * Real.log K ^ 2)) (4 * Real.exp (2 * Real.sqrt K)) ≤
+      Real.exp (K / 50) / 10 := by
+  have hs := sqrt_le_div hK
+  have hl := log_sq_le_sqrt (show (1 : ℝ) ≤ K by linarith)
+  have h10 := log10_le
+  have key : ∀ a : ℝ, a + Real.log 10 ≤ K / 50 → Real.exp a ≤ Real.exp (K / 50) / 10 := by
+    intro a h
+    rw [le_div_iff₀ (by norm_num)]
+    have : Real.exp a * 10 = Real.exp (a + Real.log 10) := by
+      rw [Real.exp_add, Real.exp_log (by norm_num)]
+    rw [this]; exact Real.exp_le_exp.mpr h
+  refine max_le (key _ (by nlinarith)) ?_
+  have e : 4 * Real.exp (2 * Real.sqrt K) = Real.exp (2 * Real.sqrt K + Real.log 4) := by
+    rw [Real.exp_add, Real.exp_log (by norm_num)]; ring
+  rw [e]
+  have h4 : Real.log 4 ≤ 1.4 := by
+    rw [show (4 : ℝ) = 2 ^ 2 by norm_num, Real.log_pow]
+    have := Real.log_two_lt_d9; push_cast; linarith
+  exact key _ (by linarith)
+
+/-- `2.04 H/X₀⁻ + 1/2 ≤ e^{(L - 0.02)/20}` for `H ≤ e^{(2L+1)/50}/10`. -/
 lemma win_len {X0 Xm Hy L : ℝ} (hX0 : 10 ^ 8 ≤ X0) (hXmlo : 0.99 * X0 ≤ Xm) (hHy0 : 0 ≤ Hy)
-    (hHyb : Hy ≤ Real.exp ((2 * L + 1) / 40) / 10) (hL : 10 ^ 8 - 1 ≤ L) :
-    2.04 * Hy / Xm + 1 / 2 ≤ Real.exp ((L - 0.02) / 8) := by
+    (hHyb : Hy ≤ Real.exp ((2 * L + 1) / 50) / 10) (hL : 10 ^ 8 - 1 ≤ L) :
+    2.04 * Hy / Xm + 1 / 2 ≤ Real.exp ((L - 0.02) / 20) := by
   have hXmp : 0 < Xm := by linarith
-  have hX0p : 0 < X0 := by linarith
-  have h1 : 2.04 * Hy / Xm ≤ Real.exp ((2 * L + 1) / 40) := by
+  have h1 : 2.04 * Hy / Xm ≤ Real.exp ((2 * L + 1) / 50) := by
     rw [div_le_iff₀ hXmp]
-    have he := Real.exp_pos ((2 * L + 1) / 40)
+    have he := Real.exp_pos ((2 * L + 1) / 50)
     nlinarith
-  have h4 : Real.exp ((2 * L + 1) / 40) * 2 ≤ Real.exp ((L - 0.02) / 8) := by
-    rw [show (L - 0.02) / 8 = (2 * L + 1) / 40 + ((L - 0.02) / 8 - (2 * L + 1) / 40) by ring,
+  have h4 : Real.exp ((2 * L + 1) / 50) * 2 ≤ Real.exp ((L - 0.02) / 20) := by
+    rw [show (L - 0.02) / 20 = (2 * L + 1) / 50 + ((L - 0.02) / 20 - (2 * L + 1) / 50) by ring,
       Real.exp_add]
-    have : (2 : ℝ) ≤ Real.exp ((L - 0.02) / 8 - (2 * L + 1) / 40) := by
-      have := Real.add_one_le_exp ((L - 0.02) / 8 - (2 * L + 1) / 40)
+    have : (2 : ℝ) ≤ Real.exp ((L - 0.02) / 20 - (2 * L + 1) / 50) := by
+      have := Real.add_one_le_exp ((L - 0.02) / 20 - (2 * L + 1) / 50)
       linarith
-    have he := Real.exp_pos ((2 * L + 1) / 40)
+    have he := Real.exp_pos ((2 * L + 1) / 50)
     nlinarith
-  have h5 : (1 : ℝ) ≤ Real.exp ((2 * L + 1) / 40) := Real.one_le_exp (by linarith)
+  have h5 : (1 : ℝ) ≤ Real.exp ((2 * L + 1) / 50) := Real.one_le_exp (by linarith)
   linarith
 
-/-- `e^{(L - 0.02)/8} ≤ x^{θ/2}` for `x ≥ 0.99 e^L`, `θ ≥ 1/4`. -/
-lemma win_base {u x θ : ℝ} (hu : 1 ≤ u) (hθ : 1 / 4 ≤ θ) (hx : 0.99 * u ≤ x) (hx1 : 1 ≤ x) :
-    Real.exp ((Real.log u - 0.02) / 8) ≤ x ^ (θ / 2) := by
+/-- `e^{(L - 0.02)/20} ≤ x^{θ_b}` for `x ≥ 0.99 e^L`, `θ ≥ 1/20`. -/
+lemma win_base {u x θ : ℝ} (hu : 1 ≤ u) (hθ : 1 / 20 ≤ θ) (hx : 0.99 * u ≤ x) (hx1 : 1 ≤ x) :
+    Real.exp ((Real.log u - 0.02) / 20) ≤ x ^ (thetaB θ) := by
   have hu0 : 0 < u := by linarith
-  have h3 := rpow_eighth_ge (show 0 < 0.99 * u by positivity) hx
-  have h4 : x ^ (1 / 8 : ℝ) ≤ x ^ (θ / 2) :=
-    Real.rpow_le_rpow_of_exponent_le hx1 (by linarith)
-  have h5 : (Real.log u - 0.02) / 8 ≤ Real.log (0.99 * u) / 8 := by
+  have h3 : Real.exp (Real.log (0.99 * u) / 20) ≤ x ^ (1 / 20 : ℝ) := by
+    rw [Real.rpow_def_of_pos (by linarith)]
+    apply Real.exp_le_exp.mpr
+    have := Real.log_le_log (by positivity) hx
+    linarith
+  have h4 : x ^ (1 / 20 : ℝ) ≤ x ^ (thetaB θ) :=
+    Real.rpow_le_rpow_of_exponent_le hx1 (thetaB_ge hθ)
+  have h5 : (Real.log u - 0.02) / 20 ≤ Real.log (0.99 * u) / 20 := by
     rw [Real.log_mul (by norm_num) hu0.ne']
     have : -0.02 ≤ Real.log 0.99 := by
       rw [Real.le_log_iff_exp_le (by norm_num)]
@@ -562,50 +587,52 @@ lemma win_base {u x θ : ℝ} (hu : 1 ≤ u) (hθ : 1 / 4 ≤ θ) (hx : 0.99 * u
   have h6 := Real.exp_le_exp.mpr h5
   linarith
 
-/-- `0.9 e^{(L+1)/40} + 20 ≤ u^{θ'/2}` for `L = log u ≥ 10⁸ - 1`, `θ' ≥ 1/4`. -/
-lemma win_small {u θo : ℝ} (hu : 1 ≤ u) (hθo : 1 / 4 ≤ θo) (hL : 10 ^ 8 - 1 ≤ Real.log u) :
-    0.9 * Real.exp ((Real.log u + 1) / 40) + 20 ≤ u ^ (θo / 2) := by
+/-- `0.9 e^{(L+1)/40} + 20 ≤ u^{θ'_b}` for `L = log u ≥ 10⁸ - 1`, `θ' ≥ 1/20`. -/
+lemma win_small {u θo : ℝ} (hu : 1 ≤ u) (hθo : 1 / 20 ≤ θo) (hL : 10 ^ 8 - 1 ≤ Real.log u) :
+    0.9 * Real.exp ((Real.log u + 1) / 40) + 20 ≤ u ^ (thetaB θo) := by
   have hu0 : 0 < u := by linarith
   set L := Real.log u
-  have h1 : u ^ (1 / 8 : ℝ) ≤ u ^ (θo / 2) :=
-    Real.rpow_le_rpow_of_exponent_le hu (by linarith)
-  have h2 : Real.exp (L / 8) = u ^ (1 / 8 : ℝ) := by
+  have h1 : u ^ (1 / 20 : ℝ) ≤ u ^ (thetaB θo) :=
+    Real.rpow_le_rpow_of_exponent_le hu (thetaB_ge hθo)
+  have h2 : Real.exp (L / 20) = u ^ (1 / 20 : ℝ) := by
     rw [Real.rpow_def_of_pos hu0]; congr 1; ring
-  have h3 : 0.9 * Real.exp ((L + 1) / 40) + 20 ≤ Real.exp (L / 8) := by
-    rw [show L / 8 = (L + 1) / 40 + (L / 8 - (L + 1) / 40) by ring, Real.exp_add]
-    have : (21 : ℝ) ≤ Real.exp (L / 8 - (L + 1) / 40) := by
-      have := Real.add_one_le_exp (L / 8 - (L + 1) / 40); linarith
+  have h3 : 0.9 * Real.exp ((L + 1) / 40) + 20 ≤ Real.exp (L / 20) := by
+    rw [show L / 20 = (L + 1) / 40 + (L / 20 - (L + 1) / 40) by ring, Real.exp_add]
+    have : (21 : ℝ) ≤ Real.exp (L / 20 - (L + 1) / 40) := by
+      have := Real.add_one_le_exp (L / 20 - (L + 1) / 40); linarith
     have he := Real.exp_pos ((L + 1) / 40)
     have h5 : (1 : ℝ) ≤ Real.exp ((L + 1) / 40) := Real.one_le_exp (by linarith)
     nlinarith
   linarith
 
-/-- `x^{θ/2} (log x)^{-4} ≤ u^{θ'/2}` for `x ≤ 2u`, `log x ≥ 10⁸`, `θ ≤ θ'`. -/
+/-- `x^{θ_b} (log x)^{-4} ≤ u^{θ'_b}` for `x ≤ 2u`, `log x ≥ 10⁸`, `θ ≤ θ'`. -/
 lemma win_LC {u x θ θo : ℝ} (hu : 1 ≤ u) (hθ : 0 ≤ θ) (hθ1 : θ ≤ 1) (hθo : θ ≤ θo)
     (hx2 : x ≤ 2 * u) (hx0 : 0 ≤ x) (hlx : 10 ^ 8 ≤ Real.log x) :
-    x ^ (θ / 2) * Real.log x ^ (-4 : ℤ) ≤ u ^ (θo / 2) := by
+    x ^ (thetaB θ) * Real.log x ^ (-4 : ℤ) ≤ u ^ (thetaB θo) := by
   have hu0 : 0 < u := by linarith
   have hl4 : Real.log x ^ (-4 : ℤ) ≤ 1 / 2 := by
     rw [zpow_neg, zpow_ofNat]
     rw [inv_le_comm₀ (by positivity) (by norm_num)]
     have : (10 : ℝ) ^ 8 ≤ Real.log x ^ 4 := hlx.trans (le_self_pow₀ (by linarith) (by norm_num))
     linarith
-  have hx2u : x ^ (θ / 2) ≤ (2 * u) ^ (θ / 2) := Real.rpow_le_rpow hx0 hx2 (by linarith)
-  have h2u : (2 * u) ^ (θ / 2) = 2 ^ (θ / 2) * u ^ (θ / 2) := Real.mul_rpow (by norm_num) hu0.le
-  have h22 : (2 : ℝ) ^ (θ / 2) ≤ 2 := by
-    calc (2 : ℝ) ^ (θ / 2) ≤ 2 ^ (1 : ℝ) :=
-          Real.rpow_le_rpow_of_exponent_le (by norm_num) (by linarith)
+  have hx2u : x ^ (thetaB θ) ≤ (2 * u) ^ (thetaB θ) :=
+    Real.rpow_le_rpow hx0 hx2 (thetaB_nonneg hθ)
+  have h2u : (2 * u) ^ (thetaB θ) = 2 ^ (thetaB θ) * u ^ (thetaB θ) := Real.mul_rpow (by norm_num) hu0.le
+  have h22 : (2 : ℝ) ^ (thetaB θ) ≤ 2 := by
+    calc (2 : ℝ) ^ (thetaB θ) ≤ 2 ^ (1 : ℝ) :=
+          Real.rpow_le_rpow_of_exponent_le (by norm_num) (thetaB_le_one (by linarith))
       _ = 2 := Real.rpow_one 2
-  have huθ : u ^ (θ / 2) ≤ u ^ (θo / 2) := Real.rpow_le_rpow_of_exponent_le hu (by linarith)
-  have hp0 : 0 ≤ x ^ (θ / 2) := by positivity
-  have hpu : 0 ≤ u ^ (θ / 2) := by positivity
-  calc x ^ (θ / 2) * Real.log x ^ (-4 : ℤ) ≤ x ^ (θ / 2) * (1 / 2) :=
+  have huθ : u ^ (thetaB θ) ≤ u ^ (thetaB θo) :=
+    Real.rpow_le_rpow_of_exponent_le hu (thetaB_mono hθo)
+  have hp0 : 0 ≤ x ^ (thetaB θ) := by positivity
+  have hpu : 0 ≤ u ^ (thetaB θ) := by positivity
+  calc x ^ (thetaB θ) * Real.log x ^ (-4 : ℤ) ≤ x ^ (thetaB θ) * (1 / 2) :=
         mul_le_mul_of_nonneg_left hl4 hp0
-    _ ≤ (2 * u) ^ (θ / 2) * (1 / 2) := by gcongr
-    _ = 2 ^ (θ / 2) * u ^ (θ / 2) / 2 := by rw [h2u]; ring
-    _ ≤ 2 * u ^ (θ / 2) / 2 := by gcongr
-    _ = u ^ (θ / 2) := by ring
-    _ ≤ u ^ (θo / 2) := huθ
+    _ ≤ (2 * u) ^ (thetaB θ) * (1 / 2) := by gcongr
+    _ = 2 ^ (thetaB θ) * u ^ (thetaB θ) / 2 := by rw [h2u]; ring
+    _ ≤ 2 * u ^ (thetaB θ) / 2 := by gcongr
+    _ = u ^ (thetaB θ) := by ring
+    _ ≤ u ^ (thetaB θo) := huθ
 
 /-- The time `t ≥ b` is beyond the heights `x ≤ 2u` (`u = y/X₀`, `y ≤ 1.0000001 b`). -/
 lemma win_time {X0 u b t x : ℝ} (hX0 : 10 ^ 8 ≤ X0) (hub : u * X0 ≤ 1.0000001 * b)
@@ -627,7 +654,7 @@ theorem winCount_G0 {t : ℕ} {ω : JitterΩ} (hω : ω ∈ G0 θ X₀ D t) (hN 
     {b : ℝ} (hbt : b ≤ t) {θo : ℝ} (hθo : θ ≤ θo) {y : ℝ} (hy1 : (X₀ : ℝ) ^ 2 / 2 < y)
     (hy2 : y ≤ b + Hc X₀ b) :
     ((KR.X0S.Win (PR θ X₀ ω) (Hc X₀) (Xm X₀) y).card : ℝ) ≤
-      4.21 * Hc X₀ y / X₀ + 2 * Hc X₀ (y / X₀) + 4 + 2 * (y / X₀) ^ (θo / 2) := by
+      4.21 * Hc X₀ y / X₀ + 2 * Hc X₀ (y / X₀) + 4 + 2 * (y / X₀) ^ (thetaB θo) := by
   classical
   obtain ⟨hθ1, hθ2⟩ := hc.hθ
   have hX := hc.hX
@@ -661,16 +688,16 @@ theorem winCount_G0 {t : ℕ} {ω : JitterΩ} (hω : ω ∈ G0 θ X₀ D t) (hN 
   have hXL : Real.log X₀ ≤ Real.log u + 1 := by linarith
   have hlogy : Real.log y ≤ 2 * Real.log u + 1 := by
     rw [← huy, Real.log_mul hu0.ne' hX0p.ne']; linarith
-  have hHyb : Hc X₀ y ≤ Real.exp ((2 * Real.log u + 1) / 40) / 10 := by
-    rw [hHy]; exact (capH_le_K hc hyX hlogy).trans (capBound_le (by linarith))
   -- the window
   obtain ⟨hαu, hβu, hα'α, hαβ, hℓe⟩ :=
     win_geom hXb hXmlo hXmhi huy (by linarith) hHy0 hHyy
   set α' := (y - 1.02 * Hc X₀ y) / Xm X₀ - 1 / 2 with hα'def
   set β := (y + 1.02 * Hc X₀ y) / Xm X₀ with hβdef
   have hα'1 : 1 ≤ α' := by linarith
-  have hℓ : β - α' ≤ Real.exp ((Real.log u - 0.02) / 8) := by
-    rw [hℓe]; exact win_len hXb hXmlo hHy0 hHyb hL8
+  have hHyb' : Hc X₀ y ≤ Real.exp ((2 * Real.log u + 1) / 50) / 10 := by
+    rw [hHy]; exact (capH_le_K hc hyX hlogy).trans (capBound_le100 (by linarith))
+  have hℓ : β - α' ≤ Real.exp ((Real.log u - 0.02) / 20) := by
+    rw [hℓe]; exact win_len hXb hXmlo hHy0 hHyb' hL8
   -- `b ≥ X₀`, `y ≤ 1.0000001 b`
   have hbX : (X₀ : ℝ) ≤ b := by
     by_contra hlt
@@ -697,11 +724,11 @@ theorem winCount_G0 {t : ℕ} {ω : JitterΩ} (hω : ω ∈ G0 θ X₀ D t) (hN 
     exact h.trans (lagBound_le hc hx1 hlx hXL hL8)
   -- the absorbed count
   have hLCb : ∀ x x' : ℝ, 0.99 * u ≤ x → (X₀ : ℝ) ≤ x → x ≤ 2 * u → x' ≤ x + (β - α') →
-      (localCountA (absSet X₀ (DF θ X₀ ω)) x x' : ℝ) ≤ u ^ (θo / 2) := by
+      (localCountA (absSet X₀ (DF θ X₀ ω)) x x' : ℝ) ≤ u ^ (thetaB θo) := by
     intro x x' h1 h2 h3 h4
     have hx1 : (1 : ℝ) ≤ x := by linarith only [h2, hX1]
     have h5 := win_base hu1 hθ1 h1 hx1
-    have hxx : x' ≤ x + x ^ (θ / 2) := by linarith only [h4, hℓ, h5]
+    have hxx : x' ≤ x + x ^ (thetaB θ) := by linarith only [h4, hℓ, h5]
     have h := LC_G0 D hc hev hω hN h2 hxx (hbig x hx1 h3).2
     exact h.trans (win_LC hu1 (by linarith only [hθ1]) (by linarith only [hθ2]) hθo h3
       (by linarith only [hx1]) (logs_of_ge hX0 hX h2).1)
@@ -715,7 +742,7 @@ theorem winCount_G0 {t : ℕ} {ω : JitterΩ} (hω : ω ∈ G0 θ X₀ D t) (hN 
     rw [mul_div_assoc', div_le_div_iff₀ hXmp hX0p]; nlinarith
   have hcont0 : 0 ≤ 2.04 * Hc X₀ y / Xm X₀ := by positivity
   have hHq : 0 ≤ Hc X₀ u := by unfold Hc; exact capH_nonneg _ _
-  have hu2 : 0 ≤ u ^ (θo / 2) := by positivity
+  have hu2 : 0 ≤ u ^ (thetaB θo) := by positivity
   have hT0 : (Mcl θ X₀ ω).T X₀ = X₀ := by rw [Mcl_eq hc]; exact (hc.std ω).limModel_T_X₀
   have hE0 := Real.exp_pos ((Real.log u + 1) / 40)
   rcases lt_or_ge β (Xm X₀) with hβXm | hβXm

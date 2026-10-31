@@ -20,22 +20,22 @@ namespace Construction
 `v ≥ X₀`, with (HBS) assumed only up to `2y(2v)` and `N(w) = ⌊w⌋` below `X₀⁻`. -/
 theorem lemma626_local {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℝ}
     {latest : ℝ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {θ X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
-    (hX : 10 ^ 8 ≤ Real.log X₀) (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2)
+    (hX : 10 ^ 8 ≤ Real.log X₀) (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2)
     (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc (0 : ℝ) 1)
     (hX0m : 100 ≤ Real.log X0m) (hX0mX : (X₀ : ℝ) / 2 + 1 ≤ X0m)
     (hfl : ∀ w, 1 ≤ w → w < X0m → P.N w = ⌊w⌋₊)
     (hcl : ∀ v ≥ (X₀ : ℝ), ClusterUpTo P X₀ (4 * v / Real.log v ^ 11) (capM1 X₀ v))
     {v : ℝ} (hv : (X₀ : ℝ) ≤ v) (hHBS : P.HBS X0m (2 * absorbYAt X₀ (2 * v)) η1 η2 ε1) :
-      (Absorbed.localCountA A v (v + v ^ (θ / 2)) : ℝ) ≤ v ^ (θ / 2) * Real.log v ^ (-4 : ℤ) := by
+      (Absorbed.localCountA A v (v + v ^ (thetaB θ)) : ℝ) ≤ v ^ (thetaB θ) * Real.log v ^ (-4 : ℤ) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hX
   obtain ⟨hv0, hL, hl, -⟩ := height_facts hX0 hX hv
-  set h := v ^ (θ / 2) with hh
+  set h := v ^ (thetaB θ) with hh
   set L := Real.log v with hLdef
   have hv1 : 1 < v := by linarith
-  have h1 : 1 ≤ h := Real.one_le_rpow hv1.le (by linarith)
+  have h1 : 1 ≤ h := Real.one_le_rpow hv1.le (thetaB_pos (by linarith)).le
   have hlt : h < v := by
-    have := Real.rpow_lt_rpow_of_exponent_lt hv1 (show θ / 2 < 1 by linarith)
+    have := Real.rpow_lt_rpow_of_exponent_lt hv1 (show thetaB θ < 1 from (thetaB_le_quarter (by linarith)).trans_lt (by norm_num))
     rwa [Real.rpow_one] at this
   by_cases hne : ∃ n ∈ A, v ≤ n ∧ (n : ℝ) ≤ v + h
   swap

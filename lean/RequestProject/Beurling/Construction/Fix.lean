@@ -36,10 +36,10 @@ namespace Construction
 scales `a_k` and the slot model `M`; `κ`, `x⁺`, `γ`, `α` are the fixed / designed ones. -/
 def PartIRest (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (M : SlotModel X₀) : Prop :=
-  (∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + u n ^ (θ / 2) = n) ∧ LocFin A ∧
+  (∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + u n ^ (thetaB θ) = n) ∧ LocFin A ∧
     (∀ v ≥ (X₀ : ℝ),
-      (localCountA A v (v + v ^ (θ / 2)) : ℝ) ≤ v ^ (θ / 2) * Real.log v ^ (-4 : ℤ)) ∧
-    (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (θ / 2) A u)
+      (localCountA A v (v + v ^ (thetaB θ)) : ℝ) ≤ v ^ (thetaB θ) * Real.log v ^ (-4 : ℤ)) ∧
+    (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (thetaB θ) A u)
       (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
         (designedGamma P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
         (switchOn X₀)) x) ∧
@@ -72,7 +72,7 @@ heights designed.** As `Theorem21InputsCon`, without the monotonicity of `v - H(
 the parameter conditions of Section 2.2 and without the fixed-point condition on `γ_k, α_k`; the
 density bound `ρ_A ≤ (log v)^{-4}` is replaced by Lemma 6.26. -/
 def Theorem21InputsFix : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -114,7 +114,7 @@ lemma heightScale_switchOn_pos (θ : ℝ) {X₀ : ℝ} (hX : 1 ≤ X₀) (k : �
 /-- `Theorem21InputsFix` with the probability budget stated as its conclusion
 `P(G) ≥ 1 - 1.5/log X₀` (for the good event `G = ⋂ E`). -/
 def Theorem21InputsFixP : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (E : ι → Set JitterΩ),
       ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ jitterMeasure (goodAll E) ∧
@@ -168,7 +168,7 @@ theorem theorem21InputsDec_of_fixP (h : Theorem21InputsFixP) : Theorem21InputsDe
     set α := designedAlpha (P ω) θ X₀ κ A u kappa0Param xp a with hαdef
     have hsp : Spacing xp := switchOn_spacing _
     have hxp0 : (X₀ : ℝ) ≤ xp 0 := switchOn_zero_ge _
-    have hb : 0 < θ / 2 := by linarith [hθ.1]
+    have hb : 0 < thetaB θ := thetaB_pos (by linarith [hθ.1])
     have hρ := rhoA_le_of_lemma626 hb (by linarith) hAu hAfin h626
     have hPI : PartIWith θ X₀ (P ω) κ A u α γ xp M := by
       refine ⟨kappaParam_pos (by linarith), kappaParam_le_one hX1.le, hsp, fun k => ?_,
@@ -177,11 +177,11 @@ theorem theorem21InputsDec_of_fixP (h : Theorem21InputsFixP) : Theorem21InputsDe
         (heightScale_switchOn_pos θ hX1.le) k
       rw [abs_of_nonneg (by linarith [hm.1])]
       exact hm.2
-    have hAbs : AbsorbedHyp (θ / 2) A u := by
-      refine ⟨hb, by linarith [hθ.2],
-        fun n hn => ⟨hb, by linarith [hθ.2], ?_, ?_, (hAu n hn).2⟩, hAfin⟩
+    have hAbs : AbsorbedHyp (thetaB θ) A u := by
+      refine ⟨hb, thetaB_le_quarter (by linarith [hθ.2]),
+        fun n hn => ⟨hb, thetaB_le_quarter (by linarith [hθ.2]), ?_, ?_, (hAu n hn).2⟩, hAfin⟩
       · have hu := (hAu n hn).1
-        have hr : 0 ≤ u n ^ (θ / 2) := Real.rpow_nonneg (by linarith) _
+        have hr : 0 ≤ u n ^ (thetaB θ) := Real.rpow_nonneg (by linarith) _
         have := (hAu n hn).2
         nlinarith
       · linarith [(hAu n hn).1]

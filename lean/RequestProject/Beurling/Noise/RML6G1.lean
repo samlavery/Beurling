@@ -124,7 +124,7 @@ structure G1BInputs (P : BeurlingSystem) (tw : ℕ → ℝ) (X0m : ℝ) (X0 : �
   θ : ℝ
   hj0 : 0 ≤ j0
   hj1 : j0 ≤ 1
-  hjS : jS ≤ 4.1 * δ + 3 * HN / N + 2 * N ^ (θ / 2 - 1)
+  hjS : jS ≤ 4.1 * δ + 3 * HN / N + 2 * N ^ (thetaB θ - 1)
   hN : Real.exp (Real.log y / 2) ≤ N
   hHN0 : 0 ≤ HN
   hHN : HN ≤ N ^ (1 / 8 : ℝ)
@@ -193,7 +193,7 @@ theorem g1B_of {P : BeurlingSystem} {tw : ℕ → ℝ} {X0m : ℝ} {X0 : ℕ} {T
         14 * (I.Kloc + 2) * L * √(I.Hy / (2 * I.δ * y))) :=
       mul_le_mul_of_nonneg_left I.hthr (by positivity)
     have t2 : L * (I.j0 * I.jS) ≤ L * I.j0 * (4.1 * I.δ + 3 * I.HN / I.N +
-        2 * I.N ^ (I.θ / 2 - 1)) := by
+        2 * I.N ^ (thetaB I.θ - 1)) := by
       rw [mul_assoc]
       exact mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left I.hjS I.hj0) hL0.le
     rw [e]

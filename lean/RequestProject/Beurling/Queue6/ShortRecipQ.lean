@@ -99,8 +99,8 @@ theorem shortRecip_win {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (h
   have hHX0 := capH_nonneg (X₀ : ℝ) X₀
   have hXme : Xm X₀ = X₀ - capH X₀ X₀ / 2 := rfl
   have hθ := hc.hθ
-  have hθ4 : θ / 2 ≤ 1 / 4 := by linarith [hθ.2]
-  have hθ0 : 0 ≤ θ / 2 := by linarith [hθ.1]
+  have hθ4 : thetaB θ ≤ 1 / 4 := thetaB_le_quarter (by linarith [hθ.2])
+  have hθ0 : 0 ≤ thetaB θ := (thetaB_pos (by linarith [hθ.1])).le
   have hM0 : 0 < M := by linarith
   have haM : 0 ≤ a * M := by positivity
   set β := M * (1 + a) with hβe
@@ -185,9 +185,9 @@ theorem shortRecip_win {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (h
     rw [Real.mul_rpow (by norm_num) hM0.le, ← hre] at h1
     have := mul_le_mul_of_nonneg_right h103 hr0.le
     linarith
-  have hpow : ∀ x : ℝ, 1 ≤ x → x ≤ 1.03 * M → x ^ (θ / 2) ≤ 1.1 * r ^ 2 := by
+  have hpow : ∀ x : ℝ, 1 ≤ x → x ≤ 1.03 * M → x ^ (thetaB θ) ≤ 1.1 * r ^ 2 := by
     intro x hx1 hx2
-    have h1 : x ^ (θ / 2) ≤ x ^ (1 / 4 : ℝ) := Real.rpow_le_rpow_of_exponent_le hx1 hθ4
+    have h1 : x ^ (thetaB θ) ≤ x ^ (1 / 4 : ℝ) := Real.rpow_le_rpow_of_exponent_le hx1 hθ4
     have h2 : x ^ (1 / 4 : ℝ) ≤ (1.03 * M) ^ (1 / 4 : ℝ) :=
       Real.rpow_le_rpow (by linarith) hx2 (by norm_num)
     rw [Real.mul_rpow (by norm_num) hM0.le, hr2] at h2
@@ -220,7 +220,7 @@ theorem shortRecip_win {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (h
     intro a' d ha' had haM hdM hd2
     have ha'0 : 0 < a' := by linarith
     have hh := hpow a' (by linarith) (by linarith)
-    have hh0 : 0 < a' ^ (θ / 2) := Real.rpow_pos_of_pos ha'0 _
+    have hh0 : 0 < a' ^ (thetaB θ) := Real.rpow_pos_of_pos ha'0 _
     have h := Ncount_le D hc hev hG hN ha' had (hlogt d (by linarith) hdM) (by linarith)
     have hld := lagD_le hc (x := d) (by linarith) le_rfl
     have hla := lagD_le hc (x := a') ha' le_rfl
@@ -234,27 +234,27 @@ theorem shortRecip_win {t : ℕ} {ω : JitterΩ} (hG : ω ∈ G0 θ X₀ D t) (h
       have : (4 : ℝ) ≤ (10 ^ 8) ^ 4 := by norm_num
       linarith
     have hL40 : 0 ≤ Real.log a' ^ (-4 : ℤ) := zpow_nonneg (by linarith) _
-    have hdh : (d + a' ^ (θ / 2)) ^ (θ / 2) ≤ 2 * a' ^ (θ / 2) := by
-      have h1 : d + a' ^ (θ / 2) ≤ 2 * a' := by linarith
-      calc (d + a' ^ (θ / 2)) ^ (θ / 2) ≤ (2 * a') ^ (θ / 2) :=
+    have hdh : (d + a' ^ (thetaB θ)) ^ (thetaB θ) ≤ 2 * a' ^ (thetaB θ) := by
+      have h1 : d + a' ^ (thetaB θ) ≤ 2 * a' := by linarith
+      calc (d + a' ^ (thetaB θ)) ^ (thetaB θ) ≤ (2 * a') ^ (thetaB θ) :=
             Real.rpow_le_rpow (by linarith) h1 hθ0
-        _ = 2 ^ (θ / 2) * a' ^ (θ / 2) := Real.mul_rpow (by norm_num) ha'0.le
-        _ ≤ 2 * a' ^ (θ / 2) := by
+        _ = 2 ^ (thetaB θ) * a' ^ (thetaB θ) := Real.mul_rpow (by norm_num) ha'0.le
+        _ ≤ 2 * a' ^ (thetaB θ) := by
             gcongr
-            calc (2 : ℝ) ^ (θ / 2) ≤ 2 ^ (1 : ℝ) :=
+            calc (2 : ℝ) ^ (thetaB θ) ≤ 2 ^ (1 : ℝ) :=
                   Real.rpow_le_rpow_of_exponent_le (by norm_num) (by linarith)
               _ = 2 := Real.rpow_one 2
-    have hq0 : 0 ≤ (d - a') / a' ^ (θ / 2) + 2 := by
-      have : 0 ≤ (d - a') / a' ^ (θ / 2) := div_nonneg (by linarith) hh0.le
+    have hq0 : 0 ≤ (d - a') / a' ^ (thetaB θ) + 2 := by
+      have : 0 ≤ (d - a') / a' ^ (thetaB θ) := div_nonneg (by linarith) hh0.le
       linarith
-    have habs : ((d - a') / a' ^ (θ / 2) + 2) *
-        ((d + a' ^ (θ / 2)) ^ (θ / 2) * Real.log a' ^ (-4 : ℤ)) ≤
+    have habs : ((d - a') / a' ^ (thetaB θ) + 2) *
+        ((d + a' ^ (thetaB θ)) ^ (thetaB θ) * Real.log a' ^ (-4 : ℤ)) ≤
           (d - a') / 2 + 1.1 * r ^ 2 := by
-      calc ((d - a') / a' ^ (θ / 2) + 2) *
-            ((d + a' ^ (θ / 2)) ^ (θ / 2) * Real.log a' ^ (-4 : ℤ))
-          ≤ ((d - a') / a' ^ (θ / 2) + 2) * (2 * a' ^ (θ / 2) * (1 / 4)) :=
+      calc ((d - a') / a' ^ (thetaB θ) + 2) *
+            ((d + a' ^ (thetaB θ)) ^ (thetaB θ) * Real.log a' ^ (-4 : ℤ))
+          ≤ ((d - a') / a' ^ (thetaB θ) + 2) * (2 * a' ^ (thetaB θ) * (1 / 4)) :=
             mul_le_mul_of_nonneg_left (mul_le_mul hdh hL4 hL40 (by positivity)) hq0
-        _ = (d - a') / 2 + a' ^ (θ / 2) := by field_simp; ring
+        _ = (d - a') / 2 + a' ^ (thetaB θ) := by field_simp; ring
         _ ≤ (d - a') / 2 + 1.1 * r ^ 2 := by linarith
     unfold lagD at hld hla h
     linarith

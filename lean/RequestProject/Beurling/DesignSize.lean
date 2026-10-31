@@ -113,7 +113,7 @@ open DesignSize
 def Theorem410InputsSize (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (X₀ : ℕ) (κ κ₀ η : ℝ) (xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
     (A : Set ℝ) (u : ℝ → ℝ),
-    10 ^ 8 ≤ Real.log X₀ ∧ 1 / 4 ≤ θ ∧ θ ≤ 1 / 2 ∧
+    10 ^ 8 ≤ Real.log X₀ ∧ 1 / 20 ≤ θ ∧ θ ≤ 1 / 2 ∧
     Real.exp (-Real.log X₀) ≤ κ ∧ κ ≤ 1 ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧
     (X₀ : ℝ) ^ 2 ≤ Real.log (xp 0) ∧
@@ -123,7 +123,7 @@ def Theorem410InputsSize (θ : ℝ) (F : ℂ → ℂ) : Prop :=
     0 ≤ η ∧ η ≤ θ / 2 ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
     (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
-    AbsorbedHyp (θ / 2) A u ∧
+    AbsorbedHyp (thetaB θ) A u ∧
     (∀ x ≥ (1 : ℝ), Real.log x ≤ Real.log X₀ ^ 2 → countA A x = 0) ∧
     (∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →
       countA A x ≤ x * Real.exp (-sigmaStar (Real.log X₀) (Real.log x))) ∧
@@ -131,7 +131,7 @@ def Theorem410InputsSize (θ : ℝ) (F : ℂ → ℂ) : Prop :=
       F s = ZBcont X₀ κ s +
         (∑' j, oscHat θ (designAlpha X₀ κ θ κ₀ Dlt xp j) (designGamma X₀ κ θ κ₀ Dlt xp j)
           (xp j) s) +
-        (Dlt k s + lateNoise D (a k) s) + absorbedHat (θ / 2) A u s)
+        (Dlt k s + lateNoise D (a k) s) + absorbedHat (thetaB θ) A u s)
 
 /-- **The size conditions are derived**: `Theorem410InputsSize` gives `Theorem410InputsRankin`,
 with `T := e^{X₀²/3}/κ`. -/

@@ -31,7 +31,7 @@ namespace BModel
 /-- **Theorem 2.1, hypothesis**: the second branch of (s2) and Proposition 5.38 for the margin
 density of the construction. -/
 def Theorem21InputsM : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
       S2SecondBranch θ X₀ ∧
       ∀ m a b, Adm X₀ m a b → ∀ᵐ ω ∂jitterMeasure,

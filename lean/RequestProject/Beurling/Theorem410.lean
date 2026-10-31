@@ -208,7 +208,7 @@ theorem TheoremAInputsDesigned.target {θ : ℝ} {X₀ : ℕ} {P : BeurlingSyste
 /-- **Theorem 2.1, refined hypothesis (Lemma 4.6 discharged)**: as `Theorem21InputsTarget`, but
 part (ii) is reduced to the hypotheses of Lemma 4.6 and the perturbation bound `< 1/4`. -/
 def Theorem21InputsDesigned : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

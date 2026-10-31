@@ -62,14 +62,14 @@ variable {θ Λ κ₀ α γ x : ℝ} {ZB : ℂ → ℂ}
 set_option maxHeartbeats 1000000 in
 /-- **Lemma 4.7 (Late noise).** On the Rouché circle `|s - s*| = 1/log x_k` of Lemma 4.6, if
 `α_k ≥ 1`, `η ≤ θ/2`, `a_k ≤ x_k ≤ (1 + 10⁻³) a_k`, and `|D(y)| ≤ y^η` for `y ≥ a_k` (the lag
-bound (13)), then `|D̂_{≥a_k}(s)| ≤ 150 Λ x_k^{η-θ}/α_k ≤ 165 Λ x_k^{-1/8}`. -/
+bound (13)), then `|D̂_{≥a_k}(s)| ≤ 150 Λ x_k^{η-θ}/α_k ≤ 165 Λ x_k^{-θ/2}`. -/
 theorem lemma_4_7 (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) (hα : 1 ≤ α) {D : ℝ → ℝ} {η a : ℝ}
     (hη0 : 0 ≤ η) (hη : η ≤ θ / 2) (ha : 0 < a) (hax : a ≤ x) (hxa : x ≤ (1 + 1 / 1000) * a)
     (hD : ∀ y ≥ a, |D y| ≤ y ^ η) {s₀ : ℂ} (hz : ZB s₀ + Mk θ α γ x s₀ = 0)
     (hs₀ : ‖s₀ - (1 + γ * I)‖ + 1 / Real.log x ≤ designRadius x) :
     ∀ s ∈ sphere s₀ (1 / Real.log x),
       ‖lateNoise D a s‖ ≤ 150 * Λ * x ^ (η - θ) / α ∧
-      ‖lateNoise D a s‖ ≤ 165 * Λ * x ^ (-(1 / 8 : ℝ)) := by
+      ‖lateNoise D a s‖ ≤ 165 * Λ * x ^ (-(θ / 2)) := by
   intro s hs
   have hL := h.L_pos
   have hL4 := h.L_ge'
@@ -211,11 +211,11 @@ theorem lemma_4_7 (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) (hα : 1 ≤ α) {D : 
           rw [e1, e2]
           exact mul_le_mul_of_nonneg_right (by norm_num) this
   refine ⟨hmain, hmain.trans ?_⟩
-  have h1 : x ^ (η - θ) ≤ x ^ (-(1 / 8 : ℝ)) :=
+  have h1 : x ^ (η - θ) ≤ x ^ (-(θ / 2)) :=
     Real.rpow_le_rpow_of_exponent_le h.one_lt_x.le (by linarith)
   have h2 : 150 * Λ * x ^ (η - θ) / α ≤ 150 * Λ * x ^ (η - θ) := by
     apply div_le_self (by positivity) hα
-  have h4 : 150 * Λ * x ^ (η - θ) ≤ 165 * Λ * x ^ (-(1 / 8 : ℝ)) := by
+  have h4 : 150 * Λ * x ^ (η - θ) ≤ 165 * Λ * x ^ (-(θ / 2)) := by
     have hp : 0 ≤ x ^ (η - θ) := Real.rpow_nonneg hx0.le _
     have : 150 * Λ ≤ 165 * Λ := by linarith
     exact mul_le_mul this h1 hp (by linarith)

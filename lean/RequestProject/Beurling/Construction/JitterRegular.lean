@@ -384,7 +384,7 @@ theorem jitterWidthRegular {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) : Jitter
 /-- **Theorem 2.1, hypothesis on the concrete construction**: `Theorem21InputsO` without the
 conjunct `JitterWidthRegular X₀`, which is now a theorem (`jitterWidthRegular`). -/
 def Theorem21InputsP : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -392,9 +392,9 @@ def Theorem21InputsP : Prop :=
       ∀ ω ∈ goodAll E, (∀ j, ω j ∈ Set.Icc (0 : ℝ) 1) →
         ArrivalsLinked (M ω) (capH X₀) ω ∧ SlotFacts (M ω) ω ∧
         PartIRestO θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-          (fun n => solveU (θ / 2) n) (constructionScale X₀) (M ω) ∧
+          (fun n => solveU (thetaB θ) n) (constructionScale X₀) (M ω) ∧
         Theorem410RestM θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-          (fun n => solveU (θ / 2) n) ∧
+          (fun n => solveU (thetaB θ) n) ∧
         ∀ v ≥ (X₀ : ℝ), ClusterUpTo (realisedSystem (M ω) (capH X₀) ω) X₀
           (4 * v / Real.log v ^ 11) (capM1 X₀ v)
 

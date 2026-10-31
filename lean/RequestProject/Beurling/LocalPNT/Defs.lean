@@ -151,7 +151,7 @@ noncomputable def relBound (Λ v η : ℝ) : ℝ :=
 /-- **The hypotheses of Theorem 5.24** for a Beurling system `P`, the target data
 `θ, X₀, α_k, γ_k, x_k` (`T₀ = T0 θ X₀ α γ xp`), `X₀⁻ = Xm` and the height `y`.
 
-* The design: `θ ∈ [1/4, 1/2 - 10⁻⁴]`, `log X₀ ≥ 10⁸`, `X₀` even, `|α_k| ≤ 2`,
+* The design: `θ ∈ [1/20, 1/2 - 10⁻⁴]`, `log X₀ ≥ 10⁸`, `X₀` even, `|α_k| ≤ 2`,
   `x_0 ≥ exp(X₀²)` and `x_{k+1} ≥ exp(x_k)`; `X₀/2 ≤ X₀⁻ ≤ X₀` and `y ≥ X₀`.
 * `T₀` is non-decreasing on `[X₀, ∞)`: Lemma 3.3 (positivity margin (7)) for the `A`-free
   target, whose slope is `T'_cont + ρ̄_A ≥ T'_cont > 0` and whose jumps are the rigid ones.
@@ -161,7 +161,7 @@ noncomputable def relBound (Λ v η : ℝ) : ℝ :=
 `a = 8` and (18) (`LocalPNT.lpb`, `LocalPNT.lpc`). -/
 structure LPHyp (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (α γ xp : ℕ → ℝ) (Xm y : ℝ)
     (D0 : ℝ → ℝ) : Prop where
-  theta_mem : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)
+  theta_mem : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)
   logX : 10 ^ 8 ≤ Real.log X₀
   even : Even X₀
   alpha_le : ∀ k, |α k| ≤ 2

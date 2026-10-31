@@ -27,7 +27,7 @@ namespace DesignedZero
 
 /-- The hypotheses of Lemma 4.6 except the lower bound `|Z_B| ≥ 1/2` on the disc. -/
 structure Lemma46HypPre (θ Λ κ₀ α γ x : ℝ) (ZB : ℂ → ℂ) : Prop where
-  θ_ge : 1 / 4 ≤ θ
+  θ_ge : 1 / 20 ≤ θ
   θ_le : θ ≤ 1 / 2
   Λ_ge : 10 ≤ Λ
   κ_ge : Real.exp (-Λ) ≤ κ₀
@@ -95,24 +95,24 @@ def Theorem410InputsAbsorbed (θ : ℝ) (F : ℂ → ℂ) : Prop :=
     0 ≤ η ∧ η ≤ θ / 2 ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
     (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
-    AbsorbedHyp (θ / 2) A u ∧ Monotone ς ∧
+    AbsorbedHyp (thetaB θ) A u ∧ Monotone ς ∧
     (∀ x ≥ 1, countA A x ≤ x * Real.exp (-ς (Real.log x))) ∧
     (∀ k, ∀ τ : ℝ, |τ - γ k| ≤ 1 →
-      absorbedBound ς (designRadius (xp k)) (|τ| ^ (1 / (1 - θ / 2))) ≤ 1 / 16) ∧
+      absorbedBound ς (designRadius (xp k)) (|τ| ^ (1 / (1 - thetaB θ))) ≤ 1 / 16) ∧
     (∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xp k)),
       F s = ZB s + (∑' j, oscHat θ (α j) (γ j) (xp j) s) + (Dlt k s + lateNoise D (a k) s) +
-        absorbedHat (θ / 2) A u s) ∧
+        absorbedHat (thetaB θ) A u s) ∧
     (∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xp k)), ‖Dlt k s‖ ≤ 1 / 16)
 
 /-- **Lemma 4.4(a) on the discs.** On `|s - (1 + iγ_k)| ≤ δ_k`, `|Ê_A(s)| ≤ 1/16`. -/
 theorem norm_absorbedHat_le_disc {θ Λ κ₀ α γ x : ℝ} {ZB : ℂ → ℂ}
     (hH : Lemma46Hyp θ Λ κ₀ α γ x ZB) (hα : α ≤ 2) {A : Set ℝ} {u : ℝ → ℝ} {ς : ℝ → ℝ}
-    (hA : AbsorbedHyp (θ / 2) A u) (hς : Monotone ς)
+    (hA : AbsorbedHyp (thetaB θ) A u) (hς : Monotone ς)
     (hN : ∀ y ≥ 1, countA A y ≤ y * Real.exp (-ς (Real.log y)))
-    (hB : ∀ τ : ℝ, |τ - γ| ≤ 1 → absorbedBound ς (designRadius x) (|τ| ^ (1 / (1 - θ / 2))) ≤
+    (hB : ∀ τ : ℝ, |τ - γ| ≤ 1 → absorbedBound ς (designRadius x) (|τ| ^ (1 / (1 - thetaB θ))) ≤
       1 / 16)
     {s : ℂ} (hs : s ∈ closedBall (1 + γ * I) (designRadius x)) :
-    ‖absorbedHat (θ / 2) A u s‖ ≤ 1 / 16 := by
+    ‖absorbedHat (thetaB θ) A u s‖ ≤ 1 / 16 := by
   have hδ := hH.δ_le
   have hδ0 := hH.δ_pos
   have hd : ‖s - (1 + γ * I)‖ ≤ designRadius x := by rwa [mem_closedBall, dist_eq_norm] at hs
@@ -140,7 +140,7 @@ theorem Theorem410InputsAbsorbed.paper {θ : ℝ} {F : ℂ → ℂ} (h : Theorem
   obtain ⟨Λ, κ₀, η, α, γ, xp, a, ZB, D, Dlt, A, u, ς, hPre, hc, hα, hsp, hγx, hη0, hη, ha, hD,
     hA, hς, hN, hB, hdec, hDlt⟩ := h
   have hH : ∀ k, Lemma46Hyp θ Λ κ₀ (α k) (γ k) (xp k) ZB := fun k => (hPre k).toLemma46Hyp (hc k)
-  exact ⟨Λ, κ₀, η, α, γ, xp, a, ZB, D, Dlt, fun k => absorbedHat (θ / 2) A u, hH, hα, hsp, hγx,
+  exact ⟨Λ, κ₀, η, α, γ, xp, a, ZB, D, Dlt, fun k => absorbedHat (thetaB θ) A u, hH, hα, hsp, hγx,
     hη0, hη, ha, hD, hdec, hDlt,
     fun k s hs => norm_absorbedHat_le_disc (hH k) (hα k).2 hA hς hN (hB k) hs⟩
 
@@ -157,7 +157,7 @@ def TheoremAInputsAbsorbed (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :
 with Lemma 4.4(a) reduced to the weight bounds plus the counting bound on `A`, and the lower
 bound on `Z_B` reduced to Lemma 4.8(i) at the centre. -/
 def Theorem21InputsAbsorbed : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

@@ -117,22 +117,22 @@ lemma AbsorbedCoupling.smooth (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc
 
 end
 
-/-- `(log v)^{11} ≤ v^{θ/2}` for `v > 0`, `log v ≥ 10⁸`, `θ ≥ 1/4`. -/
-lemma log_pow_le_rpow {v θ : ℝ} (hv0 : 0 < v) (hv : 10 ^ 8 ≤ Real.log v) (hθ : 1 / 4 ≤ θ) :
-    Real.log v ^ 11 ≤ v ^ (θ / 2) := by
+/-- `(log v)^{11} ≤ v^{θ_b}` for `v > 0`, `log v ≥ 10⁸`, `θ ≥ 1/20`. -/
+lemma log_pow_le_rpow {v θ : ℝ} (hv0 : 0 < v) (hv : 10 ^ 8 ≤ Real.log v) (hθ : 1 / 20 ≤ θ) :
+    Real.log v ^ 11 ≤ v ^ (thetaB θ) := by
   set L := Real.log v with hL
   have hv1 : 1 ≤ v := by
     by_contra hc; push_neg at hc
     have := Real.log_nonpos hv0.le hc.le; linarith
-  have h1 : v ^ (1 / 8 : ℝ) ≤ v ^ (θ / 2) :=
-    Real.rpow_le_rpow_of_exponent_le hv1 (by linarith)
-  have h2 : v ^ (1 / 8 : ℝ) = Real.exp (L / 88) ^ 11 := by
+  have h1 : v ^ (1 / 20 : ℝ) ≤ v ^ (thetaB θ) :=
+    Real.rpow_le_rpow_of_exponent_le hv1 (thetaB_ge hθ)
+  have h2 : v ^ (1 / 20 : ℝ) = Real.exp (L / 220) ^ 11 := by
     rw [Real.rpow_def_of_pos hv0, ← Real.exp_nat_mul]; congr 1; push_cast; ring
-  have h3 : L ≤ Real.exp (L / 88) := by
-    have := Real.pow_div_factorial_le_exp (L / 88) (by positivity) 2
+  have h3 : L ≤ Real.exp (L / 220) := by
+    have := Real.pow_div_factorial_le_exp (L / 220) (by positivity) 2
     simp [Nat.factorial] at this
     nlinarith
-  have h4 : L ^ 11 ≤ Real.exp (L / 88) ^ 11 := pow_le_pow_left₀ (by linarith) h3 11
+  have h4 : L ^ 11 ≤ Real.exp (L / 220) ^ 11 := pow_le_pow_left₀ (by linarith) h3 11
   linarith
 
 /-- No element of `A` in `[v, w]`: the local count vanishes. -/
@@ -149,7 +149,7 @@ lemma countA_eq_zero {A : Set ℝ} {x : ℝ} (_hx : 0 ≤ x) (h : ∀ n ∈ A, �
   suffices hE : A ∩ Set.Icc 1 x = ∅ by rw [hE]; simp
   exact Set.eq_empty_of_forall_notMem fun n ⟨hnA, hn⟩ => h n hnA hn.2
 
-/-- **Lemma 6.26 for the construction.** Let `log X₀ ≥ 10⁸`, `θ ∈ [1/4, 1/2]`, `R` a greedy run
+/-- **Lemma 6.26 for the construction.** Let `log X₀ ≥ 10⁸`, `θ ∈ [1/20, 1/2]`, `R` a greedy run
 with jitter width `H = max(H_std, M̄₁²)` and jitters in `[0, 1]`, coupled with `A` and the
 latest-prime map (`AbsorbedCoupling`). Suppose the realised system satisfies (HBS) at every height
 (with `log X₀⁻ ≥ 100`, `X₀⁻ ≥ X₀/2 + 1`) and the cluster event holds at every `v ≥ X₀` (grid windows
@@ -157,23 +157,23 @@ at dyadic heights `≤ 4v/(log v)^{11}` hold at most `M̄₁(v)` elements). Then
 `#(A ∩ [v, v + v^{θ/2}]) ≤ v^{θ/2} (log v)^{-4}`. -/
 theorem lemma626_construction {P : BeurlingSystem} {X₀ : ℕ} {R : GreedyRun X₀} {A : Set ℝ}
     {latest : ℝ → ℝ} (C : AbsorbedCoupling P R.M R.H R.U A latest) {θ X0m η1 η2 : ℝ} {ε1 : ℝ → ℝ}
-    (hX : 10 ^ 8 ≤ Real.log X₀) (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2)
+    (hX : 10 ^ 8 ≤ Real.log X₀) (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2)
     (hRH : R.H = capH X₀) (hU : ∀ j, R.U j ∈ Icc (0 : ℝ) 1)
     (hHBS : ∀ z, P.HBS X0m z η1 η2 ε1) (hX0m : 100 ≤ Real.log X0m)
     (hX0mX : (X₀ : ℝ) / 2 + 1 ≤ X0m)
     (hcl : ∀ v ≥ (X₀ : ℝ), ClusterUpTo P X₀ (4 * v / Real.log v ^ 11) (capM1 X₀ v)) :
     ∀ v ≥ (X₀ : ℝ),
-      (Absorbed.localCountA A v (v + v ^ (θ / 2)) : ℝ) ≤ v ^ (θ / 2) * Real.log v ^ (-4 : ℤ) := by
+      (Absorbed.localCountA A v (v + v ^ (thetaB θ)) : ℝ) ≤ v ^ (thetaB θ) * Real.log v ^ (-4 : ℤ) := by
   intro v hv
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := one_lt_of_logX hX0 hX
   obtain ⟨hv0, hL, hl, -⟩ := height_facts hX0 hX hv
-  set h := v ^ (θ / 2) with hh
+  set h := v ^ (thetaB θ) with hh
   set L := Real.log v with hLdef
   have hv1 : 1 < v := by linarith
-  have h1 : 1 ≤ h := Real.one_le_rpow hv1.le (by linarith)
+  have h1 : 1 ≤ h := Real.one_le_rpow hv1.le (thetaB_pos (by linarith)).le
   have hlt : h < v := by
-    have := Real.rpow_lt_rpow_of_exponent_lt hv1 (show θ / 2 < 1 by linarith)
+    have := Real.rpow_lt_rpow_of_exponent_lt hv1 (show thetaB θ < 1 from (thetaB_le_quarter (by linarith)).trans_lt (by norm_num))
     rwa [Real.rpow_one] at this
   by_cases hne : ∃ n ∈ A, v ≤ n ∧ (n : ℝ) ≤ v + h
   swap

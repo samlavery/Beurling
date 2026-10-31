@@ -308,7 +308,7 @@ theorem exists_system_zeros_escaping (h : Theorem21) :
         (∀ k, ρ k ∈ puncturedHalfPlane a ∧ F (ρ k) = 0) ∧
         Tendsto (fun k => (ρ k).re) atTop (𝓝 1) ∧
         Tendsto (fun k => |(ρ k).im|) atTop atTop := by
-  have hθ : (1 / 4 : ℝ) ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000) := by
+  have hθ : (1 / 4 : ℝ) ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000) := by
     constructor <;> norm_num
   obtain ⟨P, hP⟩ := exists_realisation h hθ
   refine ⟨P, fun β hβ => ?_, hP.tendsto_abs_im (by norm_num) (by norm_num)⟩

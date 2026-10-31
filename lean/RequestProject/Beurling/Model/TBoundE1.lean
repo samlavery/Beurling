@@ -94,8 +94,8 @@ theorem lemma626_QE {n : ℕ} (hn : 2 ≤ n) {ω : JitterΩ}
     (hTB : ∀ m, ttB X₀ m < ttB X₀ n → ω ∈ tB (θ := θ) (X₀ := X₀) m)
     (hN : ω ∈ NiceEv θ X₀) {x : ℝ} (hxW : x ≤ 2 ^ n * (X₀ : ℝ) / 2) {u : ℝ}
     (hu : (X₀ : ℝ) ≤ u) (hux : u < x) :
-    (localCountA (absSet X₀ (DF θ X₀ ω)) u (u + u ^ (θ / 2)) : ℝ) ≤
-      u ^ (θ / 2) * Real.log u ^ (-4 : ℤ) := by
+    (localCountA (absSet X₀ (DF θ X₀ ω)) u (u + u ^ (thetaB θ)) : ℝ) ≤
+      u ^ (thetaB θ) * Real.log u ^ (-4 : ℤ) := by
   obtain ⟨hU, hSG, hnt⟩ := hN
   have hX := hc.hX
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _

@@ -54,7 +54,7 @@ noncomputable def queueInputsV_of_W (hc : Cond θ X₀) (Q : QueueInputsW θ X�
 /-- **Theorem 2.1, hypothesis with §6 and Lemma 5.22 formalized** up to the variance inputs of
 Lemma 5.22, Corollary 5.40 and the Cover Bound. -/
 def Theorem21InputsW : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → Nonempty (QueueInputsW θ X₀)
 
 /-- `Theorem21InputsW` implies `Theorem21InputsV`, given (84). -/

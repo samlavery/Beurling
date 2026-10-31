@@ -63,8 +63,8 @@ lemma lag_abs_le (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Se
 /-- The lag is integrable on `(1, a]`. -/
 lemma lag_integrableOn_Ioc (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.smoothNumbers)
     {κ θ : ℝ} (hκ : 0 < κ) (hθ0 : 0 < θ) (hθ2 : θ < 2) {A : Set ℝ} {u : ℝ → ℝ}
-    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) (hAfin : LocFin A)
-    (hcap : ∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ 0.1 / Real.log v)
+    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (thetaB θ) = a) (hAfin : LocFin A)
+    (hcap : ∀ v ≥ (X₀ : ℝ), absorbedDensity (thetaB θ) A u v ≤ 0.1 / Real.log v)
     {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : ℝ} (hα : ∀ k, |α k| ≤ C) (hxp : (X₀ : ℝ) ≤ xp 0)
     {η K : ℝ} (hη : 0 ≤ η) (hη2 : η < 2)
     (hD : ∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ K * x ^ η) (a : ℝ) :
@@ -94,7 +94,7 @@ the cap of (6) is inactive, the lag bound `|D(x)| ≤ K x^η` holds on `[X₀, �
 designed amplitudes and heights. -/
 def Theorem410InputsDec (θ : ℝ) (P : BeurlingSystem) : Prop :=
   ∃ (X₀ : ℕ) (κ κ₀ η K : ℝ) (xp a : ℕ → ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ : ℕ → ℝ),
-    10 ^ 8 ≤ Real.log X₀ ∧ X₀ ∈ X₀.smoothNumbers ∧ 1 / 4 ≤ θ ∧ θ ≤ 1 / 2 ∧
+    10 ^ 8 ≤ Real.log X₀ ∧ X₀ ∈ X₀.smoothNumbers ∧ 1 / 20 ≤ θ ∧ θ ≤ 1 / 2 ∧
     Real.exp (-Real.log X₀) ≤ κ ∧ κ ≤ 1 ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧
     (X₀ : ℝ) ^ 2 ≤ Real.log (xp 0) ∧
@@ -106,9 +106,9 @@ def Theorem410InputsDec (θ : ℝ) (P : BeurlingSystem) : Prop :=
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
     (∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ K * x ^ η) ∧
     (∀ k, ∀ y ≥ a k, |lagOf P θ X₀ κ A u α γ xp y| ≤ y ^ η) ∧
-    AbsorbedHyp (θ / 2) A u ∧
+    AbsorbedHyp (thetaB θ) A u ∧
     (∀ n ∈ A, (X₀ : ℝ) ≤ u n) ∧
-    (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ 0.1 / Real.log v) ∧
+    (∀ v ≥ (X₀ : ℝ), absorbedDensity (thetaB θ) A u v ≤ 0.1 / Real.log v) ∧
     (∀ n ∈ A, ∃ r : ℝ, (X₀ : ℝ) - CaplLink.capH X₀ X₀ / 2 ≤ r ∧ r < absorbY X₀ n) ∧
     (∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →
       countA A x ≤ x * Real.exp (-sigmaStar (Real.log X₀) (Real.log x)))
@@ -182,7 +182,7 @@ theorem Theorem410InputsDec.toAbs {θ : ℝ} {P : BeurlingSystem} (h : Theorem41
       unfold amplitudeOf; rw [heightScale_eq]
     rw [e, abs_of_nonneg (div_nonneg (by linarith) hγ0.le), div_le_iff₀ hγ0]
     linarith [hm.1]
-  have hAu : ∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + u n ^ (θ / 2) = n := fun n hn =>
+  have hAu : ∀ n ∈ A, (X₀ : ℝ) ≤ u n ∧ u n + u n ^ (thetaB θ) = n := fun n hn =>
     ⟨huX n hn, (hA.weight n hn).u_eq⟩
   have hθ0 : 0 < θ := by linarith
   have hη2 : η < 2 := by linarith
@@ -227,7 +227,7 @@ def TheoremAInputsDec (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21InputsAbs`, with the decomposition (14) of
 `ζ_P` and the entireness of `D̂_{<a_k}` derived. -/
 def Theorem21InputsDec : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

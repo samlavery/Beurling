@@ -43,7 +43,7 @@ lemma sq_le_imp {A B : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B) (h : A ^ 2 ≤ B ^ 2) 
   (pow_le_pow_iff_left₀ hA hB (by norm_num)).mp h
 
 set_option maxHeartbeats 1000000 in
-theorem lemma48_numerics {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) {X₀ a xk : ℝ}
+theorem lemma48_numerics {θ : ℝ} (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) {X₀ a xk : ℝ}
     (hX0 : 0 < X₀) (hX : 10 ^ 8 ≤ Real.log X₀) (ha : X₀ ≤ a) (haxk : a ≤ xk)
     (hxk : xk ≤ (1 + 1 / 1000) * a) (hxk0 : X₀ ^ 2 ≤ Real.log xk) {c : ℝ} (hc0 : 0 < c)
     (hc : c ≤ 4 * X₀) {J : ℕ} (hJ : 2 ^ J * (X₀ + 1) ≤ 2 * a) :
@@ -95,7 +95,11 @@ theorem lemma48_numerics {θ : ℝ} (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
   have hη8 : η ≤ (1 / 2 - θ) / 2 := by
     simp only [hηdef, lagExponent]
     exact div_le_div_of_nonneg_right (min_le_right _ _) (by norm_num)
-  have hηle : η ≤ 1 / 8 := by linarith
+  have hηle : η ≤ 1 / 8 := by
+    have h1 : η ≤ θ / 2 := by
+      simp only [hηdef, lagExponent]
+      exact div_le_div_of_nonneg_right (min_le_left _ _) (by norm_num)
+    linarith
   -- the height
   have hΛpos : 0 < Λ := by linarith
   have hGeq : G = xk ^ (1 - θ) / (8 * Λ ^ 3) := by

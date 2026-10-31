@@ -19,9 +19,9 @@ open MeasureTheory Set Real CaplLink QueueBound LagSplit SlotModel InitialRange 
 
 namespace Construction
 
-/-- **The lag bound from the slot data**: for `log X₀ ≥ 10⁸`, `θ ∈ [1/4, 1/2 - 10⁻⁴]`, the queue data
+/-- **The lag bound from the slot data**: for `log X₀ ≥ 10⁸`, `θ ∈ [1/20, 1/2 - 10⁻⁴]`, the queue data
 and the landing data give `|N(x) - T(x)| ≤ x^η` for every `x ≥ X₀`. -/
-theorem lag_of_slotData {θ : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000) {X₀ : ℕ}
+theorem lag_of_slotData {θ : ℝ} (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 1 / 10000) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) (M : SlotModel X₀) (N : ℝ → ℝ) (hq : M.QueueWindowData)
     (κp : ℝ → ℝ) (hκp : ∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x)
     (hland : ∀ x ≥ (X₀ : ℝ), (X₀ : ℝ) + 2 * capH X₀ x ≤ x →
@@ -43,7 +43,7 @@ theorem lag_of_slotData {θ : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2 - 
         -(capH X₀ x / 2) * (1 + κp x / Real.log x) := by ring
     rw [e] at h12
     have hB0 := queueB_nonneg hX0 hX hx
-    exact lag_rpow_of_queue hθ1 hθ2 hX0 hX hx
+    exact lag_rpow_of_queue (by linarith) hθ2 hX0 hX hx
       (abs_lag_le_of_two_sided hLx (hκp x hx).1 (hκp x hx).2 hH hB0 le_rfl h12.1 h12.2)
   · exact lag_rpow_initial hθ1 hθ2 hX0 hX hx (hκp X₀ le_rfl).1 (hκp X₀ le_rfl).2
       ((hinit x hx hearly).abs_le M hX hq hx hearly)

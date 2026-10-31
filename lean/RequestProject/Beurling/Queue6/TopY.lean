@@ -55,7 +55,7 @@ noncomputable def queueInputsX_of_Y (hX : 1 < (X₀ : ℝ)) (Q : QueueInputsY θ
 
 /-- **Theorem 2.1, hypothesis with §6 formalized and Corollary 5.40 plugged in.** -/
 def Theorem21InputsY : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → Nonempty (QueueInputsY θ X₀)
 
 /-- `Theorem21InputsY` implies `Theorem21InputsX`. -/

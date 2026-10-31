@@ -45,6 +45,26 @@ theorem capH_le_rpow {X₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log
   have e : lagExponent (1 / 4) = 1 / 8 := by unfold lagExponent; norm_num
   rwa [e, abs_of_nonneg (by linarith)] at h
 
+/-- `H(x) ≤ x^{1/40}` (the lag bound at `θ = 1/20`). -/
+theorem capH_le_rpow40 {X₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) (hx : X₀ ≤ x) :
+    capH X₀ x ≤ x ^ (1 / 40 : ℝ) := by
+  have hH := one_le_capH hX0 hX hx
+  have hB := queueB_nonneg hX0 hX hx
+  have h := lag_rpow_of_queue (θ := 1 / 20) (D := capH X₀ x) (by norm_num) (by norm_num) hX0 hX
+    hx (by rw [abs_of_nonneg (by linarith)]; linarith)
+  have e : lagExponent (1 / 20) = 1 / 40 := by unfold lagExponent; norm_num
+  rwa [e, abs_of_nonneg (by linarith)] at h
+
+/-- `H(x) ≤ x^{1/400}` (the lag bound at `θ = 1/200`). -/
+theorem capH_le_rpow400 {X₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) (hx : X₀ ≤ x) :
+    capH X₀ x ≤ x ^ (1 / 400 : ℝ) := by
+  have hH := one_le_capH hX0 hX hx
+  have hB := queueB_nonneg hX0 hX hx
+  have h := lag_rpow_of_queue (θ := 1 / 200) (D := capH X₀ x) (by norm_num) (by norm_num) hX0
+    hX hx (by rw [abs_of_nonneg (by linarith)]; linarith)
+  have e : lagExponent (1 / 200) = 1 / 400 := by unfold lagExponent; norm_num
+  rwa [e, abs_of_nonneg (by linarith)] at h
+
 /-- **The initial range lies in one dyadic scale**: `X₀ ≤ x < X₀ + 2H(x)` implies `x < 2X₀`. -/
 theorem lt_two_mul_of_initial {X₀ x : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hx : X₀ ≤ x) (hearly : x < X₀ + 2 * capH X₀ x) : x < 2 * X₀ := by
@@ -149,10 +169,10 @@ def PartIInputsSlotModelInit (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop
   ∃ (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) (κp : ℝ → ℝ) (M : SlotModel X₀),
     0 < κ ∧ κ ≤ 1 ∧
     Spacing xp ∧ (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
-    (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) ∧
+    (∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (thetaB θ) = a) ∧
     LocFin A ∧
-    (∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
-    (∀ x, M.T x = target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A u) (osc θ α γ xp) x) ∧
+    (∀ v ≥ (X₀ : ℝ), absorbedDensity (thetaB θ) A u v ≤ (Real.log v) ^ (-4 : ℤ)) ∧
+    (∀ x, M.T x = target X₀ κ (countA A) (absorbedDensityCap (thetaB θ) A u) (osc θ α γ xp) x) ∧
     M.QueueWindowData ∧
     (∀ x ≥ (X₀ : ℝ), 0 ≤ κp x ∧ κp x ≤ Real.log x) ∧
     (∀ x ≥ (X₀ : ℝ), (X₀ : ℝ) + 2 * capH X₀ x ≤ x →
@@ -181,7 +201,7 @@ def TheoremAInputsInitSize (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :
 bound of Proposition 4.1 (derived from the slot model) and without the size conditions on `κ₀`
 and `x⁺_k` beyond the parameter choices of Section 2.2 (`Theorem410InputsSize`). -/
 def Theorem21InputsInitSize : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

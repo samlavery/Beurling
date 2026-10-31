@@ -46,7 +46,7 @@ noncomputable def queueInputsY_of_Z (hX : 10 ^ 8 ≤ Real.log X₀) (Q : QueueIn
 
 /-- **Theorem 2.1, hypothesis**: Lemma 5.22 variance inputs, `R1Ident`, (s2) on `𝓘_u`. -/
 def Theorem21InputsZ : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → Nonempty (QueueInputsZ θ X₀)
 
 /-- `Theorem21InputsZ` implies `Theorem21InputsY`. -/

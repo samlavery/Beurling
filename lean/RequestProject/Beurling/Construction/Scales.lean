@@ -137,7 +137,7 @@ def Theorem410RestM (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (
 `a_k` fixed.** `Theorem21InputsL` with `a := constructionScale X₀` and without the scale
 condition `0 < a_k ≤ x_k ≤ 1.001 a_k` (proved, `constructionScale_spec`). -/
 def Theorem21InputsM : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -145,9 +145,9 @@ def Theorem21InputsM : Prop :=
       ∀ ω ∈ goodAll E, (∀ j, ω j ∈ Icc (0 : ℝ) 1) →
         {k | placedAt (M ω) k}.Infinite ∧
         PartIRestJ θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-          (fun n => solveU (θ / 2) n) (constructionScale X₀) (M ω) ∧
+          (fun n => solveU (thetaB θ) n) (constructionScale X₀) (M ω) ∧
         Theorem410RestM θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-          (fun n => solveU (θ / 2) n) ∧
+          (fun n => solveU (thetaB θ) n) ∧
         ∀ v ≥ (X₀ : ℝ), ClusterUpTo (realisedSystem (M ω) (capH X₀) ω) X₀
           (4 * v / Real.log v ^ 11) (capM1 X₀ v)
 

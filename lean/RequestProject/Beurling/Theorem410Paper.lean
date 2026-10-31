@@ -190,18 +190,21 @@ lemma rpow_neg_two_fifths_le (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) :
   have := Real.add_one_le_exp (Real.log x * (2 / 5))
   norm_num at this ⊢; linarith
 
-/-- `165 Λ x^{-1/8} ≤ 1/100`. -/
+/-- `165 Λ x^{-θ/2} ≤ 1/100` (`θ ≥ 1/20`). -/
 lemma lateNoise_numeric (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) :
-    165 * Λ * x ^ (-(1 / 8 : ℝ)) ≤ 1 / 100 := by
+    165 * Λ * x ^ (-(θ / 2)) ≤ 1 / 100 := by
   have hL := h.L_ge_big
   have hΛ := h.Λ_ge
   have hΛL : Λ ≤ Real.log x := by
     have := h.loglog_ge
     have := Real.log_le_sub_one_of_pos h.L_pos
     linarith
-  rw [h.rpow_eq_exp, show Real.log x * (-(1 / 8 : ℝ)) = -(Real.log x / 8) by ring, Real.exp_neg]
-  have hq := Real.quadratic_le_exp_of_nonneg (show 0 ≤ Real.log x / 8 by linarith)
-  have hpos := Real.exp_pos (Real.log x / 8)
+  have hmono : x ^ (-(θ / 2)) ≤ x ^ (-(1 / 40 : ℝ)) :=
+    Real.rpow_le_rpow_of_exponent_le h.one_lt_x.le (by linarith [h.θ_ge])
+  refine le_trans (mul_le_mul_of_nonneg_left hmono (by linarith)) ?_
+  rw [h.rpow_eq_exp, show Real.log x * (-(1 / 40 : ℝ)) = -(Real.log x / 40) by ring, Real.exp_neg]
+  have hq := Real.quadratic_le_exp_of_nonneg (show 0 ≤ Real.log x / 40 by linarith)
+  have hpos := Real.exp_pos (Real.log x / 40)
   rw [← div_eq_mul_inv, div_le_div_iff₀ hpos (by norm_num)]
   nlinarith
 
@@ -408,7 +411,7 @@ the hypotheses of Lemma 4.6 (with the bounds of Lemma 4.2 on `Z_B`), the decompo
 lag bound (13) beyond `a_k`, Lemma 4.8(ii) and Lemma 4.4(a). Lemmas 4.6 and 4.7, the bounds on
 the oscillations, the perturbation bound and Rouché's theorem are proved. -/
 def Theorem21InputsPaper : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

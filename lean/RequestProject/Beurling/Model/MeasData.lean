@@ -177,18 +177,18 @@ lemma solveU_mono {b : ℝ} (hb : 0 < b) : Monotone (solveU b) := by
     linarith
 
 lemma measurable_uA {θ : ℝ} (hθ : 0 < θ) : Measurable (uA θ) :=
-  (solveU_mono (by linarith : 0 < θ / 2)).measurable
+  (solveU_mono (thetaB_pos (by linarith))).measurable
 
 /-- The bump `1[u_a ≤ v ≤ a] v^{-b}` is jointly measurable. -/
 lemma measurable_bump {θ : ℝ} (hθ : 0 < θ) :
     Measurable (Function.uncurry fun a v : ℝ =>
-      (Icc (uA θ a) a).indicator (fun w => w ^ (-(θ / 2))) v) := by
+      (Icc (uA θ a) a).indicator (fun w => w ^ (-(thetaB θ))) v) := by
   have hS : MeasurableSet {p : ℝ × ℝ | uA θ p.1 ≤ p.2 ∧ p.2 ≤ p.1} :=
     (measurableSet_le ((measurable_uA hθ).comp measurable_fst) measurable_snd).inter
       (measurableSet_le measurable_snd measurable_fst)
   have : (Function.uncurry fun a v : ℝ =>
-      (Icc (uA θ a) a).indicator (fun w => w ^ (-(θ / 2))) v) =
-      {p : ℝ × ℝ | uA θ p.1 ≤ p.2 ∧ p.2 ≤ p.1}.indicator fun p => p.2 ^ (-(θ / 2)) := by
+      (Icc (uA θ a) a).indicator (fun w => w ^ (-(thetaB θ))) v) =
+      {p : ℝ × ℝ | uA θ p.1 ≤ p.2 ∧ p.2 ≤ p.1}.indicator fun p => p.2 ^ (-(thetaB θ)) := by
     funext p; simp [Set.indicator, Function.uncurry]
   rw [this]
   exact (measurable_snd.pow_const _).indicator hS
@@ -201,21 +201,21 @@ include hD hL hP
 /-- **The capped absorbed density `ρ̄_A(v)` is jointly measurable.** -/
 theorem measurable_rhoCap (hX : 10 ^ 8 ≤ Real.log X₀) {θ : ℝ} (hθ : 0 < θ) :
     Measurable fun p : Ω × ℝ =>
-      absorbedDensityCap (θ / 2) (absSet X₀ (D p.1)) (uA θ) p.2 := by
+      absorbedDensityCap (thetaB θ) (absSet X₀ (D p.1)) (uA θ) p.2 := by
   classical
   unfold absorbedDensityCap absorbedDensity absorbedBump
   refine Measurable.min ?_ (measurable_const.div (Real.measurable_log.comp measurable_snd))
   simp_rw [absSet_eq_image]
   refine measurable_tsum_image (S := fun ω => {e | AbsQ X₀ (D ω) e}) (hD.absQ hX)
     (fun e => hD.eval e) (measurable_bump hθ) (fun ω v => ?_)
-  refine (finite_le hL hP ω (v + v ^ (θ / 2))).subset ?_
+  refine (finite_le hL hP ω (v + v ^ (thetaB θ))).subset ?_
   rintro e ⟨hq, hF⟩
   refine ⟨hq.2.1, ?_⟩
   have hmem : v ∈ Icc (uA θ (eval (D ω) e)) (eval (D ω) e) := by
     by_contra hc
     exact hF (indicator_of_notMem hc _)
   have hpos : 0 ≤ eval (D ω) e := le_trans zero_le_one (one_le_eval (hP ω).pos hq.2.1)
-  have hb : 0 < θ / 2 := by linarith
+  have hb : 0 < thetaB θ := thetaB_pos (by linarith)
   obtain ⟨h0, h1⟩ := solveU_spec hb hpos
   have hv0 : 0 ≤ v := h0.trans hmem.1
   have := Real.rpow_le_rpow h0 hmem.1 hb.le

@@ -50,7 +50,7 @@ lemma exp_half_ge {L : ℝ} (hL : 10000 ≤ L) : 20 * L ^ 3 ≤ Real.exp (L / 2)
 
 /-- **The pointwise bound of one oscillation** (Step 4, "Pointwise"; eq. (ampl)): for
 `w ≥ x_k`, `|R_k'(w)| ≤ (x_k/w)^{1/2}/(2 L_k³)`. -/
-lemma abs_deriv_oscTerm_le' {θ γ xk w : ℝ} (hθ1 : 1 / 4 ≤ θ) (hθ2 : θ ≤ 1 / 2)
+lemma abs_deriv_oscTerm_le' {θ γ xk w : ℝ} (hθ1 : 1 / 20 ≤ θ) (hθ2 : θ ≤ 1 / 2)
     (hxk : 0 < xk) (hL : 10000 ≤ Real.log xk)
     (hγ : γ ∈ Icc (DesignedZero.heightScale θ Construction.kappa0Param xk)
       (2 * DesignedZero.heightScale θ Construction.kappa0Param xk)) (hw : xk ≤ w) :

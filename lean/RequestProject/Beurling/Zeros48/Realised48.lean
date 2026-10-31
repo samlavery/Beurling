@@ -19,16 +19,16 @@ set_option maxHeartbeats 400000 in
 /-- **Lemma 4.8(ii), the pieces of `D̂_{<a_k}`, for the realised system.** From the target
 formula (6), the lag bound (13) on `[X₀, ∞)`, `X₀` even (so `X₀`-smooth), jitters in `[0, 1]` and
 the realised primes forming a Beurling system: `Lemma48PiecesCount` holds at every scale `k`. -/
-theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (hXs : X₀ ∈ X₀.smoothNumbers) (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1)
     (h : RealisedOK M (capH X₀) U)
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) U))
-      (absorbedDensityCap (θ / 2) (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n))
+      (absorbedDensityCap (thetaB θ) (realisedA M (capH X₀) U) (fun n => solveU (thetaB θ) n))
       (osc θ (designedAlpha (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀)
+          (realisedA M (capH X₀) U) (fun n => solveU (thetaB θ) n) kappa0Param (switchOn X₀)
           (constructionScale X₀))
         (designedGamma (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀)
+          (realisedA M (capH X₀) U) (fun n => solveU (thetaB θ) n) kappa0Param (switchOn X₀)
           (constructionScale X₀))
         (switchOn X₀)) x)
     (hlag : ∀ x ≥ (X₀ : ℝ),
@@ -36,24 +36,24 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
     (k : ℕ) :
     Lemma48PiecesCount X₀ (heightScale θ kappa0Param (switchOn X₀ k))
       (earlyOf (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀) (realisedA M (capH X₀) U)
-        (fun n => solveU (θ / 2) n)
+        (fun n => solveU (thetaB θ) n)
         (designedAlpha (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀)
+          (realisedA M (capH X₀) U) (fun n => solveU (thetaB θ) n) kappa0Param (switchOn X₀)
           (constructionScale X₀))
         (designedGamma (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA M (capH X₀) U) (fun n => solveU (θ / 2) n) kappa0Param (switchOn X₀)
+          (realisedA M (capH X₀) U) (fun n => solveU (thetaB θ) n) kappa0Param (switchOn X₀)
           (constructionScale X₀))
         (switchOn X₀) (constructionScale X₀) k) := by
   classical
   set P := realisedSystem M (capH X₀) U with hP
   set A := realisedA M (capH X₀) U with hA
-  set u : ℝ → ℝ := fun n => solveU (θ / 2) n with hu
+  set u : ℝ → ℝ := fun n => solveU (thetaB θ) n with hu
   set κ := kappaParam (X₀ : ℝ) with hκdef
   set xp := switchOn (X₀ : ℝ) with hxpdef
   set αd := designedAlpha P θ X₀ κ A u kappa0Param xp (constructionScale X₀) with hαd
   set γd := designedGamma P θ X₀ κ A u kappa0Param xp (constructionScale X₀) with hγd
   set R := osc θ αd γd xp with hR
-  set rhoA := absorbedDensityCap (θ / 2) A u with hrhoA
+  set rhoA := absorbedDensityCap (thetaB θ) A u with hrhoA
   set ak := constructionScale (X₀ : ℝ) k with hak
   set xk := xp k with hxk
   set η := lagExponent θ with hη
@@ -89,6 +89,7 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
   have hη8 : η ≤ 1 / 8 := by
     simp only [hη, lagExponent]
     have := min_le_right θ (1 / 2 - θ)
+    have := min_le_left θ (1 / 2 - θ)
     linarith
   -- the target below `X₀`, the absorbed set lies above `X₀`
   have hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊ := by
@@ -127,13 +128,14 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 /
   have hL0 : 0 ≤ L := Finset.sum_nonneg fun j _ => oscLip_nonneg (hxp0 j)
   -- the hypotheses on `ρ̄_A` and `R` on `[X₀, a_k]`
   have hAfin : LocFin A := realisedA_locFin M (capH X₀) U
-  set ρAF := rhoAF (θ / 2) A hAfin u ak with hρAF
+  set ρAF := rhoAF (thetaB θ) A hAfin u ak with hρAF
   have hc : ContHyp X₀ ak rhoA R ρAF (oscPart θ αd γd xp k) (oscDeriv θ αd γd xp k) L := by
     refine ⟨fun v hv => ?_, measurable_rhoAF _ _ _ _ _, fun v hv => ?_, fun v hv => ?_,
       fun x hx => ?_, measurable_oscDeriv _ _ _ _ _, fun x hx => ?_,
       fun u' hu' v hv huv => ?_, fun u' hu' v hv huv => ?_⟩
-    · exact absorbedDensityCap_eq_rhoAF (by linarith) (by linarith) hAfin
-        (fun n hn => solveU_spec (by linarith) (by linarith [hAlarge n hn])) (by linarith [hv.1])
+    · exact absorbedDensityCap_eq_rhoAF (thetaB_pos (by linarith)) (thetaB_le_one (by linarith))
+        hAfin (fun n hn => solveU_spec (thetaB_pos (by linarith)) (by linarith [hAlarge n hn]))
+        (by linarith [hv.1])
         hv.2
     · exact absorbedDensityCap_nonneg (by linarith [hv.1])
     · refine (absorbedDensityCap_le v).trans ?_

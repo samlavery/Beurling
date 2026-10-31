@@ -39,7 +39,7 @@ lemma measurable_TpCont (ω : JitterΩ) : Measurable (TpCont θ X₀ ω) := by
   have hP : ∀ ω : JitterΩ, Pos2 (DM (Mcl θ X₀ ω) (Ucl ω)) := fun ω =>
     pos2_DM hc.hX (fun j => clamp01_mem (ω j)) (by rw [Mcl_eq hc]; exact (hc.std ω).limModel_low)
   have hr := measurable_rhoCap hD hL hP hc.hX (θ := θ) (by linarith [hc.hθ.1])
-  have hr' : Measurable fun y => absorbedDensityCap (θ / 2)
+  have hr' : Measurable fun y => absorbedDensityCap (thetaB θ)
       (absSet X₀ (DM (Mcl θ X₀ ω) (Ucl ω))) (uA θ) y :=
     hr.comp (f := fun y : ℝ => ((ω, y) : JitterΩ × ℝ)) (measurable_const.prodMk measurable_id)
   rw [show DF θ X₀ ω = DM (Mcl θ X₀ ω) (Ucl ω) from rfl]

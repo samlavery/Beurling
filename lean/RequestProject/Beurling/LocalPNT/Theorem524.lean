@@ -91,14 +91,14 @@ Corollary 5.4, (eq:T1), Remark 5.3) — the form of (LP-a) of the paper — for 
 `X₀ ≤ y ≤ ž`. The positivity margin (Lemma 3.3) enters as `hmono`. -/
 theorem theorem_5_24_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ → ℝ}
     {Xm zc y : ℝ}
-    (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀) (hev : Even X₀)
+    (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀) (hev : Even X₀)
     (hα : ∀ k, |α k| ≤ 2) (h0 : Real.exp ((X₀ : ℝ) ^ 2) ≤ xp 0)
     (hsp : ∀ k, Real.exp (xp k) ≤ xp (k + 1)) (hmono : MonotoneOn (T0 θ X₀ α γ xp) (Ici (X₀ : ℝ)))
-    (cntA rhoA : ℝ → ℝ) (hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 4 : ℝ) ≤ Xm) (hXmX : Xm ≤ X₀)
+    (cntA rhoA : ℝ → ℝ) (hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 40 : ℝ) ≤ Xm) (hXmX : Xm ≤ X₀)
     (hfl : ∀ u, u < Xm → P.N u = ⌊u⌋₊)
     (hlag : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
       |P.N u - Target.target X₀ (kap X₀) cntA rhoA (osc θ α γ xp) u| ≤ u ^ lagExponent θ)
-    (hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc → |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| ≤ 2 * u ^ (θ / 2))
+    (hA : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc → |cntA u - ∫ v in (X₀ : ℝ)..u, rhoA v| ≤ 2 * u ^ (thetaB θ))
     (hy : (X₀ : ℝ) ≤ y) (hyz : y ≤ zc) :
     Theorem524Concl P X₀ y :=
   (lpHyp_of_lag hθ hX hev hα h0 hsp hmono cntA rhoA hXm hXmX hfl hlag hA hy hyz).theorem_5_24

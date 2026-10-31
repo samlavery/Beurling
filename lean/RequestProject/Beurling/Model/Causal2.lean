@@ -190,17 +190,17 @@ theorem causal2 {θ : ℝ} (hθ0 : 0 < θ) (hθ2 : θ ≤ 2) (hX : 10 ^ 8 ≤ Re
   obtain ⟨hY1, hY2⟩ := height2_bounds hX hz
   have hP := pos2_DM hX hU hM
   have hP' := pos2_DM hX hU' hM'
-  have hzθ : z ^ (θ / 2) ≤ z := by
-    have : z ^ (θ / 2) ≤ z ^ (1 : ℝ) :=
-      Real.rpow_le_rpow_of_exponent_le (by linarith) (by linarith)
+  have hzθ : z ^ (thetaB θ) ≤ z := by
+    have : z ^ (thetaB θ) ≤ z ^ (1 : ℝ) :=
+      Real.rpow_le_rpow_of_exponent_le (by linarith) (thetaB_le_one (by linarith))
     rwa [Real.rpow_one] at this
-  have hzθ0 : 0 ≤ z ^ (θ / 2) := Real.rpow_nonneg (by linarith) _
+  have hzθ0 : 0 ≤ z ^ (thetaB θ) := Real.rpow_nonneg (by linarith) _
   have hTeq : ∀ x ≤ z, targetD θ X₀ D x = targetD θ X₀ D' x := by
     intro x hx
     refine targetD_congr hθ0 hX hP.pos hP'.pos hDA (by linarith) hY2 le_rfl (fun n hn => ?_)
       (fun j hj => ?_) hx
-    · have h1 := absorbY_le_sqrt hX0 hX (x := z + z ^ (θ / 2)) (by linarith) hn
-      have h2 := rpow_half_le (x := z + z ^ (θ / 2)) (z := z) (by linarith) (by linarith)
+    · have h1 := absorbY_le_sqrt hX0 hX (x := z + z ^ (thetaB θ)) (by linarith) hn
+      have h2 := rpow_half_le (x := z + z ^ (thetaB θ)) (z := z) (by linarith) (by linarith)
       linarith
     · obtain ⟨hXa, -, -, -⟩ := constructionScale_spec hX0 hX j
       exact gap_gamma2 hX hXa (scale_add_two_capH_le hX0 hX j) hj

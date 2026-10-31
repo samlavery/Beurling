@@ -35,7 +35,7 @@ empty below `log x = (log X₀)²`, and `#(A ∩ [1, x]) ≤ x e^{-ς_*(log x)}`
 def Theorem410InputsRankin (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (X₀ : ℕ) (κ T κ₀ η : ℝ) (xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
     (A : Set ℝ) (u : ℝ → ℝ),
-    10 ^ 8 ≤ Real.log X₀ ∧ 1 / 4 ≤ θ ∧ θ ≤ 1 / 2 ∧ 0 < κ ∧ κ ≤ 1 ∧
+    10 ^ 8 ≤ Real.log X₀ ∧ 1 / 20 ≤ θ ∧ θ ≤ 1 / 2 ∧ 0 < κ ∧ κ ≤ 1 ∧
     Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * T ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧
     (∀ k, 1 < xp k) ∧ (∀ k, 2 * Real.log X₀ ≤ Real.log (Real.log (xp k))) ∧
@@ -47,7 +47,7 @@ def Theorem410InputsRankin (θ : ℝ) (F : ℂ → ℂ) : Prop :=
     0 ≤ η ∧ η ≤ θ / 2 ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
     (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
-    AbsorbedHyp (θ / 2) A u ∧
+    AbsorbedHyp (thetaB θ) A u ∧
     (∀ x ≥ (1 : ℝ), Real.log x ≤ Real.log X₀ ^ 2 → countA A x = 0) ∧
     (∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →
       countA A x ≤ x * Real.exp (-sigmaStar (Real.log X₀) (Real.log x))) ∧
@@ -55,7 +55,7 @@ def Theorem410InputsRankin (θ : ℝ) (F : ℂ → ℂ) : Prop :=
       F s = ZBcont X₀ κ s +
         (∑' j, oscHat θ (designAlpha X₀ κ θ κ₀ Dlt xp j) (designGamma X₀ κ θ κ₀ Dlt xp j)
           (xp j) s) +
-        (Dlt k s + lateNoise D (a k) s) + absorbedHat (θ / 2) A u s)
+        (Dlt k s + lateNoise D (a k) s) + absorbedHat (thetaB θ) A u s)
 
 /-- The inputs with the Rankin minorant give `Theorem410InputsDesign`, with
 `ς = sigmaExt (log X₀)`, i.e. `ς(ℓ) = ς_*(max(ℓ, (log X₀)²))`. -/
@@ -75,7 +75,7 @@ def TheoremAInputsRankin (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21InputsLag`, with the absorbed-set exponent
 given by the paper's Rankin minorant `ς_*` (`Theorem410InputsRankin`). -/
 def Theorem21InputsRankin : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

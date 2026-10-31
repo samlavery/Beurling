@@ -278,12 +278,12 @@ theorem limModel_realisedOK : RealisedOK h.limModel (capH X₀) U :=
 theorem limModel_T_formula (hnc : NoCoincidence h.limModel U) (x : ℝ) :
     h.limModel.T x = target X₀ (kappaParam X₀)
       (countA (realisedA h.limModel (capH X₀) U))
-      (absorbedDensityCap (θ / 2) (realisedA h.limModel (capH X₀) U) (fun n => solveU (θ / 2) n))
+      (absorbedDensityCap (thetaB θ) (realisedA h.limModel (capH X₀) U) (fun n => solveU (thetaB θ) n))
       (osc θ (designedAlpha (realisedSystem h.limModel (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA h.limModel (capH X₀) U) (fun n => solveU (θ / 2) n) kappa0Param
+          (realisedA h.limModel (capH X₀) U) (fun n => solveU (thetaB θ) n) kappa0Param
           (switchOn X₀) (constructionScale X₀))
         (designedGamma (realisedSystem h.limModel (capH X₀) U) θ X₀ (kappaParam X₀)
-          (realisedA h.limModel (capH X₀) U) (fun n => solveU (θ / 2) n) kappa0Param
+          (realisedA h.limModel (capH X₀) U) (fun n => solveU (thetaB θ) n) kappa0Param
           (switchOn X₀) (constructionScale X₀))
         (switchOn X₀)) x := by
   have hok := limModel_realisedOK h

@@ -64,12 +64,12 @@ lemma absSet_large (ω : JitterΩ) {n : ℝ} (hn : n ∈ absSet X₀ (DF θ X₀
 
 /-- **`ρ̄_𝒜(X₀) = 0`**. -/
 lemma rhoCap_X0 (ω : JitterΩ) :
-    absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) X₀ = 0 := by
+    absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) X₀ = 0 := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := QueueMono.one_lt_of_logX hX0 hc.hX
-  have hb : 0 < θ / 2 := by linarith [hc.hθ.1]
-  have hb1 : θ / 2 ≤ 1 := by linarith [hc.hθ.2]
-  have hρ : absorbedDensity (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) X₀ = 0 := by
+  have hb : 0 < thetaB θ := thetaB_pos (by linarith [hc.hθ.1])
+  have hb1 : thetaB θ ≤ 1 := (thetaB_le_quarter (by linarith [hc.hθ.2])).trans (by norm_num)
+  have hρ : absorbedDensity (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) X₀ = 0 := by
     unfold absorbedDensity
     refine (tsum_congr fun a => ?_).trans tsum_zero
     unfold absorbedBump
@@ -79,7 +79,7 @@ lemma rhoCap_X0 (ω : JitterΩ) :
       rintro ⟨h1, h2⟩
       have ha0 : 0 ≤ a := by linarith
       obtain ⟨hu0, hu⟩ := solveU_spec hb ha0
-      have hU : uA θ a = solveU (θ / 2) a := rfl
+      have hU : uA θ a = solveU (thetaB θ) a := rfl
       rw [hU] at h1
       -- `a ≤ 2u` (as `u^b ≤ max(u, 1)`), so `u ≥ a/2 > X₀`
       have hbig : 4 * (X₀ : ℝ) < a := by
@@ -90,11 +90,11 @@ lemma rhoCap_X0 (ω : JitterΩ) :
             linarith
           exact (Real.log_lt_log_iff (by positivity) (by linarith)).mp hlog
         nlinarith [X₀_ge_two_pow hc.hX]
-      rcases le_or_gt 1 (solveU (θ / 2) a) with hu1 | hu1
-      · have : solveU (θ / 2) a ^ (θ / 2) ≤ solveU (θ / 2) a :=
+      rcases le_or_gt 1 (solveU (thetaB θ) a) with hu1 | hu1
+      · have : solveU (thetaB θ) a ^ (thetaB θ) ≤ solveU (thetaB θ) a :=
           Real.rpow_le_self_of_one_le hu1 hb1
         linarith
-      · have : solveU (θ / 2) a ^ (θ / 2) ≤ 1 :=
+      · have : solveU (thetaB θ) a ^ (thetaB θ) ≤ 1 :=
           Real.rpow_le_one hu0 hu1.le hb.le
         linarith
     · rfl

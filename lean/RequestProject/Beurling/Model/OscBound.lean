@@ -15,7 +15,7 @@ three parts of `T_c = (ρ_det(X₀) - ρ_det) - ρ̄_𝒜 + R' + K_𝒜 ρ̃` on
 
 * `o_det ≤ (5 d + 3)/(κ s)` for windows `[s, s + d]` (`rhoDet_kappa_sub_le`; the linear window
   of length `κu` and the unit spacing of the rigid set, second bullet);
-* `o_R ≤ d s^{-1/4}` (`deriv_osc_sub_le`, from `|ϕ'| ≤ 2`, `|ϕ''| ≤ 10`; fourth bullet);
+* `o_R ≤ d s^{-1/20}` (`deriv_osc_sub_le`, from `|ϕ'| ≤ 2`, `|ϕ''| ≤ 10`; fourth bullet);
 * the `𝒜`-part `≤ 2 L⁻⁴`, and `0` unless `log u > L_*` (`rhoCap_le_L4`, `KAbsR_le_L4`,
   `rhoA_eq_zero_of_small`, `KAbsR_eq_zero_of_small`; third bullet, Lemma 6.27(c)).
 
@@ -95,30 +95,30 @@ lemma sum_term_le3 {L δ Λ : ℝ} (hδ : 0 < δ) (hδ7 : δ ≤ 0.7) (hL : 1000
         linarith
 
 /-- `2^{-1/10} ≤ 15/16`. -/
-lemma two_rpow_neg_tenth_le : (2 : ℝ) ^ (-(1 / 10 : ℝ)) ≤ 15 / 16 := by
-  have h : (16 / 15 : ℝ) ≤ (2 : ℝ) ^ (1 / 10 : ℝ) := by
-    have h1 : ((16 / 15 : ℝ) ^ (10 : ℕ)) ≤ 2 := by norm_num
-    have h2 := Real.rpow_le_rpow (by norm_num) h1 (show (0 : ℝ) ≤ 1 / 10 by norm_num)
-    rwa [← Real.rpow_natCast, ← Real.rpow_mul (by norm_num), show ((10 : ℕ) : ℝ) * (1 / 10) = 1
+lemma two_rpow_neg_tenth_le : (2 : ℝ) ^ (-(1 / 40 : ℝ)) ≤ 58 / 59 := by
+  have h : (59 / 58 : ℝ) ≤ (2 : ℝ) ^ (1 / 40 : ℝ) := by
+    have h1 : ((59 / 58 : ℝ) ^ (40 : ℕ)) ≤ 2 := by norm_num
+    have h2 := Real.rpow_le_rpow (by norm_num) h1 (show (0 : ℝ) ≤ 1 / 40 by norm_num)
+    rwa [← Real.rpow_natCast, ← Real.rpow_mul (by norm_num), show ((40 : ℕ) : ℝ) * (1 / 40) = 1
       by norm_num, Real.rpow_one] at h2
   rw [Real.rpow_neg (by norm_num)]
-  calc ((2 : ℝ) ^ (1 / 10 : ℝ))⁻¹ ≤ (16 / 15 : ℝ)⁻¹ := inv_anti₀ (by norm_num) h
-    _ = 15 / 16 := by norm_num
+  calc ((2 : ℝ) ^ (1 / 40 : ℝ))⁻¹ ≤ (59 / 58 : ℝ)⁻¹ := inv_anti₀ (by norm_num) h
+    _ = 58 / 59 := by norm_num
 
-/-- **The geometric sum** `∑_{k<N} (c 2ᵏ)^{-1/10} ≤ 16 c^{-1/10}`. -/
+/-- **The geometric sum** `∑_{k<N} (c 2ᵏ)^{-1/40} ≤ 59 c^{-1/40}`. -/
 lemma sum_geom_tenth {c : ℝ} (hc : 0 < c) (N : ℕ) :
-    ∑ k ∈ Finset.range N, (c * 2 ^ k) ^ (-(1 / 10 : ℝ)) ≤ 16 * c ^ (-(1 / 10 : ℝ)) := by
-  set r : ℝ := (2 : ℝ) ^ (-(1 / 10 : ℝ)) with hr
+    ∑ k ∈ Finset.range N, (c * 2 ^ k) ^ (-(1 / 40 : ℝ)) ≤ 59 * c ^ (-(1 / 40 : ℝ)) := by
+  set r : ℝ := (2 : ℝ) ^ (-(1 / 40 : ℝ)) with hr
   have hr0 : 0 ≤ r := Real.rpow_nonneg (by norm_num) _
   have hr1 := two_rpow_neg_tenth_le
-  have e : ∀ k : ℕ, (c * 2 ^ k) ^ (-(1 / 10 : ℝ)) = c ^ (-(1 / 10 : ℝ)) * r ^ k := by
+  have e : ∀ k : ℕ, (c * 2 ^ k) ^ (-(1 / 40 : ℝ)) = c ^ (-(1 / 40 : ℝ)) * r ^ k := by
     intro k
     rw [Real.mul_rpow hc.le (by positivity), hr, ← Real.rpow_natCast, ← Real.rpow_natCast,
       ← Real.rpow_mul (by norm_num), ← Real.rpow_mul (by norm_num), mul_comm (k : ℝ), mul_comm]
   simp_rw [e]
   rw [← Finset.mul_sum]
-  have hc0 : 0 ≤ c ^ (-(1 / 10 : ℝ)) := Real.rpow_nonneg hc.le _
-  have hgs : ∑ k ∈ Finset.range N, r ^ k ≤ 16 := by
+  have hc0 : 0 ≤ c ^ (-(1 / 40 : ℝ)) := Real.rpow_nonneg hc.le _
+  have hgs : ∑ k ∈ Finset.range N, r ^ k ≤ 59 := by
     have hr1' : r < 1 := by linarith
     have := geom_sum_eq (show r ≠ 1 by linarith) N
     rw [this, div_le_iff_of_neg (by linarith)]
@@ -160,7 +160,7 @@ lemma TcR_eq_max (ω : JitterΩ) (v : ℝ) :
 lemma TcR_split (ω : JitterΩ) {v : ℝ} (hv : (X₀ : ℝ) ≤ v) :
     TcR θ X₀ ω (jzX X₀) v = (Target.rhoDet X₀ (kappaParam X₀) X₀ -
         Target.rhoDet X₀ (kappaParam X₀) v) -
-      absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) v + Rd θ X₀ ω v +
+      absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v + Rd θ X₀ ω v +
       KAbsR θ X₀ ω (rhoT θ X₀ ω) v := by
   have hi : KR.Chain.ind X₀ v = 1 := by
     unfold KR.Chain.ind; exact Set.indicator_of_mem (by simpa using hv) _
@@ -185,10 +185,10 @@ lemma absParts {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
     {v : ℝ} (hvX : (X₀ : ℝ) ≤ v) (hv2 : v ≤ 2 * (b + Queue6.Hc X₀ b)) :
     (0 ≤ KAbsR θ X₀ ω (rhoT θ X₀ ω) v ∧ KAbsR θ X₀ ω (rhoT θ X₀ ω) v ≤ (Real.log v ^ 4)⁻¹ ∧
       (Real.log v ≤ Lstar X₀ → KAbsR θ X₀ ω (rhoT θ X₀ ω) v = 0)) ∧
-    (0 ≤ absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) v ∧
-      absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) v ≤ (Real.log v ^ 4)⁻¹ ∧
+    (0 ≤ absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v ∧
+      absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v ≤ (Real.log v ^ 4)⁻¹ ∧
       (Real.log v ≤ Lstar X₀ →
-        absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) v = 0)) := by
+        absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) v = 0)) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1' := QueueMono.one_lt_of_logX hX0 hc.hX
   have hv0 : 0 < v := by linarith
@@ -230,7 +230,7 @@ lemma Tc_pair_le {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (
       (1 / 1000) (hbsEps X₀) epsH (epsH / 10))
     {s u : ℝ} (hs : (X₀ : ℝ) ≤ s) (hsu : s ≤ u) (hu2 : u ≤ 2 * (b + Queue6.Hc X₀ b)) :
     |TcR θ X₀ ω (jzX X₀) s - TcR θ X₀ ω (jzX X₀) u| ≤
-      (5 * (u - s) + 3) / (kappaParam X₀ * s) + (u - s) * s ^ (-(1 / 4 : ℝ)) +
+      (5 * (u - s) + 3) / (kappaParam X₀ * s) + (u - s) * s ^ (-(1 / 20 : ℝ)) +
         2 * (if Lstar X₀ < Real.log u then (Real.log s ^ 4)⁻¹ else 0) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1' := QueueMono.one_lt_of_logX hX0 hc.hX
@@ -239,15 +239,15 @@ lemma Tc_pair_le {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (
   rw [TcR_split hc ω hs, TcR_split hc ω hu]
   have hdet := rhoDet_kappa_sub_le hc.hX hs hsu
   have hR := deriv_osc_sub_le hc.hθ hc.hX (gammaD_range (θ := θ) hc.hX (DF θ X₀ ω)) hs hsu
-  have hR' : |Rd θ X₀ ω s - Rd θ X₀ ω u| ≤ (u - s) * s ^ (-(1 / 4 : ℝ)) := by
+  have hR' : |Rd θ X₀ ω s - Rd θ X₀ ω u| ≤ (u - s) * s ^ (-(1 / 20 : ℝ)) := by
     rw [abs_sub_comm]; exact hR
   obtain ⟨⟨hK0s, hKs, hKs0⟩, ⟨hA0s, hAs, hAs0⟩⟩ :=
     absParts hc hev hb hbt hQC hE1 hN hT hs (hsu.trans hu2)
   obtain ⟨⟨hK0u, hKu, hKu0⟩, ⟨hA0u, hAu, hAu0⟩⟩ := absParts hc hev hb hbt hQC hE1 hN hT hu hu2
   set Ks := KAbsR θ X₀ ω (rhoT θ X₀ ω) s
   set Ku := KAbsR θ X₀ ω (rhoT θ X₀ ω) u
-  set As := absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) s
-  set Au := absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) u
+  set As := absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) s
+  set Au := absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) u
   have hlog : Real.log s ≤ Real.log u := Real.log_le_log hs0 hsu
   have hLs0 : 0 < Real.log s := by linarith [Real.log_le_log (by linarith) hs, hc.hX]
   have hinv : (Real.log u ^ 4)⁻¹ ≤ (Real.log s ^ 4)⁻¹ :=
@@ -281,11 +281,11 @@ end Pair
 
 variable (X₀) in
 /-- **The bound of `o_u`** at the scale `u`: `W = 2.04 H(2u)` bounds the window length,
-`(10W + 6)/(κu)` the rigid part, `W (u/2)^{-1/4}` the oscillation part, and
+`(10W + 6)/(κu)` the rigid part, `W (u/2)^{-1/20}` the oscillation part, and
 `2 · 1[log 4u > L_*] (log(u/2))⁻⁴` the `𝒜`-part. -/
 noncomputable def Bsc (u : ℝ) : ℝ :=
   (10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) / (kappaParam X₀ * u) +
-    2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 4 : ℝ)) +
+    2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ)) +
       2 * (if Lstar X₀ < Real.log (4 * u) then (Real.log (u / 2) ^ 4)⁻¹ else 0)
 
 section Scale
@@ -302,7 +302,7 @@ lemma Bsc_nonneg {u : ℝ} (hu : 0 < u) : 0 ≤ Bsc X₀ u := by
     split_ifs
     · exact inv_nonneg.mpr (by positivity)
     · exact le_rfl
-  have h2 : 0 ≤ (u / 2) ^ (-(1 / 4 : ℝ)) := Real.rpow_nonneg (by linarith) _
+  have h2 : 0 ≤ (u / 2) ^ (-(1 / 20 : ℝ)) := Real.rpow_nonneg (by linarith) _
   have : 0 ≤ (10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) / (kappaParam X₀ * u) := by positivity
   positivity
 
@@ -389,7 +389,7 @@ theorem oscR_le_Bsc {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ
         mul_le_mul_of_nonneg_right (by linarith) (by positivity)
       have e2 := mul_le_mul_of_nonneg_left hks (show 0 ≤ 10 * (2.04 * H (2 * u)) + 6 by linarith)
       nlinarith
-    have t2 : (v - s) * s ^ (-(1 / 4 : ℝ)) ≤ 2.04 * H (2 * u) * (u / 2) ^ (-(1 / 4 : ℝ)) :=
+    have t2 : (v - s) * s ^ (-(1 / 20 : ℝ)) ≤ 2.04 * H (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ)) :=
       mul_le_mul hvs (Real.rpow_le_rpow_of_nonpos (by linarith) hs2 (by norm_num))
         (Real.rpow_nonneg hs0.le _) hW0
     have t3 : (if Lstar X₀ < Real.log v then (Real.log s ^ 4)⁻¹ else 0) ≤
@@ -424,25 +424,24 @@ lemma four_mul_rpow_eighth_le {u : ℝ} (hu : 0 ≤ u) :
   exact mul_le_mul_of_nonneg_right h4 (Real.rpow_nonneg hu _)
 
 set_option maxHeartbeats 1000000 in
-/-- **The rigid and oscillation parts at one scale**: `log(2u)(B(u) - 𝒜-part) ≤ u^{-1/10}`
+/-- **The rigid and oscillation parts at one scale**: `log(2u)(B(u) - 𝒜-part) ≤ u^{-1/40}`
 for `u ≥ X₀/4` (second and fourth bullets of the proof of eq. (osc)). -/
 lemma nonA_le (hX : 10 ^ 8 ≤ Real.log X₀) {u : ℝ} (hu4 : (X₀ : ℝ) ≤ 4 * u) :
     Real.log (2 * u) * ((10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) / (kappaParam X₀ * u) +
-      2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 4 : ℝ))) ≤ u ^ (-(1 / 10 : ℝ)) := by
+      2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ))) ≤ u ^ (-(1 / 40 : ℝ)) := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := QueueMono.one_lt_of_logX hX0 hX
   have hu0 : 0 < u := by linarith
-  set v := u ^ (1 / 80 : ℝ) with hvdef
+  set v := u ^ (1 / 400 : ℝ) with hvdef
   have hv0 : 0 < v := Real.rpow_pos_of_pos hu0 _
-  have hpow : ∀ n : ℕ, u ^ ((n : ℝ) / 80) = v ^ n := by
+  have hpow : ∀ n : ℕ, u ^ ((n : ℝ) / 400) = v ^ n := by
     intro n
     rw [hvdef, ← Real.rpow_natCast, ← Real.rpow_mul hu0.le]; ring_nf
-  have hv80 : u = v ^ 80 := by rw [← hpow 80]; norm_num
-  have hv10 : u ^ (1 / 8 : ℝ) = v ^ 10 := by rw [← hpow 10]; norm_num
-  have hv40 : u ^ (1 / 2 : ℝ) = v ^ 40 := by rw [← hpow 40]; norm_num
-  have hv20 : u ^ (1 / 4 : ℝ) = v ^ 20 := by rw [← hpow 20]; norm_num
-  have hv8 : u ^ (-(1 / 10 : ℝ)) = (v ^ 8)⁻¹ := by
-    rw [Real.rpow_neg hu0.le, ← hpow 8]; norm_num
+  have hv400 : u = v ^ 400 := by rw [← hpow 400]; norm_num
+  have hv200 : u ^ (1 / 2 : ℝ) = v ^ 200 := by rw [← hpow 200]; norm_num
+  have hv20 : u ^ (1 / 20 : ℝ) = v ^ 20 := by rw [← hpow 20]; norm_num
+  have hv10 : u ^ (-(1 / 40 : ℝ)) = (v ^ 10)⁻¹ := by
+    rw [Real.rpow_neg hu0.le, ← hpow 10]; norm_num
   -- `v` is huge
   have hlu : Real.log X₀ - 2 ≤ Real.log u := by
     have h1 : Real.log X₀ ≤ Real.log (4 * u) := Real.log_le_log (by linarith) hu4
@@ -455,101 +454,110 @@ lemma nonA_le (hX : 10 ^ 8 ≤ Real.log X₀) {u : ℝ} (hu4 : (X₀ : ℝ) ≤ 
     linarith
   have hvbig : (20000 : ℝ) ≤ v := by
     rw [hvdef, Real.rpow_def_of_pos hu0]
-    have := Real.add_one_le_exp (Real.log u * (1 / 80))
+    have := Real.add_one_le_exp (Real.log u * (1 / 400))
     nlinarith
-  -- the width
-  have hH : Queue6.Hc X₀ (2 * u) ≤ 2 * v ^ 10 := by
+  -- the width: `H(2u) ≤ (4u)^{1/400} ≤ 2v`
+  have hH : Queue6.Hc X₀ (2 * u) ≤ 2 * v := by
     unfold Queue6.Hc
-    have h1 := InitialRange.capH_le_rpow hX0 hX (le_max_right (2 * u) (X₀ : ℝ))
+    have h1 := InitialRange.capH_le_rpow400 hX0 hX (le_max_right (2 * u) (X₀ : ℝ))
     have h2 : max (2 * u) (X₀ : ℝ) ≤ 4 * u := max_le (by linarith) hu4
-    have h3 := Real.rpow_le_rpow (by positivity) h2 (show (0 : ℝ) ≤ 1 / 8 by norm_num)
-    have h4 := four_mul_rpow_eighth_le hu0.le
-    rw [hv10] at h4
+    have h3 := Real.rpow_le_rpow (by positivity) h2 (show (0 : ℝ) ≤ 1 / 400 by norm_num)
+    have h4 : (4 * u) ^ (1 / 400 : ℝ) ≤ 2 * v := by
+      rw [Real.mul_rpow (by norm_num) hu0.le, ← hvdef]
+      have : (4 : ℝ) ^ (1 / 400 : ℝ) ≤ 4 ^ (1 / 2 : ℝ) :=
+        Real.rpow_le_rpow_of_exponent_le (by norm_num) (by norm_num)
+      have e : (4 : ℝ) ^ (1 / 2 : ℝ) = 2 := by
+        rw [show (4 : ℝ) = 2 ^ (2 : ℝ) by norm_num, ← Real.rpow_mul (by norm_num)]; norm_num
+      rw [e] at this
+      exact mul_le_mul_of_nonneg_right this hv0.le
     linarith
   have hH0 : 0 ≤ Queue6.Hc X₀ (2 * u) := (KR.WidthReal.Hc_pos hX (2 * u)).le
   -- `κ u ≥ u^{1/2}/2`
   have hκ := (kappa_facts hX).1
-  have hκu : v ^ 40 / 2 ≤ kappaParam X₀ * u := by
+  have hκu : v ^ 200 / 2 ≤ kappaParam X₀ * u := by
     have h1 : (X₀ : ℝ) ^ (-(1 / 2 : ℝ)) ≤ kappaParam X₀ := by
       unfold kappaParam
       exact Real.rpow_le_rpow_of_exponent_le hX1.le (by norm_num)
     have h2 : (4 * u) ^ (-(1 / 2 : ℝ)) ≤ (X₀ : ℝ) ^ (-(1 / 2 : ℝ)) :=
       Real.rpow_le_rpow_of_nonpos (by linarith) hu4 (by norm_num)
-    have h3 : (4 * u) ^ (-(1 / 2 : ℝ)) = (2 * v ^ 40)⁻¹ := by
-      rw [Real.rpow_neg (by positivity), Real.mul_rpow (by norm_num) hu0.le, hv40,
+    have h3 : (4 * u) ^ (-(1 / 2 : ℝ)) = (2 * v ^ 200)⁻¹ := by
+      rw [Real.rpow_neg (by positivity), Real.mul_rpow (by norm_num) hu0.le, hv200,
         show (4 : ℝ) = 2 ^ (2 : ℝ) by norm_num, ← Real.rpow_mul (by norm_num)]
       norm_num
-    have h4 : (2 * v ^ 40)⁻¹ * u ≤ kappaParam X₀ * u :=
+    have h4 : (2 * v ^ 200)⁻¹ * u ≤ kappaParam X₀ * u :=
       mul_le_mul_of_nonneg_right (h3 ▸ h2.trans h1) hu0.le
-    have e : (2 * v ^ 40)⁻¹ * u = v ^ 40 / 2 := by
-      rw [hv80]; field_simp
+    have e : (2 * v ^ 200)⁻¹ * u = v ^ 200 / 2 := by
+      rw [hv400]; field_simp
     linarith
-  -- `(u/2)^{-1/4} ≤ 2/v^{20}`
-  have hq : (u / 2) ^ (-(1 / 4 : ℝ)) ≤ 2 / v ^ 20 := by
+  -- `(u/2)^{-1/20} ≤ 2/v^{20}`
+  have hq : (u / 2) ^ (-(1 / 20 : ℝ)) ≤ 2 / v ^ 20 := by
     rw [Real.rpow_neg (by positivity), Real.div_rpow hu0.le (by norm_num), hv20, inv_div]
     rw [div_le_div_iff₀ (by positivity) (by positivity)]
-    have : (2 : ℝ) ^ (1 / 4 : ℝ) ≤ 2 := by
-      calc (2 : ℝ) ^ (1 / 4 : ℝ) ≤ 2 ^ (1 : ℝ) :=
+    have : (2 : ℝ) ^ (1 / 20 : ℝ) ≤ 2 := by
+      calc (2 : ℝ) ^ (1 / 20 : ℝ) ≤ 2 ^ (1 : ℝ) :=
             Real.rpow_le_rpow_of_exponent_le (by norm_num) (by norm_num)
         _ = 2 := Real.rpow_one 2
     nlinarith [pow_pos hv0 20]
-  -- `log(2u) ≤ 160 v`
-  have hlog : Real.log (2 * u) ≤ 160 * v := by
+  -- `log(2u) ≤ 800 v`
+  have hlog : Real.log (2 * u) ≤ 800 * v := by
     have h1 := Real.log_le_rpow_div (show (0 : ℝ) ≤ 2 * u by positivity)
-      (show (0 : ℝ) < 1 / 80 by norm_num)
+      (show (0 : ℝ) < 1 / 400 by norm_num)
     rw [Real.mul_rpow (by norm_num) hu0.le, ← hvdef] at h1
-    have : (2 : ℝ) ^ (1 / 80 : ℝ) ≤ 2 := by
-      calc (2 : ℝ) ^ (1 / 80 : ℝ) ≤ 2 ^ (1 : ℝ) :=
+    have : (2 : ℝ) ^ (1 / 400 : ℝ) ≤ 2 := by
+      calc (2 : ℝ) ^ (1 / 400 : ℝ) ≤ 2 ^ (1 : ℝ) :=
             Real.rpow_le_rpow_of_exponent_le (by norm_num) (by norm_num)
         _ = 2 := Real.rpow_one 2
-    have h2 : 2 ^ (1 / 80 : ℝ) * v / (1 / 80) ≤ 160 * v := by
+    have h2 : 2 ^ (1 / 400 : ℝ) * v / (1 / 400) ≤ 800 * v := by
       rw [div_le_iff₀ (by norm_num)]; nlinarith
     linarith
   have hl0 : 0 ≤ Real.log (2 * u) :=
     Real.log_nonneg (by linarith [KR.WidthReal.X0_ge hX (X₀ := X₀)])
   -- assemble
   have hA : (10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) / (kappaParam X₀ * u) ≤
-      (40.8 * v ^ 10 + 6) * 2 / v ^ 40 := by
+      (40.8 * v + 6) * 2 / v ^ 200 := by
     rw [div_le_div_iff₀ (by positivity) (by positivity)]
-    have : 10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6 ≤ 40.8 * v ^ 10 + 6 := by linarith
-    have hp : 0 ≤ 40.8 * v ^ 10 + 6 := by positivity
+    have : 10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6 ≤ 40.8 * v + 6 := by linarith
+    have hp : 0 ≤ 40.8 * v + 6 := by positivity
     nlinarith [mul_le_mul this hκu (by positivity) hp]
-  have hB : 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 4 : ℝ)) ≤
-      2.04 * (2 * v ^ 10) * (2 / v ^ 20) :=
+  have hB : 2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ)) ≤
+      2.04 * (2 * v) * (2 / v ^ 20) :=
     mul_le_mul (by linarith) hq (Real.rpow_nonneg (by positivity) _) (by positivity)
-  have hS : (40.8 * v ^ 10 + 6) * 2 / v ^ 40 + 2.04 * (2 * v ^ 10) * (2 / v ^ 20) ≤
-      103 / v ^ 10 := by
-    rw [div_add' _ _ _ (by positivity), div_le_div_iff₀ (by positivity) (by positivity)]
-    have h1 : (1 : ℝ) ≤ v ^ 10 := one_le_pow₀ (by linarith)
-    have e : ((40.8 * v ^ 10 + 6) * 2 + 2.04 * (2 * v ^ 10) * (2 / v ^ 20) * v ^ 40) * v ^ 10 =
-        (81.6 * v ^ 10 + 12 + 8.16 * v ^ 30) * v ^ 10 := by
+  have hv1 : (1 : ℝ) ≤ v := by linarith
+  have hS : (40.8 * v + 6) * 2 / v ^ 200 + 2.04 * (2 * v) * (2 / v ^ 20) ≤ 103 / v ^ 19 := by
+    have hp19 := pow_pos hv0 19
+    have e1 : (40.8 * v + 6) * 2 / v ^ 200 = (81.6 * v + 12) / v ^ 181 / v ^ 19 := by
       field_simp; ring
-    rw [e]
-    have h30 : v ^ 30 = v ^ 10 * v ^ 20 := by ring
-    have h40 : v ^ 40 = v ^ 10 * v ^ 30 := by ring
-    rw [h40, h30]
-    have h20 : (1 : ℝ) ≤ v ^ 20 := one_le_pow₀ (by linarith)
-    have hp := pow_pos hv0 10
-    nlinarith [mul_le_mul_of_nonneg_left h1 (show (0 : ℝ) ≤ 12 by norm_num),
-      mul_nonneg hp.le (mul_nonneg hp.le (sub_nonneg.mpr h20))]
-  rw [hv8]
+    have e2 : 2.04 * (2 * v) * (2 / v ^ 20) = 8.16 / v ^ 19 := by
+      field_simp; norm_num
+    have h181 : (81.6 * v + 12) / v ^ 181 ≤ 94 := by
+      rw [div_le_iff₀ (by positivity)]
+      have : v ≤ v ^ 181 := le_self_pow₀ hv1 (by norm_num)
+      have : (1 : ℝ) ≤ v ^ 181 := one_le_pow₀ hv1
+      nlinarith
+    rw [e1, e2, ← add_div, div_le_div_iff_of_pos_right hp19]
+    linarith
+  rw [hv10]
   calc Real.log (2 * u) * ((10 * (2.04 * Queue6.Hc X₀ (2 * u)) + 6) / (kappaParam X₀ * u) +
-        2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 4 : ℝ)))
-      ≤ (160 * v) * (103 / v ^ 10) := by
+        2.04 * Queue6.Hc X₀ (2 * u) * (u / 2) ^ (-(1 / 20 : ℝ)))
+      ≤ (800 * v) * (103 / v ^ 19) := by
         apply mul_le_mul hlog (by linarith) (by positivity) (by positivity)
-    _ ≤ (v ^ 8)⁻¹ := by
-        rw [show (160 * v) * (103 / v ^ 10) = 16480 / v ^ 9 by
+    _ ≤ (v ^ 10)⁻¹ := by
+        have hp := pow_pos hv0 18
+        have h8 : (82400 : ℝ) ≤ v ^ 8 := by
+          have : (20000 : ℝ) ^ 8 ≤ v ^ 8 := pow_le_pow_left₀ (by norm_num) hvbig 8
+          nlinarith
+        rw [show (800 * v) * (103 / v ^ 19) = 82400 / v ^ 18 by
             first | (field_simp; ring) | field_simp,
-          show (v ^ 8)⁻¹ = v / v ^ 9 by first | (field_simp; ring) | field_simp]
-        exact div_le_div_of_nonneg_right (by linarith) (by positivity)
+          show (v ^ 10)⁻¹ = v ^ 8 / v ^ 18 by first | (field_simp; ring) | field_simp]
+        exact div_le_div_of_nonneg_right h8 hp.le
 
-/-- `(X₀/4)^{-1/10} ≤ 10⁻⁴³`. -/
+/-- `(X₀/4)^{-1/40} ≤ 10⁻⁴³`. -/
 lemma X0_quarter_rpow_le (hX : 10 ^ 8 ≤ Real.log X₀) :
-    ((X₀ : ℝ) / 4) ^ (-(1 / 10 : ℝ)) ≤ 1 / 10 ^ 43 := by
+    ((X₀ : ℝ) / 4) ^ (-(1 / 40 : ℝ)) ≤ 1 / 10 ^ 43 := by
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hX1 := QueueMono.one_lt_of_logX hX0 hX
   have hc0 : (0 : ℝ) < X₀ / 4 := by linarith
-  have hl : 1000 ≤ Real.log ((X₀ : ℝ) / 4) := by
+  have hl : 4000 ≤ Real.log ((X₀ : ℝ) / 4) := by
     rw [Real.log_div (by linarith) (by norm_num)]
     have : Real.log 4 < 2 := by
       rw [Real.log_lt_iff_lt_exp (by norm_num)]
@@ -564,7 +572,7 @@ lemma X0_quarter_rpow_le (hX : 10 ^ 8 ≤ Real.log X₀) :
     rw [e]
     calc (10 : ℝ) ^ 43 ≤ 2.7182818283 ^ 100 := by norm_num
       _ ≤ Real.exp 1 ^ 100 := by gcongr
-  have h1 : Real.exp (Real.log ((X₀ : ℝ) / 4) * -(1 / 10)) ≤ Real.exp (-100) :=
+  have h1 : Real.exp (Real.log ((X₀ : ℝ) / 4) * -(1 / 40)) ≤ Real.exp (-100) :=
     Real.exp_le_exp.mpr (by linarith)
   refine h1.trans ?_
   rw [Real.exp_neg, one_div]
@@ -675,7 +683,7 @@ theorem hosc_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
     refine ⟨by rw [e1, hl], ?_, ?_⟩
     · rw [e2, Real.log_mul (by positivity) (by positivity), hl, Real.log_pow]; push_cast; ring
     · rw [e3, Real.log_mul (by positivity) (by positivity), hl, Real.log_pow]; push_cast; ring
-  have hsplit : ∀ k : ℕ, F (f k) ≤ (((X₀ : ℝ) / 4) * 2 ^ k) ^ (-(1 / 10 : ℝ)) +
+  have hsplit : ∀ k : ℕ, F (f k) ≤ (((X₀ : ℝ) / 4) * 2 ^ k) ^ (-(1 / 40 : ℝ)) +
       2 * (if Lstar X₀ < (Λ' + k * δ) + 3 * δ then
         ((Λ' + k * δ) + 2 * δ) * ((Λ' + k * δ) ^ 4)⁻¹ else 0) := by
     intro k
@@ -686,10 +694,10 @@ theorem hosc_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
     unfold Bsc
     rw [e3, e1]
     have e : Real.log (2 * f k) * ((10 * (2.04 * Queue6.Hc X₀ (2 * f k)) + 6) /
-        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 4 : ℝ)) +
+        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 20 : ℝ)) +
         2 * (if Lstar X₀ < Λ' + k * δ + 3 * δ then ((Λ' + k * δ) ^ 4)⁻¹ else 0)) =
         Real.log (2 * f k) * ((10 * (2.04 * Queue6.Hc X₀ (2 * f k)) + 6) /
-        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 4 : ℝ))) +
+        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 20 : ℝ))) +
         2 * (if Lstar X₀ < Λ' + k * δ + 3 * δ then
           Real.log (2 * f k) * ((Λ' + k * δ) ^ 4)⁻¹ else 0) := by
       split_ifs <;> ring
@@ -697,7 +705,7 @@ theorem hosc_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hb
     rw [e2] at hn ⊢
     rw [← ef]
     linarith
-  have h3 : ∑ k ∈ Finset.range N, F (f k) ≤ 16 * ((X₀ : ℝ) / 4) ^ (-(1 / 10 : ℝ)) +
+  have h3 : ∑ k ∈ Finset.range N, F (f k) ≤ 59 * ((X₀ : ℝ) / 4) ^ (-(1 / 40 : ℝ)) +
       2 * (1.01 / δ * ((Lstar X₀ - 4 * δ) ^ 2)⁻¹) := by
     refine (Finset.sum_le_sum fun k _ => hsplit k).trans ?_
     rw [Finset.sum_add_distrib, ← Finset.mul_sum]
@@ -809,7 +817,7 @@ theorem hosc_c2 {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (h
     refine ⟨by rw [e1, hl], ?_, ?_⟩
     · rw [e2, Real.log_mul (by positivity) (by positivity), hl, Real.log_pow]; push_cast; ring
     · rw [e3, Real.log_mul (by positivity) (by positivity), hl, Real.log_pow]; push_cast; ring
-  have hsplit : ∀ k : ℕ, F (f k) ≤ (((X₀ : ℝ) / 4) * 2 ^ k) ^ (-(1 / 10 : ℝ)) +
+  have hsplit : ∀ k : ℕ, F (f k) ≤ (((X₀ : ℝ) / 4) * 2 ^ k) ^ (-(1 / 40 : ℝ)) +
       2 * (if Lstar X₀ < (Λ' + k * δ) + 3 * δ then
         ((Λ' + k * δ) + 2 * δ) * ((Λ' + k * δ) ^ 4)⁻¹ else 0) := by
     intro k
@@ -820,10 +828,10 @@ theorem hosc_c2 {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (h
     unfold Bsc
     rw [e3, e1]
     have e : Real.log (2 * f k) * ((10 * (2.04 * Queue6.Hc X₀ (2 * f k)) + 6) /
-        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 4 : ℝ)) +
+        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 20 : ℝ)) +
         2 * (if Lstar X₀ < Λ' + k * δ + 3 * δ then ((Λ' + k * δ) ^ 4)⁻¹ else 0)) =
         Real.log (2 * f k) * ((10 * (2.04 * Queue6.Hc X₀ (2 * f k)) + 6) /
-        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 4 : ℝ))) +
+        (kappaParam X₀ * f k) + 2.04 * Queue6.Hc X₀ (2 * f k) * (f k / 2) ^ (-(1 / 20 : ℝ))) +
         2 * (if Lstar X₀ < Λ' + k * δ + 3 * δ then
           Real.log (2 * f k) * ((Λ' + k * δ) ^ 4)⁻¹ else 0) := by
       split_ifs <;> ring
@@ -831,7 +839,7 @@ theorem hosc_c2 {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (h
     rw [e2] at hn ⊢
     rw [← ef]
     linarith
-  have h3 : ∑ k ∈ Finset.range N, F (f k) ≤ 16 * ((X₀ : ℝ) / 4) ^ (-(1 / 10 : ℝ)) +
+  have h3 : ∑ k ∈ Finset.range N, F (f k) ≤ 59 * ((X₀ : ℝ) / 4) ^ (-(1 / 40 : ℝ)) +
       2 * (1.01 / δ * ((Lstar X₀ - 4 * δ) ^ 2)⁻¹) := by
     refine (Finset.sum_le_sum fun k _ => hsplit k).trans ?_
     rw [Finset.sum_add_distrib, ← Finset.mul_sum]

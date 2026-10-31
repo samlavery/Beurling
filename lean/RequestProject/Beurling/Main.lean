@@ -34,6 +34,41 @@ open Complex Filter Topology MeasureTheory BeurlingSystem
 /-- The lag exponent `η := min(θ, 1/2 - θ) / 2` of (13). -/
 noncomputable def lagExponent (θ : ℝ) : ℝ := min θ (1 / 2 - θ) / 2
 
+/-- The absorption-window exponent `θ_b := min(θ, max(θ/2, 1/8))` (window `h(u) = u^{θ_b}`).
+It is `θ/2` for `θ ≥ 1/4`, `1/8` on `[1/8, 1/4]` and `θ` below `1/8`. -/
+noncomputable def thetaB (θ : ℝ) : ℝ := min θ (max (θ / 2) (1 / 8))
+
+lemma thetaB_le_self (θ : ℝ) : thetaB θ ≤ θ := min_le_left _ _
+
+lemma half_le_thetaB {θ : ℝ} (hθ : 0 ≤ θ) : θ / 2 ≤ thetaB θ :=
+  le_min (by linarith) (le_max_left _ _)
+
+lemma thetaB_ge {θ : ℝ} (hθ : 1 / 20 ≤ θ) : 1 / 20 ≤ thetaB θ :=
+  le_min hθ (le_trans (by norm_num) (le_max_right _ _))
+
+lemma thetaB_pos {θ : ℝ} (hθ : 0 < θ) : 0 < thetaB θ :=
+  lt_min hθ (lt_of_lt_of_le (by norm_num) (le_max_right _ _))
+
+lemma thetaB_nonneg {θ : ℝ} (hθ : 0 ≤ θ) : 0 ≤ thetaB θ :=
+  le_min hθ (le_trans (by norm_num) (le_max_right _ _))
+
+lemma thetaB_le_quarter {θ : ℝ} (hθ : θ ≤ 1 / 2) : thetaB θ ≤ 1 / 4 :=
+  (min_le_right _ _).trans (max_le (by linarith) (by norm_num))
+
+lemma thetaB_lt_quarter {θ : ℝ} (hθ : θ < 1 / 2) : thetaB θ < 1 / 4 :=
+  lt_of_le_of_lt (min_le_right _ _) (max_lt (by linarith) (by norm_num))
+
+lemma thetaB_le_one {θ : ℝ} (hθ : θ ≤ 2) : thetaB θ ≤ 1 :=
+  (min_le_right _ _).trans (max_le (by linarith) (by norm_num))
+
+lemma thetaB_mono {θ θ' : ℝ} (h : θ ≤ θ') : thetaB θ ≤ thetaB θ' :=
+  min_le_min h (max_le_max (by linarith) le_rfl)
+
+lemma thetaB_eq_half {θ : ℝ} (hθ : 1 / 4 ≤ θ) : thetaB θ = θ / 2 := by
+  unfold thetaB
+  rw [max_eq_left (show (1 / 8 : ℝ) ≤ θ / 2 by linarith),
+    min_eq_right (show θ / 2 ≤ θ by linarith)]
+
 /-- The conclusions (i) and (ii) of Theorem 2.1 for one fixed (realised) system `P`:
 
 (i) `|N_P(x) - x| ≤ C x^θ + 3 x^θ log* x + x^η` for all `x ≥ 1`;
@@ -48,12 +83,12 @@ def TheoremAConclusion (θ : ℝ) (P : BeurlingSystem) : Prop :=
       (∀ k, ρ k ∈ puncturedHalfPlane a ∧ F (ρ k) = 0) ∧
       ∀ k, |(1 - (ρ k).re) * Real.log (xk k) - 3 * Real.log (Real.log (xk k))| ≤ C)
 
-/-- **Theorem 2.1 (Theorem A)**, taken as a hypothesis. For every `θ ∈ [1/4, 1/2 - 10⁻⁴]`
+/-- **Theorem 2.1 (Theorem A)**, taken as a hypothesis. For every `θ ∈ [1/20, 1/2 - 10⁻⁴]`
 there is a threshold `X_Hux` such that for every even integer `X₀ ≥ max(e^{10^8}, X_Hux)` the
 random system `P` of Section 3 (on some probability space) satisfies the conclusions (i), (ii)
 on an event `G` of probability at least `1 - 1.5 / log X₀`. -/
 def Theorem21 : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
@@ -71,7 +106,7 @@ def Remark12_ba : Prop :=
 /-- "Fix any `ω ∈ G`": since `P(G) ≥ 1 - 1.5 / log X₀ > 0`, Theorem 2.1 yields a fixed
 (deterministic) discrete Beurling system satisfying (i) and (ii). -/
 theorem exists_realisation (h : Theorem21) {θ : ℝ}
-    (hθ : θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000)) :
+    (hθ : θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000)) :
     ∃ P : BeurlingSystem, TheoremAConclusion θ P := by
   obtain ⟨XHux, hX⟩ := h θ hθ
   set n : ℕ := ⌈max (Real.exp (10 ^ 8)) XHux⌉₊
@@ -146,7 +181,7 @@ end TheoremAConclusion
 /-- **Corollary 2.2**: assuming Theorem 2.1, the answer to Question Q is negative. -/
 theorem corollary_2_2 (h : Theorem21) : ¬ QuestionQ := by
   intro hQ
-  have hθ : (1 / 4 : ℝ) ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000) := by
+  have hθ : (1 / 4 : ℝ) ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000) := by
     constructor <;> norm_num
   obtain ⟨P, hP⟩ := exists_realisation h hθ
   obtain ⟨C, hC⟩ := hP.N_bound (by norm_num) (β := 1 / 3) (by norm_num)
@@ -159,7 +194,7 @@ theorem corollary_2_2_one_beta_system (h : Theorem21) (hR : Remark12_ba) :
     ∃ P : BeurlingSystem,
       (∀ β > (1 / 4 : ℝ), ∃ C : ℝ, ∀ x ≥ (1 : ℝ), |P.N x - x| ≤ C * x ^ β) ∧
       ∀ ε' > (0 : ℝ), ¬ ∃ C : ℝ, ∀ x ≥ (1 : ℝ), |P.psi x - x| ≤ C * x ^ (1 - ε') := by
-  have hθ : (1 / 4 : ℝ) ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000) := by
+  have hθ : (1 / 4 : ℝ) ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000) := by
     constructor <;> norm_num
   obtain ⟨P, hP⟩ := exists_realisation h hθ
   refine ⟨P, fun β hβ => ?_, fun ε' hε' hψ => ?_⟩
@@ -170,25 +205,27 @@ theorem corollary_2_2_one_beta_system (h : Theorem21) (hR : Remark12_ba) :
 
 /-- **Proof of Theorem 2.1(i)** from the section-level bounds. Write `D := N - T` (the lag),
 `E := T - x - R` (the target error) and `R` (the oscillations). If, for `x ≥ X₀`,
-the target error (8) `|E(x)| ≤ C₀ x^θ + 2 x^{θ/2}`, the oscillation bound
+the target error (8) `|E(x)| ≤ C₀ x^θ + 2 x^{θ_b}`, the oscillation bound
 `|R(x)| ≤ 2 x^θ log* x` (Lemma 3.4) and the lag bound (13) `|D(x)| ≤ x^η` hold, and `N` is
 bounded on `[1, X₀)`, then `|N(x) - x| ≤ C x^θ + 3 x^θ log* x + x^η` for all `x ≥ 1`.
-(Here `X₀^{θ/2} ≥ 2`, which holds for the paper's `X₀ ≥ e^{10^8}`.) -/
+(Since `θ_b ≤ θ`, `2 x^{θ_b} ≤ 2 x^θ` is absorbed into `C x^θ`; the hypothesis
+`X₀^{θ_b} ≥ 2` is not needed.) -/
 theorem theorem21_part_i_of_bounds {θ η C₀ X₀ : ℝ} (N T R : ℝ → ℝ) (hθ : 0 < θ)
-    (hX₀ : 1 < X₀) (hX₀θ : 2 ≤ X₀ ^ (θ / 2))
-    (hE : ∀ x ≥ X₀, |T x - x - R x| ≤ C₀ * x ^ θ + 2 * x ^ (θ / 2))
+    (hX₀ : 1 < X₀) (hX₀θ : 2 ≤ X₀ ^ (thetaB θ))
+    (hE : ∀ x ≥ X₀, |T x - x - R x| ≤ C₀ * x ^ θ + 2 * x ^ (thetaB θ))
     (hR : ∀ x ≥ X₀, |R x| ≤ 2 * x ^ θ * (logStar x : ℝ))
     (hD : ∀ x ≥ X₀, |N x - T x| ≤ x ^ η)
     (hN : ∃ B : ℝ, ∀ x, 1 ≤ x → x < X₀ → |N x| ≤ B) :
     ∃ C : ℝ, ∀ x ≥ (1 : ℝ),
       |N x - x| ≤ C * x ^ θ + 3 * x ^ θ * (logStar x : ℝ) + x ^ η := by
   obtain ⟨B, hB⟩ := hN
-  refine ⟨|C₀| + |B| + X₀, fun x hx => ?_⟩
+  refine ⟨|C₀| + 2 + |B| + X₀, fun x hx => ?_⟩
   have hxθ : 1 ≤ x ^ θ := Real.one_le_rpow hx hθ.le
   have hL : (0 : ℝ) ≤ logStar x := Nat.cast_nonneg _
   have hxη : 0 ≤ x ^ η := Real.rpow_nonneg (by linarith) η
-  have hC : 0 ≤ |C₀| + |B| + X₀ := by positivity
-  have hCx : |C₀| + |B| + X₀ ≤ (|C₀| + |B| + X₀) * x ^ θ := le_mul_of_one_le_right hC hxθ
+  have hC : 0 ≤ |C₀| + 2 + |B| + X₀ := by positivity
+  have hCx : |C₀| + 2 + |B| + X₀ ≤ (|C₀| + 2 + |B| + X₀) * x ^ θ :=
+    le_mul_of_one_le_right hC hxθ
   have hθL : 0 ≤ x ^ θ * (logStar x : ℝ) := by positivity
   rcases lt_or_ge x X₀ with hlt | hge
   · have h1 := hB x hx hlt
@@ -198,15 +235,10 @@ theorem theorem21_part_i_of_bounds {θ η C₀ X₀ : ℝ} (N T R : ℝ → ℝ)
     have := le_abs_self B
     linarith
   · have hL1 : (1 : ℝ) ≤ logStar x := by exact_mod_cast one_le_logStar (by linarith)
-    have hx2 : 2 ≤ x ^ (θ / 2) :=
-      hX₀θ.trans (Real.rpow_le_rpow (by linarith) hge (by linarith))
-    have hsq : x ^ θ = x ^ (θ / 2) * x ^ (θ / 2) := by
-      rw [← Real.rpow_add (by linarith)]; congr 1; ring
-    have h2 : 2 * x ^ (θ / 2) ≤ x ^ θ := by
-      rw [hsq]; have : 0 ≤ x ^ (θ / 2) := by linarith
-      nlinarith
+    have h2 : 2 * x ^ (thetaB θ) ≤ 2 * x ^ θ := by
+      have := Real.rpow_le_rpow_of_exponent_le hx (thetaB_le_self θ); linarith
     have h3 : x ^ θ ≤ x ^ θ * (logStar x : ℝ) := le_mul_of_one_le_right (by linarith) hL1
-    have h4 : C₀ * x ^ θ ≤ (|C₀| + |B| + X₀) * x ^ θ := by
+    have h4 : (C₀ + 2) * x ^ θ ≤ (|C₀| + 2 + |B| + X₀) * x ^ θ := by
       apply mul_le_mul_of_nonneg_right _ (by linarith)
       have := le_abs_self C₀; have := abs_nonneg B; linarith
     have e : N x - x = (N x - T x) + (T x - x - R x) + R x := by ring

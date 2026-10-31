@@ -169,7 +169,7 @@ lemma designedGammaN_mem (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A
 /-! ### The target of the data -/
 
 /-- `u_a`: the solution of `u + u^{θ/2} = a`. -/
-noncomputable def uA (θ : ℝ) : ℝ → ℝ := fun n => solveU (θ / 2) n
+noncomputable def uA (θ : ℝ) : ℝ → ℝ := fun n => solveU (thetaB θ) n
 
 /-- The heights `γ_k` of the data (Lemma 4.8, with `κ, κ₀, x⁺, a_k` of Section 2.2). -/
 noncomputable def gammaD (θ : ℝ) (X₀ : ℕ) (D : PrimeData) : ℕ → ℝ :=
@@ -182,7 +182,7 @@ noncomputable def alphaD (θ : ℝ) (X₀ : ℕ) (D : PrimeData) : ℕ → ℝ :
 
 /-- **The target (6) of the data.** -/
 noncomputable def targetD (θ : ℝ) (X₀ : ℕ) (D : PrimeData) : ℝ → ℝ :=
-  target X₀ (kappaParam X₀) (countA (absSet X₀ D)) (absorbedDensityCap (θ / 2) (absSet X₀ D)
+  target X₀ (kappaParam X₀) (countA (absSet X₀ D)) (absorbedDensityCap (thetaB θ) (absSet X₀ D)
     (uA θ)) (osc θ (alphaD θ X₀ D) (gammaD θ X₀ D) (switchOn X₀))
 
 /-! ### Values of elements -/

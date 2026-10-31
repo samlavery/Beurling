@@ -48,7 +48,7 @@ lemma eight_logsq_div_le {Λ : ℝ} (hΛ : 10 ^ 8 ≤ Λ) :
   nlinarith
 
 /-- `θ' ≤ 0.51` and `θ' ≥ θ + 0.01`. -/
-lemma thetaPrime_bounds (hθ : θ ∈ Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000))
+lemma thetaPrime_bounds (hθ : θ ∈ Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) :
     θ + 0.01 ≤ thetaPrime θ X₀ ∧ thetaPrime θ X₀ ≤ 0.51 := by
   refine ⟨le_max_left _ _, max_le (by linarith [hθ.2]) ?_⟩

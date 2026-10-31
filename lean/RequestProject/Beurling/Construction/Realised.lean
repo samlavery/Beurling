@@ -429,11 +429,11 @@ theorem realisedU_spec {X₀ : ℕ} {M : SlotModel X₀} {U : ℕ → ℝ} (h : 
     (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1) (hX : 10 ^ 8 ≤ Real.log X₀)
     (hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊) {θ : ℝ} (hθ0 : 0 < θ) (hθ1 : θ ≤ 2) :
     ∀ n ∈ realisedA M (capH X₀) U,
-      (X₀ : ℝ) ≤ solveU (θ / 2) n ∧ solveU (θ / 2) n + solveU (θ / 2) n ^ (θ / 2) = n := by
+      (X₀ : ℝ) ≤ solveU (thetaB θ) n ∧ solveU (thetaB θ) n + solveU (thetaB θ) n ^ (thetaB θ) = n := by
   intro n hn
   have hX1 : (1 : ℝ) < X₀ := one_lt_of_logX (Nat.cast_nonneg _) hX
-  exact ⟨le_solveU (by linarith) (by linarith) hX1.le (realisedA_large h hU hX hTlow hn).2,
-    (solveU_spec (by linarith) (by linarith [(realisedA_large h hU hX hTlow hn).2])).2⟩
+  exact ⟨le_solveU (thetaB_pos hθ0) (thetaB_le_one hθ1) hX1.le (realisedA_large h hU hX hTlow hn).2,
+    (solveU_spec (thetaB_pos hθ0) (by linarith [(realisedA_large h hU hX hTlow hn).2])).2⟩
 
 /-! ### The top-level hypothesis with the coupling constructed -/
 
@@ -441,7 +441,7 @@ theorem realisedU_spec {X₀ : ℕ} {M : SlotModel X₀} {U : ℕ → ℝ} (h : 
 `u_a + u_a^{θ/2} = a` (proved, `realisedU_spec`). -/
 def PartIRestJ (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (M : SlotModel X₀) : Prop :=
-  (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (θ / 2) A u)
+  (∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (thetaB θ) A u)
       (osc θ (designedAlpha P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
         (designedGamma P θ X₀ (kappaParam X₀) A u kappa0Param (switchOn X₀) a)
         (switchOn X₀)) x) ∧
@@ -462,7 +462,7 @@ the hypotheses on them (`PartIRestJ`, `Theorem410RestSp`, `SparsityInputs`), the
 with their adaptedness and the per-scale bounds of Table 1, and the condition that the greedy rule
 places infinitely many primes. -/
 def Theorem21InputsJ : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -472,9 +472,9 @@ def Theorem21InputsJ : Prop :=
         {k | placedAt (M ω) k}.Infinite ∧
         ∃ a : ℕ → ℝ,
           PartIRestJ θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-            (fun n => solveU (θ / 2) n) a (M ω) ∧
+            (fun n => solveU (thetaB θ) n) a (M ω) ∧
           Theorem410RestSp θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-            (fun n => solveU (θ / 2) n) a ∧
+            (fun n => solveU (thetaB θ) n) a ∧
           SparsityInputs X₀ (realisedSystem (M ω) (capH X₀) ω)
 
 /-- **`Theorem21InputsJ` gives `Theorem21InputsSp`**: the system, the origin of its primes, the
@@ -496,7 +496,7 @@ theorem theorem21InputsSp_of_J (h : Theorem21InputsJ) : Theorem21InputsSp := by
     rw [hT x]
     simp only [target, if_pos hx]
   have hok := realisedOK_of (M ω) hω hlog hTlow hinf
-  refine ⟨realisedA (M ω) (capH X₀) ω, fun n => solveU (θ / 2) n, a, M ω,
+  refine ⟨realisedA (M ω) (capH X₀) ω, fun n => solveU (thetaB θ) n, a, M ω,
     realisedLatest (M ω) (capH X₀) ω,
     ⟨realisedU_spec hok hω hlog hTlow (by linarith [hθ.1]) (by linarith [hθ.2]), hT, hq, κp, hκp,
       hland, hinit⟩, hC, ⟨realisedCoupling hok⟩, hS⟩

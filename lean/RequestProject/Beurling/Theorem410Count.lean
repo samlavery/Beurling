@@ -131,13 +131,13 @@ def Theorem410InputsCount (θ : ℝ) (F : ℂ → ℂ) : Prop :=
     0 ≤ η ∧ η ≤ θ / 2 ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
     (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
-    AbsorbedHyp (θ / 2) A u ∧ Monotone ς ∧
+    AbsorbedHyp (thetaB θ) A u ∧ Monotone ς ∧
     (∀ x ≥ 1, countA A x ≤ x * Real.exp (-ς (Real.log x))) ∧
-    (∀ k, ∀ ℓ ∈ Set.Icc 0 (Real.log (γ k + 1) / (1 - θ / 2)),
+    (∀ k, ∀ ℓ ∈ Set.Icc 0 (Real.log (γ k + 1) / (1 - thetaB θ)),
       designRadius (xp k) * ℓ + 2 * Real.log (2 + ℓ) + 5 ≤ ς ℓ) ∧
     (∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xp k)),
       F s = ZBcont X₀ κ s + (∑' j, oscHat θ (α j) (γ j) (xp j) s) +
-        (Dlt k s + lateNoise D (a k) s) + absorbedHat (θ / 2) A u s)
+        (Dlt k s + lateNoise D (a k) s) + absorbedHat (thetaB θ) A u s)
 
 theorem Theorem410InputsCount.toZB48 {θ : ℝ} {F : ℂ → ℂ} (h : Theorem410InputsCount θ F) :
     Theorem410InputsZB48 θ F := by
@@ -160,7 +160,7 @@ def TheoremAInputsCount (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21InputsQueue75`, with the inputs of
 Theorem 4.10 as in `Theorem410InputsCount`. -/
 def Theorem21InputsCount : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

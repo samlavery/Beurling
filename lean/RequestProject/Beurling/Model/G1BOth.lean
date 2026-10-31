@@ -84,7 +84,7 @@ theorem sigR_bound {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ}
   have hLw0 : 0 < Real.log w := by
     linarith [Real.log_le_log (by linarith) hwX, hc.hX]
   have hK0 : 0 ≤ KAbsR θ X₀ ω (rhoT θ X₀ ω) w := KAbsR_nonneg ω (rhoT_nonneg ω) w
-  have hA0 : 0 ≤ absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) w := by
+  have hA0 : 0 ≤ absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) w := by
     refine le_min (tsum_nonneg fun a => ?_) (div_nonneg (by norm_num) hLw0.le)
     unfold absorbedBump
     split_ifs
@@ -104,7 +104,7 @@ theorem sigR_bound {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ}
   · rw [abs_le]; constructor <;> linarith
   · have hK : KAbsR θ X₀ ω (rhoT θ X₀ ω) w = 0 :=
       KAbsR_eq_zero_of_small hc ω _ (by unfold Lstar at hsmall; linarith)
-    have hA : absorbedDensityCap (θ / 2) (absSet X₀ (DF θ X₀ ω)) (uA θ) w = 0 := by
+    have hA : absorbedDensityCap (thetaB θ) (absSet X₀ (DF θ X₀ ω)) (uA θ) w = 0 := by
       unfold absorbedDensityCap
       rw [rhoA_eq_zero_of_small hc ω hsmall]
       exact min_eq_left (div_nonneg (by norm_num) hLw0.le)

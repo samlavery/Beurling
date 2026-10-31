@@ -37,7 +37,7 @@ namespace Decomp
 /-- The target (6) with the concrete absorbed count and capped density. -/
 noncomputable def targetOf (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ) (α γ xp : ℕ → ℝ) :
     ℝ → ℝ :=
-  target X₀ κ (countA A) (absorbedDensityCap (θ / 2) A u) (osc θ α γ xp)
+  target X₀ κ (countA A) (absorbedDensityCap (thetaB θ) A u) (osc θ α γ xp)
 
 /-- The lag `D = N_P - T`. -/
 noncomputable def lagOf (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ)
@@ -48,7 +48,7 @@ noncomputable def lagOf (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) 
 lemma targetOf_eq {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℝ} {u : ℝ → ℝ} {α γ xp : ℕ → ℝ}
     (hsp : Spacing xp) (hX1 : 1 ≤ X₀) (hxp : (X₀ : ℝ) ≤ xp 0) {x : ℝ} (hx : 0 < x) :
     targetOf θ X₀ κ A u α γ xp x = baseErr X₀ κ x + x +
-      absE X₀ (countA A) (absorbedDensityCap (θ / 2) A u) x + osc θ α γ xp x := by
+      absE X₀ (countA A) (absorbedDensityCap (thetaB θ) A u) x + osc θ α γ xp x := by
   have hR0 : osc θ α γ xp X₀ = 0 :=
     osc_eq_zero_of_le hsp (by exact_mod_cast hX1) hxp
   unfold targetOf target baseErr absE
@@ -62,8 +62,8 @@ lemma targetOf_eq {θ : ℝ} {X₀ : ℕ} {κ : ℝ} {A : Set ℝ} {u : ℝ → 
 /-- The transform integrand of the lag is integrable on `(1, ∞)`. -/
 lemma lag_integrableOn (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.smoothNumbers)
     {κ θ : ℝ} (hκ : 0 < κ) (hθ0 : 0 < θ) (hθ2 : θ ≤ 2) {A : Set ℝ} {u : ℝ → ℝ}
-    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) (hAfin : LocFin A)
-    (hcap : ∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ 0.1 / Real.log v)
+    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (thetaB θ) = a) (hAfin : LocFin A)
+    (hcap : ∀ v ≥ (X₀ : ℝ), absorbedDensity (thetaB θ) A u v ≤ 0.1 / Real.log v)
     {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : ℝ} (hα : ∀ k, |α k| ≤ C) (hxp : (X₀ : ℝ) ≤ xp 0)
     {η K : ℝ} (hη : 0 ≤ η)
     (hD : ∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ K * x ^ η)
@@ -74,11 +74,11 @@ lemma lag_integrableOn (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.sm
   have hX1' : (1 : ℝ) ≤ X₀ := by exact_mod_cast hX1
   have hs0 : 0 < s.re := by linarith
   set D := lagOf P θ X₀ κ A u α γ xp with hDdef
-  set E := absE (X₀ : ℝ) (countA A) (absorbedDensityCap (θ / 2) A u) with hEdef
-  have hW : AbsorbedWindowHyp (θ / 2) X₀ A u :=
-    ⟨by linarith, by linarith, hX1', fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
+  set E := absE (X₀ : ℝ) (countA A) (absorbedDensityCap (thetaB θ) A u) with hEdef
+  have hW : AbsorbedWindowHyp (thetaB θ) X₀ A u :=
+    ⟨thetaB_pos (by linarith), thetaB_le_one (by linarith), hX1', fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
   obtain ⟨hiB, -⟩ := mellin_baseErr hXs hκ hs0 hs1
-  obtain ⟨hiA, -⟩ := mellin_absE hW hcap (s := s) (by linarith)
+  obtain ⟨hiA, -⟩ := mellin_absE hW hcap (s := s) (by linarith [thetaB_le_self θ])
   obtain ⟨hiR, -⟩ := mellin_osc (θ := θ) (γ := γ) hsp hα hsθ
   -- the pointwise split `N - x = (T_base - x) + E_A + R + D`
   have hsplit : ∀ x : ℝ, 0 < x → P.N x - 1 * x =
@@ -142,24 +142,24 @@ lemma lag_integrableOn (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.sm
 /-- **The decomposition (14).** -/
 theorem decomposition_14 (P : BeurlingSystem) {X₀ : ℕ} (hXs : X₀ ∈ X₀.smoothNumbers)
     {κ θ : ℝ} (hκ : 0 < κ) (hθ0 : 0 < θ) (hθ2 : θ ≤ 2) {A : Set ℝ} {u : ℝ → ℝ}
-    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (θ / 2) = a) (hAfin : LocFin A)
-    (hcap : ∀ v ≥ (X₀ : ℝ), absorbedDensity (θ / 2) A u v ≤ 0.1 / Real.log v)
+    (hAu : ∀ a ∈ A, (X₀ : ℝ) ≤ u a ∧ u a + u a ^ (thetaB θ) = a) (hAfin : LocFin A)
+    (hcap : ∀ v ≥ (X₀ : ℝ), absorbedDensity (thetaB θ) A u v ≤ 0.1 / Real.log v)
     {α γ xp : ℕ → ℝ} (hsp : Spacing xp) {C : ℝ} (hα : ∀ k, |α k| ≤ C) (hxp : (X₀ : ℝ) ≤ xp 0)
     {η K : ℝ} (hη : 0 ≤ η)
     (hD : ∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ K * x ^ η)
     {s : ℂ} (hsθ : θ < s.re) (hsη : η < s.re) (hs1 : s ≠ 1) {a : ℝ} (ha : 1 ≤ a) :
     P.zetaCont 1 s = ZBcont X₀ κ s + (∑' j, oscHat θ (α j) (γ j) (xp j) s) +
       (earlyNoise (lagOf P θ X₀ κ A u α γ xp) a s + lateNoise (lagOf P θ X₀ κ A u α γ xp) a s) +
-      absorbedHat (θ / 2) A u s := by
+      absorbedHat (thetaB θ) A u s := by
   have hX1 : 1 ≤ X₀ := Nat.pos_of_ne_zero (Nat.ne_zero_of_mem_smoothNumbers hXs)
   have hX1' : (1 : ℝ) ≤ X₀ := by exact_mod_cast hX1
   have hs0 : 0 < s.re := by linarith
   set D := lagOf P θ X₀ κ A u α γ xp with hDdef
-  set E := absE (X₀ : ℝ) (countA A) (absorbedDensityCap (θ / 2) A u) with hEdef
-  have hW : AbsorbedWindowHyp (θ / 2) X₀ A u :=
-    ⟨by linarith, by linarith, hX1', fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
+  set E := absE (X₀ : ℝ) (countA A) (absorbedDensityCap (thetaB θ) A u) with hEdef
+  have hW : AbsorbedWindowHyp (thetaB θ) X₀ A u :=
+    ⟨thetaB_pos (by linarith), thetaB_le_one (by linarith), hX1', fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
   obtain ⟨hiB, heB⟩ := mellin_baseErr hXs hκ hs0 hs1
-  obtain ⟨hiA, heA⟩ := mellin_absE hW hcap (s := s) (by linarith)
+  obtain ⟨hiA, heA⟩ := mellin_absE hW hcap (s := s) (by linarith [thetaB_le_self θ])
   obtain ⟨hiR, heR⟩ := mellin_osc (θ := θ) (γ := γ) hsp hα hsθ
   -- the pointwise split `N - x = (T_base - x) + E_A + R + D`
   have hsplit : ∀ x : ℝ, 0 < x → P.N x - 1 * x =

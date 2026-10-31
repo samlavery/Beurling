@@ -22,7 +22,7 @@ namespace Construction
 (HBS).** `Theorem21InputsK` with `SparsityInputs` replaced by the cluster event
 `ClusterUpTo P X₀ (4v/(log v)^{11}) (capM1 X₀ v)` for all `v ≥ X₀`. -/
 def Theorem21InputsL : Prop :=
-  ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (1 / 20 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -31,9 +31,9 @@ def Theorem21InputsL : Prop :=
         {k | placedAt (M ω) k}.Infinite ∧
         ∃ a : ℕ → ℝ,
           PartIRestJ θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-            (fun n => solveU (θ / 2) n) a (M ω) ∧
+            (fun n => solveU (thetaB θ) n) a (M ω) ∧
           Theorem410RestSp θ X₀ (realisedSystem (M ω) (capH X₀) ω) (realisedA (M ω) (capH X₀) ω)
-            (fun n => solveU (θ / 2) n) a ∧
+            (fun n => solveU (thetaB θ) n) a ∧
           ∀ v ≥ (X₀ : ℝ), ClusterUpTo (realisedSystem (M ω) (capH X₀) ω) X₀
             (4 * v / Real.log v ^ 11) (capM1 X₀ v)
 
