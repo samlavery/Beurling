@@ -2,8 +2,8 @@
 
 Status (2026-10-31): paper and certificates only, no Lean. One AI agent (Claude) wrote it, on top of S1 (development a7bcdc6).
 The design was scoped (/tmp/rhscratch/ext/onezero.md, plan S2) and adversarially checked (/tmp/rhscratch/ext/onezero_check.md:
-"S2 holds (fixable)") by two earlier AI agents. **The text written here has been checked only by the agent that wrote it. It has
-had no independent AI check and no human review.** Theorem A and its proof are unchanged.
+"S2 holds (fixable)") by two earlier AI agents. **The text written here has been checked by the agent that made it and one independent AI check (PASS, no mathematical
+error; six wording fixes applied, below); no human review.** Theorem A and its proof are unchanged.
 
 ## Result
 
@@ -23,7 +23,7 @@ The constant in exp(Cℓ⁴/log ℓ) is explicit: C = 120. The constant C_{X₀}
 
 ## Design (§8.1)
 
-- θ_k := 9ℓ_k²/L_k with L_k := log x_k⁺ and ℓ_k := log L_k. This is deterministic, θ_k ≤ θ_* := 36Λ²X₀⁻², and θ_kL_k = 9ℓ_k²
+- θ_k := 9ℓ_k²/L_k with L_k := log x_k⁺ and ℓ_k := log L_k. This is deterministic, θ_k ≤ θ_max := 36Λ²X₀⁻², and θ_kL_k = 9ℓ_k²
   exactly.
 - y_k := (x_k⁺)² and ψ_k(t) := φ(t − log x_k⁺) − φ(t − log y_k).
 - R_k^♭ := α_k x^{θ_k} cos(γ_k log x) ψ_k(log x).
@@ -37,7 +37,7 @@ The constant in exp(Cℓ⁴/log ℓ) is explicit: C = 120. The constant C_{X₀}
   - So the bound in Prop g1(B) Step 3 keeps its factor (1 + 6/γ_j). The checker's (1 + 12/γ_j) is not needed.
 - (b) supp R_k^♭ ⊂ (x_k⁺, e·y_k). These intervals are disjoint, since x_{k+1} ≥ exp(x_k) > e(x_k⁺)².
   - On the k-th interval, |R^♭| ≤ 2x^{θ_k} ≤ 2.01e^{18ℓ²}.
-  - Everywhere, |R^♭| ≤ 2x^{θ_*}.
+  - Everywhere, |R^♭| ≤ 2x^{θ_max}.
 - (c) |R^♭′| ≤ 4.01κ₀/log x ≤ κ₊/log x, so Lemma G1 holds.
 - (d) The R″ bound.
 - (e) R̂_k^♭ is entire:
@@ -52,7 +52,7 @@ Every place where R or θ enters was located by grep (R, R′, R_k, κ_k, x_k, x
 - **Target error.** eq:T1flat gives |T^♭ − x − R^♭| ≤ Ψ(2x, X₀) + hΛ⁻⁸, from eq:Erig and the S1 absorbed part. Rankin's C_{X₀}x^θ was
   read only by Theorem A(i).
 - **|R| ≤ 2u^θ log*u.** Its three readers (04a (H_BS); 04e Steps 2–3; §6 margin(b) Step 1) use it only as an upper bound with
-  θ ≤ ½. They hold with 2u^{θ_*}.
+  θ ≤ ½. They hold with 2u^{θ_max}.
 - **eq:Rkprime with θ_k.** Its readers use θ only as an upper bound:
   - Step 4: r = 2^{θ_k−1} ≤ 2^{−1/2}, and 1/(1 − θ_k) ≤ 2 with |R_k^♭| ≤ α_k v^{θ_k};
   - Step 3: F_{θ_j} ≤ F_{1/2};
@@ -110,7 +110,7 @@ scoping note's claim that the rigid term "dominates only on a finite range" is r
 | main.tex | Inputs 07-onezero; new environment theoremAp. |
 | abstract, 00-intro | Abstract sentence. Informal Theorem A′ with a short design paragraph. rem:notshown bullet (β = 0 reached with α = 1). Outline sentence. |
 | B-certificates | New §B.8 (onezero, s2_check.py). Cross-check list. depcheck output and comment. |
-| C-ai-statement | Records S2 and its review status (author-checked only; not in Lean). |
+| C-ai-statement | Records S2 and its review status (the agent that made it and one independent AI check; not yet in Lean). |
 | LABELS.md | New labels. |
 | README.md | Theorem A′ informal paragraph, status, and Q sentence. |
 | CORRECTIONS-vs-v3.md | #116 (strengthening, not an error). |
@@ -152,11 +152,12 @@ and 14 overfull boxes, the same count as the S1 build. The checked-in beurling-p
 
 ## Open points (honest)
 
-1. **No independent check.** The S2 text has been checked only by its author. The scoping and adversarial check covered the design,
-   not this text. An independent AI check of §8 is the next step. The riskiest items are:
-   - the completeness of the transfer list. It rests on a grep of the source, not a line-by-line reread of §§5–6.
-   - the per-k o_R argument;
-   - the doubling of the R̂ bullet bounds.
+1. **One independent AI check only; no human review.** The check PASSED with no mathematical error. It confirmed the transfer
+   lemma by reading every use of θ, the per-k o_R argument, the doubling of the R̂ bounds, M_off, late noise, the Rouché tally,
+   the disjoint supports and the R″ factor (1+6/γ), one active R_k at a time, the rigid bound and the asymptotics, and 120 vs 320/3.
+   Its six fixes were applied: "the exponent θ" in the transfer search sentence; θ_* renamed θ_max (it clashed with the θ_* of
+   04k); "Steps 1–2" of Lemma margin(b); the S2 sentence moved to the end of its paragraph in App. C, with "not yet in Lean"; "eventually"
+   in rem:notshown; and these status lines.
 2. **Transfer by reading rule.** Lemma onezero-transfer asserts that §§3–7 hold for P′ "with θ_k for θ". It is not a rewritten
    proof. A reader must accept the list of the places where R enters. For the claims behind it, see the S1 grep in FOLLOWUP-S1.md
    and onezero_check.md (b).

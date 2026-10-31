@@ -171,8 +171,8 @@ made it and one independent AI check, and is not formalized in Lean (see [`FOLLO
 **Theorem A′ (informal).** There is a single discrete Beurling system with
 N(x) = x + O(exp(120(log log x)⁴/log log log x)), so N(x) = x + O(x^ε) for every ε > 0, whose zeta function has zeros with
 1 − Re ρ_k = (log log |Im ρ_k| + O(1))/log |Im ρ_k| → 0: a discrete [1, 0]-system. The oscillations get per-zero exponents
-θ_k = 9(log log x_k)²/log x_k and are switched off at x_k² (paper §8). This is in the paper only: it has been checked so far only by
-the AI agent that wrote it, and is not formalized in Lean (see [`FOLLOWUP-S2.md`](FOLLOWUP-S2.md)).
+θ_k = 9(log log x_k)²/log x_k and are switched off at x_k² (paper §8). This is in the paper only: it has been checked by the AI agent that
+made it and one independent AI check, and is not yet formalized in Lean (see [`FOLLOWUP-S2.md`](FOLLOWUP-S2.md)).
 
 So the answer to Q is negative. Equivalently, there is a discrete [1, β]-system with β ≤ θ < 1/2. By Theorem A′, even an integer error smaller than every power does not force a zero-free half-plane. The result says nothing about the
 Riemann zeta function itself.

@@ -35,7 +35,7 @@ $\psi_k=0$ on $(-\infty,\log x_k^+]$.
 
 Since $9(\log L)^2/L$ decreases for $L\ge e^2$ and $L_k\ge X_0^2$,
 \begin{equation}\label{eq:thetastar}
-  \theta_k\le\theta_*:=36\Lambda^2X_0^{-2},\qquad \theta_kL_k=9\ell_k^2\ge18\ell_k,\qquad \ell_k\ge2\Lambda .
+  \theta_k\le\theta_{\max}:=36\Lambda^2X_0^{-2},\qquad \theta_kL_k=9\ell_k^2\ge18\ell_k,\qquad \ell_k\ge2\Lambda .
 \end{equation}
 The equality $\theta_kL_k=9\ell_k^2$ is the condition $\theta\log x_k\ge9(\log\log x_k)^2$ of Theorem~\ref{thm:A}, now at each switch-on
 point separately.
@@ -46,7 +46,7 @@ For every $k$ and every $\omega$:
 \item $0\le\psi_k\le1$, $\psi_k=0$ outside $(\log x_k^+,\log y_k+1)$, $\|\psi_k'\|_\infty\le2$ and $\|\psi_k''\|_\infty\le10$.
 \item $R_k^\flat$ vanishes outside $(x_k^+,ey_k)$. These intervals are pairwise disjoint, so at most one $R_k^\flat$ is non-zero at
 any $x$. On the $k$-th of them, $|R^\flat(x)|\le2x^{\theta_k}\le2.01\,e^{18(\log\log x)^2}$. For every $x\ge1$,
-$|R^\flat(x)|\le2x^{\theta_*}$, and $R^\flat=0$ on $[1,x_1^+]$.
+$|R^\flat(x)|\le2x^{\theta_{\max}}$, and $R^\flat=0$ on $[1,x_1^+]$.
 \item $|R_k^{\flat\prime}(x)|\le2\kappa_0(x/x_k^+)^{\theta_k-1}/\log x_k^+$, and $|R^{\flat\prime}(x)|\le4.01\kappa_0/\log x\le\kappa_+/\log x$.
 In particular \eqref{eq:G1} holds for $T^\flat$.
 \item $|R_k^{\flat\prime\prime}(w)|\le\alpha_k\gamma_k^2w^{\theta_k-2}(1+6/\gamma_k)$ for every $w>0$.
@@ -66,7 +66,7 @@ $\|\psi_k'\|_\infty=\|\phi'\|_\infty$ and $\|\psi_k''\|_\infty=\|\phi''\|_\infty
 
 (b) The support follows from (a). For disjointness, $x_{k+1}^+>x_{k+1}\ge\exp(x_k)>e(x_k^+)^2=ey_k$. On $(x_k^+,ey_k)$,
 $|R^\flat|=|R_k^\flat|\le\alpha_kx^{\theta_k}\le2x^{\theta_k}$, and $\log x\le2L_k+1$, so $\theta_k\log x\le18\ell_k^2+\theta_k\le18(\log\log x)^2+10^{-9}$.
-The bound $2x^{\theta_*}$ follows from \eqref{eq:thetastar}.
+The bound $2x^{\theta_{\max}}$ follows from \eqref{eq:thetastar}.
 
 (c) As in the proof of Lemma~\ref{lem:G1}, $|R_k^{\flat\prime}(x)|\le\alpha_kx^{\theta_k-1}(\gamma_k+\theta_k+\|\psi_k'\|_\infty)\le
 2\alpha_k\gamma_kx^{\theta_k-1}$, since $\theta_k+2\le\Gamma_k^\flat\le\gamma_k$; and \eqref{eq:Rkflat} turns this into the first bound. At a
@@ -88,7 +88,7 @@ $\operatorname{Re}w,\operatorname{Re}w'>0$. Both sides are entire, since each br
 \begin{lemma}[Transfer]\label{lem:onezero-transfer}
 For $\PP'$, every statement of Sections~\ref{sec:construction}, \ref{sec:noise}, \ref{sec:queue} and~\ref{sec:baserange} and of
 Appendix~\ref{app:rankfull} holds, with the same constants, when every statement about $R_k$ is read with $\theta_k$ in place of
-$\theta$, and $|R(x)|\le2x^{\theta}\log^*x$ is read as $|R^\flat(x)|\le2x^{\theta_*}$. The only statement that changes is \eqref{eq:T1},
+$\theta$, and $|R(x)|\le2x^{\theta}\log^*x$ is read as $|R^\flat(x)|\le2x^{\theta_{\max}}$. The only statement that changes is \eqref{eq:T1},
 whose term $C_{X_0}x^\theta$ is replaced: for $\PP'$, \eqref{eq:T1} holds in the form
 \begin{equation}\label{eq:T1flat}
   |T^\flat(x)-x-R^\flat(x)|\le\Psi(2x,X_0)+h(x)\Lambda^{-8}\qquad(x\ge X_0)
@@ -100,7 +100,7 @@ $\Prob(\mathcal G)\ge1-1.5/\log X_0$ for $\PP'$, and \eqref{eq:La} holds on $\ma
 
 \begin{proof}
 The oscillation enters Sections~\ref{sec:construction}--\ref{sec:baserange} and Appendix~\ref{app:rankfull} only in the following ways. A
-search of the source for $R$, $R'$, $R_k$, $\kappa_k$, $x_k$, $x_1$, $o_R$ and $\theta$ finds no other use. The rest of the
+search of the source for $R$, $R'$, $R_k$, $\kappa_k$, $x_k$, $x_1$, $o_R$ and the exponent $\theta$ finds no other use. The rest of the
 construction ($H$, $c$, $M_1$, $y$, $h$, $\Abs$, $\rhodet$) and the probability budget do not involve $R$ or $\theta$.
 \begin{itemize}
 \item \emph{Positivity, slots and adaptedness.} Lemma~\ref{lem:G1}, the slot facts of \S\ref{sec:greedy}, Corollary~\ref{cor:lag}, the
@@ -112,8 +112,8 @@ Lemma~\ref{lem:adapted} holds as noted in \S\ref{sec:onezero-osc}.
 $C_{X_0}x^\theta$ is not used. Theorem~\ref{thm:A}(i) is its only reader, and it is replaced by Theorem~\ref{thm:Aprime}(i).
 \item \emph{The size of $R$.} The bound $|R|\le2u^\theta\log^*u$ is read in \S\ref{sec:noise-primes} (the error $\eps_1$ and $\eta_1$,
 $\eta_2$, where only $|R(u)|\le u^{1/2}$ for $u\ge x_1$ is used), in Steps~2 and~3 of the proof of Theorem~\ref{thm:lp} (where
-$y^{\theta-1}\log y\le X_0^{-0.49}$ is used), and in Step~1 of the proof of Lemma~\ref{lem:margin}(b) (where
-only $\theta\le\theta_1$ is used). Each holds with $2u^{\theta_*}$, as $\theta_*\le10^{-9}$.
+$y^{\theta-1}\log y\le X_0^{-0.49}$ is used), and in Steps~1--2 of the proof of Lemma~\ref{lem:margin}(b) (where
+only $\theta\le\theta_1$ is used). Each holds with $2u^{\theta_{\max}}$, as $\theta_{\max}\le10^{-9}$.
 \item \emph{The derivative bound} \eqref{eq:Rkprime}. With $\theta_k$, $|R_k^{\flat\prime}(v)|\le\kappa_k(v/x_k)^{\theta_k-1}$ holds, up to the
 factor $1+2H(x_k)/x_k$ of Section~\ref{sec:target}, and exactly at $x_k^+$, by Lemma~\ref{lem:onezero-osc}(c). Its readers use
 $\theta$ only through upper bounds. In Step~4 of the proof of Proposition~\ref{prop:g1}(B) these are
@@ -163,7 +163,7 @@ decomposition \eqref{eq:zetadecomp} hold, with $\widehat R^\flat$ for $\widehat 
 \begin{itemize}
 \item \emph{Lemmas~\ref{lem:ZB}, \ref{lem:ZBlow}, \ref{lem:ZA}.} These do not involve $R$. They read $\theta$ only through
 $\kappa\Gamma_1\ge e^{0.49X_0^2}$, $|t|\le3\Gamma_k\le x_k^{1-\theta}$ and $\log(\Gamma_k/2)\ge\frac12\log x_k$. All three hold for
-$\Gamma_k^\flat$ and $\theta_k$, as $\theta_k\le\theta_*$.
+$\Gamma_k^\flat$ and $\theta_k$, as $\theta_k\le\theta_{\max}$.
 \item \emph{The bullets after \eqref{eq:Rhat}.} On $0.99\le\sigma\le2$, $|t-\gamma_k|\le1$ we have $\operatorname{Re}w,\operatorname{Re}w'\ge0.98$.
 In \eqref{eq:Rhatflat} each term with $y_j$ has the form of the term with $x_j$, with the smaller factor
 $|y_j^{-w}|\le|x_j^{-w}|$. So the bounds for $|E_k|$, $\sum_{j<k}|\widehat R_j|$ and $\sum_{j>k}|\widehat R_j|$ at most double, and

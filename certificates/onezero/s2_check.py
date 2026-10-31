@@ -23,12 +23,12 @@ def ell_grid(lo, hi=1e300, n=4000):
 
 for lam in LAMS:
     l1 = 2 * lam                                  # ell_k >= 2 Lambda (log x_k^+ >= X_0^2)
-    # eq:thetastar: theta_k <= theta_* = 36 Lambda^2 X_0^{-2}; log theta_k = log 9 + 2 log ell - ell, decreasing for ell > 2
+    # eq:thetastar: theta_k <= theta_max = 36 Lambda^2 X_0^{-2}; log theta_k = log 9 + 2 log ell - ell, decreasing for ell > 2
     log_theta_star = math.log(36) + 2 * math.log(lam) - 2 * lam
     worst = {}
     for l in ell_grid(l1):
         log_theta = math.log(9) + 2 * math.log(l) - l
-        check('theta_k <= theta_*', log_theta <= log_theta_star + 1e-12, (lam, l))
+        check('theta_k <= theta_max', log_theta <= log_theta_star + 1e-12, (lam, l))
         theta = math.exp(log_theta)                # underflows to 0 here: theta_k is astronomically small
         delta = 9 * l * math.exp(-l)               # delta_k = 9 ell / L
         # step 6: 2 delta_k <= theta_k  <=>  18 ell <= 9 ell^2
