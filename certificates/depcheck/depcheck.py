@@ -19,6 +19,7 @@ def dep(a, bs, kind='='):
 dep('lem:adapted', 'lem:C2'); dep('lem:adapted', 'thm:caplw(b)(c)')   # log H(r) <= 3e-5 log r via caplw(c) (#67)
 dep('lem:G1', 'eq:huxley,eq:ampl')
 dep('lem:T1', 'lem:lemmaP', '<'); dep('lem:T1', 'Rankin')
+dep('lem:T1', 'thm:caplw(b)(c)')                                      # Abs empty below log u = 392 Lambda^2 (Follow-up S1)
 dep('lem:count..lem:excess', 'sec:greedy')
 dep('eq:huxley', 'cite:HeathBrown1988')
 dep('lem:blin', 'eq:huxley')

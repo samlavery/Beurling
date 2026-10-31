@@ -1,8 +1,11 @@
 # Independent numeric checks of the capacity theorem (paper Thm 6.22) Steps 1-3,5 (Λ-uniform version). Log-domain floats.
 import math, random, os
-# theta_b: absorption-window exponent (worst case 1/20 by default; CAPL_THETA_B overrides).
-THETA_B = float(os.environ.get('CAPL_THETA_B', 1/20))
-print("theta_b =", THETA_B)
+# Absorption window: the theta-free window of the paper (Section params; Follow-up S1), re-implemented here.
+def logh(l, Lam):
+    L = math.exp(l) if l < 700 else math.inf
+    if L <= 400*Lam*Lam: return L/8
+    return max(50*Lam*Lam, 27*Lam*l*l, 120*l**4/math.log(l))
+print("window: log h = L/8 (L <= 400 Lam^2), max(50 Lam^2, 27 Lam l^2, 120 l^4/log l) beyond")
 def A(Lam, s): l = 2*math.log(Lam) + s; return math.log(2) + 3*math.log(Lam) + 2*s - math.log(l)
 def G(Lam, s): a = A(Lam, s); return 2*math.sqrt(a*(a+1))*math.exp(s/2)/math.sqrt(Lam - a - 1)
 def gstar(s): return 1.3*G(max(1e8, math.exp(-s)), s)
@@ -43,14 +46,18 @@ for _ in range(200000):
         ratio = onej*g_over_L
         if ratio < 1 + 1e-3: bad3 += 1
         else: minD = min(minD, ratio)
-    # Step 5 condition for s >= sH with log c = γΛ (raised): e^s log(θ_b Λ e^s/(3.01γ)) >= 13.45 γ^2/θ_b,
-    # and hypothesis (*) of Lemma P(v): u0 >= θ_b Λ e^s/(3.01γ) >= 2Λ
-    if s >= sH and gamma(s)*Lam > 4*l*l:
-        gm = gamma(s); es = math.exp(min(s,700))
-        lhs5 = es*math.log(THETA_B*Lam*es/(3.01*gm)); rhs5 = 13.45*gm*gm/THETA_B
-        if lhs5 < rhs5: bad5 += 1
-        min5 = min(min5, lhs5/rhs5)
-        u0L = THETA_B*es/(3.01*gm)
+    # Step 5 (paper, new window): raised range (log c = γΛ): U = log h/(3.01 γ Λ), need 0.9 U log U >= 4.02 γ Λ and U >= 2Λ;
+    # standard regime (log c = 4l^2 - log 4): u0 >= v = 120 l^4/(log l (12 l^2+9l+8)), need 0.9 v log v >= 16 l^2+19 l+7, and
+    # u0 >= 27 Λ l^2/(12 l^2+9l+8) >= 2Λ.
+    if s >= sH:
+        if gamma(s)*Lam > 4*l*l - math.log(4):
+            gm = gamma(s); U = logh(l, Lam)/(3.01*gm*Lam)
+            r5 = 0.9*U*math.log(U)/(4.02*gm*Lam); u0L = U/Lam
+        else:
+            v = 120*l**4/(math.log(l)*(12*l*l + 9*l + 8))
+            r5 = 0.9*v*math.log(v)/(16*l*l + 19*l + 7); u0L = 27*l*l/(12*l*l + 9*l + 8)
+        if r5 < 1: bad5 += 1
+        min5 = min(min5, r5)
         if u0L < 2: badu += 1
         minu = min(minu, u0L)
 print("Step1 violations:", bad1, " Step2 violations:", bad2, "(min lhs/rhs %.4f)" % minH,

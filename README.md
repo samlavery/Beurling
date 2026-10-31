@@ -158,12 +158,15 @@ zeta function.
 
 Applied to the ordinary integers, a positive answer would give a zero-free half-plane for the Riemann zeta function.
 
-**Theorem A (informal).** Let θ ∈ [1/20, 1/2 − 10⁻⁴]. There is a discrete Beurling system with N(x) = x + O(x^θ log* x)
+**Theorem A (informal).** Let θ ∈ (0, 1/2 − 10⁻⁴]. There is a discrete Beurling system with N(x) = x + O(x^θ log* x)
 (log* the iterated logarithm), whose zeta function has zeros ρ_k with Re ρ_k = 1 − (log log x_k + O(1))/log x_k → 1.
-The extension to θ < 1/4 and the single log log (in place of 3 log log) are later strengthenings, each checked by the AI
+The extension to θ ∈ [1/20, 1/4) and the single log log (in place of 3 log log) are later strengthenings, each checked by the AI
 agent that made it and one independent AI check (see [`FOLLOWUP-THETA.md`](FOLLOWUP-THETA.md) and
 [`FOLLOWUP-LANDAU.md`](FOLLOWUP-LANDAU.md)). Both are formalized in Lean: `BModel.theoremA_full` (Theorem A for
 θ ∈ [1/20, 1/2 − 10⁻⁴]) and `BModel.theoremA_ii_complete` (the zeros at 1·log log, tied to their heights), both from (84).
+The further extension to every θ ∈ (0, 1/20) (a θ-free absorption window and the explicit lag bound D_max = e^{O((log log x)²)};
+X₀ does not depend on θ, only the switch-on point x₁ does) is in the paper only: it has been checked only by the AI agent that
+made it and is not formalized in Lean (see [`FOLLOWUP-S1.md`](FOLLOWUP-S1.md)).
 
 So the answer to Q is negative. Equivalently, there is a discrete [1, β]-system with β ≤ θ < 1/2. The result says nothing about the
 Riemann zeta function itself.

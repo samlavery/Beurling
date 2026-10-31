@@ -126,12 +126,13 @@ the proof.
 \subsection{Logical structure}\label{sec:logic}
 The table lists the main results with their inputs. An input marked $\downarrow$ is used only at a strictly earlier time or a
 strictly smaller height; every other input is used at the same time. The same-time dependencies form an acyclic graph; this was
-checked mechanically on the full dependency graph (78 nodes, 197 edges, 28 of them $\downarrow$; Appendix~\ref{app:cert-dep}).
+checked mechanically on the full dependency graph (78 nodes, 198 edges, 28 of them $\downarrow$; Appendix~\ref{app:cert-dep}).
 % Logged correction 61: Lemma threshold-mass also reads the lag and Lemma P (two strictly-earlier edges added).
 % Logged correction 64: Lemma goodheights no longer uses Broucke--Debruyne or Lemma ZA (two edges and one node removed).
 % Logged correction 66: edges (H_BS) -> Lemma T1, (H_BS) -> lag and Prop g1 -> Lemma P added; Lemma P -> Lemma cm is strictly earlier.
 % Logged correction 66: Lemma P no longer uses the local count (the aside in its step (iv) is deleted); one edge removed.
 % Logged correction 67: Lemma adapted -> Theorem caplw(b),(c) added (log H(r) <= 3e-5 log r).
+% Follow-up S1 (FOLLOWUP-S1.md): Lemma T1 -> Theorem caplw(b),(c) added.
 The table is an abridgement of that graph. The
 time-ordering of the $\downarrow$ edges is Section~\ref{sec:noncirc}.
 \begin{center}\footnotesize
@@ -141,7 +142,7 @@ result & inputs & used in \\ \hline
 \eqref{eq:huxley} & Heath-Brown, de la Vall\'ee Poussin & \eqref{eq:G1}, Lemmas~\ref{lem:blin}, \ref{lem:margin} \\
 Lemma~\ref{lem:adapted} (adaptedness) & Lemma~\ref{lem:C2} (causality), Section~\ref{sec:params}, Theorem~\ref{thm:caplw}(b),(c) & Section~\ref{sec:noncirc}, Lemma~\ref{lem:budget} \\
 \eqref{eq:G1} (positivity) & \eqref{eq:huxley}, the cap, \eqref{eq:ampl} & slots, \ref{eq:sF1} \\
-\eqref{eq:T1} (target error) & Rankin; Lemma~\ref{lem:lemmaP}$\downarrow$ & Theorem~\ref{thm:A}(i), Section~\ref{sec:noise}, Lemma~\ref{lem:ZA} \\
+\eqref{eq:T1} (target error) & Rankin; Theorem~\ref{thm:caplw}(b); Lemma~\ref{lem:lemmaP}$\downarrow$ & Theorem~\ref{thm:A}(i), Section~\ref{sec:noise}, Lemma~\ref{lem:ZA} \\
 Lemmas~\ref{lem:count}--\ref{lem:excess} & the greedy rule & Theorem~\ref{thm:queue}, Corollary~\ref{cor:localcount}, \eqref{eq:La} \\
 Lemmas~\ref{lem:ZB}, \ref{lem:ZBlow} & \eqref{eq:rhodet}; partial summation & Section~\ref{sec:zeros}; Theorem~\ref{thm:lp} \\
 Lemma~\ref{lem:ZA} & Lemma~\ref{lem:lemmaP}$\downarrow$, Theorem~\ref{thm:caplw}(b)$\downarrow$ & Theorem~\ref{thm:zeros} \\

@@ -1,9 +1,16 @@
 # Model for Theorem caplw (Section 6 of the paper). All quantities in log space; l = log L, L = log z, Lam = log X0.
 import math
-# THETA_B is the absorption-window exponent theta_b of Lemma lemmaP (h(u) = u^theta_b). The criterion (eq:twelvetwo) is monotone
-# in theta_b, so the default is the worst case theta_b = 1/20 of the paper (theta = 1/20); set CAPL_THETA_B to override (1/8 is the
-# value for theta in [1/8, 1/4]).
-LAM = 1e8; THETA_B = float(__import__('os').environ.get('CAPL_THETA_B', 1/20)); SLACK = 1.0
+# The absorption window h of Lemma lemmaP is the theta-free window of the paper (Section params, Follow-up S1):
+#   log h(u) = L/8 for L <= 400 Lam^2, and log h(u) = max(50 Lam^2, 27 Lam l^2, 120 l^4/log l) beyond (L = log u, l = log L).
+# Setting CAPL_THETA_B evaluates instead the superseded power window h(u) = u^theta_b (log h = theta_b L), for comparison only.
+_TB = __import__('os').environ.get('CAPL_THETA_B')
+LAM = 1e8; THETA_B = float(_TB) if _TB else None; SLACK = 1.0
+def logh_of(l, lam=LAM):
+    """log h(u) at l = log log u (theta-free window; or theta_b L if CAPL_THETA_B is set)."""
+    L = math.exp(l) if l < 700 else math.inf
+    if THETA_B is not None: return THETA_B*L
+    if L <= 400*lam*lam: return L/8
+    return max(50*lam*lam, 27*lam*l*l, 120*l**4/math.log(l))
 def lse(a, b): m = max(a, b); return m + math.log(math.exp(a - m) + math.exp(b - m))
 def base(l, lam=LAM):
     """log L, log D, log r0, log(pi) with pi = r0*D (worst-case labels)."""
@@ -69,11 +76,11 @@ def logy_of(logc, l):
     lH = max(8*l*l, 2*logM1)
     logL0 = max(5*l, math.log(48) - 2*math.log(0.15) + logM1 + 3*l)   # L0 = max(L^5, 48 M1 L^3 / c'^2), c' = 0.15
     return lH + logL0 + 6*l + math.log(2), logM1
-def lemmaP_ok(logc, l_hi, l_lo, lam=LAM, theta_b=THETA_B):
-    """A empty (y <= X0) at l_hi, or (12.2) at worst corners."""
+def lemmaP_ok(logc, l_hi, l_lo, lam=LAM):
+    """A empty (y <= X0) at l_hi, or (12.2) at worst corners (window h at l_lo, y and C_d at l_hi)."""
     logy, logM1 = logy_of(logc, l_hi)
     if logy <= lam: return True
-    logu0 = math.log(theta_b) + l_lo - math.log(logy)
+    logu0 = math.log(logh_of(l_lo, lam)) - math.log(logy)
     if logu0 < math.log(100): return False   # (12.2) requires u0 >= 100
     lhs = math.log(0.9) + logu0 + math.log(logu0)
     rhs = math.log(logy + (logM1 + 6*l_hi - math.log(2)) + 4*l_hi)

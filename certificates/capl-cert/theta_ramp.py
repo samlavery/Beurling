@@ -1,3 +1,5 @@
+# LEGACY (Follow-up S1): checks the superseded power window h = u^theta_b (theta_b = 1/20 unless CAPL_THETA_B is set); the paper
+# now uses the theta-free window, checked by window_check.py. Kept for the record of FOLLOWUP-THETA.md.
 # Step 5 of the proof of Theorem caplw and hypothesis (*) of Lemma lemmaP(v) on the raised range, as functions of theta_b
 # (paper: Theorem caplw, Step 5; Lemma lemmaP, steps (v)-(vi)). Double precision; a cross-check, not a proof step.
 #  (A) the analytic Step 5 inequality e^s log(theta_b Lam e^s/(3.01 gamma)) >= 13.45 gamma^2/theta_b on s in [s_H, s_H + 30],
@@ -11,7 +13,7 @@ import io, contextlib
 with contextlib.redirect_stdout(io.StringIO()):
     import analytic_capl as AC
 from capl_model import logy_of, THETA_B
-tb = THETA_B
+tb = THETA_B if THETA_B is not None else 1/20
 sH, g0 = AC.sH, AC.gstar(AC.sH); gp = 7.5 - g0
 print(f"theta_b = {tb}; s_H = {sH:.6f}, e^s_H = {math.exp(sH):.4f}, gamma(s_H) = {g0:.6f}")
 worst, wt = math.inf, None
