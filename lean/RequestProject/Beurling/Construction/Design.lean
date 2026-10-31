@@ -14,7 +14,7 @@ it is **proved** that the rule defines the heights by recursion: on `(1, a_k]` (
 `γ_j, α_j` for `j < k` (`earlyOf_congr`). `designedGamma` is the resulting sequence, and
 `designedGamma_fixed` is the fixed-point condition.
 
-**The parameters of Section 2.2.** `κ = X₀^{-5/12 + 2ε_κ}` with `ε_κ = 0.01`, `κ₀ = 1/4`, and the
+**The parameters of Section 2.2.** `κ = X₀^{-5/12 + 2ε_κ}` with `ε_κ = 0.01`, `κ₀ = X₀⁻¹`, and the
 switch-on points `x⁺_0 = exp(X₀²)`, `x⁺_{k+1} = exp(x⁺_k)` (the least admissible choice). Their
 required properties are proved (`kappaParam_*`, `switchOn_*`).
 -/

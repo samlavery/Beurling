@@ -121,3 +121,21 @@ An independent checker passed the mathematics of 92333a3. Its wording fixes:
 - (b) rem:landau: the caveat "a reason, not a theorem; absolute weights only" is moved into the first sentence.
 - (c) rem:landau, the barrier argument: the bound for the part v ≤ V was wrong as written. (2v)^δ/log(2v) is largest at an endpoint, which can be v ≈ X_0⁻/2. It now reads (b/C_S)·max((2V)^δ/log 2V, 2/log X_0), with v ≥ X_0⁻/2. The 2b/(C_S log X_0) term is far below ½, so the conclusion V^δ ≳ log V is unchanged.
 - (d) Where κ_0 ≤ Λ⁻⁵ is used: corrected in the 02-construction comment and above.
+
+## Lean (branch lean-landau)
+
+The Lean development now follows variant B (the paper's statement):
+- `kappa0Param X₀ = X₀⁻¹`; `heightScale`/`amplitudeOf` use `log x` (eq. (ampl), `κ'_k = κ₀`).
+- `DesignedZero.lemma_4_6`: `|(1 - Re s*) log x_k - log log x_k| ≤ 2Λ + 4`.
+- Lemma G1: `Slope.abs_deriv_oscTerm_designed`, `|R_k'(x)| ≤ 2κ₀ (x_k/x)^{1/2}/L_k`.
+  The slope bound `0.02/log x` has two parts: the one window `x_k < x < x_{k+1}` contributes `4κ₀`, and the older oscillations decay.
+- `G1BRprime.rprimeChange_all` is the Step 3/4 split:
+  - old oscillations (`x_{i+1} < 2y`) are resolvable (`gammaD_res_of_old`), so their change is smooth via `R''` and `δγ² ≤ log⁻⁴ y`;
+  - the current oscillation is handled by the Saias pointwise bound (`sum_window_le'`).
+  - `RprimeChangeR`'s right-hand side is now `2 log⁻² y + 3000κ₀`.
+- `Theorem410Inputs`, `theorem_4_10` and `TheoremAConclusion` also state `log Im ρ_k = (1-θ) log x_k - log log x_k + O(1)`.
+  Without it, an existential `x_k` makes the `log log` coefficient meaningless.
+- New theorems in `Model/MarginComplete.lean`:
+  - `theorem21_complete : Huxley84 → Theorem21`;
+  - `theoremA_ii_complete` (part (ii) for the realised systems).
+- Axioms of `corollary_2_2_complete` (statement unchanged) and of the new theorems: `[propext, Classical.choice, Quot.sound]`.

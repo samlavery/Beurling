@@ -73,6 +73,39 @@ theorem theorem21InputsH_proved (h84 : BaseRange.Huxley84) : Theorem21InputsH :=
 theorem corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ :=
   corollary_2_2_hux h84 (theorem21InputsH_proved h84)
 
+/-- **Theorem 2.1 (Theorem A)** from eq. (84) alone: the full conclusion, (i) and (ii), for the
+realised systems on an event of probability `≥ 1 - 1.5/log X₀`. -/
+theorem theorem21_complete (h84 : BaseRange.Huxley84) : Theorem21 :=
+  theorem21_of_S (BaseRange.shortIntervalPNT_of_huxley h84) tiesNull
+    (Queue6.theorem21InputsS_of_X (BaseRange.shortIntervalPNT_of_huxley h84)
+      (Queue6.theorem21InputsX_of_Y (Queue6.theorem21InputsY_of_Z
+        (theorem21InputsZ_hux h84 (theorem21InputsH_proved h84)))))
+
+/-- **Theorem A(ii), the designed zeros at `1·log log`** (eq. (ampl) with the constant relative
+amplitude `κ'_k = κ₀ = X₀⁻¹ ∈ [X₀⁻¹, Λ⁻⁵]`), from eq. (84) alone: for every
+`θ ∈ [1/4, 1/2 - 10⁻⁴]` and every even `X₀ ≥ max(e^{10⁸}, X_Hux)`, on an event `G` of probability
+`≥ 1 - 1.5/log X₀`, the zeta function of the realised system `P(ω)` continues to a punctured
+half-plane `Re s > a`, `a < 1`, and has zeros `ρ_k` there with, along `x_k → ∞`,
+`Re ρ_k = 1 - (log log x_k + O_{X₀}(1))/log x_k` and
+`log Im ρ_k = (1 - θ) log x_k - log log x_k + O_{X₀}(1)` (so `x_k` is pinned by the height of
+`ρ_k`, and `1 - Re ρ_k ≍ (1-θ) log log Im ρ_k / log Im ρ_k`). -/
+theorem theoremA_ii_complete (h84 : BaseRange.Huxley84) :
+    ∀ θ ∈ Set.Icc (1 / 4 : ℝ) (1 / 2 - 1 / 10000), ∃ XHux : ℝ, ∀ X₀ : ℕ, Even X₀ →
+      Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
+      ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
+        IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
+        ∀ ω ∈ G, ∃ a < (1 : ℝ), ∃ F : ℂ → ℂ, (P ω).IsZetaContinuation a F ∧
+          ∃ (ρ : ℕ → ℂ) (xk : ℕ → ℝ) (C : ℝ), Filter.Tendsto xk Filter.atTop Filter.atTop ∧
+            (∀ k, ρ k ∈ puncturedHalfPlane a ∧ F (ρ k) = 0) ∧
+            (∀ k, |(1 - (ρ k).re) * Real.log (xk k) - Real.log (Real.log (xk k))| ≤ C) ∧
+            ∀ k, |Real.log (ρ k).im -
+              ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k)))| ≤ C := by
+  intro θ hθ
+  obtain ⟨XHux, hX⟩ := theorem21_complete h84 θ hθ
+  refine ⟨XHux, fun X₀ hev h1 h2 => ?_⟩
+  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX X₀ hev h1 h2
+  exact ⟨Ω, m, μ, P, G, hμ, hG, fun ω hω => (hP ω hω).2⟩
+
 end BModel
 
 end

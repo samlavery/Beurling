@@ -49,7 +49,7 @@ theorem lemma_4_2_first_statement {X₀ : ℕ} (hX : 24 ≤ X₀) {κ T : ℝ} (
 
 /-- **The paper's heights are large enough.** With the paper's parameters (`θ ≤ 1/2`,
 `κ, κ₀ ≥ 1/X₀`, `κ ≤ 1`, `log x ≥ X₀²` since `x ≥ x₁ ≥ e^{X₀²}`), the height
-`Γ = κ₀ x^{1-θ}/(2 log³ x)` of Lemma 4.8 satisfies `κ (Γ - 1/2) ≥ e^{X₀²/3}`. So the condition
+`Γ = κ₀ x^{1-θ}/(2 log x)` of Lemma 4.8 satisfies `κ (Γ - 1/2) ≥ e^{X₀²/3}`. So the condition
 `κ T ≥ e^{X₀²/3}` of `lemma_4_2_first_statement` holds with `T = Γ - 1/2`, and the condition
 `κ Γ ≥ e^{X₀²/3}` of Lemma 4.8(i) holds as well. -/
 theorem paper_height_large {θ κ κ₀ x : ℝ} {X₀ : ℕ} (hθ : θ ≤ 1 / 2) (hX : 24 ≤ X₀)

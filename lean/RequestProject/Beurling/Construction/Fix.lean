@@ -10,7 +10,7 @@ public import RequestProject.Beurling.Construction.LocalCount
 `Theorem21InputsFix` is `Theorem21InputsCon` with the following former hypotheses **removed**
 (they are now proved):
 
-* the parameters of Section 2.2 are fixed: `κ = X₀^{-5/12+2ε_κ}`, `κ₀ = 1/4`,
+* the parameters of Section 2.2 are fixed: `κ = X₀^{-5/12+2ε_κ}`, `κ₀ = X₀⁻¹`,
   `x⁺_0 = exp(X₀²)`, `x⁺_{k+1} = exp(x⁺_k)`; their required properties (`0 < κ ≤ 1`,
   `κ, κ₀ ≥ X₀⁻¹`, `κ₀ ≤ 1/4`, the spacing, `x⁺_0 ≥ X₀`, `log x⁺_0 ≥ X₀²`) are proved;
 * the heights `γ_k` and amplitudes `α_k` are *defined* by the recursive rule of Lemma 4.8
