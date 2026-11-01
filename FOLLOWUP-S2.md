@@ -173,7 +173,7 @@ and 14 overfull boxes, the same count as the S1 build. The checked-in beurling-p
 `lake build` is green (10148 jobs). `#print axioms` of `BModel.theoremAprime`, `BModel.one_zero_system_exists`,
 `BModel.corollary_2_2_complete`, `BModel.theoremA_full` and `BModel.theoremA_ii_complete` gives
 [propext, Classical.choice, Quot.sound]. `Main.lean`, `Defs.lean`, `Huxley.lean` and `MarginComplete.lean` are unchanged.
-Statements (`lean/RequestProject/Beurling/OneZero/TheoremAprime.lean`):
+Statements (`RequestProject/Beurling/OneZero/TheoremAprime.lean`):
 
 - `theoremAprime : Huxley84 → ∃ XHux, ∀ X₀ even, e^{10⁸} ≤ X₀ → XHux ≤ X₀ → ∃ Ω μ P G, μ G ≥ 1 − 1.5/log X₀ ∧
   ∀ ω ∈ G, TheoremAprimeConclusion (P ω)`. The conclusion is:

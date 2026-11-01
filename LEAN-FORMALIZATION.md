@@ -1,6 +1,6 @@
 # Lean formalization: status, trust base and defects
 
-**Summary.** The Lean 4 project in [`lean/`](lean/) proves Theorem A for θ ∈ (0, 1/2 − 10⁻⁴] (one threshold X_Hux for all θ; follow-up S1) with zeros at
+**Summary.** The Lean 4 project at the repository root (`lakefile.toml`, `RequestProject/`) proves Theorem A for θ ∈ (0, 1/2 − 10⁻⁴] (one threshold X_Hux for all θ; follow-up S1) with zeros at
 1·log log (`BModel.theoremA_full`, `BModel.theoremA_ii_complete`), Theorem A′ (a single discrete [1, 0]-system; follow-up S2;
 `BModel.theoremAprime`, `BModel.one_zero_system_exists`), and Corollary 2.2 (the answer to Question Q is negative) from a
 single hypothesis, eq. (84), a short-interval prime number theorem for the rational primes:
@@ -9,7 +9,7 @@ single hypothesis, eq. (84), a short-interval prime number theorem for the ratio
 theorem BModel.corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ
 ```
 
-(`lean/RequestProject/Beurling/Model/MarginComplete.lean`). There is no `sorry` and no custom axiom. The trust base is
+(`RequestProject/Beurling/Model/MarginComplete.lean`). There is no `sorry` and no custom axiom. The trust base is
 Lean's kernel, Mathlib and (84) (see *Trust base*); the numerical certificates are kernel-checked.
 All checking of the correspondence between the paper and the Lean statements has been done by AI agents; independent
 human review is pending.
@@ -19,15 +19,14 @@ human review is pending.
   `75307cfd-…-aristotle.tar.gz` of 2026-10-26, which proved the theorem from one large hypothesis (`Theorem21InputsS`,
   about 90 of the 128 proof pages). The rest was formalized in this repository between 2026-10-26 and 2026-10-29 by
   Claude agents; the git history has the rounds.
-- Aristotle's README is renamed `lean/ARISTOTLE_README.md`. Its summary of its last step is `lean/ARISTOTLE_SUMMARY.md`.
-  Its notes mapping Lean results to the paper and the certificate scripts are in `lean/BSCERT_NOTES.md`.
+- Aristotle's README is renamed `ARISTOTLE_README.md`. Its summary of its last step is `ARISTOTLE_SUMMARY.md`.
+  Its notes mapping Lean results to the paper and the certificate scripts are in `BSCERT_NOTES.md`.
 - The archive also bundled a copy of the paper and of the certificate scripts. They are omitted here: the PDF is the
   repository's `beurling-paper.pdf` at 9ac0624, and every script is byte-identical to its copy under `certificates/`.
 
 **Building.** Lean `v4.35.0`, Mathlib `v4.35.0`:
 
 ```
-cd lean
 lake exe cache get
 lake build
 ```
@@ -64,7 +63,7 @@ lake build
 - **(84)**, as the hypothesis `Huxley84` (above).
 - **Numerical certificates, kernel-checked.** Until 2026-10-30 these used `native_decide` (`Lean.ofReduceBool`,
   `Lean.trustCompiler`). They are now proved by `decide +kernel` on fixed-point interval arithmetic (`BSCert/FX`), with
-  adaptive covers and reductions described in `lean/KERNEL-CERT-NOTES.md`; generators are in `lean/scripts/`. The
+  adaptive covers and reductions described in `KERNEL-CERT-NOTES.md`; generators are in `scripts/`. The
   files that still contain `native_decide` (`CMCertSharp`, `RankinCert75`, `SmallCertExtra`) are outside the proof's
   import closure. The certificates were, before the change:
   - `BSCert/Z2Chunks/C00–C31`: the 32 band covers of region Z2 (bs-cert);
@@ -74,7 +73,7 @@ lake build
     for n ≤ 10⁶);
   - `Construction/NatPrimeCount`, and `Noise/{BSL57PSize, BSLargePos, BSLargeRatio, BSLargeSlack, BSLargeEpsCert,
     KRHordCert, MarginVarCert}`: π(N) ≤ 2N/log N for N ≤ 1000 and point evaluations for Lemma 5.7 and §5.
-  Each mirrors a script under `certificates/`, which reproduces it independently (see `lean/BSCERT_NOTES.md`).
+  Each mirrors a script under `certificates/`, which reproduces it independently (see `BSCERT_NOTES.md`).
 
 ## Theorem A for θ ∈ [1/20, 1/2 − 10⁻⁴] (branch lean-theta, 2026-10-30)
 
@@ -139,7 +138,7 @@ Checked only by the Lean kernel and the AI agent that wrote it; no human review.
 This section is the log of the formalization rounds. Items marked open or named there were closed later; the
 final statement is above.
 
-The full map, result by result, is in `lean/BSCERT_NOTES.md`. In outline:
+The full map, result by result, is in `BSCERT_NOTES.md`. In outline:
 - **Section 4.**
   - The decomposition (14) and Lemmas 4.2, 4.4, 4.6 and 4.7.
   - Lemma 4.8(i), including the Montgomery–Vaughan mean-value theorem (Hilbert's inequality) and the Paley–Zygmund step.

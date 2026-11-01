@@ -184,7 +184,7 @@ theorem for the realised system, and a counting theorem for clusters of composit
 
 ## Lean formalization
 
-A Lean 4 formalization in [`lean/`](lean/), started by [Aristotle](https://aristotle.harmonic.fun) (Harmonic) and
+A Lean 4 formalization at the repository root (`lakefile.toml`, [`RequestProject/`](RequestProject/)), started by [Aristotle](https://aristotle.harmonic.fun) (Harmonic) and
 completed here, proves Corollary 2.2 (the answer to Question Q is negative) from (84) alone, with no `sorry`:
 
 ```lean
@@ -225,7 +225,7 @@ defects in the Aristotle model
 | `paper/` | the paper (LaTeX). `main.tex` inputs the files in `paper/sections/`. |
 | `certificates/` | the computer-assisted parts and numerical cross-checks (Python 3), described in Appendix B of the paper |
 | `review/` | the AI referee reports written while the proof was developed (two component referees and one end-to-end referee; they refer to working notes that are not included here), the AI consistency check of the paper (`paper-check.md`, `subchecks/`), and the re-check after the fixes (`paper-recheck.md`, `recheck/`) |
-| `lean/` | the Lean 4 project (Lean/Mathlib v4.35.0), started by Aristotle: Corollary 2.2 proved from (84) alone (`BModel.corollary_2_2_complete`), with the certificates of Appendix B |
+| `lakefile.toml`, `lake-manifest.json`, `lean-toolchain`, `RequestProject/` | the Lean 4 project (Lean/Mathlib v4.35.0), started by Aristotle: Corollary 2.2 proved from (84) alone (`BModel.corollary_2_2_complete`), with the certificates of Appendix B |
 | `LEAN-FORMALIZATION.md` | the Lean formalization: final statement, trust base, defects found, and the progress log |
 | `CORRECTIONS-vs-v3.md` | every deviation of the paper from the refereed draft ("v3"), with justification |
 | `PAPER-SPEC.md`, `paper/LABELS.md`, `review/PAPER-CHECK-BRIEF.md`, `review/RECHECK-BRIEF.md` | process documents: the instructions given to the AI agents that wrote and checked the paper |
@@ -259,5 +259,6 @@ outputs are listed in Appendix B of the paper:
 
 ## Licences
 
-The paper (`paper/`, `review/`) is licensed under CC BY 4.0 (`LICENSE-paper.txt`). The code (`certificates/`) is licensed under
-MIT (`LICENSE-code.txt`).
+The repository licence is MIT ([`LICENSE`](LICENSE)); it covers the code: the Lean project (`RequestProject/`, `scripts/`,
+`Challenge.lean`, `Solution.lean`) and the certificates (`certificates/`). The paper text (`paper/`, `beurling-paper.pdf`,
+`review/` and the other prose documents) is licensed under CC BY 4.0 ([`LICENSE-paper.txt`](LICENSE-paper.txt)).

@@ -10,5 +10,5 @@ main.bbl
 __pycache__/
 
 # Lean build artifacts and archives
-lean/.lake/
+.lake/
 *.tar.gz
