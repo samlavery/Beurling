@@ -132,9 +132,10 @@ automation:
     development; Claude agents completed it and found and fixed defects in the
     paper and in Aristotle's model (listed in LEAN-FORMALIZATION.md and
     CORRECTIONS-vs-v3.md). The statement surface Challenge.lean was written and
-    checked against the development by a Claude agent; lake comparator confirms
-    that the statements and definitions agree with the development and that
-    only propext, Quot.sound and Classical.choice are used.
+    checked against the development by a Claude agent (definitions copied
+    verbatim; #print axioms of both theorems gives only propext, Quot.sound and
+    Classical.choice). lake comparator is run by Palomar's CI; it was not run
+    locally (it needs a Linux sandbox).
 
 fidelity:
   divergences: >-
@@ -155,7 +156,7 @@ review:
   notes: >-
     Pre-submission review consisted only of AI checks: Claude agents compared
     the Lean statements and definitions with the paper (Challenge.lean was
-    copied verbatim from the development and checked by lake comparator), and
+    copied verbatim from the development), and
     AI component, end-to-end and adversarial referees checked the paper
     (review/). The Lean kernel checks the proofs and the numerical
     certificates. No human mathematician has reviewed the paper, the
