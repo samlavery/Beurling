@@ -6,8 +6,8 @@ project:
   name: "Discrete Beurling number systems with integer error below every power, without a zero-free half-plane (assuming the short-interval prime number theorem (84))"
   description: >-
     A Lean 4 / Mathlib formalization of S. Lavery, "Discrete Beurling number
-    systems with integer error O(x^θ), θ < 1/2, whose zeta function has no
-    zero-free half-plane". The headline theorem, BModel.one_zero_system_exists,
+    systems with integer error below every power of x and no zero-free
+    half-plane". The headline theorem, BModel.one_zero_system_exists,
     constructs a discrete Beurling generalized number system whose integer
     counting function satisfies N(x) = x + O_ε(x^ε) for every ε > 0, while its
     zeta function is zero-free on no half-plane Re s > 1 − ε (a discrete
@@ -44,7 +44,7 @@ classification:
   msc2020: ["11N80", "11M41"]
 
 sources:
-  - title: "Discrete Beurling number systems with integer error O(x^θ), θ < 1/2, whose zeta function has no zero-free half-plane"
+  - title: "Discrete Beurling number systems with integer error below every power of x and no zero-free half-plane"
     authors:
       - "Samuel Lavery"
     type: "paper (preprint, AI-assisted, not peer reviewed)"

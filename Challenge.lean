@@ -6,7 +6,7 @@ public import Mathlib
 # Discrete Beurling number systems with integer error below every power and no zero-free half-plane
 
 This file is the statement surface of the formalization of S. Lavery, *Discrete Beurling number
-systems with integer error `O(x^θ)`, `θ < 1/2`, whose zeta function has no zero-free half-plane*
+systems with integer error below every power of `x` and no zero-free half-plane*
 (the PDF `beurling-paper.pdf` and the LaTeX sources `paper/` of this repository). The proofs are
 in `RequestProject/`; `Solution.lean` imports them.
 
