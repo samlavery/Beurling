@@ -102,7 +102,7 @@ theorem theorem21InputsT_of_U (hHB : ShortIntervalPNT) (h : Theorem21InputsU) :
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this
-  have hc : Cond θ X₀ := ⟨hθ, hlog, hx₁.mono ((le_max_right _ _).trans h2)⟩
+  have hc : Cond θ X₀ := ⟨(Set.Ioc_subset_Icc_self hθ), hlog, hx₁.mono ((le_max_right _ _).trans h2)⟩
   exact ⟨queueInputs_of_U hc hev Q⟩
 
 /-- **Corollary 2.2** from `Theorem21InputsU` and (84). -/

@@ -53,7 +53,7 @@ end Counts
 /-- The standing hypotheses: the target of `M` is the paper's target for the realised system, the
 arrivals are its composites, and the jitters lie in `[0, 1]`. -/
 structure LinkedModel (θ : ℝ) (X₀ : ℕ) (M : SlotModel X₀) (U : ℕ → ℝ) (a : ℕ → ℝ) : Prop where
-  hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)
+  hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)
   hX : 10 ^ 8 ≤ Real.log X₀
   hU : ∀ j, U j ∈ Icc (0 : ℝ) 1
   hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) U))

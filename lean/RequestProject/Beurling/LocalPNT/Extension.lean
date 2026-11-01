@@ -147,28 +147,42 @@ lemma differentiableOn_oscHat {θ α γ xk : ℝ} (hθ : 0 ≤ θ) :
   rw [e]
   exact differentiableOn_id.mul hd
 
-/-- `R̂ = ∑_k R̂_k` is holomorphic on `σ > θ + 2/5`. -/
-lemma differentiableOn_oscHatSum {θ : ℝ} (hθ : 0 ≤ θ) {α γ xp : ℕ → ℝ}
-    (hα : ∀ k, |α k| ≤ 2) (hX : ∀ k, (2 : ℝ) ^ k ≤ xp k) :
-    DifferentiableOn ℂ (oscHatSum θ α γ xp) {s : ℂ | θ + 2 / 5 < s.re} := by
+/-- `R̂_k` is holomorphic on `σ > θ_k`, for every design. -/
+lemma differentiableOn_oscHatK {θ α γ xk : ℝ} (ht0 : 0 ≤ thK θ xk) :
+    DifferentiableOn ℂ (oscHatK θ α γ xk) {s : ℂ | thK θ xk < s.re} := by
+  by_cases hθ : θ = 0
+  · subst hθ
+    have h := ((differentiableOn_oscHat (α := α) (γ := γ) (xk := xk) ht0).sub
+      (differentiableOn_oscHat (α := α) (γ := γ) (xk := xk * max xk 1) ht0))
+    exact h.congr fun s hs => oscHatK_zero hs
+  · have e : oscHatK θ α γ xk = oscHat θ α γ xk := by funext s; exact oscHatK_of_ne hθ _ _ _ _
+    rw [e]
+    rw [thK_of_ne hθ] at ht0 ⊢
+    exact differentiableOn_oscHat ht0
+
+/-- `R̂ = ∑_k R̂_k` is holomorphic on `σ > t + 2/5`, when every per-zero exponent is in
+`[0, t]`. -/
+lemma differentiableOn_oscHatSum {θ t : ℝ} {α γ xp : ℕ → ℝ} (ht0 : ∀ k, 0 ≤ thK θ (xp k))
+    (ht : ∀ k, thK θ (xp k) ≤ t) (hα : ∀ k, |α k| ≤ 2) (hX : ∀ k, (2 : ℝ) ^ k ≤ xp k) :
+    DifferentiableOn ℂ (oscHatSum θ α γ xp) {s : ℂ | t + 2 / 5 < s.re} := by
   intro s0 hs0
-  set U : Set ℂ := {s : ℂ | θ + 2 / 5 < s.re} ∩ Metric.ball 0 (‖s0‖ + 1)
+  set U : Set ℂ := {s : ℂ | t + 2 / 5 < s.re} ∩ Metric.ball 0 (‖s0‖ + 1)
   have hU : IsOpen U := (isOpen_lt continuous_const Complex.continuous_re).inter
     Metric.isOpen_ball
   have hmem : s0 ∈ U := ⟨hs0, by simp⟩
   set q : ℝ := (2 : ℝ) ^ (-(2 / 5 : ℝ))
   have hq0 : 0 ≤ q := by positivity
   have hq1 : q < 1 := Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by norm_num)
-  have hsum : Summable (fun k : ℕ => 5 * (‖s0‖ + 1) * q ^ k) :=
+  have hsum : Summable (fun k : ℕ => 10 * (‖s0‖ + 1) * q ^ k) :=
     (summable_geometric_of_lt_one hq0 hq1).mul_left _
-  have hd : DifferentiableOn ℂ (fun w => ∑' k, oscHat θ (α k) (γ k) (xp k) w) U := by
+  have hd : DifferentiableOn ℂ (fun w => ∑' k, oscHatK θ (α k) (γ k) (xp k) w) U := by
     refine differentiableOn_tsum_of_summable_norm hsum (fun k => ?_) hU ?_
-    · exact (differentiableOn_oscHat hθ).mono fun w hw => by
-        have : θ + 2 / 5 < w.re := hw.1
-        show θ < w.re; linarith
+    · exact (differentiableOn_oscHatK (ht0 k)).mono fun w hw => by
+        have : t + 2 / 5 < w.re := hw.1
+        show thK θ (xp k) < w.re; linarith [ht k]
     · intro k w hw
       have hxk : 1 ≤ xp k := le_trans (one_le_pow₀ (by norm_num)) (hX k)
-      have h1 := norm_oscHat_le_of_re (θ := θ) (γ := γ k) hxk (hα k) hw.1.le
+      have h1 := norm_oscHatK_le_of_re (γ := γ k) hxk (hα k) (ht k) hw.1.le
       have hw' : ‖w‖ ≤ ‖s0‖ + 1 := by
         have := hw.2; rw [Metric.mem_ball, dist_zero_right] at this; exact this.le
       have h2 : xp k ^ (-(2 / 5 : ℝ)) ≤ q ^ k := by
@@ -177,8 +191,8 @@ lemma differentiableOn_oscHatSum {θ : ℝ} (hθ : 0 ≤ θ) {α γ xp : ℕ →
         refine h3.trans (le_of_eq ?_)
         rw [← Real.rpow_natCast, ← Real.rpow_mul (by norm_num), ← Real.rpow_natCast,
           ← Real.rpow_mul (by norm_num), mul_comm]
-      calc ‖oscHat θ (α k) (γ k) (xp k) w‖ ≤ 5 * ‖w‖ * xp k ^ (-(2 / 5 : ℝ)) := h1
-        _ ≤ 5 * (‖s0‖ + 1) * q ^ k := by gcongr
+      calc ‖oscHatK θ (α k) (γ k) (xp k) w‖ ≤ 10 * ‖w‖ * xp k ^ (-(2 / 5 : ℝ)) := h1
+        _ ≤ 10 * (‖s0‖ + 1) * q ^ k := by gcongr
   exact (hd.differentiableAt (hU.mem_nhds hmem)).differentiableWithinAt
 
 /-! ## The lag `D = N - T₀` on `[1, y]` -/
@@ -354,8 +368,8 @@ theorem zetaSharp_eq {s : ℂ} (hs : 1 < s.re) :
   have hX1 : 1 ≤ X₀ := by exact_mod_cast h.one_le_X0
   have hκ : 0 < kap X₀ := kappa_pos_aux h.logX
   obtain ⟨hiB, heB⟩ := mellin_baseErr h.smooth_X0 hκ hs0 hs1
-  obtain ⟨hiR, heR⟩ := mellin_osc h.theta_mem.1.ne' (θ := θ) (γ := γ) h.spacing (C := 2) h.alpha_le
-    (show θ < s.re by linarith [h.theta_mem.2])
+  obtain ⟨hiR, heR⟩ := mellin_osc_of (θ := θ) (γ := γ) h.spacing (C := 2) h.alpha_le h.thK_le
+    (show thU θ < s.re by linarith [thU_le h.theta_mem.2 (show (1 / 100 : ℝ) ≤ 1 / 2 - 1 / 10000 by norm_num)])
   have hlt : (-s).re < -1 := by simp; linarith
   have hiX : IntegrableOn (fun x : ℝ => (x : ℂ) ^ (-s)) (Ioi 1) :=
     integrableOn_Ioi_cpow_of_lt hlt one_pos
@@ -460,13 +474,14 @@ theorem zetaSharp_eq {s : ℂ} (hs : 1 < s.re) :
   push_cast
   ring
 
-/-- `ζ^♯` is holomorphic on `σ > θ + 2/5`, `s ≠ 1`. -/
-theorem differentiableAt_zetaSharp {s : ℂ} (hs : θ + 2 / 5 < s.re) (hs1 : s ≠ 1) :
+/-- `ζ^♯` is holomorphic on `σ > thU θ + 2/5`, `s ≠ 1`. -/
+theorem differentiableAt_zetaSharp {s : ℂ} (hs : thU θ + 2 / 5 < s.re) (hs1 : s ≠ 1) :
     DifferentiableAt ℂ (zetaSharp P θ X₀ α γ xp y) s := by
-  have hθ0 : 0 ≤ θ := by linarith [h.theta_mem.1]
-  have hO : IsOpen {s : ℂ | θ + 2 / 5 < s.re} := isOpen_lt continuous_const Complex.continuous_re
+  have hθ0 : 0 ≤ thU θ := thU_nonneg h.theta_mem.1
+  have hO : IsOpen {s : ℂ | thU θ + 2 / 5 < s.re} :=
+    isOpen_lt continuous_const Complex.continuous_re
   have h1 := differentiableAt_ZBcont X₀ (kappa_pos_aux h.logX) (by linarith) hs1
-  have h2 := (differentiableOn_oscHatSum (γ := γ) hθ0 h.alpha_le
+  have h2 := (differentiableOn_oscHatSum (γ := γ) h.thK_nonneg h.thK_le h.alpha_le
     (Decomp.Spacing.two_pow_le h.spacing)).differentiableAt (hO.mem_nhds hs)
   have h3 := h.differentiable_earlyNoise s
   exact (h1.add h2).add h3

@@ -31,7 +31,7 @@ lemma target_sub_T0 {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ → ℝ} (cntA rhoA 
 
 /-- `2u^a + 4u^b + 6 X₀^{1/40} + 2 ≤ u^{θ'}` when `a, b ≤ 1/4`, `θ' ≥ 0.26` and `u ≥ X₀ / 2`
 (`D₀ ≤ u^{3·10⁻⁵} + u^{1/8} ≤ u^{0.26}`). -/
-lemma two_pow_le_thetaPrime {θ : ℝ} {X₀ : ℕ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
+lemma two_pow_le_thetaPrime {θ : ℝ} {X₀ : ℕ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) {u a b : ℝ} (hu : (X₀ : ℝ) / 2 ≤ u) (ha : a ≤ 1 / 4)
     (hb : b ≤ 1 / 4) :
     2 * u ^ a + 4 * u ^ b + 6 * (X₀ : ℝ) ^ (1 / 40 : ℝ) + 2 ≤ u ^ thetaPrime θ X₀ := by
@@ -67,7 +67,7 @@ lemma two_pow_le_thetaPrime {θ : ℝ} {X₀ : ℕ} (hθ : θ ∈ Ioc (0 : ℝ) 
 /-- **(LP-a) from the lag bound (13) below the horizon** (Theorem 5.24, (LP-a); Remark
 `horizon`(ii)). -/
 theorem lpa_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ → ℝ} {Xm zc : ℝ}
-    (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+    (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (cntA rhoA : ℝ → ℝ) (hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 40 : ℝ) ≤ Xm) (hXmX : Xm ≤ X₀)
     (hfl : ∀ u, u < Xm → P.N u = ⌊u⌋₊)
     (hlag : ∀ u, (X₀ : ℝ) ≤ u → u ≤ zc →
@@ -166,7 +166,7 @@ theorem lpa_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ 
 /-- **The hypotheses of Theorem 5.24 at every `y ∈ [X₀, ž]`** from the design, Lemma 3.3 for
 `T₀`, and the lag bound (13) with the absorbed target error below the horizon `ž`. -/
 theorem lpHyp_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ → ℝ} {Xm zc y : ℝ}
-    (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀) (hev : Even X₀)
+    (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀) (hev : Even X₀)
     (hα : ∀ k, |α k| ≤ 2) (h0 : Real.exp ((X₀ : ℝ) ^ 2) ≤ xp 0)
     (hsp : ∀ k, Real.exp (xp k) ≤ xp (k + 1)) (hmono : MonotoneOn (T0 θ X₀ α γ xp) (Ici (X₀ : ℝ)))
     (cntA rhoA : ℝ → ℝ) (hXm : (X₀ : ℝ) - (X₀ : ℝ) ^ (1 / 40 : ℝ) ≤ Xm) (hXmX : Xm ≤ X₀)
@@ -195,7 +195,8 @@ theorem lpHyp_of_lag {P : BeurlingSystem} {θ : ℝ} {X₀ : ℕ} {α γ xp : �
       lpa_high := fun u h1 h2 => ⟨hhi u h1 (h2.trans hyz), le_rfl⟩ }
 
 /-- **(LP-c)** with eq. (Rhatbound): `|R̂(s)| ≤ |s| e^{-0.39 X₀²} ≤ |s|` on `σ ≥ 1 - 8/log X₀`. -/
-theorem lpc {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ → ℝ} (hθ : θ ≤ 1 / 2) (hX : 10 ^ 8 ≤ Real.log X₀)
+theorem lpc {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ → ℝ} (hθ : ∀ k, thK θ (xp k) ≤ 1 / 2)
+    (hX : 10 ^ 8 ≤ Real.log X₀)
     (hα : ∀ k, |α k| ≤ 2) (h0 : Real.exp ((X₀ : ℝ) ^ 2) ≤ xp 0)
     (hsp : ∀ k, Real.exp (xp k) ≤ xp (k + 1)) {s : ℂ} (hs : 1 - 8 / Real.log X₀ ≤ s.re) :
     ‖oscHatSum θ α γ xp s‖ ≤ ‖s‖ * Real.exp (-(39 / 100) * (X₀ : ℝ) ^ 2) ∧
@@ -206,11 +207,11 @@ theorem lpc {θ : ℝ} {X₀ : ℕ} {α γ xp : ℕ → ℝ} (hθ : θ ≤ 1 / 2
       have := Real.add_one_le_exp (Real.log X₀)
       rw [Real.exp_log (logX_pos_aux hX)] at this; linarith
     nlinarith
-  have hσ : θ + 2 / 5 ≤ s.re := by
+  have hσ : 1 / 2 + 2 / 5 ≤ s.re := by
     have : 8 / Real.log X₀ ≤ 8 / 10 ^ 8 := div_le_div_of_nonneg_left (by norm_num)
       (by norm_num) hX
     linarith
-  obtain ⟨hsum, hle⟩ := norm_tsum_oscHat_le (θ := θ) (γ := γ) hα h400 h0 hsp hσ
+  obtain ⟨hsum, hle⟩ := norm_tsum_oscHatK_le (θ := θ) (γ := γ) hα h400 h0 hsp hθ hσ
   have h1 : ‖oscHatSum θ α γ xp s‖ ≤ ‖s‖ * Real.exp (-(39 / 100) * (X₀ : ℝ) ^ 2) :=
     (norm_tsum_le_tsum_norm hsum).trans hle
   refine ⟨h1, h1.trans ?_⟩

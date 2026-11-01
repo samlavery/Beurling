@@ -142,6 +142,25 @@ lemma thK_zero_le {x : ℝ} (hx : 1 < x) (hℓ : 20 ≤ Real.log (Real.log x)) :
   have hp : 0 ≤ ℓ ^ 2 := sq_nonneg _
   nlinarith [mul_le_mul_of_nonneg_left h6 hp]
 
+/-- A crude upper exponent of the oscillations of the design `θ`: `θ` itself for `θ ≠ 0`, and
+`1/100` for the design `θ = 0` (`thK_switchOn_le`). -/
+noncomputable def thU (θ : ℝ) : ℝ := if θ = 0 then 1 / 100 else θ
+
+lemma thU_of_ne {θ : ℝ} (hθ : θ ≠ 0) : thU θ = θ := by simp [thU, hθ]
+
+lemma thU_nonneg {θ : ℝ} (hθ : 0 ≤ θ) : 0 ≤ thU θ := by
+  unfold thU; split_ifs <;> linarith
+
+lemma thU_le {θ c : ℝ} (hθ : θ ≤ c) (hc : 1 / 100 ≤ c) : thU θ ≤ c := by
+  unfold thU; split_ifs <;> linarith
+
+/-- For `log log x ≥ 20`, every per-zero exponent of the design `θ` is at most `thU θ`. -/
+lemma thK_le_thU (θ : ℝ) {x : ℝ} (hx : 1 < x) (hℓ : 20 ≤ Real.log (Real.log x)) :
+    thK θ x ≤ thU θ := by
+  by_cases hθ : θ = 0
+  · subst hθ; simpa [thU] using thK_zero_le hx hℓ
+  · rw [thK_of_ne hθ, thU_of_ne hθ]
+
 namespace BeurlingSystem
 
 lemma isOpen_puncturedHalfPlane (a : ℝ) : IsOpen (puncturedHalfPlane a) :=

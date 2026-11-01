@@ -74,12 +74,12 @@ theorem theorem21InputsS_of_V (hHB : ShortIntervalPNT) (h : Theorem21InputsV) :
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this
   have hHB0 : ShortIntervalPNTFrom X₀ := hx₁.mono ((le_max_right _ _).trans h2)
-  have hc : Cond θ X₀ := ⟨hθ, hlog, hHB0⟩
+  have hc : Cond θ X₀ := ⟨(Set.Ioc_subset_Icc_self hθ), hlog, hHB0⟩
   have hE1 := e1V hc hev Q.sec5 (Q.cover hc hev)
   refine ⟨ιF Q.sec5, inferInstance, EF θ X₀ Q.sec5, tF X₀ Q.sec5,
-    ⟨sF Q.sec5, tableBudget_core hθ hlog hHB0 tiesNull hev h1 (queueCore_of_V hc hev Q) hE1⟩,
+    ⟨sF Q.sec5, tableBudget_core (Set.Ioc_subset_Icc_self hθ) hlog hHB0 tiesNull hev h1 (queueCore_of_V hc hev Q) hE1⟩,
     fun ω hω hU => ?_⟩
-  exact goodAll_facts Q.sec5 hθ hlog hev hHB0 hω hU
+  exact goodAll_facts Q.sec5 (Set.Ioc_subset_Icc_self hθ) hlog hev hHB0 hω hU
 
 /-- Theorem 2.1 from `Theorem21InputsV` and (84). -/
 theorem theorem21_of_V (hHB : ShortIntervalPNT) (h : Theorem21InputsV) : Theorem21 :=

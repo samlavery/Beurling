@@ -136,14 +136,15 @@ theorem theorem21InputsN_of_O (h : Theorem21InputsO) : Theorem21InputsN := by
     rwa [Real.log_exp] at this
   refine ⟨M, ι, hι, E, time, htab, fun ω hG hω => ?_⟩
   obtain ⟨hlink, hS, ⟨hT, hq⟩, hC, hcl⟩ := hP ω hG hω
-  have L : LinkedModel θ X₀ (M ω) ω (constructionScale X₀ (swS θ X₀)) := ⟨hθ, hlog, hω, hT, hlink⟩
+  have L : LinkedModel θ X₀ (M ω) ω (constructionScale X₀ (swS θ X₀)) :=
+    ⟨Set.Ioc_subset_Icc_self hθ, hlog, hω, hT, hlink⟩
   have hTlow : ∀ x : ℝ, x < X₀ → (M ω).T x = ⌊x⌋₊ := by
     intro x hx
     rw [hT x]
     simp only [target, if_pos hx]
   have hinf : {k | placedAt (M ω) k}.Infinite :=
     placed_infinite_of_growth hω hlog hTlow
-      (fun x hx => T_ge_of_formula hθ hlog hT hx) hlink
+      (fun x hx => T_ge_of_formula (Set.Ioc_subset_Icc_self hθ) hlog hT hx) hlink
   have hok := realisedOK_of (M ω) hω hlog hTlow hinf
   refine ⟨hlink, ⟨hT, hq, Real.log, fun x hx => ⟨?_, le_rfl⟩, fun x hx _ => ?_,
     fun x hx hearly => ?_⟩, hC, hcl⟩

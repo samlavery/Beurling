@@ -441,7 +441,7 @@ lemma rpow_half_le {x z : ℝ} (hz : 8 ≤ z) (hx : x ≤ 2 * z) :
 
 /-- **Causality of one step of the construction** (Lemma 3.2, Lemma 3.5): if two slot models
 (with target `⌊x⌋` below `X₀`) agree up to height `z - 1`, the next step agrees up to `z`. -/
-theorem causal {θ : ℝ} (hθ0 : 0 < θ) (hθ2 : θ ≤ 2) (hX : 10 ^ 8 ≤ Real.log X₀) {U : ℕ → ℝ}
+theorem causal {θ : ℝ} (hθ0 : 0 ≤ θ) (hθ2 : θ ≤ 2) (hX : 10 ^ 8 ≤ Real.log X₀) {U : ℕ → ℝ}
     (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1) (hV : ValidHyp θ X₀) (hS : SlopeHyp θ X₀)
     {M M' : SlotModel X₀} (hM : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊)
     (hM' : ∀ x : ℝ, x < X₀ → M'.T x = ⌊x⌋₊) {z : ℝ} (hz : (X₀ : ℝ) ≤ z)

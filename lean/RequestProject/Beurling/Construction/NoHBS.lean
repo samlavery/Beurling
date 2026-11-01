@@ -47,7 +47,7 @@ theorem theorem21InputsK_of_L (h : Theorem21InputsL) : Theorem21InputsK := by
     rwa [Real.log_exp] at this
   refine ⟨M, ι, hι, E, time, htab, fun ω hG hω => ?_⟩
   obtain ⟨hinf, a, hI, hC, hcl⟩ := hP ω hG hω
-  exact ⟨hinf, a, hI, hC, sparsityInputs_of_cluster hθ hlog (M ω) ω hω hinf a hI hcl⟩
+  exact ⟨hinf, a, hI, hC, sparsityInputs_of_cluster (Set.Ioc_subset_Icc_self hθ) hlog (M ω) ω hω hinf a hI hcl⟩
 
 /-- `Theorem21InputsK` implies `Theorem21InputsL` (the cluster event is part of
 `SparsityInputs`), so the two hypotheses are equivalent. -/

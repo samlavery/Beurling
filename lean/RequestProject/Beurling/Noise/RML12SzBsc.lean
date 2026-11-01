@@ -23,7 +23,7 @@ variable {θ : ℝ} {X₀ : ℕ}
 
 set_option maxHeartbeats 2000000 in
 /-- **eq. (osc), second display, sharp**: `∑_{j ≤ J} (log 3v_j)² o_j ≤ 7.4·10⁻¹⁹`. -/
-theorem sum_oscG_sharp (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+theorem sum_oscG_sharp (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (J : ℕ) :
     ∑ i ∈ Finset.range (J + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG θ X₀ i ≤
       74 / 10 ^ 20 := by

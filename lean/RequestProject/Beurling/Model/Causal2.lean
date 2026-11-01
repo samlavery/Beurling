@@ -173,7 +173,7 @@ theorem gap_gamma2 {a xp z : ℝ} (ha : (X₀ : ℝ) ≤ a) (haH : a + 2 * capH 
 end Heights
 
 /-- **Causality with two jitter sequences.** -/
-theorem causal2 {θ : ℝ} (hθ0 : 0 < θ) (hθ2 : θ ≤ 2) (hX : 10 ^ 8 ≤ Real.log X₀)
+theorem causal2 {θ : ℝ} (hθ0 : 0 ≤ θ) (hθ2 : θ ≤ 2) (hX : 10 ^ 8 ≤ Real.log X₀)
     {U U' : ℕ → ℝ} (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1) (hU' : ∀ j, U' j ∈ Icc (0 : ℝ) 1)
     (hV : ValidHyp θ X₀) (hS : SlopeHyp θ X₀)
     {M M' : SlotModel X₀} (hM : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊)
@@ -299,7 +299,7 @@ theorem limModel_agree_jitters {n : ℕ} (hUU : ∀ j ≤ n, U j = U' j) :
             have := hm; unfold hor at this ⊢; push_cast at this; linarith
           linarith
       linarith
-    have hstep := causal2 (by linarith [h.hθ.1]) (by linarith [h.hθ.2]) hX h.hU h'.hU h.hV h.hS
+    have hstep := causal2 h.hθ.1 (by linarith [h.hθ.2]) hX h.hU h'.hU h.hV h.hS
       h.limModel_low h'.limModel_low hz (by rw [e]; exact IH) hUU'
     have hz13 : 13 ≤ hor X₀ (m + 1) := by linarith
     exact ((limModel_fix_agree h hz13).trans (by linarith) hstep).trans (by linarith)

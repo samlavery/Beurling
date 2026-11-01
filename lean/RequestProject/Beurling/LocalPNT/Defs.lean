@@ -83,7 +83,7 @@ noncomputable def lag0 (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (α γ xp : 
 
 /-- `R̂(s) = ∑_k R̂_k(s)`. -/
 noncomputable def oscHatSum (θ : ℝ) (α γ xp : ℕ → ℝ) (s : ℂ) : ℂ :=
-  ∑' k, oscHat θ (α k) (γ k) (xp k) s
+  ∑' k, oscHatK θ (α k) (γ k) (xp k) s
 
 /-- `Ê(s) = Z_B(s) - s/(s-1)` (Lemma 4.3). -/
 noncomputable def EHat (X₀ : ℕ) (s : ℂ) : ℂ := ZBcont X₀ (kap X₀) s - s / (s - 1)
@@ -162,7 +162,7 @@ noncomputable def relBound (Λ v η : ℝ) : ℝ :=
 `a = 8` and (18) (`LocalPNT.lpb`, `LocalPNT.lpc`). -/
 structure LPHyp (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (α γ xp : ℕ → ℝ) (Xm y : ℝ)
     (D0 : ℝ → ℝ) : Prop where
-  theta_mem : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)
+  theta_mem : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)
   logX : 10 ^ 8 ≤ Real.log X₀
   even : Even X₀
   alpha_le : ∀ k, |α k| ≤ 2

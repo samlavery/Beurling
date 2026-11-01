@@ -257,6 +257,90 @@ theorem norm_tsum_oscHat_le {θ X : ℝ} {α γ xp : ℕ → ℝ} (hα : ∀ k, 
   calc 10 * ‖s‖ * c ≤ ‖s‖ * (10 * Real.exp (-(2 / 5) * X ^ 2)) := by nlinarith
     _ ≤ ‖s‖ * Real.exp (-(39 / 100) * X ^ 2) := mul_le_mul_of_nonneg_left h10 hsn
 
+/-- `|R̂_k(s)| ≤ 10 |s| (x⁺)^{-2/5}` for `σ ≥ θ_k + 2/5`, for every design (the switched-off part
+of the design `θ = 0` is bounded like the oscillation, at the larger switch-on point). -/
+theorem norm_oscHatK_le_of_re {θ α γ xk t : ℝ} (hxk : 1 ≤ xk) (hα : |α| ≤ 2)
+    (ht : thK θ xk ≤ t) {s : ℂ} (hσ : t + 2 / 5 ≤ s.re) :
+    ‖oscHatK θ α γ xk s‖ ≤ 10 * ‖s‖ * xk ^ (-(2 / 5 : ℝ)) := by
+  have hX0 := Real.rpow_nonneg (show (0 : ℝ) ≤ xk by linarith) (-(2 / 5 : ℝ))
+  by_cases hθ : θ = 0
+  · subst hθ
+    have hy : xk ≤ xk * max xk 1 := le_mul_of_one_le_right (by linarith) (le_max_right _ _)
+    rw [oscHatK_zero (by linarith)]
+    have h1 := norm_oscHat_le_of_re (γ := γ) hxk hα (show thK 0 xk + 2 / 5 ≤ s.re by linarith)
+    have h2 := norm_oscHat_le_of_re (γ := γ) (hxk.trans hy) hα
+      (show thK 0 xk + 2 / 5 ≤ s.re by linarith)
+    have h3 : (xk * max xk 1) ^ (-(2 / 5 : ℝ)) ≤ xk ^ (-(2 / 5 : ℝ)) :=
+      Real.rpow_le_rpow_of_nonpos (by linarith) hy (by norm_num)
+    calc _ ≤ _ := norm_sub_le _ _
+      _ ≤ 5 * ‖s‖ * xk ^ (-(2 / 5 : ℝ)) + 5 * ‖s‖ * (xk * max xk 1) ^ (-(2 / 5 : ℝ)) :=
+          add_le_add h1 h2
+      _ ≤ _ := by nlinarith [norm_nonneg s]
+  · rw [oscHatK_of_ne hθ]
+    rw [thK_of_ne hθ] at ht
+    have := norm_oscHat_le_of_re (γ := γ) hxk hα (show θ + 2 / 5 ≤ s.re by linarith)
+    nlinarith [norm_nonneg s]
+
+/-- **(18)**: if `|α_k| ≤ 2`, `x⁺_0 ≥ e^{X₀²}` with `X₀² ≥ 400`, and `x⁺_{k+1} ≥ e^{x⁺_k}`, then for
+`σ ≥ θ + 2/5`, `∑_k |R̂_k(s)| ≤ |s| e^{-0.39 X₀²}` (and the series converges). -/
+theorem norm_tsum_oscHatK_le {θ X t : ℝ} {α γ xp : ℕ → ℝ} (hα : ∀ k, |α k| ≤ 2)
+    (hX : 400 ≤ X ^ 2) (h0 : Real.exp (X ^ 2) ≤ xp 0)
+    (hsp : ∀ k, Real.exp (xp k) ≤ xp (k + 1)) (ht : ∀ k, thK θ (xp k) ≤ t) {s : ℂ}
+    (hσ : t + 2 / 5 ≤ s.re) :
+    Summable (fun k => ‖oscHatK θ (α k) (γ k) (xp k) s‖) ∧
+      ∑' k, ‖oscHatK θ (α k) (γ k) (xp k) s‖ ≤ ‖s‖ * Real.exp (-(39 / 100) * X ^ 2) := by
+  have h3 : 20 ≤ xp 0 := by
+    have := Real.add_one_le_exp (X ^ 2); linarith
+  have hge : ∀ k, 1 ≤ xp k := by
+    intro k
+    induction k with
+    | zero => linarith
+    | succ n ih =>
+      have := hsp n; have := Real.add_one_le_exp (xp n); linarith
+  set c := xp 0 ^ (-(2 / 5 : ℝ))
+  have hbound : ∀ k, ‖oscHatK θ (α k) (γ k) (xp k) s‖ ≤ 10 * ‖s‖ * c * (1 / 2) ^ k := by
+    intro k
+    have := norm_oscHatK_le_of_re (γ := γ k) (hge k) (hα k) (ht k) hσ
+    have hg := rpow_neg_two_fifths_le_geom h3 hsp k
+    calc _ ≤ 10 * ‖s‖ * xp k ^ (-(2 / 5 : ℝ)) := this
+      _ ≤ 10 * ‖s‖ * (c * (1 / 2) ^ k) := by gcongr
+      _ = _ := by ring
+  have hgeom : Summable (fun k : ℕ => 10 * ‖s‖ * c * (1 / 2 : ℝ) ^ k) :=
+    (summable_geometric_two).mul_left _
+  have hsum : Summable (fun k => ‖oscHatK θ (α k) (γ k) (xp k) s‖) :=
+    hgeom.of_nonneg_of_le (fun k => norm_nonneg _) hbound
+  refine ⟨hsum, ?_⟩
+  have htsum : ∑' k : ℕ, 10 * ‖s‖ * c * (1 / 2 : ℝ) ^ k = 20 * ‖s‖ * c := by
+    rw [tsum_mul_left, tsum_geometric_two]; ring
+  have hle := hsum.tsum_le_tsum hbound hgeom
+  rw [htsum] at hle
+  refine hle.trans ?_
+  -- `10 x_0^{-2/5} ≤ e^{-0.39 X²}`
+  have hx0 : 0 < xp 0 := by linarith
+  have hc : c ≤ Real.exp (-(2 / 5) * X ^ 2) := by
+    have : c ≤ (Real.exp (X ^ 2)) ^ (-(2 / 5 : ℝ)) :=
+      Real.rpow_le_rpow_of_nonpos (Real.exp_pos _) h0 (by norm_num)
+    rw [← Real.exp_mul] at this
+    calc c ≤ Real.exp (X ^ 2 * (-(2 / 5 : ℝ))) := this
+      _ = Real.exp (-(2 / 5) * X ^ 2) := by ring_nf
+  have h10 : 20 * Real.exp (-(2 / 5) * X ^ 2) ≤ Real.exp (-(39 / 100) * X ^ 2) := by
+    have e : Real.exp (-(39 / 100) * X ^ 2) =
+        Real.exp (X ^ 2 / 100) * Real.exp (-(2 / 5) * X ^ 2) := by
+      rw [← Real.exp_add]; ring_nf
+    rw [e]
+    apply mul_le_mul_of_nonneg_right _ (Real.exp_pos _).le
+    have h4 : (4 : ℝ) ≤ X ^ 2 / 100 := by linarith
+    have := Real.add_one_le_exp (X ^ 2 / 100)
+    have h5 : Real.exp 4 ≤ Real.exp (X ^ 2 / 100) := Real.exp_le_exp.mpr h4
+    have h6 : (20 : ℝ) ≤ Real.exp 4 := by
+      have he : (2.7 : ℝ) ≤ Real.exp 1 := by have := Real.exp_one_gt_d9; linarith
+      have : (2.7 : ℝ) ^ 4 ≤ Real.exp 1 ^ 4 := pow_le_pow_left₀ (by norm_num) he 4
+      rw [← Real.exp_nat_mul] at this; norm_num at this ⊢; linarith
+    linarith
+  have hsn := norm_nonneg s
+  calc 20 * ‖s‖ * c ≤ ‖s‖ * (20 * Real.exp (-(2 / 5) * X ^ 2)) := by nlinarith
+    _ ≤ ‖s‖ * Real.exp (-(39 / 100) * X ^ 2) := mul_le_mul_of_nonneg_left h10 hsn
+
 end DesignedZero
 
 end

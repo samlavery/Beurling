@@ -625,7 +625,7 @@ lemma hasDerivAt_osc {θ : ℝ} (α γ : ℕ → ℝ) {X : ℝ} (hX : 1 ≤ X) {
 
 /-- **The oscillation slope bound** (proof of Lemma 3.3): `|R'(x)| ≤ 0.02/log x` for `x ≥ X₀`,
 for heights in the designed range and the designed amplitudes. -/
-theorem abs_deriv_osc_le {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem abs_deriv_osc_le {θ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) {x : ℝ}
     (hx : (X₀ : ℝ) ≤ x) :
     |deriv (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
@@ -733,7 +733,7 @@ theorem abs_deriv_osc_le {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
         linarith
 
 /-- The oscillation is `0.01`-Lipschitz on `[X₀, ∞)`. -/
-theorem osc_lipschitz {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem osc_lipschitz {θ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) {x x' : ℝ}
     (hx : (X₀ : ℝ) ≤ x) (hx' : (X₀ : ℝ) ≤ x') :
     |Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
@@ -770,7 +770,7 @@ lemma contPart_sub {X₀ : ℕ} {κ : ℝ} {rhoA R : ℝ → ℝ} {x x' : ℝ}
   linarith
 
 /-- **Upper slope bound**: `C(x') - C(x) ≤ 1.01 (x' - x)` (`ρ_det, ρ̄_A ≥ 0`, `|R'| ≤ 0.01`). -/
-theorem contPart_upper {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem contPart_upper {θ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) (A : Set ℝ)
     (hA : Absorbed.LocFin A) {x x' : ℝ} (hx : (X₀ : ℝ) ≤ x) (hxx : x ≤ x') :
     contPart X₀ (Construction.kappaParam X₀)
@@ -817,7 +817,7 @@ lemma continuousOn_primitive_Ici {f : ℝ → ℝ} {X : ℝ}
   rwa [uIcc_of_le hy] at this
 
 /-- **`C` is continuous on `[X₀, ∞)`.** -/
-theorem contPart_continuousOn {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem contPart_continuousOn {θ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) (γ : ℕ → ℝ) (A : Set ℝ) (hA : Absorbed.LocFin A) :
     ContinuousOn (contPart X₀ (Construction.kappaParam X₀)
         (Absorbed.absorbedDensityCap (winH X₀) A (fun n => Construction.solveU (winH X₀) n))
@@ -848,7 +848,7 @@ lemma continuous_invLogMax {X : ℝ} (hX : 1 < X) :
     have := lt_of_lt_of_le (by linarith : (0 : ℝ) < X) (le_max_right u X); exact this.ne')
 
 /-- **Lower slope bound (Lemma 3.3)**: `C(x') - C(x) ≥ 0.08 (x' - x)/log x'`, from (84). -/
-theorem contPart_lower {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem contPart_lower {θ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) (A : Set ℝ)
     (hA : Absorbed.LocFin A) (hHB : ShortIntervalPNTFrom X₀) {x x' : ℝ} (hx : (X₀ : ℝ) ≤ x)
     (hxx : x ≤ x') :

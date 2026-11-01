@@ -49,7 +49,7 @@ pair divides one side only, so it would have to land on a point fixed by the pas
 probability `0` by the box-uniform landing law"). A named hypothesis: the paper's claim for the
 constructed model. -/
 def TiesNull : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → jitterMeasure (tiesEvent θ X₀) = 0
 
 section Ties
@@ -161,7 +161,7 @@ theorem theorem21InputsP_of_Q (hHB : ShortIntervalPNT) (hnull : TiesNull)
   have hHB0 : ShortIntervalPNTFrom X₀ := hx₁.mono ((le_max_right _ _).trans h2)
   set N := tiesEvent θ X₀
   refine ⟨constructedModel θ X₀, ι ⊕ Unit, inferInstance, Sum.elim E fun _ => Nᶜ,
-    Sum.elim time fun _ => 0, ⟨_, tableBudget_add_null htab (hnull θ hθ X₀ hev h1)⟩,
+    Sum.elim time fun _ => 0, ⟨_, tableBudget_add_null htab (hnull θ (Set.Ioc_subset_Icc_self hθ) X₀ hev h1)⟩,
     fun ω hω hU => ?_⟩
   have hG : ω ∈ goodAll E := by
     simp only [goodAll, mem_iInter] at hω ⊢
@@ -169,7 +169,7 @@ theorem theorem21InputsP_of_Q (hHB : ShortIntervalPNT) (hnull : TiesNull)
   have hNω : ω ∉ N := by
     simp only [goodAll, mem_iInter] at hω
     simpa using hω (Sum.inr ())
-  have hstd : Std θ X₀ ω := ⟨hθ, hlog, hU, hHB0⟩
+  have hstd : Std θ X₀ ω := ⟨(Set.Ioc_subset_Icc_self hθ), hlog, hU, hHB0⟩
   have ht : TieFree (constructedModel θ X₀ ω) ω := by
     by_contra hc; exact hNω ⟨hstd, hc⟩
   obtain ⟨hq, hC, hcl⟩ := hP ω hG hU

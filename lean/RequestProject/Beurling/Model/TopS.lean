@@ -47,20 +47,20 @@ theorem theorem21InputsQ_of_S (hHB : ShortIntervalPNT) (hnull : TiesNull)
   have hHB0 : ShortIntervalPNTFrom X₀ := hx₁.mono ((le_max_right _ _).trans h2)
   set N := tiesEvent θ X₀
   refine ⟨ι ⊕ Unit, inferInstance, Sum.elim E fun _ => Nᶜ, Sum.elim time fun _ => 0,
-    ⟨_, tableBudget_add_null htab (hnull θ hθ X₀ hev h1)⟩, fun ω hω hU => ?_⟩
+    ⟨_, tableBudget_add_null htab (hnull θ (Set.Ioc_subset_Icc_self hθ) X₀ hev h1)⟩, fun ω hω hU => ?_⟩
   have hG : ω ∈ goodAll E := by
     simp only [goodAll, mem_iInter] at hω ⊢
     exact fun i => hω (Sum.inl i)
   have hNω : ω ∉ N := by
     simp only [goodAll, mem_iInter] at hω
     simpa using hω (Sum.inr ())
-  have hstd : Std θ X₀ ω := ⟨hθ, hlog, hU, hHB0⟩
+  have hstd : Std θ X₀ ω := ⟨(Set.Ioc_subset_Icc_self hθ), hlog, hU, hHB0⟩
   have ht : TieFree (constructedModel θ X₀ ω) ω := by
     by_contra hc; exact hNω ⟨hstd, hc⟩
   obtain ⟨hq, hcl⟩ := hP ω hG hU
   rw [constructedModel_eq hstd] at ht hq hcl ⊢
   refine ⟨hq, ?_, hcl⟩
-  exact Zeros48.theorem410RestM_of_inputs hθ hev h1 hU (limModel_linked hstd)
+  exact Zeros48.theorem410RestM_of_inputs (Set.Ioc_subset_Icc_self hθ) hev h1 hU (limModel_linked hstd)
     (limModel_slotFacts hstd hev ht) ⟨limModel_T_formula hstd (noCoincidence_of_tieFree ht), hq⟩
 
 /-- Theorem 2.1 from `Theorem21InputsS`, (84) and the nullity of `𝒩₌`. -/

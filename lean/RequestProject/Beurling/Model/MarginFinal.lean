@@ -73,7 +73,7 @@ theorem theorem21InputsZ_hux (h84 : BaseRange.Huxley84) (h : Theorem21InputsH) :
     have := Real.log_le_log (Real.exp_pos _) h2c
     rwa [Real.log_exp] at this
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by linarith
-  have hc : Cond θ X₀ := ⟨hθ, hlog, hx₁.mono h2b⟩
+  have hc : Cond θ X₀ := ⟨(Set.Ioc_subset_Icc_self hθ), hlog, hx₁.mono h2b⟩
   have hnice : ∀ᵐ ω ∂jitterMeasure, ω ∈ NiceEv θ X₀ := by
     have := niceEv_compl_null hc hev
     rw [ae_iff]; exact this

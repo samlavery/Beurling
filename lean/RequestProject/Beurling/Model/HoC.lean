@@ -87,7 +87,7 @@ theorem ho_c {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ} (hbt 
       have hhi4 : hi ≤ 4 * lo := by linarith
       have hU0 := oscModU_nonneg θ X₀ hlo0
       have t2 : (hi - lo) * oscMod θ X₀ lo hi ≤ 2.04 * Queue6.Hc X₀ (2 * lo) * oscModU θ X₀ lo :=
-        mul_le_mul hd2 (oscMod_le_U hc.hθ.1 X₀ hlo0 (by linarith) hhi4)
+        mul_le_mul hd2 (oscMod_le_U hc.hθ.1 hc.hX hlo0 (by linarith) hhi4)
           (oscMod_nonneg θ X₀ hlo0.le) (by linarith)
       have hLlo : 10 ^ 8 ≤ Real.log lo := hX.trans (Real.log_le_log hXp hlo)
       have hl2 : Real.log t' ≤ Real.log (2 * lo) := Real.log_le_log ht0 (by linarith)

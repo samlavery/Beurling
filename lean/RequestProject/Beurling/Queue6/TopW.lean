@@ -67,7 +67,7 @@ theorem theorem21InputsV_of_W (hHB : ShortIntervalPNT) (h : Theorem21InputsW) :
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this
-  have hc : Cond θ X₀ := ⟨hθ, hlog, hx₁.mono ((le_max_right _ _).trans h2)⟩
+  have hc : Cond θ X₀ := ⟨(Set.Ioc_subset_Icc_self hθ), hlog, hx₁.mono ((le_max_right _ _).trans h2)⟩
   exact ⟨queueInputsV_of_W hc Q⟩
 
 /-- **Corollary 2.2** from `Theorem21InputsW` and (84). -/

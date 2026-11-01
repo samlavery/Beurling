@@ -22,7 +22,7 @@ namespace BModel
 variable {θ : ℝ} {X₀ : ℕ}
 
 /-- **The sharp upper slope of the continuous part.** -/
-theorem contD_upper_log (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
+theorem contD_upper_log (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (D : PrimeData) (hD : LocFinD D) {x x' : ℝ}
     (hx : (X₀ : ℝ) ≤ x) (hxx : x ≤ x') :
     contD θ X₀ D x' - contD θ X₀ D x ≤ (1 + 0.02 / Real.log x) * (x' - x) := by

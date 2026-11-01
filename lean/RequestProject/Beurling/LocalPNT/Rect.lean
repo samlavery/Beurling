@@ -87,7 +87,8 @@ theorem gfun_rect {T₁ : ℝ} (hT : 1 ≤ T₁)
     · subst hs1
       have := h.differentiableOn_gfun_ball
       exact (this.differentiableAt (ball_mem_nhds 1 (by positivity))).differentiableWithinAt
-    · exact (h.differentiableAt_gfun (by linarith [h.theta_mem.2]) hs1).differentiableWithinAt
+    · have hU := thU_le h.theta_mem.2 (show (1 / 100 : ℝ) ≤ 1 / 2 - 1 / 10000 by norm_num)
+      exact (h.differentiableAt_gfun (by linarith [hU]) hs1).differentiableWithinAt
   · intro s hs
     obtain ⟨h1, h2, h3⟩ := hmem s hs
     by_cases hs1 : s = 1

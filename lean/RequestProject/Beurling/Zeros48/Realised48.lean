@@ -19,7 +19,7 @@ set_option maxHeartbeats 400000 in
 /-- **Lemma 4.8(ii), the pieces of `D̂_{<a_k}`, for the realised system.** From the target
 formula (6), the lag bound (13) on `[X₀, ∞)`, `X₀` even (so `X₀`-smooth), jitters in `[0, 1]` and
 the realised primes forming a Beurling system: `Lemma48PiecesCount` holds at every scale `k`. -/
-theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
+theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000))
     (hX : 10 ^ 8 ≤ Real.log X₀) (hXs : X₀ ∈ X₀.smoothNumbers) (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1)
     (h : RealisedOK M (capH X₀) U)
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) U))
@@ -228,7 +228,7 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 100
         rw [Real.norm_eq_abs]; exact hgFb t ⟨ht.1.le, ht.2⟩)
   set Mb : ℝ := (X ^ η + 2) * ((X₀ : ℝ) / 2) ^ (-(3 / 4 : ℝ)) with hMb
   obtain ⟨-, hβα, hnum⟩ := lemma48_numerics
-    (thK_swS_mem ⟨hθ.1.le, hθ.2⟩ hX1.le (by linarith) k) (X₀ := (X₀ : ℝ)) (a := ak) (xk := xk)
+    (thK_swS_mem hθ hX1.le (by linarith) k) (X₀ := (X₀ : ℝ)) (a := ak) (xk := xk)
     (by linarith) hX hXa haxk hxka hxk0 hc0 hc4 hJ2
   have hcP : ∀ x : ℝ, 1 < x → x < X₀ → contPart X₀ κ rhoA R x = 0 := fun x _ hx => by
     simp only [contPart, if_pos hx]

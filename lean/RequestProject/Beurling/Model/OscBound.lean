@@ -391,7 +391,7 @@ theorem oscR_le_Bsc {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : ℕ
       have e2 := mul_le_mul_of_nonneg_left hks (show 0 ≤ 10 * (2.04 * H (2 * u)) + 6 by linarith)
       nlinarith
     have t2 : (v - s) * oscMod θ X₀ s v ≤ 2.04 * H (2 * u) * oscModU θ X₀ u :=
-      mul_le_mul hvs (oscMod_le_U hc.hθ.1 X₀ hu0 hs2 hv4) (oscMod_nonneg θ X₀ hs0.le) hW0
+      mul_le_mul hvs (oscMod_le_U hc.hθ.1 hc.hX hu0 hs2 hv4) (oscMod_nonneg θ X₀ hs0.le) hW0
     have t3 : (if Lstar X₀ < Real.log v then (Real.log s ^ 4)⁻¹ else 0) ≤
         (if Lstar X₀ < Real.log (4 * u) then (Real.log (u / 2) ^ 4)⁻¹ else 0) := by
       split_ifs with h1 h2

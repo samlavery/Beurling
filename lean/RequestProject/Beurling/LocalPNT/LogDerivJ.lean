@@ -119,7 +119,8 @@ include h
 lemma differentiableAt_gJ {s : ℂ} (hs : 1 < s.re) :
     DifferentiableAt ℂ (gJ P θ X₀ α γ xp y) s := by
   have hs1 : s ≠ 1 := by intro e; rw [e] at hs; simp at hs
-  have h1 := h.differentiableAt_zetaSharp (s := s) (by linarith [h.theta_mem.2]) hs1
+  have h1 := h.differentiableAt_zetaSharp (s := s)
+    (by linarith [thU_le h.theta_mem.2 (show (1 / 100 : ℝ) ≤ 1 / 2 - 1 / 10000 by norm_num)]) hs1
   have hO : IsOpen {s : ℂ | 0 < s.re} := isOpen_lt continuous_const Complex.continuous_re
   have h2 := (differentiableOn_zetaF P (P.primesLe y)).differentiableAt
     (hO.mem_nhds (show 0 < s.re by linarith))

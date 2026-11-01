@@ -412,7 +412,7 @@ theorem placed_infinite_of_growth (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1) (hX : 10
 end Infinite
 
 /-- The paper's target grows linearly, with the designed oscillation. -/
-theorem T_ge_of_formula {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem T_ge_of_formula {θ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {P : BeurlingSystem} {A : Set ℝ} {u : ℝ → ℝ} {a : ℕ → ℝ}
     {M : SlotModel X₀}
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA A) (absorbedDensityCap (winH X₀) A u)
@@ -443,7 +443,7 @@ theorem T_ge_of_formula {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 1000
   · exact osc_eq_zero_of_le hsp (by linarith : (0 : ℝ) < X₀) (switchOn_zero_ge_swS _ _)
 
 /-- The target of `PartIRestJ` grows linearly, with the designed oscillation. -/
-theorem partIRestJ_T_ge {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem partIRestJ_T_ge {θ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {P : BeurlingSystem} {A : Set ℝ} {u : ℝ → ℝ} {a : ℕ → ℝ}
     {M : SlotModel X₀} (hI : PartIRestJ θ X₀ P A u a M) {x : ℝ} (hx : (X₀ : ℝ) ≤ x) :
     7 / 10 * x - X₀ - 1 ≤ M.T x :=
@@ -451,7 +451,7 @@ theorem partIRestJ_T_ge {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 1000
 
 /-- **Infinitely many primes are placed** in a slot model whose target is the paper's target and
 whose arrivals are the composites of the realised system. -/
-theorem placed_infinite_of_linked {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
+theorem placed_infinite_of_linked {θ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000))
     {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) (M : SlotModel X₀) {U : ℕ → ℝ}
     (hU : ∀ j, U j ∈ Icc (0 : ℝ) 1) {a : ℕ → ℝ}
     (hI : PartIRestJ θ X₀ (realisedSystem M (capH X₀) U) (realisedA M (capH X₀) U)
@@ -492,7 +492,7 @@ theorem theorem21InputsM_of_N (h : Theorem21InputsN) : Theorem21InputsM := by
     rwa [Real.log_exp] at this
   refine ⟨M, ι, hι, E, time, htab, fun ω hG hω => ?_⟩
   obtain ⟨hlink, hI, hC, hcl⟩ := hP ω hG hω
-  exact ⟨placed_infinite_of_linked hθ hlog (M ω) hω hI hlink, hI, hC, hcl⟩
+  exact ⟨placed_infinite_of_linked (Set.Ioc_subset_Icc_self hθ) hlog (M ω) hω hI hlink, hI, hC, hcl⟩
 
 /-- Theorem 2.1 from `Theorem21InputsN`. -/
 theorem theorem21_of_N (h : Theorem21InputsN) : Theorem21 :=

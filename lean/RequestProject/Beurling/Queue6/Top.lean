@@ -51,8 +51,8 @@ theorem theorem21InputsS_of_T (hHB : ShortIntervalPNT) (h : Theorem21InputsT) :
     rwa [Real.log_exp] at this
   have hHB0 : ShortIntervalPNTFrom X₀ := hx₁.mono ((le_max_right _ _).trans h2)
   refine ⟨ιF Q.sec5, inferInstance, EF θ X₀ Q.sec5, tF X₀ Q.sec5,
-    ⟨sF Q.sec5, tableBudget_EF hθ hlog hHB0 tiesNull hev h1 Q⟩, fun ω hω hU => ?_⟩
-  exact goodAll_facts Q.sec5 hθ hlog hev hHB0 hω hU
+    ⟨sF Q.sec5, tableBudget_EF (Set.Ioc_subset_Icc_self hθ) hlog hHB0 tiesNull hev h1 Q⟩, fun ω hω hU => ?_⟩
+  exact goodAll_facts Q.sec5 (Set.Ioc_subset_Icc_self hθ) hlog hev hHB0 hω hU
 
 /-- Theorem 2.1 from `Theorem21InputsT` and (84). -/
 theorem theorem21_of_T (hHB : ShortIntervalPNT) (h : Theorem21InputsT) : Theorem21 :=

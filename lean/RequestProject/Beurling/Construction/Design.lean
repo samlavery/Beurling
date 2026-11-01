@@ -229,18 +229,6 @@ lemma switchOn_gt_one (X₀ : ℝ) (k : ℕ) : 1 < switchOn X₀ (k + 1) := by
   show 1 < Real.exp (switchOn X₀ k)
   exact Real.one_lt_exp_iff.mpr (switchOn_pos X₀ k)
 
-/-- A crude upper exponent of the oscillations of the design `θ`: `θ` itself for `θ ≠ 0`, and
-`1/100` for the design `θ = 0` (`thK_switchOn_le`). -/
-noncomputable def thU (θ : ℝ) : ℝ := if θ = 0 then 1 / 100 else θ
-
-lemma thU_of_ne {θ : ℝ} (hθ : θ ≠ 0) : thU θ = θ := by simp [thU, hθ]
-
-lemma thU_nonneg {θ : ℝ} (hθ : 0 ≤ θ) : 0 ≤ thU θ := by
-  unfold thU; split_ifs <;> linarith
-
-lemma thU_le {θ c : ℝ} (hθ : θ ≤ c) (hc : 1 / 100 ≤ c) : thU θ ≤ c := by
-  unfold thU; split_ifs <;> linarith
-
 lemma switchOn_mono (S : ℝ) : Monotone (switchOn S) :=
   (switchOn_spacing S).strictMono.monotone
 
@@ -293,6 +281,13 @@ lemma thK_swS_mem {θ X₀ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000
     positivity
   · rw [thK_of_ne h0]
     exact lt_of_le_of_ne hθ.1 (Ne.symm h0)
+
+/-- **The oscillation bound for every design**: `|R(x)| ≤ 2 x^{thU θ} log* x` at the switch-on
+points of the construction. -/
+theorem abs_osc_swS_le (θ : ℝ) {X₀ : ℝ} (hX1 : 1 ≤ X₀) (hX : 10 ≤ Real.log X₀) {α γ : ℕ → ℝ}
+    (hα : ∀ k, |α k| ≤ 2) {x : ℝ} (hx : 1 ≤ x) :
+    |osc θ α γ (switchOn (swS θ X₀)) x| ≤ 2 * x ^ thU θ * (logStar x : ℝ) :=
+  abs_osc_le_of (switchOn_spacing _) hα (fun k => thK_swS_le θ hX1 hX k) hx
 
 /-- **The switch-on condition, strong form**: with the seed `S = max(X₀, 1000/θ)`, every `y`
 with `log y ≥ log x⁺_0 - 3 = S² - 3` has `16 ℓ² + 4 ℓ + 2 log X₀ + 10 ≤ θ log y`,
@@ -356,7 +351,7 @@ theorem switchOn_cond {θ X₀ : ℝ} (hθ : 0 < θ) (hX0 : 0 ≤ X₀) (hX : 10
 
 end Construction
 
-export Construction (swS le_swS logX_swS switchOn_zero_ge_swS switchOn_cond switchOn_cond' thU
-  thU_of_ne thU_nonneg thU_le thK_switchOn_le thK_swS_le thK_swS_mem)
+export Construction (swS le_swS logX_swS switchOn_zero_ge_swS switchOn_cond switchOn_cond'
+  thK_switchOn_le thK_swS_le thK_swS_mem abs_osc_swS_le)
 
 end

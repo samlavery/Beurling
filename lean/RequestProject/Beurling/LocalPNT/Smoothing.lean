@@ -83,18 +83,20 @@ theorem N_sub_le {v' v : ℝ} (hv' : (X₀ : ℝ) ≤ v') (hv : v' ≤ v) (hvy :
         (hii _ _ hv' hv)).symm
     rw [hsplit]
     linarith
-  have hR1 := abs_osc_le h.theta_mem.1.ne' h.spacing h.alpha_le (le_trans hv1 hv) (θ := θ) (γ := γ)
-  have hR2 := abs_osc_le h.theta_mem.1.ne' h.spacing h.alpha_le hv1 (θ := θ) (γ := γ)
+  have hR1 := abs_osc_le_of h.spacing h.alpha_le h.thK_le (le_trans hv1 hv) (θ := θ) (γ := γ)
+  have hR2 := abs_osc_le_of h.spacing h.alpha_le h.thK_le hv1 (θ := θ) (γ := γ)
   have htp := (thetaPrime_bounds h.theta_mem hX).1
   have hθ := h.theta_mem
   have hvv : 1 ≤ v := by linarith
-  have hpow : ∀ x : ℝ, 1 ≤ x → x ^ θ * (logStar x : ℝ) ≤ 201 * x ^ thetaPrime θ X₀ := by
+  have htU := thU_add_le_thetaPrime θ X₀
+  have hpow : ∀ x : ℝ, 1 ≤ x → x ^ thU θ * (logStar x : ℝ) ≤ 201 * x ^ thetaPrime θ X₀ := by
     intro x hx
     have hls := logStar_le_rpow hx (show (0 : ℝ) < 0.005 by norm_num)
-    calc x ^ θ * (logStar x : ℝ) ≤ x ^ θ * ((1 / 0.005 + 1) * x ^ (0.005 : ℝ)) := by gcongr
-      _ = 201 * x ^ (θ + 0.005) := by rw [Real.rpow_add (by linarith)]; ring
+    calc x ^ thU θ * (logStar x : ℝ) ≤ x ^ thU θ * ((1 / 0.005 + 1) * x ^ (0.005 : ℝ)) := by
+          gcongr
+      _ = 201 * x ^ (thU θ + 0.005) := by rw [Real.rpow_add (by linarith)]; ring
       _ ≤ 201 * x ^ thetaPrime θ X₀ := by
-          have := Real.rpow_le_rpow_of_exponent_le hx (show θ + 0.005 ≤ thetaPrime θ X₀ by
+          have := Real.rpow_le_rpow_of_exponent_le hx (show thU θ + 0.005 ≤ thetaPrime θ X₀ by
             linarith)
           linarith
   have hv'p : v' ^ thetaPrime θ X₀ ≤ v ^ thetaPrime θ X₀ :=

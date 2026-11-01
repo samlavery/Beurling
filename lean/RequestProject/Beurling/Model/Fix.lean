@@ -35,7 +35,7 @@ variable {θ : ℝ} {X₀ : ℕ} {U : ℕ → ℝ}
 /-- The standing conditions of the construction: admissible `θ`, `log X₀ ≥ 10⁸`, jitters in
 `[0, 1]`, and (84) from `X₀` on (the input of Lemma 3.3). -/
 structure Std (θ : ℝ) (X₀ : ℕ) (U : ℕ → ℝ) : Prop where
-  hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)
+  hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)
   hX : 10 ^ 8 ≤ Real.log X₀
   hU : ∀ j, U j ∈ Icc (0 : ℝ) 1
   hHB : ShortIntervalPNTFrom X₀
@@ -118,7 +118,7 @@ theorem iter_agree (n : ℕ) : MAgree (iterM θ X₀ U n) (iterM θ X₀ U (n + 
     rw [iterM_succ (n + 1), iterM_succ n]
     have hz : (X₀ : ℝ) ≤ hor X₀ (n + 1) := by unfold hor; push_cast; linarith
     have e : hor X₀ (n + 1) - 1 = hor X₀ n := by unfold hor; push_cast; ring
-    refine causal (by linarith [h.hθ.1]) (by linarith [h.hθ.2]) h.hX h.hU h.hV h.hS
+    refine causal h.hθ.1 (by linarith [h.hθ.2]) h.hX h.hU h.hV h.hS
       (h.iterM_low n) (h.iterM_low (n + 1)) hz ?_
     rw [e]; exact ih
 
@@ -261,7 +261,7 @@ theorem limModel_step_agree (n : ℕ) :
   have e : hor X₀ (n + 1) - 1 = hor X₀ n := by unfold hor; push_cast; ring
   have h1 : MAgree (Phi θ X₀ (DM h.limModel U)) (iterM θ X₀ U (n + 1)) (hor X₀ (n + 1)) := by
     rw [iterM_succ]
-    refine causal (by linarith [h.hθ.1]) (by linarith [h.hθ.2]) h.hX h.hU h.hV h.hS
+    refine causal h.hθ.1 (by linarith [h.hθ.2]) h.hX h.hU h.hV h.hS
       h.limModel_low (h.iterM_low n) hz ?_
     rw [e]; exact h.limModel_agree n
   exact h1.trans (by linarith [h.hor_ge13 (n + 1)])

@@ -24,7 +24,7 @@ namespace Zeros48
 `θ ∈ (0, 1/2 - 10⁻⁴]`, `X₀` even with `X₀ ≥ e^{10⁸}`, jitters in `[0, 1]`, the arrival link,
 the slot facts and the Part I data (target formula (6), queue window data) give the pieces of
 Lemma 4.8(ii) at every scale. -/
-theorem theorem410RestM_of_inputs {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
+theorem theorem410RestM_of_inputs {θ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000))
     {X₀ : ℕ} (hev : Even X₀) (h1 : Real.exp (10 ^ 8) ≤ X₀) {M : SlotModel X₀} {ω : ℕ → ℝ}
     (hω : ∀ j, ω j ∈ Icc (0 : ℝ) 1) (hlink : ArrivalsLinked M (capH X₀) ω) (hS : SlotFacts M ω)
     (hI : PartIRestO θ X₀ (realisedSystem M (capH X₀) ω) (realisedA M (capH X₀) ω)
@@ -82,7 +82,7 @@ theorem theorem21InputsP_of_R (h : Theorem21InputsR) : Theorem21InputsP := by
   obtain ⟨M, ι, hι, E, time, htab, hP⟩ := hX θ hθ X₀ hev h1 h2
   refine ⟨M, ι, hι, E, time, htab, fun ω hG hω => ?_⟩
   obtain ⟨hlink, hS, hI, hcl⟩ := hP ω hG hω
-  exact ⟨hlink, hS, hI, Zeros48.theorem410RestM_of_inputs hθ hev h1 hω hlink hS hI, hcl⟩
+  exact ⟨hlink, hS, hI, Zeros48.theorem410RestM_of_inputs (Set.Ioc_subset_Icc_self hθ) hev h1 hω hlink hS hI, hcl⟩
 
 /-- Theorem 2.1 from `Theorem21InputsR`. -/
 theorem theorem21_of_R (h : Theorem21InputsR) : Theorem21 :=

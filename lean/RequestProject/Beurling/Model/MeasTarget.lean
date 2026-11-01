@@ -32,7 +32,7 @@ lemma measurable_amplitudes {g : Ω → ℕ → ℝ} (hg : ∀ j, Measurable fun
 
 section Heights
 
-variable (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+variable (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
   (hHB : ShortIntervalPNTFrom X₀) {D : Ω → PrimeData} (hD : DFam D)
   (hL : ∀ ω, LocFinD (D ω)) (hP : ∀ ω, Pos2 (D ω))
 include hθ hX hD hL hP

@@ -127,6 +127,31 @@ lemma oscD2_eq_zero_of_le {θ α γ xk x : ℝ} (hx : 0 < x) (hxk : x ≤ xk) :
     deriv2_smoothTransition_of_nonpos ht]
   ring
 
+/-- `ϕ'(t) = 0` for `t ≥ 1`: there `ϕ = 1` is a maximum of `ϕ ≤ 1`. -/
+lemma deriv_smoothTransition_of_one_le {t : ℝ} (ht : 1 ≤ t) :
+    deriv Real.smoothTransition t = 0 := by
+  apply IsLocalMax.deriv_eq_zero
+  refine Filter.Eventually.of_forall fun s => ?_
+  rw [Real.smoothTransition.one_of_one_le ht]
+  exact Real.smoothTransition.le_one s
+
+/-- `ϕ''(t) = 0` for `t ≥ 1`: there `ϕ' = 0` is a minimum of `ϕ' ≥ 0`. -/
+lemma deriv2_smoothTransition_of_one_le {t : ℝ} (ht : 1 ≤ t) :
+    deriv (deriv Real.smoothTransition) t = 0 := by
+  apply IsLocalMin.deriv_eq_zero
+  refine Filter.Eventually.of_forall fun s => ?_
+  rw [deriv_smoothTransition_of_one_le ht]
+  exact SmoothStep.deriv_smoothTransition_nonneg s
+
+/-- Beyond `e·max(x⁺, y)` both oscillations are fully switched on, so their `R''` agree (the
+switched-off oscillation of the design `θ = 0` has `R'' = 0` beyond `e (x⁺)²`). -/
+lemma oscD2_eq_of_one_le {θ α γ xk y x : ℝ} (h1 : 1 ≤ Real.log (x / xk))
+    (h2 : 1 ≤ Real.log (x / y)) : oscD2 θ α γ xk x = oscD2 θ α γ y x := by
+  unfold oscD2
+  rw [Real.smoothTransition.one_of_one_le h1, Real.smoothTransition.one_of_one_le h2,
+    deriv_smoothTransition_of_one_le h1, deriv_smoothTransition_of_one_le h2,
+    deriv2_smoothTransition_of_one_le h1, deriv2_smoothTransition_of_one_le h2]
+
 /-- **`|R_k''(x)| ≤ |α| x^{θ-2} (γ² + 6γ + 15)`** for `0 ≤ θ ≤ 1`, `γ ≥ 0`, from `ϕ ∈ [0, 1]`,
 `0 ≤ ϕ' ≤ 2`, `|ϕ''| ≤ 10` (Appendix B.4). -/
 lemma abs_oscD2_le {θ α γ xk x : ℝ} (hθ0 : 0 ≤ θ) (hθ1 : θ ≤ 1) (hγ : 0 ≤ γ) (hx : 0 < x) :
@@ -218,13 +243,14 @@ theorem abs_oscD2_designed_le {θ : ℝ} (hθ1 : 0 ≤ θ) (hθ2 : θ ≤ 1 / 2)
     (hγ : γ ∈ Icc (DesignedZero.heightScale θ (Construction.kappa0Param X)
       (Construction.switchOn S k))
       (2 * DesignedZero.heightScale θ (Construction.kappa0Param X) (Construction.switchOn S k)))
-    {x : ℝ} (hx : 0 < x) :
+    {y : ℝ} (hy : Construction.switchOn S k ≤ y) {x : ℝ} (hx : 0 < x) :
     |oscD2 θ (DesignedZero.amplitudeOf θ (Construction.kappa0Param X) γ (Construction.switchOn S k))
-      γ (Construction.switchOn S k) x| ≤ (1 / 2) ^ k * x ^ (-θ) / 10 ^ 14 := by
+      γ y x| ≤ (1 / 2) ^ k * x ^ (-θ) / 10 ^ 14 := by
   set xk := Construction.switchOn S k with hxkdef
   have hxk : 0 < xk := Construction.switchOn_pos S k
-  rcases le_or_gt x xk with hle | hlt
+  rcases le_or_gt x y with hle | hlt
   · rw [oscD2_eq_zero_of_le hx hle, abs_zero]; positivity
+  replace hlt : xk < x := lt_of_le_of_lt hy hlt
   set L := Real.log xk with hLdef
   have hLk : 2 ^ k * X ^ 2 ≤ L := log_switchOn_ge_of (by linarith) hXS k
   have h2k : (1 : ℝ) ≤ 2 ^ k := one_le_pow₀ (by norm_num)
@@ -253,7 +279,7 @@ theorem abs_oscD2_designed_le {θ : ℝ} (hθ1 : 0 ≤ θ) (hθ2 : θ ≤ 1 / 2)
     rw [hG, hΓ]; unfold DesignedZero.heightScale Construction.kappa0Param; rw [← hLdef]
     field_simp
   have hγG : γ ≤ G := hγ.2
-  have hb := abs_oscD2_le (θ := θ) (γ := γ) (α := α) (xk := xk) (by linarith) (by linarith)
+  have hb := abs_oscD2_le (θ := θ) (γ := γ) (α := α) (xk := y) (by linarith) (by linarith)
     hγ0.le hx
   rw [abs_of_pos hα0] at hb
   -- `α (γ² + 6γ + 15) ≤ G² + 6G + 30`
@@ -261,7 +287,7 @@ theorem abs_oscD2_designed_le {θ : ℝ} (hθ1 : 0 ≤ θ) (hθ2 : θ ≤ 1 / 2)
     have : α * γ ^ 2 = G * γ := by rw [← hαγ]; ring
     nlinarith [mul_le_mul_of_nonneg_left hγG (show 0 ≤ G by positivity)]
   have hx2 : 0 ≤ x ^ (θ - 2) := Real.rpow_nonneg hx.le _
-  have hb' : |oscD2 θ α γ xk x| ≤ x ^ (θ - 2) * (G ^ 2 + 6 * G + 30) := by
+  have hb' : |oscD2 θ α γ y x| ≤ x ^ (θ - 2) * (G ^ 2 + 6 * G + 30) := by
     calc _ ≤ α * x ^ (θ - 2) * (γ ^ 2 + 6 * γ + 15) := hb
       _ = x ^ (θ - 2) * (α * (γ ^ 2 + 6 * γ + 15)) := by ring
       _ ≤ _ := mul_le_mul_of_nonneg_left hcoef hx2
@@ -343,24 +369,25 @@ theorem oscD_sub_le {θ : ℝ} (hθ1 : 0 ≤ θ) (hθ2 : θ ≤ 1 / 2) {X S : �
     (hγ : γ ∈ Icc (DesignedZero.heightScale θ (Construction.kappa0Param X)
       (Construction.switchOn S k))
       (2 * DesignedZero.heightScale θ (Construction.kappa0Param X) (Construction.switchOn S k)))
-    {s t : ℝ} (hs : 0 < s) (hst : s ≤ t) :
+    {y : ℝ} (hy : Construction.switchOn S k ≤ y) {s t : ℝ} (hs : 0 < s) (hst : s ≤ t) :
     |oscD θ (DesignedZero.amplitudeOf θ (Construction.kappa0Param X) γ (Construction.switchOn S k))
-        γ (Construction.switchOn S k) t -
+        γ y t -
       oscD θ (DesignedZero.amplitudeOf θ (Construction.kappa0Param X) γ (Construction.switchOn S k))
-        γ (Construction.switchOn S k) s| ≤
+        γ y s| ≤
       (t - s) * ((1 / 2) ^ k * s ^ (-θ) / 10 ^ 14) := by
   have hxk := Construction.switchOn_pos S k
+  have hy0 : 0 < y := lt_of_lt_of_le hxk hy
   have h := Convex.norm_image_sub_le_of_norm_hasDerivWithin_le
     (f := oscD θ (DesignedZero.amplitudeOf θ (Construction.kappa0Param X) γ
-      (Construction.switchOn S k)) γ (Construction.switchOn S k))
+      (Construction.switchOn S k)) γ y)
     (f' := oscD2 θ (DesignedZero.amplitudeOf θ (Construction.kappa0Param X) γ
-      (Construction.switchOn S k)) γ (Construction.switchOn S k))
+      (Construction.switchOn S k)) γ y)
     (s := Icc s t) (C := (1 / 2) ^ k * s ^ (-θ) / 10 ^ 14)
-    (fun x hx => (hasDerivAt_oscD (lt_of_lt_of_le hs hx.1) hxk).hasDerivWithinAt)
+    (fun x hx => (hasDerivAt_oscD (lt_of_lt_of_le hs hx.1) hy0).hasDerivWithinAt)
     (fun x hx => by
       have hx0 : 0 < x := lt_of_lt_of_le hs hx.1
       rw [Real.norm_eq_abs]
-      refine (abs_oscD2_designed_le hθ1 hθ2 hX hXS k hγ hx0).trans ?_
+      refine (abs_oscD2_designed_le hθ1 hθ2 hX hXS k hγ hy hx0).trans ?_
       have : x ^ (-θ) ≤ s ^ (-θ) :=
         Real.rpow_le_rpow_of_nonpos hs hx.1 (by linarith)
       gcongr)
@@ -383,17 +410,165 @@ lemma deriv_osc_eq_sum {θ : ℝ} (α γ : ℕ → ℝ) (X : ℝ) (hX : 1 ≤ X)
   filter_upwards [Ioo_mem_nhds hy hyK] with z hz
   exact osc_eq_finsum α γ X hz.1 hz.2.le
 
+/-- The modulus density of the design `θ = 0` (Theorem A′):
+`g(x) = exp(-9 (log log x - 1.1)²)`. On the active window `(x⁺_k, e (x⁺_k)²)` of the `k`-th
+oscillation, `x^{-θ_k} ≤ g(x)` (`rpow_neg_thK_le_gS`). -/
+noncomputable def gS (x : ℝ) : ℝ := Real.exp (-(9 * (Real.log (Real.log x) - 1.1) ^ 2))
+
+/-- The modulus density of the design: `s^{-θ}` for `θ ≠ 0`, `gS s` for `θ = 0`. -/
+noncomputable def mS (θ s : ℝ) : ℝ := if θ = 0 then gS s else s ^ (-θ)
+
+lemma mS_nonneg (θ : ℝ) {s : ℝ} (hs : 0 ≤ s) : 0 ≤ mS θ s := by
+  unfold mS gS; split_ifs
+  · positivity
+  · exact Real.rpow_nonneg hs _
+
+/-- `gS` is non-increasing beyond `log log x = 1.1`. -/
+lemma gS_anti {a b : ℝ} (ha1 : 1 < a) (ha : 1.1 ≤ Real.log (Real.log a)) (hab : a ≤ b) :
+    gS b ≤ gS a := by
+  unfold gS
+  rw [Real.exp_le_exp, neg_le_neg_iff]
+  have hLa : 0 < Real.log a := Real.log_pos ha1
+  have hL : Real.log a ≤ Real.log b := Real.log_le_log (by linarith) hab
+  have hl : Real.log (Real.log a) ≤ Real.log (Real.log b) := Real.log_le_log hLa hL
+  have h0 : 0 ≤ Real.log (Real.log a) - 1.1 := by linarith
+  have := pow_le_pow_left₀ h0 (show Real.log (Real.log a) - 1.1 ≤ Real.log (Real.log b) - 1.1 by
+    linarith) 2
+  linarith
+
+lemma mS_anti {θ : ℝ} (hθ : 0 ≤ θ) {a b : ℝ} (ha1 : 1 < a) (ha : 1.1 ≤ Real.log (Real.log a))
+    (hab : a ≤ b) : mS θ b ≤ mS θ a := by
+  unfold mS; split_ifs
+  · exact gS_anti ha1 ha hab
+  · exact Real.rpow_le_rpow_of_nonpos (by linarith) hab (by linarith)
+
+/-- `log 3 < 1.1`. -/
+lemma log_three_lt : Real.log 3 < 1.1 := by
+  rw [Real.log_lt_iff_lt_exp (by norm_num)]
+  have h1 := Real.exp_one_gt_d9
+  have h2 := Real.quadratic_le_exp_of_nonneg (show (0 : ℝ) ≤ 0.1 by norm_num)
+  have e : Real.exp 1.1 = Real.exp 1 * Real.exp 0.1 := by rw [← Real.exp_add]; norm_num
+  rw [e]; nlinarith
+
+/-- **On the active window of the `k`-th oscillation** of the design `θ = 0`,
+`x^{-θ_k} ≤ g(x)`: from `θ_k log x ≥ θ_k L_k = 9ℓ_k²` and `log log x ≤ ℓ_k + log 3`. -/
+lemma rpow_neg_thK_le_gS {xk x : ℝ} (hxk0 : 0 < xk) (hL1 : 1 ≤ Real.log xk)
+    (hℓ : 1.1 ≤ Real.log (Real.log xk)) (hx : xk < x) (hx2 : x < Real.exp 1 * xk ^ 2) :
+    x ^ (-thK 0 xk) ≤ gS x := by
+  set L := Real.log xk with hLdef
+  set ℓ := Real.log L with hℓdef
+  have hx0 : 0 < x := lt_trans hxk0 hx
+  have hL0 : 0 < L := by linarith
+  have hlx1 : L < Real.log x := Real.log_lt_log hxk0 hx
+  have hlx2 : Real.log x < 1 + 2 * L := by
+    have h := Real.log_lt_log hx0 hx2
+    rw [Real.log_mul (Real.exp_pos 1).ne' (by positivity), Real.log_exp, Real.log_pow] at h
+    push_cast at h; linarith
+  have hlx3 : Real.log x ≤ 3 * L := by linarith
+  have hℓx1 : ℓ ≤ Real.log (Real.log x) := Real.log_le_log hL0 hlx1.le
+  have hℓx2 : Real.log (Real.log x) ≤ ℓ + 1.1 := by
+    have := Real.log_le_log (by linarith) hlx3
+    rw [Real.log_mul (by norm_num) hL0.ne'] at this
+    linarith [log_three_lt]
+  rw [thK_zero, Real.rpow_def_of_pos hx0]
+  unfold gS
+  rw [Real.exp_le_exp]
+  have h1 : 9 * ℓ ^ 2 / L * L ≤ 9 * ℓ ^ 2 / L * Real.log x :=
+    mul_le_mul_of_nonneg_left hlx1.le (by positivity)
+  rw [div_mul_cancel₀ _ hL0.ne'] at h1
+  have h0 : 0 ≤ Real.log (Real.log x) - 1.1 := by linarith
+  have h2 : (Real.log (Real.log x) - 1.1) ^ 2 ≤ ℓ ^ 2 :=
+    pow_le_pow_left₀ h0 (by linarith) 2
+  nlinarith
+
 /-- The modulus of `R'` on `[s, t]` (§5, eq. (osc), the `o_R` bullet): `0` if `t ≤ x⁺_0`
-(`R' = 0` on `(0, x⁺_0]`), else `max(s, x⁺_0)^{-θ}/10¹³`. -/
+(`R' = 0` on `(0, x⁺_0]`), else `m(max(s, x⁺_0))/10¹³` with the modulus density `m = mS θ`. -/
 noncomputable def oscMod (θ : ℝ) (X₀ : ℕ) (s t : ℝ) : ℝ :=
   if t ≤ Construction.switchOn (swS θ X₀) 0 then 0
-  else max s (Construction.switchOn (swS θ X₀) 0) ^ (-θ) / 10 ^ 13
+  else mS θ (max s (Construction.switchOn (swS θ X₀) 0)) / 10 ^ 13
 
 lemma oscMod_nonneg (θ : ℝ) (X₀ : ℕ) {s t : ℝ} (hs : 0 ≤ s) : 0 ≤ oscMod θ X₀ s t := by
   unfold oscMod
   split_ifs
   · exact le_rfl
-  · exact div_nonneg (Real.rpow_nonneg (le_trans hs (le_max_left _ _)) _) (by norm_num)
+  · exact div_nonneg (mS_nonneg θ (le_trans hs (le_max_left _ _))) (by norm_num)
+
+/-- **The `R''` of a switched-off oscillation** (design `θ = 0`): for the designed heights and
+amplitudes, `|R_k''(x)| ≤ 2·2⁻ᵏ g(x)/10¹⁴` (`R_k'' = 0` off the active window
+`(x⁺_k, e (x⁺_k)²)`, and `x^{-θ_k} ≤ g(x)` on it). -/
+theorem abs_oscD2_zero_le {X S : ℝ} (hX : 10 ^ 8 ≤ X) (hXS : X ≤ S) (k : ℕ) {γ : ℝ}
+    (hγ : γ ∈ Icc (DesignedZero.heightScale (thK 0 (Construction.switchOn S k))
+      (Construction.kappa0Param X) (Construction.switchOn S k))
+      (2 * DesignedZero.heightScale (thK 0 (Construction.switchOn S k))
+        (Construction.kappa0Param X) (Construction.switchOn S k)))
+    {x : ℝ} (hx : 0 < x) :
+    |oscD2 (thK 0 (Construction.switchOn S k)) (DesignedZero.amplitudeOf
+        (thK 0 (Construction.switchOn S k)) (Construction.kappa0Param X) γ
+        (Construction.switchOn S k)) γ (Construction.switchOn S k) x -
+      oscD2 (thK 0 (Construction.switchOn S k)) (DesignedZero.amplitudeOf
+        (thK 0 (Construction.switchOn S k)) (Construction.kappa0Param X) γ
+        (Construction.switchOn S k)) γ
+        (Construction.switchOn S k * max (Construction.switchOn S k) 1) x| ≤
+      2 * ((1 / 2) ^ k * gS x / 10 ^ 14) := by
+  set xk := Construction.switchOn S k with hxkdef
+  set t := thK 0 xk with htdef
+  have hxk : 0 < xk := Construction.switchOn_pos S k
+  have hLk : 2 ^ k * X ^ 2 ≤ Real.log xk := log_switchOn_ge_of (by linarith) hXS k
+  have h2k : (1 : ℝ) ≤ 2 ^ k := one_le_pow₀ (by norm_num)
+  have hL : X ^ 2 ≤ Real.log xk := le_trans (le_mul_of_one_le_left (by positivity) h2k) hLk
+  have hL1 : 1 ≤ Real.log xk := by nlinarith
+  have hxk1 : 1 ≤ xk := by
+    have := Real.add_one_le_exp (Real.log xk); rw [Real.exp_log hxk] at this; linarith
+  have hyk : xk * max xk 1 = xk ^ 2 := by rw [max_eq_left hxk1]; ring
+  have hℓ : 1.1 ≤ Real.log (Real.log xk) := by
+    have h1 : Real.log (X ^ 2) ≤ Real.log (Real.log xk) := Real.log_le_log (by positivity) hL
+    rw [Real.log_pow] at h1
+    have : 1 ≤ Real.log X := by
+      rw [Real.le_log_iff_exp_le (by linarith)]
+      have := Real.exp_one_lt_d9; linarith
+    push_cast at h1; linarith
+  have ht0 : 0 ≤ t := by
+    rw [htdef, thK_zero]
+    have : 0 ≤ Real.log (Real.log xk) := by linarith
+    positivity
+  have ht2 : t ≤ 1 / 2 := by
+    have := thK_zero_le (show 1 < xk by
+      have := Real.add_one_le_exp (Real.log xk); rw [Real.exp_log hxk] at this; linarith)
+      (by
+        have h1 : Real.log (X ^ 2) ≤ Real.log (Real.log xk) := Real.log_le_log (by positivity) hL
+        rw [Real.log_pow] at h1
+        have : 10 ≤ Real.log X := by
+          rw [Real.le_log_iff_exp_le (by linarith)]
+          have h10 : Real.exp 10 ≤ 10 ^ 8 := by
+            have := Real.exp_one_lt_d9
+            calc Real.exp 10 = Real.exp 1 ^ 10 := by rw [← Real.exp_nat_mul]; norm_num
+              _ ≤ 2.7182818286 ^ 10 := by gcongr
+              _ ≤ 10 ^ 8 := by norm_num
+          linarith
+        push_cast at h1; linarith)
+    linarith
+  have hg0 : 0 ≤ gS x := by unfold gS; positivity
+  have hxk2 : xk ≤ xk * max xk 1 := le_mul_of_one_le_right hxk.le (le_max_right _ _)
+  rcases le_or_gt x xk with h1 | h1
+  · rw [oscD2_eq_zero_of_le hx h1, oscD2_eq_zero_of_le hx (h1.trans hxk2), sub_zero, abs_zero]
+    positivity
+  rcases le_or_gt (Real.exp 1 * xk ^ 2) x with h2 | h2
+  · have hl1 : 1 ≤ Real.log (x / xk) := by
+      rw [Real.le_log_iff_exp_le (div_pos hx hxk), le_div_iff₀ hxk]
+      nlinarith [Real.exp_pos 1]
+    have hl2 : 1 ≤ Real.log (x / (xk * max xk 1)) := by
+      rw [hyk, Real.le_log_iff_exp_le (div_pos hx (by positivity)), le_div_iff₀ (by positivity)]
+      linarith
+    rw [oscD2_eq_of_one_le hl1 hl2, sub_self, abs_zero]
+    positivity
+  have hA := abs_oscD2_designed_le ht0 ht2 hX hXS k hγ le_rfl hx
+  have hB := abs_oscD2_designed_le ht0 ht2 hX hXS k hγ hxk2 hx
+  have hr := rpow_neg_thK_le_gS hxk hL1 hℓ h1 h2
+  have hq : (1 / 2 : ℝ) ^ k * x ^ (-t) / 10 ^ 14 ≤ (1 / 2) ^ k * gS x / 10 ^ 14 := by
+    gcongr
+  calc _ ≤ _ := abs_sub _ _
+    _ ≤ (1 / 2) ^ k * x ^ (-t) / 10 ^ 14 + (1 / 2) ^ k * x ^ (-t) / 10 ^ 14 := add_le_add hA hB
+    _ ≤ _ := by linarith
 
 /-- `R' = 0` on `(0, x⁺_0]`. -/
 lemma deriv_osc_eq_zero_of_le {θ : ℝ} (α γ : ℕ → ℝ) (S : ℝ) (hS : 1 ≤ S) {y : ℝ} (hy : 0 < y)
@@ -412,7 +587,7 @@ lemma deriv_osc_eq_zero_of_le {θ : ℝ} (α γ : ℕ → ℝ) (S : ℝ) (hS : 1
 /-- **The `R'` modulus** (§5, eq. (osc), the `o_R` bullet): for `X₀ ≤ s ≤ t`,
 `|R'(t) - R'(s)| ≤ (t - s) · oscMod θ X₀ s t`, from `|R''(x)| ≤ ∑_k 2⁻ᵏ x^{-θ}/10¹⁴` beyond
 `x⁺_0` and `R' = 0` on `(0, x⁺_0]`. -/
-theorem deriv_osc_sub_le {θ : ℝ} (hθ : θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
+theorem deriv_osc_sub_le {θ : ℝ} (hθ : θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000)) {X₀ : ℕ}
     (hX : 10 ^ 8 ≤ Real.log X₀) {γ : ℕ → ℝ} (hγ : DesignedRange θ X₀ γ) {s t : ℝ}
     (hs : (X₀ : ℝ) ≤ s) (hst : s ≤ t) :
     |deriv (Oscillation.osc θ (Construction.amplitudes θ (Construction.kappa0Param X₀)
@@ -427,15 +602,25 @@ theorem deriv_osc_sub_le {θ : ℝ} (hθ : θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 /
   have hX2 : (10 : ℝ) ^ 8 ≤ X := by
     have := Real.add_one_le_exp (Real.log X); rw [Real.exp_log (by linarith)] at this; linarith
   have hS1 : 1 ≤ S := by linarith
-  have hθ1 : 0 ≤ θ := hθ.1.le
+  have hθ1 : 0 ≤ θ := hθ.1
   have hθ2 : θ ≤ 1 / 2 := by linarith [hθ.2]
-  have hθne : θ ≠ 0 := hθ.1.ne'
   set α := Construction.amplitudes θ (Construction.kappa0Param X₀) (Construction.switchOn S) γ
   set R' := deriv (Oscillation.osc θ α γ (Construction.switchOn S)) with hR'
   set x0 := Construction.switchOn S 0 with hx0
-  -- the step beyond the switch-on: `|R'(t) - R'(s)| ≤ (t - s) s^{-θ}/10¹³` for `0 < s ≤ t`
-  have hbase : ∀ s t : ℝ, 0 < s → s ≤ t → |R' t - R' s| ≤ (t - s) * (s ^ (-θ) / 10 ^ 13) := by
-    intro s t hs0 hst
+  have hlogX : 10 ^ 8 ≤ Real.log X := hX
+  -- `log log s ≥ 1.1` beyond `X₀`
+  have hll : ∀ s, X ≤ s → 1.1 ≤ Real.log (Real.log s) := fun s hs => by
+    have h1 : 10 ^ 8 ≤ Real.log s := hlogX.trans (Real.log_le_log (by linarith) hs)
+    rw [Real.le_log_iff_exp_le (by linarith)]
+    have := Real.exp_one_lt_d9
+    have e : Real.exp 1.1 ≤ Real.exp 2 := Real.exp_le_exp.mpr (by norm_num)
+    have e2 : Real.exp 2 = Real.exp 1 ^ 2 := by rw [← Real.exp_nat_mul]; norm_num
+    have e3 : Real.exp 1 ^ 2 ≤ 2.7182818286 ^ 2 := by gcongr
+    linarith [show (2.7182818286 : ℝ) ^ 2 ≤ 10 ^ 8 by norm_num]
+  -- the step beyond the switch-on: `|R'(t) - R'(s)| ≤ (t - s) m(s)/10¹³` for `X₀ ≤ s ≤ t`
+  have hbase : ∀ s t : ℝ, X ≤ s → s ≤ t → |R' t - R' s| ≤ (t - s) * (mS θ s / 10 ^ 13) := by
+    intro s t hsX hst
+    have hs0 : 0 < s := by linarith
     have ht0 : 0 < t := by linarith
     set K := ⌈t⌉₊ + 1 with hK
     have htK : t < Construction.switchOn S K := by
@@ -446,27 +631,81 @@ theorem deriv_osc_sub_le {θ : ℝ} (hθ : θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 /
     have hsK : s < Construction.switchOn S K := lt_of_le_of_lt hst htK
     rw [hR', deriv_osc_eq_sum _ _ S hS1 ht0 htK, deriv_osc_eq_sum _ _ S hS1 hs0 hsK,
       ← Finset.sum_sub_distrib]
-    simp only [RkD_of_ne hθne]
-    have hq : 0 ≤ s ^ (-θ) := Real.rpow_nonneg hs0.le _
-    calc _ ≤ ∑ k ∈ Finset.range K, |oscD θ (α k) (γ k) (Construction.switchOn S k) t -
-          oscD θ (α k) (γ k) (Construction.switchOn S k) s| :=
-          Finset.abs_sum_le_sum_abs _ _
-      _ ≤ ∑ k ∈ Finset.range K, (t - s) * ((1 / 2) ^ k * s ^ (-θ) / 10 ^ 14) :=
-          Finset.sum_le_sum fun k _ => by
-            have hk := oscD_sub_le hθ1 hθ2 hX2 hXS k
-              (by simpa [thK_of_ne hθne] using hγ k) hs0 hst
-            simpa [α, Construction.amplitudes, thK_of_ne hθne] using hk
-      _ = (t - s) * s ^ (-θ) / 10 ^ 14 * ∑ k ∈ Finset.range K, (1 / 2 : ℝ) ^ k := by
-          rw [Finset.mul_sum]; refine Finset.sum_congr rfl fun k _ => ?_; ring
-      _ ≤ (t - s) * s ^ (-θ) / 10 ^ 14 * 2 :=
-          mul_le_mul_of_nonneg_left (sum_geometric_two_le K)
-            (by have : 0 ≤ t - s := by linarith
-                positivity)
-      _ ≤ (t - s) * (s ^ (-θ) / 10 ^ 13) := by
-          have : 0 ≤ (t - s) * s ^ (-θ) := mul_nonneg (by linarith) hq
-          nlinarith
+    by_cases hθne : θ = 0
+    · -- the design `θ = 0`: the switched-off oscillations, with the modulus density `g`
+      subst hθne
+      have hg : 0 ≤ gS s := by unfold gS; positivity
+      have hstep : ∀ k, |RkD 0 (α k) (γ k) (Construction.switchOn S k) t -
+          RkD 0 (α k) (γ k) (Construction.switchOn S k) s| ≤
+          (t - s) * (2 * ((1 / 2) ^ k * gS s / 10 ^ 14)) := by
+        intro k
+        set xk := Construction.switchOn S k with hxk
+        have hxk0 : 0 < xk := Construction.switchOn_pos S k
+        have hy0 : 0 < xk * max xk 1 :=
+          mul_pos hxk0 (lt_of_lt_of_le one_pos (le_max_right _ _))
+        have hf : ∀ x, RkD 0 (α k) (γ k) xk x = oscD (thK 0 xk) (α k) (γ k) xk x -
+            oscD (thK 0 xk) (α k) (γ k) (xk * max xk 1) x := fun x => by
+          simp [RkD]
+        have h := Convex.norm_image_sub_le_of_norm_hasDerivWithin_le
+          (f := fun x => oscD (thK 0 xk) (α k) (γ k) xk x -
+            oscD (thK 0 xk) (α k) (γ k) (xk * max xk 1) x)
+          (f' := fun x => oscD2 (thK 0 xk) (α k) (γ k) xk x -
+            oscD2 (thK 0 xk) (α k) (γ k) (xk * max xk 1) x)
+          (s := Icc s t) (C := 2 * ((1 / 2) ^ k * gS s / 10 ^ 14))
+          (fun x hx => ((hasDerivAt_oscD (lt_of_lt_of_le hs0 hx.1) hxk0).sub
+            (hasDerivAt_oscD (lt_of_lt_of_le hs0 hx.1) hy0)).hasDerivWithinAt)
+          (fun x hx => by
+            have hx0 : 0 < x := lt_of_lt_of_le hs0 hx.1
+            rw [Real.norm_eq_abs]
+            refine (abs_oscD2_zero_le hX2 hXS k (hγ k) hx0).trans ?_
+            have := gS_anti (by linarith) (hll s hsX) hx.1
+            gcongr)
+          (convex_Icc s t) (left_mem_Icc.mpr hst) (right_mem_Icc.mpr hst)
+        rw [Real.norm_eq_abs, Real.norm_eq_abs,
+          abs_of_nonneg (by linarith : (0 : ℝ) ≤ t - s)] at h
+        rw [hf, hf]
+        linarith
+      calc _ ≤ ∑ k ∈ Finset.range K, |RkD 0 (α k) (γ k) (Construction.switchOn S k) t -
+            RkD 0 (α k) (γ k) (Construction.switchOn S k) s| := Finset.abs_sum_le_sum_abs _ _
+        _ ≤ ∑ k ∈ Finset.range K, (t - s) * (2 * ((1 / 2) ^ k * gS s / 10 ^ 14)) :=
+            Finset.sum_le_sum fun k _ => hstep k
+        _ = (t - s) * gS s / 10 ^ 14 * 2 * ∑ k ∈ Finset.range K, (1 / 2 : ℝ) ^ k := by
+            rw [Finset.mul_sum]; refine Finset.sum_congr rfl fun k _ => ?_; ring
+        _ ≤ (t - s) * gS s / 10 ^ 14 * 2 * 2 :=
+            mul_le_mul_of_nonneg_left (sum_geometric_two_le K)
+              (by have : 0 ≤ t - s := by linarith
+                  positivity)
+        _ ≤ (t - s) * (mS 0 s / 10 ^ 13) := by
+            have : 0 ≤ (t - s) * gS s := mul_nonneg (by linarith) hg
+            rw [show mS 0 s = gS s from if_pos rfl]
+            have e : (t - s) * gS s / 10 ^ 14 * 2 * 2 = ((t - s) * gS s) * (4 / 10 ^ 14) := by
+              ring
+            have e' : (t - s) * (gS s / 10 ^ 13) = ((t - s) * gS s) * (1 / 10 ^ 13) := by ring
+            rw [e, e']
+            exact mul_le_mul_of_nonneg_left (by norm_num) this
+    · simp only [RkD_of_ne hθne]
+      have hq : 0 ≤ s ^ (-θ) := Real.rpow_nonneg hs0.le _
+      calc _ ≤ ∑ k ∈ Finset.range K, |oscD θ (α k) (γ k) (Construction.switchOn S k) t -
+            oscD θ (α k) (γ k) (Construction.switchOn S k) s| :=
+            Finset.abs_sum_le_sum_abs _ _
+        _ ≤ ∑ k ∈ Finset.range K, (t - s) * ((1 / 2) ^ k * s ^ (-θ) / 10 ^ 14) :=
+            Finset.sum_le_sum fun k _ => by
+              have hk := oscD_sub_le hθ1 hθ2 hX2 hXS k
+                (by simpa [thK_of_ne hθne] using hγ k) le_rfl hs0 hst
+              simpa [α, Construction.amplitudes, thK_of_ne hθne] using hk
+        _ = (t - s) * s ^ (-θ) / 10 ^ 14 * ∑ k ∈ Finset.range K, (1 / 2 : ℝ) ^ k := by
+            rw [Finset.mul_sum]; refine Finset.sum_congr rfl fun k _ => ?_; ring
+        _ ≤ (t - s) * s ^ (-θ) / 10 ^ 14 * 2 :=
+            mul_le_mul_of_nonneg_left (sum_geometric_two_le K)
+              (by have : 0 ≤ t - s := by linarith
+                  positivity)
+        _ ≤ (t - s) * (mS θ s / 10 ^ 13) := by
+            have : 0 ≤ (t - s) * s ^ (-θ) := mul_nonneg (by linarith) hq
+            simp only [mS, if_neg hθne]
+            nlinarith
   have hs0 : 0 < s := by linarith
   have hx00 : 0 < x0 := Construction.switchOn_pos S 0
+  have hx0X : X ≤ x0 := switchOn_zero_ge_swS θ X
   have hzero : ∀ y, 0 < y → y ≤ x0 → R' y = 0 := fun y hy hyx =>
     deriv_osc_eq_zero_of_le α γ S hS1 hy hyx
   unfold oscMod
@@ -475,13 +714,13 @@ theorem deriv_osc_sub_le {θ : ℝ} (hθ : θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 /
   · rw [hzero t (by linarith) htx, hzero s hs0 (hst.trans htx)]; simp
   · push_neg at htx
     rcases le_total x0 s with hxs | hsx
-    · rw [max_eq_left hxs]; exact hbase s t hs0 hst
+    · rw [max_eq_left hxs]; exact hbase s t hs hst
     · rw [max_eq_right hsx, hzero s hs0 hsx]
-      have h := hbase x0 t hx00 htx.le
+      have h := hbase x0 t hx0X htx.le
       rw [hzero x0 hx00 le_rfl] at h
-      have hq : 0 ≤ x0 ^ (-θ) / 10 ^ 13 := by positivity
-      calc |R' t - 0| ≤ (t - x0) * (x0 ^ (-θ) / 10 ^ 13) := h
-        _ ≤ (t - s) * (x0 ^ (-θ) / 10 ^ 13) :=
+      have hq : 0 ≤ mS θ x0 / 10 ^ 13 := div_nonneg (mS_nonneg θ hx00.le) (by norm_num)
+      calc |R' t - 0| ≤ (t - x0) * (mS θ x0 / 10 ^ 13) := h
+        _ ≤ (t - s) * (mS θ x0 / 10 ^ 13) :=
             mul_le_mul_of_nonneg_right (by linarith) hq
 
 end BModel

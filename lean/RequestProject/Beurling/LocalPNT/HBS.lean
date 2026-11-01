@@ -48,12 +48,18 @@ lemma eight_logsq_div_le {Λ : ℝ} (hΛ : 10 ^ 8 ≤ Λ) :
   nlinarith
 
 /-- `θ' ≤ 0.51` and `θ' ≥ θ + 0.01`. -/
-lemma thetaPrime_bounds (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
+lemma thetaPrime_bounds (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000))
     (_hX : 10 ^ 8 ≤ Real.log X₀) :
     θ + 0.01 ≤ thetaPrime θ X₀ ∧ thetaPrime θ X₀ ≤ 0.51 :=
   ⟨le_max_left _ _, max_le (by linarith [hθ.2]) (by norm_num)⟩
 
 lemma thetaPrime_ge (θ : ℝ) (X₀ : ℕ) : 0.26 ≤ thetaPrime θ X₀ := le_max_right _ _
+
+/-- `thU θ + 0.01 ≤ θ'`: the oscillations of every design are dominated by `x^{θ' - 0.01}`. -/
+lemma thU_add_le_thetaPrime (θ : ℝ) (X₀ : ℕ) : thU θ + 0.01 ≤ thetaPrime θ X₀ := by
+  unfold thU thetaPrime; split_ifs
+  · exact le_max_of_le_right (by norm_num)
+  · exact le_max_left _ _
 
 namespace LPHyp
 
@@ -70,6 +76,38 @@ lemma X0_ge : Real.exp (10 ^ 8) ≤ X₀ := by
 
 lemma spacing : Spacing xp :=
   ⟨by have := Real.one_le_exp (sq_nonneg (X₀ : ℝ)); linarith [h.xp_zero], h.xp_succ⟩
+
+/-- The per-zero exponents are at most `thU θ`. -/
+lemma thK_le (k : ℕ) : thK θ (xp k) ≤ thU θ := by
+  have hX1 := h.one_le_X0
+  have hX : (10 : ℝ) ≤ Real.log X₀ := by linarith [h.logX]
+  have h0 : xp 0 ≤ xp k := DesignSize.xp_ge_zero h.xp_succ k
+  have hpos : 0 < Real.exp ((X₀ : ℝ) ^ 2) := Real.exp_pos _
+  have hL : (X₀ : ℝ) ^ 2 ≤ Real.log (xp k) := by
+    have := Real.log_le_log hpos (h.xp_zero.trans h0)
+    rwa [Real.log_exp] at this
+  have hx1 : 1 < xp k := by
+    have := Real.add_one_le_exp ((X₀ : ℝ) ^ 2)
+    nlinarith [h.xp_zero]
+  refine thK_le_thU θ hx1 ?_
+  have h2 : Real.log ((X₀ : ℝ) ^ 2) ≤ Real.log (Real.log (xp k)) :=
+    Real.log_le_log (by positivity) hL
+  rw [Real.log_pow] at h2; push_cast at h2; linarith
+
+/-- The per-zero exponents are nonnegative. -/
+lemma thK_nonneg (k : ℕ) : 0 ≤ thK θ (xp k) := by
+  have h0 : xp 0 ≤ xp k := DesignSize.xp_ge_zero h.xp_succ k
+  have hpos : 0 < Real.exp ((X₀ : ℝ) ^ 2) := Real.exp_pos _
+  have hL : (X₀ : ℝ) ^ 2 ≤ Real.log (xp k) := by
+    have := Real.log_le_log hpos (h.xp_zero.trans h0)
+    rwa [Real.log_exp] at this
+  have hX1 := h.one_le_X0
+  unfold thK; split_ifs
+  · have hL1 : 1 ≤ Real.log (xp k) := by nlinarith
+    have : 0 ≤ Real.log (Real.log (xp k)) := Real.log_nonneg hL1
+    have : 0 < Real.log (xp k) := by linarith
+    positivity
+  · exact h.theta_mem.1
 
 lemma X0_le_xp : (X₀ : ℝ) ≤ xp 0 := by
   have h1 := Real.add_one_le_exp ((X₀ : ℝ) ^ 2)
@@ -134,17 +172,18 @@ lemma hbs_err {v : ℝ} (h1 : Xm ≤ v) (h2 : v ≤ y) :
     have hr1 := abs_rigidErr_le_fine X₀ hκ0 hX1n hhigh
     have hr2 := Target.abs_rigidErr_le X₀ hκ0 hκ1 hX1n hhigh
     have hrig := le_min hr1 hr2
-    have hR := abs_osc_le h.theta_mem.1.ne' h.spacing h.alpha_le hv1 (θ := θ) (γ := γ)
+    have hR := abs_osc_le_of h.spacing h.alpha_le h.thK_le hv1 (θ := θ) (γ := γ)
     have hls := logStar_le_rpow hv1 (show (0 : ℝ) < 0.05 by norm_num)
     have hbig := rpow_ge_of_half hX (v := v) (by linarith [h.X0_pos])
       (show (0 : ℝ) ≤ 0.05 by norm_num)
     have h55 : 0 < v ^ (0.55 : ℝ) := by positivity
-    have hθ2 := h.theta_mem.2
-    have p4 : v ^ θ * (logStar v : ℝ) ≤ 3 * v ^ (0.6 : ℝ) := by
-      calc v ^ θ * (logStar v : ℝ) ≤ v ^ θ * ((1 / 0.05 + 1) * v ^ (0.05 : ℝ)) := by gcongr
-        _ = 21 * v ^ (θ + 0.05) := by rw [Real.rpow_add hv0]; ring
+    have hθ2 : thU θ ≤ 1 / 2 - 1 / 10000 := thU_le h.theta_mem.2 (by norm_num)
+    have p4 : v ^ thU θ * (logStar v : ℝ) ≤ 3 * v ^ (0.6 : ℝ) := by
+      calc v ^ thU θ * (logStar v : ℝ) ≤ v ^ thU θ * ((1 / 0.05 + 1) * v ^ (0.05 : ℝ)) := by gcongr
+        _ = 21 * v ^ (thU θ + 0.05) := by rw [Real.rpow_add hv0]; ring
         _ ≤ 21 * v ^ (0.55 : ℝ) := by
-            have := Real.rpow_le_rpow_of_exponent_le hv1 (show θ + 0.05 ≤ (0.55 : ℝ) by linarith)
+            have := Real.rpow_le_rpow_of_exponent_le hv1
+              (show thU θ + 0.05 ≤ (0.55 : ℝ) by linarith)
             linarith
         _ ≤ 3 * v ^ (0.6 : ℝ) := by
             rw [show (0.6 : ℝ) = 0.55 + 0.05 by norm_num, Real.rpow_add hv0]

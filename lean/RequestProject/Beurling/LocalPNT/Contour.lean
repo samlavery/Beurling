@@ -158,7 +158,7 @@ theorem G1_near_pole {T₁ : ℝ} (hT : 1 ≤ T₁)
     · refine (h.differentiableAt_gfun ?_ hw1).differentiableWithinAt
       have := hc0 w hw
       have : 8 / Λ ≤ 8 / 10 ^ 8 := div_le_div_of_nonneg_left (by norm_num) (by norm_num) hX
-      linarith [h.theta_mem.2]
+      linarith [thU_le h.theta_mem.2 (show (1 / 100 : ℝ) ≤ 1 / 2 - 1 / 10000 by norm_num)]
   -- the base point `1 + 1/20`
   set s₀ : ℂ := ((1 + 1 / 20 : ℝ) : ℂ)
   have hs₀re : s₀.re = 1 + 1 / 20 := by simp [s₀]
