@@ -41,7 +41,7 @@ project:
 
 classification:
   arxiv: ["math.NT"]
-  msc2020: ["11N80", "11M41"]
+  msc2020: ["11N80", "11M41", "03B35"]
 
 sources:
   - title: "Discrete Beurling number systems with integer error below every power of x and no zero-free half-plane"
