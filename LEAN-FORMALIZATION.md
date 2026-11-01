@@ -123,7 +123,14 @@ theorem BModel.one_zero_system_exists (h84 : BaseRange.Huxley84) :
 - The late-lag exponent is η_k = 8.5ℓ_k²/log x_k for θ = 0; the o_R modulus uses the density
   g(x) = exp(−9(log log x − 1.1)²) (`OscD2.gS`).
 - `PartIInputsTargetLag` (`LagSplit.lean`) keeps D_max = `lagMax` explicit for the exp(120ℓ⁴/log ℓ) bound.
-- The deviations from §8 are listed in FOLLOWUP-S2.md, *Lean*. No error in §8 was found.
+- Two proof routes differ from §8:
+  - **Late noise.** A per-k late-lag exponent η_k = 8.5ℓ_k²/log x_k (with 150Λx_k^{η_k−θ_k} ≤ 1/100) replaces the route
+    through the exact D_max.
+  - **o_R.** One modulus density g for all active windows replaces the per-k bound e^{−ℓ_k²/2}; it does not need
+    H = H_std at x_k⁺.
+  The smaller differences (|R| ≤ 2e^{27ℓ²} for 2.01e^{18ℓ²}, the rigid count, the range x ≥ e^{e^e} of the explicit form) are
+  listed in FOLLOWUP-S2.md, *Lean*.
+- Defects: none. No error in §8 was found, and no earlier Lean statement had to be corrected.
 
 Checked only by the Lean kernel and the AI agent that wrote it; no human review.
 
