@@ -63,7 +63,7 @@ lake build
 - **(84)**, as the hypothesis `Huxley84` (above).
 - **Numerical certificates, kernel-checked.** Until 2026-10-30 these used `native_decide` (`Lean.ofReduceBool`,
   `Lean.trustCompiler`). They are now proved by `decide +kernel` on fixed-point interval arithmetic (`BSCert/FX`), with
-  adaptive covers and reductions described in `KERNEL-CERT-NOTES.md`; generators are in `scripts/`. The
+  adaptive covers and reductions described in `KERNEL-CERT-NOTES.md`; generators are in `scripts/` (named `*.lean.gen`, see `scripts/README.md`). The
   files that still contain `native_decide` (`CMCertSharp`, `RankinCert75`, `SmallCertExtra`) are outside the proof's
   import closure. The certificates were, before the change:
   - `BSCert/Z2Chunks/C00–C31`: the 32 band covers of region Z2 (bs-cert);

@@ -1,7 +1,7 @@
 #!/usr/bin/python3 -I -B
 """Sequentially build the import closure of a target module, one Lean process at a time."""
 import os, re, sys, subprocess, time
-root = os.path.expanduser('~/work/beurling-paper/lean')
+root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # the repository root
 os.chdir(root)
 imp = {}
 for d, _, fs in os.walk('RequestProject'):

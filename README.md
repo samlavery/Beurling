@@ -212,6 +212,13 @@ theorem BModel.corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ
   are x^{o(1)} and are absorbed into C (see [`FOLLOWUP-S1.md`](FOLLOWUP-S1.md), Lean section).
 - The correspondence between the paper and the Lean statements has been checked by AI agents only.
 
+**Statement surface.** [`Challenge.lean`](Challenge.lean) (imports only Mathlib) states the two headline theorems,
+`BModel.one_zero_system_exists` and `BModel.corollary_2_2_complete`, with `sorry`, together with every definition they use,
+copied verbatim from the development; [`Solution.lean`](Solution.lean) imports the proofs. [`comparator.json`](comparator.json)
+configures `lake comparator`, which checks that the proved theorems and the definitions are exactly those of `Challenge.lean`
+and use only `propext`, `Quot.sound` and `Classical.choice`. [`formalization.yaml`](formalization.yaml) describes the
+formalization (sources, scope, AI use, review status). Build everything with `lake exe cache get && lake build`.
+
 The formalization found four defects in the paper (corrections #102 and #104, constants in Lemma 5.7 and Theorem 5.24; #103, certificate
 coverage of two constants; #105, the definition of X_Hux), prompted a check that tightened the quantifier of Lemma 3.4 (#106), found that (s2), Lemma 6.27(b) and the bridge's oscillation term needed event qualifiers (#107–#109), led to a constant fix in Lemma predictable (#110), found that the o_R bound of eq. (osc) omitted windows reaching past a switch-on point (#117) and that
 the smoothing step of Theorem lp needed θ′ ≥ θ + 0.01 (#118), and found two
@@ -226,6 +233,8 @@ defects in the Aristotle model
 | `certificates/` | the computer-assisted parts and numerical cross-checks (Python 3), described in Appendix B of the paper |
 | `review/` | the AI referee reports written while the proof was developed (two component referees and one end-to-end referee; they refer to working notes that are not included here), the AI consistency check of the paper (`paper-check.md`, `subchecks/`), and the re-check after the fixes (`paper-recheck.md`, `recheck/`) |
 | `lakefile.toml`, `lake-manifest.json`, `lean-toolchain`, `RequestProject/` | the Lean 4 project (Lean/Mathlib v4.35.0), started by Aristotle: Corollary 2.2 proved from (84) alone (`BModel.corollary_2_2_complete`), with the certificates of Appendix B |
+| `Challenge.lean`, `Solution.lean`, `comparator.json`, `formalization.yaml` | the statement surface of the Lean results, its link to the proofs, and the metadata of the formalization |
+| `scripts/` | the generators of the Lean certificate files (see `scripts/README.md`) |
 | `LEAN-FORMALIZATION.md` | the Lean formalization: final statement, trust base, defects found, and the progress log |
 | `CORRECTIONS-vs-v3.md` | every deviation of the paper from the refereed draft ("v3"), with justification |
 | `PAPER-SPEC.md`, `paper/LABELS.md`, `review/PAPER-CHECK-BRIEF.md`, `review/RECHECK-BRIEF.md` | process documents: the instructions given to the AI agents that wrote and checked the paper |

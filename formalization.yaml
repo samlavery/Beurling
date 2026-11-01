@@ -1,0 +1,193 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+# formalization.yaml v0.4.
+version: "v0.4"
+
+project:
+  name: "Discrete Beurling number systems with integer error below every power, without a zero-free half-plane (assuming the short-interval prime number theorem (84))"
+  description: >-
+    A Lean 4 / Mathlib formalization of S. Lavery, "Discrete Beurling number
+    systems with integer error O(x^θ), θ < 1/2, whose zeta function has no
+    zero-free half-plane". The headline theorem, BModel.one_zero_system_exists,
+    constructs a discrete Beurling generalized number system whose integer
+    counting function satisfies N(x) = x + O_ε(x^ε) for every ε > 0, while its
+    zeta function is zero-free on no half-plane Re s > 1 − ε (a discrete
+    [1, 0]-system in the sense of Broucke–Debruyne–Révész). The second theorem,
+    BModel.corollary_2_2_complete, is Corollary 2.2: the answer to Question Q
+    (must N(x) = Ax + O(x^θ) with θ < 1/2 force a zero-free half-plane?) is
+    negative. The project also proves Theorem A for every θ ∈ (0, 1/2 − 10⁻⁴]:
+    a system with N(x) = x + O(x^θ log* x) whose zeta function has zeros ρ_k with
+    1 − Re ρ_k = (log log x_k + O(1))/log x_k, i.e. at distance 1·log log x_k / log x_k
+    from the line Re s = 1. The method is integer-first: a randomised greedy
+    rule chooses each generalized prime so that the integer count tracks a
+    target x + R(x) whose oscillation R plants the zeros; the main work is a
+    positive drift for the queue of composites at every scale, using a
+    Beurling–Saias-type resolvent bound, a local prime number theorem for the
+    realised system and a cluster-counting theorem, with numerical
+    certificates checked by the Lean kernel (decide +kernel). In Lean both
+    theorems are conditional on one explicit hypothesis, BaseRange.Huxley84,
+    eq. (84) of the paper: a short-interval prime number theorem for the
+    rational primes (relative error ≤ (log q)⁻³ on every interval of length
+    ≥ (2q)^{7/12} in [q, 2q], for large q). This is a known theorem
+    (Heath-Brown 1988 with the de la Vallée Poussin error term) that is not in
+    Mathlib; it is a hypothesis of the theorems, not an axiom. The paper and
+    the formalization were produced with heavy AI assistance (Claude agents;
+    the Lean development was started by Aristotle, Harmonic) and have had no
+    human expert review.
+  authors:
+    - "Samuel Lavery"
+  license: "MIT"
+  responsible_maintainers:
+    - "Samuel Lavery"
+
+classification:
+  arxiv: ["math.NT"]
+  msc2020: ["11N80", "11M41"]
+
+sources:
+  - title: "Discrete Beurling number systems with integer error O(x^θ), θ < 1/2, whose zeta function has no zero-free half-plane"
+    authors:
+      - "Samuel Lavery"
+    type: "paper (preprint, AI-assisted, not peer reviewed)"
+    location: "https://github.com/samlavery/Beurling (beurling-paper.pdf; LaTeX sources in paper/)"
+    relationship: "formalizes"
+    note: "The paper is distributed in this repository. The Lean development formalizes Theorem A (for every θ ∈ (0, 1/2 − 10⁻⁴]), Theorem A′, Corollary onezero and Corollary 2.2, including Sections 2–8, Appendix A and the certificates of Appendix B, from eq. (84)."
+    license: "CC-BY-4.0"
+    author_endorsement: "participated"
+  - title: "Some examples of well-behaved Beurling number systems"
+    authors:
+      - "Frederik Broucke"
+      - "Gregory Debruyne"
+      - "Szilárd Gy. Révész"
+    type: "article"
+    id: "arXiv:2309.01567"
+    location: "Trans. Amer. Math. Soc. 378 (2025), 477–501"
+    relationship: "background"
+    note: "Source of the [α, β]-system terminology used to describe the headline result; not formalized."
+  - title: "The number of primes in a short interval"
+    authors:
+      - "D. R. Heath-Brown"
+    type: "article"
+    id: "doi:10.1515/crll.1988.389.22"
+    location: "J. Reine Angew. Math. 389 (1988), 22–63"
+    relationship: "background"
+    note: "Theorem (1.2), with the de la Vallée Poussin error term in the prime number theorem, implies eq. (84) (BaseRange.Huxley84), which the Lean theorems take as an explicit hypothesis because it is not in Mathlib. Not formalized."
+
+related_formalizations: []
+
+status:
+  scope: >-
+    Formalized: Theorem A for every θ ∈ (0, 1/2 − 10⁻⁴] (BModel.theoremA_full,
+    BModel.theoremA_ii_complete), Theorem A′ (BModel.theoremAprime), Corollary
+    onezero (BModel.one_zero_system_exists) and Corollary 2.2
+    (BModel.corollary_2_2_complete), with the whole proof: Sections 2–8 and
+    Appendix A, the random construction with its measurability and probability
+    budget, and the numerical certificates of Appendix B (kernel-checked).
+    Not formalized: eq. (84), the short-interval prime number theorem for the
+    rational primes, is an explicit hypothesis (BaseRange.Huxley84) of every
+    main theorem; its derivation from Heath-Brown 1988 and the de la Vallée
+    Poussin error term (§7.1 of the paper) is not formalized. The remarks that
+    the system of one_zero_system_exists has prime exponent α = 1 and integer
+    exponent β = 0 (so is a [1, 0]-system in the BDR sense) are standard and are
+    not part of the Lean statement, which states the integer bound and the
+    absence of a zero-free half-plane directly. Lean's Theorem21 states part (i)
+    of Theorem A as |N(x) − x| ≤ C x^θ + 3 x^θ log* x + x^{η(θ)} with C depending on
+    θ and the realisation (the paper's D_max(x) + h(x)Λ⁻⁸ are absorbed into C).
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: []
+
+automation:
+  methods:
+    - method: "manual"
+      models: []
+      framework: "n/a"
+      tool_setup: "Samuel Lavery chose the problem and the statements to formalize, wrote the instructions given to the agents (see PAPER-SPEC.md and review/*BRIEF.md), and decided which reported defects to fix. No claim is made that the proof text or the Lean code was written by hand."
+      cost:
+        wall_time: "not tracked"
+        spend_usd: "n/a"
+        hardware: "local machine"
+      prompting_notes: "n/a"
+    - method: "agent"
+      models: ["Claude Opus 5.5"]
+      framework: "Claude Code (Claude Agent SDK), many parallel agents"
+      tool_setup: "AI-assisted throughout. Claude agents wrote most of the paper's proof text and most of the Lean code (Aristotle's development assumed one hypothesis, Theorem21InputsS, covering about 90 of the 128 proof pages; the agents formalized it between 2026-10-26 and 2026-11-01), ran the Lean builds, wrote and ran the certificate scripts, and acted as component, end-to-end and adversarial referees (reports in review/). 170 of the 176 commits before packaging are co-authored by Claude Opus 5.5."
+      cost:
+        wall_time: "about 10 days (git history 2026-10-22 to 2026-11-01)"
+        spend_usd: "not tracked"
+        hardware: "local machine (Apple silicon) plus API"
+      prompting_notes: "Agents were given briefs per section, lemma or Lean module, with instructions to report every defect found; the paper's CORRECTIONS-vs-v3.md records each deviation and its check."
+    - method: "autonomous"
+      models: ["Aristotle"]
+      framework: "Aristotle (Harmonic)"
+      tool_setup: "Aristotle started the Lean development (archive 75307cfd, 2026-10-26): it proved the main theorem from one large hypothesis, Theorem21InputsS, which the Claude agents then discharged. See ARISTOTLE_README.md and ARISTOTLE_SUMMARY.md."
+      cost:
+        wall_time: "not tracked"
+        spend_usd: "not tracked"
+        hardware: "API-only"
+      prompting_notes: "n/a"
+  spend_usd: "not tracked"
+  notes: >-
+    The mathematics and the Lean code were produced by AI agents under the
+    direction of the author. Aristotle (Harmonic) produced the first Lean
+    development; Claude agents completed it and found and fixed defects in the
+    paper and in Aristotle's model (listed in LEAN-FORMALIZATION.md and
+    CORRECTIONS-vs-v3.md). The statement surface Challenge.lean was written and
+    checked against the development by a Claude agent; lake comparator confirms
+    that the statements and definitions agree with the development and that
+    only propext, Quot.sound and Classical.choice are used.
+
+fidelity:
+  divergences: >-
+    (1) Eq. (84) is a hypothesis (BaseRange.Huxley84) rather than proved. (2)
+    Lean's form of Theorem A part (i) absorbs the paper's D_max(x) + h(x)Λ⁻⁸
+    (both x^{o(1)}) into the constant C, which depends on θ and the
+    realisation. (3) Two proof routes in the formalization of Theorem A′ differ
+    from §8 of the paper (late noise via a per-k lag exponent; one modulus
+    density for o_R); see FOLLOWUP-S2.md and LEAN-FORMALIZATION.md. (4) X_Hux is
+    defined without the paper's "1 +" (correction 105). Other differences found
+    during formalization were corrected in the paper (corrections 102–110, 117,
+    118 in CORRECTIONS-vs-v3.md).
+
+review:
+  status: "self-assessed by AI agents only; no human expert review"
+  reviewers:
+    - "none"
+  notes: >-
+    Pre-submission review consisted only of AI checks: Claude agents compared
+    the Lean statements and definitions with the paper (Challenge.lean was
+    copied verbatim from the development and checked by lake comparator), and
+    AI component, end-to-end and adversarial referees checked the paper
+    (review/). The Lean kernel checks the proofs and the numerical
+    certificates. No human mathematician has reviewed the paper, the
+    formalization or the correspondence between them.
+
+alignment:
+  namespace: "BModel"
+  statements:
+    - source: "Theorem A′ / Corollary onezero (thm:Aprime, cor:onezero)"
+      lean: "BModel.one_zero_system_exists"
+      module: "RequestProject.Beurling.OneZero.TheoremAprime"
+      status: "proved (from eq. (84))"
+      note: "States N(x) = x + O_ε(x^ε) for every ε > 0 and no zero-free half-plane; the explicit bound exp(120ℓ⁴/log ℓ) and the zero locations are in BModel.theoremAprime."
+    - source: "Theorem A′ (thm:Aprime), full form"
+      lean: "BModel.theoremAprime"
+      module: "RequestProject.Beurling.OneZero.TheoremAprime"
+      status: "proved (from eq. (84))"
+      note: "On an event of probability ≥ 1 − 1.5/log X₀; see LEAN-FORMALIZATION.md."
+    - source: "Corollary 2.2 (cor:notQ)"
+      lean: "BModel.corollary_2_2_complete"
+      module: "RequestProject.Beurling.Model.MarginComplete"
+      status: "proved (from eq. (84))"
+      note: "¬ QuestionQ, with QuestionQ as Definition 1.1."
+    - source: "Theorem A (thm:A), parts (i) and (ii)"
+      lean: "BModel.theoremA_full"
+      module: "RequestProject.Beurling.Model.MarginComplete"
+      status: "adapted (from eq. (84))"
+      note: "For every θ ∈ (0, 1/2 − 10⁻⁴] with one threshold X_Hux; part (i) absorbs D_max + hΛ⁻⁸ into C (see fidelity)."
+    - source: "Theorem A (thm:A), zero locations at 1·log log x_k"
+      lean: "BModel.theoremA_ii_complete"
+      module: "RequestProject.Beurling.Model.MarginComplete"
+      status: "proved (from eq. (84))"
+      note: "|(1 − Re ρ_k) log x_k − log log x_k| ≤ C and |log Im ρ_k − ((1−θ) log x_k − log log x_k)| ≤ C."
+
+acknowledgements: "Lean 4 and Mathlib; Aristotle (Harmonic), which started the Lean development; Claude (Anthropic) agents; python-flint / Arb for the certificate scripts."

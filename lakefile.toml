@@ -1,5 +1,5 @@
 name = "RequestProject"
-defaultTargets = ["RequestProject"]
+defaultTargets = ["RequestProject", "Challenge", "Solution"]
 
 [[require]]
 name = "mathlib"
@@ -12,3 +12,11 @@ globs = ["RequestProject.+"]
 # The interval checks in BSCert/Consts/MarginCert.lean recurse deeply in the interpreter during
 # native_decide; the default 8 MB thread stack is not enough on macOS.
 moreLeanArgs = ["--tstack=262144"]
+
+[[lean_lib]]
+name = "Challenge"
+roots = ["Challenge"]
+
+[[lean_lib]]
+name = "Solution"
+roots = ["Solution"]
