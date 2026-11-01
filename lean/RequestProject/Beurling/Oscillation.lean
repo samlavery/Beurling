@@ -11,9 +11,14 @@ With `ϕ` the smooth step (`Real.smoothTransition`), the switch-on points `x⁺_
   `R_k(x) := α_k x^θ cos(γ_k log x) ϕ(log(x / x⁺_k))`,   `R := ∑_k R_k`.
 
 * `oscTerm_eq_zero_of_le` : `R_k ≡ 0` on `(0, x⁺_k]`;
+* the **design index** `θ ∈ [0, 1/2 - 10⁻⁴]`: for `θ ≠ 0` the oscillations are the `oscTerm θ` of
+  Theorem A; for `θ = 0` (Theorem A′, §8) the `k`-th oscillation has the per-zero exponent
+  `thK 0 x⁺_k = 9 ℓ_k²/L_k` (`L_k = log x⁺_k`, `ℓ_k = log L_k`) and is switched off at `(x⁺_k)²`
+  (`oscTermS`, `oscK`); `osc θ` sums the `oscK θ`;
 * `card_switched_on_le_logStar` : with spacing `x⁺_{k+1} ≥ exp(x⁺_k)` and `x⁺_0 ≥ 1`, the number of
   `k` with `x⁺_k < x` is at most `log* x`;
-* `abs_osc_le` : the oscillation bound of Lemma 3.4, `|R(x)| ≤ 2 x^θ log* x` (for `|α_k| ≤ 2`).
+* `abs_osc_le_of` : the oscillation bound of Lemma 3.4, `|R(x)| ≤ 2 x^t log* x` when every
+  per-zero exponent is `≤ t` (for `|α_k| ≤ 2`); `abs_osc_le` is the case `t = θ ≠ 0`.
 -/
 
 @[expose] public section
@@ -38,7 +43,8 @@ lemma offPt_eq {xp : ℝ} (h : 1 ≤ xp) : xp * max xp 1 = xp ^ 2 := by
 
 lemma oscTermS_eq {t α γ xp x : ℝ} (h : 1 ≤ xp) : oscTermS t α γ xp x =
     α * x ^ t * Real.cos (γ * Real.log x) *
-      (Real.smoothTransition (Real.log (x / xp)) - Real.smoothTransition (Real.log (x / xp ^ 2))) := by
+      (Real.smoothTransition (Real.log (x / xp)) -
+        Real.smoothTransition (Real.log (x / xp ^ 2))) := by
   unfold oscTermS oscTerm; rw [offPt_eq h]; ring
 
 /-- The `k`-th oscillation of the design `θ`: `oscTerm θ` for `θ ≠ 0`, and the switched-off

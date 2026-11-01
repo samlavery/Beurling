@@ -104,8 +104,10 @@ def Theorem410InputsDec (θ : ℝ) (P : BeurlingSystem) : Prop :=
     (∀ k, Real.exp (xp k) ≤ xp (k + 1)) ∧
     (∀ k, γ k = designGamma X₀ κ θ κ₀ (earlyOf P θ X₀ κ A u α γ xp a) xp k) ∧
     (∀ k, α k = amplitudeOf (thK θ (xp k)) κ₀ (γ k) (xp k)) ∧
-    (∀ k, Lemma48PiecesCount X₀ (heightScale (thK θ (xp k)) κ₀ (xp k)) (earlyOf P θ X₀ κ A u α γ xp a k)) ∧
-    (∀ k, 0 ≤ η k ∧ η k ≤ 1 / 4 ∧ 150 * Real.log X₀ * xp k ^ (η k - thK θ (xp k)) ≤ 1 / 100) ∧ 0 ≤ ηG ∧ ηG ≤ 1 / 2 ∧
+    (∀ k, Lemma48PiecesCount X₀ (heightScale (thK θ (xp k)) κ₀ (xp k))
+      (earlyOf P θ X₀ κ A u α γ xp a k)) ∧
+    (∀ k, 0 ≤ η k ∧ η k ≤ 1 / 4 ∧ 150 * Real.log X₀ * xp k ^ (η k - thK θ (xp k)) ≤ 1 / 100) ∧
+    0 ≤ ηG ∧ ηG ≤ 1 / 2 ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
     (∀ x ≥ (X₀ : ℝ), |lagOf P θ X₀ κ A u α γ xp x| ≤ K * x ^ ηG) ∧
     (∀ k, ∀ y ≥ a k, |lagOf P θ X₀ κ A u α γ xp y| ≤ y ^ η k) ∧
@@ -170,7 +172,8 @@ theorem Theorem410InputsDec.toAbs {θ : ℝ} {P : BeurlingSystem} (h : Theorem41
     have : 0 ≤ Real.exp ((X₀ : ℝ) ^ 2 / 3) / κ := div_nonneg (Real.exp_pos _).le hκ0.le
     linarith
   have hγmem : ∀ k, designGamma X₀ κ θ κ₀ Dlt xp k ∈
-      Icc (heightScale (thK θ (xp k)) κ₀ (xp k)) (2 * heightScale (thK θ (xp k)) κ₀ (xp k)) := fun k =>
+      Icc (heightScale (thK θ (xp k)) κ₀ (xp k))
+        (2 * heightScale (thK θ (xp k)) κ₀ (xp k)) := fun k =>
     chooseHeight_mem _ _ _ (by linarith [hΓ k])
   have hγeq : ∀ k, designGamma X₀ κ θ κ₀ Dlt xp k = γ k := fun k => (hγ k).symm
   have hαeq : ∀ k, designAlpha X₀ κ θ κ₀ Dlt xp k = α k := fun k => by
@@ -181,7 +184,8 @@ theorem Theorem410InputsDec.toAbs {θ : ℝ} {P : BeurlingSystem} (h : Theorem41
     have hΓk := hΓ k
     have hγ0 : 0 < γ k := by linarith [hm.1]
     rw [hα k]
-    have e : amplitudeOf (thK θ (xp k)) κ₀ (γ k) (xp k) = 2 * heightScale (thK θ (xp k)) κ₀ (xp k) / γ k := by
+    have e : amplitudeOf (thK θ (xp k)) κ₀ (γ k) (xp k) =
+        2 * heightScale (thK θ (xp k)) κ₀ (xp k) / γ k := by
       unfold amplitudeOf; rw [heightScale_eq]
     rw [e, abs_of_nonneg (div_nonneg (by linarith) hγ0.le), div_le_iff₀ hγ0]
     linarith [hm.1]

@@ -163,7 +163,8 @@ noncomputable def βo (y : ℝ) (j k : ℕ) : ℝ :=
 
 variable (θ X₀) in
 /-- The pointwise bound of the switched-off part (design `θ = 0`, switched on at
-`y_k = x_k max(x_k, 1)`) of `R_k'` on the block `j`: as `βk`, with the indicator `y_k < 2^{j+1}X₀`. -/
+`y_k = x_k max(x_k, 1)`) of `R_k'` on the block `j`: as `βk`, with the indicator
+`y_k < 2^{j+1}X₀`. -/
 noncomputable def βkB (j k : ℕ) : ℝ :=
   if switchOn (swS θ X₀) k * max (switchOn (swS θ X₀) k) 1 < 2 * (2 ^ j * (X₀ : ℝ)) then
     2 * Real.sqrt (2 * switchOn (swS θ X₀) k / (2 ^ j * X₀)) /

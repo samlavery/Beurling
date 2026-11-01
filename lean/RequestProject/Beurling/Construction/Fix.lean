@@ -190,7 +190,9 @@ theorem theorem21InputsDec_of_fixP (h : Theorem21InputsFixP) : Theorem21InputsDe
     have hCo : Theorem410InputsCoupled θ X₀ (P ω) κ A u α γ xp
         (jitteredPrimesOf M (capH X₀) ω) latest := by
       refine ⟨(kappa0Param X₀), a, hArule, kappaParam_ge hX1.le, kappa0Param_ge hX4,
-        kappa0Param_le hX4, ?_, fun h0 => switchOn_cond (lt_of_le_of_ne hθ.1 (Ne.symm h0)) hX0 hlog, fun k => ?_, fun k => rfl, hpieces,
+        kappa0Param_le hX4, ?_,
+        fun h0 => switchOn_cond (lt_of_le_of_ne hθ.1 (Ne.symm h0)) hX0 hlog, fun k => ?_,
+        fun k => rfl, hpieces,
         ha, hAbs, hbound⟩
       · rw [hxpdef, log_switchOn_zero]
         have := le_swS θ (X₀ : ℝ)

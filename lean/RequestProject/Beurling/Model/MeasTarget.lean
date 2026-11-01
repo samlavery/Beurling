@@ -76,7 +76,8 @@ theorem measurable_gammaD (k : ℕ) : Measurable fun ω => gammaD θ X₀ (D ω)
     (absSet X₀ (D ω)) (uA X₀) (amplitudes θ (kappa0Param X₀) (switchOn (swS θ X₀)) (g ω)) (g ω)
     (switchOn (swS θ X₀)) (constructionScale X₀ (swS θ X₀)) k with hF
   have hrec : (fun ω => gammaD θ X₀ (D ω) k) = fun ω =>
-      chooseHeight X₀ (kappaParam X₀) (F ω) (heightScale (thK θ (switchOn (swS θ X₀) k)) (kappa0Param X₀) (switchOn (swS θ X₀) k)) := by
+      chooseHeight X₀ (kappaParam X₀) (F ω) (heightScale (thK θ (switchOn (swS θ X₀) k))
+        (kappa0Param X₀) (switchOn (swS θ X₀) k)) := by
     funext ω
     unfold gammaD
     rw [designedGammaN_rec]

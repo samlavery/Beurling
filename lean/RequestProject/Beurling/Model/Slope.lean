@@ -556,7 +556,8 @@ lemma abs_deriv_oscK_designed {θ X S : ℝ} (hθ0 : 0 ≤ θ) (hX : 10 ≤ X) (
         (Construction.kappa0Param X) (Construction.switchOn S k)))
     (hx : Construction.switchOn S k ≤ x) :
     |deriv (Oscillation.oscK θ (DesignedZero.amplitudeOf (thK θ (Construction.switchOn S k))
-      (Construction.kappa0Param X) γ (Construction.switchOn S k)) γ (Construction.switchOn S k)) x| ≤
+      (Construction.kappa0Param X) γ (Construction.switchOn S k)) γ
+        (Construction.switchOn S k)) x| ≤
       4 * Real.sqrt (Construction.switchOn S k / x) /
         (X * Real.log (Construction.switchOn S k)) := by
   set xk := Construction.switchOn S k with hxkdef

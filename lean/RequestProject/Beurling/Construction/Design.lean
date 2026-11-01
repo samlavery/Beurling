@@ -122,10 +122,11 @@ theorem designedGamma_fixed (P : BeurlingSystem) {θ : ℝ} {X₀ : ℕ} {κ : �
 
 /-- The designed heights lie in `[Γ_k, 2Γ_k]`. -/
 lemma designedGamma_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
-    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) (hΓ : ∀ k, 0 ≤ DesignedZero.heightScale (thK θ (xp k)) κ₀ (xp k))
-    (k : ℕ) :
+    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ)
+    (hΓ : ∀ k, 0 ≤ DesignedZero.heightScale (thK θ (xp k)) κ₀ (xp k)) (k : ℕ) :
     designedGamma P θ X₀ κ A u κ₀ xp a k ∈
-      Icc (DesignedZero.heightScale (thK θ (xp k)) κ₀ (xp k)) (2 * DesignedZero.heightScale (thK θ (xp k)) κ₀ (xp k)) := by
+      Icc (DesignedZero.heightScale (thK θ (xp k)) κ₀ (xp k))
+        (2 * DesignedZero.heightScale (thK θ (xp k)) κ₀ (xp k)) := by
   have hrec : designedGamma P θ X₀ κ A u κ₀ xp a k = stepGamma P θ X₀ κ A u κ₀ xp a
       (fun j => if h : j < k then designedGamma P θ X₀ κ A u κ₀ xp a j else 0) k := by
     unfold designedGamma
@@ -137,7 +138,8 @@ lemma designedGamma_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) 
 /-- The designed amplitudes satisfy `1 ≤ α_k ≤ 2` (as `α_k γ_k = 2 Γ_k` and `γ_k ∈ [Γ_k, 2Γ_k]`),
 when `Γ_k > 0`. -/
 lemma designedAlpha_mem (P : BeurlingSystem) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ)
-    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ) (hΓ : ∀ k, 0 < DesignedZero.heightScale (thK θ (xp k)) κ₀ (xp k))
+    (u : ℝ → ℝ) (κ₀ : ℝ) (xp a : ℕ → ℝ)
+    (hΓ : ∀ k, 0 < DesignedZero.heightScale (thK θ (xp k)) κ₀ (xp k))
     (k : ℕ) : designedAlpha P θ X₀ κ A u κ₀ xp a k ∈ Icc (1 : ℝ) 2 := by
   have hm := designedGamma_mem P θ X₀ κ A u κ₀ xp a (fun k => (hΓ k).le) k
   set γ := designedGamma P θ X₀ κ A u κ₀ xp a k

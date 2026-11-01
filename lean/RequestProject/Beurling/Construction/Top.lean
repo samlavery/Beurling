@@ -55,7 +55,8 @@ def PartIRestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : 
 Rankin bound for `A`: the pieces of `D̂_{<a_k}` and the construction scales. -/
 def Theorem410RestSp (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ)
     (a : ℕ → ℝ) : Prop :=
-  (∀ k, Lemma48PiecesCount X₀ (heightScale (thK θ (switchOn (swS θ X₀) k)) (kappa0Param X₀) (switchOn (swS θ X₀) k))
+  (∀ k, Lemma48PiecesCount X₀
+      (heightScale (thK θ (switchOn (swS θ X₀) k)) (kappa0Param X₀) (switchOn (swS θ X₀) k))
       (earlyOf P θ X₀ (kappaParam X₀) A u
         (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
         (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)

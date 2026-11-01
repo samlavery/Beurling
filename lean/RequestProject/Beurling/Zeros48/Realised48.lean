@@ -34,7 +34,8 @@ theorem lemma48PiecesCount_realised (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 100
     (hlag : ∀ x ≥ (X₀ : ℝ),
       |(realisedSystem M (capH X₀) U).N x - M.T x| ≤ x ^ lagExponent (1 / 10000))
     (k : ℕ) :
-    Lemma48PiecesCount X₀ (heightScale (thK θ (switchOn (swS θ X₀) k)) (kappa0Param X₀) (switchOn (swS θ X₀) k))
+    Lemma48PiecesCount X₀
+      (heightScale (thK θ (switchOn (swS θ X₀) k)) (kappa0Param X₀) (switchOn (swS θ X₀) k))
       (earlyOf (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀) (realisedA M (capH X₀) U)
         (fun n => solveU (winH X₀) n)
         (designedAlpha (realisedSystem M (capH X₀) U) θ X₀ (kappaParam X₀)

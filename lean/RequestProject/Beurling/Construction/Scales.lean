@@ -127,7 +127,8 @@ theorem lt_add_two_capH_of_constructionScale_lt {X₀ S : ℝ} (hX0' : 0 ≤ X�
 
 /-- `Theorem410RestSp` with the scales fixed to `a_k`, without the (proved) scale condition. -/
 def Theorem410RestM (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) : Prop :=
-  ∀ k, Lemma48PiecesCount X₀ (DesignedZero.heightScale (thK θ (switchOn (swS θ X₀) k)) (kappa0Param X₀) (switchOn (swS θ X₀) k))
+  ∀ k, Lemma48PiecesCount X₀ (DesignedZero.heightScale (thK θ (switchOn (swS θ X₀) k))
+      (kappa0Param X₀) (switchOn (swS θ X₀) k))
       (earlyOf P θ X₀ (kappaParam X₀) A u
         (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀))
           (constructionScale X₀ (swS θ X₀)))
