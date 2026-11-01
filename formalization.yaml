@@ -101,7 +101,7 @@ automation:
     - method: "manual"
       models: []
       framework: "n/a"
-      tool_setup: "Samuel Lavery chose the problem and the statements to formalize, wrote the instructions given to the agents (see PAPER-SPEC.md and review/*BRIEF.md), and decided which reported defects to fix. No claim is made that the proof text or the Lean code was written by hand."
+      tool_setup: "Samuel Lavery directed the research: this result is one thread of his larger geometric research program. He chose the problem and the statements to formalize, directed the agents (see PAPER-SPEC.md and review/*BRIEF.md), and decided which reported defects to fix and which strengthenings to pursue. No claim is made that the proof text or the Lean code was written by hand."
       cost:
         wall_time: "not tracked"
         spend_usd: "n/a"
