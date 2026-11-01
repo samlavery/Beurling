@@ -384,7 +384,7 @@ theorem jitterWidthRegular {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) : Jitter
 /-- **Theorem 2.1, hypothesis on the concrete construction**: `Theorem21InputsO` without the
 conjunct `JitterWidthRegular X₀`, which is now a theorem (`jitterWidthRegular`). -/
 def Theorem21InputsP : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),

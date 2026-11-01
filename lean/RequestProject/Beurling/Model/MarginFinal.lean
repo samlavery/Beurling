@@ -51,7 +51,7 @@ def OthersInputsH (θ : ℝ) (X₀ : ℕ) (ω : JitterΩ) (b : ℝ) : Prop :=
 /-- **Theorem 2.1, hypothesis**: for `X₀` beyond some threshold, a.s. on `Good(< b)` for every
 admissible window `[a, b)`, the open inputs `OthersInputsH`. -/
 def Theorem21InputsH : Prop :=
-  ∃ X : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ → X ≤ X₀ →
+  ∃ X : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ → X ≤ X₀ →
     ∀ m a b, Adm X₀ m a b → ∀ᵐ ω ∂jitterMeasure,
       ω ∈ G0 θ X₀ (e3Family θ X₀) (tE2 b) → OthersInputsH θ X₀ ω b
 
@@ -73,7 +73,7 @@ theorem theorem21InputsZ_hux (h84 : BaseRange.Huxley84) (h : Theorem21InputsH) :
     have := Real.log_le_log (Real.exp_pos _) h2c
     rwa [Real.log_exp] at this
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by linarith
-  have hc : Cond θ X₀ := ⟨(Set.Ioc_subset_Icc_self hθ), hlog, hx₁.mono h2b⟩
+  have hc : Cond θ X₀ := ⟨hθ, hlog, hx₁.mono h2b⟩
   have hnice : ∀ᵐ ω ∂jitterMeasure, ω ∈ NiceEv θ X₀ := by
     have := niceEv_compl_null hc hev
     rw [ae_iff]; exact this

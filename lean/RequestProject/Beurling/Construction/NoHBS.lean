@@ -22,7 +22,7 @@ namespace Construction
 (HBS).** `Theorem21InputsK` with `SparsityInputs` replaced by the cluster event
 `ClusterUpTo P X₀ (4v/(log v)^{11}) (capM1 X₀ v)` for all `v ≥ X₀`. -/
 def Theorem21InputsL : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -47,7 +47,7 @@ theorem theorem21InputsK_of_L (h : Theorem21InputsL) : Theorem21InputsK := by
     rwa [Real.log_exp] at this
   refine ⟨M, ι, hι, E, time, htab, fun ω hG hω => ?_⟩
   obtain ⟨hinf, a, hI, hC, hcl⟩ := hP ω hG hω
-  exact ⟨hinf, a, hI, hC, sparsityInputs_of_cluster (Set.Ioc_subset_Icc_self hθ) hlog (M ω) ω hω hinf a hI hcl⟩
+  exact ⟨hinf, a, hI, hC, sparsityInputs_of_cluster hθ hlog (M ω) ω hω hinf a hI hcl⟩
 
 /-- `Theorem21InputsK` implies `Theorem21InputsL` (the cluster event is part of
 `SparsityInputs`), so the two hypotheses are equivalent. -/

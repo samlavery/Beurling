@@ -112,7 +112,7 @@ def PartIRestO (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : �
 of `P(ω)`, the slot facts `SlotFacts` (base case of Lemma 3.6, window count of placed slot starts)
 and the slow variation of `H` (`JitterWidthRegular`). -/
 def Theorem21InputsO : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → JitterWidthRegular X₀ ∧
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -137,14 +137,14 @@ theorem theorem21InputsN_of_O (h : Theorem21InputsO) : Theorem21InputsN := by
   refine ⟨M, ι, hι, E, time, htab, fun ω hG hω => ?_⟩
   obtain ⟨hlink, hS, ⟨hT, hq⟩, hC, hcl⟩ := hP ω hG hω
   have L : LinkedModel θ X₀ (M ω) ω (constructionScale X₀ (swS θ X₀)) :=
-    ⟨Set.Ioc_subset_Icc_self hθ, hlog, hω, hT, hlink⟩
+    ⟨hθ, hlog, hω, hT, hlink⟩
   have hTlow : ∀ x : ℝ, x < X₀ → (M ω).T x = ⌊x⌋₊ := by
     intro x hx
     rw [hT x]
     simp only [target, if_pos hx]
   have hinf : {k | placedAt (M ω) k}.Infinite :=
     placed_infinite_of_growth hω hlog hTlow
-      (fun x hx => T_ge_of_formula (Set.Ioc_subset_Icc_self hθ) hlog hT hx) hlink
+      (fun x hx => T_ge_of_formula hθ hlog hT hx) hlink
   have hok := realisedOK_of (M ω) hω hlog hTlow hinf
   refine ⟨hlink, ⟨hT, hq, Real.log, fun x hx => ⟨?_, le_rfl⟩, fun x hx _ => ?_,
     fun x hx hearly => ?_⟩, hC, hcl⟩

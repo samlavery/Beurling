@@ -51,7 +51,7 @@ noncomputable def queueCore_of_X (hc : Cond θ X₀) (hev : Even X₀) (Q : Queu
 
 /-- **Theorem 2.1, hypothesis with §6 formalized up to the inputs of §5.** -/
 def Theorem21InputsX : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → Nonempty (QueueInputsX θ X₀)
 
 /-- **`Theorem21InputsX` implies `Theorem21InputsS`**, given (84). -/
@@ -65,11 +65,11 @@ theorem theorem21InputsS_of_X (hHB : ShortIntervalPNT) (h : Theorem21InputsX) :
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this
   have hHB0 : ShortIntervalPNTFrom X₀ := hx₁.mono ((le_max_right _ _).trans h2)
-  have hc : Cond θ X₀ := ⟨(Set.Ioc_subset_Icc_self hθ), hlog, hHB0⟩
+  have hc : Cond θ X₀ := ⟨hθ, hlog, hHB0⟩
   refine ⟨ιF (e3Family θ X₀), inferInstance, EF θ X₀ (e3Family θ X₀), tF X₀ (e3Family θ X₀),
-    ⟨sF (e3Family θ X₀), tableBudget_core (Set.Ioc_subset_Icc_self hθ) hlog hHB0 tiesNull hev h1
+    ⟨sF (e3Family θ X₀), tableBudget_core hθ hlog hHB0 tiesNull hev h1
       (queueCore_of_X hc hev Q) (e1X hc hev (e3Family θ X₀))⟩, fun ω hω hU => ?_⟩
-  exact goodAll_facts (e3Family θ X₀) (Set.Ioc_subset_Icc_self hθ) hlog hev hHB0 hω hU
+  exact goodAll_facts (e3Family θ X₀) hθ hlog hev hHB0 hω hU
 
 /-- Theorem 2.1 from `Theorem21InputsX` and (84). -/
 theorem theorem21_of_X (hHB : ShortIntervalPNT) (h : Theorem21InputsX) : Theorem21 :=

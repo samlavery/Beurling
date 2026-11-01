@@ -102,7 +102,7 @@ end R1
 /-- **Theorem 2.1, hypothesis, local form**: the second branch of (s2), and Proposition 5.38 for
 the margin density of the construction on `[X₀, b]`, a.s. on `Good(< b)`. -/
 def Theorem21InputsMOn : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
       S2SecondBranch θ X₀ ∧
       ∀ m a b, Adm X₀ m a b → ∀ᵐ ω ∂jitterMeasure,
@@ -127,7 +127,7 @@ theorem theorem21InputsZ_of_MOn (hHB : ShortIntervalPNT) (h : Theorem21InputsMOn
   have hlog : 10 ^ 8 ≤ Real.log X₀ := by
     have := Real.log_le_log (Real.exp_pos _) h1
     rwa [Real.log_exp] at this
-  have hc : Cond θ X₀ := ⟨(Set.Ioc_subset_Icc_self hθ), hlog, hx₁.mono ((le_max_right _ _).trans h2)⟩
+  have hc : Cond θ X₀ := ⟨hθ, hlog, hx₁.mono ((le_max_right _ _).trans h2)⟩
   have hcore := s2Core_of hc hev hS
   exact ⟨{ compE3 := e3CompBound hc hev
            s2E3 := e3S2Bound_of hc hev hcore

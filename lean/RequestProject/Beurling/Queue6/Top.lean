@@ -34,7 +34,7 @@ namespace Queue6
 /-- **Theorem 2.1, hypothesis with §6.1–§6.4 formalized**: the inputs of §6.3–§6.4 from other
 sections, for every admissible `θ` and every even `X₀ ≥ max(e^{10⁸}, X_Hux)`. -/
 def Theorem21InputsT : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → Nonempty (QueueInputs θ X₀)
 
 instance (D : Sec5Family) : Countable (ιF D) := by unfold ιF ι0; infer_instance
@@ -51,8 +51,8 @@ theorem theorem21InputsS_of_T (hHB : ShortIntervalPNT) (h : Theorem21InputsT) :
     rwa [Real.log_exp] at this
   have hHB0 : ShortIntervalPNTFrom X₀ := hx₁.mono ((le_max_right _ _).trans h2)
   refine ⟨ιF Q.sec5, inferInstance, EF θ X₀ Q.sec5, tF X₀ Q.sec5,
-    ⟨sF Q.sec5, tableBudget_EF (Set.Ioc_subset_Icc_self hθ) hlog hHB0 tiesNull hev h1 Q⟩, fun ω hω hU => ?_⟩
-  exact goodAll_facts Q.sec5 (Set.Ioc_subset_Icc_self hθ) hlog hev hHB0 hω hU
+    ⟨sF Q.sec5, tableBudget_EF hθ hlog hHB0 tiesNull hev h1 Q⟩, fun ω hω hU => ?_⟩
+  exact goodAll_facts Q.sec5 hθ hlog hev hHB0 hω hU
 
 /-- Theorem 2.1 from `Theorem21InputsT` and (84). -/
 theorem theorem21_of_T (hHB : ShortIntervalPNT) (h : Theorem21InputsT) : Theorem21 :=

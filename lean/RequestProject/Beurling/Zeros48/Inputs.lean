@@ -63,7 +63,7 @@ namespace Construction
 /-- **Theorem 2.1, hypothesis on the concrete construction**: `Theorem21InputsP` without the
 conjunct `Theorem410RestM` (Lemma 4.8(ii), now derived: `Zeros48.theorem410RestM_of_inputs`). -/
 def Theorem21InputsR : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -82,7 +82,7 @@ theorem theorem21InputsP_of_R (h : Theorem21InputsR) : Theorem21InputsP := by
   obtain ⟨M, ι, hι, E, time, htab, hP⟩ := hX θ hθ X₀ hev h1 h2
   refine ⟨M, ι, hι, E, time, htab, fun ω hG hω => ?_⟩
   obtain ⟨hlink, hS, hI, hcl⟩ := hP ω hG hω
-  exact ⟨hlink, hS, hI, Zeros48.theorem410RestM_of_inputs (Set.Ioc_subset_Icc_self hθ) hev h1 hω hlink hS hI, hcl⟩
+  exact ⟨hlink, hS, hI, Zeros48.theorem410RestM_of_inputs hθ hev h1 hω hlink hS hI, hcl⟩
 
 /-- Theorem 2.1 from `Theorem21InputsR`. -/
 theorem theorem21_of_R (h : Theorem21InputsR) : Theorem21 :=

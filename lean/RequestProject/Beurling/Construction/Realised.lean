@@ -472,7 +472,7 @@ the hypotheses on them (`PartIRestJ`, `Theorem410RestSp`, `SparsityInputs`), the
 with their adaptedness and the per-scale bounds of Table 1, and the condition that the greedy rule
 places infinitely many primes. -/
 def Theorem21InputsJ : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (M : JitterΩ → SlotModel X₀) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),

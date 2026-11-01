@@ -324,7 +324,7 @@ theorem Theorem410InputsCoupled.toDec {θ : ℝ} {X₀ : ℕ} {P : BeurlingSyste
   with `M`, and the Theorem 4.10 inputs hold, coupled to the same data, with the jittered primes
   being those placed by the greedy rule from `M`, the width `H` and the jitters `ω`. -/
 def Theorem21InputsCon : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     MonotoneOn (fun v => v - capH X₀ v / 2) (Ici (X₀ : ℝ)) ∧
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
@@ -359,7 +359,7 @@ theorem theorem21InputsDec_of_con (h : Theorem21InputsCon) : Theorem21InputsDec 
     exact goodAll_prob_ge jitterFiltration hE (by positivity) hsum
   · rintro ω ⟨hG, hSω⟩
     obtain ⟨κ, A, u, α, γ, xp, M, latest, hI, hC⟩ := hP ω hG hSω
-    refine ⟨hI.toInit, hC.toDec hθ.1.le hθ.2 hlog hev ?_ hI⟩
+    refine ⟨hI.toInit, hC.toDec hθ.1 hθ.2 hlog hev ?_ hI⟩
     -- the placement of the jittered primes
     have hTlow : ∀ x : ℝ, x < X₀ → M.T x = ⌊x⌋₊ := by
       intro x hx
