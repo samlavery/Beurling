@@ -102,7 +102,7 @@ end R1
 /-- **Theorem 2.1, hypothesis, local form**: the second branch of (s2), and Proposition 5.38 for
 the margin density of the construction on `[X₀, b]`, a.s. on `Good(< b)`. -/
 def Theorem21InputsMOn : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
       S2SecondBranch θ X₀ ∧
       ∀ m a b, Adm X₀ m a b → ∀ᵐ ω ∂jitterMeasure,

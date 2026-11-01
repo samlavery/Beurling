@@ -137,34 +137,34 @@ namespace DesignedZero
 but `Z_B` is the concrete `ZBcont X₀ κ` (the continuation of the paper's `Z_B`), and the two
 assumptions of Lemma 4.2 on `Z_B` are replaced by `0 < κ ≤ 1` and `κ T ≥ e^{X₀²/3}`. -/
 def Theorem410InputsZB (θ : ℝ) (F : ℂ → ℂ) : Prop :=
-  ∃ (X₀ : ℕ) (κ T κ₀ η : ℝ) (α γ xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
+  ∃ (X₀ : ℕ) (κ T κ₀ : ℝ) (η α γ xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
     (A : Set ℝ) (u : ℝ → ℝ) (ς : ℝ → ℝ),
     10 ^ 4 ≤ Real.log X₀ ∧ 0 < κ ∧ κ ≤ 1 ∧ Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * T ∧
-    (∀ k, DesignParams θ (Real.log X₀) κ₀ (α k) (γ k) (xp k)) ∧
+    (∀ k, DesignParams (thK θ (xp k)) (Real.log X₀) κ₀ (α k) (γ k) (xp k)) ∧
     (∀ k, T + 1 / 2 ≤ γ k) ∧
     (∀ k, 0.6 ≤ ‖ZBcont X₀ κ (1 + γ k * I)‖) ∧
     (∀ k, 1 ≤ α k ∧ α k ≤ 2) ∧
     (∀ k, Real.exp (xp k) ≤ xp (k + 1)) ∧
     (∀ k, γ k ≤ xp k) ∧
-    0 ≤ η ∧ η ≤ θ / 2 ∧
+    (∀ k, 0 ≤ η k ∧ η k ≤ 1 / 4 ∧ 150 * Real.log X₀ * xp k ^ (η k - thK θ (xp k)) ≤ 1 / 100) ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
-    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
+    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η k) ∧
     AbsorbedHyp (winH X₀) A u ∧ Monotone ς ∧
     (∀ x ≥ 1, countA A x ≤ x * Real.exp (-ς (Real.log x))) ∧
     (∀ k, ∀ τ : ℝ, |τ - γ k| ≤ 1 →
       absorbedBound ς (designRadius (xp k)) (|τ| ^ (8 / 7 : ℝ)) ≤ 1 / 16) ∧
     (∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xp k)),
-      F s = ZBcont X₀ κ s + (∑' j, oscHat θ (α j) (γ j) (xp j) s) +
+      F s = ZBcont X₀ κ s + (∑' j, oscHatK θ (α j) (γ j) (xp j) s) +
         (Dlt k s + lateNoise D (a k) s) + absorbedHat (winH X₀) A u s) ∧
     (∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xp k)), ‖Dlt k s‖ ≤ 1 / 16)
 
 theorem Theorem410InputsZB.mertens {θ : ℝ} {F : ℂ → ℂ} (h : Theorem410InputsZB θ F) :
     Theorem410InputsMertens θ F := by
   obtain ⟨X₀, κ, T, κ₀, η, α, γ, xp, a, D, Dlt, A, u, ς, hX, hκ, hκ1, hT, hP, hγT,
-    hc, hα, hsp, hγx, hη0, hη, ha, hD, hA, hς, hN, hB, hdec, hDlt⟩ := h
+    hc, hα, hsp, hγx, hη, ha, hD, hA, hς, hN, hB, hdec, hDlt⟩ := h
   obtain ⟨hdiff, hclose⟩ := lemma_4_2_first_statement (twentyfour_le_of_log hX) hκ hκ1 hT
   exact ⟨X₀, T, κ₀, η, α, γ, xp, a, ZBcont X₀ κ, D, Dlt, A, u, ς, hX, hdiff, hclose, hP, hγT,
-    hc, hα, hsp, hγx, hη0, hη, ha, hD, hA, hς, hN, hB, hdec, hDlt⟩
+    hc, hα, hsp, hγx, hη, ha, hD, hA, hς, hN, hB, hdec, hDlt⟩
 
 end DesignedZero
 
@@ -176,7 +176,7 @@ def TheoremAInputsZB (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 
 /-- **Theorem 2.1, refined hypothesis** with the concrete base factor (Lemma 4.2 fully derived). -/
 def Theorem21InputsZB : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

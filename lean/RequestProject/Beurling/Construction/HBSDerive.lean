@@ -148,7 +148,7 @@ theorem hbs_err_low {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) {θ : ℝ}
   constructor <;> nlinarith
 
 /-- **(HBS) for the realised system, derived from the slot data and the cluster event.** -/
-theorem sparsityInputs_of_cluster {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
+theorem sparsityInputs_of_cluster {θ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000))
     {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) (M : SlotModel X₀) (ω : JitterΩ)
     (hω : ∀ j, ω j ∈ Icc (0 : ℝ) 1) (hinf : {k | placedAt M k}.Infinite) (a : ℕ → ℝ)
     (hI : PartIRestJ θ X₀ (realisedSystem M (capH X₀) ω) (realisedA M (capH X₀) ω)
@@ -255,15 +255,16 @@ theorem sparsityInputs_of_cluster {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 
           (kappa0Param X₀) (switchOn (swS θ X₀)) a (heightScale_switchOn_pos θ hX1.le) k
         rw [abs_of_nonneg (by linarith [hm.1])]
         exact hm.2
-      have hR := abs_osc_le (θ := θ) (γ := designedGamma P θ X₀ (kappaParam X₀) A
-        (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a) hsp hα (x := v) (by linarith)
+      have hR := abs_osc_swS_le θ hX1.le (by linarith) (γ := designedGamma P θ X₀
+        (kappaParam X₀) A (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        hα (x := v) (by linarith)
       have hR0 := osc_eq_zero_of_le (θ := θ) (α := designedAlpha P θ X₀ (kappaParam X₀) A
         (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a) (γ := designedGamma P θ X₀
         (kappaParam X₀) A (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a) hsp
         (by linarith : (0 : ℝ) < X₀) ((le_swS θ _).trans (switchOn_zero_ge _))
       have hl := hlag v hhigh
       rw [hT v] at hl
-      exact hbs_err_high hX hθ.2 hhigh hl hEA hR hR0
+      exact hbs_err_high hX (thU_le hθ.2 (by norm_num)) hhigh hl hEA hR hR0
   exact ⟨X0m, 1 / 1000, 1 / 1000, hbsEps X₀, hX0mlog, hX0m2,
     fun z => hHBS_of z (fun v h1 _ => main ⌊v⌋₊ v rfl h1), hcl⟩
 

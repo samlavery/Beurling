@@ -91,10 +91,10 @@ inputs of the proof of Lemma 4.8(ii) for `D̂_{<a_k}` (`Dlt k`), at the heights 
 `δ_k ℓ + 2 log(2 + ℓ) + 5 ≤ ς(ℓ)` for `0 ≤ ℓ ≤ log(γ_k + 1)/(1 - θ/2)`
 (`Absorbed.absorbedBound_le_of_growth`). -/
 def Theorem410InputsZB48 (θ : ℝ) (F : ℂ → ℂ) : Prop :=
-  ∃ (X₀ : ℕ) (κ T κ₀ η : ℝ) (α γ xp a Γ : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
+  ∃ (X₀ : ℕ) (κ T κ₀ : ℝ) (η α γ xp a Γ : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
     (A : Set ℝ) (u : ℝ → ℝ) (ς : ℝ → ℝ),
     10 ^ 4 ≤ Real.log X₀ ∧ 0 < κ ∧ κ ≤ 1 ∧ Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * T ∧
-    (∀ k, DesignParams θ (Real.log X₀) κ₀ (α k) (γ k) (xp k)) ∧
+    (∀ k, DesignParams (thK θ (xp k)) (Real.log X₀) κ₀ (α k) (γ k) (xp k)) ∧
     (∀ k, T + 1 / 2 ≤ γ k) ∧
     (∀ k, Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * Γ k) ∧
     (∀ k, Differentiable ℂ (Dlt k)) ∧
@@ -103,15 +103,15 @@ def Theorem410InputsZB48 (θ : ℝ) (F : ℂ → ℂ) : Prop :=
     (∀ k, 1 ≤ α k ∧ α k ≤ 2) ∧
     (∀ k, Real.exp (xp k) ≤ xp (k + 1)) ∧
     (∀ k, γ k ≤ xp k) ∧
-    0 ≤ η ∧ η ≤ θ / 2 ∧
+    (∀ k, 0 ≤ η k ∧ η k ≤ 1 / 4 ∧ 150 * Real.log X₀ * xp k ^ (η k - thK θ (xp k)) ≤ 1 / 100) ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
-    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
+    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η k) ∧
     AbsorbedHyp (winH X₀) A u ∧ Monotone ς ∧
     (∀ x ≥ 1, countA A x ≤ x * Real.exp (-ς (Real.log x))) ∧
     (∀ k, ∀ ℓ ∈ Set.Icc 0 (Real.log (γ k + 1) / (1 - 1 / 8)),
       designRadius (xp k) * ℓ + 2 * Real.log (2 + ℓ) + 5 ≤ ς ℓ) ∧
     (∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xp k)),
-      F s = ZBcont X₀ κ s + (∑' j, oscHat θ (α j) (γ j) (xp j) s) +
+      F s = ZBcont X₀ κ s + (∑' j, oscHatK θ (α j) (γ j) (xp j) s) +
         (Dlt k s + lateNoise D (a k) s) + absorbedHat (winH X₀) A u s)
 
 /-- The two bounds at the chosen heights follow from Lemma 4.8, and the `1/16` requirement from
@@ -119,7 +119,7 @@ the growth condition. -/
 theorem Theorem410InputsZB48.toZB {θ : ℝ} {F : ℂ → ℂ} (h : Theorem410InputsZB48 θ F) :
     Theorem410InputsZB θ F := by
   obtain ⟨X₀, κ, T, κ₀, η, α, γ, xp, a, Γ, D, Dlt, A, u, ς, hX, hκ, hκ1, hT, hP, hγT, hΓ,
-    hDd, hpieces, hrule, hα, hsp, hγx, hη0, hη, ha, hD, hA, hς, hN, hgrowth, hdec⟩ := h
+    hDd, hpieces, hrule, hα, hsp, hγx, hη, ha, hD, hA, hς, hN, hgrowth, hdec⟩ := h
   have hgood : ∀ k, GoodHeight X₀ κ (Dlt k) (Γ k) (γ k) := fun k =>
     hrule k (exists_goodHeight (exp_100_le_of_log hX) hκ hκ1 (hΓ k) (hDd k) (hpieces k))
   have hB : ∀ k, ∀ τ : ℝ, |τ - γ k| ≤ 1 →
@@ -139,7 +139,7 @@ theorem Theorem410InputsZB48.toZB {θ : ℝ} {F : ℂ → ℂ} (h : Theorem410In
     have e : Real.log (γ k + 1) / (1 - 1 / 8) = 8 / 7 * Real.log (γ k + 1) := by ring
     rw [e]; linarith
   refine ⟨X₀, κ, T, κ₀, η, α, γ, xp, a, D, Dlt, A, u, ς, hX, hκ, hκ1, hT, hP, hγT,
-    fun k => (hgood k).2.1, hα, hsp, hγx, hη0, hη, ha, hD, hA, hς, hN, hB, hdec, ?_⟩
+    fun k => (hgood k).2.1, hα, hsp, hγx, hη, ha, hD, hA, hς, hN, hB, hdec, ?_⟩
   intro k s hs
   apply (hgood k).2.2 s
   have hr := (hP k).radius_bounds
@@ -155,7 +155,7 @@ def TheoremAInputsZB48 (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 
 /-- **Theorem 2.1, refined hypothesis** with the heights chosen by Lemma 4.8. -/
 def Theorem21InputsZB48 : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

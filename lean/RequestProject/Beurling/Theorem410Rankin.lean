@@ -33,27 +33,28 @@ open Complex Metric Set Filter Topology MeasureTheory SmoothStep Oscillation Abs
 with `log X₀ ≥ 10⁸`, and with the free exponent `ς` and its three hypotheses replaced by: `A` is
 empty below `log x = (log X₀)²`, and `#(A ∩ [1, x]) ≤ x e^{-ς_*(log x)}` above. -/
 def Theorem410InputsRankin (θ : ℝ) (F : ℂ → ℂ) : Prop :=
-  ∃ (X₀ : ℕ) (κ T κ₀ η : ℝ) (xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
+  ∃ (X₀ : ℕ) (κ T κ₀ : ℝ) (η xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
     (A : Set ℝ) (u : ℝ → ℝ),
-    10 ^ 8 ≤ Real.log X₀ ∧ (∀ k, 2 * designRadius (xp k) ≤ θ) ∧ θ ≤ 1 / 2 ∧ 0 < κ ∧ κ ≤ 1 ∧
+    10 ^ 8 ≤ Real.log X₀ ∧ (∀ k, 2 * designRadius (xp k) ≤ thK θ (xp k)) ∧
+    (∀ k, thK θ (xp k) ≤ 1 / 2) ∧ 0 < κ ∧ κ ≤ 1 ∧
     Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * T ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧
     (∀ k, 1 < xp k) ∧ (∀ k, 2 * Real.log X₀ ≤ Real.log (Real.log (xp k))) ∧
-    (∀ k, T + 1 / 2 ≤ heightScale θ κ₀ (xp k)) ∧
-    (∀ k, Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * heightScale θ κ₀ (xp k)) ∧
+    (∀ k, T + 1 / 2 ≤ heightScale (thK θ (xp k)) κ₀ (xp k)) ∧
+    (∀ k, Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * heightScale (thK θ (xp k)) κ₀ (xp k)) ∧
     (∀ k, Differentiable ℂ (Dlt k)) ∧
-    (∀ k, Lemma48PiecesCount X₀ (heightScale θ κ₀ (xp k)) (Dlt k)) ∧
+    (∀ k, Lemma48PiecesCount X₀ (heightScale (thK θ (xp k)) κ₀ (xp k)) (Dlt k)) ∧
     (∀ k, Real.exp (xp k) ≤ xp (k + 1)) ∧
-    0 ≤ η ∧ η ≤ θ / 2 ∧
+    (∀ k, 0 ≤ η k ∧ η k ≤ 1 / 4 ∧ 150 * Real.log X₀ * xp k ^ (η k - thK θ (xp k)) ≤ 1 / 100) ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
-    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
+    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η k) ∧
     AbsorbedHyp (winH X₀) A u ∧
     (∀ x ≥ (1 : ℝ), Real.log x ≤ Real.log X₀ ^ 2 → countA A x = 0) ∧
     (∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →
       countA A x ≤ x * Real.exp (-sigmaStar (Real.log X₀) (Real.log x))) ∧
     (∀ k, ∀ s ∈ closedBall (1 + designGamma X₀ κ θ κ₀ Dlt xp k * I) (designRadius (xp k)),
       F s = ZBcont X₀ κ s +
-        (∑' j, oscHat θ (designAlpha X₀ κ θ κ₀ Dlt xp j) (designGamma X₀ κ θ κ₀ Dlt xp j)
+        (∑' j, oscHatK θ (designAlpha X₀ κ θ κ₀ Dlt xp j) (designGamma X₀ κ θ κ₀ Dlt xp j)
           (xp j) s) +
         (Dlt k s + lateNoise D (a k) s) + absorbedHat (winH X₀) A u s)
 
@@ -62,9 +63,9 @@ def Theorem410InputsRankin (θ : ℝ) (F : ℂ → ℂ) : Prop :=
 theorem Theorem410InputsRankin.toDesign {θ : ℝ} {F : ℂ → ℂ} (h : Theorem410InputsRankin θ F) :
     Theorem410InputsDesign θ F := by
   obtain ⟨X₀, κ, T, κ₀, η, xp, a, D, Dlt, A, u, hX, hθ1, hθ2, hκ, hκ1, hT, hκ₀1, hκ₀2,
-    hx1, hLL, hΓT, hΓ, hDd, hpieces, hsp, hη0, hη, ha, hD, hA, hempty, hbound, hdec⟩ := h
+    hx1, hLL, hΓT, hΓ, hDd, hpieces, hsp, hη, ha, hD, hA, hempty, hbound, hdec⟩ := h
   exact ⟨X₀, κ, T, κ₀, η, xp, a, D, Dlt, A, u, sigmaExt (Real.log X₀), by linarith, hθ1, hθ2,
-    hκ, hκ1, hT, hκ₀1, hκ₀2, hx1, hLL, hΓT, hΓ, hDd, hpieces, hsp, hη0, hη, ha, hD, hA,
+    hκ, hκ1, hT, hκ₀1, hκ₀2, hx1, hLL, hΓT, hΓ, hDd, hpieces, hsp, hη, ha, hD, hA,
     sigmaExt_monotone hX, le_sigmaExt (countA A) hempty hbound,
     fun ℓ hℓ => sigmaExt_growth hX hℓ, hdec⟩
 
@@ -75,7 +76,7 @@ def TheoremAInputsRankin (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21InputsLag`, with the absorbed-set exponent
 given by the paper's Rankin minorant `ς_*` (`Theorem410InputsRankin`). -/
 def Theorem21InputsRankin : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

@@ -113,25 +113,26 @@ open DesignSize
 * `κ ≥ X₀⁻¹` (the paper's `κ = X₀^{-5/12+2ε_κ}` satisfies this);
 * `κ₀ ∈ [X₀⁻¹, 1/4]`, as before. -/
 def Theorem410InputsSize (θ : ℝ) (F : ℂ → ℂ) : Prop :=
-  ∃ (X₀ : ℕ) (κ κ₀ η : ℝ) (xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
+  ∃ (X₀ : ℕ) (κ κ₀ : ℝ) (η xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
     (A : Set ℝ) (u : ℝ → ℝ),
-    10 ^ 8 ≤ Real.log X₀ ∧ (∀ k, 2 * designRadius (xp k) ≤ θ) ∧ θ ≤ 1 / 2 ∧
+    10 ^ 8 ≤ Real.log X₀ ∧ (∀ k, 2 * designRadius (xp k) ≤ thK θ (xp k)) ∧
+    (∀ k, thK θ (xp k) ≤ 1 / 2) ∧
     Real.exp (-Real.log X₀) ≤ κ ∧ κ ≤ 1 ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧
     (X₀ : ℝ) ^ 2 ≤ Real.log (xp 0) ∧
     (∀ k, Differentiable ℂ (Dlt k)) ∧
-    (∀ k, Lemma48PiecesCount X₀ (heightScale θ κ₀ (xp k)) (Dlt k)) ∧
+    (∀ k, Lemma48PiecesCount X₀ (heightScale (thK θ (xp k)) κ₀ (xp k)) (Dlt k)) ∧
     (∀ k, Real.exp (xp k) ≤ xp (k + 1)) ∧
-    0 ≤ η ∧ η ≤ θ / 2 ∧
+    (∀ k, 0 ≤ η k ∧ η k ≤ 1 / 4 ∧ 150 * Real.log X₀ * xp k ^ (η k - thK θ (xp k)) ≤ 1 / 100) ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
-    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
+    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η k) ∧
     AbsorbedHyp (winH X₀) A u ∧
     (∀ x ≥ (1 : ℝ), Real.log x ≤ Real.log X₀ ^ 2 → countA A x = 0) ∧
     (∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →
       countA A x ≤ x * Real.exp (-sigmaStar (Real.log X₀) (Real.log x))) ∧
     (∀ k, ∀ s ∈ closedBall (1 + designGamma X₀ κ θ κ₀ Dlt xp k * I) (designRadius (xp k)),
       F s = ZBcont X₀ κ s +
-        (∑' j, oscHat θ (designAlpha X₀ κ θ κ₀ Dlt xp j) (designGamma X₀ κ θ κ₀ Dlt xp j)
+        (∑' j, oscHatK θ (designAlpha X₀ κ θ κ₀ Dlt xp j) (designGamma X₀ κ θ κ₀ Dlt xp j)
           (xp j) s) +
         (Dlt k s + lateNoise D (a k) s) + absorbedHat (winH X₀) A u s)
 
@@ -140,26 +141,26 @@ with `T := e^{X₀²/3}/κ`. -/
 theorem Theorem410InputsSize.toRankin {θ : ℝ} {F : ℂ → ℂ} (h : Theorem410InputsSize θ F) :
     Theorem410InputsRankin θ F := by
   obtain ⟨X₀, κ, κ₀, η, xp, a, D, Dlt, A, u, hX, hθ1, hθ2, hκ, hκ1, hκ₀1, hκ₀2, hxp0, hDd,
-    hpieces, hsp, hη0, hη, ha, hD, hA, hempty, hbound, hdec⟩ := h
+    hpieces, hsp, hη, ha, hD, hA, hempty, hbound, hdec⟩ := h
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
   have hκp : 0 < κ := lt_of_lt_of_le (Real.exp_pos _) hκ
   have hsize : ∀ k, 1 < xp k ∧ 2 * Real.log X₀ ≤ Real.log (Real.log (xp k)) ∧
-      Real.exp ((X₀ : ℝ) ^ 2 / 3) / κ + 1 / 2 ≤ heightScale θ κ₀ (xp k) := by
+      Real.exp ((X₀ : ℝ) ^ 2 / 3) / κ + 1 / 2 ≤ heightScale (thK θ (xp k)) κ₀ (xp k) := by
     intro k
     have hpos : 0 < xp k := lt_of_lt_of_le (ha k).1 (ha k).2.1
     have h0 : 0 < xp 0 := lt_of_lt_of_le (ha 0).1 (ha 0).2.1
     have hlog : (X₀ : ℝ) ^ 2 ≤ Real.log (xp k) :=
       hxp0.trans (Real.log_le_log h0 (xp_ge_zero hsp k))
-    exact size_of_log_ge hX0 hX hθ2 hκ hκ1 hκ₀1 hpos hlog
+    exact size_of_log_ge hX0 hX (hθ2 k) hκ hκ1 hκ₀1 hpos hlog
   set T := Real.exp ((X₀ : ℝ) ^ 2 / 3) / κ with hT
   have hκT : Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * T := by
     rw [hT, mul_div_cancel₀ _ hκp.ne']
   refine ⟨X₀, κ, T, κ₀, η, xp, a, D, Dlt, A, u, hX, hθ1, hθ2, hκp, hκ1, hκT, hκ₀1, hκ₀2,
     fun k => (hsize k).1, fun k => (hsize k).2.1, fun k => (hsize k).2.2, fun k => ?_, hDd,
-    hpieces, hsp, hη0, hη, ha, hD, hA, hempty, hbound, hdec⟩
+    hpieces, hsp, hη, ha, hD, hA, hempty, hbound, hdec⟩
   have := (hsize k).2.2
   calc Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * T := hκT
-    _ ≤ κ * heightScale θ κ₀ (xp k) := by
+    _ ≤ κ * heightScale (thK θ (xp k)) κ₀ (xp k) := by
       apply mul_le_mul_of_nonneg_left _ hκp.le; linarith
 
 

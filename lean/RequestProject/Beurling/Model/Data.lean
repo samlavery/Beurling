@@ -159,9 +159,9 @@ theorem designedGammaN_fixed (N : ℝ → ℝ) {θ : ℝ} {X₀ : ℕ} {κ : ℝ
 
 /-- The heights `designedGammaN` lie in `[Γ_k, 2Γ_k]`. -/
 lemma designedGammaN_mem (N : ℝ → ℝ) (θ : ℝ) (X₀ : ℕ) (κ : ℝ) (A : Set ℝ) (u : ℝ → ℝ)
-    (κ₀ : ℝ) (xp a : ℕ → ℝ) (hΓ : ∀ k, 0 ≤ heightScale θ κ₀ (xp k)) (k : ℕ) :
+    (κ₀ : ℝ) (xp a : ℕ → ℝ) (hΓ : ∀ k, 0 ≤ heightScale (thK θ (xp k)) κ₀ (xp k)) (k : ℕ) :
     designedGammaN N θ X₀ κ A u κ₀ xp a k ∈
-      Icc (heightScale θ κ₀ (xp k)) (2 * heightScale θ κ₀ (xp k)) := by
+      Icc (heightScale (thK θ (xp k)) κ₀ (xp k)) (2 * heightScale (thK θ (xp k)) κ₀ (xp k)) := by
   rw [designedGammaN_rec]
   unfold stepGammaN designGamma
   exact chooseHeight_mem _ _ _ (hΓ k)

@@ -59,7 +59,8 @@ jittered primes `jit` and the latest-prime map `latest`); the pieces of `D̂_{<a
 def Theorem410Rest (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) (A : Set ℝ) (u : ℝ → ℝ) (a : ℕ → ℝ)
     (jit : Set ℝ) (latest : ℝ → ℝ) : Prop :=
   A ⊆ absorbedRule (10 ^ 7) jit latest (absorbY X₀) ∧
-    (∀ k, Lemma48PiecesCount X₀ (heightScale θ (kappa0Param X₀) (switchOn (swS θ X₀) k))
+    (∀ k, Lemma48PiecesCount X₀
+      (heightScale (thK θ (switchOn (swS θ X₀) k)) (kappa0Param X₀) (switchOn (swS θ X₀) k))
       (earlyOf P θ X₀ (kappaParam X₀) A u
         (designedAlpha P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
         (designedGamma P θ X₀ (kappaParam X₀) A u (kappa0Param X₀) (switchOn (swS θ X₀)) a)
@@ -73,7 +74,7 @@ heights designed.** As `Theorem21InputsCon`, without the monotonicity of `v - H(
 the parameter conditions of Section 2.2 and without the fixed-point condition on `γ_k, α_k`; the
 density bound `ρ_A ≤ (log v)^{-4}` is replaced by Lemma 6.26. -/
 def Theorem21InputsFix : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ)
       (time : ι → ℕ),
@@ -100,7 +101,7 @@ theorem GreedyRun.jittered_ge_of_floor {X₀ : ℕ} (R : GreedyRun X₀)
 
 /-- `Γ_k > 0` for the switch-on points. -/
 lemma heightScale_switchOn_pos (θ : ℝ) {X₀ : ℝ} (hX : 1 ≤ X₀) (k : ℕ) :
-    0 < heightScale θ (kappa0Param X₀) (switchOn (swS θ X₀) k) := by
+    0 < heightScale (thK θ (switchOn (swS θ X₀) k)) (kappa0Param X₀) (switchOn (swS θ X₀) k) := by
   have h1 : 1 < switchOn (swS θ X₀) k := by
     cases k with
     | zero =>
@@ -111,13 +112,14 @@ lemma heightScale_switchOn_pos (θ : ℝ) {X₀ : ℝ} (hX : 1 ≤ X₀) (k : �
   have hL := Real.log_pos h1
   unfold heightScale kappa0Param
   have : 0 < X₀ := by linarith
-  have := Real.rpow_pos_of_pos (by linarith : (0 : ℝ) < switchOn (swS θ X₀) k) (1 - θ)
+  have := Real.rpow_pos_of_pos (by linarith : (0 : ℝ) < switchOn (swS θ X₀) k)
+    (1 - thK θ (switchOn (swS θ X₀) k))
   positivity
 
 /-- `Theorem21InputsFix` with the probability budget stated as its conclusion
 `P(G) ≥ 1 - 1.5/log X₀` (for the good event `G = ⋂ E`). -/
 def Theorem21InputsFixP : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (P : JitterΩ → BeurlingSystem) (ι : Type) (E : ι → Set JitterΩ),
       ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ jitterMeasure (goodAll E) ∧
@@ -188,7 +190,9 @@ theorem theorem21InputsDec_of_fixP (h : Theorem21InputsFixP) : Theorem21InputsDe
     have hCo : Theorem410InputsCoupled θ X₀ (P ω) κ A u α γ xp
         (jitteredPrimesOf M (capH X₀) ω) latest := by
       refine ⟨(kappa0Param X₀), a, hArule, kappaParam_ge hX1.le, kappa0Param_ge hX4,
-        kappa0Param_le hX4, ?_, switchOn_cond hθ.1 hX0 hlog, fun k => ?_, fun k => rfl, hpieces,
+        kappa0Param_le hX4, ?_,
+        fun h0 => switchOn_cond (lt_of_le_of_ne hθ.1 (Ne.symm h0)) hX0 hlog, fun k => ?_,
+        fun k => rfl, hpieces,
         ha, hAbs, hbound⟩
       · rw [hxpdef, log_switchOn_zero]
         have := le_swS θ (X₀ : ℝ)

@@ -100,7 +100,8 @@ theorem differentiableOn_gfun_ball :
     have hs0 : s ≠ 0 := by intro e; rw [e] at h1; simp at h1; linarith
     refine DifferentiableAt.differentiableWithinAt ?_
     exact ((differentiableAt_id.sub_const 1).mul (h.differentiableAt_zetaSharp
-      (by linarith [h.theta_mem.2]) hs1)).div differentiableAt_id hs0
+      (by linarith [thU_le h.theta_mem.2 (show (1 / 100 : ℝ) ≤ 1 / 2 - 1 / 10000 by norm_num)])
+      hs1)).div differentiableAt_id hs0
   have hbound : ∀ s ∈ ball (1 : ℂ) (1 / Real.log X₀) \ {1}, ‖f s - 1‖ ≤ 1 := by
     intro s hs
     obtain ⟨h0, h1, h2⟩ := h.one_le_re_of_ball hs.1
@@ -162,10 +163,10 @@ theorem differentiableOn_gfun_ball :
   exact hD
 
 /-- `gfun` is holomorphic at `s ≠ 1` with `σ > θ + 2/5`. -/
-theorem differentiableAt_gfun {s : ℂ} (hs : θ + 2 / 5 < s.re) (hs1 : s ≠ 1) :
+theorem differentiableAt_gfun {s : ℂ} (hs : thU θ + 2 / 5 < s.re) (hs1 : s ≠ 1) :
     DifferentiableAt ℂ (gfun P θ X₀ α γ xp y) s := by
   have hs0 : s ≠ 0 := by
-    intro e; rw [e] at hs; simp at hs; linarith [h.theta_mem.1]
+    intro e; rw [e] at hs; simp at hs; linarith [thU_nonneg h.theta_mem.1]
   have hf : DifferentiableAt ℂ (fun s => (s - 1) * zetaSharp P θ X₀ α γ xp y s / s) s :=
     ((differentiableAt_id.sub_const 1).mul (h.differentiableAt_zetaSharp hs hs1)).div
       differentiableAt_id hs0

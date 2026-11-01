@@ -215,8 +215,8 @@ theorem target_error (X₀ : ℕ) {κ θ : ℝ} (cntA rhoA R E : ℝ → ℝ) (h
 lemma osc_eq_zero_of_le {θ : ℝ} {α γ xp : ℕ → ℝ} (h : Spacing xp) {x : ℝ} (hx : 0 < x)
     (hxp : x ≤ xp 0) : osc θ α γ xp x = 0 := by
   unfold osc
-  rw [show (fun k => oscTerm θ (α k) (γ k) (xp k) x) = fun _ => 0 from funext fun k =>
-    oscTerm_eq_zero_of_le hx (hxp.trans (h.strictMono.monotone (Nat.zero_le k)))]
+  rw [show (fun k => oscK θ (α k) (γ k) (xp k) x) = fun _ => 0 from funext fun k =>
+    oscK_eq_zero_of_le hx (hxp.trans (h.strictMono.monotone (Nat.zero_le k)))]
   exact tsum_zero
 
 end Target
@@ -258,7 +258,7 @@ def TheoremAInputsTarget (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 part (i) is reduced to the absorbed part of the target error and the lag bound (La) for the
 concrete target (6). -/
 def Theorem21InputsTarget : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧
@@ -267,7 +267,7 @@ def Theorem21InputsTarget : Prop :=
 theorem theorem21Inputs'_of_target (h : Theorem21InputsTarget) : Theorem21Inputs' := by
   obtain ⟨XHux, hX⟩ := h
   refine ⟨XHux, fun θ hθ X₀ hev h1 h2 => ?_⟩
-  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX θ hθ X₀ hev h1 h2
+  obtain ⟨Ω, m, μ, P, G, hμ, hG, hP⟩ := hX θ (Set.Ioc_subset_Icc_self hθ) X₀ hev h1 h2
   have hX0 : 1 ≤ X₀ := by
     have : (1 : ℝ) ≤ X₀ := le_trans (Real.one_le_exp (by norm_num)) h1
     exact_mod_cast this

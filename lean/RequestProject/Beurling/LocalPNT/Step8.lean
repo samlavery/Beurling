@@ -260,7 +260,8 @@ theorem G1_disc_bound {T₁ : ℝ} (hT : 1 ≤ T₁)
     intro w hw
     obtain ⟨h1, -⟩ := hball w hw
     refine (h.differentiableAt_zetaSharp ?_ (hne1 w hw)).differentiableWithinAt
-    linarith [(abs_lt.mp h1).1, h.theta_mem.2]
+    linarith [(abs_lt.mp h1).1,
+      thU_le h.theta_mem.2 (show (1 / 100 : ℝ) ≤ 1 / 2 - 1 / 10000 by norm_num)]
   have hnz : ∀ w ∈ ball s₁ R₁, f w ≠ 0 := by
     intro w hw
     obtain ⟨h1, h2⟩ := hball w hw

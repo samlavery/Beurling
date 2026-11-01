@@ -102,7 +102,7 @@ lemma Tc_pair_le_Bsc {ω : JitterΩ} {b : ℝ} (hb : (X₀ : ℝ) ≤ b) {t : �
     have e2 := mul_le_mul_of_nonneg_left hks (show 0 ≤ 10 * (2.04 * H (2 * u)) + 6 by linarith)
     nlinarith
   have t2 : (v - s) * oscMod θ X₀ s v ≤ 2.04 * H (2 * u) * oscModU θ X₀ u :=
-    mul_le_mul hvs (oscMod_le_U hc.hθ.1 X₀ hu0 hs2 hv4) (oscMod_nonneg θ X₀ hs0.le) hW0
+    mul_le_mul hvs (oscMod_le_U hc.hθ.1 hc.hX hu0 hs2 hv4) (oscMod_nonneg θ X₀ hs0.le) hW0
   have t3 : (if Lstar X₀ < Real.log v then (Real.log s ^ 4)⁻¹ else 0) ≤
       (if Lstar X₀ < Real.log (4 * u) then (Real.log (u / 2) ^ 4)⁻¹ else 0) := by
     split_ifs with h1 h2
@@ -343,7 +343,7 @@ lemma logs_blk (hX : 10 ^ 8 ≤ Real.log X₀) (i : ℕ) :
 set_option maxHeartbeats 2000000 in
 /-- **eq. (osc), second display**: `∑_j (log 3v_j)² o_j ≤ e^{-41}` (04f-bridge.tex,
 paragraph "Oscillation of the target", and `lem:predictable`). -/
-theorem sum_oscG_le (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+theorem sum_oscG_le (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
     (J : ℕ) :
     ∑ i ∈ Finset.range (J + 1), Real.log (3 * (Xm X₀ * 2 ^ i)) ^ 2 * obG θ X₀ i ≤
       Real.exp (-41) := by

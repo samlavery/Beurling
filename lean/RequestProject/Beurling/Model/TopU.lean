@@ -89,7 +89,7 @@ noncomputable def queueInputs_of_U (hc : Cond θ X₀) (hev : Even X₀) (Q : Qu
 
 /-- **Theorem 2.1, hypothesis with §6 formalized up to §5 and Appendix A.** -/
 def Theorem21InputsU : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ → Nonempty (QueueInputsU θ X₀)
 
 /-- `Theorem21InputsU` implies `Theorem21InputsT`, given (84). -/

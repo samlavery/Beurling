@@ -49,14 +49,16 @@ lemma abs_T0_sub_le {x : ℝ} (hx : (X₀ : ℝ) ≤ x) :
   have hκ0 := kappa_pos_aux hX
   have hX1n : 1 ≤ X₀ := by exact_mod_cast h.one_le_X0
   have hr1 := abs_rigidErr_le_fine X₀ hκ0 hX1n hx
-  have hR := abs_osc_le h.spacing h.alpha_le hx1 (θ := θ) (γ := γ)
+  have hR := abs_osc_le_of h.spacing h.alpha_le h.thK_le hx1 (θ := θ) (γ := γ)
   have hls := logStar_le_rpow hx1 (show (0 : ℝ) < 0.05 by norm_num)
-  have hθ2 := h.theta_mem.2
-  have p4 : x ^ θ * (logStar x : ℝ) ≤ 21 * x ^ (0.55 : ℝ) := by
-    calc x ^ θ * (logStar x : ℝ) ≤ x ^ θ * ((1 / 0.05 + 1) * x ^ (0.05 : ℝ)) := by gcongr
-      _ = 21 * x ^ (θ + 0.05) := by rw [Real.rpow_add hx0]; ring
+  have hθ2 : thU θ ≤ 1 / 2 - 1 / 10000 := thU_le h.theta_mem.2 (by norm_num)
+  have p4 : x ^ thU θ * (logStar x : ℝ) ≤ 21 * x ^ (0.55 : ℝ) := by
+    calc x ^ thU θ * (logStar x : ℝ) ≤ x ^ thU θ * ((1 / 0.05 + 1) * x ^ (0.05 : ℝ)) := by
+          gcongr
+      _ = 21 * x ^ (thU θ + 0.05) := by rw [Real.rpow_add hx0]; ring
       _ ≤ 21 * x ^ (0.55 : ℝ) := by
-          have := Real.rpow_le_rpow_of_exponent_le hx1 (show θ + 0.05 ≤ (0.55 : ℝ) by linarith)
+          have := Real.rpow_le_rpow_of_exponent_le hx1
+            (show thU θ + 0.05 ≤ (0.55 : ℝ) by linarith)
           linarith
   have hk7 := h.kappa_mul_rpow_ge hx
   have hbig : 7 ≤ x ^ (0.05 : ℝ) := by

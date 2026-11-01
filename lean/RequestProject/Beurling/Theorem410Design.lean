@@ -190,11 +190,11 @@ theorem growth_of_uniform {ς : ℝ → ℝ} (hς : ∀ ℓ, 0 ≤ ℓ → 42 * 
 /-- The height `γ_k` chosen by the rule of Lemma 4.8 in `[Γ_k, 2Γ_k]`,
 `Γ_k = heightScale θ κ₀ x⁺_k`, for `f = D̂_{<a_k}`. -/
 noncomputable def designGamma (X₀ : ℕ) (κ θ κ₀ : ℝ) (Dlt : ℕ → ℂ → ℂ) (xp : ℕ → ℝ) (k : ℕ) : ℝ :=
-  chooseHeight X₀ κ (Dlt k) (heightScale θ κ₀ (xp k))
+  chooseHeight X₀ κ (Dlt k) (heightScale (thK θ (xp k)) κ₀ (xp k))
 
 /-- The amplitude `α_k = amplitudeOf θ κ₀ γ_k x⁺_k` for the chosen height `γ_k`. -/
 noncomputable def designAlpha (X₀ : ℕ) (κ θ κ₀ : ℝ) (Dlt : ℕ → ℂ → ℂ) (xp : ℕ → ℝ) (k : ℕ) : ℝ :=
-  amplitudeOf θ κ₀ (designGamma X₀ κ θ κ₀ Dlt xp k) (xp k)
+  amplitudeOf (thK θ (xp k)) κ₀ (designGamma X₀ κ θ κ₀ Dlt xp k) (xp k)
 
 /-- **The inputs of Theorem 4.10 with the heights, amplitudes and growth condition designed**: as
 `Theorem410InputsCount`, but `γ_k` is chosen by the rule of Lemma 4.8 in `[Γ_k, 2Γ_k]` with
@@ -203,26 +203,27 @@ absorbed-set growth is the single condition `42 log(2 + ℓ) + 5 ≤ ς(ℓ)` fo
 conditions on the design are `2δ_k ≤ θ ≤ 1/2`, `1/X₀ ≤ κ₀ ≤ 1/4`, `x⁺_k > 1`,
 `log log x⁺_k ≥ 2 log X₀`, `Γ_k ≥ T + 1/2`, `κ Γ_k ≥ e^{X₀²/3}`. -/
 def Theorem410InputsDesign (θ : ℝ) (F : ℂ → ℂ) : Prop :=
-  ∃ (X₀ : ℕ) (κ T κ₀ η : ℝ) (xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
+  ∃ (X₀ : ℕ) (κ T κ₀ : ℝ) (η xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
     (A : Set ℝ) (u : ℝ → ℝ) (ς : ℝ → ℝ),
-    10 ^ 4 ≤ Real.log X₀ ∧ (∀ k, 2 * designRadius (xp k) ≤ θ) ∧ θ ≤ 1 / 2 ∧ 0 < κ ∧ κ ≤ 1 ∧
+    10 ^ 4 ≤ Real.log X₀ ∧ (∀ k, 2 * designRadius (xp k) ≤ thK θ (xp k)) ∧
+    (∀ k, thK θ (xp k) ≤ 1 / 2) ∧ 0 < κ ∧ κ ≤ 1 ∧
     Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * T ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧
     (∀ k, 1 < xp k) ∧ (∀ k, 2 * Real.log X₀ ≤ Real.log (Real.log (xp k))) ∧
-    (∀ k, T + 1 / 2 ≤ heightScale θ κ₀ (xp k)) ∧
-    (∀ k, Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * heightScale θ κ₀ (xp k)) ∧
+    (∀ k, T + 1 / 2 ≤ heightScale (thK θ (xp k)) κ₀ (xp k)) ∧
+    (∀ k, Real.exp ((X₀ : ℝ) ^ 2 / 3) ≤ κ * heightScale (thK θ (xp k)) κ₀ (xp k)) ∧
     (∀ k, Differentiable ℂ (Dlt k)) ∧
-    (∀ k, Lemma48PiecesCount X₀ (heightScale θ κ₀ (xp k)) (Dlt k)) ∧
+    (∀ k, Lemma48PiecesCount X₀ (heightScale (thK θ (xp k)) κ₀ (xp k)) (Dlt k)) ∧
     (∀ k, Real.exp (xp k) ≤ xp (k + 1)) ∧
-    0 ≤ η ∧ η ≤ θ / 2 ∧
+    (∀ k, 0 ≤ η k ∧ η k ≤ 1 / 4 ∧ 150 * Real.log X₀ * xp k ^ (η k - thK θ (xp k)) ≤ 1 / 100) ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
-    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
+    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η k) ∧
     AbsorbedHyp (winH X₀) A u ∧ Monotone ς ∧
     (∀ x ≥ 1, countA A x ≤ x * Real.exp (-ς (Real.log x))) ∧
     (∀ ℓ, 0 ≤ ℓ → 42 * Real.log (2 + ℓ) + 5 ≤ ς ℓ) ∧
     (∀ k, ∀ s ∈ closedBall (1 + designGamma X₀ κ θ κ₀ Dlt xp k * I) (designRadius (xp k)),
       F s = ZBcont X₀ κ s +
-        (∑' j, oscHat θ (designAlpha X₀ κ θ κ₀ Dlt xp j) (designGamma X₀ κ θ κ₀ Dlt xp j)
+        (∑' j, oscHatK θ (designAlpha X₀ κ θ κ₀ Dlt xp j) (designGamma X₀ κ θ κ₀ Dlt xp j)
           (xp j) s) +
         (Dlt k s + lateNoise D (a k) s) + absorbedHat (winH X₀) A u s)
 
@@ -231,7 +232,7 @@ the absorbed-set growth for every `k` are derived. -/
 theorem Theorem410InputsDesign.toCount {θ : ℝ} {F : ℂ → ℂ} (h : Theorem410InputsDesign θ F) :
     Theorem410InputsCount θ F := by
   obtain ⟨X₀, κ, T, κ₀, η, xp, a, D, Dlt, A, u, ς, hX, hθ1, hθ2, hκ, hκ1, hT, hκ₀1, hκ₀2,
-    hx1, hLL, hΓT, hΓ, hDd, hpieces, hsp, hη0, hη, ha, hD, hA, hς, hN, hgrowth, hdec⟩ := h
+    hx1, hLL, hΓT, hΓ, hDd, hpieces, hsp, hη, ha, hD, hA, hς, hN, hgrowth, hdec⟩ := h
   -- `X₀ ≥ 2`, hence `T ≥ 7/3` and `Γ_k ≥ 2`
   have hX2 : (2 : ℝ) ≤ X₀ := by
     rcases Nat.lt_or_ge X₀ 2 with h | h
@@ -248,17 +249,19 @@ theorem Theorem410InputsDesign.toCount {θ : ℝ} {F : ℂ → ℂ} (h : Theorem
     nlinarith
   have hΛ : (10 : ℝ) ≤ Real.log X₀ := by linarith
   have hmem : ∀ k, designGamma X₀ κ θ κ₀ Dlt xp k ∈
-      Icc (heightScale θ κ₀ (xp k)) (2 * heightScale θ κ₀ (xp k)) := fun k =>
+      Icc (heightScale (thK θ (xp k)) κ₀ (xp k))
+        (2 * heightScale (thK θ (xp k)) κ₀ (xp k)) := fun k =>
     chooseHeight_mem X₀ κ (Dlt k) (by linarith [hΓT k])
-  have hdp := fun k => designParams_of_mem (hθ1 k) hθ2 hΛ hκ₀1 hκ₀2 (hx1 k) (hLL k)
+  have hdp := fun k => designParams_of_mem (hθ1 k) (hθ2 k) hΛ hκ₀1 hκ₀2 (hx1 k) (hLL k)
     (by linarith [hΓT k]) (hmem k)
   refine ⟨X₀, κ, T, κ₀, η, designAlpha X₀ κ θ κ₀ Dlt xp, designGamma X₀ κ θ κ₀ Dlt xp, xp, a,
-    fun k => heightScale θ κ₀ (xp k), D, Dlt, A, u, ς, hX, hκ, hκ1, hT, fun k => (hdp k).1,
+    fun k => heightScale (thK θ (xp k)) κ₀ (xp k), D, Dlt, A, u, ς, hX, hκ, hκ1, hT,
+    fun k => (hdp k).1,
     fun k => le_trans (hΓT k) (hmem k).1, hΓ, hDd, hpieces,
     fun k => chooseHeight_rule X₀ κ (Dlt k) _, fun k => ⟨(hdp k).2.1, (hdp k).2.2.1⟩, hsp,
-    fun k => (hdp k).2.2.2, hη0, hη, ha, hD, hA, hς, hN, ?_, hdec⟩
+    fun k => (hdp k).2.2.2, hη, ha, hD, hA, hς, hN, ?_, hdec⟩
   intro k
-  exact growth_of_uniform hgrowth hθ2 (by linarith [(hmem k).1, hΓT k]) (hdp k).2.2.2 (hx1 k)
+  exact growth_of_uniform hgrowth (hθ2 k) (by linarith [(hmem k).1, hΓT k]) (hdp k).2.2.2 (hx1 k)
     (by linarith [hLL k])
 
 end DesignedZero
@@ -272,7 +275,7 @@ def TheoremAInputsDesign (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21InputsCount`, with the inputs of
 Theorem 4.10 as in `Theorem410InputsDesign`. -/
 def Theorem21InputsDesign : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

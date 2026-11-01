@@ -387,7 +387,7 @@ theorem landau_at {η t : ℝ} {k : ℕ} (hk1 : 1 ≤ k) (hk4 : k ≤ 4) (ht : 1
       intro e; rw [e] at h3; simp at h3
       rw [abs_mul, Nat.abs_cast] at hkt; linarith [hkt, hRs]
     refine (h.differentiableAt_zetaSharp ?_ hw1).differentiableWithinAt
-    linarith [h.theta_mem.2]
+    linarith [thU_le h.theta_mem.2 (show (1 / 100 : ℝ) ≤ 1 / 2 - 1 / 10000 by norm_num)]
   -- the lower bound at the centre
   have hlow := h.norm_zetaSharp_ge (s := z) (by rw [hzre]; linarith) (by rw [hzre]; linarith)
   rw [hzre] at hlow

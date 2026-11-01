@@ -298,25 +298,26 @@ assumed. In its place: every `a ∈ A` has a prime `r` (its latest prime, which 
 `X₀ - H(X₀)/2 ≤ r < y(a)`. This is the definition (5) of `A` together with the centred placement
 of jittered primes (§6.8). -/
 def Theorem410InputsAbs (θ : ℝ) (F : ℂ → ℂ) : Prop :=
-  ∃ (X₀ : ℕ) (κ κ₀ η : ℝ) (xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
+  ∃ (X₀ : ℕ) (κ κ₀ : ℝ) (η xp a : ℕ → ℝ) (D : ℝ → ℝ) (Dlt : ℕ → ℂ → ℂ)
     (A : Set ℝ) (u : ℝ → ℝ),
-    10 ^ 8 ≤ Real.log X₀ ∧ (∀ k, 2 * designRadius (xp k) ≤ θ) ∧ θ ≤ 1 / 2 ∧
+    10 ^ 8 ≤ Real.log X₀ ∧ (∀ k, 2 * designRadius (xp k) ≤ thK θ (xp k)) ∧
+    (∀ k, thK θ (xp k) ≤ 1 / 2) ∧
     Real.exp (-Real.log X₀) ≤ κ ∧ κ ≤ 1 ∧
     Real.exp (-Real.log X₀) ≤ κ₀ ∧ κ₀ ≤ 1 / 4 ∧
     (X₀ : ℝ) ^ 2 ≤ Real.log (xp 0) ∧
     (∀ k, Differentiable ℂ (Dlt k)) ∧
-    (∀ k, Lemma48PiecesCount X₀ (heightScale θ κ₀ (xp k)) (Dlt k)) ∧
+    (∀ k, Lemma48PiecesCount X₀ (heightScale (thK θ (xp k)) κ₀ (xp k)) (Dlt k)) ∧
     (∀ k, Real.exp (xp k) ≤ xp (k + 1)) ∧
-    0 ≤ η ∧ η ≤ θ / 2 ∧
+    (∀ k, 0 ≤ η k ∧ η k ≤ 1 / 4 ∧ 150 * Real.log X₀ * xp k ^ (η k - thK θ (xp k)) ≤ 1 / 100) ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
-    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
+    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η k) ∧
     AbsorbedHyp (winH X₀) A u ∧
     (∀ n ∈ A, ∃ r : ℝ, (X₀ : ℝ) - CaplLink.capH X₀ X₀ / 2 ≤ r ∧ r < absorbY X₀ n) ∧
     (∀ x ≥ (1 : ℝ), Real.log X₀ ^ 2 < Real.log x →
       countA A x ≤ x * Real.exp (-sigmaStar (Real.log X₀) (Real.log x))) ∧
     (∀ k, ∀ s ∈ closedBall (1 + designGamma X₀ κ θ κ₀ Dlt xp k * I) (designRadius (xp k)),
       F s = ZBcont X₀ κ s +
-        (∑' j, oscHat θ (designAlpha X₀ κ θ κ₀ Dlt xp j) (designGamma X₀ κ θ κ₀ Dlt xp j)
+        (∑' j, oscHatK θ (designAlpha X₀ κ θ κ₀ Dlt xp j) (designGamma X₀ κ θ κ₀ Dlt xp j)
           (xp j) s) +
         (Dlt k s + lateNoise D (a k) s) + absorbedHat (winH X₀) A u s)
 
@@ -325,9 +326,9 @@ def Theorem410InputsAbs (θ : ℝ) (F : ℂ → ℂ) : Prop :=
 theorem Theorem410InputsAbs.toSize {θ : ℝ} {F : ℂ → ℂ} (h : Theorem410InputsAbs θ F) :
     Theorem410InputsSize θ F := by
   obtain ⟨X₀, κ, κ₀, η, xp, a, D, Dlt, A, u, hX, hθ1, hθ2, hκ, hκ1, hκ₀1, hκ₀2, hxp0, hDd,
-    hpieces, hsp, hη0, hη, ha, hD, hA, hAy, hbound, hdec⟩ := h
+    hpieces, hsp, hη, ha, hD, hA, hAy, hbound, hdec⟩ := h
   exact ⟨X₀, κ, κ₀, η, xp, a, D, Dlt, A, u, hX, hθ1, hθ2, hκ, hκ1, hκ₀1, hκ₀2, hxp0, hDd,
-    hpieces, hsp, hη0, hη, ha, hD, hA, countA_eq_zero_of_low (Nat.cast_nonneg _) hX hAy, hbound,
+    hpieces, hsp, hη, ha, hD, hA, countA_eq_zero_of_low (Nat.cast_nonneg _) hX hAy, hbound,
     hdec⟩
 
 /-- Refined inputs for one system: `PartIInputsSlotModelInit` and `Theorem410InputsAbs`. -/
@@ -337,7 +338,7 @@ def TheoremAInputsAbs (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
 /-- **Theorem 2.1, refined hypothesis**: as `Theorem21InputsInitSize`, without the emptiness of
 the absorbed set at low heights (derived from the definition of `A`). -/
 def Theorem21InputsAbs : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

@@ -80,7 +80,7 @@ lemma osc_congr_of {θ : ℝ} {α γ α' γ' xp : ℕ → ℝ} {z : ℝ}
   by_cases hj : xp j < x
   · rw [(h j (lt_of_lt_of_le hj hxz)).1, (h j (lt_of_lt_of_le hj hxz)).2]
   · push_neg at hj
-    rw [oscTerm_eq_zero_of_le hx hj, oscTerm_eq_zero_of_le hx hj]
+    rw [oscK_eq_zero_of_le hx hj, oscK_eq_zero_of_le hx hj]
 
 /-- **Locality of the target**: at heights `x ≤ z` the target only reads `A` on `[0, Z]`
 (`z + h(z) ≤ Z`) and the oscillation parameters with `x⁺_j < z`. -/
@@ -154,7 +154,7 @@ theorem designedGammaN_congr {N N' : ℝ → ℝ} {θ : ℝ} {X₀ : ℕ} (hX : 
 /-- **Lemma 3.2 (adaptedness), deterministic form**: under `DAgree D D' Y`, the targets of the
 data agree at every height `x ≤ z`, provided `y(n) ≤ Y` for every `n ≤ Z`, `z + h(z) ≤ Z`, and
 `a_j < Y` for every `j` with `x⁺_j < z`. -/
-theorem targetD_congr {θ : ℝ} (hθ : 0 < θ) {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀)
+theorem targetD_congr {θ : ℝ} (_hθ : 0 ≤ θ) {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀)
     {D D' : PrimeData} (hD : Pos D) (hD' : Pos D') {Y z Z : ℝ} (h : DAgree D D' Y)
     (hY0 : 0 < Y) (hYz : Y ≤ z) (hZ : z + winH X₀ z ≤ Z)
     (hYA : ∀ n : ℝ, n ≤ Z → absorbY X₀ n ≤ Y)

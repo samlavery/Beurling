@@ -76,7 +76,9 @@ theorem norm_zetaSharp_sub_le {s : ℂ} (hs : 1 - 8 / Real.log X₀ ≤ s.re) (h
       C8 * (1 + kap X₀ * ‖s‖) * Real.exp Real.eulerMascheroniConstant * Real.log X₀ +
         (1 + 5 * (X₀ : ℝ) ^ (-(0.48 : ℝ))) * ‖s‖ + 1 := by
   have hE := lemma_4_3' h.logX (a := 8) (by norm_num) le_rfl hs hs1
-  have hR := (lpc (θ := θ) (γ := γ) (by linarith [h.theta_mem.2]) h.logX h.alpha_le h.xp_zero
+  have hR := (lpc (θ := θ) (γ := γ)
+    (fun k => (h.thK_le k).trans (thU_le (by linarith [h.theta_mem.2]) (by norm_num))) h.logX
+    h.alpha_le h.xp_zero
     h.xp_succ hs).2
   have hD := h.norm_earlyNoise_le' hs
   have e : zetaSharp P θ X₀ α γ xp y s - s / (s - 1) =
@@ -93,7 +95,9 @@ theorem near_pole' {s : ℂ} (hs : 1 - 8 / Real.log X₀ ≤ s.re) (hs1 : ‖s -
     ‖(s - 1) * zetaSharp P θ X₀ α γ xp y s - 1‖ ≤ 4 * ‖s - 1‖ := by
   have hX := h.logX
   have hE := EHat_add_one_near_pole hX hs hs1 hs1'
-  have hR := (lpc (θ := θ) (γ := γ) (by linarith [h.theta_mem.2]) hX h.alpha_le h.xp_zero
+  have hR := (lpc (θ := θ) (γ := γ)
+    (fun k => (h.thK_le k).trans (thU_le (by linarith [h.theta_mem.2]) (by norm_num))) hX
+    h.alpha_le h.xp_zero
     h.xp_succ hs).1
   have hD := h.norm_earlyNoise_le' hs
   have hs0 : s - 1 ≠ 0 := sub_ne_zero.mpr hs1'

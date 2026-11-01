@@ -49,7 +49,7 @@ pair divides one side only, so it would have to land on a point fixed by the pas
 probability `0` by the box-uniform landing law"). A named hypothesis: the paper's claim for the
 constructed model. -/
 def TiesNull : Prop :=
-  ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → jitterMeasure (tiesEvent θ X₀) = 0
 
 section Ties
@@ -99,7 +99,7 @@ end Constructed
 (`constructedModel θ X₀`), and without the conjuncts `ArrivalsLinked`, `SlotFacts` and the target
 formula of `PartIRestO`, which are proved. -/
 def Theorem21InputsQ : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (ι : Type) (_ : Countable ι) (E : ι → Set JitterΩ) (time : ι → ℕ),
       (∃ scale : ι → ℕ, TableBudget jitterMeasure X₀ E time scale) ∧

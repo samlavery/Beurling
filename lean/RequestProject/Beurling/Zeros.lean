@@ -136,7 +136,7 @@ def Theorem410Inputs (θ : ℝ) (F : ℂ → ℂ) (a : ℝ) : Prop :=
     (∀ k, |(1 - (sstar k).re) * Real.log (xk k) - Real.log (Real.log (xk k))| ≤ C) ∧
     (∀ k, 3 / 2 ≤ (sstar k).im ∧ 2 ≤ Real.log (xk k)) ∧
     ∀ k, |Real.log (sstar k).im -
-      ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k)))| ≤ C
+      ((1 - thK θ (xk k)) * Real.log (xk k) - Real.log (Real.log (xk k)))| ≤ C
 
 /-- `|log a - log b| ≤ |a - b|` for `a, b ≥ 1`. -/
 lemma abs_log_sub_log_le {a b : ℝ} (ha : 1 ≤ a) (hb : 1 ≤ b) :
@@ -174,7 +174,8 @@ theorem theorem_4_10 {P : BeurlingSystem} {θ a : ℝ} {F : ℂ → ℂ} (hF : P
     ∃ (ρ : ℕ → ℂ) (xk : ℕ → ℝ) (C : ℝ), Tendsto xk atTop atTop ∧
       (∀ k, ρ k ∈ puncturedHalfPlane a ∧ F (ρ k) = 0) ∧
       (∀ k, |(1 - (ρ k).re) * Real.log (xk k) - Real.log (Real.log (xk k))| ≤ C) ∧
-      ∀ k, |Real.log (ρ k).im - ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k)))| ≤ C := by
+      ∀ k, |Real.log (ρ k).im -
+        ((1 - thK θ (xk k)) * Real.log (xk k) - Real.log (Real.log (xk k)))| ≤ C := by
   obtain ⟨sstar, xk, Φ, C, hx, hx1, hball, hΦ, hΦ0, hpert, hC, him2, hCim⟩ := h
   have hr : ∀ k, 0 < 1 / Real.log (xk k) := fun k => by
     have := Real.log_pos (hx1 k); positivity
@@ -208,9 +209,10 @@ theorem theorem_4_10 {P : BeurlingSystem} {θ a : ℝ} {F : ℂ → ℂ} (hF : P
       linarith [hnear k]
     have hρ1 : 1 ≤ (ρ k).im := by linarith [(abs_le.mp hd).1]
     have hl := abs_log_sub_log_le hρ1 (by linarith : (1 : ℝ) ≤ (sstar k).im)
-    have e : Real.log (ρ k).im - ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k))) =
-        (Real.log (ρ k).im - Real.log (sstar k).im) +
-          (Real.log (sstar k).im - ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k)))) := by
+    have e : Real.log (ρ k).im -
+        ((1 - thK θ (xk k)) * Real.log (xk k) - Real.log (Real.log (xk k))) =
+        (Real.log (ρ k).im - Real.log (sstar k).im) + (Real.log (sstar k).im -
+          ((1 - thK θ (xk k)) * Real.log (xk k) - Real.log (Real.log (xk k)))) := by
       ring
     rw [e]
     refine (abs_add_le _ _).trans ?_
@@ -259,7 +261,9 @@ theorem TheoremAInputs.conclusion {θ : ℝ} {P : BeurlingSystem} (hθ : 0 < θ)
   obtain ⟨h1, a, hθa, ha1, h410⟩ := h
   obtain ⟨C, hC⟩ := N_bound_of_part_i hθ h1 hθa
   have hcont := P.zetaCont_isZetaContinuation ha1 hC
-  exact ⟨h1, a, ha1, P.zetaCont 1, hcont, theorem_4_10 hcont h410⟩
+  obtain ⟨ρ, xk, C', hx, hz, hre, him⟩ := theorem_4_10 hcont h410
+  exact ⟨h1, a, ha1, P.zetaCont 1, hcont, ρ, xk, C', hx, hz, hre, fun k => by
+    simpa [thK_of_ne hθ.ne'] using him k⟩
 
 /-- Theorem 2.1, with part (ii) replaced by the inputs of Theorem 4.10 (see `TheoremAInputs`). -/
 def Theorem21Inputs : Prop :=

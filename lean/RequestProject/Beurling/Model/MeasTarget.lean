@@ -32,7 +32,7 @@ lemma measurable_amplitudes {g : Ω → ℕ → ℝ} (hg : ∀ j, Measurable fun
 
 section Heights
 
-variable (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
+variable (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000)) (hX : 10 ^ 8 ≤ Real.log X₀)
   (hHB : ShortIntervalPNTFrom X₀) {D : Ω → PrimeData} (hD : DFam D)
   (hL : ∀ ω, LocFinD (D ω)) (hP : ∀ ω, Pos2 (D ω))
 include hθ hX hD hL hP
@@ -76,7 +76,8 @@ theorem measurable_gammaD (k : ℕ) : Measurable fun ω => gammaD θ X₀ (D ω)
     (absSet X₀ (D ω)) (uA X₀) (amplitudes θ (kappa0Param X₀) (switchOn (swS θ X₀)) (g ω)) (g ω)
     (switchOn (swS θ X₀)) (constructionScale X₀ (swS θ X₀)) k with hF
   have hrec : (fun ω => gammaD θ X₀ (D ω) k) = fun ω =>
-      chooseHeight X₀ (kappaParam X₀) (F ω) (heightScale θ (kappa0Param X₀) (switchOn (swS θ X₀) k)) := by
+      chooseHeight X₀ (kappaParam X₀) (F ω) (heightScale (thK θ (switchOn (swS θ X₀) k))
+        (kappa0Param X₀) (switchOn (swS θ X₀) k)) := by
     funext ω
     unfold gammaD
     rw [designedGammaN_rec]

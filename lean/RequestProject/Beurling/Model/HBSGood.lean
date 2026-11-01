@@ -193,7 +193,7 @@ open AbsorbEmpty
 /-- **(HBS) up to a horizon** (Remark *horizon*): the induction of
 `Construction.sparsityInputs_of_cluster`, reading the queue bound only at the slots of the heights
 `v ≤ Z` and the cluster event only at the heights `v ≤ Z`. -/
-theorem hbs_local {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
+theorem hbs_local {θ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000))
     {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) (M : SlotModel X₀) (ω : JitterΩ)
     (hω : ∀ j, ω j ∈ Icc (0 : ℝ) 1) (hinf : {k | placedAt M k}.Infinite) (a : ℕ → ℝ)
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) ω))
@@ -321,21 +321,22 @@ theorem hbs_local {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
           (kappa0Param X₀) (switchOn (swS θ X₀)) a (heightScale_switchOn_pos θ hX1.le) k
         rw [abs_of_nonneg (by linarith [hm.1])]
         exact hm.2
-      have hR := abs_osc_le (θ := θ) (γ := designedGamma P θ X₀ (kappaParam X₀) A
-        (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a) hsp hα (x := v) (by linarith)
+      have hR := abs_osc_swS_le θ hX1.le (by linarith) (γ := designedGamma P θ X₀
+        (kappaParam X₀) A (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a)
+        hα (x := v) (by linarith)
       have hR0 := osc_eq_zero_of_le (θ := θ) (α := designedAlpha P θ X₀ (kappaParam X₀) A
         (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a) (γ := designedGamma P θ X₀
         (kappaParam X₀) A (fun n => solveU (winH X₀) n) (kappa0Param X₀) (switchOn (swS θ X₀)) a) hsp
         (by linarith : (0 : ℝ) < X₀) (switchOn_zero_ge_swS _ _)
       have hl := hlag v hhigh hvZ
       rw [hT v] at hl
-      exact hbs_err_high hX hθ.2 hhigh hl hEA hR hR0
+      exact hbs_err_high hX (thU_le hθ.2 (by norm_num)) hhigh hl hEA hR hR0
   exact fun v h1 h2 => main ⌊v⌋₊ v rfl h1 h2
 
 /-- **Lemma 6.26 up to a horizon** (Lemma 6.26 on `Good(< t)`): at every height `u ≥ X₀` with
 `2y(2u) ≤ Z`, from the queue bound and the cluster event at heights `≤ Z` and the cluster event
 at `u`. -/
-theorem lemma626_horizon {θ : ℝ} (hθ : θ ∈ Ioc (0 : ℝ) (1 / 2 - 1 / 10000))
+theorem lemma626_horizon {θ : ℝ} (hθ : θ ∈ Icc (0 : ℝ) (1 / 2 - 1 / 10000))
     {X₀ : ℕ} (hX : 10 ^ 8 ≤ Real.log X₀) (M : SlotModel X₀) (ω : JitterΩ)
     (hω : ∀ j, ω j ∈ Icc (0 : ℝ) 1) (hinf : {k | placedAt M k}.Infinite) (a : ℕ → ℝ)
     (hT : ∀ x, M.T x = target X₀ (kappaParam X₀) (countA (realisedA M (capH X₀) ω))

@@ -139,9 +139,9 @@ end DesignedZero
 def Theorem410InputsDesigned (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (Λ κ₀ : ℝ) (α γ xk : ℕ → ℝ) (ZB : ℕ → ℂ → ℂ),
     Tendsto xk atTop atTop ∧
-    (∀ k, Lemma46Hyp θ Λ κ₀ (α k) (γ k) (xk k) (ZB k)) ∧ (∀ k, 1 ≤ α k ∧ α k ≤ 2) ∧
+    (∀ k, Lemma46Hyp (thK θ (xk k)) Λ κ₀ (α k) (γ k) (xk k) (ZB k)) ∧ (∀ k, 1 ≤ α k ∧ α k ≤ 2) ∧
     ∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xk k)),
-      ‖F s - (ZB k s + Mk θ (α k) (γ k) (xk k) s)‖ < 1 / 4
+      ‖F s - (ZB k s + Mk (thK θ (xk k)) (α k) (γ k) (xk k) s)‖ < 1 / 4
 
 /-- **The inputs of Theorem 4.10, with the perturbation bounded on the Rouché circles.** As
 `Theorem410InputsDesigned`, but the perturbation bound `|F - (Z_B + M_k)| < 1/4` is only required
@@ -150,11 +150,11 @@ disc `|s - (1 + iγ_k)| ≤ δ_k` (as in the paper, where Lemma 4.7 is a bound o
 def Theorem410InputsCircle (θ : ℝ) (F : ℂ → ℂ) : Prop :=
   ∃ (Λ κ₀ : ℝ) (α γ xk : ℕ → ℝ) (ZB : ℕ → ℂ → ℂ),
     Tendsto xk atTop atTop ∧
-    (∀ k, Lemma46Hyp θ Λ κ₀ (α k) (γ k) (xk k) (ZB k)) ∧ (∀ k, 1 ≤ α k ∧ α k ≤ 2) ∧
-    ∀ k (s₀ : ℂ), ZB k s₀ + Mk θ (α k) (γ k) (xk k) s₀ = 0 →
+    (∀ k, Lemma46Hyp (thK θ (xk k)) Λ κ₀ (α k) (γ k) (xk k) (ZB k)) ∧ (∀ k, 1 ≤ α k ∧ α k ≤ 2) ∧
+    ∀ k (s₀ : ℂ), ZB k s₀ + Mk (thK θ (xk k)) (α k) (γ k) (xk k) s₀ = 0 →
       ‖s₀ - (1 + γ k * I)‖ + 1 / Real.log (xk k) ≤ designRadius (xk k) →
       ∀ s ∈ sphere s₀ (1 / Real.log (xk k)),
-        ‖F s - (ZB k s + Mk θ (α k) (γ k) (xk k) s)‖ < 1 / 4
+        ‖F s - (ZB k s + Mk (thK θ (xk k)) (α k) (γ k) (xk k) s)‖ < 1 / 4
 
 /-- The disc form of the inputs implies the circle form. -/
 theorem Theorem410InputsDesigned.circle {θ : ℝ} {F : ℂ → ℂ} (h : Theorem410InputsDesigned θ F) :
@@ -189,7 +189,8 @@ theorem theorem410Inputs_of_circle {θ a : ℝ} {F : ℂ → ℂ} (ha : a ≤ 3 
     have h2 : 0 < 1 / Real.log (xk k) := by have := (hH k).L_pos; positivity
     linarith [hdisc k, (hH k).δ_le]
   have hheight : ∀ k, 2 ≤ (sstar k).im + 1 / 10 ^ 5 ∧
-      |Real.log (sstar k).im - ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k)))| ≤
+      |Real.log (sstar k).im -
+        ((1 - thK θ (xk k)) * Real.log (xk k) - Real.log (Real.log (xk k)))| ≤
         Λ + 2 := fun k => by
     have hk := hH k
     have hγ2 := hk.γ_ge
@@ -210,7 +211,7 @@ theorem theorem410Inputs_of_circle {θ a : ℝ} {F : ℂ → ℂ} (ha : a ≤ 3 
     have hl' := hl.trans (him k)
     rw [abs_le] at hl' ⊢
     constructor <;> linarith [hl'.1, hl'.2]
-  refine ⟨sstar, xk, fun k s => ZB k s + Mk θ (α k) (γ k) (xk k) s, 2 * Λ + 4, hx,
+  refine ⟨sstar, xk, fun k s => ZB k s + Mk (thK θ (xk k)) (α k) (γ k) (xk k) s, 2 * Λ + 4, hx,
     fun k => (hH k).one_lt_x, fun k => (hsub k).trans ((hH k).closedBall_subset ha),
     fun k => ?_, hzero, fun k s hs => ?_, hre, fun k => ?_, fun k => ?_⟩
   · intro s hs
@@ -222,7 +223,7 @@ theorem theorem410Inputs_of_circle {θ a : ℝ} {F : ℂ → ℂ} (ha : a ≤ 3 
     have hi := abs_le.mp (him k)
     exact ⟨by linarith, by linarith [(hH k).L_ge']⟩
   · linarith [(hheight k).2, (hH k).Λ_ge, le_abs_self (Real.log (sstar k).im -
-      ((1 - θ) * Real.log (xk k) - Real.log (Real.log (xk k))))]
+      ((1 - thK θ (xk k)) * Real.log (xk k) - Real.log (Real.log (xk k))))]
 
 /-- **Theorem 4.10 inputs from Lemma 4.6** (disc form of the perturbation bound). -/
 theorem theorem410Inputs_of_designed {θ a : ℝ} {F : ℂ → ℂ} (ha : a ≤ 3 / 4)
@@ -243,7 +244,7 @@ theorem TheoremAInputsDesigned.target {θ : ℝ} {X₀ : ℕ} {P : BeurlingSyste
 /-- **Theorem 2.1, refined hypothesis (Lemma 4.6 discharged)**: as `Theorem21InputsTarget`, but
 part (ii) is reduced to the hypotheses of Lemma 4.6 and the perturbation bound `< 1/4`. -/
 def Theorem21InputsDesigned : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

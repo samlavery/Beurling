@@ -92,18 +92,23 @@ lemma spacing_facts {xp : ℕ → ℝ} (h0 : 20 ≤ xp 0) (hsp : ∀ k, Real.exp
 /-- **The other oscillations** (`j ≠ k`): on `0.99 ≤ σ ≤ 1.01`, `|t - γ_k| ≤ 1`, if `|α_j| ≤ 2`,
 `γ_j ≥ 0`, `γ_k ≥ 2γ_j + 5` for `j < k`, and the spacing holds, then
 `|∑_j R̂_j(s) - R̂_k(s)| ≤ 8 x_0^{-2/5} + 10 |s| x_{k+1}^{-2/5}`. -/
-theorem norm_tsum_oscHat_sub_le {θ : ℝ} {α γ xp : ℕ → ℝ} (hα : ∀ j, |α j| ≤ 2)
-    (hθ : θ ≤ 1 / 2) (hγ : ∀ j, 0 ≤ γ j) (h0 : 20 ≤ xp 0)
-    (hsp : ∀ k, Real.exp (xp k) ≤ xp (k + 1)) {k : ℕ} (hγk : ∀ j < k, 2 * γ j + 5 ≤ γ k)
+theorem norm_tsum_oscHat_sub_le' {th α γ xp xq : ℕ → ℝ} (hα : ∀ j, |α j| ≤ 2)
+    (hθ : ∀ j, th j ≤ 1 / 2) (hγ : ∀ j, 0 ≤ γ j) (h0 : 20 ≤ xp 0)
+    (hsp : ∀ k, Real.exp (xp k) ≤ xp (k + 1)) (hxq : ∀ j, xp j ≤ xq j) {k : ℕ}
+    (hγk : ∀ j < k, 2 * γ j + 5 ≤ γ k)
     {s : ℂ} (hσ1 : 99 / 100 ≤ s.re) (hσ2 : s.re ≤ 101 / 100) (ht : |s.im - γ k| ≤ 1) :
-    ‖(∑' j, oscHat θ (α j) (γ j) (xp j) s) - oscHat θ (α k) (γ k) (xp k) s‖ ≤
+    Summable (fun j => oscHat (th j) (α j) (γ j) (xq j) s) ∧
+    ‖(∑' j, oscHat (th j) (α j) (γ j) (xq j) s) - oscHat (th k) (α k) (γ k) (xq k) s‖ ≤
       8 * xp 0 ^ (-(2 / 5 : ℝ)) + 10 * ‖s‖ * xp (k + 1) ^ (-(2 / 5 : ℝ)) := by
   obtain ⟨hge, -, -⟩ := spacing_facts h0 hsp
   have hge1 : ∀ j, 1 ≤ xp j := fun j => by linarith [hge j]
-  have hσ : θ + 2 / 5 ≤ s.re := by linarith
-  set f : ℕ → ℂ := fun j => oscHat θ (α j) (γ j) (xp j) s with hf
+  have hq1 : ∀ j, 1 ≤ xq j := fun j => (hge1 j).trans (hxq j)
+  have hqp : ∀ j, xq j ^ (-(2 / 5 : ℝ)) ≤ xp j ^ (-(2 / 5 : ℝ)) := fun j =>
+    Real.rpow_le_rpow_of_nonpos (by linarith [hge1 j]) (hxq j) (by norm_num)
+  set f : ℕ → ℂ := fun j => oscHat (th j) (α j) (γ j) (xq j) s with hf
   have hbound : ∀ j, ‖f j‖ ≤ 5 * ‖s‖ * xp j ^ (-(2 / 5 : ℝ)) := fun j =>
-    norm_oscHat_le_of_re (γ := γ j) (hge1 j) (hα j) hσ
+    (norm_oscHat_le_of_re (γ := γ j) (hq1 j) (hα j) (show th j + 2 / 5 ≤ s.re by
+      linarith [hθ j])).trans (mul_le_mul_of_nonneg_left (hqp j) (by positivity))
   have hgeom := rpow_neg_two_fifths_le_geom h0 hsp
   have hsumN : Summable fun j => ‖f j‖ := by
     refine ((summable_geometric_two).mul_left (5 * ‖s‖ * xp 0 ^ (-(2 / 5 : ℝ)))).of_nonneg_of_le
@@ -116,7 +121,8 @@ theorem norm_tsum_oscHat_sub_le {θ : ℝ} {α γ xp : ℕ → ℝ} (hα : ∀ j
   have hsum : Summable f := hsumN.of_norm
   have hsplit : (∑' j, f j) - f k = (∑ j ∈ Finset.range k, f j) + ∑' i, f (i + (k + 1)) := by
     rw [← hsum.sum_add_tsum_nat_add (k + 1), Finset.sum_range_succ]; ring
-  rw [show (∑' j, oscHat θ (α j) (γ j) (xp j) s) - oscHat θ (α k) (γ k) (xp k) s =
+  refine ⟨hsum, ?_⟩
+  rw [show (∑' j, oscHat (th j) (α j) (γ j) (xq j) s) - oscHat (th k) (α k) (γ k) (xq k) s =
     (∑' j, f j) - f k from rfl, hsplit]
   refine (norm_add_le _ _).trans (add_le_add ?_ ?_)
   · -- the finitely many earlier oscillations
@@ -126,10 +132,12 @@ theorem norm_tsum_oscHat_sub_le {θ : ℝ} {α γ xp : ℕ → ℝ} (hα : ∀ j
           apply Finset.sum_le_sum
           intro j hj
           have hjk := Finset.mem_range.mp hj
-          refine (norm_oscHat_le_of_lt (hge1 j) (hα j) hθ (hγ j) (hγk j hjk) hσ1 hσ2 ht).trans ?_
+          refine (norm_oscHat_le_of_lt (hq1 j) (hα j) (hθ j) (hγ j) (hγk j hjk) hσ1 hσ2
+            ht).trans ?_
           have := hgeom j
-          calc 4 * xp j ^ (-(2 / 5 : ℝ)) ≤ 4 * (xp 0 ^ (-(2 / 5 : ℝ)) * (1 / 2) ^ j) := by
-                gcongr
+          have := hqp j
+          calc 4 * xq j ^ (-(2 / 5 : ℝ)) ≤ 4 * (xp 0 ^ (-(2 / 5 : ℝ)) * (1 / 2) ^ j) := by
+                nlinarith
             _ = _ := by ring
       _ = 4 * xp 0 ^ (-(2 / 5 : ℝ)) * ∑ j ∈ Finset.range k, (1 / 2 : ℝ) ^ j := by
           rw [Finset.mul_sum]
@@ -157,6 +165,16 @@ theorem norm_tsum_oscHat_sub_le {θ : ℝ} {α γ xp : ℕ → ℝ} (hα : ∀ j
     refine (norm_tsum_le_tsum_norm hsumN').trans ?_
     refine (hsumN'.tsum_le_tsum hb' hg2).trans (le_of_eq ?_)
     rw [tsum_mul_left, tsum_geometric_two]; ring
+
+/-- **The other oscillations** (`j ≠ k`), for one exponent `θ` and the switch-on points. -/
+theorem norm_tsum_oscHat_sub_le {θ : ℝ} {α γ xp : ℕ → ℝ} (hα : ∀ j, |α j| ≤ 2)
+    (hθ : θ ≤ 1 / 2) (hγ : ∀ j, 0 ≤ γ j) (h0 : 20 ≤ xp 0)
+    (hsp : ∀ k, Real.exp (xp k) ≤ xp (k + 1)) {k : ℕ} (hγk : ∀ j < k, 2 * γ j + 5 ≤ γ k)
+    {s : ℂ} (hσ1 : 99 / 100 ≤ s.re) (hσ2 : s.re ≤ 101 / 100) (ht : |s.im - γ k| ≤ 1) :
+    ‖(∑' j, oscHat θ (α j) (γ j) (xp j) s) - oscHat θ (α k) (γ k) (xp k) s‖ ≤
+      8 * xp 0 ^ (-(2 / 5 : ℝ)) + 10 * ‖s‖ * xp (k + 1) ^ (-(2 / 5 : ℝ)) :=
+  (norm_tsum_oscHat_sub_le' (th := fun _ => θ) hα (fun _ => hθ) hγ h0 hsp (fun _ => le_rfl)
+    hγk hσ1 hσ2 ht).2
 
 namespace Lemma46Hyp
 
@@ -275,35 +293,169 @@ lemma tail_numeric {y : ℝ} (hy : 10 ^ 5 ≤ y) :
     div_le_div_iff₀ hpos (by norm_num)]
   nlinarith
 
+/-- **The oscillations other than the resonant term**: on `0.99 ≤ σ ≤ 1.01`, `|t - γ_k| ≤ 1`,
+`|∑_j R̂_j(s) - M_k(s)| ≤ 1/40` (for the design `θ ≠ 0`: `∑_{j≠k} R̂_j + E_k`; for the design
+`θ = 0`: also the terms of the switched-off parts, at `(x⁺_j)²`). -/
+theorem norm_tsum_oscHatK_sub_Mk_le {θ Λ κ₀ : ℝ} {α γ xp : ℕ → ℝ} {ZB : ℂ → ℂ}
+    (hH : ∀ k, Lemma46Hyp (thK θ (xp k)) Λ κ₀ (α k) (γ k) (xp k) ZB)
+    (hα : ∀ k, 1 ≤ α k ∧ α k ≤ 2) (hsp : ∀ k, Real.exp (xp k) ≤ xp (k + 1))
+    (hγx : ∀ k, γ k ≤ xp k) (k : ℕ) {s : ℂ} (hσ1 : 99 / 100 ≤ s.re) (hσ2 : s.re ≤ 101 / 100)
+    (ht : |s.im - γ k| ≤ 1) :
+    ‖(∑' j, oscHatK θ (α j) (γ j) (xp j) s) - Mk (thK θ (xp k)) (α k) (γ k) (xp k) s‖ ≤
+      1 / 40 := by
+  have hx0 : 20 ≤ xp 0 := by linarith [(hH 0).x_ge]
+  obtain ⟨hge, hmono, hlog⟩ := spacing_facts hx0 hsp
+  have hαabs : ∀ j, |α j| ≤ 2 := fun j => abs_le.mpr ⟨by linarith [(hα j).1], (hα j).2⟩
+  have hγ0 : ∀ j, 0 ≤ γ j := fun j => by linarith [(hH j).γ_ge]
+  have hγlog := (hH k).γ_ge_log (hα k).2
+  have hγk : ∀ j < k, 2 * γ j + 5 ≤ γ k := fun j hj => by
+    have := hlog j k hj; have := hγx j; linarith
+  have hθ2 : ∀ j, thK θ (xp j) ≤ 1 / 2 := fun j => (hH j).θ_le
+  have hx0r := (hH 0).rpow_neg_two_fifths_le
+  have hxk := (hH k).x_ge
+  have hsnorm : ‖s‖ ≤ xp k + 3 := by
+    have := Complex.norm_le_abs_re_add_abs_im s
+    have h1 : |s.re| ≤ 2 := abs_le.mpr ⟨by linarith, by linarith⟩
+    have h2 : |s.im| ≤ γ k + 1 := by
+      rw [abs_le]; have := abs_le.mp ht; constructor <;> linarith [hγ0 k]
+    linarith [hγx k]
+  have hnext : xp (k + 1) ^ (-(2 / 5 : ℝ)) ≤ Real.exp (-(2 / 5) * xp k) := by
+    have := Real.rpow_le_rpow_of_nonpos (Real.exp_pos (xp k)) (hsp k)
+      (show (-(2 / 5 : ℝ)) ≤ 0 by norm_num)
+    rw [← Real.exp_mul] at this
+    calc _ ≤ Real.exp (xp k * (-(2 / 5 : ℝ))) := this
+      _ = _ := by ring_nf
+  have htail := tail_numeric (show (10 : ℝ) ^ 5 ≤ xp k by linarith)
+  have hbd : 8 * xp 0 ^ (-(2 / 5 : ℝ)) + 10 * ‖s‖ * xp (k + 1) ^ (-(2 / 5 : ℝ)) ≤
+      8 / 10 ^ 7 + 1 / 100 := by
+    have h1 : 8 * xp 0 ^ (-(2 / 5 : ℝ)) ≤ 8 / 10 ^ 7 := by linarith
+    have h2 : 10 * ‖s‖ * xp (k + 1) ^ (-(2 / 5 : ℝ)) ≤ 1 / 100 := by
+      have hp := Real.rpow_nonneg (show 0 ≤ xp (k + 1) by linarith [hge (k + 1)])
+        (-(2 / 5 : ℝ))
+      calc 10 * ‖s‖ * xp (k + 1) ^ (-(2 / 5 : ℝ)) ≤
+            10 * (xp k + 3) * Real.exp (-(2 / 5) * xp k) := by
+            gcongr
+      _ ≤ 1 / 100 := htail
+    linarith
+  -- the conjugate term at `x⁺_k`
+  have hE : ‖Ek (thK θ (xp k)) (α k) (γ k) (xp k) s‖ ≤ 51 / 10 ^ 9 := by
+    have h1 := norm_Ek_le (θ := thK θ (xp k)) (α := α k) (γ := γ k) (xk := xp k)
+      (by linarith [hge k]) (hαabs k) (hθ2 k) (by linarith [(hH k).L_ge_big]) hσ1 (by linarith) ht
+    have h2 : xp k ^ (thK θ (xp k) - s.re) ≤ xp k ^ (-(2 / 5 : ℝ)) :=
+      Real.rpow_le_rpow_of_exponent_le (by linarith [hge k]) (by linarith [hθ2 k])
+    have h3 := (hH k).rpow_neg_two_fifths_le
+    linarith
+  have hRk := oscHat_eq_Mk_add_Ek (α := α k) (γ := γ k) (xk := xp k) (by linarith [hge k])
+    (show thK θ (xp k) < s.re by linarith [hθ2 k])
+  by_cases hθ : θ = 0
+  · subst hθ
+    set t : ℕ → ℝ := fun j => thK 0 (xp j) with ht_def
+    have hA := norm_tsum_oscHat_sub_le' (th := t) (xq := xp) hαabs hθ2 hγ0 hx0 hsp
+      (fun _ => le_rfl) hγk hσ1 hσ2 ht
+    have hB := norm_tsum_oscHat_sub_le' (th := t) (xq := fun j => xp j ^ 2) hαabs hθ2 hγ0 hx0
+      hsp (fun j => by nlinarith [hge j]) hγk hσ1 hσ2 ht
+    have hsplit : (fun j => oscHatK 0 (α j) (γ j) (xp j) s) = fun j =>
+        oscHat (t j) (α j) (γ j) (xp j) s - oscHat (t j) (α j) (γ j) (xp j ^ 2) s := by
+      funext j
+      rw [oscHatK_zero (by linarith [hθ2 j]), offPt_eq (by linarith [hge j])]
+    rw [hsplit, hA.1.tsum_sub hB.1]
+    -- the switched-off part at `(x⁺_k)²`
+    have htk : t k ≤ 1 / 100 := thK_zero_le (hH k).one_lt_x (hH k).logL_ge
+    have hy1 : 1 ≤ xp k ^ 2 := by nlinarith [hge k]
+    have hoff := norm_oscHat_le_margin (θ := t k) (α := α k) (γ := γ k) hy1 (hαabs k)
+      (show t k < s.re by linarith)
+    have hxk0 : 0 < xp k := by linarith [hge k]
+    have hyr : (xp k ^ 2) ^ (t k - s.re) ≤ xp k ^ (-(2 / 5 : ℝ)) * (1 / xp k) := by
+      rw [← Real.rpow_natCast, ← Real.rpow_mul hxk0.le, one_div, ← Real.rpow_neg_one,
+        ← Real.rpow_add hxk0]
+      exact Real.rpow_le_rpow_of_exponent_le (by linarith [hge k]) (by push_cast; linarith)
+    have hoff' : ‖oscHat (t k) (α k) (γ k) (xp k ^ 2) s‖ ≤ 9 / 10 ^ 7 := by
+      refine hoff.trans ?_
+      have hd : 98 / 100 ≤ s.re - t k := by linarith
+      have h3 := (hH k).rpow_neg_two_fifths_le
+      have hX := Real.rpow_nonneg (show (0 : ℝ) ≤ xp k ^ 2 by positivity) (t k - s.re)
+      rw [div_le_iff₀ (by linarith)]
+      have h4 : ‖s‖ * (1 / xp k) ≤ 2 := by
+        rw [mul_one_div, div_le_iff₀ hxk0]; linarith
+      have h5 : ‖s‖ * (xp k ^ 2) ^ (t k - s.re) ≤ 2 * xp k ^ (-(2 / 5 : ℝ)) := by
+        calc ‖s‖ * (xp k ^ 2) ^ (t k - s.re) ≤ ‖s‖ * (xp k ^ (-(2 / 5 : ℝ)) * (1 / xp k)) :=
+              mul_le_mul_of_nonneg_left hyr (norm_nonneg _)
+          _ = (‖s‖ * (1 / xp k)) * xp k ^ (-(2 / 5 : ℝ)) := by ring
+          _ ≤ 2 * xp k ^ (-(2 / 5 : ℝ)) :=
+              mul_le_mul_of_nonneg_right h4 (Real.rpow_nonneg hxk0.le _)
+      nlinarith
+    have hkey : (∑' j, oscHat (t j) (α j) (γ j) (xp j) s) -
+        (∑' j, oscHat (t j) (α j) (γ j) (xp j ^ 2) s) - Mk (t k) (α k) (γ k) (xp k) s =
+        ((∑' j, oscHat (t j) (α j) (γ j) (xp j) s) - oscHat (t k) (α k) (γ k) (xp k) s) -
+        ((∑' j, oscHat (t j) (α j) (γ j) (xp j ^ 2) s) - oscHat (t k) (α k) (γ k) (xp k ^ 2) s) +
+        Ek (t k) (α k) (γ k) (xp k) s - oscHat (t k) (α k) (γ k) (xp k ^ 2) s := by
+      rw [hRk]; ring
+    rw [hkey]
+    have n1 := norm_sub_le (((∑' j, oscHat (t j) (α j) (γ j) (xp j) s) -
+        oscHat (t k) (α k) (γ k) (xp k) s) -
+        ((∑' j, oscHat (t j) (α j) (γ j) (xp j ^ 2) s) - oscHat (t k) (α k) (γ k) (xp k ^ 2) s) +
+        Ek (t k) (α k) (γ k) (xp k) s) (oscHat (t k) (α k) (γ k) (xp k ^ 2) s)
+    have n2 := norm_add_le (((∑' j, oscHat (t j) (α j) (γ j) (xp j) s) -
+        oscHat (t k) (α k) (γ k) (xp k) s) -
+        ((∑' j, oscHat (t j) (α j) (γ j) (xp j ^ 2) s) - oscHat (t k) (α k) (γ k) (xp k ^ 2) s))
+        (Ek (t k) (α k) (γ k) (xp k) s)
+    have n3 := norm_sub_le ((∑' j, oscHat (t j) (α j) (γ j) (xp j) s) -
+        oscHat (t k) (α k) (γ k) (xp k) s)
+        ((∑' j, oscHat (t j) (α j) (γ j) (xp j ^ 2) s) - oscHat (t k) (α k) (γ k) (xp k ^ 2) s)
+    have := hA.2; have := hB.2
+    linarith
+  · have hsum := norm_tsum_oscHat_sub_le (θ := θ) hαabs (by simpa [thK_of_ne hθ] using hθ2 0)
+      hγ0 hx0 hsp hγk hσ1 hσ2 ht
+    simp only [oscHatK_of_ne hθ, thK_of_ne hθ] at hRk hE ⊢
+    have hkey : (∑' j, oscHat θ (α j) (γ j) (xp j) s) - Mk θ (α k) (γ k) (xp k) s =
+        ((∑' j, oscHat θ (α j) (γ j) (xp j) s) - oscHat θ (α k) (γ k) (xp k) s) +
+          Ek θ (α k) (γ k) (xp k) s := by rw [hRk]; ring
+    rw [hkey]
+    have := norm_add_le ((∑' j, oscHat θ (α j) (γ j) (xp j) s) - oscHat θ (α k) (γ k) (xp k) s)
+      (Ek θ (α k) (γ k) (xp k) s)
+    linarith
+
 /-- **The inputs of Theorem 4.10, as in its proof.** For the oscillation data `α_k ∈ [1, 2]`,
 `γ_k ≤ x_k` with switch-on points `x_k` (`x_{k+1} ≥ e^{x_k}`), a fixed base factor `Z_B`
-satisfying the hypotheses of Lemma 4.6 at every `k` (these include the bounds of Lemma 4.2), the
-noise `D` with the lag bound `|D(y)| ≤ y^η` (13) beyond `a_k`, where `a_k ≤ x_k ≤ 1.001 a_k`, and
-on each disc `|s - (1 + iγ_k)| ≤ δ_k`:
+satisfying the hypotheses of Lemma 4.6 at every `k` with the per-zero exponent `θ_k = thK θ x_k`
+(these include the bounds of Lemma 4.2), the noise `D` with the lag bound `|D(y)| ≤ y^{η_k}` (13)
+beyond `a_k`, where `a_k ≤ x_k ≤ 1.001 a_k` and `150 Λ x_k^{η_k - θ_k} ≤ 1/100`, and on each disc
+`|s - (1 + iγ_k)| ≤ δ_k`:
 
 * the decomposition (14): `F = Z_B + ∑_j R̂_j + (D̂_{<a_k} + D̂_{≥a_k}) + Ê_A`;
 * Lemma 4.8(ii): `|D̂_{<a_k}| ≤ 1/16`;
 * Lemma 4.4(a): `|Ê_A| ≤ 1/16` (the paper proves `≤ e^{-10^{10}}`). -/
 def Theorem410InputsPaper (θ : ℝ) (F : ℂ → ℂ) : Prop :=
-  ∃ (Λ κ₀ η : ℝ) (α γ xp a : ℕ → ℝ) (ZB : ℂ → ℂ) (D : ℝ → ℝ) (Dlt EA : ℕ → ℂ → ℂ),
-    (∀ k, Lemma46Hyp θ Λ κ₀ (α k) (γ k) (xp k) ZB) ∧
+  ∃ (Λ κ₀ : ℝ) (η α γ xp a : ℕ → ℝ) (ZB : ℂ → ℂ) (D : ℝ → ℝ) (Dlt EA : ℕ → ℂ → ℂ),
+    (∀ k, Lemma46Hyp (thK θ (xp k)) Λ κ₀ (α k) (γ k) (xp k) ZB) ∧
     (∀ k, 1 ≤ α k ∧ α k ≤ 2) ∧
     (∀ k, Real.exp (xp k) ≤ xp (k + 1)) ∧
     (∀ k, γ k ≤ xp k) ∧
-    0 ≤ η ∧ η ≤ θ / 2 ∧
+    (∀ k, 0 ≤ η k ∧ η k ≤ 1 / 4 ∧ 150 * Λ * xp k ^ (η k - thK θ (xp k)) ≤ 1 / 100) ∧
     (∀ k, 0 < a k ∧ a k ≤ xp k ∧ xp k ≤ (1 + 1 / 1000) * a k) ∧
-    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η) ∧
+    (∀ k, ∀ y ≥ a k, |D y| ≤ y ^ η k) ∧
     (∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xp k)),
-      F s = ZB s + (∑' j, oscHat θ (α j) (γ j) (xp j) s) + (Dlt k s + lateNoise D (a k) s) +
+      F s = ZB s + (∑' j, oscHatK θ (α j) (γ j) (xp j) s) + (Dlt k s + lateNoise D (a k) s) +
         EA k s) ∧
     (∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xp k)), ‖Dlt k s‖ ≤ 1 / 16) ∧
     (∀ k, ∀ s ∈ closedBall (1 + γ k * I) (designRadius (xp k)), ‖EA k s‖ ≤ 1 / 16)
 
+/-- The late-noise numerics for a fixed exponent: `150 Λ x^{η-θ} ≤ 1/100` for `η ≤ θ/2`. -/
+lemma Lemma46Hyp.lateNoise_numeric' {θ Λ κ₀ α γ x η : ℝ} {ZB : ℂ → ℂ}
+    (h : Lemma46Hyp θ Λ κ₀ α γ x ZB) (hη : η ≤ θ / 2) :
+    150 * Λ * x ^ (η - θ) ≤ 1 / 100 := by
+  have h1 : x ^ (η - θ) ≤ x ^ (-(θ / 2)) :=
+    Real.rpow_le_rpow_of_exponent_le h.one_lt_x.le (by linarith)
+  have hΛ := h.Λ_ge
+  have hp : 0 ≤ x ^ (η - θ) := Real.rpow_nonneg (by linarith [h.one_lt_x]) _
+  have h2 := h.lateNoise_numeric
+  nlinarith
+
 /-- **The perturbation bound of Theorem 4.10**: from the paper-form inputs, on the Rouché circle
-of Lemma 4.6, `|F - (Z_B + M_k)| ≤ |E_k| + |∑_{j≠k} R̂_j| + |D̂_{<a_k}| + |D̂_{≥a_k}| + |Ê_A| < 1/4`. -/
+of Lemma 4.6, `|F - (Z_B + M_k)| ≤ |∑_j R̂_j - M_k| + |D̂_{<a_k}| + |D̂_{≥a_k}| + |Ê_A| < 1/4`. -/
 theorem Theorem410InputsPaper.circle {θ : ℝ} {F : ℂ → ℂ} (h : Theorem410InputsPaper θ F) :
     Theorem410InputsCircle θ F := by
-  obtain ⟨Λ, κ₀, η, α, γ, xp, a, ZB, D, Dlt, EA, hH, hα, hsp, hγx, hη0, hη, ha, hD, hdec,
+  obtain ⟨Λ, κ₀, η, α, γ, xp, a, ZB, D, Dlt, EA, hH, hα, hsp, hγx, hη, ha, hD, hdec,
     hDlt, hEA⟩ := h
   have hx0 : 20 ≤ xp 0 := by linarith [(hH 0).x_ge]
   obtain ⟨hge, hmono, hlog⟩ := spacing_facts hx0 hsp
@@ -336,73 +488,30 @@ theorem Theorem410InputsPaper.circle {θ : ℝ} {F : ℂ → ℂ} (h : Theorem41
   have hσ1 : 99 / 100 ≤ s.re := by linarith [(abs_le.mp (hre.trans hsn)).1]
   have hσ2 : s.re ≤ 101 / 100 := by linarith [(abs_le.mp (hre.trans hsn)).2]
   have ht : |s.im - γ k| ≤ 1 := by linarith
-  have hθ2 := hk.θ_le
-  -- the decomposition and `R̂_k = M_k + E_k`
-  have hRk := oscHat_eq_Mk_add_Ek (α := α k) (γ := γ k) (xk := xp k) (by linarith [hge k])
-    (show θ < s.re by linarith)
-  show ‖F s - (ZB s + Mk θ (α k) (γ k) (xp k) s)‖ < 1 / 4
-  have hkey : F s - (ZB s + Mk θ (α k) (γ k) (xp k) s) =
-      ((∑' j, oscHat θ (α j) (γ j) (xp j) s) - oscHat θ (α k) (γ k) (xp k) s) +
-        Ek θ (α k) (γ k) (xp k) s + Dlt k s + lateNoise D (a k) s + EA k s := by
-    rw [hdec k s hsm, hRk]; ring
+  show ‖F s - (ZB s + Mk (thK θ (xp k)) (α k) (γ k) (xp k) s)‖ < 1 / 4
+  have hkey : F s - (ZB s + Mk (thK θ (xp k)) (α k) (γ k) (xp k) s) =
+      ((∑' j, oscHatK θ (α j) (γ j) (xp j) s) - Mk (thK θ (xp k)) (α k) (γ k) (xp k) s) +
+        Dlt k s + lateNoise D (a k) s + EA k s := by
+    rw [hdec k s hsm]; ring
   rw [hkey]
-  -- the other oscillations
-  have hαabs : ∀ j, |α j| ≤ 2 := fun j => abs_le.mpr ⟨by linarith [(hα j).1], (hα j).2⟩
-  have hγ0 : ∀ j, 0 ≤ γ j := fun j => by linarith [(hH j).γ_ge]
-  have hγlog := (hH k).γ_ge_log (hα k).2
-  have hγk : ∀ j < k, 2 * γ j + 5 ≤ γ k := fun j hj => by
-    have := hlog j k hj; have := hγx j; linarith
-  have hsum := norm_tsum_oscHat_sub_le hαabs hθ2 hγ0 hx0 hsp hγk hσ1 hσ2 ht
-  have hx0r := (hH 0).rpow_neg_two_fifths_le
-  have hxk := (hH k).x_ge
-  have hsnorm : ‖s‖ ≤ xp k + 3 := by
-    have := Complex.norm_le_abs_re_add_abs_im s
-    have h1 : |s.re| ≤ 2 := abs_le.mpr ⟨by linarith, by linarith⟩
-    have h2 : |s.im| ≤ γ k + 1 := by
-      rw [abs_le]; have := abs_le.mp ht; constructor <;> linarith [hγ0 k]
-    linarith [hγx k]
-  have hnext : xp (k + 1) ^ (-(2 / 5 : ℝ)) ≤ Real.exp (-(2 / 5) * xp k) := by
-    have := Real.rpow_le_rpow_of_nonpos (Real.exp_pos (xp k)) (hsp k)
-      (show (-(2 / 5 : ℝ)) ≤ 0 by norm_num)
-    rw [← Real.exp_mul] at this
-    calc _ ≤ Real.exp (xp k * (-(2 / 5 : ℝ))) := this
-      _ = _ := by ring_nf
-  have htail := tail_numeric (show (10 : ℝ) ^ 5 ≤ xp k by linarith)
-  have hR : ‖(∑' j, oscHat θ (α j) (γ j) (xp j) s) - oscHat θ (α k) (γ k) (xp k) s‖ ≤
-      8 / 10 ^ 7 + 1 / 100 := by
-    refine hsum.trans ?_
-    have h1 : 8 * xp 0 ^ (-(2 / 5 : ℝ)) ≤ 8 / 10 ^ 7 := by linarith
-    have h2 : 10 * ‖s‖ * xp (k + 1) ^ (-(2 / 5 : ℝ)) ≤ 1 / 100 := by
-      have hp := Real.rpow_nonneg (show 0 ≤ xp (k + 1) by linarith [hge (k + 1)])
-        (-(2 / 5 : ℝ))
-      calc 10 * ‖s‖ * xp (k + 1) ^ (-(2 / 5 : ℝ)) ≤
-            10 * (xp k + 3) * Real.exp (-(2 / 5) * xp k) := by
-            gcongr
-      _ ≤ 1 / 100 := htail
-    linarith
-  -- the conjugate term
-  have hE : ‖Ek θ (α k) (γ k) (xp k) s‖ ≤ 51 / 10 ^ 9 := by
-    have h1 := norm_Ek_le (θ := θ) (α := α k) (γ := γ k) (xk := xp k) (by linarith [hge k])
-      (hαabs k) hθ2 (by linarith [(hH k).L_ge_big]) hσ1 (by linarith) ht
-    have h2 : xp k ^ (θ - s.re) ≤ xp k ^ (-(2 / 5 : ℝ)) :=
-      Real.rpow_le_rpow_of_exponent_le (by linarith [hge k]) (by linarith)
-    have h3 := (hH k).rpow_neg_two_fifths_le
-    linarith
+  have hR := norm_tsum_oscHatK_sub_Mk_le hH hα hsp hγx k hσ1 hσ2 ht
   -- the late noise (Lemma 4.7)
-  have hN := (hk.lemma_4_7 (hα k).1 hη0 hη (ha k).1 (ha k).2.1 (ha k).2.2 (hD k) hz hdisc s
-    hs).2
-  have hN' := hk.lateNoise_numeric
+  have hN := hk.lemma_4_7' (hα k).1 (hη k).1 (hη k).2.1 (ha k).1 (ha k).2.1 (ha k).2.2 (hD k)
+    hz hdisc s hs
+  have hN' : 150 * Λ * xp k ^ (η k - thK θ (xp k)) / α k ≤ 1 / 100 := by
+    refine le_trans (div_le_self ?_ (hα k).1) (hη k).2.2
+    have := hk.Λ_ge
+    have := Real.rpow_nonneg (show (0 : ℝ) ≤ xp k by linarith [hge k]) (η k - thK θ (xp k))
+    positivity
   have hD1 := hDlt k s hsm
   have hE1 := hEA k s hsm
-  set A := (∑' j, oscHat θ (α j) (γ j) (xp j) s) - oscHat θ (α k) (γ k) (xp k) s
-  set B := Ek θ (α k) (γ k) (xp k) s
+  set A := (∑' j, oscHatK θ (α j) (γ j) (xp j) s) - Mk (thK θ (xp k)) (α k) (γ k) (xp k) s
   set C := Dlt k s
   set D' := lateNoise D (a k) s
   set E := EA k s
-  have n1 := norm_add_le (A + B + C + D') E
-  have n2 := norm_add_le (A + B + C) D'
-  have n3 := norm_add_le (A + B) C
-  have n4 := norm_add_le A B
+  have n1 := norm_add_le (A + C + D') E
+  have n2 := norm_add_le (A + C) D'
+  have n3 := norm_add_le A C
   linarith
 
 end DesignedZero
@@ -425,7 +534,7 @@ the hypotheses of Lemma 4.6 (with the bounds of Lemma 4.2 on `Z_B`), the decompo
 lag bound (13) beyond `a_k`, Lemma 4.8(ii) and Lemma 4.4(a). Lemmas 4.6 and 4.7, the bounds on
 the oscillations, the perturbation bound and Rouché's theorem are proved. -/
 def Theorem21InputsPaper : Prop :=
-  ∃ XHux : ℝ, ∀ θ ∈ Set.Ioc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
+  ∃ XHux : ℝ, ∀ θ ∈ Set.Icc (0 : ℝ) (1 / 2 - 1 / 10000), ∀ X₀ : ℕ, Even X₀ →
     Real.exp (10 ^ 8) ≤ X₀ → XHux ≤ X₀ →
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (P : Ω → BeurlingSystem) (G : Set Ω),
       IsProbabilityMeasure μ ∧ ENNReal.ofReal (1 - 1.5 / Real.log X₀) ≤ μ G ∧

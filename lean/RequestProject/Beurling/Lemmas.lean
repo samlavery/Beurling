@@ -111,6 +111,56 @@ lemma tendsto_one_of_log_asymptotic (r : ℕ → ℝ) (xk : ℕ → ℝ) (C : �
 
 /-! ### Uniqueness of the continuation of `ζ_P` -/
 
+/-- **The per-zero exponent of the design `θ`** at the switch-on point `x⁺`: `θ` itself for
+`θ ≠ 0` (Theorem A), and `θ_k = 9 ℓ_k² / L_k` (`L_k = log x⁺_k`, `ℓ_k = log L_k`, eq. (thetak) of
+§8) for the design `θ = 0` of Theorem A′ (the "exponent `0⁺`", a `[1,0]`-system). -/
+noncomputable def thK (θ xp : ℝ) : ℝ :=
+  if θ = 0 then 9 * Real.log (Real.log xp) ^ 2 / Real.log xp else θ
+
+lemma thK_of_ne {θ : ℝ} (hθ : θ ≠ 0) (xp : ℝ) : thK θ xp = θ := by simp [thK, hθ]
+
+lemma thK_zero (xp : ℝ) : thK 0 xp = 9 * Real.log (Real.log xp) ^ 2 / Real.log xp := by
+  simp [thK]
+
+/-- For `log log x ≥ 20`, the per-zero exponent of the design `0` is `≤ 1/100`
+(`9ℓ²/e^ℓ ≤ 1/100` for `ℓ ≥ 20`). -/
+lemma thK_zero_le {x : ℝ} (hx : 1 < x) (hℓ : 20 ≤ Real.log (Real.log x)) :
+    thK 0 x ≤ 1 / 100 := by
+  rw [thK_zero]
+  have hL : 0 < Real.log x := Real.log_pos hx
+  set ℓ := Real.log (Real.log x) with hℓdef
+  have hLe : Real.log x = Real.exp ℓ := (Real.exp_log hL).symm
+  have hexp := Real.pow_div_factorial_le_exp ℓ (by linarith) 8
+  norm_num [Nat.factorial] at hexp
+  rw [div_le_div_iff₀ hL (by norm_num), hLe]
+  have h2 : (400 : ℝ) ≤ ℓ ^ 2 := by nlinarith
+  have h6 : (36288000 : ℝ) ≤ ℓ ^ 6 := by
+    have : (64000000 : ℝ) ≤ ℓ ^ 6 := by
+      have := pow_le_pow_left₀ (by norm_num) h2 3
+      rw [← pow_mul] at this; norm_num at this; linarith
+    linarith
+  have hp : 0 ≤ ℓ ^ 2 := sq_nonneg _
+  nlinarith [mul_le_mul_of_nonneg_left h6 hp]
+
+/-- A crude upper exponent of the oscillations of the design `θ`: `θ` itself for `θ ≠ 0`, and
+`1/100` for the design `θ = 0` (`thK_switchOn_le`). -/
+noncomputable def thU (θ : ℝ) : ℝ := if θ = 0 then 1 / 100 else θ
+
+lemma thU_of_ne {θ : ℝ} (hθ : θ ≠ 0) : thU θ = θ := by simp [thU, hθ]
+
+lemma thU_nonneg {θ : ℝ} (hθ : 0 ≤ θ) : 0 ≤ thU θ := by
+  unfold thU; split_ifs <;> linarith
+
+lemma thU_le {θ c : ℝ} (hθ : θ ≤ c) (hc : 1 / 100 ≤ c) : thU θ ≤ c := by
+  unfold thU; split_ifs <;> linarith
+
+/-- For `log log x ≥ 20`, every per-zero exponent of the design `θ` is at most `thU θ`. -/
+lemma thK_le_thU (θ : ℝ) {x : ℝ} (hx : 1 < x) (hℓ : 20 ≤ Real.log (Real.log x)) :
+    thK θ x ≤ thU θ := by
+  by_cases hθ : θ = 0
+  · subst hθ; simpa [thU] using thK_zero_le hx hℓ
+  · rw [thK_of_ne hθ, thU_of_ne hθ]
+
 namespace BeurlingSystem
 
 lemma isOpen_puncturedHalfPlane (a : ℝ) : IsOpen (puncturedHalfPlane a) :=
