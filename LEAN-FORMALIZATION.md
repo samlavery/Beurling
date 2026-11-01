@@ -1,7 +1,8 @@
 # Lean formalization: status, trust base and defects
 
 **Summary.** The Lean 4 project in [`lean/`](lean/) proves Theorem A for θ ∈ (0, 1/2 − 10⁻⁴] (one threshold X_Hux for all θ; follow-up S1) with zeros at
-1·log log (`BModel.theoremA_full`, `BModel.theoremA_ii_complete`), and Corollary 2.2 (the answer to Question Q is negative) from a
+1·log log (`BModel.theoremA_full`, `BModel.theoremA_ii_complete`), Theorem A′ (a single discrete [1, 0]-system; follow-up S2;
+`BModel.theoremAprime`, `BModel.one_zero_system_exists`), and Corollary 2.2 (the answer to Question Q is negative) from a
 single hypothesis, eq. (84), a short-interval prime number theorem for the rational primes:
 
 ```lean
@@ -95,6 +96,34 @@ unchanged `corollary_2_2_complete`. This is the formalization of FOLLOWUP-THETA.
     (u^{−1/40}, via `capH_le_rpow400`), `OscBlockG.nonA3_le` (u^{−1/50}) and the geometric constants 59 and 73;
   - `Main.theorem21_part_i_of_bounds`, where 2x^{θ_b} ≤ 2x^θ is absorbed into Cx^θ.
 - `lag_rpow_of_queue` needs only θ ≥ 10⁻⁴.
+
+Checked only by the Lean kernel and the AI agent that wrote it; no human review.
+
+## Theorem A′: a single discrete [1, 0]-system (branch lean-s2, 2026-10-31)
+
+`BModel.theoremAprime` and `BModel.one_zero_system_exists` (`OneZero/TheoremAprime.lean`) prove Theorem A′ and Corollary
+onezero from (84):
+
+```lean
+theorem BModel.one_zero_system_exists (h84 : BaseRange.Huxley84) :
+    ∃ P : BeurlingSystem, (∀ ε > (0 : ℝ), ∃ C : ℝ, ∀ x ≥ (1 : ℝ), |P.N x - x| ≤ C * x ^ ε) ∧
+      ¬ P.HasZeroFreeHalfPlane
+```
+
+`theoremAprime` states, on an event of probability ≥ 1 − 1.5/log X₀: N(x) = x + O_ε(x^ε) for every ε > 0;
+|N(x) − x| ≤ C exp(120ℓ⁴/log ℓ) for x ≥ e^{e^e}; and zeros ρ_k with |(1 − Re ρ_k) log x_k − log log x_k| ≤ C and
+|log Im ρ_k − (log x_k − 9(log log x_k)² − log log x_k)| ≤ C. `#print axioms` gives `propext`, `Classical.choice`,
+`Quot.sound`. The Lean changes:
+- S2 is the design θ = 0 of the existing construction. The internal input chain (`Theorem21Inputs*` down to
+  `Theorem21InputsTarget`, `Cond`, `Std`, `LPHyp`, `ElemCount`, `LinkedModel`, `TiesNull`) quantifies over
+  θ ∈ [0, 1/2 − 10⁻⁴]. `Main.Theorem21`, `Theorem21Inputs'`, `Theorem21Inputs` and the statements of `theoremA_full` and
+  `theoremA_ii_complete` are unchanged.
+- Per-zero exponent `thK θ x` (`Lemmas.lean`) and switched-off oscillation `oscK`/`oscTermS` (`Oscillation.lean`), with
+  its Mellin transform `oscHatK`. The zero chain (Theorem 4.10 and its inputs) is per k.
+- The late-lag exponent is η_k = 8.5ℓ_k²/log x_k for θ = 0; the o_R modulus uses the density
+  g(x) = exp(−9(log log x − 1.1)²) (`OscD2.gS`).
+- `PartIInputsTargetLag` (`LagSplit.lean`) keeps D_max = `lagMax` explicit for the exp(120ℓ⁴/log ℓ) bound.
+- The deviations from §8 are listed in FOLLOWUP-S2.md, *Lean*. No error in §8 was found.
 
 Checked only by the Lean kernel and the AI agent that wrote it; no human review.
 
@@ -440,6 +469,8 @@ Nothing in the proof. Open items are review, not formalization:
 
 - **Corollary 2.2 is formally verified from (84)**: `BModel.corollary_2_2_complete : Huxley84 → ¬QuestionQ`, with the
   trust base above.
+- **Theorem A′ is formally verified from (84)** (`BModel.theoremAprime`, `BModel.one_zero_system_exists`), with the same
+  trust base; the statement-to-paper correspondence is checked only by the AI agent that wrote it.
 - Two independent read-only AI audits (2026-10-29) checked that `Huxley84` is implied by Heath-Brown 1988 and is not
   stronger, that `QuestionQ` is Definition 1.1, that the probability layer is not vacuous, that no input structure is
   unsatisfiable or exploited through junk values (sSup of unbounded sets, division by zero), and the axiom list.

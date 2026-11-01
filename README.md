@@ -171,8 +171,9 @@ and `BModel.theoremA_ii_complete` (the zeros at 1·log log, tied to their height
 **Theorem A′ (informal).** There is a single discrete Beurling system with
 N(x) = x + O(exp(120(log log x)⁴/log log log x)), so N(x) = x + O(x^ε) for every ε > 0, whose zeta function has zeros with
 1 − Re ρ_k = (log log |Im ρ_k| + O(1))/log |Im ρ_k| → 0: a discrete [1, 0]-system. The oscillations get per-zero exponents
-θ_k = 9(log log x_k)²/log x_k and are switched off at x_k² (paper §8). This is in the paper only: it has been checked by the AI agent that
-made it and one independent AI check, and is not yet formalized in Lean (see [`FOLLOWUP-S2.md`](FOLLOWUP-S2.md)).
+θ_k = 9(log log x_k)²/log x_k and are switched off at x_k² (paper §8). It has been checked by the AI agent that made it and one
+independent AI check, and is formalized in Lean from (84) (`BModel.theoremAprime`, `BModel.one_zero_system_exists`; see
+[`FOLLOWUP-S2.md`](FOLLOWUP-S2.md)).
 
 So the answer to Q is negative. Equivalently, there is a discrete [1, β]-system with β ≤ θ < 1/2. By Theorem A′, even an integer error smaller than every power does not force a zero-free half-plane. The result says nothing about the
 Riemann zeta function itself.
@@ -201,6 +202,11 @@ theorem BModel.corollary_2_2_complete (h84 : BaseRange.Huxley84) : ¬ QuestionQ
   three axioms: `BModel.theoremA_full : Huxley84 → Theorem21` (Theorem A for θ ∈ (0, 1/2 − 10⁻⁴], one X_Hux for all θ) and
   `BModel.theoremA_ii_complete` (zeros with |(1 − Re ρ_k) log x_k − log log x_k| ≤ C and
   |log Im ρ_k − ((1−θ) log x_k − log log x_k)| ≤ C).
+- Theorem A′ is also proved from (84), with the same three axioms: `BModel.theoremAprime` (a single system with
+  |N(x) − x| ≤ C_ε x^ε for every ε > 0 and |N(x) − x| ≤ C exp(120ℓ⁴/log ℓ), ℓ = log log x, and zeros with
+  |(1 − Re ρ_k) log x_k − log log x_k| ≤ C and |log Im ρ_k − (log x_k − 9ℓ_k² − log log x_k)| ≤ C, on an event of
+  probability ≥ 1 − 1.5/log X₀) and `BModel.one_zero_system_exists : Huxley84 → ∃ P, (∀ ε > 0, N_P(x) = x + O(x^ε)) ∧
+  ¬ P.HasZeroFreeHalfPlane`, a discrete [1, 0]-system.
 - Lean's `Theorem21` is the S1 form of Theorem A: ∃ X_Hux ∀ θ ∈ (0, 1/2 − 10⁻⁴], with (i) stated as
   |N(x) − x| ≤ C x^θ + 3 x^θ log* x + x^{η(θ)}, where C depends on θ and on the realisation. The paper's D_max(x) + h(x)Λ⁻⁸
   are x^{o(1)} and are absorbed into C (see [`FOLLOWUP-S1.md`](FOLLOWUP-S1.md), Lean section).

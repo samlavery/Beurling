@@ -1,6 +1,6 @@
 # Follow-up S2: a single discrete [1,0]-system (Theorem A′, branch followup-s2)
 
-Status (2026-10-31): paper and certificates only, no Lean. One AI agent (Claude) wrote it, on top of S1 (development a7bcdc6).
+Status (2026-10-31): paper and certificates; formalized in Lean (branch lean-s2, see *Lean* below). One AI agent (Claude) wrote it, on top of S1 (development a7bcdc6).
 The design was scoped (/tmp/rhscratch/ext/onezero.md, plan S2) and adversarially checked (/tmp/rhscratch/ext/onezero_check.md:
 "S2 holds (fixable)") by two earlier AI agents. **The text written here has been checked by the agent that made it and one independent AI check (PASS, no mathematical
 error; six wording fixes applied, below); no human review.** Theorem A and its proof are unchanged.
@@ -110,7 +110,7 @@ scoping note's claim that the rigid term "dominates only on a finite range" is r
 | main.tex | Inputs 07-onezero; new environment theoremAp. |
 | abstract, 00-intro | Abstract sentence. Informal Theorem A′ with a short design paragraph. rem:notshown bullet (β = 0 reached with α = 1). Outline sentence. |
 | B-certificates | New §B.8 (onezero, s2_check.py). Cross-check list. depcheck output and comment. |
-| C-ai-statement | Records S2 and its review status (the agent that made it and one independent AI check; not yet in Lean). |
+| C-ai-statement | Records S2 and its review status (the agent that made it and one independent AI check; formalized in Lean, branch lean-s2). |
 | LABELS.md | New labels. |
 | README.md | Theorem A′ informal paragraph, status, and Q sentence. |
 | CORRECTIONS-vs-v3.md | #116 (strengthening, not an error). |
@@ -164,7 +164,45 @@ and 14 overfull boxes, the same count as the S1 build. The checked-in beurling-p
 3. **C_{X₀}** in N = x + O_{X₀}(exp(120ℓ⁴/log ℓ)) is not computed. The rigid term (2 log x)^{π(X₀)} dominates up to log ℓ ≈ Λ/3.
 4. **The floor exp(≈107ℓ⁴/log ℓ)** is a property of Lemma P's divisor trick. Lowering it to the lag floor e^{8ℓ²} would need a new
    count of Abs in short windows. This is not attempted.
-5. **Lean.** Not formalized. Lean's Theorem21 is the pre-S1 form. S2 would add per-k θ_k and the switch-off to the oscillation files
-   (scoping estimate 2–3 weeks).
+5. **Lean.** Formalized (branch lean-s2). See *Lean* below.
 6. **Lemma ZA(b)** keeps its o(1) and is unused, as before.
 7. The checked-in PDF and README page count are not updated (left to the merge, as for S1).
+
+## Lean (branch lean-s2, 2026-10-31)
+
+`lake build` is green (10148 jobs). `#print axioms` of `BModel.theoremAprime`, `BModel.one_zero_system_exists`,
+`BModel.corollary_2_2_complete`, `BModel.theoremA_full` and `BModel.theoremA_ii_complete` gives
+[propext, Classical.choice, Quot.sound]. `Main.lean`, `Defs.lean`, `Huxley.lean` and `MarginComplete.lean` are unchanged.
+Statements (`lean/RequestProject/Beurling/OneZero/TheoremAprime.lean`):
+
+- `theoremAprime : Huxley84 → ∃ XHux, ∀ X₀ even, e^{10⁸} ≤ X₀ → XHux ≤ X₀ → ∃ Ω μ P G, μ G ≥ 1 − 1.5/log X₀ ∧
+  ∀ ω ∈ G, TheoremAprimeConclusion (P ω)`. The conclusion is:
+  - (i) ∀ ε > 0, ∃ C, ∀ x ≥ 1, |N(x) − x| ≤ C x^ε, and ∃ C, ∀ x ≥ e^{e^e}, |N(x) − x| ≤ C exp(120ℓ⁴/log ℓ) (ℓ = log log x);
+  - (ii) a continuation F on Re s > 1/2 and zeros ρ_k of F with |(1 − Re ρ_k) log x_k − log log x_k| ≤ C and
+    |log Im ρ_k − (log x_k − 9(log log x_k)² − log log x_k)| ≤ C. This is the paper's height relation with O(1) in place of
+    O(log log x_k).
+- `one_zero_system_exists : Huxley84 → ∃ P, (∀ ε > 0, ∃ C, ∀ x ≥ 1, |N_P(x) − x| ≤ C x^ε) ∧ ¬ P.HasZeroFreeHalfPlane`.
+- The constants C depend on X₀ and ω and are not computed (point 3).
+
+How it is built. S2 is the design θ = 0 of the existing construction. Every intermediate `Theorem21Inputs*` (down to
+`Theorem21InputsTarget`), `Cond`, `Std`, `LPHyp`, `ElemCount`, `LinkedModel` and `TiesNull` now quantify over
+θ ∈ [0, 1/2 − 10⁻⁴]. The public `Theorem21`, `Theorem21Inputs'` and `Theorem21Inputs` keep (0, 1/2 − 10⁻⁴], so the fixed-θ
+results are untouched. The per-zero exponent is `thK θ x` (= 9(log log x)²/log x for θ = 0, = θ otherwise), and the
+oscillation is `oscK` (for θ = 0, `oscTermS`: the oscillation minus its copy started at (x_k⁺)²). Theorem A′(i) runs through
+`Theorem21InputsSplit` at θ = 0, where D_max = `lagMax X₀` is explicit (`PartIInputsTargetLag`).
+
+Where the Lean differs from §8, or §8 left something unspecified (no mathematical error was found in §8):
+- **Late noise.** The late-lag exponent is per k: η_k = 8.5ℓ_k²/log x_k for θ = 0 (θ/2 otherwise), with
+  150Λ x_k^{η_k − θ_k} ≤ 1/100 (`OneZero/Numerics.late_numeric`). This replaces the route through the exact D_max.
+- **o_R.** The R′ modulus for θ = 0 is a single density g(x) = exp(−9(log log x − 1.1)²) on all active windows
+  (`OscD2.gS`, `mS`), not the per-k computation of Lemma onezero-transfer. It needs no H = H_std at x_k⁺. Summed over dyadic
+  scales it is ≤ 10⁻⁸⁰ (`OscR.sum_oscModU_le_zero`).
+- **Switch-off terms.** In the Rouché tally of Theorem 4.10 the switched-off copies contribute ≤ 1/40
+  (`norm_tsum_oscHatK_sub_Mk_le`). The R̂ bounds are doubled (constant 20 in `norm_tsum_oscHatK_le`), as in §8.
+- **|R|.** Lean proves |R(x)| ≤ 2e^{27ℓ²} (`abs_osc_zero_le`), cruder than the text's 2.01e^{18ℓ²}. Both are below exp(120ℓ⁴/log ℓ).
+- **Rigid term.** Ψ(2x, X₀) ≤ (log 2x/log 2 + 1)^{π(X₀)} ≤ 4^{π(X₀)}(log x)^{π(X₀)} (`smoothCount_le_pow`), in place of
+  (2 log x)^{π(X₀)}.
+- **Explicit form.** It is proved for x ≥ e^{e^e} (ℓ ≥ e), so that log ℓ ≥ 1. It uses a ℓ² ≤ 120ℓ⁴/log ℓ + a³/14400
+  (`sq_le_main`) for each of D_max = O(e^{8ℓ²}) (`lagMax_le_exp`), the rigid term, h(x) (`winH_le_three`) and |R|.
+
+Checked only by the Lean kernel and the AI agent that wrote it; no human review.
