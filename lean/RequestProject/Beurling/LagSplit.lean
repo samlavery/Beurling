@@ -263,11 +263,54 @@ def PartIInputsSlotsSplit (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
       |P.N x - target X₀ κ (countA A) (absorbedDensityCap (winH X₀) A u) (osc θ α γ xp) x| ≤
         queueB X₀ X₀ + capH X₀ X₀ / 2 * (1 + κp X₀ / Real.log X₀) + 5)
 
+/-- **`D_max = O(e^{8ℓ²})`** on `[X₀, ∞)` (`ℓ = log log x`): eq. (Dmaxstd) in the standard regime
+`ℓ ≥ 2Λ - 1`, and `D_max = x^{o(1)}` below it. -/
+theorem lagMax_le_exp {X₀ : ℝ} (hX0 : 0 ≤ X₀) (hX : 10 ^ 8 ≤ Real.log X₀) :
+    ∃ c : ℝ, ∀ x ≥ X₀, lagMax X₀ x ≤ c * Real.exp (8 * Real.log (Real.log x) ^ 2) := by
+  obtain ⟨C, hC⟩ := subPow_lagMax hX0 hX (1 / 2) (by norm_num)
+  set Λ := Real.log X₀ with hΛ
+  refine ⟨max (Real.exp (Λ + 2)) (|C| * Real.exp (Real.exp (2 * Λ) / 2)), fun x hx => ?_⟩
+  have hX1 : 1 < X₀ := by
+    by_contra hc; push_neg at hc; linarith [Real.log_nonpos hX0 hc]
+  have hx0 : 0 < x := by linarith
+  have he1 : 1 ≤ Real.exp (8 * Real.log (Real.log x) ^ 2) := Real.one_le_exp (by positivity)
+  have hm0 : 0 ≤ max (Real.exp (Λ + 2)) (|C| * Real.exp (Real.exp (2 * Λ) / 2)) :=
+    le_trans (Real.exp_pos _).le (le_max_left _ _)
+  by_cases hℓ : 2 * Λ - 1 ≤ Real.log (Real.log x)
+  · have h1 := lagMax_le_std hX0 hX hx hℓ
+    have e : Real.exp (8 * Real.log (Real.log x) ^ 2 + Λ + 2) =
+        Real.exp (Λ + 2) * Real.exp (8 * Real.log (Real.log x) ^ 2) := by
+      rw [← Real.exp_add]; ring_nf
+    rw [e] at h1
+    refine h1.trans ?_
+    exact mul_le_mul_of_nonneg_right (le_max_left _ _) (by positivity)
+  · push_neg at hℓ
+    have hL0 : 0 < Real.log x := Real.log_pos (by linarith)
+    have hLx : Real.log x < Real.exp (2 * Λ) := by
+      have := (Real.log_lt_iff_lt_exp hL0).mp hℓ
+      exact this.trans (Real.exp_lt_exp.mpr (by linarith))
+    have hsq : x ^ (1 / 2 : ℝ) ≤ Real.exp (Real.exp (2 * Λ) / 2) := by
+      rw [Real.rpow_def_of_pos hx0, Real.exp_le_exp]; linarith
+    have h1 := hC x hx
+    have h2 : C * x ^ (1 / 2 : ℝ) ≤ |C| * Real.exp (Real.exp (2 * Λ) / 2) :=
+      (mul_le_mul_of_nonneg_right (le_abs_self C) (by positivity)).trans
+        (mul_le_mul_of_nonneg_left hsq (abs_nonneg C))
+    calc lagMax X₀ x ≤ max (Real.exp (Λ + 2)) (|C| * Real.exp (Real.exp (2 * Λ) / 2)) :=
+          h1.trans (h2.trans (le_max_right _ _))
+      _ ≤ _ := le_mul_of_one_le_right hm0 he1
+
+/-- `PartIInputsTarget` with the lag bound `D_max = lagMax X₀` (eq. (La)) explicit. -/
+def PartIInputsTargetLag (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
+  ∃ (κ : ℝ) (cntA rhoA : ℝ → ℝ) (α γ xp : ℕ → ℝ), 0 < κ ∧ κ ≤ 1 ∧ Spacing xp ∧
+    (∀ k, |α k| ≤ 2) ∧ (X₀ : ℝ) ≤ xp 0 ∧
+    (∀ x ≥ (X₀ : ℝ), |cntA x - ∫ u in (X₀ : ℝ)..x, rhoA u| ≤ 2 * Absorbed.winH X₀ x) ∧
+    (∀ x ≥ (X₀ : ℝ), |P.N x - target X₀ κ cntA rhoA (osc θ α γ xp) x| ≤ lagMax X₀ x)
+
 /-- **Proposition 4.1 (the lag bound (La)) with the paper's split**: the split inputs give
-`|N_P(x) - T(x)| ≤ D_max(x)` for every `x ≥ X₀`, hence `PartIInputsTarget`. -/
-theorem PartIInputsSlotsSplit.toTarget {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
+`|N_P(x) - T(x)| ≤ D_max(x)` for every `x ≥ X₀`. -/
+theorem PartIInputsSlotsSplit.toTargetLag {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
     (hXw : 10 ^ 8 ≤ Real.log X₀)
-    (h : PartIInputsSlotsSplit θ X₀ P) : PartIInputsTarget θ X₀ P := by
+    (h : PartIInputsSlotsSplit θ X₀ P) : PartIInputsTargetLag θ X₀ P := by
   obtain ⟨κ, A, u, α, γ, xp, Qmax, κp, hκ, hκ1, hsp, hα, hxp, hAu, hAfin, hρ, hQ, hκp, hslot,
     hinit⟩ := h
   have hX := hXw
@@ -278,9 +321,8 @@ theorem PartIInputsSlotsSplit.toTarget {θ : ℝ} {X₀ : ℕ} {P : BeurlingSyst
   have hW : AbsorbedWindowHyp (winH X₀) X₀ A u :=
     ⟨winH_isWin hXw, hX1, fun a ha => (hAu a ha).1, fun a ha => (hAu a ha).2, hAfin⟩
   have hX0 : (0 : ℝ) ≤ X₀ := Nat.cast_nonneg _
-  refine ⟨κ, countA A, absorbedDensityCap (winH X₀) A u, α, γ, xp, lagMax X₀, hκ, hκ1, hsp, hα,
-    hxp, fun x hx => absorbed_target_error_cap hW (by linarith) hρ hx, fun x hx => ?_,
-    subPow_lagMax hX0 hX⟩
+  refine ⟨κ, countA A, absorbedDensityCap (winH X₀) A u, α, γ, xp, hκ, hκ1, hsp, hα,
+    hxp, fun x hx => absorbed_target_error_cap hW (by linarith) hρ hx, fun x hx => ?_⟩
   have hB0 : 0 ≤ queueB X₀ X₀ := (hQ X₀ le_rfl).1.trans (hQ X₀ le_rfl).2
   have hBx : 0 ≤ queueB X₀ x := (hQ x hx).1.trans (hQ x hx).2
   have hH0 : 0 ≤ capH X₀ X₀ := le_trans (Real.exp_pos _).le (le_max_left _ _)
@@ -305,6 +347,15 @@ theorem PartIInputsSlotsSplit.toTarget {θ : ℝ} {X₀ : ℕ} {P : BeurlingSyst
     have hk0 : 0 ≤ κp X₀ / Real.log X₀ := div_nonneg (hκp X₀ le_rfl).1 hLX.le
     have : capH X₀ X₀ / 2 * (1 + κp X₀ / Real.log X₀) ≤ 3 * capH X₀ X₀ := by nlinarith
     unfold lagMax; linarith
+
+/-- **Proposition 4.1 (the lag bound (La)) with the paper's split**, in the form
+`PartIInputsTarget` (`D_max = x^{o(1)}`). -/
+theorem PartIInputsSlotsSplit.toTarget {θ : ℝ} {X₀ : ℕ} {P : BeurlingSystem}
+    (hXw : 10 ^ 8 ≤ Real.log X₀)
+    (h : PartIInputsSlotsSplit θ X₀ P) : PartIInputsTarget θ X₀ P := by
+  obtain ⟨κ, cntA, rhoA, α, γ, xp, hκ, hκ1, hsp, hα, hxp, hA, hD⟩ := h.toTargetLag hXw
+  exact ⟨κ, cntA, rhoA, α, γ, xp, lagMax X₀, hκ, hκ1, hsp, hα, hxp, hA, hD,
+    subPow_lagMax (Nat.cast_nonneg _) hXw⟩
 
 /-- Refined inputs for one system: `PartIInputsSlotsSplit` and `Theorem410InputsRankin`. -/
 def TheoremAInputsSplit (θ : ℝ) (X₀ : ℕ) (P : BeurlingSystem) : Prop :=
