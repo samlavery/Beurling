@@ -2,12 +2,6 @@
   "challenge_module": "Challenge",
   "solution_module": "Solution",
   "theorem_names": ["BModel.one_zero_system_exists", "BModel.corollary_2_2_complete"],
-  "definition_names": [
-    "BeurlingSystem", "BeurlingSystem.val", "BeurlingSystem.N", "BeurlingSystem.zeta",
-    "BeurlingSystem.puncturedHalfPlane", "BeurlingSystem.IsZetaContinuation",
-    "BeurlingSystem.HasZeroFreeHalfPlane", "QuestionQ",
-    "BaseRange.primeCount", "BaseRange.liI", "BaseRange.Admissible", "BaseRange.relErr",
-    "BaseRange.HuxleyFrom", "BaseRange.Huxley84"
-  ],
+  "definition_names": [],
   "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
 }
