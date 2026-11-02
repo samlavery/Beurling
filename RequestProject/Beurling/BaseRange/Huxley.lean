@@ -1,6 +1,7 @@
 module
 
 public import RequestProject.Beurling.Model.Slope
+public import RequestProject.Beurling.StatementDefs
 
 /-!
 # §7.1: the short-interval prime number theorem and the threshold `X_Hux` (eq. (84))
@@ -34,32 +35,8 @@ open Real MeasureTheory Set Filter
 
 namespace BaseRange
 
-/-- `π(I)` for `I = [a, b]`: the number of rational primes `p` with `a ≤ p ≤ b`. -/
-noncomputable def primeCount (a b : ℝ) : ℕ := {p : ℕ | p.Prime ∧ a ≤ p ∧ (p : ℝ) ≤ b}.ncard
-
-/-- `∫_a^b dt/log t`. -/
-noncomputable def liI (a b : ℝ) : ℝ := ∫ t in a..b, 1 / Real.log t
-
-/-- The intervals `I = [a, b] ⊂ [q, 2q]` with `|I| ≥ (2q)^{7/12}` of (84). -/
-def Admissible (q a b : ℝ) : Prop := q ≤ a ∧ b ≤ 2 * q ∧ (2 * q) ^ (7 / 12 : ℝ) ≤ b - a
-
-/-- The relative error `|π(I)/∫_I dt/log t - 1|` of the interval `[a, b]`. -/
-noncomputable def relErr (a b : ℝ) : ℝ := |(primeCount a b : ℝ) / liI a b - 1|
-
 /-- `η_H(q)` of (84). -/
 noncomputable def etaH (q : ℝ) : ℝ := sSup {e | ∃ a b, Admissible q a b ∧ e = relErr a b}
-
-/-- (84) from `X` on: `η_H(q) ≤ (log q)^{-3}` for every `q ≥ X`, interval by interval. -/
-def HuxleyFrom (X : ℝ) : Prop :=
-  ∀ q a b : ℝ, X ≤ q → Admissible q a b → relErr a b ≤ Real.log q ^ (-3 : ℤ)
-
-/-- **Named hypothesis (eq. (84)): `X_Hux` is finite.** For some `X`, every interval
-`I ⊂ [q, 2q]` with `|I| ≥ (2q)^{7/12}` and `q ≥ X` has
-`|π(I)/∫_I dt/log t - 1| ≤ (log q)^{-3}`. This is a statement about the rational primes; the
-paper derives it (§7.1) from Heath-Brown's short-interval prime number theorem [HB88, (1.2)]
-with `ε_HB ≡ 0` (eq. (83)) and the de la Vallée Poussin error term, neither of which is in
-Mathlib. -/
-def Huxley84 : Prop := ∃ X : ℝ, HuxleyFrom X
 
 /-- The set of admissible thresholds in the definition of `X_Hux`. -/
 def huxSet : Set ℝ := {X | Real.exp (10 ^ 8) ≤ X ∧ ∀ q, X ≤ q → etaH q ≤ Real.log q ^ (-3 : ℤ)}

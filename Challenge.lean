@@ -64,7 +64,8 @@ theorems rather than an axiom. Nothing else is assumed: `#print axioms` of both 
 `propext`, `Classical.choice` and `Quot.sound`.
 
 The definitions below are copied verbatim, with the same namespaces and `open`s, from
-`RequestProject/Beurling/Defs.lean` and `RequestProject/Beurling/BaseRange/Huxley.lean`.
+`RequestProject/Beurling/StatementDefs.lean` (one module, same order, so that Lean's auxiliary
+`_proof_` constants coincide too).
 -/
 
 @[expose] public section

@@ -12,8 +12,8 @@ proved there under the same names as in `Challenge.lean`:
 
 * `BModel.one_zero_system_exists` in `RequestProject/Beurling/OneZero/TheoremAprime.lean`;
 * `BModel.corollary_2_2_complete` in `RequestProject/Beurling/Model/MarginComplete.lean`;
-* the definitions in `RequestProject/Beurling/Defs.lean` and
-  `RequestProject/Beurling/BaseRange/Huxley.lean`.
+* the definitions in `RequestProject/Beurling/StatementDefs.lean`, a verbatim copy of the
+  Challenge's definitions in one module.
 
 `lake comparator` checks that each has exactly the statement (for definitions, the value) of
 its counterpart in `Challenge.lean` and uses only the permitted axioms.

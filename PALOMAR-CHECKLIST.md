@@ -36,3 +36,15 @@ v4.35.0). Nothing has been pushed or submitted.
   consider pinning a commit or a release in `sources[0].id`.
 - Docstrings in `RequestProject/` still call the generators `genz2.lean` and so on. I left them as they are so the build
   would not change; `scripts/README.md` explains the renaming.
+
+## Comparator fixes after submission
+
+1. `definition_names` must list definition *holes* only; it is now empty (Palomar: "Challenge constant is not a
+   definition: 'BeurlingSystem'").
+2. "Const does not match between challenge and target 'BaseRange.Admissible'": the terms differed only in Lean's
+   auxiliary `_proof_N` constants, which are shared within a module (Challenge reused `QuestionQ._proof_1`; the
+   project, with the definitions split over Defs.lean and Huxley.lean, made `BaseRange.Admissible._proof_1`). The
+   definitions now live in `RequestProject/Beurling/StatementDefs.lean`, a verbatim copy of the Challenge's in one
+   Mathlib-only module. Checked: `pp.all` output of all 17 definitions/fields and of both theorem statements is
+   byte-identical between `import Challenge` and `import Solution`; full build green (10153 jobs); axioms of both
+   theorems are propext, Classical.choice, Quot.sound.
